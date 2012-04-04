@@ -1,0 +1,147 @@
+package org.celstec.arlearn2.delegators.inventory;
+
+import org.celstec.arlearn2.beans.generalItem.DropZone;
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.run.InventoryRecord;
+import org.celstec.arlearn2.beans.generalItem.PickupItem;
+import org.celstec.arlearn2.delegators.GoogleDelegator;
+import org.celstec.arlearn2.delegators.generalitems.QueryGeneralItems;
+import org.celstec.arlearn2.fusion.CSV;
+import org.celstec.arlearn2.jdo.UserLoggedInManager;
+import org.celstec.arlearn2.jdo.manager.InventoryRecordManager;
+import org.celstec.arlearn2.cache.InventoryRecordCache;
+
+import com.google.gdata.util.AuthenticationException;
+import com.google.gdata.util.ServiceException;
+
+public class UpdateInventoryRecord extends GoogleDelegator {
+
+	public UpdateInventoryRecord(String authToken) throws AuthenticationException {
+		super(authToken);
+	}
+
+	public UpdateInventoryRecord(GoogleDelegator gd) {
+		super(gd);
+	}
+
+	public InventoryRecord updateInventoryRecord(Long runId, InventoryRecord ir) {
+		if (ir.getRunId() == null) {
+			ir.setError("No run identifier specified");
+			return ir;
+		}
+		try {
+			QueryInventoryRecord qu = new QueryInventoryRecord(authToken);
+			InventoryRecord storedInventoryRecord = qu.getInventoryRecord(runId, ir.getGeneralItemId(), ir.getScope(), ir.getEmail(), ir.getTeamId());
+
+			String teamId = ir.getTeamId();
+			String email = ir.getEmail();
+			if ("all".equals(ir.getScope())) {
+				teamId = null;
+				email = null;
+			} else if ("team".equals(ir.getScope())) {
+				email = null;
+			} else if ("user".equals(ir.getScope())) {
+				teamId = null;
+			}
+
+			InventoryRecordManager.updateInventoryRecord(runId, ir.getGeneralItemId(), ir.getScope(), email, teamId, ir.getLat(), ir.getLng(), ir.getStatus());
+			InventoryRecordCache.getInstance().putInventoryRecordList(ir, runId, ir.getScope(), ir.getGeneralItemId(),  email, teamId);
+			
+		} catch (AuthenticationException e) {
+			e.printStackTrace();
+		}
+		return ir;
+	}
+
+	// public InventoryRecord updateInventoryRecord(Long runId, InventoryRecord
+	// ir) {
+	// try {
+	// QueryInventoryRecord qu = new QueryInventoryRecord(authToken);
+	// InventoryRecord storedInventoryRecord = qu.getInventoryRecord(runId,
+	// ir.getGeneralItemId(), ir.getScope(), ir.getEmail(), ir.getTeamId());
+	// if (ir.getRunId() == null) {
+	// ir.setError("No run identifier specified");
+	// return ir;
+	// }
+	// int tableId;
+	// tableId = (new
+	// QueryInventoryRecord(this)).getInventoryRecordTableIdForRun(ir.getRunId());
+	// if (tableId == -1) throw new
+	// ServiceException("table to update InventoryRecord "+ir.getEmail()+" does not exist.");
+	// if (tableId != -1) {
+	// updateRowInInventoryRecordTable(tableId, ir.getGeneralItemId(),
+	// ir.getScope(), ir.getEmail(), ir.getTeamId(), ir.getLat(), ir.getLng(),
+	// ir.getStatus());
+	// InventoryRecordCache.getInstance().removeInventoryRecord(runId,
+	// ir.getGeneralItemId(), ir.getScope(), ir.getEmail(), ir.getTeamId());
+	// InventoryRecordCache.getInstance().putInventoryRecord(runId, ir);
+	// }
+	// } catch (IOException e) {
+	// logger.log(Level.SEVERE, e.getMessage(), e);
+	// ir.setError(e.getMessage());
+	// } catch (ServiceException e) {
+	// logger.log(Level.SEVERE, e.getMessage(), e);
+	// ir.setError(e.getMessage());
+	// }
+	// return ir;
+	// }
+
+	public InventoryRecord pickupItem(Long runIdentifier, String email, String teamId, Long generalItemId) {
+		QueryInventoryRecord qir = new QueryInventoryRecord(this);
+		QueryGeneralItems qgi = new QueryGeneralItems(this);
+		GeneralItem gi = qgi.getGeneralItem(runIdentifier, generalItemId);
+		InventoryRecord ir = qir.getInventoryRecord(runIdentifier, generalItemId, gi.getScope(), email, teamId);
+		if (ir != null && ("map".equals(ir.getStatus()) || "dropped".equals(ir.getStatus()))) {
+			ir.setStatus("picked");
+			ir.setScope(gi.getScope());
+			ir.setTeamId(teamId);
+			ir.setGeneralItemId(generalItemId);
+			ir.setEmail(email);
+			return updateInventoryRecord(runIdentifier, ir);
+		}
+		return ir;
+	}
+
+	public InventoryRecord dropItem(Long runIdentifier, String email, String teamId, Long generalItemId, Double lat, Double lng) {
+		QueryInventoryRecord qir = new QueryInventoryRecord(this);
+		QueryGeneralItems qgi = new QueryGeneralItems(this);
+		GeneralItem gi = qgi.getGeneralItem(runIdentifier, generalItemId);
+		InventoryRecord ir = qir.getInventoryRecord(runIdentifier, generalItemId, gi.getScope(), email, teamId);
+		if (ir != null && "picked".equals(ir.getStatus())) {
+			ir.setStatus("dropped");
+			ir.setScope(gi.getScope());
+			ir.setTeamId(teamId);
+			ir.setGeneralItemId(generalItemId);
+			ir.setEmail(email);
+			ir.setLat(lat);
+			ir.setLng(lng);
+			return updateInventoryRecord(runIdentifier, ir);
+		}
+		return ir;
+	}
+
+	public InventoryRecord dropAtDropZone(Long runIdentifier, String email, String teamId, Long generalItemId, Long dropZoneId) {
+		QueryInventoryRecord qir = new QueryInventoryRecord(this);
+		QueryGeneralItems qgi = new QueryGeneralItems(this);
+		GeneralItem gi = qgi.getGeneralItem(runIdentifier, generalItemId);
+		if (gi instanceof PickupItem && dropZoneId != null && dropZoneId.equals(((PickupItem) gi).getDropZoneId())) {
+			InventoryRecord ir = qir.getInventoryRecord(runIdentifier, generalItemId, gi.getScope(), email, teamId);
+			if (ir != null && "picked".equals(ir.getStatus())) {
+				GeneralItem dz = qgi.getGeneralItem(runIdentifier, dropZoneId);
+				if (dz != null && dz instanceof DropZone) {
+					ir.setStatus("droppedAtDropZone");
+					ir.setScope(gi.getScope());
+					ir.setTeamId(teamId);
+					ir.setGeneralItemId(generalItemId);
+					ir.setEmail(email);
+					ir.setLat(dz.getLat());
+					ir.setLng(dz.getLng());
+					return updateInventoryRecord(runIdentifier, ir);
+				}
+			}
+			return ir;
+		}
+		return null;
+	}
+
+}
