@@ -37,19 +37,14 @@ public class Authoring implements EntryPoint {
 		topTabSet.setSize("100%", "100%");
 		topTabSet.setTabBarPosition(Side.TOP);
 		topTabSet.setTabBarAlign(Side.LEFT);
-		
-		Tab tTab1 = new Tab("Games");  
-		  
-        tTab1.setCanClose(false);  
-  
         
-        topTabSet.addTab(tTab1);  
+        topTabSet.addTab(new GamesTab());  
 
 		
 		VLayout vLayout = new VLayout();  
         vLayout.setMembersMargin(15);  
         vLayout.addMember(topTabSet);  
-        vLayout.setSize("640", "480");
+        vLayout.setSize("1000", "600");
         
         rootPanel.add(vLayout);
 		
