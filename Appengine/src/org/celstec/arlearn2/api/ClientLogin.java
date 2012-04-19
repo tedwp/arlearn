@@ -38,8 +38,7 @@ public class ClientLogin extends Service {
 		service = new GoogleService("fusiontables", "ARLearn2");
 		AuthResponse ar = new AuthResponse();
 		try {
-			service.setUserCredentials(username, password,ClientLoginAccountType.GOOGLE);
-			
+			service.setUserCredentials(username, password,ClientLoginAccountType.GOOGLE);			
 		} catch (AuthenticationException e) {
 			log.log(Level.SEVERE, "failed "+e.getMessage());
 			ar.setError("Authentication failed: "+e.getMessage());
