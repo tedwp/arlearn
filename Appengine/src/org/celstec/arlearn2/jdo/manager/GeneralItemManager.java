@@ -115,14 +115,21 @@ public class GeneralItemManager {
 	}
 
 	public static void deleteGeneralItem(long gameId) {
+		delete(gameId, null, null);
+	}
+	
+	public static void deleteGeneralItem(long gameId, String itemId) {
+		delete(gameId, itemId, null);
+	}
+	
+	private static void delete(long gameId, String generalItemId, String type){
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
-			List<GeneralItemJDO> deleteList = getGeneralitems(pm, gameId, null, null);
+			List<GeneralItemJDO> deleteList = getGeneralitems(pm, gameId, generalItemId, type);
 			pm.deletePersistentAll(deleteList);
 		} finally {
 			pm.close();
 		}
-		
 	}
 
 }

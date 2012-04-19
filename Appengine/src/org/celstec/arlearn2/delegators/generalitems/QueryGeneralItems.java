@@ -214,7 +214,12 @@ public class QueryGeneralItems extends GoogleDelegator {
 		// TODO:better do a DB query by id																			 
 		RunDelegator rd = new RunDelegator(this);
 		Run run = rd.getRun(runIdentifier);
-		GeneralItemList returnItemList = getGeneralItems(run.getGameId());
+		return getGeneralItemForGame(run.getGameId(), generalItemId);
+	}
+	
+	public GeneralItem getGeneralItemForGame(Long gameId, Long generalItemId) { 
+		// TODO:better do a DB query by id																			 
+		GeneralItemList returnItemList = getGeneralItems(gameId);
 		List<GeneralItem> gl = returnItemList.getGeneralItems();
 		for (int i = gl.size() - 1; i >= 0; i--) {
 			if (gl.get(i).getId().equals(generalItemId)) {
