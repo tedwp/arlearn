@@ -1,8 +1,7 @@
 package org.celstec.arlearn2.api;
 
-import java.util.Iterator;
-
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -19,6 +18,7 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.beans.run.Inventory;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
+import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.generalitems.CreateGeneralItems;
 import org.celstec.arlearn2.delegators.generalitems.QueryGeneralItems;
@@ -59,6 +59,19 @@ public class GeneralItems extends Service {
 		GeneralItem giError = new GeneralItem();
 		giError.setError("id "+itemId+" does not exist");
 		return serialise(giError, accept);
+	}
+	
+	@DELETE
+	@Path("/gameId/{gameIdentifier}/generalItem/{itemId}")
+	public String deleteItem(@HeaderParam("Authorization") String token, 
+			@PathParam("gameIdentifier") Long gameIdentifier, 
+			@PathParam("itemId") String itemId, 
+			@HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		CreateGeneralItems cg = new CreateGeneralItems(token);
+		cg.deleteGeneralItem(gameIdentifier, itemId);
+		return "";
 	}
 
 	@GET
@@ -217,5 +230,7 @@ public class GeneralItems extends Service {
 		return serialise((new CreateGeneralItems(token)).createGeneralItem((GeneralItem) inItem), accept);
 
 	}
+	
+	
 
 }
