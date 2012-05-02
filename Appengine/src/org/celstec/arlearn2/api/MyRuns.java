@@ -47,6 +47,18 @@ public class MyRuns extends Service {
 	
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/runId/{runIdentifier")
+	public String getRun(@HeaderParam("Authorization") String token, 
+			@PathParam("runIdentifier") Long runIdentifier,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		RunDelegator rd = new RunDelegator(token);
+		return serialise(rd.getRun(runIdentifier), accept);
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/config/runId/{runIdentifier}")
 	public String getConfig(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
 		logger.log(Level.SEVERE, "in get config" );

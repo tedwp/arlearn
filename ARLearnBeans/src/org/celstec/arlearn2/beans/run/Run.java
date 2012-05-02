@@ -3,6 +3,7 @@ package org.celstec.arlearn2.beans.run;
 import java.io.Serializable;
 
 import org.celstec.arlearn2.beans.game.DependsOn;
+import org.celstec.arlearn2.beans.game.Game;
 
 
 public class Run extends RunBean implements Serializable{
@@ -12,6 +13,8 @@ public class Run extends RunBean implements Serializable{
 	private String owner;
 	private Long startTime;
 	private Long serverCreationTime;
+	private Game game;
+	
 	@Deprecated
 	private DependsOn gameOverDependsOn;
 
@@ -59,6 +62,14 @@ public class Run extends RunBean implements Serializable{
 		this.serverCreationTime = serverCreationTime;
 	}
 	
+	public Game getGame() {
+		return game;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
+	}
+
 	@Deprecated
 	public DependsOn getGameOverDependsOn() {
 		return gameOverDependsOn;

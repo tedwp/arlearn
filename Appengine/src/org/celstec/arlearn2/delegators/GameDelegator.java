@@ -64,6 +64,21 @@ public class GameDelegator extends GoogleDelegator{
 		return list.get(0);
 	}
 	
+	public Game getUnOwnedGame(Long gameId) {
+		List<Game> list = MyGamesCache.getInstance().getGameList(gameId, null, null, null, null);
+		if (list == null) {
+			list = GameManager.getGames(gameId, null, null, null, null);
+			MyGamesCache.getInstance().putGameList(list, gameId, null, null, null, null);
+		}
+		if (list.isEmpty()) {
+			Game game = new Game();
+			game.setGameId(gameId);
+			game.setError("game does not exist");
+			return game;
+		}
+		return list.get(0);
+	}
+	
 	public Game getNotOwnedGame(Long gameId) {
 		List<Game> list = GameManager.getGames(gameId, null, null, null, null);
 		if (list.isEmpty()) {
