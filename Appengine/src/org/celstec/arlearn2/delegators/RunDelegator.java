@@ -49,6 +49,8 @@ public class RunDelegator extends GoogleDelegator {
 			r = runList.get(0);
 			RunsCache.getInstance().putRun(runId, r);
 		}
+		GameDelegator gd = new GameDelegator(this);
+		r.setGame(gd.getUnOwnedGame(r.getRunId()));
 		return r;
 	}
 

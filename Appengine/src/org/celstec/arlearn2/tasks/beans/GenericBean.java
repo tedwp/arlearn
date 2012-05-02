@@ -98,4 +98,7 @@ public abstract class GenericBean  implements Runnable{
 		
 		
 	}
+
+	public void run() {		
+	}
 }
