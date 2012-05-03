@@ -7,7 +7,7 @@ public class NarratorItem extends GeneralItem {
 	private String imageUrl;
 	private String text;
 	private String richText;
-	private Boolean isOpenQuestion;
+	private OpenQuestion openQuestion;
 	
 	public NarratorItem(){
 	 super();
@@ -45,13 +45,13 @@ public class NarratorItem extends GeneralItem {
 	public void setText(String text) {
 		this.text = text;
 	}
-	
-	public Boolean getIsOpenQuestion() {
-		return isOpenQuestion;
+
+	public OpenQuestion getOpenQuestion() {
+		return openQuestion;
 	}
 
-	public void setIsOpenQuestion(Boolean isOpenQuestion) {
-		this.isOpenQuestion = isOpenQuestion;
+	public void setOpenQuestion(OpenQuestion openQuestion) {
+		this.openQuestion = openQuestion;
 	}
 
 }
