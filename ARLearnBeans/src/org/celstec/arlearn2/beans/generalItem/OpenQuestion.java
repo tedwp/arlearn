@@ -4,21 +4,20 @@ import org.celstec.arlearn2.beans.Bean;
 
 public class OpenQuestion extends Bean {
 
-	private String withAudio;
-	private String withPicture;
-	
-	public String getWithAudio() {
+	private boolean withAudio;
+	private boolean withPicture;
+	public boolean isWithAudio() {
 		return withAudio;
 	}
-	public void setWithAudio(String withAudio) {
+	public void setWithAudio(boolean withAudio) {
 		this.withAudio = withAudio;
 	}
-	public String getWithPicture() {
+	public boolean isWithPicture() {
 		return withPicture;
 	}
-	public void setWithPicture(String withPicture) {
+	public void setWithPicture(boolean withPicture) {
 		this.withPicture = withPicture;
 	}
-
+	
 	
 }
