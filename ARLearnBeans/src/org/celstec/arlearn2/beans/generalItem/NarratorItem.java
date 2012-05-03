@@ -5,6 +5,7 @@ public class NarratorItem extends GeneralItem {
 	private String videoUrl;
 	private String audioUrl;
 	private String imageUrl;
+	
 	private String text;
 	private String richText;
 	private Boolean isOpenQuestion;
