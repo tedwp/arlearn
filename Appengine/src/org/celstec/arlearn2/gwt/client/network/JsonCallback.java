@@ -25,7 +25,7 @@ public class JsonCallback {
 	}
 	
 	public void onJsonReceived(JSONValue jsonValue) {
-			if (jsonValue.isObject().get(type) != null && jsonValue.isObject().get(type).isArray() != null) {
+			if (type != null && jsonValue.isObject().get(type) != null && jsonValue.isObject().get(type).isArray() != null) {
 				this.jsonValue = jsonValue.isObject().get(type).isArray();
 			}
 			onReceived();

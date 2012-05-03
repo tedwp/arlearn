@@ -150,7 +150,6 @@ public class RunTab extends Tab {
 
 			@Override
 			public void onCellClick(CellClickEvent event) {
-				// TODO Auto-generated method stub
 				sectionStack.expandSection(1);
 				Criteria crit = new Criteria();
 				Integer critInt = new Integer((int) runId);

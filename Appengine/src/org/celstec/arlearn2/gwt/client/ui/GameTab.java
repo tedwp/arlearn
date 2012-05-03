@@ -33,7 +33,7 @@ public class GameTab extends Tab {
 	private ListGrid listGrid;
 	GeneralItemCanvas giCanvas;
 	Canvas nonForm;
-	IButton createButtton;
+	HLayout horizontalButtons;
 	
 	public GameTab(String title, final long gameId) {
 		super(title);
@@ -42,7 +42,7 @@ public class GameTab extends Tab {
 		HLayout navLayout = new HLayout();
 		navLayout.setMembersMargin(10);
 		Canvas rightCanvas = getRightCanvas();
-		rightCanvas.setWidth(500);
+		rightCanvas.setWidth(300);
 		navLayout.addMember(rightCanvas);
 		navLayout.addMember(getLeftCanvas());
 		
@@ -64,8 +64,11 @@ public class GameTab extends Tab {
 	}
 
 	private  VLayout layout = new VLayout(10);
+	private  SelectItem selectType;
+	private DynamicForm selectForm;
+	
 	public Canvas getRightCanvas() {
-		final DynamicForm selectForm = new DynamicForm();
+		selectForm = new DynamicForm();
 		layout.setBorder("1px solid");
 		HeaderItem header = new HeaderItem();
 		header.setDefaultValue("Create new general item");
@@ -77,7 +80,7 @@ public class GameTab extends Tab {
 				"org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest",
 				"Multiple Choice");
 
-		final SelectItem selectType = new SelectItem();
+		selectType = new SelectItem();
 		selectType.setTitle("Select type");
 		selectType.setValueMap(valueMap);
 
@@ -97,19 +100,27 @@ public class GameTab extends Tab {
 	
 	private void createNewItem(String type) {
 		initGenericControls(type);
-		createButtton = new IButton("create");
+		horizontalButtons = new HLayout();
+		horizontalButtons.setWidth100();
+		IButton createButtton = new IButton("create");
 		createButtton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
+            	if (giCanvas.validateForm()){
+            	
             	JSONObject object = giCanvas.generateObject();
+            	System.out.println(object);
+            	
             	GeneralItemsClient.getInstance().createGeneralItem(object, new JsonCallback() {
         			public void onJsonReceived(JSONValue jsonValue) {
 		            	System.out.println("create complete");
 		            	removeGenericControls();
             		}
 				});
+            	}
             }  
         });  
-		layout.addMember(createButtton);
+		horizontalButtons.addMember(createButtton);
+		layout.addMember(horizontalButtons);
 	}
 	
 	private void editItem(final String type, int id) {
@@ -117,8 +128,12 @@ public class GameTab extends Tab {
 		GeneralItemsClient.getInstance().getGeneralItem(gameId, id, new JsonCallback() {
 			public void onJsonReceived(JSONValue jsonValue) {
 				initGenericControls(type);
+				selectType.setDisabled(true);
 				giCanvas.setItemValues(jsonValue);
-				createButtton = new IButton("save");
+				horizontalButtons = new HLayout();
+				horizontalButtons.setWidth100();
+				
+				IButton createButtton = new IButton("save");
 				createButtton.addClickHandler(new ClickHandler() {  
 		            public void onClick(ClickEvent event) {  
 		            	JSONObject object = giCanvas.generateObject();
@@ -131,7 +146,18 @@ public class GameTab extends Tab {
 						});
 		            }  
 		        });  
-				layout.addMember(createButtton);
+				IButton discardButton  = new IButton("discard");
+				discardButton.addClickHandler(new ClickHandler() {  
+		            public void onClick(ClickEvent event) {
+		            	selectType.setDisabled(false);
+		            	layout.removeChild(giCanvas);
+		            	layout.removeChild(horizontalButtons);
+		            	if (nonForm != null) layout.removeChild(nonForm);
+		            }
+				});
+				horizontalButtons.addMember(createButtton);
+				horizontalButtons.addMember(discardButton);
+				layout.addMember(horizontalButtons);
 			}
 		});
 		
@@ -150,9 +176,9 @@ public class GameTab extends Tab {
 			layout.removeChild(giCanvas);
 			giCanvas.markForDestroy();
 		}
-		if (createButtton != null) {
-			layout.removeChild(createButtton);
-			createButtton.markForDestroy();
+		if (horizontalButtons != null) {
+			layout.removeChild(horizontalButtons);
+			horizontalButtons.markForDestroy();
 		} 
 		if (nonForm != null) {
 			layout.removeChild(nonForm);

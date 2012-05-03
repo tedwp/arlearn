@@ -64,7 +64,7 @@ public abstract class GenericDataSource extends DataSource {
 	protected void addDerivedField(DerivedFieldTask task, boolean primaryKey, boolean hidden) {
 		derivedTaskList.add(task);
 		String attribute =  task.getTargetFieldName();
-		addField(INTEGER_DATA_TYPE,attribute, primaryKey, hidden);
+		addField(STRING_DATA_TYPE,attribute, primaryKey, hidden);
 		attributeList.remove(attribute);
 	}
 	

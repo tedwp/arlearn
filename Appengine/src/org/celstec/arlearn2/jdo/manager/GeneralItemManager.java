@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
@@ -25,9 +26,9 @@ import com.google.appengine.api.datastore.Text;
 public class GeneralItemManager {
 
 	
-	private static final String params[] = new String[]{"gameId", "generalItemId", "type"};
+	private static final String params[] = new String[]{"gameId", "id", "type"};
 	private static final String paramsNames[] = new String[]{"gameParam", "generalItemIdParam", "typeParam"};
-	private static final String types[] = new String[]{"Long", "String", "String"};
+	private static final String types[] = new String[]{"Long", "com.google.appengine.api.datastore.Key", "String"};
 
 
 	public static void addGeneralItem(GeneralItem bean) {
@@ -69,7 +70,7 @@ public class GeneralItemManager {
 	
 	private static List<GeneralItemJDO> getGeneralitems(PersistenceManager pm, Long gameId, String generalItemId, String type) {
 		Query query = pm.newQuery(GeneralItemJDO.class);
-		Object args [] ={gameId, generalItemId, type};
+		Object args [] ={gameId, generalItemId!=null?KeyFactory.createKey(GeneralItemJDO.class.getSimpleName(), Long.parseLong(generalItemId)):null, type};
 		query.setFilter(ManagerUtil.generateFilter(args, params, paramsNames));
 		query.declareParameters(ManagerUtil.generateDeclareParameters(args, types, params, paramsNames));
 		return (List<GeneralItemJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args));

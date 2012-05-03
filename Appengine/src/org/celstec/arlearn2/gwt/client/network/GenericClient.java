@@ -73,6 +73,10 @@ public class GenericClient {
 						Response response) {
 					if (200 == response.getStatusCode()) {
 						try {
+							if (response.getText().equals("")) {
+								jcb.onJsonReceived(new JSONObject());
+								return;
+							}
 							JSONValue jsonValue = JSONParser
 									.parseLenient(response.getText());
 							if (jsonValue.isObject() != null) {

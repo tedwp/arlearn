@@ -3,4 +3,5 @@
 	<inherits name="com.google.gwt.user.theme.standard.Standard"/>
 	<inherits name="com.smartgwt.SmartGwt"/>
 	<entry-point class="org.celstec.arlearn2.gwt.client.Authoring"/>
+	<!-- <extend-property name="locale" values="nl"/> -->
 </module>

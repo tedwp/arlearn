@@ -1,6 +1,7 @@
 package org.celstec.arlearn2.gwt.client.ui;
 
 import org.celstec.arlearn2.gwt.client.Authoring;
+import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 import org.celstec.arlearn2.gwt.client.control.Authentication;
 //import org.celstec.arlearn2.gwt.client.control.GameDataSource;
 import org.celstec.arlearn2.gwt.client.control.ReadyCallback;
@@ -23,6 +24,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.HeaderItem;
 import com.smartgwt.client.widgets.form.fields.HiddenItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
@@ -45,9 +47,13 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
+import com.google.gwt.core.client.GWT;
 
 public class GamesTab extends GenericTab {
 
+	 private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
+
+	  
 	public static ListGrid listGrid;
 	
 	public GamesTab() {
@@ -87,8 +93,8 @@ public class GamesTab extends GenericTab {
 	
 	private Canvas getNewGameForm() {		
 
-		HeaderItem header = new HeaderItem();
-		header.setDefaultValue("Create new Game");
+//		HeaderItem header = new HeaderItem();
+//		header.setDefaultValue(constants.createNewGame());
 
 		final TextItem titleGame = new TextItem("titleGame");
 		titleGame.setTitle("Game name");
@@ -96,15 +102,19 @@ public class GamesTab extends GenericTab {
 		titleGame.setWrapTitle(false);
 
 		final TextItem creatorGame = new TextItem("creator");
-		creatorGame.setTitle("Creator");
-
+		creatorGame.setTitle(constants.author());
 		creatorGame.setWrapTitle(false);
 
+		final CheckboxItem withMap = new CheckboxItem("withMap");
+		withMap.setTitle("With map");
+		withMap.setValue(true);
+		
+		
 		ButtonItem button = new ButtonItem("submit", "Submit");
 		// button.setStartRow(true);
 		button.setWidth(80);
 		button.setAlign(Alignment.RIGHT);
-		final DynamicForm form = getForm("Create new game", titleGame, creatorGame, new RowSpacerItem(),
+		final DynamicForm form = getForm(constants.createNewGame(), titleGame, creatorGame, withMap, new RowSpacerItem(),
 				button);
 		form.setWidth(285);
 		button.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
@@ -112,6 +122,7 @@ public class GamesTab extends GenericTab {
 				GameClient.getInstance().createGame(
 						form.getValueAsString("titleGame"),
 						form.getValueAsString("creator"),
+						(Boolean) form.getValue("withMap"),
 						new JsonCallback() {
 							
 							@Override
