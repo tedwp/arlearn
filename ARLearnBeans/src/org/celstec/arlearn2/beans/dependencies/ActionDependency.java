@@ -49,7 +49,8 @@ public class ActionDependency extends Dependency {
 		return minSatisfiedAt;
 	}
 	
-	private boolean nullSafeEquals(Object act1, Object act2) {
+	//TODO merge with method in superClass
+	public boolean nullSafeEquals(Object act1, Object act2) {
 		if (act2 == null || act1 == act2) return true;
 		if (act1 == null) return false;
 		return act1.equals(act2);

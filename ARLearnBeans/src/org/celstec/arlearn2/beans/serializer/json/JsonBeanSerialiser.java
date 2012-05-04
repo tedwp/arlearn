@@ -2,10 +2,14 @@ package org.celstec.arlearn2.beans.serializer.json;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
+import org.celstec.arlearn2.beans.deserializer.json.OpenQuestionDeserializer;
+import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.celstec.arlearn2.beans.serializer.BeanSerializer;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -16,13 +20,19 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		super(bean);
 	}
 
-	public Class getCustomSerialiser() {
-//		System.out.println(bean.getClass().getPackage().getName()+".serializer.json");
-		try {
-			return Class.forName(bean.getClass().getPackage().getName()+".serializer.json."+bean.getClass().getSimpleName());
-		} catch (ClassNotFoundException e) {
-			return null;
-		}
+	public JsonBean getCustomSerialiser() {
+//		try {
+//			return Class.forName(bean.getClass().getPackage().getName()+".serializer.json."+bean.getClass().getSimpleName());
+//		} catch (ClassNotFoundException e) {
+//			return null;
+//		}
+		return customSerializerMap.get(bean.getClass());
+	}
+	
+	private static HashMap<Class, JsonBean> customSerializerMap = new HashMap<Class, JsonBean>();
+
+	static {
+		customSerializerMap.put(OpenQuestion.class, new OpenQuestionSerializer());
 	}
 	
 	public JSONObject serialiseToJson() {
@@ -32,16 +42,17 @@ public class JsonBeanSerialiser extends BeanSerializer{
 	}
 
 	public JSONObject serialiseToJson(JSONObject returnJson) {
-		Class customSerialiser = getCustomSerialiser();
+		JsonBean customSerialiser = getCustomSerialiser();
 		if (customSerialiser !=null) {
-			try {
-				JsonBean jsonCustomSerialiser = (JsonBean) customSerialiser.newInstance();
-				return jsonCustomSerialiser.toJSON(bean);
-			} catch (InstantiationException  e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
+			return customSerialiser.toJSON(bean);
+//			try {
+//				JsonBean jsonCustomSerialiser = (JsonBean) customSerialiser.newInstance();
+//				return jsonCustomSerialiser.toJSON(bean);
+//			} catch (InstantiationException  e) {
+//				e.printStackTrace();
+//			} catch (IllegalAccessException e) {
+//				e.printStackTrace();
+//			}
 		}
 		Iterator<Field> it = getRelevantBeanProperties(bean.getClass()).iterator();
 		while (it.hasNext()) {

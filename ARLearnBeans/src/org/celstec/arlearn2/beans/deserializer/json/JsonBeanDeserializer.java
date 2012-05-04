@@ -10,7 +10,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.deserializer.BeanDeserializer;
+import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -108,6 +110,8 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 	}
 
 	public Object deserialize(Class beanCls) throws Exception {
+		CustomDeserializer cd = getCustomDeserializer(beanCls);
+		if (cd != null) return cd.toBean(json);
 		if (beanCls == null) {
 			return null;
 		}
@@ -147,6 +151,15 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		return returnObject;
 	}
 	
+	private CustomDeserializer getCustomDeserializer(Class beanCls) {
+		return customDeserializerMap.get(beanCls);
+	}
+	
+	private static HashMap<Class, CustomDeserializer> customDeserializerMap = new HashMap<Class, CustomDeserializer>();
+
+	static {
+		customDeserializerMap.put(OpenQuestionDeserializer.class, new OpenQuestionDeserializer());
+	}
 	private Method getDeclaredMethod(Class beanCls, String methodName, Class type) throws NoSuchMethodException {
 		try {
 			return beanCls.getDeclaredMethod(methodName, type);
