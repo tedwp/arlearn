@@ -1,16 +1,18 @@
 package org.celstec.arlearn2.beans.deserializer.json;
 
+import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.dependencies.AndDependency;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.dependencies.OrDependency;
 import org.celstec.arlearn2.beans.dependencies.TimeDependency;
 import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
+import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class DependencyDeserializer extends CustomDeserializer {
+public class DependencyDeserializer extends BeanDeserializer {
 
 	private final String ACTION_DEP = "org.celstec.arlearn2.beans.dependencies.ActionDependency";
 	private final String AND_DEP = "org.celstec.arlearn2.beans.dependencies.AndDependency";
@@ -21,16 +23,25 @@ public class DependencyDeserializer extends CustomDeserializer {
 	public Dependency toBean(JSONObject object) {
 		try {
 			if (!object.has("type")) return null;
-			String type = object.getString("type");
-			if (type == null) return null;
-			if (ACTION_DEP.equals(type)) return toBeanAction(object, type);
-			if (AND_DEP.equals(type)) return toAndAction(object, type);
-			if (OR_DEP.equals(type)) return toOrAction(object, type);
-			if (TIME_DEP.equals(type)) return toTimeAction(object, type);
+			return initBean(object);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public Dependency initBean(JSONObject object) throws JSONException {
+		Dependency dep = null;
+		String type = object.getString("type");
+		if (type != null) {
+		if (ACTION_DEP.equals(type)) dep = toBeanAction(object, type);
+		if (AND_DEP.equals(type)) dep = toAndAction(object, type);
+		if (OR_DEP.equals(type)) dep = toOrAction(object, type);
+		if (TIME_DEP.equals(type)) dep = toTimeAction(object, type);
+		super.initBean(object, dep);
+		}
+		return dep;
+		
 	}
 	
 	private Dependency toTimeAction(JSONObject object, String type) throws JSONException {

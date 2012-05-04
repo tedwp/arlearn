@@ -9,6 +9,19 @@ public class NarratorItem extends GeneralItem {
 	private String richText;
 	private OpenQuestion openQuestion;
 	
+	@Override
+	public boolean equals(Object obj) {
+		NarratorItem other = (NarratorItem ) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getVideoUrl(), other.getVideoUrl()) &&
+			nullSafeEquals(getAudioUrl(), other.getAudioUrl()) &&
+			nullSafeEquals(getImageUrl(), other.getImageUrl()) &&
+			nullSafeEquals(getText(), other.getText()) &&
+			nullSafeEquals(getRichText(), other.getRichText()) &&
+			nullSafeEquals(getOpenQuestion(), other.getOpenQuestion()) ; 
+
+	}
+	
 	public NarratorItem(){
 	 super();
 	}

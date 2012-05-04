@@ -15,6 +15,7 @@ import org.celstec.arlearn2.beans.dependencies.OrDependency;
 import org.celstec.arlearn2.beans.dependencies.TimeDependency;
 import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
 import org.celstec.arlearn2.beans.deserializer.json.OpenQuestionDeserializer;
+import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.celstec.arlearn2.beans.serializer.BeanSerializer;
 import org.codehaus.jettison.json.JSONArray;
@@ -47,6 +48,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 	private static HashMap<Class, JsonBean> customSerializerMap = new HashMap<Class, JsonBean>();
 
 	static {
+		customSerializerMap.put(NarratorItem.class, new NarratorItemSerializer());
 		customSerializerMap.put(OpenQuestion.class, new OpenQuestionSerializer());
 		customSerializerMap.put(Dependency.class, new DependencySerializer());
 		customSerializerMap.put(ActionDependency.class, new DependencySerializer());
