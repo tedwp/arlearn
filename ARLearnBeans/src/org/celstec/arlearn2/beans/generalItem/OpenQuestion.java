@@ -6,6 +6,7 @@ public class OpenQuestion extends Bean {
 
 	private boolean withAudio;
 	private boolean withPicture;
+	
 	public boolean isWithAudio() {
 		return withAudio;
 	}
@@ -19,5 +20,12 @@ public class OpenQuestion extends Bean {
 		this.withPicture = withPicture;
 	}
 	
-	
+	@Override
+	public boolean equals(Object obj) {
+		OpenQuestion other = (OpenQuestion ) obj;
+		return super.equals(obj) && 
+				 nullSafeEquals(isWithPicture(), other.isWithPicture()) && 
+						 nullSafeEquals(isWithAudio(), other.isWithAudio()); 
+
+	}
 }
