@@ -7,6 +7,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.celstec.arlearn2.beans.dependencies.ActionDependency;
+import org.celstec.arlearn2.beans.dependencies.AndDependency;
+import org.celstec.arlearn2.beans.dependencies.BooleanDependency;
+import org.celstec.arlearn2.beans.dependencies.Dependency;
+import org.celstec.arlearn2.beans.dependencies.OrDependency;
+import org.celstec.arlearn2.beans.dependencies.TimeDependency;
 import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
 import org.celstec.arlearn2.beans.deserializer.json.OpenQuestionDeserializer;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
@@ -29,12 +35,34 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		return customSerializerMap.get(bean.getClass());
 	}
 	
+	public static JsonBean getCustomSerialiser(Object bean) {
+//		try {
+//			return Class.forName(bean.getClass().getPackage().getName()+".serializer.json."+bean.getClass().getSimpleName());
+//		} catch (ClassNotFoundException e) {
+//			return null;
+//		}
+		return customSerializerMap.get(bean.getClass());
+	}
+	
 	private static HashMap<Class, JsonBean> customSerializerMap = new HashMap<Class, JsonBean>();
 
 	static {
 		customSerializerMap.put(OpenQuestion.class, new OpenQuestionSerializer());
+		customSerializerMap.put(Dependency.class, new DependencySerializer());
+		customSerializerMap.put(ActionDependency.class, new DependencySerializer());
+		customSerializerMap.put(TimeDependency.class, new DependencySerializer());
+		customSerializerMap.put(BooleanDependency.class, new DependencySerializer());
+		customSerializerMap.put(AndDependency.class, new DependencySerializer());
+		customSerializerMap.put(OrDependency.class, new DependencySerializer());
 	}
 	
+	public static JSONObject serialiseToJson(Object bean) {
+		JsonBean customSerialiser = getCustomSerialiser(bean);
+		if (customSerialiser !=null) {
+			return customSerialiser.toJSON(bean);
+		}
+		return null;
+	}
 	public JSONObject serialiseToJson() {
 		JSONObject returnJson = new JSONObject();
 		if (bean == null) return returnJson;

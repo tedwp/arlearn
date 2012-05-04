@@ -11,8 +11,12 @@ import java.util.List;
 import java.util.Vector;
 
 import org.celstec.arlearn2.beans.Bean;
+import org.celstec.arlearn2.beans.dependencies.ActionDependency;
+import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.deserializer.BeanDeserializer;
 import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -109,9 +113,16 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 
 	}
 
+	public static Object deserialize(Class beanCls, JSONObject json) {
+		CustomDeserializer cd = getCustomDeserializer(beanCls);
+		if (cd != null) return cd.toBean(json);
+		return null;
+	}
+	
 	public Object deserialize(Class beanCls) throws Exception {
 		CustomDeserializer cd = getCustomDeserializer(beanCls);
 		if (cd != null) return cd.toBean(json);
+		System.err.println("no custom deserializer for "+beanCls);
 		if (beanCls == null) {
 			return null;
 		}
@@ -151,14 +162,17 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		return returnObject;
 	}
 	
-	private CustomDeserializer getCustomDeserializer(Class beanCls) {
+	private static CustomDeserializer getCustomDeserializer(Class beanCls) {
 		return customDeserializerMap.get(beanCls);
 	}
 	
 	private static HashMap<Class, CustomDeserializer> customDeserializerMap = new HashMap<Class, CustomDeserializer>();
 
 	static {
-		customDeserializerMap.put(OpenQuestionDeserializer.class, new OpenQuestionDeserializer());
+		customDeserializerMap.put(GeneralItem.class, new GeneralItemDeserializer());
+		customDeserializerMap.put(OpenQuestion.class, new OpenQuestionDeserializer());
+		customDeserializerMap.put(Dependency.class, new DependencyDeserializer());
+		customDeserializerMap.put(ActionDependency.class, new DependencyDeserializer());
 	}
 	private Method getDeclaredMethod(Class beanCls, String methodName, Class type) throws NoSuchMethodException {
 		try {

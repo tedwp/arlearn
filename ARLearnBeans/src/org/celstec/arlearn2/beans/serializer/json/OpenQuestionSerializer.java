@@ -4,12 +4,12 @@ import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class OpenQuestionSerializer implements JsonBean{
+public class OpenQuestionSerializer extends BeanSerializer{
 
 	@Override
 	public JSONObject toJSON(Object bean) {
 		OpenQuestion openQuestion = (OpenQuestion) bean;
-		JSONObject returnObject = new JSONObject();
+		JSONObject returnObject = super.toJSON(bean);
 		try {
 			returnObject.put("withAudio", openQuestion.isWithAudio());
 			returnObject.put("withPicture", openQuestion.isWithPicture());
