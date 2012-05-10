@@ -34,5 +34,13 @@ public class MultipleChoiceAnswerItem extends Bean {
 	public void setAnswer(String answer) {
 		this.answer = answer;
 	}
+	
+	public boolean equals(Object obj) {
+		MultipleChoiceAnswerItem other = (MultipleChoiceAnswerItem ) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getId(), other.getId()) && 
+			nullSafeEquals(getIsCorrect(), other.getIsCorrect()) && 
+			nullSafeEquals(getAnswer(), other.getAnswer()) ; 
+	}
 
 }

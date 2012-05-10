@@ -18,9 +18,18 @@ import org.celstec.arlearn2.beans.dependencies.OrDependency;
 import org.celstec.arlearn2.beans.dependencies.TimeDependency;
 import org.celstec.arlearn2.beans.deserializer.BeanDeserializer;
 import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
+import org.celstec.arlearn2.beans.game.Config;
+import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
+import org.celstec.arlearn2.beans.generalItem.VideoObject;
+import org.celstec.arlearn2.beans.run.Run;
+import org.celstec.arlearn2.beans.run.RunBean;
+import org.celstec.arlearn2.beans.run.User;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -118,13 +127,25 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 	}
 
 	public static Object deserialize(Class beanCls, JSONObject json) {
-		CustomDeserializer cd = getCustomDeserializer(beanCls);
+		CustomDeserializer cd = null;
+		try {
+			if (json.has("type")) cd = getCustomDeserializer(json.getString("type"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		if (cd == null) cd = getCustomDeserializer(beanCls);
 		if (cd != null) return cd.toBean(json);
 		return null;
 	}
 	
 	public Object deserialize(Class beanCls) throws Exception {
-		CustomDeserializer cd = getCustomDeserializer(beanCls);
+		CustomDeserializer cd = null;
+		try {
+			if (json.has("type")) cd = getCustomDeserializer(json.getString("type"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		if (cd == null) cd = getCustomDeserializer(beanCls);
 		if (cd != null) return cd.toBean(json);
 		System.err.println("no custom deserializer for "+beanCls);
 		if (beanCls == null) {
@@ -170,18 +191,44 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		return customDeserializerMap.get(beanCls);
 	}
 	
+	private static CustomDeserializer getCustomDeserializer(String beanCls) {
+		return customDeserializerMapString.get(beanCls);
+	}
+	
 	private static HashMap<Class, CustomDeserializer> customDeserializerMap = new HashMap<Class, CustomDeserializer>();
+	private static HashMap<String, CustomDeserializer> customDeserializerMapString = new HashMap<String, CustomDeserializer>();
 
 	static {
+		NarratorItemDeserializer nid = new NarratorItemDeserializer();
+		AudioObjectDeserializer aod = new AudioObjectDeserializer();
+		VideoObjectDeserializer vod = new VideoObjectDeserializer();
+		MultipleChoiceTestDeserializer mct = new MultipleChoiceTestDeserializer();
+		
 		customDeserializerMap.put(GeneralItem.class, new GeneralItemDeserializer());
-		customDeserializerMap.put(NarratorItem.class, new NarratorItemDeserializer());
+		customDeserializerMap.put(NarratorItem.class, nid);
+		customDeserializerMap.put(AudioObject.class, aod);
+		customDeserializerMap.put(VideoObject.class, vod);
 		customDeserializerMap.put(OpenQuestion.class, new OpenQuestionDeserializer());
 		customDeserializerMap.put(Dependency.class, new DependencyDeserializer());
 		customDeserializerMap.put(ActionDependency.class, new DependencyDeserializer());
 		customDeserializerMap.put(AndDependency.class, new DependencyDeserializer());
 		customDeserializerMap.put(OrDependency.class, new DependencyDeserializer());
 		customDeserializerMap.put(TimeDependency.class, new DependencyDeserializer());
+		customDeserializerMap.put(Game.class, new GameDeserializer());
+		customDeserializerMap.put(Config.class, new ConfigDeserializer());
+		customDeserializerMap.put(RunBean.class, new RunBeanDeserializer());
+		customDeserializerMap.put(Run.class, new RunDeserializer());
+		customDeserializerMap.put(MultipleChoiceAnswerItem.class, new MultipleChoiceAnswerItemDeserializer());
+		customDeserializerMap.put(MultipleChoiceTest.class, mct);
+		customDeserializerMap.put(User.class, new UserDeserializer());
+
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.NarratorItem", nid);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.AudioObject", aod);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.VideoObject", vod);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest", mct);
 	}
+	
+	
 	private Method getDeclaredMethod(Class beanCls, String methodName, Class type) throws NoSuchMethodException {
 		try {
 			return beanCls.getDeclaredMethod(methodName, type);

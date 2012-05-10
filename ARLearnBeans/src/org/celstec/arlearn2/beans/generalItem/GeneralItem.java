@@ -1,5 +1,7 @@
 package org.celstec.arlearn2.beans.generalItem;
 
+import java.util.List;
+
 import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.game.DependsOn;
 import org.celstec.arlearn2.beans.game.GameBean;
@@ -28,6 +30,8 @@ public class GeneralItem extends GameBean{
 	
 	private String iconUrl;
 	
+	private List<String> roles;
+	
 	@Override
 	public boolean equals(Object obj) {
 		GeneralItem other = (GeneralItem ) obj;
@@ -42,8 +46,8 @@ public class GeneralItem extends GameBean{
 			nullSafeEquals(getShowAtTimeStamp(), other.getShowAtTimeStamp()) &&
 			nullSafeEquals(getLng(), other.getLng()) &&
 			nullSafeEquals(getLat(), other.getLat()) &&
-			nullSafeEquals(getIconUrl(), other.getIconUrl()) ; 
-
+			nullSafeEquals(getIconUrl(), other.getIconUrl()) &&
+			nullSafeEquals(getRoles(), other.getRoles()) ; 
 	}
 
 	/*
@@ -160,6 +164,15 @@ public class GeneralItem extends GameBean{
 	
 	public boolean isMessage() {
 		return (getLat() == null && getLng() == null);
+	}
+
+
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
 	}
 
 //	@Override

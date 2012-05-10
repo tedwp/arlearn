@@ -4,7 +4,7 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class GeneralItemSerializer extends BeanSerializer{
+public class GeneralItemSerializer extends GameBeanSerializer{
 
 	
 	@Override
@@ -23,6 +23,8 @@ public class GeneralItemSerializer extends BeanSerializer{
 			if (gi.getLng() != null) returnObject.put("lng", gi.getLng());
 			if (gi.getLat() != null) returnObject.put("lat", gi.getLat());
 			if (gi.getIconUrl() != null) returnObject.put("iconUrl", gi.getIconUrl());
+			if (gi.getRoles() != null) returnObject.put("roles", ListSerializer.toStringList(gi.getRoles()));
+
 			
 		} catch (JSONException e) {
 			e.printStackTrace();

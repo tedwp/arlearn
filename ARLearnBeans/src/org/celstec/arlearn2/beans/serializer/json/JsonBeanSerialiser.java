@@ -15,8 +15,16 @@ import org.celstec.arlearn2.beans.dependencies.OrDependency;
 import org.celstec.arlearn2.beans.dependencies.TimeDependency;
 import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
 import org.celstec.arlearn2.beans.deserializer.json.OpenQuestionDeserializer;
+import org.celstec.arlearn2.beans.game.Config;
+import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.generalItem.AudioObject;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
+import org.celstec.arlearn2.beans.generalItem.VideoObject;
+import org.celstec.arlearn2.beans.run.RunBean;
+import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.serializer.BeanSerializer;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -56,6 +64,15 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(BooleanDependency.class, new DependencySerializer());
 		customSerializerMap.put(AndDependency.class, new DependencySerializer());
 		customSerializerMap.put(OrDependency.class, new DependencySerializer());
+		customSerializerMap.put(Game.class, new GameSerializer());
+		customSerializerMap.put(Config.class, new ConfigSerializer());
+		customSerializerMap.put(Run.class, new RunSerializer());
+		customSerializerMap.put(RunBean.class, new RunBeanSerialiser());
+		customSerializerMap.put(AudioObject.class, new AudioObjectSerializer());
+		customSerializerMap.put(VideoObject.class, new VideoObjectSerializer());
+		customSerializerMap.put(MultipleChoiceTest.class, new MultipleChoiceTestSerializer());
+		customSerializerMap.put(MultipleChoiceAnswerItem.class, new MultipleChoiceAnswerItemSerializer());
+		customSerializerMap.put(User.class, new UserSerializer());
 	}
 	
 	public static JSONObject serialiseToJson(Object bean) {

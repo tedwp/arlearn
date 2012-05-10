@@ -7,7 +7,7 @@ import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.Team;
 import org.celstec.arlearn2.beans.run.User;
 
-public class RunPackage {
+public class RunPackage extends Bean{
 	private Run run;
 	private List<Team> teams = new ArrayList<Team>();
 	

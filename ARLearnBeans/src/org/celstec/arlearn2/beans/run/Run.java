@@ -15,6 +15,19 @@ public class Run extends RunBean implements Serializable{
 	private Long serverCreationTime;
 	private Game game;
 	
+	@Override
+	public boolean equals(Object obj) {
+		Run other = (Run ) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getGameId(), other.getGameId()) && 
+			nullSafeEquals(getTitle(), other.getTitle()) && 
+			nullSafeEquals(getOwner(), other.getOwner()) && 
+			nullSafeEquals(getStartTime(), other.getStartTime()) && 
+			nullSafeEquals(getServerCreationTime(), other.getServerCreationTime()) && 
+			nullSafeEquals(getGame(), other.getGame()); 
+
+	}
+	
 	@Deprecated
 	private DependsOn gameOverDependsOn;
 

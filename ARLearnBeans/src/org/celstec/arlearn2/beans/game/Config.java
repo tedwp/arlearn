@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.celstec.arlearn2.beans.Bean;
+import org.celstec.arlearn2.beans.dependencies.BooleanDependency;
+import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
 public class Config extends Bean {
@@ -14,7 +16,28 @@ public class Config extends Bean {
 	private Boolean mapAvailable;
 	public static String manualItemsType = "org.celstec.arlearn2.beans.generalItem.GeneralItem";
 	private List<GeneralItem> manualItems = new ArrayList<GeneralItem>();
+	private List<String> roles;
 
+	@Override
+	public boolean equals(Object obj) {
+		Config other = (Config ) obj;
+		
+//		List<GeneralItem> list1 = getManualItems();list1.equals(o)
+//		List<GeneralItem> list2 = other.getManualItems();
+//		if (!(list1.size() == list2.size())) return false;
+//		for (int i = 0 ; i< list1.size();i++) {
+//			if (!(list1.get(i).equals(list2.get(i)))) return false;
+//		}
+		
+		return super.equals(obj) && 
+			nullSafeEquals(getManualItems(), other.getManualItems()) && 	
+			nullSafeEquals(getScoring(), other.getScoring()) && 
+			nullSafeEquals(getRoles(), other.getRoles()) && 
+
+			nullSafeEquals(getMapAvailable(), other.getMapAvailable()); 
+
+	}
+	
 	public Boolean getScoring() {
 		return scoring;
 	}
@@ -37,6 +60,14 @@ public class Config extends Bean {
 
 	public void setManualItems(List<GeneralItem> manualItems) {
 		this.manualItems = manualItems;
+	}
+	
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
 	}
 	
 }

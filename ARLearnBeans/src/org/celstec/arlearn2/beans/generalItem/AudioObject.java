@@ -14,6 +14,13 @@ public class AudioObject extends NarratorItem {
 
 	public void setAudioFeed(String audioFeed) {
 		this.audioFeed = audioFeed;
-	}	
+	}
+	
+	public boolean equals(Object obj) {
+		AudioObject other = (AudioObject ) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getAudioFeed(), other.getAudioFeed()) ; 
+
+	}
 }
 
