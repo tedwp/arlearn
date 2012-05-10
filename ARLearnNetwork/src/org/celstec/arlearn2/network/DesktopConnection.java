@@ -57,14 +57,12 @@ public class DesktopConnection implements HttpConnection {
 		} catch (KeyManagementException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
 
 	}
 
-	@Override
 	public HttpResponse executeHttpsPOST(String url, String token, String accept, HttpEntity postData, String contentType) {
 		HttpClient httpClient = getHttpsClient();
 		try {
@@ -88,7 +86,7 @@ public class DesktopConnection implements HttpConnection {
 		return null;
 	}
 
-	@Override
+	
 	public HttpResponse executeGET(String url, String token, String accept) {
 		HttpClient httpClient = new DefaultHttpClient();
 		try {
@@ -108,7 +106,7 @@ public class DesktopConnection implements HttpConnection {
 		return null;
 	}
 
-	@Override
+	
 	public HttpResponse executePOST(String url, String token, String accept,
 			String postData, String contentType) {
 		HttpClient httpClient = new DefaultHttpClient();
@@ -133,7 +131,7 @@ public class DesktopConnection implements HttpConnection {
 		return null;
 	}
 	
-	@Override
+	
 	public HttpResponse executeDELETE(String url, String token, String accept) {
 		HttpClient httpClient = new DefaultHttpClient();
 		try {
