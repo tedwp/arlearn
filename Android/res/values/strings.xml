@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ARLearn2</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
+    
+     <!--Menu Strings-->
+    <string name="login">LOGIN</string>
+    <string name="logout">LOGOUT</string>
+    <string name="exit">EXIT</string>
+    
+     <!--Login Activity Strings-->
+    <string name="loginHeader">Aanmelden met uw Google account</string>
+    <string name="uNameHint">E-mail</string>
+    <string name="passwordHint">Wachtwoord</string>
+    <string name="emailMissing">Aanmelden niet geslaagd:\n gebruikersnaam ontbreekt</string>
+    <string name="pwMissing">Aanmelden niet geslaagd:\n wachtwoord ontbreekt</string>
+    <string name="serviceMissing">Aanmelden niet geslaagd:\n interne fout, service ontbreekt</string>
+    <string name="loginFailed">Aanmelden voor ***  is niet geslaagd</string>
+    <string name="checkCredentials">Verificatie wachtwoord</string>
+    
+    
+     <!--List Excursion Activity Strings-->
+    <string name="listExcursionsHeader">Selecteer een excursie</string>
+    <string name="loadingExcursions">Excursies worden geladen\n Even geduld</string>
+    
+    <!--Map View Activity Strings-->
+    <string name="mapViewHeader">Excursie</string>
+    <string name="messagesMenu">Messages</string>
+    <string name="myLocationMenu">My Location</string>
+    
+     <!--Multiple Choice Detail Activity Strings-->
+    <string name="mct_header">Multiple Choice Question</string>
+    <string name="mct_submit">Submit vote</string>
+    
+    <!--Audio Object Activity Strings-->
+    <string name="ao_answer_menu">Provide Answer</string>
+    
+    <!--Answer Activity Strings-->
+    <string name="answerQuestionHeader">Beantwoord vraag</string>
+    <string name="annotateCounterReset">00:00.0</string>
+    <string name="removePicture">Deze afbeelding verwijderen?</string>
+    <string name="gpsOff">GPS uitgeschakeld. Zet gps aan en publiceer opnieuw. </string>
+    <string name="nothingToPublish">Niets te publiceren</string>
+    
+    <!--Display Message Activity Strings-->
+    <string name="messageHeader">Message</string>
+    
+     <!-- View Answer Activity Strings-->
+    <string name="viewAnswerHeader">uw antwoord</string>
+    <string name="deleteAnswer">delete answer</string>
+    
+    <string name="listMessagesHeader">Message List</string>
+    
+     <!--Todo-->
+     <string name="makeAnnotation">Wil je hier een aantekening maken?</string>
+     <string name="reset">RESET</string>
+     <string name="refresh">REFRESH</string>
+     <string name="resetQuestion">Ben je zeker dat je al je vooruitgang wil verwijderen?</string>
+     
+     <string name="downloadBusy">Even geduld. Bestand is nog niet gedownloaded.</string>
+     
+</resources>

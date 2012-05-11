@@ -1,0 +1,40 @@
+<LinearLayout android:id="@+id/ni_linearLayout"
+	android:layout_width="fill_parent" android:layout_height="match_parent"
+	android:layout_gravity="bottom" android:orientation="vertical"
+	android:background="@android:color/white"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	
+	<ScrollView android:id="@+id/ni_scrollView"
+	 android:layout_width="fill_parent" 
+		android:layout_height="match_parent"
+		android:layout_gravity="bottom" android:layout_weight="2"
+		android:orientation="vertical">
+		
+		<LinearLayout
+      	android:orientation="vertical"
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:gravity="center_horizontal"  
+		android:layout_weight="0">
+            
+         <TextView
+            android:id="@+id/giNarratorDescription"
+            android:paddingRight="12dip"
+            android:paddingLeft="12dip"
+            android:padding="10dip"
+            android:text="hier str regels tekst."
+            android:textColor="@android:color/black"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:maxWidth="250dip"/>
+            
+	<WebView android:id="@+id/giNarratorWebView" 
+		android:layout_width="fill_parent"
+		android:layout_height="match_parent"></WebView>
+
+		</LinearLayout>
+             </ScrollView> 
+	 
+	
+	 
+	
+</LinearLayout>

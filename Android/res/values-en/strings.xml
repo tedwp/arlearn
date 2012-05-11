@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ARLearn2</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    
+     <!--Menu Strings-->
+    <string name="login">LOGIN</string>
+    <string name="logout">LOGOUT</string>
+    <string name="exit">EXIT</string>
+    
+     <!--Login Activity Strings-->
+    <string name="loginHeader">Login with your Google account</string>
+    <string name="uNameHint">E-mail</string>
+    <string name="passwordHint">Password</string>
+    <string name="emailMissing">Login was unsuccessful:\n E-mail is missing</string>
+    <string name="pwMissing">Login was unsuccessful:\n password is missing</string>
+    <string name="serviceMissing">Login was unsuccessful:\n internal error, service missing</string>
+    <string name="loginFailed">Login for ***  did not succeed</string>
+    <string name="checkCredentials">Verifying credentials</string>
+    
+    
+     <!--List Excursion Activity Strings-->
+    <string name="listExcursionsHeader">Select an excursion</string>
+    <string name="loadingExcursions">Loading excursions</string>
+    
+    <!--Map View Activity Strings-->
+    <string name="mapViewHeader">Excursion</string>
+    <string name="messagesMenu">Messages</string>
+    <string name="myLocationMenu">My Location</string>
+    
+     <!--Multiple Choice Detail Activity Strings-->
+    <string name="mct_header">Multiple Choice Question</string>
+    <string name="mct_submit">Submit answer</string>
+    
+    <!--Audio Object Activity Strings-->
+    <string name="ao_answer_menu">Provide Answer</string>
+    
+    <!--Answer Activity Strings-->
+    <string name="answerQuestionHeader">Answer question</string>
+    <string name="annotateCounterReset">00:00.0</string>
+    <string name="removePicture">Delete this image?</string>
+    <string name="gpsOff">GPS is switchedoff. Switch on GPS, and try again </string>
+    <string name="nothingToPublish">Nothing to publish</string>
+    
+    <!--Display Message Activity Strings-->
+    <string name="messageHeader">Message</string>
+    
+     <!-- View Answer Activity Strings-->
+    <string name="viewAnswerHeader">your answer</string>
+    <string name="deleteAnswer">delete answer</string>
+    
+    <string name="listMessagesHeader">Message List</string>
+    
+     <string name="makeAnnotation">Do you want to create an annotation here?</string>
+     <string name="reset">RESET</string>
+     <string name="refresh">REFRESH</string>
+     <string name="resetQuestion">Are you sure that you want to delete all progress?</string>
+     
+        <string name="downloadBusy">Patience. File has not yet been downloaded</string>
+    
+</resources>

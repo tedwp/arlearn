@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/fv_linearlayout"
+	android:orientation="vertical" 
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@android:color/white"
+	android:minWidth="280dip"
+	>
+	
+  
+	<ScrollView android:id="@+id/scrollView"
+	 android:layout_width="fill_parent" 
+		android:layout_height="match_parent"
+		android:layout_gravity="bottom" android:layout_weight="2"
+		android:orientation="vertical">
+		<LinearLayout 		android:id="@+id/playButtons"
+      	android:orientation="vertical"
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:gravity="center_horizontal"  
+		android:layout_weight="0">
+		
+		<TextView
+            android:id="@+id/ao_description"
+            android:paddingRight="12dip"
+            android:paddingLeft="12dip"
+            android:padding="10dip"
+            android:text="hier str regels tekst."
+             android:textColor="@android:color/black"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:maxWidth="250dip"/>
+		<WebView  android:id="@+id/ao_webview"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content" />
+		</LinearLayout>
+             </ScrollView>
+            
+      <LinearLayout 		android:id="@+id/playButtons"
+      	android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:gravity="center_horizontal"  
+		android:layout_weight="0">
+		<ImageView android:id="@+id/ao_playButton" 
+			android:src="@drawable/black_play"
+			android:layout_width="wrap_content" 
+			android:layout_height="fill_parent"
+			android:layout_weight="0" />
+		<ImageView android:id="@+id/ao_stopButton" 
+		android:src="@drawable/grey_stop"
+			android:layout_width="wrap_content" 
+			android:layout_height="fill_parent"
+			android:layout_weight="0" />
+       </LinearLayout>
+
+	
+</LinearLayout>
