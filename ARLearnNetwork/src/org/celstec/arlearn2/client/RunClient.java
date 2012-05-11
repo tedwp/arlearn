@@ -23,6 +23,10 @@ public class RunClient extends GenericClient{
 		return instance;
 	}
 	
+	public Run getRun(long runId, String token) {
+		return (Run) executeGet(getUrlPrefix()+"/runId/"+runId, token, Run.class);
+	}
+	
 	public RunList getRuns (String token) {
 		HttpResponse response = conn.executeGET(getUrlPrefix(), token, "application/json");
 		String entry;

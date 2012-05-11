@@ -47,7 +47,7 @@ public class GenericClient {
 		protected Object executeGet(String url, String token,@SuppressWarnings("rawtypes")  Class beanClass) {
 			HttpResponse response = conn.executeGET(url, token, "application/json");
 			try {
-				return (GeneralItemList) jsonDeserialise(EntityUtils.toString(response.getEntity()), beanClass);
+				return jsonDeserialise(EntityUtils.toString(response.getEntity()), beanClass);
 			} catch (Exception e) {
 				return returnError(beanClass, e);	
 			}
