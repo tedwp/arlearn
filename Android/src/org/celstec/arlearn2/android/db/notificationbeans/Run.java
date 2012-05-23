@@ -57,6 +57,8 @@ public class Run extends NotificationBean {
 		rs.runAuthenticated();
 		GameSyncroniser gs = new GameSyncroniser(ctx);
 		gs.runAuthenticated();
+		GeneralItemsSyncroniser.syncronizeItems(ctx, new PropertiesAdapter(ctx), runId);
+		
 	}
 	
 	private void deleteRunFromDatabase(Context ctx) {
