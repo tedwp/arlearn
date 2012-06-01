@@ -7,13 +7,17 @@ import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
+import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.UserJDO;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Text;
 
 public class UserManager {
 
@@ -21,14 +25,16 @@ public class UserManager {
 	private static final String paramsNames[] = new String[]{"nameParam", "emailParam", "teamIdParam", "runIdParam"};
 	private static final String types[] = new String[]{"String", "String", "String", "Long"};
 
-	public static void addUser(Long runId, String teamId, String email, String name) {
+	public static void addUser(User bean) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		UserJDO user = new UserJDO();
-		user.setTeamId(teamId);
-		user.setName(name);
-		user.setRunId(runId);
-		user.setEmail(email);
+		user.setTeamId(bean.getTeamId());
+		user.setName(bean.getName());
+		user.setRunId(bean.getRunId());
+		user.setEmail(bean.getEmail());
 		user.setId();
+		JsonBeanSerialiser jbs = new JsonBeanSerialiser(bean);
+		user.setPayload(new Text(jbs.serialiseToJson().toString()));
 		try {
 			pm.makePersistent(user);
 		} finally {
@@ -102,7 +108,14 @@ public class UserManager {
 	private static User toBean(UserJDO jdo) {
 		if (jdo == null)
 			return null;
-		User userBean = new User();
+		User userBean = null;
+		try {
+			JsonBeanDeserializer jbd = new JsonBeanDeserializer(jdo.getPayload().getValue());
+			userBean = (User) jbd.deserialize(User.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			userBean = new User();
+		}
 		userBean.setName(jdo.getName());
 		userBean.setRunId(jdo.getRunId());
 		userBean.setTeamId(jdo.getTeamId());

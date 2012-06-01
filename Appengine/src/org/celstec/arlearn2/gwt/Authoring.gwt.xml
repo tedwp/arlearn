@@ -1,0 +1,10 @@
+<module>
+	<inherits name="com.google.gwt.user.User"/>
+	<inherits name="com.google.gwt.user.theme.standard.Standard"/>
+	<inherits name="com.smartgwt.SmartGwt"/>
+	<inherits name='com.google.gwt.appengine.channel.Channel'/>
+	<inherits name='com.google.gwt.maps.GoogleMaps' />
+	
+	<entry-point class="org.celstec.arlearn2.gwt.client.Authoring"/>
+	<extend-property name="locale" values="nl"/>
+</module>

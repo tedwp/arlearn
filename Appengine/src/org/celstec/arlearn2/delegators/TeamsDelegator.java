@@ -8,6 +8,7 @@ import org.celstec.arlearn2.beans.run.TeamList;
 import org.celstec.arlearn2.jdo.manager.TeamManager;
 import org.celstec.arlearn2.tasks.beans.DeleteUsers;
 import org.celstec.arlearn2.cache.TeamsCache;
+import org.celstec.arlearn2.cache.UsersCache;
 
 import com.google.gdata.util.AuthenticationException;
 
@@ -72,10 +73,13 @@ public class TeamsDelegator extends GoogleDelegator {
 		}
 	}
 	
-	public void deleteTeam(String teamId) {
+	public Team deleteTeam(String teamId) {
 		TeamsCache.getInstance().removeTeam(teamId);
-		TeamManager.deleteTeam(teamId);
+		Team t = TeamManager.deleteTeam(teamId);
+		TeamsCache.getInstance().removeTeams(t.getRunId());
+		UsersCache.getInstance().removeUser(t.getRunId());
 		(new DeleteUsers(getAuthToken(), null, null, teamId)).scheduleTask();
 		//TODO test if deleting users works...
+		return t;
 	}
 }

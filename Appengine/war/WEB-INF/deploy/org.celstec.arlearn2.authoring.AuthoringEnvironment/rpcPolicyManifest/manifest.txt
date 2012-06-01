@@ -1,0 +1,2 @@
+# Module org.celstec.arlearn2.authoring.AuthoringEnvironment
+# RPC service class, partial path of RPC policy file

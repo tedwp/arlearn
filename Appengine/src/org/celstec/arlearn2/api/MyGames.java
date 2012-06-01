@@ -64,4 +64,41 @@ public class MyGames extends Service {
 		GameDelegator cg = new GameDelegator(token);
 		return serialise(cg.deleteGame(gameIdentifier), accept);
 	}
+	
+	//ROLES
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("/config/gameId/{gameIdentifier}")
+	public String getRoles(@HeaderParam("Authorization") String token, @PathParam("gameIdentifier") Long gameIdentifier, @DefaultValue("application/json") @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GameDelegator qg = new GameDelegator(token);
+		Game g = qg.getGame(gameIdentifier);
+		if (g == null) return "{}";
+		if (g.getError() != null) serialise(qg.getGame(gameIdentifier), accept);
+		if (g.getConfig() != null && g.getConfig() != null) {
+			return serialise(g.getConfig(), accept);
+		} else {
+			return "{}";
+		}
+		
+	}
+	
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Path("/config/gameId/{gameIdentifier}/role")
+	public String createRole(@HeaderParam("Authorization") String token, String roleString, 
+			@PathParam("gameIdentifier") Long gameIdentifier,
+			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		System.out.println("role ontvangen "+roleString);
+		GameDelegator qg = new GameDelegator(token);
+		return serialise(qg.createRole(gameIdentifier, roleString), accept);
+	}
+	
+	
 }

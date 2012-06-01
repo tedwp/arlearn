@@ -1,8 +1,10 @@
 package org.celstec.arlearn2.delegators;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.cache.MyGamesCache;
@@ -128,5 +130,16 @@ public class GameDelegator extends GoogleDelegator{
 //				.param(AsyncTasksServlet.GAMEID, ""+gameIdentifier)
 //				.param(AsyncTasksServlet.EMAIL, myAccount));
 		return g;
+	}
+	public Game createRole(Long gameIdentifier, String roleString) {
+		Game g = getGame(gameIdentifier); 
+		if (g.getError() != null)return g;
+		if (g.getConfig() == null) g.setConfig(new Config());
+		Config c =g.getConfig(); 
+		if (c.getRoles() == null) c.setRoles(new ArrayList<String>());
+		c.getRoles().add(roleString);
+		createGame(g);
+		return g;
+		
 	}
 }

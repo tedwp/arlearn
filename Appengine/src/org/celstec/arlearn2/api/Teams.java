@@ -72,8 +72,8 @@ public class Teams extends Service {
 			return serialise(getInvalidCredentialsBean(), accept);
 
 		TeamsDelegator td = new TeamsDelegator(verifyCredentials(token));
-		td.deleteTeam(teamId);
-		return null;
+		String returnStirng =serialise(td.deleteTeam(teamId), accept);
+		return returnStirng;
 
 	}
 
