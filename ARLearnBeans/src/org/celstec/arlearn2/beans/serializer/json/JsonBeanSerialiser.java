@@ -7,9 +7,24 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.celstec.arlearn2.beans.dependencies.ActionDependency;
+import org.celstec.arlearn2.beans.dependencies.AndDependency;
+import org.celstec.arlearn2.beans.dependencies.BooleanDependency;
+import org.celstec.arlearn2.beans.dependencies.Dependency;
+import org.celstec.arlearn2.beans.dependencies.OrDependency;
+import org.celstec.arlearn2.beans.dependencies.TimeDependency;
 import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
 import org.celstec.arlearn2.beans.deserializer.json.OpenQuestionDeserializer;
+import org.celstec.arlearn2.beans.game.Config;
+import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.generalItem.AudioObject;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
+import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
+import org.celstec.arlearn2.beans.generalItem.VideoObject;
+import org.celstec.arlearn2.beans.run.RunBean;
+import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.serializer.BeanSerializer;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -29,12 +44,44 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		return customSerializerMap.get(bean.getClass());
 	}
 	
+	public static JsonBean getCustomSerialiser(Object bean) {
+//		try {
+//			return Class.forName(bean.getClass().getPackage().getName()+".serializer.json."+bean.getClass().getSimpleName());
+//		} catch (ClassNotFoundException e) {
+//			return null;
+//		}
+		return customSerializerMap.get(bean.getClass());
+	}
+	
 	private static HashMap<Class, JsonBean> customSerializerMap = new HashMap<Class, JsonBean>();
 
 	static {
+		customSerializerMap.put(NarratorItem.class, new NarratorItemSerializer());
 		customSerializerMap.put(OpenQuestion.class, new OpenQuestionSerializer());
+		customSerializerMap.put(Dependency.class, new DependencySerializer());
+		customSerializerMap.put(ActionDependency.class, new DependencySerializer());
+		customSerializerMap.put(TimeDependency.class, new DependencySerializer());
+		customSerializerMap.put(BooleanDependency.class, new DependencySerializer());
+		customSerializerMap.put(AndDependency.class, new DependencySerializer());
+		customSerializerMap.put(OrDependency.class, new DependencySerializer());
+		customSerializerMap.put(Game.class, new GameSerializer());
+		customSerializerMap.put(Config.class, new ConfigSerializer());
+		customSerializerMap.put(Run.class, new RunSerializer());
+		customSerializerMap.put(RunBean.class, new RunBeanSerialiser());
+		customSerializerMap.put(AudioObject.class, new AudioObjectSerializer());
+		customSerializerMap.put(VideoObject.class, new VideoObjectSerializer());
+		customSerializerMap.put(MultipleChoiceTest.class, new MultipleChoiceTestSerializer());
+		customSerializerMap.put(MultipleChoiceAnswerItem.class, new MultipleChoiceAnswerItemSerializer());
+		customSerializerMap.put(User.class, new UserSerializer());
 	}
 	
+	public static JSONObject serialiseToJson(Object bean) {
+		JsonBean customSerialiser = getCustomSerialiser(bean);
+		if (customSerialiser !=null) {
+			return customSerialiser.toJSON(bean);
+		}
+		return null;
+	}
 	public JSONObject serialiseToJson() {
 		JSONObject returnJson = new JSONObject();
 		if (bean == null) return returnJson;

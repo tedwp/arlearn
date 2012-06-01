@@ -3,6 +3,7 @@ package org.celstec.arlearn2.beans.dependencies;
 import java.util.Iterator;
 import java.util.List;
 
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.Action;
 
 public class ActionDependency extends Dependency {
@@ -49,12 +50,21 @@ public class ActionDependency extends Dependency {
 		return minSatisfiedAt;
 	}
 	
-	//TODO merge with method in superClass
-	public boolean nullSafeEquals(Object act1, Object act2) {
-		if (act2 == null || act1 == act2) return true;
-		if (act1 == null) return false;
-		return act1.equals(act2);
-	}
+//	//TODO merge with method in superClass
+//	public boolean nullSafeEquals(Object act1, Object act2) {
+//		if (act2 == null || act1 == act2) return true;
+//		if (act1 == null) return false;
+//		return act1.equals(act2);
+//	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		ActionDependency other = (ActionDependency ) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getAction(), other.getAction()) &&
+			nullSafeEquals(getGeneralItemId(), other.getGeneralItemId()) &&
+			nullSafeEquals(getGeneralItemType(), other.getGeneralItemType()) ; 
+
+	}
 	
 }

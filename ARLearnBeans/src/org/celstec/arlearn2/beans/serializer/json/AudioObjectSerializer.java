@@ -1,18 +1,17 @@
 package org.celstec.arlearn2.beans.serializer.json;
 
-import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
+import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class OpenQuestionSerializer extends BeanSerializer{
+public class AudioObjectSerializer extends NarratorItemSerializer {
 
 	@Override
 	public JSONObject toJSON(Object bean) {
-		OpenQuestion openQuestion = (OpenQuestion) bean;
+		AudioObject gi = (AudioObject) bean;
 		JSONObject returnObject = super.toJSON(bean);
 		try {
-			returnObject.put("withAudio", openQuestion.isWithAudio());
-			returnObject.put("withPicture", openQuestion.isWithPicture());
+			if (gi.getAudioFeed() != null) returnObject.put("audioFeed", gi.getAudioFeed());			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

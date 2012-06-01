@@ -1,4 +1,4 @@
-package org.celstec.arlearn2.beans.generalItem;
+ package org.celstec.arlearn2.beans.generalItem;
 
 import java.util.ArrayList;
 import java.util.List;

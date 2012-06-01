@@ -45,4 +45,12 @@ public class TimeDependency extends Dependency{
 		return  satisfiedAt;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		TimeDependency other = (TimeDependency ) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getOffset(), other.getOffset()) &&
+			nullSafeEquals(getTimeDelta(), other.getTimeDelta())  ; 
+
+	}
 }

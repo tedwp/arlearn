@@ -1,5 +1,7 @@
 package org.celstec.arlearn2.beans.generalItem;
 
+import java.util.List;
+
 import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.game.DependsOn;
 import org.celstec.arlearn2.beans.game.GameBean;
@@ -27,6 +29,26 @@ public class GeneralItem extends GameBean{
 	private Double lat;
 	
 	private String iconUrl;
+	
+	private List<String> roles;
+	
+	@Override
+	public boolean equals(Object obj) {
+		GeneralItem other = (GeneralItem ) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getId(), other.getId()) &&
+			nullSafeEquals(getScope(), other.getScope()) &&
+			nullSafeEquals(getName(), other.getName()) &&
+			nullSafeEquals(getDescription(), other.getDescription()) &&
+			nullSafeEquals(getDependsOn(), other.getDependsOn()) &&
+			nullSafeEquals(getType(), other.getType()) &&
+			nullSafeEquals(getRadius(), other.getRadius()) &&
+			nullSafeEquals(getShowAtTimeStamp(), other.getShowAtTimeStamp()) &&
+			nullSafeEquals(getLng(), other.getLng()) &&
+			nullSafeEquals(getLat(), other.getLat()) &&
+			nullSafeEquals(getIconUrl(), other.getIconUrl()) &&
+			nullSafeEquals(getRoles(), other.getRoles()) ; 
+	}
 
 	/*
 	 * Only relevant for the Android client
@@ -144,10 +166,19 @@ public class GeneralItem extends GameBean{
 		return (getLat() == null && getLng() == null);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		return this.toString().equals(obj.toString());
+
+	public List<String> getRoles() {
+		return roles;
 	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
+	}
+
+//	@Override
+//	public boolean equals(Object obj) {
+//		return this.toString().equals(obj.toString());
+//	}
 	
 	
 	

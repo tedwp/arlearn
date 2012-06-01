@@ -1,5 +1,9 @@
 package org.celstec.arlearn2.beans.run;
 
+import java.util.List;
+
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+
 
 public class User extends RunBean{
 
@@ -7,11 +11,23 @@ public class User extends RunBean{
 	private String email;
 	private String name;
 
+	private List<String> roles;
+
 	private Double lng;
 	private Double lat;
 	
 	public User() {
 		
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		User other = (User) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getTeamId(), other.getTeamId()) &&
+			nullSafeEquals(getEmail(), other.getEmail()) &&
+			nullSafeEquals(getName(), other.getName()) &&
+			nullSafeEquals(getRoles(), other.getRoles()) ; 
 	}
 
 	public String getTeamId() {
@@ -54,7 +70,13 @@ public class User extends RunBean{
 		this.lat = lat;
 	}
 	
-	
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
+	}
 	
 	
 }

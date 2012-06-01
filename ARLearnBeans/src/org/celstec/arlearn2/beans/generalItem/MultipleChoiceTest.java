@@ -34,5 +34,14 @@ public class MultipleChoiceTest extends GeneralItem {
 		this.text = text;
 	}
 	
+	public boolean equals(Object obj) {
+		MultipleChoiceTest other = (MultipleChoiceTest ) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getAnswers(), other.getAnswers()) && 
+			nullSafeEquals(getText(), other.getText()) && 
+			nullSafeEquals(getRichText(), other.getRichText()) ; 
+
+	}
+	
 	
 }

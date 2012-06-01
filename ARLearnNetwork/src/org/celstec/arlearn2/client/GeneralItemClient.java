@@ -19,16 +19,6 @@ public class GeneralItemClient extends GenericClient{
 	}
 	
 	public GeneralItemList getRunGeneralItems(String token, Long runId) {
-		HttpResponse response = conn.executeGET(getUrlPrefix()+"/runId/"+runId, token, "application/json");
-		String entry;
-		try {
-			entry = EntityUtils.toString(response.getEntity());
-			return (GeneralItemList) jsonDeserialise(entry, GeneralItemList.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-			GeneralItemList gil = new GeneralItemList();
-			gil.setError("exception "+e.getMessage());
-			return gil;
-		}
+		return (GeneralItemList)  executeGet(getUrlPrefix()+"/runId/"+runId, token, GeneralItemList.class);
 	}
 }

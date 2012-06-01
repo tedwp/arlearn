@@ -1,18 +1,17 @@
 package org.celstec.arlearn2.beans.serializer.json;
 
-import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
+import org.celstec.arlearn2.beans.game.GameBean;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class OpenQuestionSerializer extends BeanSerializer{
+public class GameBeanSerializer extends BeanSerializer{
 
 	@Override
 	public JSONObject toJSON(Object bean) {
-		OpenQuestion openQuestion = (OpenQuestion) bean;
+		GameBean gameBean = (GameBean) bean;
 		JSONObject returnObject = super.toJSON(bean);
 		try {
-			returnObject.put("withAudio", openQuestion.isWithAudio());
-			returnObject.put("withPicture", openQuestion.isWithPicture());
+			if (gameBean.getGameId() != null) returnObject.put("gameId", gameBean.getGameId());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

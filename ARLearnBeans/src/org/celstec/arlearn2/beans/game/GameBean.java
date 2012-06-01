@@ -14,5 +14,12 @@ public class GameBean extends Bean{
 		this.gameId = gameId;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		GameBean other = (GameBean ) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getGameId(), other.getGameId()); 
+
+	}
 }
 

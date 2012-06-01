@@ -57,5 +57,18 @@ public class Game extends GameBean implements Serializable{
 		this.config = config;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		Game other = (Game ) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getTitle(), other.getTitle()) && 
+			nullSafeEquals(getCreator(), other.getCreator()) && 
+			nullSafeEquals(getOwner(), other.getOwner()) && 
+			nullSafeEquals(getFeedUrl(), other.getFeedUrl()) && 
+			nullSafeEquals(getConfig(), other.getConfig()); 
+
+	}
+	
+	
 }
 

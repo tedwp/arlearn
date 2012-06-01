@@ -4,6 +4,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
+import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.celstec.arlearn2.network.ConnectionFactory;
 import org.celstec.arlearn2.network.HttpConnection;
@@ -31,7 +32,7 @@ public class GenericClient {
 			return jbs.serialiseToJson().toString();
 		}
 		
-		protected Object jsonDeserialise(String beanString, Class beanClass) {
+		protected Object jsonDeserialise(String beanString, @SuppressWarnings("rawtypes") Class beanClass) {
 			JsonBeanDeserializer jbd;
 			try {
 				jbd = new JsonBeanDeserializer(beanString);
@@ -43,44 +44,43 @@ public class GenericClient {
 			}
 		}
 		
-		protected Object executePost(String url, String token, Object bean, Class beanClass) {
-			HttpResponse response = ConnectionFactory.getConnection().executePOST(url, token, "application/json", toJson(bean), "application/json");
-			String entry;
+		protected Object executeGet(String url, String token,@SuppressWarnings("rawtypes")  Class beanClass) {
+			HttpResponse response = conn.executeGET(url, token, "application/json");
 			try {
-				entry = EntityUtils.toString(response.getEntity());
-				return jsonDeserialise(entry, beanClass);
+				return (GeneralItemList) jsonDeserialise(EntityUtils.toString(response.getEntity()), beanClass);
 			} catch (Exception e) {
-				e.printStackTrace();
-				Bean b;
-				try {
-					b = (Bean) Class.forName(beanClass.getName()).getConstructor().newInstance();
-					b.setError("exception "+e.getMessage());
-					return b;
-				} catch (Exception e1) {
-					return null;
-				} 		
+				return returnError(beanClass, e);	
 			}
 		}
 		
-		protected Object executeDelete(String url, String token, Class beanClass) {
-			HttpResponse response =ConnectionFactory.getConnection().executeDELETE(url, token, "application/json");
-
-			String entry;
+		
+		
+		protected Object executePost(String url, String token, Object bean, @SuppressWarnings("rawtypes") Class beanClass) {
+			HttpResponse response = ConnectionFactory.getConnection().executePOST(url, token, "application/json", toJson(bean), "application/json");
 			try {
-				entry = EntityUtils.toString(response.getEntity());
-				return jsonDeserialise(entry, beanClass);
+				return jsonDeserialise(EntityUtils.toString(response.getEntity()), beanClass);
 			} catch (Exception e) {
-				e.printStackTrace();
-				Bean b;
-				try {
-					b = (Bean) Class.forName(beanClass.getName()).getConstructor().newInstance();
-					b.setError("exception "+e.getMessage());
-					return b;
-				} catch (Exception e1) {
-					return null;
-				} 		
+				return returnError(beanClass, e);
+			}
+		}
+		
+		protected Object executeDelete(String url, String token, @SuppressWarnings("rawtypes") Class beanClass) {
+			HttpResponse response =ConnectionFactory.getConnection().executeDELETE(url, token, "application/json");
+			try {
+				return jsonDeserialise(EntityUtils.toString(response.getEntity()), beanClass);
+			} catch (Exception e) {
+				return returnError(beanClass, e);
 			}
 		}
 
-
+		private Object returnError(Class beanClass, Exception e) {
+			Bean b;
+			try {
+				b = (Bean) Class.forName(beanClass.getName()).getConstructor().newInstance();
+				b.setError("exception "+e.getMessage());
+				return b;
+			} catch (Exception e1) {
+				return null;
+			} 	
+		}
 }
