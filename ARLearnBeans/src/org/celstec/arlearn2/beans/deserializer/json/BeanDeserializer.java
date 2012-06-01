@@ -19,6 +19,7 @@ public class BeanDeserializer  extends CustomDeserializer {
 	}
 	
 	public void initBean(JSONObject object, Bean bean) throws JSONException {
+		if (object.has("type")) bean.setType(object.getString("type"));
 		if (object.has("error")) bean.setError(object.getString("error"));
 		if (object.has("errorCode")) bean.setErrorCode(object.getInt("errorCode"));
 		if (object.has("timestamp")) bean.setTimestamp(object.getLong("timestamp"));

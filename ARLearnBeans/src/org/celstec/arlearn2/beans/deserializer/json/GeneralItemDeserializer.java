@@ -25,10 +25,10 @@ public class GeneralItemDeserializer extends GameBeanDeserializer {
 		super.initBean(object, genericBean);
 		GeneralItem gi = (GeneralItem) genericBean;
 		if (object.has("id")) gi.setId(object.getLong("id"));
+		if (object.has("sortKey")) gi.setSortKey(object.getInt("sortKey"));
 		if (object.has("scope")) gi.setScope(object.getString("scope"));
 		if (object.has("name")) gi.setName(object.getString("name"));
 		if (object.has("description")) gi.setDescription(object.getString("description"));
-		if (object.has("type")) gi.setType(object.getString("type"));
 		if (object.has("iconUrl")) gi.setIconUrl(object.getString("iconUrl"));
 		if (object.has("radius")) gi.setRadius(object.getInt("radius"));
 		if (object.has("showAtTimeStamp")) gi.setShowAtTimeStamp(object.getLong("showAtTimeStamp"));

@@ -138,6 +138,20 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		return null;
 	}
 	
+	public static Object deserialize(String json) throws JSONException {
+		return deserialize(new JSONObject(json));
+	}
+	public static Object deserialize(JSONObject json) {
+		CustomDeserializer cd = null;
+		try {
+			if (json.has("type")) cd = getCustomDeserializer(json.getString("type"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		if (cd != null) return cd.toBean(json);
+		return null;
+	}
+	
 	public Object deserialize(Class beanCls) throws Exception {
 		CustomDeserializer cd = null;
 		try {
@@ -222,6 +236,7 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMap.put(MultipleChoiceTest.class, mct);
 		customDeserializerMap.put(User.class, new UserDeserializer());
 
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.authoring.GameCreationStatus", new GameCreationStatusDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.NarratorItem", nid);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.AudioObject", aod);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.VideoObject", vod);

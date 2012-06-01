@@ -11,10 +11,23 @@ public class Bean  implements Serializable {
 	 */
 	public static final int RUNNOTFOUND = 1;
 	 
+	private String type;
 	private String error;
 	private Integer errorCode;
 	private Long timestamp;
 
+	public Bean() {
+		setType(getClass().getName());
+	}
+	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 	public String getError() {
 		return error;
 	}
@@ -49,6 +62,7 @@ public class Bean  implements Serializable {
 		Bean other = (Bean ) obj;
 		if (obj == null) return false;
 		return nullSafeEquals(getError(), other.getError()) && 
+				nullSafeEquals(getType(), other.getType()) &&
 				 nullSafeEquals(getErrorCode(), other.getErrorCode()) && 
 						 nullSafeEquals(getTimestamp(), other.getTimestamp()); 
 

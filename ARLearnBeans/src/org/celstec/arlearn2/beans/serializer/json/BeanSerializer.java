@@ -11,6 +11,7 @@ public class BeanSerializer implements JsonBean {
 		Bean beanBean = (Bean) bean;
 		JSONObject returnObject = new JSONObject();
 		try {
+			if (beanBean.getType() != null) returnObject.put("type", beanBean.getType());			
 			if (beanBean.getError() != null) returnObject.put("error", beanBean.getError());
 			if (beanBean.getErrorCode() != null) returnObject.put("errorCode", beanBean.getErrorCode());
 			if (beanBean.getTimestamp() != null) returnObject.put("timestamp", beanBean.getTimestamp());

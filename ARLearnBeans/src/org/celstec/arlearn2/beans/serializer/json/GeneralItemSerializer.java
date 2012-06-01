@@ -13,11 +13,11 @@ public class GeneralItemSerializer extends GameBeanSerializer{
 		JSONObject returnObject = super.toJSON(bean);
 		try {
 			if (gi.getId() != null) returnObject.put("id", gi.getId());
+			if (gi.getSortKey() != null) returnObject.put("sortKey", gi.getSortKey());
 			if (gi.getScope() != null) returnObject.put("scope", gi.getScope());
 			if (gi.getName() != null) returnObject.put("name", gi.getName());
 			if (gi.getDescription() != null) returnObject.put("description", gi.getDescription());
 			if (gi.getDependsOn() != null) returnObject.put("dependsOn", JsonBeanSerialiser.serialiseToJson(gi.getDependsOn()));
-			if (gi.getType() != null) returnObject.put("type", gi.getType());			
 			if (gi.getRadius() != null) returnObject.put("radius", gi.getRadius());
 			if (gi.getShowAtTimeStamp() != null) returnObject.put("showAtTimeStamp", gi.getShowAtTimeStamp());
 			if (gi.getLng() != null) returnObject.put("lng", gi.getLng());

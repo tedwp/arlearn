@@ -10,6 +10,8 @@ public class GeneralItem extends GameBean{
 	
 	private Long id;
 
+	private Integer sortKey;
+
 	private String scope;
 	
 	private String name;
@@ -18,7 +20,6 @@ public class GeneralItem extends GameBean{
 
 	private Dependency dependsOn;
 
-	private String type;
 	
 	private Integer radius;
 	
@@ -37,11 +38,11 @@ public class GeneralItem extends GameBean{
 		GeneralItem other = (GeneralItem ) obj;
 		return super.equals(obj) && 
 			nullSafeEquals(getId(), other.getId()) &&
+			nullSafeEquals(getSortKey(), other.getSortKey()) &&
 			nullSafeEquals(getScope(), other.getScope()) &&
 			nullSafeEquals(getName(), other.getName()) &&
 			nullSafeEquals(getDescription(), other.getDescription()) &&
 			nullSafeEquals(getDependsOn(), other.getDependsOn()) &&
-			nullSafeEquals(getType(), other.getType()) &&
 			nullSafeEquals(getRadius(), other.getRadius()) &&
 			nullSafeEquals(getShowAtTimeStamp(), other.getShowAtTimeStamp()) &&
 			nullSafeEquals(getLng(), other.getLng()) &&
@@ -67,6 +68,14 @@ public class GeneralItem extends GameBean{
 		this.id = id;
 	}
 		
+	public Integer getSortKey() {
+		return sortKey;
+	}
+
+	public void setSortKey(int sortKey) {
+		this.sortKey = sortKey;
+	}
+
 	public String getScope() {
 		if (scope == null) return "user";
 		return scope;
@@ -101,13 +110,7 @@ public class GeneralItem extends GameBean{
 		this.dependsOn = dependsOn;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
+	
 
 	public Integer getRadius() {
 		return radius;
