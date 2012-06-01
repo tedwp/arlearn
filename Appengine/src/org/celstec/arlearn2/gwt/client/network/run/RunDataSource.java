@@ -6,6 +6,8 @@ import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
 
 import com.google.gwt.json.client.JSONValue;
+import com.smartgwt.client.data.Criteria;
+import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class RunDataSource extends GenericDataSource {
@@ -56,8 +58,12 @@ public class RunDataSource extends GenericDataSource {
 //					}
 //				});	
 			}
-		});
+		});	
+	}
+	
+	public void recordExists( DSCallback cb) {
 		
+		fetchData(null, cb);
 		
 	}
 

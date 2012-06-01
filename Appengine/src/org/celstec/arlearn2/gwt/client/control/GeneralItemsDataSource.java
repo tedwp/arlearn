@@ -39,12 +39,11 @@ public class GeneralItemsDataSource extends DataSource {
 		accountField.setHidden(true);
 		accountField.setPrimaryKey(true);
 
-		DataSourceTextField nameField = new DataSourceTextField("name",
-				"Item Title");
+		DataSourceTextField sortField = new DataSourceTextField("sortKey", "sortKey");
+		DataSourceTextField nameField = new DataSourceTextField("name", "Item Title");
 		nameField.setRequired(true);
 
-		DataSourceTextField typeField = new DataSourceTextField("type",
-				"Item Type");
+		DataSourceTextField typeField = new DataSourceTextField("type","Item Type");
 		typeField.setRequired(true);
 
 		DataSourceIntegerField gameIdField = new DataSourceIntegerField(
@@ -59,7 +58,7 @@ public class GeneralItemsDataSource extends DataSource {
 
 		DataSourceTextField answerField = new DataSourceTextField("answer");
 
-		setFields(pkField, itemIdField, accountField, nameField, typeField,
+		setFields(pkField, sortField, itemIdField, accountField, nameField, typeField,
 				gameIdField, runIdField, readField, correctField, answerField);
 
 		setClientOnly(true);
@@ -84,6 +83,7 @@ public class GeneralItemsDataSource extends DataSource {
 									+ runId;
 							rec.setAttribute("pk", pk);
 							rec.setAttribute("id", getItemId(i));
+							rec.setAttribute("sortKey", getSortKey(i));
 							rec.setAttribute("account", account);
 							rec.setAttribute("name", getItemName(i));
 							rec.setAttribute("type", getItemType(i));
@@ -179,11 +179,11 @@ public class GeneralItemsDataSource extends DataSource {
 						for (int i = 0; i < responsesSize(); i++) {
 
 							final String responseValue = getResponseValue(i);
+//							final String responseValue = "{\"answer\":\"Notify the hostage family\",\"isCorrect\":false}";
 							Criteria crit = new Criteria();
-							String pk = getGeneralItemId(i) + ":"
-									+ getUserEmail(i) + ":" + getRunId(i);
-							System.out.println("response "
-									+ getResponseValue(i) + " " + pk);
+							String pk = getGeneralItemId(i) + ":"+ getUserEmail(i) + ":" + getRunId(i);
+//							String pk = "829:test:866" ;
+//							System.out.println("response "+ getResponseValue(i) + " " + pk);
 							crit.addCriteria("pk", pk);
 							fetchData(crit, new DSCallback() {
 
@@ -194,9 +194,7 @@ public class GeneralItemsDataSource extends DataSource {
 									for (Record record : records) {
 										record.setAttribute("answer", processResponseValue(responseValue));
 										if (processIsCorrect(responseValue)!=null) {
-											record.setAttribute("correct", processResponseValue(responseValue));
-											System.out.println("set correct to" +processResponseValue(responseValue));
-
+											record.setAttribute("correct", processIsCorrect(responseValue));
 										}
 										updateData(record);
 

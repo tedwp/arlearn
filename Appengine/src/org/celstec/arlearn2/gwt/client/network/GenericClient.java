@@ -32,10 +32,13 @@ public class GenericClient {
 	}
 	
 	protected void invokeJsonPOST(String urlPostfix, JSONObject object, final JsonCallback jcb) {
+		invokeJsonPOST(urlPostfix, object == null?"":object.toString(), jcb);
+	}
+	protected void invokeJsonPOST(String urlPostfix, String object, final JsonCallback jcb) {
 		RequestBuilder builder = getRequestBuilder(urlPostfix,  RequestBuilder.POST);
 		builder.setHeader("Content-Type", "application/json");
 		try {
-			Request request = builder.sendRequest(object == null?"":object.toString(),
+			Request request = builder.sendRequest(object,
 					new RequestCallback() {
 
 						@Override

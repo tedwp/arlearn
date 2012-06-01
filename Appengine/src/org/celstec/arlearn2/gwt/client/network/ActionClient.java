@@ -35,7 +35,7 @@ public class ActionClient  extends GenericClient {
 	}
 
 	public void notify(long runId, String email, String itemId, final JsonCallback jsonCallback) {
-		invokeJsonPOST("/notify/"+email+"/"+runId+"/"+itemId, null, jsonCallback);
+		invokeJsonPOST("/notify/"+email+"/"+runId+"/"+itemId, "", jsonCallback);
 		
 	}
 }

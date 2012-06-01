@@ -76,15 +76,18 @@ public class TeamManager {
 		return teamBean;
 	}
 
-	public static void deleteTeam(String teamId) {
+	public static Team deleteTeam(String teamId) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Team t = null;
 		try {
 			TeamJDO teamJDO = getTeamJDO(pm, teamId);
+			t = toBean(teamJDO);
 			if (teamJDO != null) {
 				pm.deletePersistent(teamJDO);
 			}
 		} finally {
 			pm.close();
 		}
+		return t;
 	}
 }

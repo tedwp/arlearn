@@ -22,8 +22,10 @@ public class GeneralItemGameDataSource extends GenericDataSource {
 	@Override
 	protected void initFields() {
 		addField(INTEGER_DATA_TYPE, "id", true, true);
+		addField(INTEGER_DATA_TYPE, "sortKey", false, true);
 		addField(STRING_DATA_TYPE, "name", false, false);
 		addField(STRING_DATA_TYPE, "type", false, false);
+		addField(STRING_AR_DATA_TYPE, "roles", false, false);
 		addDerivedField(new DerivedFieldTask() {
 			
 			@Override

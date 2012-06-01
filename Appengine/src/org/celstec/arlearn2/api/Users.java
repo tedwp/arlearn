@@ -53,8 +53,7 @@ public class Users extends Service {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 		UsersDelegator cu = new UsersDelegator(verifyCredentials(token));
-		cu.deleteUser(runId, email);
-		return null;
+		return serialise(cu.deleteUser(runId, email), accept);
 	}
 
 	@GET

@@ -52,6 +52,7 @@ public class GeneralItemManager {
 		gi.setPayload(new Text(jbs.serialiseToJson().toString()));
 		try {
 			pm.makePersistent(gi);
+			bean.setId(gi.getIdentier());
 		} finally {
 			pm.close();
 		}
@@ -105,7 +106,7 @@ public class GeneralItemManager {
 		gi.setId(jdo.getIdentier());
 		gi.setLat(jdo.getLat());
 		gi.setLng(jdo.getLng());
-		
+		gi.setGameId(jdo.getGameId());
 		gi.setName(jdo.getName());
 		gi.setRadius(jdo.getRadius());
 		gi.setScope(jdo.getScope());

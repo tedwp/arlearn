@@ -5,6 +5,8 @@ import org.celstec.arlearn2.gwt.client.control.ReadyCallback;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.widgets.grid.ListGrid;
 
 public class JsonCallback {
 
@@ -46,6 +48,16 @@ public class JsonCallback {
 			if (jsonValue == null) return null;
 			JSONObject game = jsonValue.get(i).isObject();
 			if (game == null) return null;
+			if (!game.containsKey(attributeName)) return null;
+			if (game.get(attributeName).isArray()!=null) {
+				JSONArray ar = game.get(attributeName).isArray();
+				String returnString = "";
+				if (ar.size()>=1) returnString = ar.get(0).isString().stringValue();
+				for (int j = 1; j< ar.size(); j++) {
+					returnString += ", "+ar.get(j).isString().stringValue();
+				}
+				return returnString;
+			}
 			return game.get(attributeName).isString().stringValue();
 	}
 	
@@ -54,6 +66,7 @@ public class JsonCallback {
 			JSONObject game = jsonValue.get(i).isObject();
 			if (game == null) return -1;
 //			System.out.println("attribute: "+attributeName +" game");
+			if (!game.containsKey(attributeName) ) return 0;
 			return (int) game.get(attributeName).isNumber().doubleValue();
 	}
 	
@@ -64,4 +77,12 @@ public class JsonCallback {
 		if (game.get("config") == null) return null;
 		return game.get("config").isObject();
 	}
+
+//	protected ListGrid lg;
+//	
+//	public void setFetchListGrid(ListGrid lg) {
+//		this.lg = lg;
+//		
+//	}
+	
 }

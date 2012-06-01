@@ -1,6 +1,9 @@
 package org.celstec.arlearn2.gwt.client.ui;
 
+import java.util.HashSet;
+
 import org.celstec.arlearn2.gwt.client.Authoring;
+import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 //import org.celstec.arlearn2.gwt.client.control.GameDataSource;
 import org.celstec.arlearn2.gwt.client.control.Authentication;
 import org.celstec.arlearn2.gwt.client.control.ReadyCallback;
@@ -9,9 +12,14 @@ import org.celstec.arlearn2.gwt.client.network.game.GameDataSource;
 import org.celstec.arlearn2.gwt.client.network.run.RunClient;
 import org.celstec.arlearn2.gwt.client.network.run.RunDataSource;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Encoding;
 import com.smartgwt.client.widgets.Canvas;
@@ -31,6 +39,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class RunsTab extends GenericTab {
 	private ListGrid listGrid;
+	 private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
 	public RunsTab() {
 		super("Runs");
@@ -59,13 +68,13 @@ public class RunsTab extends GenericTab {
 
 	private DynamicForm getNewRunForm() {
 		final TextItem titleRun = new TextItem("titleRun");
-		titleRun.setTitle("Run name");
+		titleRun.setTitle(constants.runName());
 		titleRun.setSelectOnFocus(true);
 		titleRun.setWrapTitle(false);
 		titleRun.setWidth(200);
 
 		final SelectItem item = new SelectItem("itemID");
-		item.setTitle("Game");
+		item.setTitle(constants.game());
 		item.setOptionDataSource(GameDataSource.getInstance());
 		item.setDisplayField("title");
 		item.setPickListWidth(300);
@@ -77,7 +86,7 @@ public class RunsTab extends GenericTab {
 
 		item.setPickListFields(titleGameField, creatorGameField);
 
-		ButtonItem button = new ButtonItem("submit", "Create");
+		ButtonItem button = new ButtonItem("submit", constants.create());
 		// button.setStartRow(true);
 		button.setWidth(80);
 		button.setStartRow(false);
@@ -85,7 +94,7 @@ public class RunsTab extends GenericTab {
 		button.setColSpan(4);
 		button.setAlign(Alignment.CENTER);
 
-		final DynamicForm form = getForm("Create new run", titleRun, item,
+		final DynamicForm form = getForm(constants.createNewRun(), titleRun, item,
 				new RowSpacerItem(), button);
 		form.setWidth(300);
 
@@ -93,7 +102,11 @@ public class RunsTab extends GenericTab {
 			public void onClick(
 					com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
 				RunClient.getInstance().createRun(form.getValue("itemID"),
-						form.getValueAsString("titleRun"), new JsonCallback());
+						form.getValueAsString("titleRun"), new JsonCallback() {
+							public void onJsonReceived(JSONValue jsonValue) {
+								tabSelect();
+							}
+						});
 				titleRun.setValue("");
 				item.setValue("");
 			}
@@ -103,7 +116,7 @@ public class RunsTab extends GenericTab {
 
 	private DynamicForm getExistingRunForm() {
 		final SelectItem item = new SelectItem("gameId");
-		item.setTitle("Game");
+		item.setTitle(constants.game());
 		item.setOptionDataSource(GameDataSource.getInstance());
 		item.setDisplayField("title");
 		item.setPickListWidth(300);
@@ -116,7 +129,7 @@ public class RunsTab extends GenericTab {
 		item.setPickListFields(titleGameField, creatorGameField);
 
 		final UploadItem fileItem = new UploadItem("uploadRun");
-		fileItem.setTitle("Upload Run");
+		fileItem.setTitle(constants.uploadRun());
 		fileItem.setWidth(200);
 		fileItem.setWrapTitle(false);
 
@@ -124,7 +137,7 @@ public class RunsTab extends GenericTab {
 		authItem.setValue("auth="
 				+ Authentication.getInstance().getAuthenticationToken());
 
-		ButtonItem button = new ButtonItem("submit", "Upload");
+		ButtonItem button = new ButtonItem("submit", constants.upload());
 		// button.setStartRow(true);
 		button.setWidth(80);
 		button.setStartRow(false);
@@ -132,7 +145,7 @@ public class RunsTab extends GenericTab {
 		button.setColSpan(4);
 		button.setAlign(Alignment.CENTER);
 
-		final DynamicForm form = getForm("Upload run", fileItem, item,
+		final DynamicForm form = getForm(constants.chooseARun(), fileItem, item,
 				new RowSpacerItem(), button, authItem);
 		form.setWidth(300);
 		form.setEncoding(Encoding.MULTIPART);
@@ -142,16 +155,10 @@ public class RunsTab extends GenericTab {
 					com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
 				// gameIdItem.setValue(form.getValue("itemID"));
 				form.setCanSubmit(true);
-				form.submit(new DSCallback() {
-
-					@Override
-					public void execute(DSResponse response, Object rawData,
-							DSRequest request) {
-						System.out.println("in callback");
-
-					}
-				});
+				form.submit();
 				item.setValue("");
+				pollForUpdate();
+				
 			}
 		});
 
@@ -159,7 +166,55 @@ public class RunsTab extends GenericTab {
 		form.setAction("/uploadGame/fileUpload.html");
 		return form;
 	}
+	
+	private void pollForUpdate() {
+		RunDataSource.getInstance().fetchData(null, new DSCallback() {
 
+			@Override
+			public void execute(DSResponse response, Object rawData,
+					DSRequest request) {
+				HashSet<String> idSet = new HashSet<String>();
+				for (Record r : response.getData()) {
+					idSet.add(r.getAttribute("runId"));
+				}
+				System.out.println("amount of records "+ idSet);
+				t = new Timer() {
+					private int delay = 2000;
+				public void run() {
+					RunDataSource.getInstance().loadData(new ReadyCallback() {
+						@Override
+						public void ready() {
+							
+							RunDataSource.getInstance().fetchData(null, new DSCallback() {
+
+								@Override
+								public void execute(DSResponse response, Object rawData,
+										DSRequest request) {
+									HashSet<String> idSet = new HashSet<String>();
+									boolean continueTimer = true;
+									for (Record r : response.getData()) {
+										if (!idSet.contains(r.getAttribute("runId"))) continueTimer = false;
+									}
+									if (continueTimer) {
+										delay = 2 * delay;
+										t.schedule(delay);
+										System.out.println("Timer! ");
+
+									}
+								}
+							});
+							
+						}
+					});
+				}
+			};
+			t.schedule(1000);
+			}
+		});
+	}
+
+	private int amountOfRecords = 0;
+	private Timer t = null;
 	// private DynamicForm getForm() {
 	// final DynamicForm form = new DynamicForm();
 	// form.setBorder("1px solid");
@@ -190,13 +245,18 @@ public class RunsTab extends GenericTab {
 
 	public Canvas getRunCanvas() {
 
-		listGrid = new GenericListGrid(true, true) {
+		listGrid = new GenericListGrid(true, true, true) {
 			protected void deleteItem(ListGridRecord rollOverRecord) {
 				RunsTab.this.deleteRun(rollOverRecord
 						.getAttributeAsInt("runId"));
 			}
+
 			protected void editItem(ListGridRecord rollOverRecord) {
 				RunsTab.this.editRun(rollOverRecord);
+			}
+			
+			protected void download(ListGridRecord rollOverRecord) {
+				RunsTab.this.download(rollOverRecord);
 			}
 		};
 		listGrid.setShowRollOverCanvas(true);
@@ -206,8 +266,8 @@ public class RunsTab extends GenericTab {
 		listGrid.setShowAllRecords(true);
 		listGrid.setDataSource(RunDataSource.getInstance());
 
-		ListGridField titleGameField = new ListGridField("title", "Run title");
-		ListGridField creatorGameField = new ListGridField("owner", "Owner");
+		ListGridField titleGameField = new ListGridField("title", constants.run());
+		ListGridField creatorGameField = new ListGridField("owner", constants.ownerAccount());
 
 		listGrid.setFields(new ListGridField[] { titleGameField,
 				creatorGameField });
@@ -227,14 +287,22 @@ public class RunsTab extends GenericTab {
 	}
 
 	protected void editRun(ListGridRecord record) {
-		RunTab tab = new RunTab(
-				"Run: " + record.getAttribute("title"),
-				Long.parseLong(record.getAttribute("runId")),
+		long runId = Long.parseLong(record.getAttribute("runId"));
+		RunTab tab = new RunTab("Run: " + record.getAttribute("title"), runId,
 				Long.parseLong(record.getAttribute("gameId")));
-		Authoring.addTab(tab);		
+		Authoring.addTab(tab, "run:" + runId);
 	}
 
 	private void deleteRun(int runId) {
+		Authoring.removeTab("run:" + runId);
 		RunDataSource.getInstance().delete(runId);
+	}
+	
+	protected void download(ListGridRecord record) {
+		long runId = Long.parseLong(record.getAttribute("runId"));
+		String auth = Authentication.getInstance().getAuthenticationToken();
+		Window.open( "../download/run?runId="+runId+"&auth="+auth+"&type=run", "_self", "");
+		
+		
 	}
 }

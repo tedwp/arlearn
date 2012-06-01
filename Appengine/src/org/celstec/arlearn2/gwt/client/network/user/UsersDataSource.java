@@ -27,6 +27,7 @@ public class UsersDataSource extends GenericDataSource {
 	protected void initFields() {
 		addField(STRING_DATA_TYPE, "teamId", false, true);
 		addField(STRING_DATA_TYPE, "email", false, true);
+		addField(STRING_DATA_TYPE, "roles", false, true);
 		addField(STRING_DATA_TYPE, "name", false, true);
 		addField(INTEGER_DATA_TYPE, "runId", false, true);
 		addDerivedField(new DerivedFieldTask() {

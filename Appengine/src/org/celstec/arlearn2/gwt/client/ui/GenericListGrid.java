@@ -3,6 +3,9 @@ package org.celstec.arlearn2.gwt.client.ui;
 
 
 
+import org.celstec.arlearn2.gwt.client.AuthoringConstants;
+
+import com.google.gwt.core.client.GWT;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.ImgButton;
 import com.smartgwt.client.widgets.events.ClickEvent;  
@@ -20,11 +23,21 @@ public class GenericListGrid extends ListGrid {
 	private HLayout rollOverCanvas = null;
 	private boolean editable = false;
 	private boolean deleteable = false;
+	private boolean downloadable = false;
+	
+	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 	
 	public GenericListGrid(boolean editable, boolean deleteable) {
 		this.editable =editable;
 		this.deleteable = deleteable;
 	}
+	
+	public GenericListGrid(boolean editable, boolean deleteable, boolean downloadable) {
+		this.editable =editable;
+		this.deleteable = deleteable;
+		this.downloadable = downloadable;
+	}
+	
  	private ListGridRecord rollOverRecord;// = this.getRecord(rowNum);  
 
 	 protected Canvas getRollOverCanvas(Integer rowNum, Integer colNum) { 
@@ -42,7 +55,7 @@ public class GenericListGrid extends ListGrid {
 				editImg.setShowRollOver(false);
 				editImg.setLayoutAlign(Alignment.CENTER);
 				editImg.setSrc("icon_edit.png");
-				editImg.setPrompt("Edit item");
+				editImg.setPrompt(constants.editItem());
 				editImg.setHeight(16);
 				editImg.setWidth(16);
 				editImg.addClickHandler(new ClickHandler() {
@@ -53,6 +66,28 @@ public class GenericListGrid extends ListGrid {
 	             rollOverCanvas.addMember(editImg);  
 
 			}
+			
+			if (downloadable) {
+
+	             ImgButton deleteImg = new ImgButton();  
+	             deleteImg.setShowDown(false);  
+	             deleteImg.setShowRollOver(false);  
+	             deleteImg.setLayoutAlign(Alignment.CENTER);  
+	             deleteImg.setSrc("icon_down.png");  
+	             deleteImg.setPrompt(constants.downloadItem());  
+	             deleteImg.setHeight(16);  
+	             deleteImg.setWidth(16);  
+	             deleteImg.addClickHandler(new ClickHandler() {  
+	                 public void onClick(ClickEvent event) {  
+	                	 download( rollOverRecord);
+	                     
+	                 }
+
+	             });  
+
+	             rollOverCanvas.addMember(deleteImg);  
+				}
+			
 			if (deleteable) {
 
              ImgButton deleteImg = new ImgButton();  
@@ -60,7 +95,7 @@ public class GenericListGrid extends ListGrid {
              deleteImg.setShowRollOver(false);  
              deleteImg.setLayoutAlign(Alignment.CENTER);  
              deleteImg.setSrc("icon_delete.png");  
-             deleteImg.setPrompt("Delete item");  
+             deleteImg.setPrompt(constants.deleteItem());  
              deleteImg.setHeight(16);  
              deleteImg.setWidth(16);  
              deleteImg.addClickHandler(new ClickHandler() {  
@@ -82,6 +117,9 @@ public class GenericListGrid extends ListGrid {
 
 	protected void deleteItem(ListGridRecord rollOverRecord) {
 	} 
+	protected void download(ListGridRecord rollOverRecord) {
+		
+	}  
 	
 	
 

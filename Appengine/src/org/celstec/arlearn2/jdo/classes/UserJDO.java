@@ -5,6 +5,7 @@ import javax.jdo.annotations.Persistent;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Text;
 
 @PersistenceCapable
 public class UserJDO extends RunClass {
@@ -18,6 +19,9 @@ public class UserJDO extends RunClass {
 	@Persistent
     private String email;
 
+	@Persistent
+	private Text payload;
+	
 	public String getTeamId() {
 		return teamId;
 	}
@@ -50,5 +54,13 @@ public class UserJDO extends RunClass {
 	
 	public static String generateId(String email, Long runId) {
 		return runId +":"+email;
+	}
+	
+	public Text getPayload() {
+		return payload;
+	}
+
+	public void setPayload(Text payload) {
+		this.payload = payload;
 	}
 }

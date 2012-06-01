@@ -1,5 +1,7 @@
 package org.celstec.arlearn2.gwt.client.ui;
 
+import java.util.HashSet;
+
 import org.celstec.arlearn2.gwt.client.Authoring;
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 import org.celstec.arlearn2.gwt.client.control.Authentication;
@@ -10,16 +12,26 @@ import org.celstec.arlearn2.gwt.client.control.ReadyCallback;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
 import org.celstec.arlearn2.gwt.client.network.game.GameClient;
 import org.celstec.arlearn2.gwt.client.network.game.GameDataSource;
+import org.celstec.arlearn2.gwt.client.network.run.RunDataSource;
+import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
+import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Encoding;
+import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Progressbar;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -37,6 +49,8 @@ import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.ItemHoverEvent;
+import com.smartgwt.client.widgets.form.fields.events.ItemHoverHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -49,12 +63,13 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 import com.google.gwt.core.client.GWT;
 
-public class GamesTab extends GenericTab {
+public class GamesTab extends GenericTab implements NotificationHandler {
 
 	 private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
 	  
 	public static ListGrid listGrid;
+	private Progressbar hBar2;
 	
 	public GamesTab() {
 		super("Games");		
@@ -62,9 +77,9 @@ public class GamesTab extends GenericTab {
 		setRight(getGameCanvas());
 		listGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {  
             public void onCellDoubleClick(CellDoubleClickEvent event) {  
-            	GameTab tab = new GameTab("Game: "+event.getRecord().getAttribute("title"), 
-            			Long.parseLong(event.getRecord().getAttribute("gameId")));  
-                Authoring.addTab(tab);
+            	long gameId = Long.parseLong(event.getRecord().getAttribute("gameId"));
+            	GameTab tab = new GameTab("Game: "+event.getRecord().getAttribute("title"), gameId);  
+                Authoring.addTab(tab, "game:"+gameId);
                
             }  
         });  
@@ -73,10 +88,17 @@ public class GamesTab extends GenericTab {
 	@Override
 	protected void tabSelect() {
 //		listGrid.fetchData();
+//	    RootPanel.get("loading").setVisible(true);
+		final WaitPopup wp = new WaitPopup();
+//		wp.show("loading");
+		listGrid.setLoadingDataMessage("is loading");
 		GameDataSource.getInstance().loadData(new ReadyCallback() {
 			
 			@Override
 			public void ready() {
+//			    RootPanel.get("loading").setVisible(false);
+//				wp.hide();
+				
 				listGrid.fetchData();
 				
 			}
@@ -87,6 +109,14 @@ public class GamesTab extends GenericTab {
 		VLayout vLayout = new VLayout(10);
 		vLayout.addMember(getNewGameForm());
 		 vLayout.addMember(getExistingGameForm());
+		 
+		 hBar2 = new Progressbar();  
+	        hBar2.setVertical(false);  
+	        hBar2.setHeight(24);  
+	        hBar2.setWidth("*");
+	        vLayout.addMember(hBar2); 
+	        hBar2.setVisibility(Visibility.HIDDEN);
+	        
 		return vLayout;
 	}
 
@@ -97,7 +127,7 @@ public class GamesTab extends GenericTab {
 //		header.setDefaultValue(constants.createNewGame());
 
 		final TextItem titleGame = new TextItem("titleGame");
-		titleGame.setTitle("Game name");
+		titleGame.setTitle(constants.gameName());
 		titleGame.setSelectOnFocus(true);
 		titleGame.setWrapTitle(false);
 
@@ -106,14 +136,21 @@ public class GamesTab extends GenericTab {
 		creatorGame.setWrapTitle(false);
 
 		final CheckboxItem withMap = new CheckboxItem("withMap");
-		withMap.setTitle("With map");
+		withMap.setTitle(constants.withMap());
 		withMap.setValue(true);
+		withMap.addItemHoverHandler(new ItemHoverHandler() {
+			public void onItemHover(ItemHoverEvent event) {
+				withMap.setPrompt(constants.instructMap());
+			}
+		});
 		
-		
-		ButtonItem button = new ButtonItem("submit", "Submit");
+		ButtonItem button = new ButtonItem("submit", constants.submit());
 		// button.setStartRow(true);
 		button.setWidth(80);
-		button.setAlign(Alignment.RIGHT);
+		button.setStartRow(false);
+		button.setEndRow(false);
+		button.setColSpan(4);
+		button.setAlign(Alignment.CENTER);
 		final DynamicForm form = getForm(constants.createNewGame(), titleGame, creatorGame, withMap, new RowSpacerItem(),
 				button);
 		form.setWidth(285);
@@ -124,67 +161,14 @@ public class GamesTab extends GenericTab {
 						form.getValueAsString("creator"),
 						(Boolean) form.getValue("withMap"),
 						new JsonCallback() {
-							
-							@Override
 							public void onJsonReceived(JSONValue jsonValue) {
-								//TODO merge method  with onload tab
-								GameDataSource.getInstance().loadData(new ReadyCallback() {
-									
-									@Override
-									public void ready() {
-										listGrid.fetchData();
-										
-									}
-								});
-							}
-							
-							@Override
-							public void onError() {
-								// TODO Auto-generated method stub
-								
+								tabSelect();
 							}
 						});
 				titleGame.setValue("");
 				creatorGame.setValue("");
 			}
 		});
-//		form.setFields(header, titleGame, creatorGame, button);
-		
-//		final DynamicForm uploadForm = new DynamicForm();
-//		uploadForm.setWidth(100);
-//		uploadForm.setEncoding(Encoding.MULTIPART);
-//		uploadForm.setBorder("1px solid");
-//
-//		final UploadItem fileItem = new UploadItem("uploadRun");
-//		fileItem.setTitle("Upload Game");
-//		uploadForm.setTarget("hidden_frame");
-//		uploadForm.setAction("/uploadGame/fileUpload.html");
-//		
-//		HiddenItem authItem = new HiddenItem("auth");
-//		authItem.setValue("auth="+Authentication.getInstance().getAuthenticationToken());
-//		
-//		final HiddenItem callbackItem = new HiddenItem("callbackName");
-//
-//		uploadForm.setFields(fileItem, authItem, callbackItem);
-//		
-//		fileItem.addChangeHandler(new ChangeHandler() {
-//			
-//			@Override
-//			public void onChange(ChangeEvent event) {
-//			
-//				String callbackName = JavaScriptMethodHelper.registerCallbackFunction(new JavaScriptMethodCallback() {
-//					public void execute(JavaScriptObject obj) {
-//						System.out.println("upload finished");
-//					}
-//							
-//				});
-//				callbackItem.setValue(callbackName);
-//				uploadForm.submitForm();
-//				
-//				
-//			}
-//		});
-//		vLayout.setMembers(form, uploadForm);
 		return form;
 	}
 	
@@ -192,7 +176,7 @@ public class GamesTab extends GenericTab {
 		
 
 		final UploadItem fileItem = new UploadItem("uploadRun");
-		fileItem.setTitle("Upload Run");
+		fileItem.setTitle(constants.chooseAGame());
 		fileItem.setWidth(150);
 		fileItem.setWrapTitle(false);
 
@@ -201,7 +185,7 @@ public class GamesTab extends GenericTab {
 		authItem.setValue("auth="
 				+ Authentication.getInstance().getAuthenticationToken());
 
-		ButtonItem button = new ButtonItem("submit", "Upload");
+		ButtonItem button = new ButtonItem("submit", constants.upload());
 		// button.setStartRow(true);
 		button.setWidth(80);
 		button.setStartRow(false);
@@ -211,7 +195,7 @@ public class GamesTab extends GenericTab {
 		
 		
 		
-		final DynamicForm form = getForm("Upload game", fileItem, new RowSpacerItem(),
+		final DynamicForm form = getForm(constants.uploadGame(), fileItem, new RowSpacerItem(),
 				button, authItem);
 		form.setEncoding(Encoding.MULTIPART);
 
@@ -221,14 +205,12 @@ public class GamesTab extends GenericTab {
 					com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
 //				gameIdItem.setValue(form.getValue("itemID"));
 				form.setCanSubmit(true);
-				form.submit(new DSCallback() {
-					
-					@Override
-					public void execute(DSResponse response, Object rawData, DSRequest request) {
-						System.out.println("in callback");
-						
-					}
-				});
+				form.submit();
+				NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.authoring.GameCreationStatus", GamesTab.this);
+				hBar2.setPercentDone(0);
+				hBar2.setVisibility(Visibility.VISIBLE);
+				
+//				pollForUpdate();
 			}
 		});
 
@@ -239,9 +221,12 @@ public class GamesTab extends GenericTab {
 
 	public Canvas getGameCanvas() {
 
-		listGrid = new GenericListGrid(false, true) {
+		listGrid = new GenericListGrid(false, true, true) {
 			protected void deleteItem(ListGridRecord rollOverRecord) {
 				GamesTab.this.deleteGame(rollOverRecord.getAttributeAsInt("gameId"));
+			}
+			protected void download(ListGridRecord rollOverRecord) {
+				GamesTab.this.download(rollOverRecord);
 			}
 		};
 		listGrid.setShowRollOverCanvas(true);
@@ -251,8 +236,8 @@ public class GamesTab extends GenericTab {
 		listGrid.setShowAllRecords(true);
 		listGrid.setDataSource(GameDataSource.getInstance());
 		
-		ListGridField titleGameField = new ListGridField("title", "Game");  
-	    ListGridField creatorGameField = new ListGridField("creator", "Creator");  
+		ListGridField titleGameField = new ListGridField("title", constants.game());  
+	    ListGridField creatorGameField = new ListGridField("creator", constants.creator());  
 		
 		listGrid.setFields(new ListGridField[] { titleGameField, creatorGameField });
 		listGrid.setCanResizeFields(true);
@@ -266,6 +251,8 @@ public class GamesTab extends GenericTab {
 
 	protected void deleteGame(final int gameId) {
 		System.out.println("delete game id "+gameId);
+		Authoring.removeTab("game:"+gameId);
+
 		GameClient.getInstance().deleteGame(gameId, new JsonCallback() {
 			
 			@Override
@@ -275,6 +262,77 @@ public class GamesTab extends GenericTab {
 			
 		});
 		
+	}
+	
+	protected void download(ListGridRecord record) {
+		long gameId = Long.parseLong(record.getAttribute("gameId"));
+		String auth = Authentication.getInstance().getAuthenticationToken();
+		Window.open( "../download/game?gameId="+gameId+"&auth="+auth+"&type=game", "_self", "");
+		
+		
+	}
+	
+	@Deprecated
+	private void pollForUpdate() {
+		GameDataSource.getInstance().fetchData(null, new DSCallback() {
+
+			@Override
+			public void execute(DSResponse response, Object rawData,
+					DSRequest request) {
+				HashSet<String> idSet = new HashSet<String>();
+				for (Record r : response.getData()) {
+					idSet.add(r.getAttribute("gameId"));
+				}
+				t = new Timer() {
+					private int delay = 2000;
+				public void run() {
+					GameDataSource.getInstance().loadData(new ReadyCallback() {
+						@Override
+						public void ready() {
+							
+							GameDataSource.getInstance().fetchData(null, new DSCallback() {
+
+								@Override
+								public void execute(DSResponse response, Object rawData,
+										DSRequest request) {
+									HashSet<String> idSet = new HashSet<String>();
+									boolean continueTimer = true;
+									for (Record r : response.getData()) {
+										if (!idSet.contains(r.getAttribute("gameId"))) continueTimer = false;
+									}
+									if (continueTimer) {
+										delay = 2 * delay;
+										t.schedule(delay);
+										System.out.println("Timer! ");
+
+									}
+								}
+							});
+							
+						}
+					});
+				}
+			};
+			t.schedule(1000);
+			}
+		});
+	}
+	
+	private int amountOfRecords = 0;
+	private Timer t = null;
+
+	@Override
+	public void onNotification(JSONObject bean) {
+//		Window.alert("bean received " +bean.toString());
+		System.out.println(bean);
+		int status = (int) bean.get("status").isNumber().doubleValue();
+
+		hBar2.setPercentDone((int) (100/3*(status+1)));  
+		if (status == 100) {
+			hBar2.setVisibility(Visibility.HIDDEN);
+			tabSelect();
+		}
+
 	}
 
 	

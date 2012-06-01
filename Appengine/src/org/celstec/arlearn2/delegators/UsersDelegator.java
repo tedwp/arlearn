@@ -44,7 +44,7 @@ public class UsersDelegator extends GoogleDelegator {
 			}
 		}
 		u.setEmail(UserLoggedInManager.normalizeEmail(u.getEmail()));
-		UserManager.addUser(u.getRunId(), u.getTeamId(), u.getEmail(), u.getName());
+		UserManager.addUser(u);
 		UsersCache.getInstance().removeUser(u.getRunId()); //removing because user might be cached in a team
 		(new NotifyUpdateRun(authToken,u.getRunId(), true, false, u.getEmail())).scheduleTask();
 		return u;
@@ -109,11 +109,13 @@ public class UsersDelegator extends GoogleDelegator {
 		return users.get(0);		
 	}
 	
-	public void deleteUser(Long runId, String email) {
+	public User deleteUser(Long runId, String email) {
 		email = UserLoggedInManager.normalizeEmail(email);
 		User user = getUserByEmail(runId, email);
 		UserManager.deleteUser(runId, email);
 		UsersCache.getInstance().removeUser(runId); //removing because user might be cached in a team
+		(new NotifyUpdateRun(authToken,runId, false, true, user.getEmail())).scheduleTask();
+		return user;
 	}
 
 	public void deleteUser(long runId) {

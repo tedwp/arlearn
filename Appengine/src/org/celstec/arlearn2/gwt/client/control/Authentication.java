@@ -3,6 +3,8 @@ package org.celstec.arlearn2.gwt.client.control;
 import org.celstec.arlearn2.gwt.client.Authoring;
 import org.celstec.arlearn2.gwt.client.network.LoginCallback;
 import org.celstec.arlearn2.gwt.client.network.LoginClient;
+import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
+import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
 
 import com.google.gwt.user.client.Cookies;
 
@@ -31,7 +33,6 @@ public class Authentication implements LoginCallback {
 		if (string.endsWith("\"")) string = string.substring(0, string.length()-1);
 		
 		Cookies.setCookie("auth", string);	
-		System.out.println("auth after login "+Cookies.getCookie("auth"));
 
 		Authoring.enableTabs();
 		
@@ -39,16 +40,17 @@ public class Authentication implements LoginCallback {
 
 	@Override
 	public void onError() {
+		System.out.println("login did not succeed");
+		Authoring.loginIncorrect();
 		Cookies.removeCookie("auth");		
 		Cookies.removeCookie("username");		
 	}
 	
 	public void disAuthenticate() {
-		System.out.println("auth before "+Cookies.getCookie("auth"));
 		Cookies.removeCookie("auth");		
 		Cookies.removeCookie("username");
-		System.out.println("auth after "+Cookies.getCookie("auth"));
 		Authoring.disableTabs();
+		NotificationSubscriber.getInstance().removeAllHandlers();
 	}
 	
 	public boolean isAuthenticated() {

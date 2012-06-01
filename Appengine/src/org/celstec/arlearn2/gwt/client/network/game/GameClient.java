@@ -40,13 +40,21 @@ public class GameClient extends GenericClient {
 	public void getGames(final JsonCallback jcb) {
 		invokeJsonGET(null, jcb);
 	}
-
+	
+	public void getGameConfig(long id, final JsonCallback jcb) {
+		invokeJsonGET("/config/gameId/"+id, jcb);
+	}
+		
 	public void deleteGame(long id, final JsonCallback jcb) {
 		invokeJsonDELETE("/gameId/"+id, jcb);
 	}
 	
 	public String getUrl() {
 		return super.getUrl() + "myGames";
+	}
+
+	public void createRole(long gameId, String roleValue, JsonCallback jsonCallback) {
+		invokeJsonPOST("/config/gameId/"+gameId+"/role", roleValue, jsonCallback);
 	}
 
 }

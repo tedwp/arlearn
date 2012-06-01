@@ -1,16 +1,26 @@
 package org.celstec.arlearn2.gwt.client.ui;
 
+import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 import org.celstec.arlearn2.gwt.client.control.GeneralItemsDataSource;
 import org.celstec.arlearn2.gwt.client.control.ReadyCallback;
 import org.celstec.arlearn2.gwt.client.control.TriggerDataSource;
 //import org.celstec.arlearn2.gwt.client.control.UsersDataSource;
 import org.celstec.arlearn2.gwt.client.network.ActionClient;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
+import org.celstec.arlearn2.gwt.client.network.team.TeamClient;
 import org.celstec.arlearn2.gwt.client.network.team.TeamsDataSource;
+import org.celstec.arlearn2.gwt.client.network.user.UserClient;
 import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
+import org.celstec.arlearn2.gwt.client.ui.modal.OpenQuestionAnswerWindow;
+import org.celstec.arlearn2.gwt.client.ui.modal.TeamWindow;
+import org.celstec.arlearn2.gwt.client.ui.modal.UserWindow;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.smartgwt.client.data.Criteria;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
@@ -28,6 +38,8 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellClickHandler;
+import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 
 public class RunTab extends Tab {
 	private ListGrid teamGrid;
@@ -37,6 +49,8 @@ public class RunTab extends Tab {
 
 	private long runId;
 	private long gameId;
+	
+	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
 	public RunTab(String title, final long runId, final long gameId) {
 		super(title);
@@ -53,39 +67,22 @@ public class RunTab extends Tab {
 
 			@Override
 			public void onTabSelected(TabSelectedEvent event) {
-				Criteria crit = new Criteria();
-//				Integer critInt = new Integer((int) runId);
-				crit.addCriteria("gameId", (int) gameId);
-				actionGrid.filterData(crit);
-				
-				TeamsDataSource.getInstance().loadDataRun(runId);
-//						new ReadyCallback() {
-//
-//							@Override
-//							public void ready() {
-//								teamGrid.fetchData();
-//								Criteria crit = new Criteria();
-//								Integer critInt = new Integer((int) runId);
-//								crit.addCriteria("runId", critInt);
-//								teamGrid.filterData(crit);
-//							}
-//						});
-				UsersDataSource.getInstance().loadDataRun(runId);
-//				.loadUsers(runId,
-//						new ReadyCallback() {
-//
-//							@Override
-//							public void ready() {
-//								userGrid.fetchData();
-//								 Criteria crit = new Criteria();
-//								 Integer critInt = new Integer((int) runId);
-//								 crit.addCriteria("runId", critInt);
-//								 userGrid.filterData(crit);
-//							}
-//						});
-
+				refreshSources();
 			}
 		});
+	}
+	
+	public void refreshSources(){
+		Criteria crit = new Criteria();
+		crit.addCriteria("gameId", (int) gameId);
+		actionGrid.filterData(crit);
+
+		
+		TeamsDataSource.getInstance().loadDataRun(runId);
+		
+		UsersDataSource.getInstance().loadDataRun(runId);
+//		teamGrid.fetchData();
+//		userGrid.fetchData();
 	}
 
 	private Canvas getSectionStack() {
@@ -96,13 +93,13 @@ public class RunTab extends Tab {
 
 		IButton expandButton = new IButton("Expand Players");
 
-		SectionStackSection section1 = new SectionStackSection("Teams");
+		SectionStackSection section1 = new SectionStackSection(constants.teams());
 		section1.setExpanded(true);
 		section1.addItem(getTeams());
 
 		sectionStack.addSection(section1);
 
-		final SectionStackSection section2 = new SectionStackSection("Players");
+		final SectionStackSection section2 = new SectionStackSection(constants.players());
 		section2.setExpanded(true);
 		section2.setCanCollapse(true);
 		section2.addItem(getUsers());
@@ -124,39 +121,52 @@ public class RunTab extends Tab {
 
 	public Canvas getTeams() {
 		Canvas canvas = new Canvas();
-		teamGrid = new ListGrid();
+//		teamGrid = new ListGrid();
+		teamGrid = new GenericListGrid(false, true) {
+			protected void deleteItem(ListGridRecord rollOverRecord) {
+				RunTab.this.deleteTeam(rollOverRecord.getAttributeAsString("teamId"));
+			}
+
+		};
+		teamGrid.setShowRollOverCanvas(true);
 		teamGrid.setWidth("100%");
-		teamGrid.setHeight(240);
+		teamGrid.setHeight(245);
 		teamGrid.setShowAllRecords(true);
 
 		teamGrid.setDataSource(TeamsDataSource.getInstance());
 
-		ListGridField nameField = new ListGridField("name", "Team name");
+		ListGridField nameField = new ListGridField("name", constants.teamName());
 		teamGrid.setFields(new ListGridField[] { nameField });
 
 		canvas.addChild(teamGrid);
 
-		// IButton editButton = new IButton("New team");
-		// editButton.setTop(250);
-		// editButton.addClickHandler(new ClickHandler() {
-		// public void onClick(ClickEvent event) {
-		// teamGrid.startEditingNew();
-		//
-		// }
-		// });
-		//
-		// canvas.addChild(editButton);
+		IButton addTeamButton = new IButton(constants.newTeam());
+//		addTeamButton.setTop(245);
+		addTeamButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				(new TeamWindow(runId, RunTab.this)).show();
+			}
+		});
+
+		HLayout buttonLayout = new HLayout();
+		buttonLayout.setAlign(Alignment.CENTER);
+		buttonLayout.setLayoutMargin(6);
+		buttonLayout.setMembersMargin(6);
+		buttonLayout.addMember(addTeamButton);
+		buttonLayout.setTop(245);
+		buttonLayout.setHeight(20);
+		buttonLayout.setWidth100();
+//		buttonLayout.setBorder("2px solid blue");
+
+//		canvas.setBorder("1px solid blue");
+
+		canvas.addChild(buttonLayout);
 		teamGrid.addCellClickHandler(new CellClickHandler() {
 
 			@Override
 			public void onCellClick(CellClickEvent event) {
 				sectionStack.expandSection(1);
-				Criteria crit = new Criteria();
-				Integer critInt = new Integer((int) runId);
-				crit.addCriteria("runId", critInt);
-				crit.addCriteria("teamId",
-						event.getRecord().getAttribute("teamId"));
-				userGrid.filterData(crit);
+				filterUsers(event.getRecord().getAttribute("teamId"));
 			}
 		});
 		// Criteria crit = new Criteria();
@@ -166,54 +176,94 @@ public class RunTab extends Tab {
 		// teamGrid.filterData(new Criteria("name", "Team A"));
 		return canvas;
 	}
+	
+	public void filterUsers(String teamId) {
+		Criteria crit = new Criteria();
+		Integer critInt = new Integer((int) runId);
+		crit.addCriteria("runId", critInt);
+		if (teamId != null ) crit.addCriteria("teamId", teamId);
+		userGrid.filterData(crit);
+	}
+
+	protected void deleteTeam(String teamId) {
+		TeamClient.getInstance().deleteTeam(teamId,new JsonCallback(){
+			public void onJsonReceived(JSONValue jsonValue) {
+				refreshSources();
+			}
+		});
+		
+	}
 
 	public Canvas getUsers() {
 		Canvas canvas = new Canvas();
-		userGrid = new ListGrid();
+		userGrid = new GenericListGrid(false, true) {
+			protected void deleteItem(ListGridRecord rollOverRecord) {
+				RunTab.this.deleteUser(rollOverRecord.getAttributeAsString("email"));
+			}
+
+		};
+		userGrid.setShowRollOverCanvas(true);
+//		userGrid = new ListGrid();
 		userGrid.setWidth("100%");
-		userGrid.setHeight(240);
+		userGrid.setHeight(200);
 
 		userGrid.setDataSource(UsersDataSource.getInstance());
-		ListGridField nameField = new ListGridField("name", "User name");
-		ListGridField emailField = new ListGridField("email", "Email");
-		userGrid.setFields(new ListGridField[] {nameField, emailField });
+		ListGridField nameField = new ListGridField("name", constants.userName());
+		ListGridField emailField = new ListGridField("email", constants.email());
+		ListGridField rolesField = new ListGridField("roles", constants.roles());
+		userGrid.setFields(new ListGridField[] { nameField, emailField , rolesField});
 		userGrid.fetchData();
+		
+		
 		canvas.addChild(userGrid);
+		
+		IButton addUserButton = new IButton(constants.newUser());
+//		addTeamButton.setTop(245);
+		addUserButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				(new UserWindow(runId, gameId, RunTab.this)).show();
+			}
+		});
+
+		HLayout buttonLayout = new HLayout();
+		buttonLayout.setAlign(Alignment.CENTER);
+		buttonLayout.setLayoutMargin(6);
+		buttonLayout.setMembersMargin(6);
+		buttonLayout.addMember(addUserButton);
+		buttonLayout.setTop(200);
+		buttonLayout.setHeight(20);
+		buttonLayout.setWidth100();
+//		buttonLayout.setBorder("2px solid blue");
+
+//		canvas.setBorder("1px solid blue");
+
+		canvas.addChild(buttonLayout);
 
 		userGrid.addCellClickHandler(new CellClickHandler() {
 
+			
 			@Override
 			public void onCellClick(final CellClickEvent event) {
-				GeneralItemsDataSource.getInstance().loadItemsGame(gameId,
-						runId, event.getRecord().getAttribute("email"),
-						new ReadyCallback() {
-
-							@Override
-							public void ready() {
-								giGrid.fetchData();
-								Criteria crit = new Criteria();
-								crit.addCriteria("account", event.getRecord()
-										.getAttribute("email"));
-								crit.addCriteria("runId", Integer
-										.parseInt(event.getRecord()
-												.getAttribute("runId")));
-								giGrid.filterData(crit);
-
-							}
-						});
+				Criteria crit = new Criteria();
+				System.out.println("filter "+ event.getRecord().getAttribute("email"));
+				crit.addCriteria("account", event.getRecord().getAttribute("email"));
+				crit.addCriteria("runId", Integer.parseInt(event.getRecord().getAttribute("runId")));
+				giGrid.filterData(crit);
+				GeneralItemsDataSource.getInstance().loadItemsGame(gameId,runId, event.getRecord().getAttribute("email"), null);
 			}
 		});
-		// IButton editButton = new IButton("New player");
-		// editButton.setTop(250);
-		// editButton.addClickHandler(new ClickHandler() {
-		// public void onClick(ClickEvent event) {
-		// userGrid.startEditingNew();
-		// }
-		// });
-		//
-		// canvas.addChild(editButton);
 
 		return canvas;
+	}
+
+	protected void deleteUser(String email) {
+		System.out.println("delete "+email);
+		UserClient.getInstance().deleteUser(runId, email, new JsonCallback(){
+			public void onJsonReceived(JSONValue jsonValue) {
+				refreshSources();
+			}
+		});
+		
 	}
 
 	public VLayout getRightSide() {
@@ -226,32 +276,43 @@ public class RunTab extends Tab {
 	public Canvas getRunCanvas() {
 
 		giGrid = new ListGrid();
-		// {
-		//
-		// protected Canvas getExpansionComponent(final ListGridRecord record) {
-		//
-		// return getSubCanvans(record);
-		// }
-		// };
-		// giGrid.setCanExpandRecords(true);
-
 		giGrid.setWidth(500);
 		giGrid.setHeight(224);
 		giGrid.setShowAllRecords(true);
 		giGrid.setDataSource(GeneralItemsDataSource.getInstance());
 
 		// ListGridField pkField = new ListGridField("pk", "Pk");
-		ListGridField titleGameField = new ListGridField("name", "Title");
-		ListGridField typeField = new ListGridField("type", "Type");
-		ListGridField readField = new ListGridField("read", "Read");
-		ListGridField correctField = new ListGridField("correct", "Correct");
-		ListGridField answerField = new ListGridField("answer", "Answer");
-		ListGridField accountField = new ListGridField("account", "Account");
+//		ListGridField id = new ListGridField("id", constants.title());
+		ListGridField titleGameField = new ListGridField("name", constants.title());
+		ListGridField typeField = new ListGridField("type", constants.type());
+		ListGridField readField = new ListGridField("read", constants.read());
+		ListGridField correctField = new ListGridField("correct", constants.correct());
+		ListGridField answerField = new ListGridField("answer", constants.answer());
+		ListGridField accountField = new ListGridField("account", constants.account());
 
 		giGrid.setFields(new ListGridField[] { accountField, titleGameField,
 				typeField, readField, correctField, answerField });
 		giGrid.setCanResizeFields(true);
+		giGrid.setSortField("sortKey");
 
+
+		giGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {  
+	            public void onCellDoubleClick(CellDoubleClickEvent event) {  
+	            	if ("NarratorItem".equals(event.getRecord().getAttributeAsString("type"))||"AudioObject".equals(event.getRecord().getAttributeAsString("type"))){
+	            		String html = event.getRecord().getAttributeAsString("answer");
+//	            		JSONObject object = new JSONObject();
+//	            		JSONString string = new JSONString("http://streetlearn.appspot.com/uploadService/414007/arlearn1/image54439871.jpg");
+//	            		object.put("imageUrl", string);
+//	            		string = new JSONString("http://sharetec.celstec.org/arlearn/Vanessa.m4a");
+//	            		object.put("audioUrl", string);
+//	            		html = object.toString();
+	            		OpenQuestionAnswerWindow window = new OpenQuestionAnswerWindow(html, "answer");
+	            		window.show();
+	            	}
+//	                sayCellEvent(countryGrid, "Double-clicked", (CountryRecord) event.getRecord(), event.getColNum());  
+	            }  
+	        }); 
+		
 		giGrid.setPadding(5);
 		giGrid.setWidth("100%");
 		giGrid.setHeight("100%");
@@ -264,49 +325,53 @@ public class RunTab extends Tab {
 		actionGrid = new ListGrid();
 		actionGrid.setWidth("100%");
 		actionGrid.setHeight(150);
-//		ListGridField gameField = new ListGridField("gameId", "Game Id");
+		// ListGridField gameField = new ListGridField("gameId", "Game Id");
 		ListGridField itemIdField = new ListGridField("itemId", "Item Id");
-		ListGridField nameField = new ListGridField("name", "Item name");
+		ListGridField nameField = new ListGridField("name", constants.itemName());
 		actionGrid.setFields(new ListGridField[] { itemIdField, nameField });
 		actionGrid.setDataSource(TriggerDataSource.getInstance());
 
-//		actionGrid.setPadding(5);
-//		actionGrid.setWidth("100%");
-//		actionGrid.setHeight("100%");
+		// actionGrid.setPadding(5);
+		// actionGrid.setWidth("100%");
+		// actionGrid.setHeight("100%");
 		actionGrid.fetchData();
-        canvas.addChild(actionGrid);  
+		canvas.addChild(actionGrid);
 
-		IButton sendTriggers = new IButton("Send");
+		IButton sendTriggers = new IButton(constants.send());
 		sendTriggers.setLeft(0);
 		sendTriggers.setTop(160);
 		sendTriggers.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				for (ListGridRecord userRec: userGrid.getSelectedRecords()){
+				for (ListGridRecord userRec : userGrid.getSelectedRecords()) {
 					System.out.println(userRec.getAttribute("email"));
 
-					for (ListGridRecord actionRec: actionGrid.getSelectedRecords()){
+					for (ListGridRecord actionRec : actionGrid
+							.getSelectedRecords()) {
 
-						System.out.println(actionRec.getAttribute("itemId"));
-						ActionClient.getInstance().notify(runId, userRec.getAttribute("email"), actionRec.getAttribute("itemId"), new JsonCallback() {
-							
-							@Override
-							public void onJsonReceived(JSONValue jsonValue) {
-								System.out.println("time for deselection");
-								userGrid.deselectAllRecords();
-								actionGrid.deselectAllRecords();
-							}
-							
-							@Override
-							public void onError() {
-								userGrid.deselectAllRecords();
-								actionGrid.deselectAllRecords();
-							}
-						});
+						ActionClient.getInstance().notify(runId,
+								userRec.getAttribute("email"),
+								actionRec.getAttribute("itemId"),
+								new JsonCallback() {
+
+									@Override
+									public void onJsonReceived(
+											JSONValue jsonValue) {
+										
+										userGrid.deselectAllRecords();
+										actionGrid.deselectAllRecords();
+									}
+
+									@Override
+									public void onError() {
+										userGrid.deselectAllRecords();
+										actionGrid.deselectAllRecords();
+									}
+								});
 						userGrid.deselectAllRecords();
 						actionGrid.deselectAllRecords();
 					}
 				}
-				
+
 			}
 		});
 		canvas.addChild(sendTriggers);

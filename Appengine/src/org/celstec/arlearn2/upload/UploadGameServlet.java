@@ -126,11 +126,17 @@ public class UploadGameServlet extends HttpServlet {
 
 	}
 
-	private void unpackGame(GamePackage arlPackage, HttpServletRequest req, String auth)
+	private void unpackGame(GamePackage arlPackage, HttpServletRequest req, String auth) {
+		auth = auth == null?req.getHeader("Authorization"):auth;
+		GameUnpacker gu = new GameUnpacker(arlPackage, auth);
+		gu.unpack();
+	}
+	private void unpackGame_old(GamePackage arlPackage, HttpServletRequest req, String auth)
 			throws AuthenticationException {
 		Game game = arlPackage.getGame();
 		if (game != null) {
 			GameDelegator gd = new GameDelegator(auth == null?req.getHeader("Authorization"):auth);
+			game.setGameId(null);
 			game = gd.createGame(game);
 			Long gameId = game.getGameId();
 			Iterator<GeneralItem> it = arlPackage.getGeneralItems().iterator();

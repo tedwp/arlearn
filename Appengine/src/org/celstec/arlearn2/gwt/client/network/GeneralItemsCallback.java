@@ -49,8 +49,16 @@ public abstract class GeneralItemsCallback extends JsonCallback {
 		JSONObject game = jsonValue.get(i).isObject();
 		if (game == null) return -1;
 		return (long) game.get("id").isNumber().doubleValue();
+	
 	}
 	
+	public int getSortKey(int i) {
+		if (jsonValue == null) return -1;
+		JSONObject game = jsonValue.get(i).isObject();
+		if (game == null) return -1;
+		if (!game.containsKey("sortKey")) return 0;
+		return (int) game.get("sortKey").isNumber().doubleValue();
+	}
 	public long getGameId(int i) {
 		if (jsonValue == null) return -1;
 		JSONObject game = jsonValue.get(i).isObject();

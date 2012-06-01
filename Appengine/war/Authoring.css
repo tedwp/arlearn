@@ -14,6 +14,10 @@ a:visited {
 	color: darkblue; 
 }
 
+.htmlsection {
+	text-align:left;
+}
+
 .gwt-DialogBox {
 	border: 2px solid #AAAAAA;
 	background-color: white;

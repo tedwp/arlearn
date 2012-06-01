@@ -41,6 +41,9 @@ public class LoginClient {
 
 								} catch (JSONException e) {
 								}
+							} else {
+								
+								lc.onError();
 							}
 
 						}
