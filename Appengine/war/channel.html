@@ -1,0 +1,17 @@
+<html>
+<head>
+      <script src='/_ah/channel/jsapi'></script>
+</head>
+
+<body>
+  <script>
+    channel = new goog.appengine.Channel('{{ token }}');
+    socket = channel.open();
+    socket.onopen = onOpened;
+    socket.onmessage = onMessage;
+    socket.onerror = onError;
+    socket.onclose = onClose;
+  </script>
+</body>
+
+</html>
