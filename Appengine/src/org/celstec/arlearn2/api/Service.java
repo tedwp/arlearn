@@ -40,8 +40,7 @@ public class Service {
 	}
 	
 	protected String toJson(Object bean) {
-		JsonBeanSerialiser jbs = new JsonBeanSerialiser(bean);
-		return jbs.serialiseToJson().toString();
+		return bean.toString();
 	}
 	
 	protected String serialise(Object bean, String accept) {

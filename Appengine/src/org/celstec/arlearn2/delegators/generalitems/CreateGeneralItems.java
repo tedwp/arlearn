@@ -2,12 +2,15 @@ package org.celstec.arlearn2.delegators.generalitems;
 
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.notification.GeneralItemModification;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.cache.GeneralitemsCache;
 import org.celstec.arlearn2.delegators.GameDelegator;
 import org.celstec.arlearn2.delegators.GoogleDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
+import org.celstec.arlearn2.tasks.beans.NotifyRunsFromGame;
+import org.celstec.arlearn2.tasks.beans.UpdateGeneralItems;
 
 import com.google.gdata.util.AuthenticationException;
 
@@ -24,6 +27,8 @@ public class CreateGeneralItems extends GoogleDelegator {
 	public GeneralItem createGeneralItem(GeneralItem gi) {
 		GeneralitemsCache.getInstance().removeGeneralItemList(gi.getGameId());
 		GeneralItemManager.addGeneralItem(gi);
+		(new NotifyRunsFromGame(authToken, gi.getGameId(), gi, GeneralItemModification.CREATED)).scheduleTask();
+
 		return gi;
 	}
 
@@ -46,6 +51,8 @@ public class CreateGeneralItems extends GoogleDelegator {
 		}
 		GeneralItemManager.deleteGeneralItem(gameId, itemId);
 		GeneralitemsCache.getInstance().removeGeneralItemList(gameId);
+		(new NotifyRunsFromGame(authToken, gi.getGameId(), gi, GeneralItemModification.DELETED)).scheduleTask();
+
 		return gi;
 	}
 	

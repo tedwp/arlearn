@@ -17,7 +17,7 @@ import org.celstec.arlearn2.jdo.manager.RunManager;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import sun.misc.GC.LatencyRequest;
+
 
 public class AnswerJspUtil {
 	

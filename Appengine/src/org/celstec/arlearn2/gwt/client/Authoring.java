@@ -47,6 +47,7 @@ import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.TabBarControls;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -130,6 +131,17 @@ public class Authoring implements EntryPoint {
         
 
 	  }
+	
+	public void onModuleLoad1() {
+		RootPanel rootPanel = RootPanel.get();
+
+		HLayout navLayout = new HLayout();
+		navLayout.setMembersMargin(10);
+		
+		navLayout.addChild(new IButton());
+		rootPanel.add(navLayout);
+		
+	}
 	
 	public void onModuleLoad() {
 		RootPanel rootPanel = RootPanel.get("container");

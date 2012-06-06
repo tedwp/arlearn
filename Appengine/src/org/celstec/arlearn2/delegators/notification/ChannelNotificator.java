@@ -1,6 +1,5 @@
 package org.celstec.arlearn2.delegators.notification;
 
-import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 
 import com.google.appengine.api.channel.ChannelMessage;
 import com.google.appengine.api.channel.ChannelService;
@@ -25,6 +24,7 @@ public class ChannelNotificator {
 	}
 	
 	public void notify(String account, String message) {
+		System.out.println(account + " gets "+message);
 		channelService.sendMessage(new ChannelMessage(account, message));
 	}
 }

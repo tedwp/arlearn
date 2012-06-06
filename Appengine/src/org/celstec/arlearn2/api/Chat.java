@@ -14,8 +14,6 @@ import org.celstec.arlearn2.delegators.notification.LocationNotification;
 import org.celstec.arlearn2.delegators.notification.ScoreNotification;
 import org.celstec.arlearn2.tasks.AsyncTasksServlet;
 import org.celstec.arlearn2.tasks.XmppNotificationServlet;
-import org.celstec.arlearn2.tasks.beans.DeleteGame;
-import org.celstec.arlearn2.tasks.beans.NotifyUpdateRun;
 
 import com.google.appengine.api.xmpp.JID;
 import com.google.appengine.api.xmpp.Message;
@@ -42,7 +40,6 @@ public class Chat {
 	public User flush(@PathParam("message") String message, @HeaderParam("Authorization") String token) {
 		log.severe("test message");
 		log.log(Level.SEVERE, "in chat class");
-		(new NotifyUpdateRun(token, 1110705l, true, false, "arlearn1")).scheduleTask();
 //		DeleteGame dg = new DeleteGame();
 //		dg.setToken("token");
 //		dg.setGameId(12345l);
@@ -89,7 +86,6 @@ public class Chat {
 	public String createRun(@HeaderParam("Authorization") String token,
 			@PathParam("runId") long runId, @PathParam("email") String email) {
 		try{
-			(new NotifyUpdateRun(token, runId, true, false, email)).scheduleTask();
 		} catch (Exception e) {
 			return e.getMessage();
 		}

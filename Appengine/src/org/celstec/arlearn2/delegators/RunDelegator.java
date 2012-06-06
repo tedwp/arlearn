@@ -23,7 +23,6 @@ import org.celstec.arlearn2.tasks.beans.DeleteScoreRecords;
 import org.celstec.arlearn2.tasks.beans.DeleteTeams;
 import org.celstec.arlearn2.tasks.beans.DeleteUsers;
 import org.celstec.arlearn2.tasks.beans.DeleteVisibleItems;
-import org.celstec.arlearn2.tasks.beans.NotifyUpdateRun;
 import org.celstec.arlearn2.util.RunsCache;
 
 import com.google.gdata.util.AuthenticationException;
@@ -112,8 +111,9 @@ public class RunDelegator extends GoogleDelegator {
 			run.setError("Game with id '" + run.getGameId() + "' does not exist");
 			return run;
 		}
-		JsonBeanSerialiser jbs = new JsonBeanSerialiser(run.getGameOverDependsOn());
-		run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), jbs.serialiseToJson().toString()));
+//		JsonBeanSerialiser jbs = new JsonBeanSerialiser(run.getGameOverDependsOn());
+//		run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), jbs.serialiseToJson().toString()));
+		run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), null));
 		return run;
 	}
 
@@ -157,5 +157,10 @@ public class RunDelegator extends GoogleDelegator {
 		GameDelegator gd = new GameDelegator(this);
 		logger.log(Level.SEVERE, "game "+gd.getNotOwnedGame(r.getGameId()));
 		return gd.getNotOwnedGame(r.getGameId()).getConfig();
+	}
+
+	public List<Run>  getRunsForGame(long gameId) {
+		return RunManager.getRuns(null, gameId, null, null);
+		
 	}
 }

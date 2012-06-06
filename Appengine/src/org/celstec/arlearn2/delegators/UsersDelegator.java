@@ -3,16 +3,17 @@ package org.celstec.arlearn2.delegators;
 import java.util.List;
 
 import org.celstec.arlearn2.beans.run.Run;
+import org.celstec.arlearn2.beans.notification.RunModification;
 import org.celstec.arlearn2.beans.run.Team;
 import org.celstec.arlearn2.beans.run.TeamList;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.cache.UserLoggedInCache;
 import org.celstec.arlearn2.cache.UsersCache;
+import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.manager.RunManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
-import org.celstec.arlearn2.tasks.beans.NotifyUpdateRun;
 
 import com.google.gdata.util.AuthenticationException;
 
@@ -46,7 +47,13 @@ public class UsersDelegator extends GoogleDelegator {
 		u.setEmail(UserLoggedInManager.normalizeEmail(u.getEmail()));
 		UserManager.addUser(u);
 		UsersCache.getInstance().removeUser(u.getRunId()); //removing because user might be cached in a team
-		(new NotifyUpdateRun(authToken,u.getRunId(), true, false, u.getEmail())).scheduleTask();
+//		(new NotifyUpdateRun(authToken,u.getRunId(), true, false, u.getEmail())).scheduleTask();
+		
+		RunModification rm = new RunModification();
+		rm.setModificationType(RunModification.CREATED);
+		rm.setRun((new RunDelegator(this)).getRun(u.getRunId()));
+		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
+		
 		return u;
 	}
 
@@ -114,7 +121,10 @@ public class UsersDelegator extends GoogleDelegator {
 		User user = getUserByEmail(runId, email);
 		UserManager.deleteUser(runId, email);
 		UsersCache.getInstance().removeUser(runId); //removing because user might be cached in a team
-		(new NotifyUpdateRun(authToken,runId, false, true, user.getEmail())).scheduleTask();
+		//(new NotifyUpdateRun(authToken,runId, false, true, user.getEmail())).scheduleTask();
+		
+		notifyRunDeleted(runId, email);
+		
 		return user;
 	}
 
@@ -131,9 +141,17 @@ public class UsersDelegator extends GoogleDelegator {
 		for (User u : userList) {
 			runId = u.getRunId();
 			UserManager.deleteUser(runId, u.getEmail());
-			(new NotifyUpdateRun(authToken,runId, false, true, u.getEmail())).scheduleTask();
+			notifyRunDeleted(runId, u.getEmail());
 		}
 		if (runId != null) UsersCache.getInstance().removeUser(runId);
+	}
+	
+	private void notifyRunDeleted(long runId, String email) {
+		RunModification rm = new RunModification();
+		rm.setModificationType(RunModification.DELETED	);
+		rm.setRun(new Run());
+		rm.getRun().setRunId(runId);
+		ChannelNotificator.getInstance().notify(email, rm);
 	}
 	
 }

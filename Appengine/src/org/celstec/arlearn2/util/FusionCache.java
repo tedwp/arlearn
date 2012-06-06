@@ -9,8 +9,6 @@ import net.sf.jsr107cache.CacheManager;
 
 import java.util.logging.Logger;
 
-import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
-
 
 public class FusionCache {
 	

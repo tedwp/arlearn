@@ -84,12 +84,12 @@ public class RunManager {
 		run.setStartTime(jdo.getStartTime());
 		run.setServerCreationTime(jdo.getServerCreationTime());
 		JsonBeanDeserializer jbd;
-		try {
-			jbd = new JsonBeanDeserializer(jdo.getGameOverDependsOn());
-			run.setGameOverDependsOn((DependsOn) jbd.deserialize(DependsOn.class));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			jbd = new JsonBeanDeserializer(jdo.getGameOverDependsOn());
+//			run.setGameOverDependsOn((DependsOn) jbd.deserialize(DependsOn.class));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return run;
 	}
 

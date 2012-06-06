@@ -10,10 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.User;
-import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.generalitems.QueryGeneralItems;
-import org.celstec.arlearn2.delegators.notification.UpdateRunNotification;
 import org.celstec.arlearn2.delegators.progressRecord.CreateProgressRecord;
 import org.celstec.arlearn2.delegators.scoreRecord.CreateScoreRecord;
 import org.celstec.arlearn2.tasks.beans.GenericBean;
