@@ -15,4 +15,11 @@ public class AuthResponse extends Bean{
 	public void setAuth(String auth) {
 		this.auth = auth;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		AuthResponse other = (AuthResponse ) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getAuth(), other.getAuth()); 
+	}
 }

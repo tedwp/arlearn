@@ -27,9 +27,6 @@ public class Run extends RunBean implements Serializable{
 			nullSafeEquals(getGame(), other.getGame()); 
 
 	}
-	
-	@Deprecated
-	private DependsOn gameOverDependsOn;
 
 	public Run(){
 		
@@ -83,15 +80,15 @@ public class Run extends RunBean implements Serializable{
 		this.game = game;
 	}
 
-	@Deprecated
-	public DependsOn getGameOverDependsOn() {
-		return gameOverDependsOn;
-	}
-
-	@Deprecated
-	public void setGameOverDependsOn(DependsOn gameOverDependsOn) {
-		this.gameOverDependsOn = gameOverDependsOn;
-	}
+//	@Deprecated
+//	public DependsOn getGameOverDependsOn() {
+//		return gameOverDependsOn;
+//	}
+//
+//	@Deprecated
+//	public void setGameOverDependsOn(DependsOn gameOverDependsOn) {
+//		this.gameOverDependsOn = gameOverDependsOn;
+//	}
 
 	public boolean timeStampCheck() {
 		//TODO implement

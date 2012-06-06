@@ -3,6 +3,7 @@ package org.celstec.arlearn2.beans;
 import java.io.Serializable;
 
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
+import org.codehaus.jettison.json.JSONObject;
 
 public class Bean  implements Serializable {
 
@@ -53,8 +54,14 @@ public class Bean  implements Serializable {
 	}
 	
 	public String toString() {
-		JsonBeanSerialiser jbs = new JsonBeanSerialiser(this);
-		return jbs.serialiseToJson().toString();
+//		JsonBeanSerialiser jbs = new JsonBeanSerialiser(this);
+//		return jbs.serialiseToJson().toString();
+		JSONObject json = JsonBeanSerialiser.serialiseToJson(this);
+		if (json == null) {
+			System.err.println("json is null for this bean "+getClass());
+			return null;
+		}
+		return json.toString();
 	}
 	
 	@Override

@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.celstec.arlearn2.beans.AuthResponseDeserializer;
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.dependencies.AndDependency;
@@ -29,6 +30,7 @@ import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.RunBean;
+import org.celstec.arlearn2.beans.run.RunList;
 import org.celstec.arlearn2.beans.run.User;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -217,30 +219,65 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		AudioObjectDeserializer aod = new AudioObjectDeserializer();
 		VideoObjectDeserializer vod = new VideoObjectDeserializer();
 		MultipleChoiceTestDeserializer mct = new MultipleChoiceTestDeserializer();
+		GeneralItemDeserializer gid = new GeneralItemDeserializer();
+		OpenQuestionDeserializer oqd =new OpenQuestionDeserializer();
 		
-		customDeserializerMap.put(GeneralItem.class, new GeneralItemDeserializer());
+		DependencyDeserializer dd = new DependencyDeserializer();
+		GameDeserializer gd = new GameDeserializer();
+		ConfigDeserializer cd = new ConfigDeserializer();
+		RunBeanDeserializer rbd = new RunBeanDeserializer();
+		RunDeserializer rd = new RunDeserializer();
+		MultipleChoiceAnswerItemDeserializer mcaid = new MultipleChoiceAnswerItemDeserializer();
+		UserDeserializer ud = new UserDeserializer();
+		
+		customDeserializerMap.put(GeneralItem.class, gid);
 		customDeserializerMap.put(NarratorItem.class, nid);
 		customDeserializerMap.put(AudioObject.class, aod);
 		customDeserializerMap.put(VideoObject.class, vod);
-		customDeserializerMap.put(OpenQuestion.class, new OpenQuestionDeserializer());
-		customDeserializerMap.put(Dependency.class, new DependencyDeserializer());
-		customDeserializerMap.put(ActionDependency.class, new DependencyDeserializer());
-		customDeserializerMap.put(AndDependency.class, new DependencyDeserializer());
-		customDeserializerMap.put(OrDependency.class, new DependencyDeserializer());
-		customDeserializerMap.put(TimeDependency.class, new DependencyDeserializer());
-		customDeserializerMap.put(Game.class, new GameDeserializer());
-		customDeserializerMap.put(Config.class, new ConfigDeserializer());
-		customDeserializerMap.put(RunBean.class, new RunBeanDeserializer());
-		customDeserializerMap.put(Run.class, new RunDeserializer());
-		customDeserializerMap.put(MultipleChoiceAnswerItem.class, new MultipleChoiceAnswerItemDeserializer());
+		customDeserializerMap.put(OpenQuestion.class, oqd);
+		customDeserializerMap.put(Dependency.class, dd);
+		customDeserializerMap.put(ActionDependency.class, dd);
+		customDeserializerMap.put(AndDependency.class, dd);
+		customDeserializerMap.put(OrDependency.class, dd);
+		customDeserializerMap.put(TimeDependency.class, dd);
+		customDeserializerMap.put(Game.class, gd);
+		customDeserializerMap.put(Config.class,cd);
+		customDeserializerMap.put(RunBean.class, rbd);
+		customDeserializerMap.put(Run.class, rd);
+		
+		customDeserializerMap.put(MultipleChoiceAnswerItem.class, mcaid);
 		customDeserializerMap.put(MultipleChoiceTest.class, mct);
-		customDeserializerMap.put(User.class, new UserDeserializer());
+		customDeserializerMap.put(User.class, ud);
 
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.authoring.GameCreationStatus", new GameCreationStatusDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.NarratorItem", nid);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.AudioObject", aod);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.VideoObject", vod);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest", mct);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.GeneralItem", gid);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.GeneralItemList", new GeneralItemListDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.Bean.OpenQuestion", oqd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.dependencies.Dependency", dd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.dependencies.ActionDependency", dd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.dependencies.AndDependency", dd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.dependencies.OrDependency", dd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.dependencies.TimeDependency", dd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.Game", gd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.Config", cd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.RunBean", rbd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Run", rd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.RunList", new RunListDeserializer());
+		
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem", mcaid);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest", mct);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.User", ud);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.AuthResponse", new AuthResponseDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.UserList", new UserListDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Team", new TeamDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.TeamList", new TeamListDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.RunModification", new RunModificationDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.GeneralItemModification", new GeneralItemModificationDeserializer());
+		
 	}
 	
 	
