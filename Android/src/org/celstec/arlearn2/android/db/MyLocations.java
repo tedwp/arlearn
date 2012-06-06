@@ -78,7 +78,6 @@ public class MyLocations  extends GenericDbTable {
 		return locations;
 	}
 
-	@Override
 	public Object queryById(Object id) {
 		return null;
 	}

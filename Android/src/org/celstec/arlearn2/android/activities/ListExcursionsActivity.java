@@ -11,6 +11,7 @@ import org.celstec.arlearn2.android.db.notificationbeans.NotificationBean;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.BackgroundService;
+import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 import org.celstec.arlearn2.android.service.NotificationService;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.run.Run;
@@ -37,8 +38,11 @@ public class ListExcursionsActivity  extends GeneralListActivity {
 	
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
-			NotificationBean bean = (NotificationBean) intent.getExtras().getSerializable("bean");
-			if (bean.getClass().equals(org.celstec.arlearn2.android.db.notificationbeans.Run.class)) {
+//			Object bean = (Object) intent.getExtras().getSerializable("bean");
+//			System.out.println("in execursions "+bean);
+//			if (bean.getClass().equals(org.celstec.arlearn2.android.db.notificationbeans.Run.class)) {
+			Boolean forMe = intent.getExtras().getBoolean(ListExcursionsActivity.class.getCanonicalName(), false);
+			if (forMe) {
 				runs = getExcursionsFromDatabase();
 				renderExcursionList();
 			}
@@ -47,6 +51,7 @@ public class ListExcursionsActivity  extends GeneralListActivity {
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ChannelAPINotificationService.startService(this);
 		if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			this.finish();
 		} else {
@@ -122,7 +127,9 @@ public class ListExcursionsActivity  extends GeneralListActivity {
 
 	protected void onResume() {
 		super.onResume();
-		registerReceiver(broadcastReceiver, new IntentFilter(NotificationService.BROADCAST_ACTION));
+//		registerReceiver(broadcastReceiver, new IntentFilter(NotificationService.BROADCAST_ACTION));
+//		registerReceiver(broadcastReceiver, new IntentFilter(Run.class.getName()));
+		registerReceiver(broadcastReceiver, new IntentFilter("org.celstec.arlearn.updateActivities"));
 	}
 	
 	@Override

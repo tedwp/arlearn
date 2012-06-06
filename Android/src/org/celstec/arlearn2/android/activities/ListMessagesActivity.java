@@ -33,8 +33,9 @@ public class ListMessagesActivity extends GeneralListActivity {
 	
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
-			NotificationBean bean = (NotificationBean) intent.getExtras().getSerializable("bean");
-			if (bean.getClass().equals(org.celstec.arlearn2.android.db.notificationbeans.GeneralItem.class)) {
+//			NotificationBean bean = (NotificationBean) intent.getExtras().getSerializable("bean");
+			Boolean forMe = intent.getExtras().getBoolean(ListMessagesActivity.class.getCanonicalName(), false);
+			if (forMe) {
 				doDatabaseQueryOnAuthenticated();
 			}
 		}
@@ -85,7 +86,7 @@ public class ListMessagesActivity extends GeneralListActivity {
 	protected void onResume() {
 		super.onResume();
 		doDatabaseQueryOnAuthenticated();
-		registerReceiver(broadcastReceiver, new IntentFilter(NotificationService.BROADCAST_ACTION));
+		registerReceiver(broadcastReceiver, new IntentFilter("org.celstec.arlearn.updateActivities"));
 	}
 	
 	@Override

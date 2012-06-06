@@ -9,10 +9,16 @@ import android.content.SharedPreferences.Editor;
 public class PropertiesAdapter {
 	
 	private Context context;
+	private static PropertiesAdapter pa;
 	
 	public PropertiesAdapter(Context context) {
 		if (context == null) throw new NullPointerException("context passed to a properties adapter cannot be null");
 		this.context = context;
+	}
+	
+	public static PropertiesAdapter getInstance(Context context) {
+		if (pa == null)  pa = new PropertiesAdapter(context);
+		return pa;
 	}
 	
 	private SharedPreferences getDefaultPrefs() {

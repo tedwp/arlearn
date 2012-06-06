@@ -80,7 +80,6 @@ public class GameAdapter extends GenericDbTable {
 		return db.getSQLiteDb().delete(getTableName(), ID+" = "+id, null);
 	}
 
-	@Override
 	public Object queryById(Object id) {
 		try {
 			return query(ID + "= ?", new String[] { ""+ id })[0];

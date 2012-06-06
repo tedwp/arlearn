@@ -14,12 +14,12 @@ public abstract class GenericDbTable {
 
 	public abstract boolean insert(Object o);
 	
-	public abstract int delete(Object o);
+	public int delete(Object o){ return -1;}
+	
 	
 //	public abstract Object[] query();
 	
-	public abstract Object queryById(Object id);
-	
+
 	public String dropStatement() {
 		return "DROP TABLE IF EXISTS "+getTableName();
 	}

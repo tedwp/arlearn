@@ -91,7 +91,7 @@ public class MediaCache extends GenericDbTable {
 		return null;
 	}
 
-	@Override
+	
 	public MediaCacheItem queryById(Object id) {
 		try {
 			return query(ITEM_ID + "= ?", new String[] { (String) id }, 1)[0];

@@ -8,6 +8,7 @@ import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.MyActions;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.db.RunAdapter;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
@@ -67,7 +68,7 @@ public class GeneralItemsSyncroniser extends GenericSyncroniser {
 			if (gl.getErrorCode() != null && gl.getErrorCode() == GeneralItemList.RUNNOTFOUND) {
 				db.deleteRun(currentRunId);
 			}
-			Run currentRun = (Run) db.table(DBAdapter.RUN_ADAPTER).queryById(currentRunId);
+			Run currentRun = (Run) ((RunAdapter) db.table(DBAdapter.RUN_ADAPTER)).queryById(currentRunId);
 			Iterator<GeneralItem> it = gl.getGeneralItems().iterator();
 			while (it.hasNext()) {
 				GeneralItem item = it.next();
@@ -115,7 +116,7 @@ public class GeneralItemsSyncroniser extends GenericSyncroniser {
 //	}
 	
 	public static Run getCurrentRun(DBAdapter db, Long runId) {
-		return (Run) db.table(DBAdapter.RUN_ADAPTER).queryById(runId);
+		return (Run) ((RunAdapter) db.table(DBAdapter.RUN_ADAPTER)).queryById(runId);
 	}
 	
 	public static Run getCurrentRun(Context ctx, Long runId){

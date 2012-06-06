@@ -45,6 +45,18 @@
 		<service android:name=".service.NotificationService" />
 		<service android:name=".service.AudioPlayerService" />
 		<service android:name=".service.AlarmService" />
+        <service android:name=".service.ChannelAPINotificationService" />
+        
+        <receiver android:name=".service.BeanReceiver" >
+            <intent-filter>
+                <action android:name="org.celstec.arlearn.beanbroadcast" />
+            </intent-filter>
+        </receiver>
+         <receiver android:name=".service.GeneralItemReceiver" >
+            <intent-filter>
+                <action android:name="org.celstec.arlearn2.beans.notification.GeneralItemModification" />
+            </intent-filter>
+        </receiver>
 		
     </application>
     

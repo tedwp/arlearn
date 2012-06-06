@@ -156,7 +156,6 @@ public class MyResponses extends GenericDbTable {
 		return resultRuns;
 	}	
 
-	@Override
 	public Object queryById(Object id) {
 		return null;
 	}

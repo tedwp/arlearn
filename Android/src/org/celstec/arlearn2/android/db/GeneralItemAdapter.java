@@ -79,7 +79,7 @@ public class GeneralItemAdapter extends GenericDbTable {
 //		if (json != null)
 //			gi.setPayload(json);
 //			gi.setPayload(jbs.serialiseToJson().toString());
-		GeneralItem oldItem = queryById(gi.getId());
+		GeneralItem oldItem = queryById(gi.getId(), gi.getRunId());
 		if (oldItem == null || !oldItem.equals(gi)) {
 			String giJson = jbs.serialiseToJson().toString();
 			gic.remove(gi.getId());
@@ -109,18 +109,18 @@ public class GeneralItemAdapter extends GenericDbTable {
 	}
 
 	
-	public int delete(Object o) {
+	public int delete(Object o, long runId) {
 		Long id = (Long) o;
-		return db.getSQLiteDb().delete(getTableName(), ID + " = " + id, null);
+		return db.getSQLiteDb().delete(getTableName(), ID + " = " + id+ " and "+RUNID + " = "+runId, null);
 	}
 	
 	public int deleteRun(long runId) {
 		return db.getSQLiteDb().delete(getTableName(), RUNID + " = " + runId, null);
 	}
 
-	public GeneralItem queryById(Object id) {
+	public GeneralItem queryById(Object id, long runId) {
 		try {
-			return query(ID + "= "+id, null)[0];
+			return query(ID + "= "+id + " and "+RUNID + " = "+runId, null)[0];
 		} catch (Exception e) {
 			return null;
 		}
