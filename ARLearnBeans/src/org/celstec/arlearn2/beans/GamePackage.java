@@ -1,9 +1,11 @@
 package org.celstec.arlearn2.beans;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.game.ScoreDefinition;
 import org.celstec.arlearn2.beans.game.ScoreDefinitionList;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
@@ -13,7 +15,7 @@ public class GamePackage extends Bean{
 	
 	private List<GeneralItem> generalItems = new Vector();
 	
-	private ScoreDefinitionList scoreDefinitions;
+	private List<ScoreDefinition> scoreDefinitions = new ArrayList<ScoreDefinition>();
 	
 	public GamePackage() {
 		
@@ -39,12 +41,20 @@ public class GamePackage extends Bean{
 		this.generalItems.add(generalItem);
 	}
 
-	public ScoreDefinitionList getScoreDefinitions() {
+	public List<ScoreDefinition> getScoreDefinitions() {
 		return scoreDefinitions;
 	}
 
-	public void setScoreDefinitions(ScoreDefinitionList scoreDefinitions) {
+	public void setScoreDefinitions(List<ScoreDefinition> scoreDefinitions) {
 		this.scoreDefinitions = scoreDefinitions;
+	}
+	
+	public void addScoreDefinition(ScoreDefinition sd) {
+		scoreDefinitions.add(sd);
+	}
+	
+	public void addScoreDefinition(List<ScoreDefinition> sds) {
+		this.scoreDefinitions.addAll(sds);
 	}
 
 	

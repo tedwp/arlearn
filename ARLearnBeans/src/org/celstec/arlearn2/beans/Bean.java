@@ -11,6 +11,7 @@ public class Bean  implements Serializable {
 	 * Error code, indicates run was not found
 	 */
 	public static final int RUNNOTFOUND = 1;
+	public static final int INVALID_CREDENTIALS = 2;
 	 
 	private String type;
 	private String error;

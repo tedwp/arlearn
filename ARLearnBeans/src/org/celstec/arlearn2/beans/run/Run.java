@@ -2,7 +2,6 @@ package org.celstec.arlearn2.beans.run;
 
 import java.io.Serializable;
 
-import org.celstec.arlearn2.beans.game.DependsOn;
 import org.celstec.arlearn2.beans.game.Game;
 
 
@@ -14,6 +13,7 @@ public class Run extends RunBean implements Serializable{
 	private Long startTime;
 	private Long serverCreationTime;
 	private Game game;
+	private RunConfig runConfig;
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -24,6 +24,7 @@ public class Run extends RunBean implements Serializable{
 			nullSafeEquals(getOwner(), other.getOwner()) && 
 			nullSafeEquals(getStartTime(), other.getStartTime()) && 
 			nullSafeEquals(getServerCreationTime(), other.getServerCreationTime()) && 
+			nullSafeEquals(getRunConfig(), other.getRunConfig()) && 
 			nullSafeEquals(getGame(), other.getGame()); 
 
 	}
@@ -80,6 +81,7 @@ public class Run extends RunBean implements Serializable{
 		this.game = game;
 	}
 
+	
 //	@Deprecated
 //	public DependsOn getGameOverDependsOn() {
 //		return gameOverDependsOn;
@@ -89,6 +91,14 @@ public class Run extends RunBean implements Serializable{
 //	public void setGameOverDependsOn(DependsOn gameOverDependsOn) {
 //		this.gameOverDependsOn = gameOverDependsOn;
 //	}
+
+	public RunConfig getRunConfig() {
+		return runConfig;
+	}
+
+	public void setRunConfig(RunConfig runConfig) {
+		this.runConfig = runConfig;
+	}
 
 	public boolean timeStampCheck() {
 		//TODO implement

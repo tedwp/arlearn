@@ -22,6 +22,8 @@ public class GameBeanDeserializer extends BeanDeserializer{
 		super.initBean(object, genericBean);
 		GameBean bean = (GameBean) genericBean;
 		if (object.has("gameId")) bean.setGameId(object.getLong("gameId"));
+		if (object.has("deleted")) bean.setDeleted(object.getBoolean("deleted"));
+		if (object.has("lastModificationDate")) bean.setLastModificationDate(object.getLong("lastModificationDate"));
 
 		
 	}

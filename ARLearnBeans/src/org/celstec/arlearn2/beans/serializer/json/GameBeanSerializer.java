@@ -12,6 +12,8 @@ public class GameBeanSerializer extends BeanSerializer{
 		JSONObject returnObject = super.toJSON(bean);
 		try {
 			if (gameBean.getGameId() != null) returnObject.put("gameId", gameBean.getGameId());
+			if (gameBean.getDeleted() != null) returnObject.put("deleted", gameBean.getDeleted());
+			if (gameBean.getLastModificationDate() != null) returnObject.put("lastModificationDate", gameBean.getLastModificationDate());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

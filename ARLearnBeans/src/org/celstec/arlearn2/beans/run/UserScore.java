@@ -2,45 +2,45 @@ package org.celstec.arlearn2.beans.run;
 
 public class UserScore extends RunBean{
 
-	private long userScore;
-	private long teamScore;
-	private long allScore;
+	private Long userScore;
+	private Long teamScore;
+	private Long allScore;
 	
-	private long totalScore;
+	private Long totalScore;
 	
 	public UserScore() {
 		
 	}
 
-	public long getUserScore() {
+	public Long getUserScore() {
 		return userScore;
 	}
 
-	public void setUserScore(long userScore) {
+	public void setUserScore(Long userScore) {
 		this.userScore = userScore;
 	}
 
-	public long getTeamScore() {
+	public Long getTeamScore() {
 		return teamScore;
 	}
 
-	public void setTeamScore(long teamScore) {
+	public void setTeamScore(Long teamScore) {
 		this.teamScore = teamScore;
 	}
 
-	public long getAllScore() {
+	public Long getAllScore() {
 		return allScore;
 	}
 
-	public void setAllScore(long allScore) {
+	public void setAllScore(Long allScore) {
 		this.allScore = allScore;
 	}
 
-	public long getTotalScore() {
+	public Long getTotalScore() {
 		return totalScore;
 	}
 
-	public void setTotalScore(long totalScore) {
+	public void setTotalScore(Long totalScore) {
 		this.totalScore = totalScore;
 	}
 

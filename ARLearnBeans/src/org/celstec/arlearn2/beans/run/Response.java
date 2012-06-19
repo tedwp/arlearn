@@ -63,7 +63,17 @@ public class Response extends RunBean{
 		this.revoked = revoked;
 	}
     
-    
+	@Override
+	public boolean equals(Object obj) {
+		Response other = (Response ) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getGeneralItemId(), other.getGeneralItemId()) && 
+			nullSafeEquals(getUserEmail(), other.getUserEmail()) && 
+			nullSafeEquals(getResponseValue(), other.getResponseValue()) && 
+			nullSafeEquals(getResponseItemId(), other.getResponseItemId()) && 
+			nullSafeEquals(getTimestamp(), other.getTimestamp()) && 
+			nullSafeEquals(getRevoked(), other.getRevoked()); 
+	}
 
 
 }

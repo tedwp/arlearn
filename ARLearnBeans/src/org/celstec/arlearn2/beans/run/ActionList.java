@@ -5,8 +5,6 @@ import java.util.List;
 
 public class ActionList extends RunBean {
 
-	public static String actionsType = "org.celstec.arlearn2.beans.run.Action";
-
 	private List<Action> actions = new ArrayList<Action>();
 
 	public ActionList() {

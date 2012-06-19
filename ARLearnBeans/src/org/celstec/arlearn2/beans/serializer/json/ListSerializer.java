@@ -1,19 +1,23 @@
 package org.celstec.arlearn2.beans.serializer.json;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.codehaus.jettison.json.JSONStringer;
 
 public class ListSerializer {
+	private static final Logger logger = Logger.getLogger(ListSerializer.class.getName());
 
 	public static JSONArray toJSON(Object bean) {
 		List list = (List) bean;
 		JSONArray array = new JSONArray();
 		for (Object b: list) {
-			array.put(JsonBeanSerialiser.serialiseToJson(b));
+			if (b == null) {
+				logger.log(Level.SEVERE, "b is null for list "+bean.getClass());
+			} else {
+				array.put(JsonBeanSerialiser.serialiseToJson(b));	
+			}
 		}
 		return array;
 	}

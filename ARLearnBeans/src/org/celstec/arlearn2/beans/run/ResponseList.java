@@ -5,8 +5,6 @@ import java.util.List;
 
 public class ResponseList  extends RunBean{
 	
-	public static String responsesType = "org.celstec.arlearn2.beans.run.Response";
-	
 	private List<Response> responses = new ArrayList<Response>();
 
 	public ResponseList() {

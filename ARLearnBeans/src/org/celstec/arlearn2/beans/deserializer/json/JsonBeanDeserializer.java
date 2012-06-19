@@ -12,6 +12,8 @@ import java.util.Vector;
 
 import org.celstec.arlearn2.beans.AuthResponseDeserializer;
 import org.celstec.arlearn2.beans.Bean;
+import org.celstec.arlearn2.beans.GamePackageDeserializer;
+import org.celstec.arlearn2.beans.VersionDeserializer;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.dependencies.AndDependency;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
@@ -20,18 +22,30 @@ import org.celstec.arlearn2.beans.dependencies.TimeDependency;
 import org.celstec.arlearn2.beans.deserializer.BeanDeserializer;
 import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
 import org.celstec.arlearn2.beans.game.Config;
+import org.celstec.arlearn2.beans.game.ConfigDeserializer;
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.game.LocationUpdateConfig;
+import org.celstec.arlearn2.beans.game.LocationUpdateConfigDeserializer;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
+import org.celstec.arlearn2.beans.generalItem.GameDeserializer;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.GeneralItemDeserializer;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
+import org.celstec.arlearn2.beans.run.ActionDeserializer;
+import org.celstec.arlearn2.beans.run.ActionListDeserializer;
+import org.celstec.arlearn2.beans.run.LocationUpdateDeserializer;
+import org.celstec.arlearn2.beans.run.ResponseDeserializer;
+import org.celstec.arlearn2.beans.run.ResponseListDeserializer;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.RunBean;
+import org.celstec.arlearn2.beans.run.RunDeserializer;
 import org.celstec.arlearn2.beans.run.RunList;
 import org.celstec.arlearn2.beans.run.User;
+import org.celstec.arlearn2.beans.run.UserScoreDeserializer;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -135,6 +149,11 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		return deserialize(beanCls, json, cd);
+		
+	}
+	
+	public static Object deserialize(Class beanCls, JSONObject json, CustomDeserializer cd ) {
 		if (cd == null) cd = getCustomDeserializer(beanCls);
 		if (cd != null) return cd.toBean(json);
 		return null;
@@ -249,6 +268,7 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMap.put(MultipleChoiceTest.class, mct);
 		customDeserializerMap.put(User.class, ud);
 
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.Bean", new org.celstec.arlearn2.beans.deserializer.json.BeanDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.authoring.GameCreationStatus", new GameCreationStatusDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.NarratorItem", nid);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.AudioObject", aod);
@@ -262,19 +282,28 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.dependencies.AndDependency", dd);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.dependencies.OrDependency", dd);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.dependencies.TimeDependency", dd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.GamePackage", new GamePackageDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.Game", gd);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.Config", cd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.LocationUpdateConfig", new LocationUpdateConfigDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.RunBean", rbd);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Run", rd);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.RunList", new RunListDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Action", new ActionDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.ActionList", new ActionListDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Response", new ResponseDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.ResponseList", new ResponseListDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.UserScore", new UserScoreDeserializer());
 		
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem", mcaid);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest", mct);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.User", ud);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.AuthResponse", new AuthResponseDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.Version", new VersionDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.UserList", new UserListDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Team", new TeamDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.TeamList", new TeamListDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.LocationUpdate", new LocationUpdateDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.RunModification", new RunModificationDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.GeneralItemModification", new GeneralItemModificationDeserializer());
 		

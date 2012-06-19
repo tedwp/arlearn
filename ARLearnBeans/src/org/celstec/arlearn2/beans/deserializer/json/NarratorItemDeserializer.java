@@ -1,6 +1,7 @@
 package org.celstec.arlearn2.beans.deserializer.json;
 
 import org.celstec.arlearn2.beans.Bean;
+import org.celstec.arlearn2.beans.generalItem.GeneralItemDeserializer;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.codehaus.jettison.json.JSONException;

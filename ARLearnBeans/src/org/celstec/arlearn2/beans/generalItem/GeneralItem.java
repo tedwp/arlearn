@@ -20,7 +20,6 @@ public class GeneralItem extends GameBean{
 
 	private Dependency dependsOn;
 
-	
 	private Integer radius;
 	
 	private Long showAtTimeStamp;
