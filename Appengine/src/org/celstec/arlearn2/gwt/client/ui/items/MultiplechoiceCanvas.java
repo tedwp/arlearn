@@ -83,8 +83,10 @@ public class MultiplechoiceCanvas extends GeneralItemCanvas{
 
 	private void doLayout() {
 		this.addMember(form1);
-		form1.setFields(idItem, gameIdItem, nameItem, radiusItem, latItem, lngItem, dependencyField, roleGrid);
-		addField(form1, idItem, gameIdItem, nameItem, radiusItem, latItem, lngItem, dependencyField, roleGrid);
+//		form1.setFields(idItem, gameIdItem, nameItem, radiusItem, latItem, lngItem, dependencyField, roleGrid);
+		form1.setFields(idItem, gameIdItem, nameItem, latItem, lngItem, sortItem, dependencyField, roleGrid);
+//		addField(form1, idItem, gameIdItem, nameItem, radiusItem, latItem, lngItem, dependencyField, roleGrid);
+		addField(form1, idItem, gameIdItem, nameItem, latItem, lngItem, sortItem, dependencyField, roleGrid);
 		this.addMember(questionLabel);
 		this.addMember(questionHtmlLabel);
 		
@@ -323,11 +325,9 @@ public class MultiplechoiceCanvas extends GeneralItemCanvas{
 //		
 		if (o.get("answers") != null) {
 			JSONArray array = o.get("answers").isArray();
-			System.out.println("array size"+ o.get("answers"));
 			for (int  i = 0; i< array.size(); i++) {
 				JSONObject ansObject = array.get(i).isObject();
 				form2.setValue("answertext"+(i+1), "Html");
-				System.out.println("setting value for "+"answertext"+(i+1) + " to " + ansObject.get("answer").isString().stringValue());
 				if (ansObject.get("isCorrect") != null) form2.setValue("answercb"+(i+1), ansObject.get("isCorrect").isBoolean().booleanValue());
 				if (ansObject.get("answer") != null) form2.setValue("answertext"+(i+1), ansObject.get("answer").isString().stringValue());
 //				if (ansObject.get("id") != null);

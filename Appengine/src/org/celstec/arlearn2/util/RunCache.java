@@ -19,7 +19,6 @@ public abstract class RunCache {
 			hs.add(cachekey);
 			getCache().put(PROGRESSRECORD_CK_PREFIX+getType()+runId, hs);
 		}
-		System.out.println("storing cacheKey "+hs);
 	}
 	
 	private HashSet<String> getCacheKey(Long runId) {

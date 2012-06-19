@@ -86,62 +86,62 @@ public class UpdateInventoryRecord extends GoogleDelegator {
 	// return ir;
 	// }
 
-	public InventoryRecord pickupItem(Long runIdentifier, String email, String teamId, Long generalItemId) {
-		QueryInventoryRecord qir = new QueryInventoryRecord(this);
-		QueryGeneralItems qgi = new QueryGeneralItems(this);
-		GeneralItem gi = qgi.getGeneralItem(runIdentifier, generalItemId);
-		InventoryRecord ir = qir.getInventoryRecord(runIdentifier, generalItemId, gi.getScope(), email, teamId);
-		if (ir != null && ("map".equals(ir.getStatus()) || "dropped".equals(ir.getStatus()))) {
-			ir.setStatus("picked");
-			ir.setScope(gi.getScope());
-			ir.setTeamId(teamId);
-			ir.setGeneralItemId(generalItemId);
-			ir.setEmail(email);
-			return updateInventoryRecord(runIdentifier, ir);
-		}
-		return ir;
-	}
-
-	public InventoryRecord dropItem(Long runIdentifier, String email, String teamId, Long generalItemId, Double lat, Double lng) {
-		QueryInventoryRecord qir = new QueryInventoryRecord(this);
-		QueryGeneralItems qgi = new QueryGeneralItems(this);
-		GeneralItem gi = qgi.getGeneralItem(runIdentifier, generalItemId);
-		InventoryRecord ir = qir.getInventoryRecord(runIdentifier, generalItemId, gi.getScope(), email, teamId);
-		if (ir != null && "picked".equals(ir.getStatus())) {
-			ir.setStatus("dropped");
-			ir.setScope(gi.getScope());
-			ir.setTeamId(teamId);
-			ir.setGeneralItemId(generalItemId);
-			ir.setEmail(email);
-			ir.setLat(lat);
-			ir.setLng(lng);
-			return updateInventoryRecord(runIdentifier, ir);
-		}
-		return ir;
-	}
-
-	public InventoryRecord dropAtDropZone(Long runIdentifier, String email, String teamId, Long generalItemId, Long dropZoneId) {
-		QueryInventoryRecord qir = new QueryInventoryRecord(this);
-		QueryGeneralItems qgi = new QueryGeneralItems(this);
-		GeneralItem gi = qgi.getGeneralItem(runIdentifier, generalItemId);
-		if (gi instanceof PickupItem && dropZoneId != null && dropZoneId.equals(((PickupItem) gi).getDropZoneId())) {
-			InventoryRecord ir = qir.getInventoryRecord(runIdentifier, generalItemId, gi.getScope(), email, teamId);
-			if (ir != null && "picked".equals(ir.getStatus())) {
-				GeneralItem dz = qgi.getGeneralItem(runIdentifier, dropZoneId);
-				if (dz != null && dz instanceof DropZone) {
-					ir.setStatus("droppedAtDropZone");
-					ir.setScope(gi.getScope());
-					ir.setTeamId(teamId);
-					ir.setGeneralItemId(generalItemId);
-					ir.setEmail(email);
-					ir.setLat(dz.getLat());
-					ir.setLng(dz.getLng());
-					return updateInventoryRecord(runIdentifier, ir);
-				}
-			}
-			return ir;
-		}
-		return null;
-	}
+//	public InventoryRecord pickupItem(Long runIdentifier, String email, String teamId, Long generalItemId) {
+//		QueryInventoryRecord qir = new QueryInventoryRecord(this);
+//		QueryGeneralItems qgi = new QueryGeneralItems(this);
+//		GeneralItem gi = qgi.getGeneralItem(runIdentifier, generalItemId);
+//		InventoryRecord ir = qir.getInventoryRecord(runIdentifier, generalItemId, gi.getScope(), email, teamId);
+//		if (ir != null && ("map".equals(ir.getStatus()) || "dropped".equals(ir.getStatus()))) {
+//			ir.setStatus("picked");
+//			ir.setScope(gi.getScope());
+//			ir.setTeamId(teamId);
+//			ir.setGeneralItemId(generalItemId);
+//			ir.setEmail(email);
+//			return updateInventoryRecord(runIdentifier, ir);
+//		}
+//		return ir;
+//	}
+//
+//	public InventoryRecord dropItem(Long runIdentifier, String email, String teamId, Long generalItemId, Double lat, Double lng) {
+//		QueryInventoryRecord qir = new QueryInventoryRecord(this);
+//		QueryGeneralItems qgi = new QueryGeneralItems(this);
+//		GeneralItem gi = qgi.getGeneralItem(runIdentifier, generalItemId);
+//		InventoryRecord ir = qir.getInventoryRecord(runIdentifier, generalItemId, gi.getScope(), email, teamId);
+//		if (ir != null && "picked".equals(ir.getStatus())) {
+//			ir.setStatus("dropped");
+//			ir.setScope(gi.getScope());
+//			ir.setTeamId(teamId);
+//			ir.setGeneralItemId(generalItemId);
+//			ir.setEmail(email);
+//			ir.setLat(lat);
+//			ir.setLng(lng);
+//			return updateInventoryRecord(runIdentifier, ir);
+//		}
+//		return ir;
+//	}
+//
+//	public InventoryRecord dropAtDropZone(Long runIdentifier, String email, String teamId, Long generalItemId, Long dropZoneId) {
+//		QueryInventoryRecord qir = new QueryInventoryRecord(this);
+//		QueryGeneralItems qgi = new QueryGeneralItems(this);
+//		GeneralItem gi = qgi.getGeneralItem(runIdentifier, generalItemId);
+//		if (gi instanceof PickupItem && dropZoneId != null && dropZoneId.equals(((PickupItem) gi).getDropZoneId())) {
+//			InventoryRecord ir = qir.getInventoryRecord(runIdentifier, generalItemId, gi.getScope(), email, teamId);
+//			if (ir != null && "picked".equals(ir.getStatus())) {
+//				GeneralItem dz = qgi.getGeneralItem(runIdentifier, dropZoneId);
+//				if (dz != null && dz instanceof DropZone) {
+//					ir.setStatus("droppedAtDropZone");
+//					ir.setScope(gi.getScope());
+//					ir.setTeamId(teamId);
+//					ir.setGeneralItemId(generalItemId);
+//					ir.setEmail(email);
+//					ir.setLat(dz.getLat());
+//					ir.setLng(dz.getLng());
+//					return updateInventoryRecord(runIdentifier, ir);
+//				}
+//			}
+//			return ir;
+//		}
+//		return null;
+//	}
 
 }

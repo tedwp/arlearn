@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.celstec.arlearn2.beans.run.VisibleItem;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 public class VisibleItemsCache extends RunCache{
 
 	private static VisibleItemsCache instance;
 
-	private static String INVENTORY_RECORD_PREFIX = "InventoryRecord";
+	private static String INVENTORY_RECORD_PREFIX = SystemProperty.applicationVersion.get()+"InventoryRecord";
 
 	private VisibleItemsCache() {
 	}

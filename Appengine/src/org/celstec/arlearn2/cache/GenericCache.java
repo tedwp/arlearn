@@ -57,7 +57,6 @@ public class GenericCache {
 			hs.add(cachekey);
 			getCache().put(prefix+id, hs);
 		}
-		System.out.println("storing game cacheKey "+hs);
 	}
 	
 	protected HashSet<String> getCacheKey(Long id, String prefix) {

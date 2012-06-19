@@ -24,7 +24,6 @@ public class ChannelNotificator {
 	}
 	
 	public void notify(String account, String message) {
-		System.out.println(account + " gets "+message);
 		channelService.sendMessage(new ChannelMessage(account, message));
 	}
 }

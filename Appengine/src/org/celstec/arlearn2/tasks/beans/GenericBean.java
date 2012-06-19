@@ -93,12 +93,7 @@ public abstract class GenericBean  implements Runnable{
 		return method_name;
 	}
 	
-	public static void main(String[] args) {
-		System.out.println("test");
-		
-		
-	}
-
+	
 	public void run() {		
 	}
 }

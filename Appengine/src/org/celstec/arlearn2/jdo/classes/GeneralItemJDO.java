@@ -47,6 +47,8 @@ public class GeneralItemJDO extends GameClass {
 	@Persistent
 	private String iconUrl;
 
+	
+	
 	public String getName() {
 		return name;
 	}

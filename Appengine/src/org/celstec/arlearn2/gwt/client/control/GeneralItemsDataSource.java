@@ -57,9 +57,10 @@ public class GeneralItemsDataSource extends DataSource {
 		DataSourceBooleanField correctField = new DataSourceBooleanField("correct");
 
 		DataSourceTextField answerField = new DataSourceTextField("answer");
+		DataSourceBooleanField deletedField = new DataSourceBooleanField("deleted");
 
 		setFields(pkField, sortField, itemIdField, accountField, nameField, typeField,
-				gameIdField, runIdField, readField, correctField, answerField);
+				gameIdField, runIdField, readField, correctField, answerField, deletedField);
 
 		setClientOnly(true);
 	}
@@ -93,7 +94,7 @@ public class GeneralItemsDataSource extends DataSource {
 							// removeData(rec);
 							// addData(rec);
 							final boolean last = i == giSize() - 1;
-							fetchData(new Criteria("pk", pk), new DSCallback() {
+							if (!getDeleted(i)) fetchData(new Criteria("pk", pk), new DSCallback() {
 
 								@Override
 								public void execute(DSResponse response,
@@ -105,7 +106,6 @@ public class GeneralItemsDataSource extends DataSource {
 										updateData(rec);
 									}
 									if (last) {
-										System.out.println("executing last");
 										updateResponses(runId, account, rc);
 										updateActions(runId, account, rc);
 									}

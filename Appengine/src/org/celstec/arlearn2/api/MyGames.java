@@ -95,7 +95,6 @@ public class MyGames extends Service {
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		System.out.println("role ontvangen "+roleString);
 		GameDelegator qg = new GameDelegator(token);
 		return serialise(qg.createRole(gameIdentifier, roleString), accept);
 	}

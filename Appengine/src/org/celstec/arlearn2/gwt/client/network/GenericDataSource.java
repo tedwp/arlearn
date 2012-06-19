@@ -10,6 +10,7 @@ import org.celstec.arlearn2.gwt.client.control.TriggerDataSource;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.DataSourceField;
+import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -18,6 +19,7 @@ public abstract class GenericDataSource extends DataSource {
 	protected final int STRING_DATA_TYPE = 1;
 	protected final int INTEGER_DATA_TYPE = 2;
 	protected final int STRING_AR_DATA_TYPE = 3;
+	protected final int BOOLEAN_DATA_TYPE = 4;
 
 	private List<DataSourceField> fieldList = new ArrayList<DataSourceField>();
 	private List<String> attributeList = new ArrayList<String>();
@@ -52,6 +54,10 @@ public abstract class GenericDataSource extends DataSource {
 		case STRING_AR_DATA_TYPE:
 			field = new DataSourceTextField(attributeName);
 			typeList.add(STRING_DATA_TYPE);
+			break;
+		case BOOLEAN_DATA_TYPE:
+			field = new DataSourceBooleanField(attributeName);
+			typeList.add(BOOLEAN_DATA_TYPE);
 			break;
 		default:
 			break;
@@ -133,6 +139,10 @@ public abstract class GenericDataSource extends DataSource {
 									&& pkAttribute.equals(attributeName))
 								searchCrit = new Criteria(pkAttribute, arValue);
 							break;
+						case BOOLEAN_DATA_TYPE:
+							Boolean boolValue = getAttributeBoolean(i, attributeName);
+							rec.setAttribute(attributeName, boolValue);
+							break;
 						case INTEGER_DATA_TYPE:
 							int intValue = getAttributeInteger(i, attributeName);
 							rec.setAttribute(attributeName, intValue);
@@ -141,7 +151,9 @@ public abstract class GenericDataSource extends DataSource {
 								searchCrit = new Criteria();
 								searchCrit.addCriteria(pkAttribute, intValue);
 							}
+							break;
 						}
+						
 
 					}
 					if ("gameId".equals(pkAttribute)) {
@@ -161,7 +173,6 @@ public abstract class GenericDataSource extends DataSource {
 					}
 				}
 				for (String id : deleteSet) {
-					System.out.println("delete " + id);
 					final ListGridRecord rec = new ListGridRecord();
 					rec.setAttribute(pkAttribute, id);
 					removeData(rec);
@@ -179,5 +190,18 @@ public abstract class GenericDataSource extends DataSource {
 
 		};
 	}
+	
+	public void clearAllData() {
+		HashSet<String> deleteSet = (HashSet<String>) pkMap.clone();
+		for (String id : deleteSet) {
+			final ListGridRecord rec = new ListGridRecord();
+			rec.setAttribute(pkAttribute, id);
+			removeData(rec);
+			pkMap.remove(id);
+		}
+	}
 
+	public boolean isEmpty(){
+		return pkMap.isEmpty();
+	}
 }

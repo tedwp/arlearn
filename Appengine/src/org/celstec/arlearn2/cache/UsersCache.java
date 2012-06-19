@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.celstec.arlearn2.beans.run.User;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 public class UsersCache  extends RunCache{
 
 	private static UsersCache instance;
 
-	private static String USER_PREFIX = "UsersCache";
+	private static String USER_PREFIX = SystemProperty.applicationVersion.get()+"UsersCache";
 
 	private UsersCache() {
 	}

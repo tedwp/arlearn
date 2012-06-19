@@ -24,36 +24,36 @@ public class CreateGeneralItems extends GoogleDelegator {
 		super(gd);
 	}
 
-	public GeneralItem createGeneralItem(GeneralItem gi) {
-		GeneralitemsCache.getInstance().removeGeneralItemList(gi.getGameId());
-		GeneralItemManager.addGeneralItem(gi);
-		(new NotifyRunsFromGame(authToken, gi.getGameId(), gi, GeneralItemModification.CREATED)).scheduleTask();
+//	public GeneralItem createGeneralItem(GeneralItem gi) {
+//		GeneralitemsCache.getInstance().removeGeneralItemList(gi.getGameId());
+//		GeneralItemManager.addGeneralItem(gi);
+//		(new NotifyRunsFromGame(authToken, gi.getGameId(), gi, GeneralItemModification.CREATED)).scheduleTask();
+//
+//		return gi;
+//	}
 
-		return gi;
-	}
-
-	public void deleteGeneralItems(long gameId) {
-		GeneralItemManager.deleteGeneralItem(gameId);
-		GeneralitemsCache.getInstance().removeGeneralItemList(gameId);
-	}
-	
-	public GeneralItem deleteGeneralItem(long gameId, String itemId) {
-		UsersDelegator qu = new UsersDelegator(this);
-		String myAccount = qu.getCurrentUserAccount();
-		QueryGeneralItems cgi = new QueryGeneralItems(this);
-		GeneralItem gi = cgi.getGeneralItemForGame(gameId, Long.parseLong(itemId));
-		GameDelegator gd = new GameDelegator(this);
-		Game g = gd.getGame(gi.getGameId());
-		if (!g.getOwner().equals(myAccount)) {
-			gi = new GeneralItem();
-			gi.setError("You are not the owner of this game");
-			return gi;
-		}
-		GeneralItemManager.deleteGeneralItem(gameId, itemId);
-		GeneralitemsCache.getInstance().removeGeneralItemList(gameId);
-		(new NotifyRunsFromGame(authToken, gi.getGameId(), gi, GeneralItemModification.DELETED)).scheduleTask();
-
-		return gi;
-	}
+//	public void deleteGeneralItems(long gameId) {
+//		GeneralItemManager.deleteGeneralItem(gameId);
+//		GeneralitemsCache.getInstance().removeGeneralItemList(gameId);
+//	}
+//	
+//	public GeneralItem deleteGeneralItem(long gameId, String itemId) {
+//		UsersDelegator qu = new UsersDelegator(this);
+//		String myAccount = qu.getCurrentUserAccount();
+//		QueryGeneralItems cgi = new QueryGeneralItems(this);
+//		GeneralItem gi = cgi.getGeneralItemForGame(gameId, Long.parseLong(itemId));
+//		GameDelegator gd = new GameDelegator(this);
+//		Game g = gd.getGame(gi.getGameId());
+//		if (!g.getOwner().equals(myAccount)) {
+//			gi = new GeneralItem();
+//			gi.setError("You are not the owner of this game");
+//			return gi;
+//		}
+//		GeneralItemManager.deleteGeneralItem(gameId, itemId);
+//		GeneralitemsCache.getInstance().removeGeneralItemList(gameId);
+//		(new NotifyRunsFromGame(authToken, gi.getGameId(), gi, GeneralItemModification.DELETED)).scheduleTask();
+//
+//		return gi;
+//	}
 	
 }

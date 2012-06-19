@@ -82,28 +82,4 @@ public class FusionClient {
 			runCreate("DELETE FROM "+tableId+ " WHERE ROWID = '"+res.getValue(i, 0)+"' ");
 		}
 	}
-	
-	public static void main(String[] args) throws IOException, ServiceException {
-		FusionClient fc = new FusionClient("");
-		
-//	    CSV csv = fc.runSelect("select * from 615277 ");
-//	    System.out.println(csv.getColumnName(1));
-//	    System.out.println(csv.columnSize());
-//	    System.out.println(csv.rowSize());
-//	    System.out.println(csv.getValue(0, 0));
-//	    System.out.println(csv.getValue(0, 1));
-//	    System.out.println(csv.getValue(0, 2));
-//		
-//		 csv = fc.showTables();
-//		System.out.println(csv.columnSize());
-//	    System.out.println(csv.rowSize());
-//	    System.out.println(csv.getValue(0, 1));
-//	    System.out.println(csv.containsValue(csv.getColumnIndex("name"), "testes"));
-//	    System.out.println(csv.containsValue(csv.getColumnIndex("table id"), "testes"));
-		
-		CSV csv = fc.runCreate("CREATE TABLE SaleInformation (customer: NUMBER, memo: STRING, 'sale location': LOCATION)");
-		System.out.println(csv.columnSize());
-	    System.out.println(csv.rowSize());
-	    System.out.println(csv.getValue(0, 0));
-	}
 }

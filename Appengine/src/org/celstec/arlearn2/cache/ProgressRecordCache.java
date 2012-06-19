@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.celstec.arlearn2.beans.run.ProgressRecord;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 public class ProgressRecordCache extends RunCache{
 
 	private static ProgressRecordCache instance;
 
-	private static String PROGRESS_RECORD_PREFIX = "ProgressRecord";
+	private static String PROGRESS_RECORD_PREFIX = SystemProperty.applicationVersion.get()+"ProgressRecord";
 
 	private ProgressRecordCache() {
 	}

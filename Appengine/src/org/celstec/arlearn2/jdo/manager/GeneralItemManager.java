@@ -48,6 +48,8 @@ public class GeneralItemManager {
 		gi.setShowAtTimeStamp(bean.getShowAtTimeStamp());
 		gi.setType(bean.getType());
 		gi.setIconUrl(bean.getIconUrl());
+		gi.setDeleted(false);
+		gi.setLastModificationDate(bean.getLastModificationDate());
 		jbs = new JsonBeanSerialiser(bean);
 		gi.setPayload(new Text(jbs.serialiseToJson().toString()));
 		try {
@@ -113,11 +115,25 @@ public class GeneralItemManager {
 		gi.setShowAtTimeStamp(jdo.getShowAtTimeStamp());
 		gi.setType(jdo.getType());
 		gi.setIconUrl(jdo.getIconUrl());
+		gi.setDeleted(jdo.getDeleted());
+		gi.setLastModificationDate(jdo.getLastModificationDate());
 		return gi;
 	}
 
 	public static void deleteGeneralItem(long gameId) {
 		delete(gameId, null, null);
+	}
+	
+	public static void setStatusDeleted(long gameId, String itemId) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			List<GeneralItemJDO> deleteList = getGeneralitems(pm, gameId, itemId, null);
+			for (GeneralItemJDO jdo: deleteList) {
+				jdo.setDeleted(true);
+			}
+		} finally {
+			pm.close();
+		}
 	}
 	
 	public static void deleteGeneralItem(long gameId, String itemId) {

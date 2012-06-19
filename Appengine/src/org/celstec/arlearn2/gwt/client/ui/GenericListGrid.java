@@ -24,6 +24,7 @@ public class GenericListGrid extends ListGrid {
 	private boolean editable = false;
 	private boolean deleteable = false;
 	private boolean downloadable = false;
+	private boolean mapable = false;
 	
 	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 	
@@ -32,10 +33,11 @@ public class GenericListGrid extends ListGrid {
 		this.deleteable = deleteable;
 	}
 	
-	public GenericListGrid(boolean editable, boolean deleteable, boolean downloadable) {
+	public GenericListGrid(boolean editable, boolean deleteable, boolean downloadable, boolean mapable) {
 		this.editable =editable;
 		this.deleteable = deleteable;
 		this.downloadable = downloadable;
+		this.mapable =mapable;
 	}
 	
  	private ListGridRecord rollOverRecord;// = this.getRecord(rowNum);  
@@ -67,6 +69,26 @@ public class GenericListGrid extends ListGrid {
 
 			}
 			
+			if (mapable) {
+				ImgButton mapImg = new ImgButton();  
+	             mapImg.setShowDown(false);  
+	             mapImg.setShowRollOver(false);  
+	             mapImg.setLayoutAlign(Alignment.CENTER);  
+	             mapImg.setSrc("icon_maps.png");  
+	             mapImg.setPrompt(constants.mapItem());  
+	             mapImg.setHeight(16);  
+	             mapImg.setWidth(16);  
+	             mapImg.addClickHandler(new ClickHandler() {  
+	                 public void onClick(ClickEvent event) {  
+	                	 mapItem( rollOverRecord);
+	                     
+	                 }
+
+					
+	             });  
+
+	             rollOverCanvas.addMember(mapImg); 
+			}
 			if (downloadable) {
 
 	             ImgButton deleteImg = new ImgButton();  
@@ -107,18 +129,24 @@ public class GenericListGrid extends ListGrid {
 
              rollOverCanvas.addMember(deleteImg);  
 			}
+			
+			
          }  
          return rollOverCanvas;  
 
      }
 
+	 public void setMapable(boolean mapable){
+		 this.mapable = mapable;
+	 }
 	protected void editItem(ListGridRecord rollOverRecord) {		
 	}
 
 	protected void deleteItem(ListGridRecord rollOverRecord) {
 	} 
 	protected void download(ListGridRecord rollOverRecord) {
-		
+	}  
+	protected void mapItem(ListGridRecord rollOverRecord) {		
 	}  
 	
 	

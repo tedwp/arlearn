@@ -2,11 +2,13 @@ package org.celstec.arlearn2.cache;
 
 import java.util.HashSet;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 import net.sf.jsr107cache.Cache;
 
 public abstract class GameCache extends GenericCache {
 
-	private static String GAMECACHE_CK_PREFIX = "GameCache:CK";
+	private static String GAMECACHE_CK_PREFIX = SystemProperty.applicationVersion.get()+"GameCache:CK";
 
 	protected abstract String getType();
 
@@ -19,7 +21,6 @@ public abstract class GameCache extends GenericCache {
 			hs.add(cachekey);
 			getCache().put(GAMECACHE_CK_PREFIX+getType()+gameId, hs);
 		}
-		System.out.println("storing game cacheKey "+hs);
 	}
 	
 	private HashSet<String> getCacheKey(Long gameId) {

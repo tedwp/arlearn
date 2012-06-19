@@ -17,9 +17,13 @@ package org.celstec.arlearn2.gwt.client;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.gwt.client.control.Authentication;
+import org.celstec.arlearn2.gwt.client.network.game.GameDataSource;
+import org.celstec.arlearn2.gwt.client.network.run.RunDataSource;
+import org.celstec.arlearn2.gwt.client.network.team.TeamsDataSource;
+import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
 import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
+import org.celstec.arlearn2.gwt.client.ui.GameTab.RoleDataSource;
 import org.celstec.arlearn2.gwt.client.ui.GamesMapTab;
 import org.celstec.arlearn2.gwt.client.ui.GamesTab;
 import org.celstec.arlearn2.gwt.client.ui.LoginWindow;
@@ -78,59 +82,7 @@ public class Authoring implements EntryPoint {
 		
 	}
 	
-	private void buildUi() {
-	    // Open a map centered on Cawker City, KS USA
-	    LatLng cawkerCity = LatLng.newInstance(39.509, -98.434);
-
-	    final MapWidget map = new MapWidget(cawkerCity, 2);
-	    map.setSize("100%", "100%");
-	    // Add some controls for the zoom level
-	    map.addControl(new LargeMapControl());
-
-	    // Add a marker
-	    MarkerOptions options = MarkerOptions.newInstance();
-	    options.setDraggable(true);
-	    
-	    Marker m = new Marker(map.getCenter(), options);
-
-	    m.addMarkerDragEndHandler(new MarkerDragEndHandler() {
-			
-			@Override
-			public void onDragEnd(MarkerDragEndEvent event) {
-				System.out.println("dragged to "+event.getSender().getLatLng().getLatitude());
-				 com.google.gwt.user.client.Window.alert("dragged to "+event.getSender().getLatLng().getLatitude());
-				
-			}
-		});
-	    map.addOverlay(m);
-
-	    // Add an info window to highlight a point of interest
-	    map.getInfoWindow().open(map.getCenter(),
-	        new InfoWindowContent("World's Largest Ball of Sisal Twine"));
-//	    map.setHeight("100%");
-//	  	map.setWidth("600");
-//	    map.addMapDragEndHandler(new MapDragEndHandler(){
-//
-//			@Override
-//			public void onDragEnd(MapDragEndEvent event) {
-////				System.out.println(event.getSender().get);
-//				
-//			}
-//	    	
-//	    });
-	  	VerticalPanel vPanel2 = new VerticalPanel();  
-        vPanel2.setSpacing(15);  
-        vPanel2.setHeight("500px");
-        vPanel2.setWidth("800px");
-        
-        vPanel2.add(map);
-	    
-	    
-	  	GamesMapTab mapTab = new GamesMapTab("map", vPanel2);
-        topTabSet.addTab(mapTab);
-        
-
-	  }
+	
 	
 	public void onModuleLoad1() {
 		RootPanel rootPanel = RootPanel.get();
@@ -156,7 +108,6 @@ public class Authoring implements EntryPoint {
 			
 			@Override
 			public void onCloseClick(TabCloseClickEvent event) {
-				System.out.println("close click"+event.getTab().getID());
 				String toDelete = "";
 				for (Map.Entry<String, String> entry: tabHashMap.entrySet()) {
 					if (entry.getValue().equals(event.getTab().getID())) toDelete =entry.getKey();
@@ -170,11 +121,7 @@ public class Authoring implements EntryPoint {
         topTabSet.addTab(gamesTab);  
         topTabSet.addTab(runsTab);  
         
-        Maps.loadMapsApi("AIzaSyAyNa-4zOAleXRkWRSTJLLkzyLLULS9Vxk", "2", false, new Runnable() {
-		      public void run() {
-		        buildUi();
-		      }
-		    });
+       
         
         
   
@@ -238,7 +185,13 @@ public class Authoring implements EntryPoint {
 				
 			} else topTabSet.removeTab(t);
 		}
-		
+	}
+	
+	public static void clearCaches() {
+		GameDataSource.getInstance().clearAllData();
+		RunDataSource.getInstance().clearAllData();
+		TeamsDataSource.getInstance().clearAllData();
+		UsersDataSource.getInstance().clearAllData();
 	}
 
 	public static void enableTabs() {

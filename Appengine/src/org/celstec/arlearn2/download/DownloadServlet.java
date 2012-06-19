@@ -15,6 +15,7 @@ import org.celstec.arlearn2.beans.run.TeamList;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.delegators.GameDelegator;
+import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.ScoreDefinitionDelegator;
 import org.celstec.arlearn2.delegators.TeamsDelegator;
@@ -53,12 +54,13 @@ public class DownloadServlet extends HttpServlet {
 		try {
 			GameDelegator gd = new GameDelegator(auth);
 			gp.setGame(gd.getGame(gameId));
-			QueryGeneralItems qgi = new QueryGeneralItems(gd);
-			gp.setGeneralItems(qgi.getGeneralItems(gameId).getGeneralItems());
+
+			GeneralItemDelegator gid = new GeneralItemDelegator(gd);
+
+			gp.setGeneralItems(gid.getGeneralItems(gameId).getGeneralItems());
 			ScoreDefinitionDelegator sd = new ScoreDefinitionDelegator(gd);
 			ScoreDefinitionList list = new ScoreDefinitionList();
-			list.setScoreDefinitions(sd.getScoreDefinitionsList(gameId, null, null, null));
-			gp.setScoreDefinitions(list);
+			gp.setScoreDefinitions(sd.getScoreDefinitionsList(gameId, null, null, null));
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
 		}

@@ -2,9 +2,11 @@ package org.celstec.arlearn2.cache;
 
 import java.util.HashSet;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 public abstract class RunCache extends GenericCache {
 
-	private static String RUNCACHE_CK_PREFIX = "RunCache:CK";
+	private static String RUNCACHE_CK_PREFIX = SystemProperty.applicationVersion.get()+"RunCache:CK";
 
 	protected abstract String getType();
 

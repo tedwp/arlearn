@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.User;
+import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.generalitems.QueryGeneralItems;
 import org.celstec.arlearn2.delegators.progressRecord.CreateProgressRecord;
@@ -69,8 +70,9 @@ public class AsyncTasksServlet extends HttpServlet {
 				
 				break;
 			case UPDATE_GENERAL_ITEMS:
+				GeneralItemDelegator gid = new GeneralItemDelegator(qu);
 				QueryGeneralItems qgi = new QueryGeneralItems(qu);
-				qgi.checkActionEffect(action, runId, u);
+				gid.checkActionEffect(action, runId, u);
 				break;
 			}
 			

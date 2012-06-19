@@ -221,13 +221,17 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 
 	public Canvas getGameCanvas() {
 
-		listGrid = new GenericListGrid(false, true, true) {
+		listGrid = new GenericListGrid(false, true, true, true) {
 			protected void deleteItem(ListGridRecord rollOverRecord) {
 				GamesTab.this.deleteGame(rollOverRecord.getAttributeAsInt("gameId"));
 			}
 			protected void download(ListGridRecord rollOverRecord) {
 				GamesTab.this.download(rollOverRecord);
 			}
+			
+			protected void mapItem(ListGridRecord rollOverRecord) {
+				GamesTab.this.map(rollOverRecord);
+			} 
 		};
 		listGrid.setShowRollOverCanvas(true);
 
@@ -250,7 +254,6 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 	}
 
 	protected void deleteGame(final int gameId) {
-		System.out.println("delete game id "+gameId);
 		Authoring.removeTab("game:"+gameId);
 
 		GameClient.getInstance().deleteGame(gameId, new JsonCallback() {
@@ -264,58 +267,19 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 		
 	}
 	
+	protected void map(ListGridRecord record) {
+		long gameId = Long.parseLong(record.getAttribute("gameId"));
+		GameMapTab tab = new GameMapTab("Game map: " + record.getAttribute("title"), 
+				Long.parseLong(record.getAttribute("gameId")));
+		Authoring.addTab(tab, "gamemap:" + gameId);
+	}
+	
 	protected void download(ListGridRecord record) {
 		long gameId = Long.parseLong(record.getAttribute("gameId"));
 		String auth = Authentication.getInstance().getAuthenticationToken();
 		Window.open( "../download/game?gameId="+gameId+"&auth="+auth+"&type=game", "_self", "");
 		
 		
-	}
-	
-	@Deprecated
-	private void pollForUpdate() {
-		GameDataSource.getInstance().fetchData(null, new DSCallback() {
-
-			@Override
-			public void execute(DSResponse response, Object rawData,
-					DSRequest request) {
-				HashSet<String> idSet = new HashSet<String>();
-				for (Record r : response.getData()) {
-					idSet.add(r.getAttribute("gameId"));
-				}
-				t = new Timer() {
-					private int delay = 2000;
-				public void run() {
-					GameDataSource.getInstance().loadData(new ReadyCallback() {
-						@Override
-						public void ready() {
-							
-							GameDataSource.getInstance().fetchData(null, new DSCallback() {
-
-								@Override
-								public void execute(DSResponse response, Object rawData,
-										DSRequest request) {
-									HashSet<String> idSet = new HashSet<String>();
-									boolean continueTimer = true;
-									for (Record r : response.getData()) {
-										if (!idSet.contains(r.getAttribute("gameId"))) continueTimer = false;
-									}
-									if (continueTimer) {
-										delay = 2 * delay;
-										t.schedule(delay);
-										System.out.println("Timer! ");
-
-									}
-								}
-							});
-							
-						}
-					});
-				}
-			};
-			t.schedule(1000);
-			}
-		});
 	}
 	
 	private int amountOfRecords = 0;

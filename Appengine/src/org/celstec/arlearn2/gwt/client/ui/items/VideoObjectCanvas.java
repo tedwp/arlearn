@@ -1,9 +1,8 @@
 package org.celstec.arlearn2.gwt.client.ui.items;
 
-import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 
@@ -12,16 +11,13 @@ public class VideoObjectCanvas extends NarratorItemCanvas {
 	protected TextItem videoFeed;
 
 	private final String VIDEOFEED = "videoFeed";
-
-	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
-
 	
 	public VideoObjectCanvas(String roles[]) {
 		super(roles);
 	}
 	@Override
 	public boolean validateForm() {
-		return false;
+		return super.validateForm();
 	}
 	
 	protected void initComponents() {
@@ -39,10 +35,12 @@ public class VideoObjectCanvas extends NarratorItemCanvas {
 		videoFeed = new TextItem(VIDEOFEED);
 		videoFeed.setTitle(constants.videoUrl());
 		videoFeed.setWrapTitle(false);
+		videoFeed.setValidators(urlValidator);
 	}
 	
 	public JSONObject generateObject() {
 		JSONObject result = super.generateObject();
+		result.put("type", new JSONString("org.celstec.arlearn2.beans.generalItem.VideoObject"));
 		putStringValue(result, VIDEOFEED);
 
 		return result;
@@ -56,4 +54,6 @@ public class VideoObjectCanvas extends NarratorItemCanvas {
 		form1.redraw();
 		form2.redraw();
 	}
+	
+	
 }

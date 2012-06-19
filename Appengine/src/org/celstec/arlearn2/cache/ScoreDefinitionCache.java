@@ -6,12 +6,14 @@ import java.util.logging.Logger;
 import org.celstec.arlearn2.beans.game.ScoreDefinition;
 import org.celstec.arlearn2.util.FusionCache;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 public class ScoreDefinitionCache extends GameCache{
 
 	private static ScoreDefinitionCache instance;
 
 	private static final Logger logger = Logger.getLogger(UsersCache.class.getName());
-	private static String SCOREDEFINITION_PREFIX = "ScoreDefinition";
+	private static String SCOREDEFINITION_PREFIX = SystemProperty.applicationVersion.get()+"ScoreDefinition";
 
 	private ScoreDefinitionCache() {
 	}

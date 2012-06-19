@@ -1,9 +1,8 @@
 package org.celstec.arlearn2.gwt.client.ui.items;
 
-import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 
@@ -12,7 +11,6 @@ public class AudioObjectCanvas extends NarratorItemCanvas {
 	protected TextItem audioFeed;
 
 	private final String AUDIOFEED = "audioFeed";
-	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
 	
 	public AudioObjectCanvas(String roles[]) {
@@ -20,7 +18,7 @@ public class AudioObjectCanvas extends NarratorItemCanvas {
 	}
 	@Override
 	public boolean validateForm() {
-		return false;
+		return super.validateForm();
 	}
 	
 	protected void initComponents() {
@@ -38,10 +36,13 @@ public class AudioObjectCanvas extends NarratorItemCanvas {
 		audioFeed = new TextItem(AUDIOFEED);
 		audioFeed.setTitle(constants.audioUrl());
 		audioFeed.setWrapTitle(false);
+		audioFeed.setValidators(urlValidator);
 	}
 	
 	public JSONObject generateObject() {
 		JSONObject result = super.generateObject();
+		result.put("type", new JSONString("org.celstec.arlearn2.beans.generalItem.AudioObject"));
+
 		putStringValue(result, AUDIOFEED);
 
 		return result;

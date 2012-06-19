@@ -21,6 +21,7 @@ import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.IsFloatValidator;
+import com.smartgwt.client.widgets.form.validator.IsIntegerValidator;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
@@ -31,25 +32,27 @@ public abstract class GeneralItemCanvas extends VStack{
 	protected HiddenItem gameIdItem;
 	protected TextItem nameItem;
 	protected SelectItem selectScope;
-	protected TextItem radiusItem;
+//	protected TextItem radiusItem;
 	protected TextItem latItem;
 	protected TextItem lngItem;
+	protected TextItem sortItem;
 	protected TextAreaItem dependencyField;
 	protected SelectItem roleGrid;
 	private String dependency = null;
 	private String roles[];
 	
 	private final String ID_NAME = "id";
+	private final String ORDER = "sortKey";
 	private final String GAME_ID_NAME = "gameId";
 	private final String NAME = "name";
 	private final String SCOPE = "scope";
-	private final String RADIUS = "radius";
+//	private final String RADIUS = "radius";
 	private final String LAT = "lat";
 	private final String LNG = "lng";
 	private final String ROLE = "roles";
 	private final String DEPENDENCY = "dependency";
 	
-	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
+	protected AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
 	public GeneralItemCanvas (String roles[]) {
 		this.roles = roles;
@@ -61,9 +64,10 @@ public abstract class GeneralItemCanvas extends VStack{
 		createIdItem();
 		createGameIdItem();
 		createNameItem();
-		createRadiusItem();
+//		createRadiusItem();
 		createLatItem();
 		createLngItem();
+		createSortItem();
 		createDepencyItem();
 		createRoleItem();
 	}
@@ -92,12 +96,12 @@ public abstract class GeneralItemCanvas extends VStack{
 		selectScope.setDisabled(true);
 	}
 	
-	protected void createRadiusItem() {
-		radiusItem = new TextItem(RADIUS);
-		radiusItem.setTitle(constants.radius());
-		radiusItem.setSelectOnFocus(true);
-		radiusItem.setWrapTitle(false);
-	}
+//	protected void createRadiusItem() {
+//		radiusItem = new TextItem(RADIUS);
+//		radiusItem.setTitle(constants.radius());
+//		radiusItem.setSelectOnFocus(true);
+//		radiusItem.setWrapTitle(false);
+//	}
 
 	protected void createLatItem() {
 		latItem = new TextItem(LAT);
@@ -107,6 +111,7 @@ public abstract class GeneralItemCanvas extends VStack{
 		latItem.setValidators(floatValidator);
 	}
 
+	
 	protected void createLngItem() {
 		lngItem = new TextItem(LNG);
 		lngItem.setTitle(constants.longitude());
@@ -115,6 +120,14 @@ public abstract class GeneralItemCanvas extends VStack{
 		lngItem.setValidators(floatValidator);
 
 	}	
+	
+	protected void createSortItem() {
+		sortItem = new TextItem(ORDER);
+		sortItem.setTitle("order");
+		sortItem.setSelectOnFocus(true);
+		sortItem.setWrapTitle(false);
+		sortItem.setValidators(intValidator);
+	}
 	
 	protected void createDepencyItem(){
 		dependencyField = new TextAreaItem();  
@@ -225,9 +238,9 @@ public abstract class GeneralItemCanvas extends VStack{
 	}
 
 	public JSONObject generateObject() {
-		System.out.println("in generate object");
 		JSONObject object = new JSONObject();
-		putIntegerValue(object, ID_NAME, GAME_ID_NAME, RADIUS);
+		putIntegerValue(object, ID_NAME, GAME_ID_NAME, ORDER);
+//		putIntegerValue(object, ID_NAME, GAME_ID_NAME, RADIUS);
 		putStringValue(object, NAME, SCOPE);
 		putDoubleValue(object, LAT, LNG);
 		putArrayValue(object, roleGrid);
@@ -278,9 +291,10 @@ public abstract class GeneralItemCanvas extends VStack{
 		JSONObject o = jsonValue.isObject();
 		if (o == null) return;
 		setValueDouble(ID_NAME, o);
+		setValueDouble(ORDER, o);
 		setValueString(NAME, o);
 		setValueString(SCOPE, o);
-		setValueDouble(RADIUS, o);
+//		setValueDouble(RADIUS, o);
 		setValueDouble(LAT, o);
 		setValueDouble(LNG, o);
 
@@ -316,14 +330,30 @@ public abstract class GeneralItemCanvas extends VStack{
 		}
 	};
 	
+	protected CustomValidator urlValidator = new CustomValidator() {
+		
+		@Override
+		protected boolean condition(Object value) {
+			if (value == null) return false;
+			String stringValue = (""+value);
+			if ((""+value).trim().equals("")) return false;
+			if (!stringValue.startsWith("http://")) return false;
+			return true;
+		}
+	};
+	
 	IsFloatValidator floatValidator = new IsFloatValidator();
+	IsIntegerValidator intValidator = new IsIntegerValidator();
 	
-	private void initValidators() {
-		cv.setErrorMessage("an empty value is not allowed");
-		floatValidator.setErrorMessage("This is not a correct value");
+	protected void initValidators() {
+		cv.setErrorMessage(constants.emptyValue());
+		floatValidator.setErrorMessage(constants.incorrectValue());
+		urlValidator.setErrorMessage(constants.invalidUrl());
 	}
-	
-	
-	
+
+	public void setLocation(double lat, double lng) {
+		formMapping.get(LAT).setValue(LAT, lat);
+		formMapping.get(LNG).setValue(LNG, lng);
+	}
 	
 }

@@ -14,6 +14,7 @@ import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.notification.authoring.GameCreationStatus;
 import org.celstec.arlearn2.delegators.GameDelegator;
+import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.generalitems.CreateGeneralItems;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
@@ -97,13 +98,15 @@ public class GameUnpacker {
 
 	private void insertGeneralItems(boolean resetId)
 			throws AuthenticationException {
-		CreateGeneralItems cr = new CreateGeneralItems(auth);
+		GeneralItemDelegator gid = new GeneralItemDelegator(auth);
+
+//		CreateGeneralItems cr = new CreateGeneralItems(auth);
 		for (GeneralItem generalItem : generalItems) {
 			generalItem.getScope();
 			Long oldId = generalItem.getId();
 			if (resetId)
 				generalItem.setId(null);
-			Long newId = cr.createGeneralItem(generalItem).getId();
+			Long newId = gid.createGeneralItem(generalItem).getId();
 			if (resetId)
 				identifierMapping.put(oldId, newId);
 

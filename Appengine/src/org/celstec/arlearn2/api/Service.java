@@ -20,6 +20,7 @@ public class Service {
 	protected Object getInvalidCredentialsBean() {
 		Bean error = new Bean();
 		error.setError("credentials are invalid");
+		error.setErrorCode(Bean.INVALID_CREDENTIALS);
 		return error;
 	}
 	
@@ -40,6 +41,7 @@ public class Service {
 	}
 	
 	protected String toJson(Object bean) {
+		if (bean == null) return "";
 		return bean.toString();
 	}
 	

@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.celstec.arlearn2.beans.run.ScoreRecord;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 public class ScoreRecordCache extends RunCache{
 
 	private static ScoreRecordCache instance;
 
-	private static String SCORE_RECORD_PREFIX = "ScoreRecord";
+	private static String SCORE_RECORD_PREFIX = SystemProperty.applicationVersion.get()+"ScoreRecord";
 
 	private ScoreRecordCache() {
 	}

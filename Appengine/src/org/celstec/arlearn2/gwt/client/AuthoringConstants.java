@@ -97,6 +97,9 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Delete Item")
 	String deleteItem();
 	
+	@DefaultStringValue("Map Item")
+	String mapItem();
+	
 	@DefaultStringValue("Download Item")
 	String downloadItem();
 	
@@ -162,6 +165,15 @@ public interface AuthoringConstants extends Constants {
 	
 	@DefaultStringValue("Video URL")
 	String videoUrl();
+	
+	@DefaultStringValue("Invalid URL. A valid URL must start with http:// ")
+	String invalidUrl();
+	
+	@DefaultStringValue("An empty value is not allowed for this field ")
+	String emptyValue();
+	
+	@DefaultStringValue("Incorrect Value ")
+	String incorrectValue();
 	
 	@DefaultStringValue("Audio Url")
 	String audioUrl();

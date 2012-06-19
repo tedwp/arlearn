@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.tasks.beans;
 
+import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.generalitems.CreateGeneralItems;
 
 import com.google.gdata.util.AuthenticationException;
@@ -28,8 +29,10 @@ public class DeleteGeneralItems  extends GenericBean {
 	@Override
 	public void run() {
 		try {
-			CreateGeneralItems cgi = new CreateGeneralItems("auth=" + getToken());
-			if (getGameId() !=null) cgi.deleteGeneralItems(getGameId());
+			GeneralItemDelegator gid = new GeneralItemDelegator("auth=" + getToken());
+
+//			CreateGeneralItems cgi = new CreateGeneralItems("auth=" + getToken());
+			if (getGameId() !=null) gid.deleteGeneralItems(getGameId());
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
 		}

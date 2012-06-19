@@ -1,17 +1,19 @@
 package org.celstec.arlearn2.gwt.client.network;
 
+import org.celstec.arlearn2.gwt.client.control.Authentication;
 import org.celstec.arlearn2.gwt.client.control.ReadyCallback;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Window;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.widgets.grid.ListGrid;
 
 public class JsonCallback {
 
-	private String type;
-	private JSONArray jsonValue;
+	protected String type;
+	protected JSONArray jsonValue;
 	protected ReadyCallback rc;
 	
 	public JsonCallback() {
@@ -30,6 +32,9 @@ public class JsonCallback {
 			if (type != null && jsonValue.isObject().get(type) != null && jsonValue.isObject().get(type).isArray() != null) {
 				this.jsonValue = jsonValue.isObject().get(type).isArray();
 			}
+			if (jsonValue.isObject() != null && jsonValue.isObject().get("error") != null){
+				Authentication.getInstance().disAuthenticate();
+			}
 			onReceived();
 	}
 	
@@ -46,6 +51,8 @@ public class JsonCallback {
 	
 	public String getAttributeString(int i, String attributeName) {
 			if (jsonValue == null) return null;
+//			Window.alert("jsonValue string"+jsonValue);
+//			Window.alert("jsonValue string"+i+ " "+jsonValue.get(i));
 			JSONObject game = jsonValue.get(i).isObject();
 			if (game == null) return null;
 			if (!game.containsKey(attributeName)) return null;
@@ -61,6 +68,19 @@ public class JsonCallback {
 			return game.get(attributeName).isString().stringValue();
 	}
 	
+	public Boolean getAttributeBoolean(int i, String attributeName) {
+		if (jsonValue == null) return null;
+//		Window.alert("jsonValue "+jsonValue);
+//		Window.alert("jsonValue "+i+ " "+jsonValue.get(i));
+		JSONObject game = jsonValue.get(i).isObject();
+		if (game == null) return null;
+//		Window.alert("game "+game);
+
+		if (!game.containsKey(attributeName)) return null;
+//		Window.alert("game "+game.get(attributeName));
+		return game.get(attributeName).isBoolean().booleanValue();
+	}
+	
 	public int getAttributeInteger(int i, String attributeName) {
 			if (jsonValue == null) return -1;
 			JSONObject game = jsonValue.get(i).isObject();
@@ -69,6 +89,14 @@ public class JsonCallback {
 			if (!game.containsKey(attributeName) ) return 0;
 			return (int) game.get(attributeName).isNumber().doubleValue();
 	}
+	
+	public Double getAttributeDouble(int i, String attributeName) {
+		if (jsonValue == null) return null;
+		JSONObject game = jsonValue.get(i).isObject();
+		if (game == null) return null;
+		if (!game.containsKey(attributeName) ) return null;
+		return game.get(attributeName).isNumber().doubleValue();
+}
 	
 	public JSONObject getGameConfig(int i) {
 		if (jsonValue == null) return null;

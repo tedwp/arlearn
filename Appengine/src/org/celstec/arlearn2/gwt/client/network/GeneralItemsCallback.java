@@ -35,6 +35,13 @@ public abstract class GeneralItemsCallback extends JsonCallback {
 		return game.get("name").isString().stringValue();
 	}
 	
+	public boolean getDeleted(int i) {
+		if (jsonValue == null) return false;
+		JSONObject game = jsonValue.get(i).isObject();
+		if (game == null) return false;
+		return game.get("deleted").isBoolean().booleanValue();
+	}
+	
 	public String getItemType(int i) {
 		if (jsonValue == null) return null;
 		JSONObject game = jsonValue.get(i).isObject();

@@ -2,10 +2,12 @@ package org.celstec.arlearn2.cache;
 
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 public class GeneralitemsCache extends GameCache {
 	private static GeneralitemsCache instance;
 
-	private static String GENERALITEM_PREFIX = "GeneralItemDefinition";
+	private static String GENERALITEM_PREFIX = SystemProperty.applicationVersion.get()+"GeneralItemDefinition";
 
 	private GeneralitemsCache() {
 	}

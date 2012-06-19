@@ -67,20 +67,20 @@ public class Users extends Service {
 		UsersDelegator qu = new UsersDelegator(token);
 		UserList ul = qu.getUsers(runIdentifier, null);
 		List<User> ulist = ul.getUsers();
-		for (int i = 0; i < ulist.size(); i++) {
-			User u = ulist.get(i);
-			if (u != null) {
-				QueryLocations ql = new QueryLocations(qu);
-				Location loc = ql.getLastLocation(u.getEmail(), runIdentifier);
-				// return ql.getLastLocation(u.getEmail(), runIdentifier);
-				// Location loc = this.getLocation(token, u.getEmail(),
-				// runIdentifier, accept);
-				if (loc != null) {
-					u.setLat(loc.getLat());
-					u.setLng(loc.getLng());
-				}
-			}
-		}
+//		for (int i = 0; i < ulist.size(); i++) {
+//			User u = ulist.get(i);
+//			if (u != null) {
+//				QueryLocations ql = new QueryLocations(qu);
+//				Location loc = ql.getLastLocation(u.getEmail(), runIdentifier);
+//				// return ql.getLastLocation(u.getEmail(), runIdentifier);
+//				// Location loc = this.getLocation(token, u.getEmail(),
+//				// runIdentifier, accept);
+//				if (loc != null) {
+//					u.setLat(loc.getLat());
+//					u.setLng(loc.getLng());
+//				}
+//			}
+//		}
 		return serialise(ul, accept);
 	}
 

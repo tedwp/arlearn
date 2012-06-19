@@ -6,11 +6,13 @@ import net.sf.jsr107cache.Cache;
 
 import org.celstec.arlearn2.util.FusionCache;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 public class UserLoggedInCache extends GenericCache{
 
 	private static UserLoggedInCache instance;
 
-	private static String PROGRESSDEFINITION_PREFIX = "ProgressDefinition";
+	private static String PROGRESSDEFINITION_PREFIX = SystemProperty.applicationVersion.get()+"ProgressDefinition";
 
 	private UserLoggedInCache() {
 	}

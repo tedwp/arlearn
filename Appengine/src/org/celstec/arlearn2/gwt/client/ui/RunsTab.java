@@ -167,6 +167,7 @@ public class RunsTab extends GenericTab {
 		return form;
 	}
 	
+	@Deprecated
 	private void pollForUpdate() {
 		RunDataSource.getInstance().fetchData(null, new DSCallback() {
 
@@ -177,7 +178,6 @@ public class RunsTab extends GenericTab {
 				for (Record r : response.getData()) {
 					idSet.add(r.getAttribute("runId"));
 				}
-				System.out.println("amount of records "+ idSet);
 				t = new Timer() {
 					private int delay = 2000;
 				public void run() {
@@ -198,7 +198,6 @@ public class RunsTab extends GenericTab {
 									if (continueTimer) {
 										delay = 2 * delay;
 										t.schedule(delay);
-										System.out.println("Timer! ");
 
 									}
 								}
@@ -244,8 +243,7 @@ public class RunsTab extends GenericTab {
 	// }
 
 	public Canvas getRunCanvas() {
-
-		listGrid = new GenericListGrid(true, true, true) {
+		listGrid = new GenericListGrid(true, true, true, false) {
 			protected void deleteItem(ListGridRecord rollOverRecord) {
 				RunsTab.this.deleteRun(rollOverRecord
 						.getAttributeAsInt("runId"));
@@ -258,7 +256,12 @@ public class RunsTab extends GenericTab {
 			protected void download(ListGridRecord rollOverRecord) {
 				RunsTab.this.download(rollOverRecord);
 			}
+			
+			protected void mapItem(ListGridRecord rollOverRecord) {
+				RunsTab.this.map(rollOverRecord);
+			} 
 		};
+
 		listGrid.setShowRollOverCanvas(true);
 
 		listGrid.setWidth(500);
@@ -292,6 +295,14 @@ public class RunsTab extends GenericTab {
 				Long.parseLong(record.getAttribute("gameId")));
 		Authoring.addTab(tab, "run:" + runId);
 	}
+	
+	protected void map(ListGridRecord record) {
+		long runId = Long.parseLong(record.getAttribute("runId"));
+		RunMapTab tab = new RunMapTab("Run: " + record.getAttribute("title"), runId,
+				Long.parseLong(record.getAttribute("gameId")));
+		Authoring.addTab(tab, "runmap:" + runId);
+	}
+	
 
 	private void deleteRun(int runId) {
 		Authoring.removeTab("run:" + runId);

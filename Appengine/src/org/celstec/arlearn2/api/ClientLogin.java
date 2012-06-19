@@ -9,12 +9,15 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.AuthResponse;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
+import org.celstec.arlearn2.delegators.GameDelegator;
+import org.celstec.arlearn2.delegators.MailDelegator;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.tasks.beans.UpdateScore;
 
@@ -50,4 +53,14 @@ public class ClientLogin extends Service {
 		return serialise(ar, accept);
 	}
 	
+	@POST
+	@Path("/instructions/{account}")
+	public String createRole(@HeaderParam("Authorization") String token,  
+			@PathParam("account") String account, @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		MailDelegator md = new MailDelegator(token);
+		md.sendInstructionMail("stefaan.ternier@gmail.com", "Stefaan Ternier", account);
+		return null;
+	}
 }

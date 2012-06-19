@@ -3,6 +3,8 @@ package org.celstec.arlearn2.cache;
 import org.celstec.arlearn2.beans.run.Team;
 import org.celstec.arlearn2.beans.run.TeamList;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 public class TeamsCache extends GenericCache {
 
 	private static TeamsCache instance;
@@ -18,8 +20,8 @@ public class TeamsCache extends GenericCache {
 	}
 	
 
-	private static String TEAMS_PREFIX_T = "teamst";
-	private static String TEAMS_PREFIX_R = "teamsr";
+	private static String TEAMS_PREFIX_T = SystemProperty.applicationVersion.get()+"teamst";
+	private static String TEAMS_PREFIX_R = SystemProperty.applicationVersion.get()+"teamsr";
 	
 	public Team getTeam(String teamId) {
 		return (Team) getCache().get(TEAMS_PREFIX_T+teamId);

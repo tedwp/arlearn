@@ -13,6 +13,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 public class TeamWindow extends Window {
@@ -63,5 +64,7 @@ public class TeamWindow extends Window {
 		addItem(buttonLayout);
 
 	}
+	
+	
 
 }

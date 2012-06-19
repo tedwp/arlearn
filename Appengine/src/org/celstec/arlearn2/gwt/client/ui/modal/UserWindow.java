@@ -24,6 +24,7 @@ import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 public class UserWindow  extends Window {
@@ -53,6 +54,8 @@ public class UserWindow  extends Window {
         selectTeamItem.setValueField("teamId");
         selectTeamItem.setOptionDataSource(TeamsDataSource.getInstance());
         selectTeamItem.setWrapTitle(false);
+        selectTeamItem.setValidators(cv);
+        cv.setErrorMessage(constants.emptyValue());
   
         final SelectItem roleGrid = new SelectItem();
 		roleGrid.setName("roles");
@@ -106,6 +109,7 @@ public class UserWindow  extends Window {
 		final IButton submitButton = new IButton(constants.add());
 		submitButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				if (form.validate())
 				UserClient.getInstance().createUser(
 						runId, 
 						form.getValueAsString("teamId"), 
@@ -134,6 +138,16 @@ public class UserWindow  extends Window {
 		addItem(buttonLayout);
 
 	}
+	
+	private CustomValidator cv = new CustomValidator() {
+		
+		@Override
+		protected boolean condition(Object value) {
+			if (value == null) return false;
+			if ((""+value).trim().equals("")) return false;
+			return true;
+		}
+	};
 
 }
 

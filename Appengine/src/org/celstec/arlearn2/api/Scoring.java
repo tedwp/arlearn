@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.run.Action;
+import org.celstec.arlearn2.beans.run.UserScore;
 import org.celstec.arlearn2.beans.game.ScoreDefinition;
 
 import org.celstec.arlearn2.delegators.RunDelegator;

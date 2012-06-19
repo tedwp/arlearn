@@ -47,9 +47,6 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 	
 	protected DynamicForm form1 = new DynamicForm();
 	protected DynamicForm form2 = new DynamicForm();
-	
-	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
-
 
 	public NarratorItemCanvas(String roles[]) {
 		super(roles);
@@ -76,8 +73,10 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 		this.addMember(buttonLayout);
 
 		this.addMember(form2);
-		form2.setFields(radiusItem, latItem, lngItem, dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem);
-		addField(form2,radiusItem, latItem, lngItem, dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem);
+//		form2.setFields(radiusItem, latItem, lngItem, dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem);
+		form2.setFields(latItem, lngItem, sortItem, dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem);
+//		addField(form2,radiusItem, latItem, lngItem, dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem);
+		addField(form2, latItem, lngItem, sortItem,dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem);
 	}
 	
 	protected void doLayoutForm1() {

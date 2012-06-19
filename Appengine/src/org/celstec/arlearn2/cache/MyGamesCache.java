@@ -6,12 +6,14 @@ import java.util.logging.Logger;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.ProgressDefinition;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 
 public class MyGamesCache extends GenericCache{
 	private static MyGamesCache instance;
 
 	private static final Logger logger = Logger.getLogger(MyGamesCache.class.getName());
-	private static String MYGAMES_PREFIX = "MyGamesCache";
+	private static String MYGAMES_PREFIX = SystemProperty.applicationVersion.get()+"MyGamesCache";
 
 	private MyGamesCache() {
 	}

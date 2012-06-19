@@ -175,38 +175,5 @@ public class BeanDeserialiser {
 		System.out.println(rl.getRuns().size());
 		System.out.println(rl.getRuns().get(0).getStartTime());
 	}
-	public static void main(String[] args) throws Exception {
-		String jsons = "{'generalItems':[{'@type':'narratorItem','id':'123','name':'OUNL Entry gate','description':'Hard work is done here','type':'NarratorItem','radius':'20','showAtTimeStamp':'1200','lng':'5.958125','lat':'50.879215','videoUrl':'test','text':'this is a NarratorItem without audio, images or video'},{'@type':'multipleChoiceTest','id':'124','name':'Multiple Choice','description':'Wat is de naam van dit gebouw','dependsOn':'{event: \"narator123read\", scope: \"user\" }','type':'MultipleChoiceTest','radius':'20','lng':'5.958025','lat':'50.879215','text':'Apart from the fields, we find some important institution here. Just look around!','question':'This is the entry gate of which institution?','answers':[{'isCorrect':'false','answer':'Belastingdienst Heerlen'},{'isCorrect':'false','answer':'RWTH Aachen'},{'isCorrect':'true','answer':'Open Universiteit Nederland'}]},{'@type':'pickupItem','id':'125','name':'Key','description':'a key','type':'PickupItem','radius':'20','showAtTimeStamp':'300','lng':'5.95812','lat':'50.87921','imageUrl':'<a href=\"http://www.flickr.com/photos/bohman/210977249/\" title=\"Keys. by Bohman, on Flickr\"></a>','dropZoneId':'126'},{'@type':'dropZone','id':'126','name':'Door','description':'a door','type':'DropZone','radius':'20','lng':'5.958197','lat':'50.879008','pickupItemId':'125'}]}";
-		
-		// String jsons =
-		// " {'team':{'name':'Team Strong','teamId':'34034f47-1a67-4f8d-9c9a-2c1c39579ce0'} }";
-		BeanDeserialiser bd = new BeanDeserialiser(jsons);
-		GeneralItemList list = (GeneralItemList) bd.deserialize(GeneralItemList.class);
-		System.out.println("teams size " + list.getGeneralitems().size());
-		System.out.println("teams size " + ((NarratorItem)list.getGeneralitems().get(0)).getVideoUrl());
-		System.out.println("teams size " + ((NarratorItem)list.getGeneralitems().get(0)).getText());
-		System.out.println("teams size " + ((NarratorItem)list.getGeneralitems().get(0)).getLat());
-		System.out.println("teams size " + ((NarratorItem)list.getGeneralitems().get(0)).getId());
-
-		System.out.println("teams size " + ((MultipleChoiceTest) list.getGeneralitems().get(1)).getAnswers().size());
-		
-	}
-
-	public static void main1(String[] args) throws Exception {
-		// String jsons =
-		// " {'team':[ {'name':'Team Strong','teamId':'34034f47-1a67-4f8d-9c9a-2c1c39579ce0'},{'name':'Team Strong','teamId':'34034f47-1a67-4f8d-9c9a-2c1c39579ce0'}]}";
-
-		String jsons = " {'name':'Team Strong','teamId':'34034f47-1a67-4f8d-9c9a-2c1c39579ce0', test:1, test2:2, test3:true}";
-		// String jsons = " {test3:true}";
-		BeanDeserialiser bd = new BeanDeserialiser(jsons);
-		
-		Team ret = (Team) bd.deserialize(Team.class);
-
-		System.out.println(ret.getTeamId());
-		System.out.println(ret.getName());
-		
-		// // System.out.println(json.keys().next());
-
-	}
-
+	
 }

@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.delegators.ActionDelegator;
+import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.generalitems.QueryGeneralItems;
 
@@ -73,10 +74,12 @@ public class UpdateGeneralItems extends GenericBean{
 		Action a = new Action();
 		a.setRunId(runId);
 		a.setAction(getAction());
-		QueryGeneralItems qgi = new QueryGeneralItems(qu);
+		GeneralItemDelegator gid = new GeneralItemDelegator(qu);
+
+//		QueryGeneralItems qgi = new QueryGeneralItems(qu);
 		log.severe("before check action effect"+runId+ " "+getAction());
 
-		qgi.checkActionEffect(a, runId, u);
+		gid.checkActionEffect(a, runId, u);
 		
 	}
 

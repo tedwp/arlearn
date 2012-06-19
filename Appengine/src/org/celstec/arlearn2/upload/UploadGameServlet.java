@@ -31,6 +31,7 @@ import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.Team;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.delegators.GameDelegator;
+import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.ScoreDefinitionDelegator;
 import org.celstec.arlearn2.delegators.TeamsDelegator;
@@ -140,18 +141,20 @@ public class UploadGameServlet extends HttpServlet {
 			game = gd.createGame(game);
 			Long gameId = game.getGameId();
 			Iterator<GeneralItem> it = arlPackage.getGeneralItems().iterator();
-			CreateGeneralItems cr = new CreateGeneralItems(
-					auth == null?req.getHeader("Authorization"):auth);
+			GeneralItemDelegator gid = new GeneralItemDelegator(auth == null?req.getHeader("Authorization"):auth);
+
+//			CreateGeneralItems cr = new CreateGeneralItems(
+//					auth == null?req.getHeader("Authorization"):auth);
 			while (it.hasNext()) {
 				GeneralItem generalItem = (GeneralItem) it.next();
 				generalItem.setGameId(gameId);
 
-				cr.createGeneralItem(generalItem);
+				gid.createGeneralItem(generalItem);
 			}
 			if (arlPackage.getScoreDefinitions() != null) {
 				Iterator<ScoreDefinition> scoreIterator = arlPackage
-						.getScoreDefinitions().getScoreDefinitions().iterator();
-				ScoreDefinitionDelegator sdd = new ScoreDefinitionDelegator(cr);
+						.getScoreDefinitions().iterator();
+				ScoreDefinitionDelegator sdd = new ScoreDefinitionDelegator(gid);
 				while (scoreIterator.hasNext()) {
 					ScoreDefinition scoreDefinition = (ScoreDefinition) scoreIterator
 							.next();

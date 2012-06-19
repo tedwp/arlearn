@@ -26,6 +26,7 @@ public class GeneralItemGameDataSource extends GenericDataSource {
 		addField(STRING_DATA_TYPE, "name", false, false);
 		addField(STRING_DATA_TYPE, "type", false, false);
 		addField(STRING_AR_DATA_TYPE, "roles", false, false);
+		addField(BOOLEAN_DATA_TYPE, "deleted", false, true);
 		addDerivedField(new DerivedFieldTask() {
 			
 			@Override

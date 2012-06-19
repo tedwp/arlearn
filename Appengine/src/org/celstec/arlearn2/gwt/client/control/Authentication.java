@@ -40,7 +40,6 @@ public class Authentication implements LoginCallback {
 
 	@Override
 	public void onError() {
-		System.out.println("login did not succeed");
 		Authoring.loginIncorrect();
 		Cookies.removeCookie("auth");		
 		Cookies.removeCookie("username");		
@@ -50,6 +49,7 @@ public class Authentication implements LoginCallback {
 		Cookies.removeCookie("auth");		
 		Cookies.removeCookie("username");
 		Authoring.disableTabs();
+		Authoring.clearCaches();
 		NotificationSubscriber.getInstance().removeAllHandlers();
 	}
 	

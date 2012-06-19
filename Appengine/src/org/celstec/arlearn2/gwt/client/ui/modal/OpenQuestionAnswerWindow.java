@@ -36,7 +36,7 @@ public class OpenQuestionAnswerWindow extends Window {
 //			html += "</audio>";
 			html += "<embed src=\""+audioUrl+"\" autostart=\"false\" loop=\"false\" width=\"350\" height=\"50\">";
 		}
-		html += "<pre>"+json+"</json>";
+//		html += "<pre>"+json+"</json>";
 		htmlPane.setContents(html);
 		
 		

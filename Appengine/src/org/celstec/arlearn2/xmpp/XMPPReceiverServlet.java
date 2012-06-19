@@ -14,6 +14,7 @@ import com.google.appengine.api.xmpp.PresenceType;
 import com.google.appengine.api.xmpp.XMPPService;
 import com.google.appengine.api.xmpp.XMPPServiceFactory;
 
+@Deprecated
 public class XMPPReceiverServlet extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse res)
             throws IOException {
@@ -23,7 +24,6 @@ public class XMPPReceiverServlet extends HttpServlet {
 
           JID fromJid = message.getFromJid();
           String body = message.getBody();
-          System.out.println("chat message " +body);
           JID toJid = new JID("stefaan.ternier@gmail.com/arlearn");
           //XMPPService xmppService = XMPPServiceFactory.getXMPPService();
           xmpp.sendPresence( toJid, PresenceType.AVAILABLE, PresenceShow.NONE, "Dit is mijn status");

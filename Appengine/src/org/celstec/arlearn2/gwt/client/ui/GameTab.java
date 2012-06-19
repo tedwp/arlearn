@@ -16,6 +16,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Window;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceEnumField;
@@ -88,6 +89,9 @@ public class GameTab extends Tab {
 	public void initGeneralItems() {
 		GeneralItemGameDataSource.getInstance().loadDataGame(gameId);
 		GameTeamDataSource.getInstance().loadDataGame(gameId);
+		Criteria crit = new Criteria();
+		crit.addCriteria("deleted", false);
+		listGrid.filterData(crit);
 		GameClient.getInstance().getGameConfig(gameId, new JsonCallback() {
 
 			public void onJsonReceived(JSONValue jsonValue) {
@@ -214,12 +218,12 @@ public class GameTab extends Tab {
 		layout.addMember(horizontalButtons);
 	}
 
-	private void editItem(final String type, int id) {
+	private void editItem(final String itemType, int id) {
 
 		GeneralItemsClient.getInstance().getGeneralItem(gameId, id,
 				new JsonCallback() {
 					public void onJsonReceived(JSONValue jsonValue) {
-						initGenericControls(type);
+						initGenericControls(itemType);
 						selectType.setDisabled(true);
 						giCanvas.setItemValues(jsonValue);
 						horizontalButtons = new HLayout();
@@ -229,6 +233,8 @@ public class GameTab extends Tab {
 						createButtton.addClickHandler(new ClickHandler() {
 							public void onClick(ClickEvent event) {
 								JSONObject object = giCanvas.generateObject();
+//								Window.alert("jsonValue "+object);
+
 								System.out.println(object);
 
 								GeneralItemsClient.getInstance()
@@ -236,8 +242,6 @@ public class GameTab extends Tab {
 												new JsonCallback() {
 													public void onJsonReceived(
 															JSONValue jsonValue) {
-														System.out
-																.println("update complete");
 														removeGenericControls();
 													}
 												});
@@ -297,7 +301,6 @@ public class GameTab extends Tab {
 		Canvas canvas = new Canvas();
 		listGrid = new GenericListGrid(true, true) {
 			protected void deleteItem(ListGridRecord rollOverRecord) {
-				System.out.println("click delete");
 				GameTab.this.deleteItem(rollOverRecord.getAttributeAsInt("id"));
 			}
 
@@ -316,6 +319,7 @@ public class GameTab extends Tab {
 		ListGridField titleGameField = new ListGridField("name", constants.title());
 		ListGridField typeField = new ListGridField("simpleName", constants.type());
 		ListGridField rolesField = new ListGridField("roles", constants.roles());
+		ListGridField deletedField = new ListGridField("deleted", "deleted");
 		ListGridField sortKeyField = new ListGridField("sortKey", "Order");
 		sortKeyField.setWidth(35);
 //sortKeyField,

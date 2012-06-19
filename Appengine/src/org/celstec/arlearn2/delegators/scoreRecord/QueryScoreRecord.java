@@ -62,7 +62,11 @@ public class QueryScoreRecord extends GoogleDelegator {
 		UserScore us = new UserScore();
 		us.setUserScore(getUserScore(runId, email));
 		us.setTeamScore(getTeamScore(runId, user.getTeamId()));
+		if (us.getUserScore() == null) us.setUserScore(0l);
+		if (us.getTeamScore() == null) us.setTeamScore(0l);
+		if (us.getAllScore() == null) us.setAllScore(0l);
 		us.setTotalScore(us.getUserScore()+us.getTeamScore()+us.getAllScore());
+		
 		//TODO check semantics of allscore
 		us.setAllScore(getAllScoreForTeam(runId, user.getTeamId()));
 		return us;

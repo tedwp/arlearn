@@ -18,6 +18,7 @@ import com.google.gwt.user.client.Window;
 public class NotificationSubscriber {
 
 	private static NotificationSubscriber instance;
+	private static boolean error = false;
 
 	private HashMap<String, NotificationHandler> notificationMap = new HashMap<String, NotificationHandler>();
 	
@@ -27,7 +28,7 @@ public class NotificationSubscriber {
 			channel.open(new SocketListener() {
 				@Override
 				public void onOpen() {
-					Window.alert("Channel opened!");
+//					Window.alert("Channel opened!");
 				}
 
 				@Override
@@ -36,15 +37,17 @@ public class NotificationSubscriber {
 				}
 
 				@Override
-				public void onError(SocketError error) {
+				public void onError(SocketError sError) {
 					instance = null;
-//					Window.alert("Error: " + error.getDescription());
+					error = true;
+					Window.alert("Error: you are no longer online. Reload this page once you're  again online" ); //TODO  i18n
 				}
 
 				@Override
 				public void onClose() {
 					instance = null;
-//					Window.alert("Channel closed!");
+					if (! error) requestToken();
+					//Window.alert("Channel closed!");
 				}
 			});
 		}

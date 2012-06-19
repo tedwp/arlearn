@@ -77,9 +77,7 @@ public class GameTeamDataSource extends GenericDataSource {
 		
 		@Override
 		public void onReceived() {
-//			System.out.println("AND NOW WE ARE TALKING... "+ getAttributeString(0, "teams"));
-			System.out.println("AND NOW WE ARE TALKING... "+ size());
-			
+			//TODO do something here
 		}
 		
 		

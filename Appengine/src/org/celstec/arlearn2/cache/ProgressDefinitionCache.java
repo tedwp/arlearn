@@ -5,12 +5,14 @@ import java.util.logging.Logger;
 
 import org.celstec.arlearn2.beans.game.ProgressDefinition;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 public class ProgressDefinitionCache extends GameCache{
 
 	private static ProgressDefinitionCache instance;
 
 	private static final Logger logger = Logger.getLogger(ProgressDefinitionCache.class.getName());
-	private static String PROGRESSDEFINITION_PREFIX = "ProgressDefinition";
+	private static String PROGRESSDEFINITION_PREFIX = SystemProperty.applicationVersion.get()+"ProgressDefinition";
 
 	private ProgressDefinitionCache() {
 	}

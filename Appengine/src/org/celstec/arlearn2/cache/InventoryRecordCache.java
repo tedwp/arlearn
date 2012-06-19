@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.celstec.arlearn2.beans.run.InventoryRecord;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 public class InventoryRecordCache extends RunCache{
 
 	private static InventoryRecordCache instance;
 
-	private static String INVENTORY_RECORD_PREFIX = "InventoryRecord";
+	private static String INVENTORY_RECORD_PREFIX = SystemProperty.applicationVersion.get()+"InventoryRecord";
 
 	private InventoryRecordCache() {
 	}
