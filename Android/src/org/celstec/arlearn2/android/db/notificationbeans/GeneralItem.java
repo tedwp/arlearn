@@ -91,7 +91,7 @@ public class GeneralItem extends NotificationBean{
 		if (soundPool == null) {
 			soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
 	        soundPoolMap = new HashMap<Integer, Integer>();
-	        soundPoolMap.put(1, soundPool.load(ctx, R.raw.activity, 1));
+	        soundPoolMap.put(1, soundPool.load(ctx, R.raw.multi_new, 1));
 		}
 	    /* Updated: The next 4 lines calculate the current volume in a scale of 0.0 to 1.0 */
 	    AudioManager mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);

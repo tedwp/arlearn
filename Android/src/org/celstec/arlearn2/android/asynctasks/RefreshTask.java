@@ -2,7 +2,6 @@ package org.celstec.arlearn2.android.asynctasks;
 
 import org.celstec.arlearn2.android.activities.IGeneralActivity;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.android.service.NotificationService;
 import org.celstec.arlearn2.android.sync.GeneralItemsSyncroniser;
 import org.celstec.arlearn2.android.sync.RunSyncroniser;
 import org.celstec.arlearn2.beans.run.Run;

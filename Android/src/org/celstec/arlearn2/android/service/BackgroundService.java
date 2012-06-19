@@ -15,6 +15,9 @@ import org.celstec.arlearn2.android.sync.MyLocationSyncronizer;
 import org.celstec.arlearn2.android.sync.MyResponseSyncronizer;
 import org.celstec.arlearn2.android.sync.RunSyncroniser;
 import org.celstec.arlearn2.android.sync.ScoreSyncroniser;
+import org.celstec.arlearn2.beans.Version;
+import org.celstec.arlearn2.client.GenericClient;
+import org.celstec.arlearn2.client.VersionClient;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -28,6 +31,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -100,10 +105,10 @@ public class BackgroundService extends IntentService {
 	}
 
 	protected void onHandleIntent(Intent intent) {
-		run = new RunSyncroniser(this);
+		checkServerUrl();
+//		run = new RunSyncroniser(this);
 		game = new GameSyncroniser(this);
-		gis = new GeneralItemsSyncroniser(this);
-//		loc = new MyLocationSyncronizer(this);
+//		gis = new GeneralItemsSyncroniser(this);
 		resp = new MyResponseSyncronizer(this);
 		act = new MyActionsSyncronizer(this);
 		mcs = new MediaCacheSyncroniser(this);
@@ -114,12 +119,12 @@ public class BackgroundService extends IntentService {
 			// Log.i("service", "is still running");
 			synchronized (this) {
 				try {
-					if (run.timeToExecute(time))
-						run.run();
+//					if (run.timeToExecute(time))
+//						run.run();
 					if (game.timeToExecute(time))
 						game.run();
-					if (gis.timeToExecute(time))
-						gis.run();
+//					if (gis.timeToExecute(time))
+//						gis.run();
 //					if (loc.timeToExecute(time))
 //						loc.run();
 					if (resp.timeToExecute(time))
@@ -138,6 +143,22 @@ public class BackgroundService extends IntentService {
 					Log.e("interrupt", e.getMessage(), e);
 				}
 			}
+		}
+	}
+	
+	private void checkServerUrl() {
+		try {
+			PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			int versionNumber = pinfo.versionCode;
+//			Version v = VersionClient.getVersionClient().getVersionInfo(versionNumber);
+//			if (v != null) {
+//				GenericClient.setUrlPrefix(v.getServiceUrl());
+//				System.out.println(v.getServiceUrl());
+//
+//			}
+		} catch (NameNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

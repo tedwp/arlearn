@@ -18,6 +18,7 @@ public class Constants {
 	public static String TOKEN = "Token";
 	public static String CURRENT_RUN = "CurrentRun";
 	public static String TOTAL_SCORE = "TotalScore";
+	public static String STATUS = "status";
 	
 	public static String ITEM_ID = "id";
 

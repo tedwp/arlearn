@@ -1,4 +1,4 @@
-package org.celstec.arlearn2.android.service;
+package org.celstec.arlearn2.android.broadcast;
 
 import java.io.Serializable;
 
@@ -30,15 +30,11 @@ public class BeanReceiver extends BroadcastReceiver {
 				runIntent.setAction("org.celstec.arlearn2.beans.notification.RunModification");
 				runIntent.putExtra("bean", bean);
 				context.sendBroadcast(runIntent);
-				
-//				process(context, (RunModification) bean);
 			}
 			if (bean instanceof GeneralItemModification) {
 				Intent gimIntent = new Intent();
 				gimIntent.setAction("org.celstec.arlearn2.beans.notification.GeneralItemModification");
 				gimIntent.putExtra("bean", bean);
-
-				System.out.println("canoncial name is "+GeneralItemModification.class.getCanonicalName());
 				context.sendBroadcast(gimIntent);
 //				process(context, (GeneralItemModification) bean);
 			}

@@ -1,5 +1,7 @@
 package org.celstec.arlearn2.android.activities;
 
+import java.io.Serializable;
+
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.db.notificationbeans.GeneralItem;
@@ -11,7 +13,8 @@ import org.celstec.arlearn2.android.maps.ResponsesOverlay;
 import org.celstec.arlearn2.android.maps.UsersOverlay;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.score.ScoreHandler;
-import org.celstec.arlearn2.android.service.NotificationService;
+import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
+import org.celstec.arlearn2.beans.notification.GeneralItemModification;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -62,24 +65,44 @@ public class MapViewActivity extends MapActivity {
 	private ScoreHandler scoreHandler = new ScoreHandler(this);
 	protected MenuHandler menuHandler; 
 	
-	private Intent intent;
+//	private Intent intent;
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
-			NotificationBean bean = (NotificationBean) intent.getExtras().getSerializable("bean");
-			if (bean.getClass().equals(UpdateScore.class) && menuHandler.getPropertiesAdapter().isScoringEnabled()) {
-				scoreHandler.setScore((UpdateScore) bean);
-			}
-			if (bean.getClass().equals(LocationUpdate.class)) {
-				usersOverlay.updateLocation((LocationUpdate) bean);
+//			NotificationBean bean = (NotificationBean) intent.getExtras().getSerializable("bean");
+//			if (bean.getClass().equals(UpdateScore.class) && menuHandler.getPropertiesAdapter().isScoringEnabled()) {
+//				scoreHandler.setScore((UpdateScore) bean);
+//			}
+//			if (bean.getClass().equals(LocationUpdate.class)) {
+//				usersOverlay.updateLocation((LocationUpdate) bean);
+//				
+//				mv.invalidate();
+//			}
+//			if (bean.getClass().equals(GeneralItem.class)) {
+//				GeneralItem gibean = (GeneralItem) bean;
+//				if ("visible".equals(gibean.getAction())) makeGeneralItemVisible(gibean);
+//			}
+			Boolean forMe = intent.getExtras().getBoolean(MapViewActivity.class.getCanonicalName(), false);
+			if (forMe) {
+				LedStatus.updateStatus(MapViewActivity.this);
+//				updateStatus();
+				makeGeneralItemVisible();
 				
-				mv.invalidate();
-			}
-			if (bean.getClass().equals(GeneralItem.class)) {
-				GeneralItem gibean = (GeneralItem) bean;
-				if ("visible".equals(gibean.getAction())) makeGeneralItemVisible(gibean);
 			}
 		}
 	};
+	
+//	private void updateStatus(){
+//		ImageView iv = (ImageView) MapViewActivity.this.findViewById(R.id.statusLed);
+//		switch (menuHandler.getPropertiesAdapter().getStatus()) {
+//		case ChannelAPINotificationService.ONLINE_STATUS:
+//			iv.setImageResource(R.drawable.status_icon_green);
+//			break;
+//
+//		default:
+//			iv.setImageResource(R.drawable.status_icon_red);
+//			break;
+//		}
+//	}
 	
 	protected boolean isRouteDisplayed() {
 		return false;
@@ -87,7 +110,7 @@ public class MapViewActivity extends MapActivity {
 	long lastTap = 0;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		intent = new Intent(this, NotificationService.class);
+//		intent = new Intent(this, NotificationService.class);
 		
 //		runId = getIntent().getLongExtra("runId", 0);
 //		runId = intent.getExtras().getLong("runId");
@@ -148,6 +171,7 @@ public class MapViewActivity extends MapActivity {
 		control = mv.getController();
 		mHandler.postDelayed(checkForUpdates, 10000);
 		initListMapButton();
+
 		
 	}
 	
@@ -228,11 +252,17 @@ public class MapViewActivity extends MapActivity {
 		myLocation.enableMyLocation();
 		mHandler.removeCallbacks(checkForUpdates);
 		mHandler.post(checkForUpdates);
-		startService(intent);
-		registerReceiver(broadcastReceiver, new IntentFilter(NotificationService.BROADCAST_ACTION));
+//		startService(intent);
+//		registerReceiver(broadcastReceiver, new IntentFilter(NotificationService.BROADCAST_ACTION));
+		registerReceiver(broadcastReceiver, new IntentFilter("org.celstec.arlearn.updateActivities"));
+
 		if (menuHandler.getPropertiesAdapter().isScoringEnabled() && menuHandler.getPropertiesAdapter().getTotalScore() != null && menuHandler.getPropertiesAdapter().getTotalScore() != Long.MIN_VALUE) {
 			scoreHandler.setScore((int) menuHandler.getPropertiesAdapter().getTotalScore().longValue());
 		}
+//		updateStatus();
+		LedStatus.updateStatus(MapViewActivity.this);
+
+
 	}
 	
 	@Override
@@ -254,13 +284,13 @@ public class MapViewActivity extends MapActivity {
 		}
 	};
 	
-	private void makeGeneralItemVisible(GeneralItem gi) {
-		if (gi.getLat() ==null && gi.getLng() == null) {
-		} else {
+	private void makeGeneralItemVisible() {
+//		if (generalItem.getLat() ==null && generalItem.getLng() == null) {
+//		} else {
 			itemsOverlay.syncItems(this);
 			responsesOverlay.syncItems(this);
 			mv.invalidate();
-		}
+//		}
 	}
 	
 	public long getRunId(){

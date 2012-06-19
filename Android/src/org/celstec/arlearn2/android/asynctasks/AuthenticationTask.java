@@ -13,6 +13,7 @@ public class AuthenticationTask extends RestInvocation {
 	private String email;
 	private String password;
 	private String service;
+	private Boolean instructions;
 
 	public AuthenticationTask(IGeneralActivity activity) {
 		super(activity);
@@ -22,6 +23,7 @@ public class AuthenticationTask extends RestInvocation {
 		email = (String) params[0];
 		password = (String) params[1];
 		service = (String) params[2];
+		instructions = (Boolean) params[3];
 	}
 
 	private boolean checkConstraints() {
@@ -53,6 +55,7 @@ public class AuthenticationTask extends RestInvocation {
 		} else {
 			callingActivity.getMenuHandler().getPropertiesAdapter().setFusionAuthToken(resp.getAuth());
 			callingActivity.getMenuHandler().getPropertiesAdapter().setIsAuthenticated();
+			if (instructions != null && instructions) LoginClient.getLoginClient().instructions(resp.getAuth(), email);
 		}
 //		doGoogleAuthenticate();
 		return null;

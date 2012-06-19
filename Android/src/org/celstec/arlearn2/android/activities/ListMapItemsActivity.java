@@ -12,7 +12,7 @@ import org.celstec.arlearn2.android.db.notificationbeans.UpdateScore;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
-import org.celstec.arlearn2.android.service.NotificationService;
+import org.celstec.arlearn2.android.service.LocationService;
 import org.celstec.arlearn2.android.util.GPSUtil;
 
 import android.content.BroadcastReceiver;
@@ -42,13 +42,24 @@ public class ListMapItemsActivity extends GeneralListActivity {
 	private long runId;
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+//		public void onReceive(Context context, Intent intent) {
+//			NotificationBean bean = (NotificationBean) intent.getExtras().getSerializable("bean");
+//			if (bean.getClass().equals(org.celstec.arlearn2.android.db.notificationbeans.GeneralItem.class)) {
+//				org.celstec.arlearn2.android.db.notificationbeans.GeneralItem gibean = (org.celstec.arlearn2.android.db.notificationbeans.GeneralItem) bean;
+//				if ("visible".equals(gibean.getAction())) {
+//					renderList();
+//				}
+//			}
+//			
+//
+//		}
+		
 		public void onReceive(Context context, Intent intent) {
-			NotificationBean bean = (NotificationBean) intent.getExtras().getSerializable("bean");
-			if (bean.getClass().equals(org.celstec.arlearn2.android.db.notificationbeans.GeneralItem.class)) {
-				org.celstec.arlearn2.android.db.notificationbeans.GeneralItem gibean = (org.celstec.arlearn2.android.db.notificationbeans.GeneralItem) bean;
-				if ("visible".equals(gibean.getAction())) {
-					renderList();
-				}
+			Boolean forMe = intent.getExtras().getBoolean(ListMapItemsActivity.class.getCanonicalName(), false);
+			if (forMe) {
+				LedStatus.updateStatus(ListMapItemsActivity.this);
+				renderList();
+				
 			}
 		}
 	};
@@ -62,67 +73,22 @@ public class ListMapItemsActivity extends GeneralListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-	private static final int TWO_MINUTES = 1000 * 60 * 2;
 
-	protected boolean isBetterLocation(Location location, Location currentBestLocation) {
-	    if (currentBestLocation == null) {
-	        // A new location is always better than no location
-	        return true;
-	    }
-
-	    // Check whether the new location fix is newer or older
-	    long timeDelta = location.getTime() - currentBestLocation.getTime();
-	    boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-	    boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
-	    boolean isNewer = timeDelta > 0;
-
-	    // If it's been more than two minutes since the current location, use the new location
-	    // because the user has likely moved
-	    if (isSignificantlyNewer) {
-	        return true;
-	    // If the new location is more than two minutes older, it must be worse
-	    } else if (isSignificantlyOlder) {
-	        return false;
-	    }
-
-	    // Check whether the new location fix is more or less accurate
-	    int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-	    boolean isLessAccurate = accuracyDelta > 0;
-	    boolean isMoreAccurate = accuracyDelta < 0;
-	    boolean isSignificantlyLessAccurate = accuracyDelta > 200;
-
-	    // Check if the old and new location are from the same provider
-	    boolean isFromSameProvider = isSameProvider(location.getProvider(),
-	            currentBestLocation.getProvider());
-
-	    // Determine location quality using a combination of timeliness and accuracy
-	    if (isMoreAccurate) {
-	        return true;
-	    } else if (isNewer && !isLessAccurate) {
-	        return true;
-	    } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
-	        return true;
-	    }
-	    return false;
-	}
 	
-	private boolean isSameProvider(String provider1, String provider2) {
-	    if (provider1 == null) {
-	      return provider2 == null;
-	    }
-	    return provider1.equals(provider2);
-	}
+	
+	
 	
 	private void renderList(){
-		Location loc = ((LocationManager) getSystemService(LOCATION_SERVICE)).getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		Location loc2 = ((LocationManager) getSystemService(LOCATION_SERVICE)).getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		if (loc == null) {
-			loc = loc2;
-		} else {
-			if (loc2 != null) if (isBetterLocation(loc2, loc)) loc= loc2;
-			
-		}
-		
+		Location loc = LocationService.getBestLocation(this);
+//		Location loc = ((LocationManager) getSystemService(LOCATION_SERVICE)).getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//		Location loc2 = ((LocationManager) getSystemService(LOCATION_SERVICE)).getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+//		if (loc == null) {
+//			loc = loc2;
+//		} else {
+//			if (loc2 != null) if (isBetterLocation(loc2, loc)) loc= loc2;
+//			
+//		}
+//		
 		
 		if (loc != null) {
 			setLat(loc.getLatitude());
@@ -210,9 +176,15 @@ public class ListMapItemsActivity extends GeneralListActivity {
 			runId = getIntent().getLongExtra("runId", 0);
 			adapter = new MessageListAdapter(this);
 			setListAdapter(adapter);
-			registerReceiver(broadcastReceiver, new IntentFilter(NotificationService.BROADCAST_ACTION));
+			//TODO
+//			registerReceiver(broadcastReceiver, new IntentFilter(NotificationService.BROADCAST_ACTION));
+			registerReceiver(broadcastReceiver, new IntentFilter("org.celstec.arlearn.updateActivities"));
+
 			renderList();
 		}
+		
+		LedStatus.updateStatus(ListMapItemsActivity.this);
+
 		
 	}
 	

@@ -18,7 +18,8 @@
     <string name="serviceMissing">Aanmelden niet geslaagd:\n interne fout, service ontbreekt</string>
     <string name="loginFailed">Aanmelden voor ***  is niet geslaagd</string>
     <string name="checkCredentials">Verificatie wachtwoord</string>
-    
+       <string name="sendInstructions">Instructies opsturen</string>
+        
     
      <!--List Excursion Activity Strings-->
     <string name="listExcursionsHeader">Selecteer een excursie</string>

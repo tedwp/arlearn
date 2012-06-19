@@ -5,6 +5,7 @@ import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.client.RunClient;
 
+@Deprecated
 public class CheckGameConfig extends RestInvocation {
 
 		public CheckGameConfig(IGeneralActivity activity) {

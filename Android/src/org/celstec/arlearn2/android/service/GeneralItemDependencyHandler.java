@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
+import org.celstec.arlearn2.android.activities.ListMessagesActivity;
+import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MyActions;
@@ -29,10 +32,10 @@ public class GeneralItemDependencyHandler {
 		this.ctx = ctx;
 		soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
         soundPoolMap = new HashMap<Integer, Integer>();
-        soundPoolMap.put(1, soundPool.load(ctx, R.raw.activity, 1));
+        soundPoolMap.put(1, soundPool.load(ctx, R.raw.multi_new, 1));
 	}
 	
-	protected void checkDependencies() {
+	public void checkDependencies() {
 		DBAdapter db = new DBAdapter(ctx);
 		db.openForWrite();
 		long runId = (new PropertiesAdapter(ctx)).getCurrentRunId();
@@ -131,9 +134,16 @@ public class GeneralItemDependencyHandler {
 	}
 	
 	private  void broadcastTroughIntent(org.celstec.arlearn2.android.db.notificationbeans.GeneralItem giNot) {
-		Intent intent = new Intent(NotificationService.BROADCAST_ACTION);
-		intent.putExtra("bean", giNot);
-		ctx.sendBroadcast(intent);
+//		Intent intent = new Intent(NotificationService.BROADCAST_ACTION);
+//		intent.putExtra("bean", giNot);
+//		ctx.sendBroadcast(intent);
+		Intent updateIntent = new Intent();
+		updateIntent.setAction("org.celstec.arlearn.updateActivities");
+		updateIntent.putExtra(ListMessagesActivity.class.getCanonicalName(), true);
+		updateIntent.putExtra(MapViewActivity.class.getCanonicalName(), true);
+		updateIntent.putExtra(ListMapItemsActivity.class.getCanonicalName(), true);
+		ctx.sendBroadcast(updateIntent);
+		
 		Vibrator vibrator = (Vibrator)ctx.getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(new long[] {0, 200,200, 500,200,200}, -1);
         playSound(1);

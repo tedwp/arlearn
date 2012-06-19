@@ -43,6 +43,8 @@ public class GeneralItemAdapter extends GenericDbTable {
 //	public static final String DEPENDENCY_VISIBLE = "dependson_visible";//11
 //	public static final String TIME_VISIBLE = "time_visible";//12
 	public static final String FIRST_READ = "firstRead";//13
+	public static final String DELETED = "deleted";
+	public static final String LAST_MODIFICATION_DATE = "lastModificationDate";//15
 
 	public GeneralItemAdapter(DBAdapter db) {
 		super(db);
@@ -64,7 +66,9 @@ public class GeneralItemAdapter extends GenericDbTable {
 				+ RUNID + " long ," 
 //				+ DEPENDENCY_VISIBLE+" boolean, "
 				+ VISIBILITY_STATUS+" int, "
-				+ FIRST_READ + " long );";
+				+ FIRST_READ + " long, "
+				+ DELETED + " boolean, "
+				+ LAST_MODIFICATION_DATE + " long );";
 	}
 
 	protected String getTableName() {
@@ -84,7 +88,7 @@ public class GeneralItemAdapter extends GenericDbTable {
 			String giJson = jbs.serialiseToJson().toString();
 			gic.remove(gi.getId());
 			queryCache = null;
-			delete(gi.getId());
+			delete(gi.getId(), gi.getRunId());
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(ID, gi.getId());
 			initialValues.put(NAME, gi.getName());
@@ -103,6 +107,13 @@ public class GeneralItemAdapter extends GenericDbTable {
 			//TODO other implementation for dependencies
 			initialValues.put(VISIBILITY_STATUS, NOT_INITIALISED);
 			initialValues.put(FIRST_READ, System.currentTimeMillis());
+			if (gi.getDeleted() == null) {
+				initialValues.put(DELETED, true);
+			} else {
+				initialValues.put(DELETED, gi.getDeleted());
+			}
+				
+			initialValues.put(LAST_MODIFICATION_DATE, gi.getLastModificationDate());
 			return db.getSQLiteDb().insert(getTableName(), null, initialValues) != -1;
 		} 
 		return false;
@@ -134,21 +145,21 @@ public class GeneralItemAdapter extends GenericDbTable {
 	}
 	
 	public GeneralItem[] query(long runId) {
-		return query(RUNID + "= ?  ", new String[] { ""+runId});
+		return query(RUNID + "= ?  and " +DELETED + " = ?", new String[] { ""+runId, "0"});
 		//TODO dependencies
 //		return query(RUNID + "= ? and "+TIME_VISIBLE + " = ? and "+DEPENDENCY_VISIBLE + " = ? ", new String[] { ""+runId, ""+VISIBLE,"1"});
 	}
 	
 	public GeneralItem[] queryMessages(long runId) {
 		try {
-			return query(LAT + "= ? and "+LNG+"= ? and "+RUNID+" = ? and "+VISIBILITY_STATUS + " = ?", new String[] { "0", "0", ""+runId, ""+VISIBLE});
+			return query(LAT + "= ? and "+LNG+"= ? and "+RUNID+" = ? and "+VISIBILITY_STATUS + " = ? and " +DELETED + " = ?", new String[] { "0", "0", ""+runId, ""+VISIBLE, "0"});
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
 	public GeneralItem[] query(long runId, int visibility) {
-		return query(RUNID + "= ? and "+VISIBILITY_STATUS + " = ? ", new String[] { ""+runId, ""+visibility});
+		return query(RUNID + "= ? and "+VISIBILITY_STATUS + " = ? and " +DELETED + " = ?", new String[] { ""+runId, ""+visibility, "0"});
 	}
 	
 //	public GeneralItem[] queryDependencyInvisibleItems(long runId) {
@@ -160,7 +171,7 @@ public class GeneralItemAdapter extends GenericDbTable {
 //	}
 	
 	public GeneralItem[] queryWithLocation(long runId) {
-		return query(RUNID + "= ? and "+LAT + " != ? and "+LNG+" != ? and "+VISIBILITY_STATUS + " = ? ", new String[] { ""+runId, "0", "0", ""+VISIBLE});
+		return query(RUNID + "= ? and "+LAT + " != ? and "+LNG+" != ? and "+VISIBILITY_STATUS + " = ? and " +DELETED + " = ?", new String[] { ""+runId, "0", "0", ""+VISIBLE, "0"});
 	}
 	
 	public static HashMap<Long, GeneralItem> gic = new HashMap<Long, GeneralItem>();

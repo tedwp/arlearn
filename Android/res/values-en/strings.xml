@@ -18,7 +18,8 @@
     <string name="serviceMissing">Login was unsuccessful:\n internal error, service missing</string>
     <string name="loginFailed">Login for ***  did not succeed</string>
     <string name="checkCredentials">Verifying credentials</string>
-    
+    <string name="sendInstructions">Send me instructions</string>
+        
     
      <!--List Excursion Activity Strings-->
     <string name="listExcursionsHeader">Select an excursion</string>

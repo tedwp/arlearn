@@ -1,8 +1,10 @@
 package org.celstec.arlearn2.android.db;
 
+import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.run.Run;
+import org.codehaus.jettison.json.JSONException;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -16,6 +18,7 @@ public class GameAdapter extends GenericDbTable {
 	public static final String TITLE = "title";
 	public static final String SCORING = "scoring";
 	public static final String MAP_AVAILABLE = "mapAvailable";
+	public static final String BEAN = "bean";
 	
 	public GameAdapter(DBAdapter db) {
 		super(db);
@@ -27,6 +30,7 @@ public class GameAdapter extends GenericDbTable {
 				+ ID + " long primary key, " 
 				+ TITLE + " text not null, " 
 				+ SCORING + " boolean not null, "
+				+ BEAN + " text , "
 				+ MAP_AVAILABLE + " boolean not null);";
 	}
 
@@ -63,6 +67,7 @@ public class GameAdapter extends GenericDbTable {
         	if (c.getScoring() == null) c.setScoring(true);
         	cValues.put(SCORING, c.getScoring());
         }	
+        cValues.put(BEAN, g.toString());
         return cValues;
 	}
 
@@ -108,13 +113,19 @@ public class GameAdapter extends GenericDbTable {
 	}
 
 	private Game cursorToGame(Cursor mCursor) {
-		Game game = new Game();
+		Game game = null;
+		try {
+			game = (Game) JsonBeanDeserializer.deserialize(mCursor.getString(3));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		if (game == null) game = new Game();
 		game.setGameId(mCursor.getLong(0));
 		game.setTitle(mCursor.getString(1));
-		Config c = new Config();
-		c.setScoring(1==mCursor.getInt(2));
-		c.setMapAvailable(1==mCursor.getInt(3));
-		game.setConfig(c);
+//		Config c = new Config();
+//		c.setScoring(1==mCursor.getInt(2));
+//		c.setMapAvailable(1==mCursor.getInt(4));
+//		game.setConfig(c);
 		return game;
 	}
 }

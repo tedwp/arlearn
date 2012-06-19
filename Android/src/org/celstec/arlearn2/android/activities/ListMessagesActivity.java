@@ -1,7 +1,6 @@
 package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.asynctasks.GetLocationLessMessages;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MyActions;
@@ -9,7 +8,6 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
 //import org.celstec.arlearn2.android.db.beans.GeneralItem;
 import org.celstec.arlearn2.android.db.notificationbeans.NotificationBean;
-import org.celstec.arlearn2.android.service.NotificationService;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

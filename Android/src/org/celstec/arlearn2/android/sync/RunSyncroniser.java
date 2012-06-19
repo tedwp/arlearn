@@ -20,10 +20,11 @@ public class RunSyncroniser extends GenericSyncroniser {
 
 	public void runAuthenticated() {
 		syncronizeRuns(ctx, pa);
-		syncAdditionalInfo(ctx, pa);
+//		syncAdditionalInfo(ctx, pa);
 		increaseDelay();
 	}
 
+	@Deprecated
 	public static RunList syncronizeRuns(Context ctx, PropertiesAdapter pa) {
 		String result;
 		try {
@@ -41,27 +42,27 @@ public class RunSyncroniser extends GenericSyncroniser {
 		
 	}
 	
-	public static void syncAdditionalInfo(Context ctx, PropertiesAdapter pa) {
-		String result;
-		try {
-			DBAdapter db = new DBAdapter(ctx);
-			db.openForWrite();
-			Run[] runs = db.getRunAdapter().runsWithoutGame();
-			for (Run r: runs) {
-				User u = UserClient.getUserClient().getUser(pa.getFusionAuthToken(), r.getRunId(), pa.getUsername());
-
-				Run fullRun = RunClient.getRunClient().getRun(r.getRunId(), pa.getFusionAuthToken());
-				if (fullRun.getGame() != null) {
-					db.getGameAdapter().insert(fullRun.getGame());
-					db.getRunAdapter().insert(fullRun, u.getRoles());
-				}
-				System.out.println("run found "+fullRun);
-			}
-//			db.getGameAdapter();
-			//if (rl.getError() == null) ((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).insert(rl.getRuns());
-			db.close();
-		} catch (Exception e) {
-			Log.e("exception", e.getMessage(), e);
-		}
-	}
+//	public static void syncAdditionalInfo(Context ctx, PropertiesAdapter pa) {
+//		String result;
+//		try {
+//			DBAdapter db = new DBAdapter(ctx);
+//			db.openForWrite();
+//			Run[] runs = db.getRunAdapter().runsWithoutGame();
+//			for (Run r: runs) {
+//				User u = UserClient.getUserClient().getUser(pa.getFusionAuthToken(), r.getRunId(), pa.getUsername());
+//
+//				Run fullRun = RunClient.getRunClient().getRun(r.getRunId(), pa.getFusionAuthToken());
+//				if (fullRun.getGame() != null) {
+//					db.getGameAdapter().insert(fullRun.getGame());
+//					db.getRunAdapter().insert(fullRun, u.getRoles());
+//				}
+//				System.out.println("run found "+fullRun);
+//			}
+////			db.getGameAdapter();
+//			//if (rl.getError() == null) ((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).insert(rl.getRuns());
+//			db.close();
+//		} catch (Exception e) {
+//			Log.e("exception", e.getMessage(), e);
+//		}
+//	}
 }

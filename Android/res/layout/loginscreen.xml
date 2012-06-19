@@ -16,6 +16,13 @@
 		android:layout_weight="0" 
 		android:password="true"
 		android:hint="@string/passwordHint"/>
+
+	<CheckBox
+	    android:id="@+id/sendInstructions"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="0"
+	    android:text="@string/sendInstructions" />
 		
 	<LinearLayout android:orientation="horizontal"
 		android:layout_width="fill_parent" 

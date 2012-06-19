@@ -49,8 +49,8 @@ public class MyActionsSyncronizer extends GenericSyncroniser {
 			if (result.getError()== null) {
 				dbAdapter.confirmReplicated(result);	
 			} else {
-				if (result.getError() !=null && "User not found".equals(result.getError())) 				dbAdapter.confirmReplicated(result);	 //this is not elegant... but it mean the user was deleted, so don't try to sync in future
-
+				if (result.getError() !=null && "User not found".equals(result.getError())) 				
+					dbAdapter.confirmReplicated(result);	 //this is not elegant... but it mean the user was deleted, so don't try to sync in future
 				increaseDelay();
 			}
 		}

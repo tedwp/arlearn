@@ -12,7 +12,7 @@ import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.BackgroundService;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
-import org.celstec.arlearn2.android.service.NotificationService;
+import org.celstec.arlearn2.android.service.LocationService;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.run.Run;
 
@@ -43,6 +43,7 @@ public class ListExcursionsActivity  extends GeneralListActivity {
 //			if (bean.getClass().equals(org.celstec.arlearn2.android.db.notificationbeans.Run.class)) {
 			Boolean forMe = intent.getExtras().getBoolean(ListExcursionsActivity.class.getCanonicalName(), false);
 			if (forMe) {
+				checkAuthentication();
 				runs = getExcursionsFromDatabase();
 				renderExcursionList();
 			}
@@ -56,16 +57,18 @@ public class ListExcursionsActivity  extends GeneralListActivity {
 			this.finish();
 		} else {
 			setContentView(R.layout.listexcursionscreen);
-			runs = getExcursionsFromDatabase();
-			renderExcursionList();
+			
 		}
 	}
 	
-	
-	public boolean onCreateOptionsMenu(Menu menu) {
+	private void checkAuthentication() {
 		if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			this.finish();
 		}
+	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+		checkAuthentication();
 		menu.add(0, EXIT, 0, getString(R.string.exit));
 //		menu.add(0, MenuHandler.RESET, 0, getString(R.string.reset));
 		menu.add(0, MenuHandler.REFRESH, 0, getString(R.string.refresh));
@@ -108,6 +111,11 @@ public class ListExcursionsActivity  extends GeneralListActivity {
 			boolean mapView = true;
 			if (g != null && g.getConfig()!=null ) {
 				mapView = g.getConfig().getMapAvailable();
+				if (g.getConfig().getLocationUpdates()!= null && !g.getConfig().getLocationUpdates().isEmpty()) {
+					Intent intent = new Intent(this, LocationService.class);
+					intent.putExtra("bean", g.getConfig());
+					startService(intent);
+				}
 			}
 			if (mapView) {
 				i = new Intent(this, MapViewActivity.class);
@@ -119,14 +127,20 @@ public class ListExcursionsActivity  extends GeneralListActivity {
 			startActivity(i);
 			ActionDispatcher.startRun(ListExcursionsActivity.this);
 			
-			CheckGameConfig task = new CheckGameConfig(this); //TODO remove this
-			task.execute(new Object[] {});
+			Intent gimIntent = new Intent();
+			gimIntent.setAction("org.celstec.arlearn2.beans.notification.GeneralItemModification");
+			sendBroadcast(gimIntent);
+			
+//			CheckGameConfig task = new CheckGameConfig(this); //TODO remove this
+//			task.execute(new Object[] {});
 		}
 	
 	}
 
 	protected void onResume() {
 		super.onResume();
+		runs = getExcursionsFromDatabase();
+		renderExcursionList();
 //		registerReceiver(broadcastReceiver, new IntentFilter(NotificationService.BROADCAST_ACTION));
 //		registerReceiver(broadcastReceiver, new IntentFilter(Run.class.getName()));
 		registerReceiver(broadcastReceiver, new IntentFilter("org.celstec.arlearn.updateActivities"));

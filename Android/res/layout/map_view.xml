@@ -29,8 +29,14 @@
         android:layout_marginBottom="20dip"
         android:layout_gravity="right|top"
 
-        android:padding="12dip"
-        > 
+        android:padding="12dip"> 
+        <ImageView 
+   			android:id="@+id/statusLed"
+			android:src="@drawable/status_icon_red"
+			android:layout_width="wrap_content" 
+        	android:layout_height="wrap_content"
+        	android:layout_marginBottom="20dip"
+        	/>
         </LinearLayout>
   
    <!-- TextView android:id="@+id/mapViewId" android:layout_width="wrap_content"

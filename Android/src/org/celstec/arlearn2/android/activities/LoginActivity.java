@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 public class LoginActivity extends GeneralActivity {
@@ -55,9 +56,10 @@ public class LoginActivity extends GeneralActivity {
 			dialog.show();
 			String username = ((EditText) findViewById(R.id.email)) .getText()+"";
 			String password = ((EditText) findViewById(R.id.password)).getText()+"";
+			Boolean sendInstructions = ((CheckBox) findViewById(R.id.sendInstructions)).isChecked();
 			storeUsername(username);
 			menuHandler.getPropertiesAdapter().setPassword(password);
-			new AuthenticationTask(LoginActivity.this).execute(new Object[]{username, password, Constants.FUSION_SERVICE});
+			new AuthenticationTask(LoginActivity.this).execute(new Object[]{username, password, Constants.FUSION_SERVICE, sendInstructions});
 			//new AuthenticationTask(LoginActivity.this).execute(new Object[]{username, password, Constants.MAPS_SERVICE, menuHandler.getDefaultPrefs()});
 			////	new AuthenticationTask(LoginActivity.this).execute(new Object[]{username, password, Constants.PICASA_SERVICE, menuHandler.getDefaultPrefs()});
 			//	new AuthenticationTask(LoginActivity.this).execute(new Object[]{username, password, Constants.SITES_SERVICE, menuHandler.getDefaultPrefs()});

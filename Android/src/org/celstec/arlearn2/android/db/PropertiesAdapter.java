@@ -136,4 +136,14 @@ public class PropertiesAdapter {
 		editor.putBoolean(Constants.SCORING_ENABLED, scoringEnabled);
 		editor.commit();
 	}
+	
+	public void setStatus(int status) {
+		SharedPreferences.Editor editor = getDefaultPrefs().edit();
+		editor.putInt(Constants.STATUS, status);
+		editor.commit();
+	}
+	
+	public int getStatus() {
+		return getDefaultPrefs().getInt(Constants.STATUS, 0);
+	}
 }

@@ -46,6 +46,7 @@ public class RunAdapter extends GenericDbTable {
 		return RUN_TABLE;
 	}
 	
+	@Deprecated
 	public boolean insert (List<Run> runs) {
 		if (runs.isEmpty()){
 			return true;

@@ -18,7 +18,6 @@ import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.genItemActivities.AudioObjectActivity;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.service.BackgroundService;
-import org.celstec.arlearn2.android.service.NotificationService;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
