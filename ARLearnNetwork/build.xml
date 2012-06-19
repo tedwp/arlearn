@@ -10,12 +10,12 @@
 
 	<target name="compile" depends="clean">
 		<mkdir dir="build/classes" />
-		<javac target="1.6" srcdir="src" destdir="build/classes" classpathref="classpath" />
+		<javac target="1.6" srcdir="src" destdir="build/classes" classpathref="classpath" debug="on" />
 	</target>
 
 	<target name="jar" depends="compile">
 		<mkdir dir="build/jar" />
-		<jar destfile="build/jar/ARLearnNetwork.jar" basedir="build/classes">
-		</jar>
+		<jar destfile="build/jar/ARLearnNetwork.jar" basedir="build/classes"></jar>
+		<jar destfile="../lib/ARLearnNetwork.jar" basedir="build/classes"></jar>
 	</target>
 </project>
