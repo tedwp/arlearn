@@ -73,7 +73,7 @@ public class DesktopConnection implements HttpConnection {
 				request.setHeader("Accept", accept);
 			if (contentType != null)
 				request.setHeader("Content-Type", contentType);
-			request.setEntity(postData);
+			if (postData != null) request.setEntity(postData);
 			return httpClient.execute(request);
 		} catch (ParseException e) {
 			System.err.print("exception in executePOST");
@@ -91,7 +91,7 @@ public class DesktopConnection implements HttpConnection {
 		HttpClient httpClient = new DefaultHttpClient();
 		try {
 			HttpGet request = new HttpGet(url);
-			request.setHeader("Authorization", "GoogleLogin auth=" + token);
+			if (token != null) request.setHeader("Authorization", "GoogleLogin auth=" + token);
 			if (accept != null)
 				request.setHeader("Accept", accept);
 			return httpClient.execute(request);

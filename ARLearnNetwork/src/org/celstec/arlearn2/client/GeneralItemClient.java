@@ -2,6 +2,7 @@ package org.celstec.arlearn2.client;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 
 public class GeneralItemClient extends GenericClient{
@@ -21,4 +22,10 @@ public class GeneralItemClient extends GenericClient{
 	public GeneralItemList getRunGeneralItems(String token, Long runId) {
 		return (GeneralItemList)  executeGet(getUrlPrefix()+"/runId/"+runId, token, GeneralItemList.class);
 	}
+	
+	public GeneralItem getRunGeneralItem(String token, Long runId, long itemId) {
+		return (GeneralItem)  executeGet(getUrlPrefix()+"/runId/"+runId+"/generalItem/"+itemId, token, GeneralItem.class);
+	}
+	
+
 }

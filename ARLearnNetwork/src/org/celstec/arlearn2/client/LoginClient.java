@@ -3,6 +3,7 @@ package org.celstec.arlearn2.client;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.beans.AuthResponse;
+import org.celstec.arlearn2.beans.game.ScoreDefinition;
 import org.celstec.arlearn2.network.ConnectionFactory;
 
 public class LoginClient extends GenericClient{
@@ -32,6 +33,10 @@ public class LoginClient extends GenericClient{
 			return rl;
 		}
 
+	}
+	
+	public void instructions(String token, String account) {
+		executePost(getUrlPrefix()+"/instructions/"+account, token, null, null);
 	}
 
 }
