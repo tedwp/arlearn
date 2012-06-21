@@ -143,7 +143,11 @@ public class GeneralItemDependencyHandler {
 		updateIntent.putExtra(MapViewActivity.class.getCanonicalName(), true);
 		updateIntent.putExtra(ListMapItemsActivity.class.getCanonicalName(), true);
 		ctx.sendBroadcast(updateIntent);
+		vibrateRingPhone();
 		
+	}
+	
+	public void vibrateRingPhone(){
 		Vibrator vibrator = (Vibrator)ctx.getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(new long[] {0, 200,200, 500,200,200}, -1);
         playSound(1);

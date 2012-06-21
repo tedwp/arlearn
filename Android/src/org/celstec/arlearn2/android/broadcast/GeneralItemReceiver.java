@@ -72,7 +72,7 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 
 			case GeneralItemModification.VISIBLE:
 				((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).setVisiblityStatus(bean.getRunId(), bean.getGeneralItem().getId(), GeneralItemAdapter.VISIBLE, System.currentTimeMillis());
-
+				(new GeneralItemDependencyHandler(ctx)).vibrateRingPhone();
 				break;
 			// case RunModification.ALTERED:
 			// ((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).delete(rm.getRun().getRunId());
