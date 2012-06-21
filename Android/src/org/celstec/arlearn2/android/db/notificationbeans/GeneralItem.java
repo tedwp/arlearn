@@ -70,6 +70,7 @@ public class GeneralItem extends NotificationBean{
 	private static SoundPool soundPool;
 	private static HashMap<Integer, Integer> soundPoolMap;
 
+	@Deprecated
 	public void run(Context ctx) {
 		if ("visible".equals(getAction())) {
 			DBAdapter db = new DBAdapter(ctx);

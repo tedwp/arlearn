@@ -70,6 +70,9 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 			case GeneralItemModification.DELETED:
 				((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).delete(bean.getGeneralItem().getId(), bean.getRunId());
 
+			case GeneralItemModification.VISIBLE:
+				((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).setVisiblityStatus(bean.getRunId(), bean.getGeneralItem().getId(), GeneralItemAdapter.VISIBLE, System.currentTimeMillis());
+
 				break;
 			// case RunModification.ALTERED:
 			// ((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).delete(rm.getRun().getRunId());
