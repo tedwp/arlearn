@@ -35,12 +35,18 @@ public class GeneralItemDependencyHandler {
         soundPoolMap.put(1, soundPool.load(ctx, R.raw.multi_new, 1));
 	}
 	
-	public void checkDependencies() {
+	public synchronized void checkDependencies() {
 		DBAdapter db = new DBAdapter(ctx);
 		db.openForWrite();
 		long runId = (new PropertiesAdapter(ctx)).getCurrentRunId();
 		List<Action> actions = ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).query(runId);
+		db.close();
+		db = new DBAdapter(ctx);
+		db.openForWrite();
 		processItemsNotYetInitialised(db, runId);
+		db.close();
+		db = new DBAdapter(ctx);
+		db.openForWrite();
 		processItemsNotYetVisible(db, runId, actions);
 		db.close();
 	}
@@ -49,21 +55,21 @@ public class GeneralItemDependencyHandler {
 		GeneralItemAdapter giAdap = ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER));
 		
 		GeneralItem[] giArray = (GeneralItem[]) giAdap.query(runId, GeneralItemAdapter.NOT_INITIALISED);
-		String userRoles = db.getRunAdapter().queryRoles(runId);
+//		String userRoles = db.getRunAdapter().queryRoles(runId);
 		for (int i = 0; i < giArray.length; i++) {
-			boolean playerHasRequiredRole = false;
-			if (giArray[i].getRoles() != null && !giArray[i].getRoles().isEmpty()) {
-				
-				if (userRoles != null && !"".equals(userRoles)) {
-					for (String giRole : giArray[i].getRoles()) {
-						if (userRoles.contains(giRole))
-							playerHasRequiredRole = true;
-					}
-				}
-			} else {
-				playerHasRequiredRole =true;
-			}
-			if (playerHasRequiredRole) {
+//			boolean playerHasRequiredRole = false;
+//			if (giArray[i].getRoles() != null && !giArray[i].getRoles().isEmpty()) {
+//				
+//				if (userRoles != null && !"".equals(userRoles)) {
+//					for (String giRole : giArray[i].getRoles()) {
+//						if (userRoles.contains(giRole))
+//							playerHasRequiredRole = true;
+//					}
+//				}
+//			} else {
+//				playerHasRequiredRole =true;
+//			}
+			if (itemMatchesPlayersRole(db, runId, giArray[i])) {
 				Dependency dep = giArray[i].getDependsOn();
 				if (dep == null) {
 					giAdap.setVisiblityStatus(runId, giArray[i].getId(), GeneralItemAdapter.VISIBLE, System.currentTimeMillis());
@@ -72,6 +78,23 @@ public class GeneralItemDependencyHandler {
 				}
 			}
 		}
+	}
+	
+	public static boolean itemMatchesPlayersRole(DBAdapter db, long runId, GeneralItem gi ) {
+		boolean playerHasRequiredRole = false;
+		String userRoles = db.getRunAdapter().queryRoles(runId);
+		if (gi.getRoles() != null && !gi.getRoles().isEmpty()) {
+			
+			if (userRoles != null && !"".equals(userRoles)) {
+				for (String giRole : gi.getRoles()) {
+					if (userRoles.contains(giRole))
+						playerHasRequiredRole = true;
+				}
+			}
+		} else {
+			playerHasRequiredRole =true;
+		}
+		return playerHasRequiredRole;
 	}
 	
 	public void processItemsNotYetVisible(DBAdapter db, final long runId, List<Action> actions) {
@@ -101,11 +124,11 @@ public class GeneralItemDependencyHandler {
 									long sleepTime = satisfiedAt - System.currentTimeMillis();
 									if (sleepTime < 0) sleepTime = 10;
 									Thread.sleep(sleepTime);
-									DBAdapter db = new DBAdapter(ctx);
-									db.openForWrite();
-									GeneralItemAdapter giAdap2 = ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER));
+									DBAdapter db2 = new DBAdapter(ctx);
+									db2.openForWrite();
+									GeneralItemAdapter giAdap2 = ((GeneralItemAdapter) db2.table(DBAdapter.GENERALITEM_ADAPTER));
 									giAdap2.setVisiblityStatus(runId, itemId, GeneralItemAdapter.VISIBLE, satisfiedAt);
-									db.close();
+									db2.close();
 									
 									
 									

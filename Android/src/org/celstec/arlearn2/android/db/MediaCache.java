@@ -109,8 +109,9 @@ public class MediaCache extends GenericDbTable {
 
 	private MediaCacheItem[] query(String selection, String[] selectionArgs, int amount) {
 		MediaCacheItem[] resultGenIt = null;
+		Cursor mCursor = null;
 		try {
-			Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), null, selection, selectionArgs, null, null, null, null);
+			mCursor = db.getSQLiteDb().query(true, getTableName(), null, selection, selectionArgs, null, null, null, null);
 			if (amount > mCursor.getCount())
 				amount = mCursor.getCount();
 			if (amount == 0)
@@ -131,10 +132,12 @@ public class MediaCache extends GenericDbTable {
 				gi.setMimetype(mCursor.getString(7));
 				resultGenIt[i++] = gi;
 			}
-			mCursor.close();
+			
 
 		} catch (SQLException e) {
 			Log.e("sqlex", "ex", e);
+		} finally {
+			if (mCursor != null) mCursor.close();
 		}
 		return resultGenIt;
 	}

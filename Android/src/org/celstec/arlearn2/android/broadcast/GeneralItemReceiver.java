@@ -17,6 +17,9 @@ import org.celstec.arlearn2.android.sync.MediaCacheSyncroniser;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
+import org.celstec.arlearn2.beans.generalItem.NarratorItem;
+import org.celstec.arlearn2.beans.generalItem.OpenUrl;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.notification.GeneralItemModification;
 import org.celstec.arlearn2.beans.notification.RunModification;
@@ -57,6 +60,7 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 
 	private void processItem(Context ctx, GeneralItemModification bean) {
 		bean.getGeneralItem().setRunId(bean.getRunId());
+		if (!canDealWithitemType(bean.getGeneralItem())) return;
 		DBAdapter db = new DBAdapter(ctx);
 		try {
 			db.openForWrite();
@@ -69,10 +73,13 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 				break;
 			case GeneralItemModification.DELETED:
 				((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).delete(bean.getGeneralItem().getId(), bean.getRunId());
-
+				break;
 			case GeneralItemModification.VISIBLE:
-				((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).setVisiblityStatus(bean.getRunId(), bean.getGeneralItem().getId(), GeneralItemAdapter.VISIBLE, System.currentTimeMillis());
-				(new GeneralItemDependencyHandler(ctx)).vibrateRingPhone();
+				if (GeneralItemDependencyHandler.itemMatchesPlayersRole(db, bean.getRunId(), bean.getGeneralItem())) {
+					if (((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).getVisiblityStatus(bean.getRunId(), bean.getGeneralItem().getId()) == GeneralItemAdapter.VISIBLE) break;
+					((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).setVisiblityStatus(bean.getRunId(), bean.getGeneralItem().getId(), GeneralItemAdapter.VISIBLE, System.currentTimeMillis());
+					(new GeneralItemDependencyHandler(ctx)).vibrateRingPhone();					
+				}
 				break;
 			// case RunModification.ALTERED:
 			// ((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).delete(rm.getRun().getRunId());
@@ -84,6 +91,14 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 		} finally {
 			db.close();
 		}
+	}
+
+	private boolean canDealWithitemType(GeneralItem generalItem) {
+		if (generalItem instanceof MultipleChoiceTest) return true;
+		if (generalItem instanceof OpenUrl) return false;
+		if (generalItem instanceof NarratorItem) return true;
+		if (generalItem instanceof GeneralItem) return true;
+		return false;
 	}
 
 	private void syncronizeGeneralItems(Context context) {

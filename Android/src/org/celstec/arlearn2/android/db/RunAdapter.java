@@ -207,8 +207,11 @@ public class RunAdapter extends GenericDbTable {
 		try {
 			Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), null, selection, selectionArgs, null, null, null, null);
 			if (mCursor.moveToNext()) {
-				return mCursor.getString(5);
+				String result = mCursor.getString(5);
+				mCursor.close();
+				return result;
 			}
+			mCursor.close();
 		} catch (SQLException e) {
 			Log.e("sqlex", "ex", e);
 		}

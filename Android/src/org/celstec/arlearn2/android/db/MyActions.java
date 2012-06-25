@@ -60,8 +60,8 @@ public class MyActions extends GenericDbTable {
 			initialValues.put(ID, id);
 			initialValues.put(ACCOUNT, resp.getUserEmail());
 			initialValues.put(ACTION, resp.getAction());
-			initialValues.put(GENERAL_ITEM_ID, resp.getGeneralItemId());
-			initialValues.put(GENERAL_ITEM_TYPE, resp.getGeneralItemType());
+			if (resp.getGeneralItemId()!= null) initialValues.put(GENERAL_ITEM_ID, resp.getGeneralItemId());
+			if (resp.getGeneralItemType()!= null) initialValues.put(GENERAL_ITEM_TYPE, resp.getGeneralItemType());
 			initialValues.put(RUNID, resp.getRunId());
 			initialValues.put(TIMESTAMP, resp.getTime());
 			initialValues.put(REPLICATED, false);

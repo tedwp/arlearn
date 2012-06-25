@@ -26,6 +26,15 @@ public class SplashScreenActivity extends GeneralActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splashscreen);
+		String uri = getIntent().toURI();
+		if (uri.contains("#")) uri = uri.substring(0, uri.indexOf("#"));
+		if (uri.startsWith("http://arlearn")) {
+			Intent actionIntent = new Intent();
+			actionIntent.setAction("org.celstec.arlearn2.beans.notification.Action");
+			actionIntent.putExtra("action", uri.substring(uri.lastIndexOf("/")+1));
+			sendBroadcast(actionIntent);
+//			this.finish();
+		}
 		ImageView view = (ImageView) findViewById(R.id.logo);
 		view.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

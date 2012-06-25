@@ -51,6 +51,15 @@ public class LoginActivity extends GeneralActivity {
 //			}
 		}
 		
+		
+		
+		@Override
+		protected void onDestroy() {
+			if (dialog != null && dialog.isShowing()) dialog.dismiss();
+			super.onDestroy();
+		}
+
+
 		private void userClickedLoginButton(){
 			dialog = ProgressDialog.show(LoginActivity.this, "", getString(R.string.checkCredentials), true);
 			dialog.show();

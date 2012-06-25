@@ -39,7 +39,7 @@ public class GeneralItemAdapter extends GenericDbTable {
 	public static final String LNG = "lng";
 	public static final String LAT = "lat";// 9
 	public static final String RUNID = "runId";//10
-	public static final String VISIBILITY_STATUS = "visibilityStatus";//10
+	public static final String VISIBILITY_STATUS = "visibilityStatus";//11
 //	public static final String DEPENDENCY_VISIBLE = "dependson_visible";//11
 //	public static final String TIME_VISIBLE = "time_visible";//12
 	public static final String FIRST_READ = "firstRead";//13
@@ -52,20 +52,19 @@ public class GeneralItemAdapter extends GenericDbTable {
 
 	public String createStatement() {
 		return "create table " + GENERALITEM_TABLE + " (" 
-				+ ID + " text, " 
+				+ ID + " text, " //0
 				+ NAME + " text, " 
-				+ DESCRIPTION 
-				+ " text, " 
+				+ DESCRIPTION + " text, " 
 				+ DEPENDSON + " text, "
-				+ TYPE + " text, " 
+				+ TYPE + " text, " //4
 				+ PAYLOAD + " text, " 
 				+ RADIUS + " integer , " 
 				+ SHOW_AT + " long , " 
 				+ LNG + " double , " 
-				+ LAT + " double ,"
-				+ RUNID + " long ," 
+				+ LAT + " double ," 
+				+ RUNID + " long ," //10
 //				+ DEPENDENCY_VISIBLE+" boolean, "
-				+ VISIBILITY_STATUS+" int, "
+				+ VISIBILITY_STATUS+" int, " //11
 				+ FIRST_READ + " long, "
 				+ DELETED + " boolean, "
 				+ LAST_MODIFICATION_DATE + " long );";
@@ -178,8 +177,9 @@ public class GeneralItemAdapter extends GenericDbTable {
 	
 	private GeneralItem[] query(String selection, String[] selectionArgs) {
 		GeneralItem[] resultGenIt = null;
+		Cursor mCursor = null;
 		try {
-			Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), null, selection, selectionArgs, null, null, FIRST_READ+" DESC", null);
+			mCursor = db.getSQLiteDb().query(true, getTableName(), null, selection, selectionArgs, null, null, FIRST_READ+" DESC", null);
 			resultGenIt = new GeneralItem[mCursor.getCount()];
 			int i = 0;
 			while (mCursor.moveToNext()) {
@@ -218,9 +218,11 @@ public class GeneralItemAdapter extends GenericDbTable {
 				
 
 			}
-			mCursor.close();
+			
 		} catch (SQLException e) {
 			Log.e("sqlex", "ex", e);
+		} finally {
+			if (mCursor != null)  mCursor.close();
 		}
 		return resultGenIt;
 	}
@@ -313,6 +315,24 @@ public class GeneralItemAdapter extends GenericDbTable {
 		newValue.put(VISIBILITY_STATUS, visiblityStatus);
 		newValue.put(FIRST_READ, timeAt);
 		db.getSQLiteDb().update(getTableName(), newValue, RUNID + "= ?  and "+ID + "=?", new String[] { ""+runId, ""+generalItemId });	
+	}
+	
+	public int getVisiblityStatus(Long runId, Long generalItemId) {
+		try {
+			Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), null, RUNID + "= ?  and "+ID + "=?", new String[] { ""+runId, ""+generalItemId }, null, null, FIRST_READ+" DESC", null);
+			
+			
+			int i = 0;
+			if (mCursor.moveToNext()) {
+				int result = mCursor.getInt(11); 
+				mCursor.close();
+				return result; 
 
+			}
+			mCursor.close();
+		} catch (SQLException e) {
+			Log.e("sqlex", "ex", e);
+		}
+		return -1;
 	}
 }
