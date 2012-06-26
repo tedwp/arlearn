@@ -16,7 +16,7 @@ public class GenericClient {
 //		public static String urlPrefix = "http://192.168.1.4:9999";
 //		public static String urlPrefix = "http://145.20.132.154:9999";
 //		public static String urlPrefix = "http://10.0.2.2:9999";
-//		public static String urlPrefix = "http://127.0.0.1:9999";
+//		public static String urlPrefix = "http://10.0.1.2:9999";
 		public static String urlPrefix = "http://streetlearn.appspot.com/";
 		
 		protected static HttpConnection	conn = ConnectionFactory.getConnection();

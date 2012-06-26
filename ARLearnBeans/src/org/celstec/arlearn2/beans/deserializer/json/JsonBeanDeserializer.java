@@ -34,6 +34,7 @@ import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
+import org.celstec.arlearn2.beans.generalItem.OpenUrl;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.run.ActionDeserializer;
 import org.celstec.arlearn2.beans.run.ActionListDeserializer;
@@ -297,6 +298,7 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem", mcaid);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest", mct);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.OpenUrl", OpenUrl.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.User", ud);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.AuthResponse", new AuthResponseDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.Version", new VersionDeserializer());

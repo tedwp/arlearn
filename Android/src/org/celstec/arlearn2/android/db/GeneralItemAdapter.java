@@ -45,6 +45,7 @@ public class GeneralItemAdapter extends GenericDbTable {
 	public static final String FIRST_READ = "firstRead";//13
 	public static final String DELETED = "deleted";
 	public static final String LAST_MODIFICATION_DATE = "lastModificationDate";//15
+	public static final String SORTKEY = "sortKey";//16
 
 	public GeneralItemAdapter(DBAdapter db) {
 		super(db);
@@ -67,7 +68,8 @@ public class GeneralItemAdapter extends GenericDbTable {
 				+ VISIBILITY_STATUS+" int, " //11
 				+ FIRST_READ + " long, "
 				+ DELETED + " boolean, "
-				+ LAST_MODIFICATION_DATE + " long );";
+				+ LAST_MODIFICATION_DATE + " long, "
+				+ SORTKEY + " long );";
 	}
 
 	protected String getTableName() {
@@ -113,6 +115,8 @@ public class GeneralItemAdapter extends GenericDbTable {
 			}
 				
 			initialValues.put(LAST_MODIFICATION_DATE, gi.getLastModificationDate());
+			if (gi.getSortKey() == null) gi.setSortKey(0);
+			initialValues.put(SORTKEY, gi.getSortKey());
 			return db.getSQLiteDb().insert(getTableName(), null, initialValues) != -1;
 		} 
 		return false;
@@ -179,7 +183,7 @@ public class GeneralItemAdapter extends GenericDbTable {
 		GeneralItem[] resultGenIt = null;
 		Cursor mCursor = null;
 		try {
-			mCursor = db.getSQLiteDb().query(true, getTableName(), null, selection, selectionArgs, null, null, FIRST_READ+" DESC", null);
+			mCursor = db.getSQLiteDb().query(true, getTableName(), null, selection, selectionArgs, null, null, SORTKEY+" DESC, "+FIRST_READ+" DESC", null);
 			resultGenIt = new GeneralItem[mCursor.getCount()];
 			int i = 0;
 			while (mCursor.moveToNext()) {

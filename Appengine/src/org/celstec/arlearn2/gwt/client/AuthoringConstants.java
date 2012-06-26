@@ -246,6 +246,9 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Select Team")
 	String selectTeam();
 	
+	@DefaultStringValue("search")
+	String search();
+	
 	//instruction
 	
 	@DefaultStringValue("Deselecting ''With map'' will result in the map view no longer being available on the ARLearn smartphone app. Only the messages window will be available.")

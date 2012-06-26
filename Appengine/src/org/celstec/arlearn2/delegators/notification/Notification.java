@@ -17,6 +17,7 @@ import com.google.appengine.api.xmpp.XMPPService;
 import com.google.appengine.api.xmpp.XMPPServiceFactory;
 import com.google.gdata.util.AuthenticationException;
 
+@Deprecated
 public class Notification {
 
 	private static final Logger log = Logger.getLogger(Notification.class.getName());

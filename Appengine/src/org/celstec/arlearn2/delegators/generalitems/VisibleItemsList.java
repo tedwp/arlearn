@@ -13,14 +13,14 @@ public class VisibleItemsList {
 	private HashMap<Long, VisibleItem> map = new HashMap<Long, VisibleItem>();
 	
 	
-	public void log(Logger log) {
-		
-for (Iterator iterator = visibleItems.iterator(); iterator.hasNext();) {
-	VisibleItem type = (VisibleItem) iterator.next();
-	log.severe("contains "+type.getGeneralItemId());
-}
-		
-	}
+//	public void log(Logger log) {
+//		
+//for (Iterator iterator = visibleItems.iterator(); iterator.hasNext();) {
+//	VisibleItem type = (VisibleItem) iterator.next();
+//	log.severe("contains "+type.getGeneralItemId());
+//}
+//		
+//	}
 	
 	public List<VisibleItem> getVisibleItems() {
 		return visibleItems;

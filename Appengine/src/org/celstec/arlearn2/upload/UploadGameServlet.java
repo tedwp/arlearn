@@ -27,6 +27,7 @@ import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.ScoreDefinition;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.OpenUrl;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.Team;
 import org.celstec.arlearn2.beans.run.User;
@@ -78,15 +79,12 @@ public class UploadGameServlet extends HttpServlet {
 			System.out.println(json);
 			JSONObject jObject = new JSONObject(json);
 			System.out.println(jObject);
-			JsonBeanDeserializer jbd = new JsonBeanDeserializer(json);
-			GamePackage arlPackage = (GamePackage) jbd
-					.deserialize(GamePackage.class);
-			if (arlPackage.getGame() != null)
-				unpackGame(arlPackage, req, auth);
-			RunPackage runPackage = (RunPackage) jbd
-					.deserialize(RunPackage.class);
-			if (runPackage.getRun() != null)
-				unpackRun(runPackage, req, gameId, auth);
+			Object deserialized = JsonBeanDeserializer.deserialize(json);
+			
+			if (deserialized instanceof GamePackage && ((GamePackage) deserialized).getGame() != null)
+				unpackGame((GamePackage) deserialized, req, auth);
+			if (deserialized instanceof RunPackage && ((RunPackage) deserialized ).getRun() != null)
+				unpackRun((RunPackage) deserialized, req, gameId, auth);
 
 		} catch (Exception ex) {
 			throw new ServletException(ex);

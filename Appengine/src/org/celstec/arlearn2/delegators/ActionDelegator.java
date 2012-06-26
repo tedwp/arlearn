@@ -38,9 +38,6 @@ public class ActionDelegator extends GoogleDelegator{
 	private static final Logger log = Logger.getLogger(ActionDelegator.class.getName());
 
 	public Action createAction(Action action) {
-        log.severe("action "+action.getAction());
-        log.severe("user "+action.getUserEmail()+" run "+action.getRunId());
-        
 
 		if (action.getRunId() == null) {
 			action.setError("No run identifier specified");

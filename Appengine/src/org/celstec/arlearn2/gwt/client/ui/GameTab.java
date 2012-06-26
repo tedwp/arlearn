@@ -3,6 +3,7 @@ package org.celstec.arlearn2.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import org.celstec.arlearn2.gwt.client.Authoring;
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
 import org.celstec.arlearn2.gwt.client.network.game.GameClient;
@@ -137,6 +138,10 @@ public class GameTab extends Tab {
 		valueMap.put(
 				"org.celstec.arlearn2.beans.generalItem.AudioObject",
 				"Audio Object");
+		
+		if (Authoring.hidden) valueMap.put(
+				"org.celstec.arlearn2.beans.generalItem.OpenUrl",
+				"Browser Url open");
 
 		selectType = new SelectItem();
 		selectType.setName("selectGi");

@@ -37,6 +37,7 @@ public class GeneralItemGameDataSource extends GenericDataSource {
 				if (firstValue.contains("VideoObject")) return "Video Object";
 				if (firstValue.contains("MultipleChoiceTest")) return "Multiple Choice Test";
 				if (firstValue.contains("NarratorItem")) return "Narrator Item";
+				if (firstValue.contains("OpenUrl")) return "Open URL";
 				return firstValue;
 			}
 			

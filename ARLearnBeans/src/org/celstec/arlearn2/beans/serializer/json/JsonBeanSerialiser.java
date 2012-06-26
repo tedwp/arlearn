@@ -40,6 +40,7 @@ import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
+import org.celstec.arlearn2.beans.generalItem.OpenUrl;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.notification.GeneralItemModification;
 import org.celstec.arlearn2.beans.notification.RunModification;
@@ -127,6 +128,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(VideoObject.class.getCanonicalName(), new VideoObjectSerializer());
 		customSerializerMap.put(MultipleChoiceTest.class.getCanonicalName(), new MultipleChoiceTestSerializer());
 		customSerializerMap.put(MultipleChoiceAnswerItem.class.getCanonicalName(), new MultipleChoiceAnswerItemSerializer());
+		customSerializerMap.put(OpenUrl.class.getCanonicalName(), OpenUrl.serializer);
 		customSerializerMap.put(User.class.getCanonicalName(), new UserSerializer());
 		customSerializerMap.put(UserList.class.getCanonicalName(), new UserListSerializer());
 		customSerializerMap.put(Team.class.getCanonicalName(), new TeamSerializer());
@@ -254,4 +256,5 @@ public class JsonBeanSerialiser extends BeanSerializer{
 			return getMethod(c.getSuperclass(), fieldName);
 		}
 	}
+	
 }

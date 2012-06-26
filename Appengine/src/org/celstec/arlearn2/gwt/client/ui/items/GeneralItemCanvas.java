@@ -2,6 +2,7 @@ package org.celstec.arlearn2.gwt.client.ui.items;
 
 import java.util.HashMap;
 
+import org.celstec.arlearn2.gwt.client.Authoring;
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 
 
@@ -233,6 +234,9 @@ public abstract class GeneralItemCanvas extends VStack{
 		}
 		if ("org.celstec.arlearn2.beans.generalItem.AudioObject".equals(itemId)) {
 			return new AudioObjectCanvas(roles);	
+		}
+		if (Authoring.hidden && "org.celstec.arlearn2.beans.generalItem.OpenUrl".equals(itemId)) {
+			return new OpenUrlCanvas(roles);	
 		}
 		return new MultiplechoiceCanvas(roles);
 	}

@@ -52,15 +52,11 @@ public class UpdateGeneralItems extends GenericBean{
 		this.userEmail = userEmail;
 	}
 
-	
 	private static final Logger log = Logger.getLogger(UpdateGeneralItems.class.getName());
 
 	
-        
-        
 	@Override
 	public void run() {
-		log.severe("update general items "+runId+ " "+getAction());
 		UsersDelegator qu = null;
 		User u = null;
 		try {
@@ -75,10 +71,6 @@ public class UpdateGeneralItems extends GenericBean{
 		a.setRunId(runId);
 		a.setAction(getAction());
 		GeneralItemDelegator gid = new GeneralItemDelegator(qu);
-
-//		QueryGeneralItems qgi = new QueryGeneralItems(qu);
-		log.severe("before check action effect"+runId+ " "+getAction());
-
 		gid.checkActionEffect(a, runId, u);
 		
 	}

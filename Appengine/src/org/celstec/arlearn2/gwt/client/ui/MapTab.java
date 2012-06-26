@@ -3,12 +3,20 @@ package org.celstec.arlearn2.gwt.client.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.celstec.arlearn2.gwt.client.AuthoringConstants;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.control.LargeMapControl;
+import com.google.gwt.maps.client.control.MenuMapTypeControl;
 import com.google.gwt.maps.client.event.MapDoubleClickHandler;
 import com.google.gwt.maps.client.event.MarkerDoubleClickHandler;
 import com.google.gwt.maps.client.event.MarkerDragEndHandler;
+import com.google.gwt.maps.client.geocode.Geocoder;
+import com.google.gwt.maps.client.geocode.LocationCallback;
+import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.geom.Point;
 import com.google.gwt.maps.client.overlay.Icon;
@@ -17,14 +25,24 @@ import com.google.gwt.maps.client.overlay.MarkerOptions;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 
 public abstract class MapTab extends Tab {
 
 	private VerticalPanel mapContainerPanel;
 	private MapWidget map;
+	
+	private static AuthoringConstants constants = GWT.create(AuthoringConstants.class);
+
 
 	public MapTab(String title) {
 		super(title);
@@ -59,6 +77,45 @@ public abstract class MapTab extends Tab {
 		mapContainerPanel.setHeight("100%");
 		mapContainerPanel.setWidth("100%");
 
+		HLayout searchLayout = new HLayout();
+		searchLayout.setWidth100();
+		final DynamicForm form = new DynamicForm();  
+		form.setWidth100();
+		  
+        TextItem textItem = new TextItem("location");
+        textItem.setShowTitle(false);
+        textItem.setColSpan(2);  
+        textItem.setWidth("*");  
+        form.setFields(textItem);
+        Button button = new Button(constants.search());
+        button.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				Geocoder geo = new Geocoder();
+				geo.getLocations(form.getValueAsString("location"), new LocationCallback() {
+					
+					@Override
+					public void onSuccess(JsArray<Placemark> locations) {
+						if (locations.length() >0) {
+							map.setCenter(locations.get(0).getPoint());
+							Marker m = new Marker(locations.get(0).getPoint());
+							map.addOverlay(m);
+							form.setValue("location", "");
+						}
+						
+					}
+					
+					@Override
+					public void onFailure(int statusCode) {
+						form.setValue("location", "");
+					}
+				});
+			}
+		});
+        searchLayout.setMembers(form, button);
+        
+		VLayout vlayout = new VLayout();
 		Canvas c = new Canvas();
 		c.setPadding(2);
 		c.setWidth100();
@@ -68,7 +125,8 @@ public abstract class MapTab extends Tab {
 
 		c.addChild(mapContainerPanel);
 
-		return c;
+		vlayout.setMembers(searchLayout, c);
+		return vlayout;
 
 	}
 
@@ -77,7 +135,9 @@ public abstract class MapTab extends Tab {
 		map = new MapWidget();
 		map.setSize("100%", "100%");
 		map.addControl(new LargeMapControl());
+		map.addControl(new MenuMapTypeControl());
 		map.setDraggable(true);
+		
 		map.addMapDoubleClickHandler(new MapDoubleClickHandler() {
 			
 			@Override

@@ -75,7 +75,7 @@ public class Authoring implements EntryPoint {
 	private static LoginWindow lt;
 	
 	private static AuthoringConstants constants = GWT.create(AuthoringConstants.class);
-	
+	public static boolean hidden = false;
 	
 	
 	public void setCanvas() {
@@ -97,7 +97,7 @@ public class Authoring implements EntryPoint {
 	
 	public void onModuleLoad() {
 		RootPanel rootPanel = RootPanel.get("container");
-		
+		hidden = "true".equals(com.google.gwt.user.client.Window.Location.getParameter("hidden"));
 		NotificationSubscriber not = NotificationSubscriber.getInstance();
 		
 		topTabSet = new TabSet();
