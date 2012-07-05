@@ -2,6 +2,7 @@ package org.celstec.arlearn2.android.service;
 
 import java.io.File;
 
+import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.genItemActivities.AudioObjectActivity;
@@ -35,7 +36,7 @@ public class AudioPlayerBinder extends IAudioPlayerService.Stub {
 		db.openForRead();
 		File audioFile = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getLocalFileFromIdIgnoreReplication(audioIdentifier);
 		if (audioFile == null) {
-			Toast toast = Toast.makeText(service, "Even geduld. Bestand is nog niet gedownloaded.", Toast.LENGTH_LONG);
+			Toast toast = Toast.makeText(service, service.getString(R.string.downloadBusy), Toast.LENGTH_LONG);
 			toast.show();
 			db.close();
 			return;
