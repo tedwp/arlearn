@@ -21,6 +21,7 @@ public class ActionClient extends GenericClient{
 		return instance;
 	}
 	
+	//TODO credentials are invalid exception
 	public Action publishAction(String token, Action action) {
 		HttpResponse response = ConnectionFactory.getConnection().executePOST(getUrlPrefix(), token, "application/json", toJson(action), "application/json");
 		String entry;

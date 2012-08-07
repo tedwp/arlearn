@@ -13,11 +13,11 @@ import org.codehaus.jettison.json.JSONException;
 
 public class GenericClient {
 //		public static String urlPrefix = "http://localhost:9999";
-//		public static String urlPrefix = "http://192.168.1.4:9999";
+//		public static String urlPrefix = "http://192.168.1.6:9999";
 //		public static String urlPrefix = "http://145.20.132.154:9999";
 //		public static String urlPrefix = "http://10.0.2.2:9999";
 //		public static String urlPrefix = "http://10.0.1.2:9999";
-		public static String urlPrefix = "http://streetlearn.appspot.com/";
+		public static String urlPrefix = "http://ar-learn.appspot.com/";
 		
 		protected static HttpConnection	conn = ConnectionFactory.getConnection();
 
@@ -36,6 +36,7 @@ public class GenericClient {
 		}
 		
 		protected String toJson(Object bean) {
+			if (bean instanceof String) return (String) bean;
 			JsonBeanSerialiser jbs = new JsonBeanSerialiser(bean);
 			return jbs.serialiseToJson().toString();
 		}
@@ -55,7 +56,10 @@ public class GenericClient {
 		protected Object executeGet(String url, String token,@SuppressWarnings("rawtypes")  Class beanClass) {
 			HttpResponse response = conn.executeGET(url, token, "application/json");
 			try {
-				Object o = jsonDeserialise(EntityUtils.toString(response.getEntity()), beanClass);
+				if (beanClass.equals(String.class)) return EntityUtils.toString(response.getEntity());
+				String result = EntityUtils.toString(response.getEntity());
+				if (result.trim().startsWith("<html><head>")) throw new ARLearnException(result);
+				Object o = jsonDeserialise(result, beanClass);
 				if (o instanceof Bean) {
 					Bean b = (Bean) o;
 					if (b.getErrorCode() != null) throw new ARLearnException(b.getErrorCode());
@@ -80,6 +84,7 @@ public class GenericClient {
 				return returnError(beanClass, e);
 			}
 		}
+		
 		
 		protected Object executeDelete(String url, String token, @SuppressWarnings("rawtypes") Class beanClass) {
 			HttpResponse response =ConnectionFactory.getConnection().executeDELETE(url, token, "application/json");

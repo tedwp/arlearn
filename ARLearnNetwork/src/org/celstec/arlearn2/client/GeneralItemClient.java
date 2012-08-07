@@ -24,7 +24,11 @@ public class GeneralItemClient extends GenericClient{
 	}
 	
 	public GeneralItem getRunGeneralItem(String token, Long runId, long itemId) {
-		return (GeneralItem)  executeGet(getUrlPrefix()+"/runId/"+runId+"/generalItem/"+itemId, token, GeneralItem.class);
+		Object o = executeGet(getUrlPrefix()+"/runId/"+runId+"/generalItem/"+itemId, token, GeneralItem.class);
+		if (o instanceof String) {
+			System.out.println(o);
+		}
+		return (GeneralItem)  o;
 	}
 	
 

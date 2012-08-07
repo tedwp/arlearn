@@ -88,6 +88,11 @@ public class RunClient extends GenericClient{
 		}
 	}
 	
+	public Run selfRegister(String token, String tagId) {
+		return (Run)  executeGet(getUrlPrefix()+"/selfRegister/tagId/"+tagId, token, Run.class);
+
+	}
+	
 	public Run createRun(String token, Run run) {
 		HttpResponse response = ConnectionFactory.getConnection().executePOST(getUrlPrefix(), token, "application/json", toJson(run), "application/json");
 		String entry;

@@ -14,6 +14,10 @@ public class ARLearnException extends RuntimeException {
 		this.code = code;
 	}
 	
+	public ARLearnException(String messsage) {
+		super(messsage);
+	}
+	
 	public boolean invalidCredentials() {
 		return this.code == Bean.INVALID_CREDENTIALS;
 	}

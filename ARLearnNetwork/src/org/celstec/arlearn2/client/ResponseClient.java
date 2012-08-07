@@ -26,6 +26,7 @@ public class ResponseClient extends GenericClient{
 		String entry;
 		try {
 			entry = EntityUtils.toString(httpResp.getEntity());
+			System.out.println(entry);
 			return (Response) jsonDeserialise(entry, Response.class);
 		} catch (Exception e) {
 			e.printStackTrace();
