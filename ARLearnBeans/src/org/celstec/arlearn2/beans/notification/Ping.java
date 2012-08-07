@@ -8,6 +8,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Ping extends Bean {
 	
+	public static final int PING = 0;
 	public static final int DB_QUERY = 1;
 	public static final int READ_NFC = 2;
 	

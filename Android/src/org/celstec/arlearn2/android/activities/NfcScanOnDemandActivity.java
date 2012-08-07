@@ -2,6 +2,7 @@ package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.genItemActivities.MultipleChoiceActivity;
+import org.celstec.arlearn2.beans.notification.Ping;
 import org.celstec.arlearn2.client.ChannelClient;
 
 import android.os.Bundle;
@@ -24,7 +25,7 @@ public class NfcScanOnDemandActivity extends GeneralActivity {
 		provideAnswerButton.setVisibility(View.GONE);
 
 		WebView webview = (WebView) findViewById(R.id.giNarratorWebView);
-		String summary = "<html><body><br><br><br><center><b>scan an NFC tag</b></center></body></html>";
+		String summary = "<html><body><br><br><br><center><b>"+getString(R.string.scanTag)+"</b></center></body></html>";
 		webview.loadData(summary, "text/html", "utf-8");
 		
 		to =  getIntent().getExtras().getString("to");
@@ -42,12 +43,17 @@ public class NfcScanOnDemandActivity extends GeneralActivity {
 	protected void newNfcAction(final String action) {
 		new Thread(new Runnable() {
 			public void run() {
-				ChannelClient.getChannelClient().pong(0, "", to, from, action, timestamp);
+				ChannelClient.getChannelClient().pong(0, "", to, from, Ping.READ_NFC, action, timestamp);
 			}
 		}).start();
 		NfcScanOnDemandActivity.this.finish();
 	}
 	
+	public void onBroadcastMessage(Bundle bundle) {
+		if (bundle.getBoolean(NFC_SCAN_SHUTDOWN, false)) this.finish();
+	}
+	
+	public static final String NFC_SCAN_SHUTDOWN = "NfcScanShutdownMessage"; 
 	
 
 }

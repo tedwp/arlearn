@@ -21,9 +21,14 @@
     <string name="sendInstructions">Send me instructions</string>
     
     
+     <!--NfcScanOnDemand Activity Strings-->
+     <string name="scanTag">Scan een NFC tag of een barcode</string>
+     <string name="scanTagMenu">Scan barcode</string>
+     
      <!--List Excursion Activity Strings-->
-    <string name="listExcursionsHeader">Selecteer een excursie</string>
+    <string name="listExcursionsHeader">Selecteer een run</string>
     <string name="loadingExcursions">Excursies worden geladen\n Even geduld</string>
+    <string name="registerRun">Wil je je voor deze run registreren?</string>
     
     <!--Map View Activity Strings-->
     <string name="mapViewHeader">Excursie</string>

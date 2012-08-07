@@ -127,7 +127,7 @@ public class RunDelegator extends GoogleDelegator {
 		}
 //		JsonBeanSerialiser jbs = new JsonBeanSerialiser(run.getGameOverDependsOn());
 //		run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), jbs.serialiseToJson().toString()));
-		run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), null));
+		run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), run));
 		return run;
 	}
 	

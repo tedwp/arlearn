@@ -293,7 +293,7 @@ public class MultiplechoiceCanvas extends GeneralItemCanvas {
 		if (form2.getValue(textId) != null) {
 			JSONObject answer = new JSONObject();
 			answer.put("answer", new JSONString(form2.getValueAsString(textId)));
-			if (((Boolean) form2.getValue("isNfcEnabled")))
+			if (form2.getValue("isNfcEnabled") != null && ((Boolean) form2.getValue("isNfcEnabled")))
 				answer.put("nfcTag", new JSONString(form2.getValueAsString(cbId + "nfc")));
 			answer.put("isCorrect", JSONBoolean.getInstance(form2.getValue(cbId) == null ? false : (Boolean) form2.getValue(cbId)));
 			ansArray.set(i, answer);
@@ -337,8 +337,11 @@ public class MultiplechoiceCanvas extends GeneralItemCanvas {
 	public class DisplayNotificationHandler implements NotificationHandler {
 		@Override
 		public void onNotification(final JSONObject bean) {
-			if (currentSelectedNfcTag != null)
-				form2.setValue(currentSelectedNfcTag, bean.get("response").isString().stringValue());
+			if (currentSelectedNfcTag != null) {
+				String response = bean.get("response").isString().stringValue();
+				if (response != null && !"".equals(response.trim())) form2.setValue(currentSelectedNfcTag, response);
+			}
+				
 		}
 	}
 }

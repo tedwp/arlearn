@@ -135,8 +135,8 @@ public class ChannelAPI extends Service{
 	
 	@POST
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Path("/pong/{from}/{to}/{origTimeStamp}")
-	public String pong(String response, @PathParam("from") String from,@PathParam("to") String to, @PathParam("origTimeStamp") long origTimeStamp ) {
+	@Path("/pong/{from}/{to}/{origRequest}/{origTimeStamp}")
+	public String pong(String response, @PathParam("from") String from,@PathParam("to") String to, @PathParam("origTimeStamp") long origTimeStamp, @PathParam("origRequest") int origRequest ) {
 		System.out.println("pong received "+response);
 		Pong pong = new Pong();
 		pong.setTimestamp(System.currentTimeMillis());
@@ -144,6 +144,7 @@ public class ChannelAPI extends Service{
 		pong.setTo(to);
 		pong.setOrigTimeStamp(origTimeStamp);
 		pong.setResponse(response);
+		pong.setRequestType(origRequest);
 		ChannelNotificator.getInstance().notify(to, pong.toString());
 		return "ok";
 	}

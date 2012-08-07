@@ -7,6 +7,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class Pong extends Ping{
 	
 	private Long origTimeStamp;
+	private Integer requestType;
 	private String response;
 
 	public Long getOrigTimeStamp() {
@@ -17,6 +18,15 @@ public class Pong extends Ping{
 		this.origTimeStamp = origTimeStamp;
 	}
 	
+	
+	public Integer getRequestType() {
+		return requestType;
+	}
+
+	public void setRequestType(Integer requestType) {
+		this.requestType = requestType;
+	}
+
 	public String getResponse() {
 		return response;
 	}
@@ -29,6 +39,7 @@ public class Pong extends Ping{
 	public boolean equals(Object obj) {
 		Pong other = (Pong ) obj;
 		return super.equals(obj) && 
+		nullSafeEquals(getRequestType(), other.getRequestType()) && 
 		nullSafeEquals(getResponse(), other.getResponse()) && 
 		nullSafeEquals(getOrigTimeStamp(), other.getOrigTimeStamp()); 
 
@@ -50,6 +61,7 @@ public class Pong extends Ping{
 		public void initBean(JSONObject object, Bean genericBean) throws JSONException {
 			super.initBean(object, genericBean);
 			Pong bean = (Pong) genericBean;
+			if (object.has("requestType")) bean.setRequestType(object.getInt("requestType"));
 			if (object.has("origTimeStamp")) bean.setOrigTimeStamp(object.getLong("origTimeStamp"));
 			if (object.has("response")) bean.setResponse(object.getString("response"));
 		}
@@ -63,6 +75,7 @@ public class Pong extends Ping{
 			Pong statusBean = (Pong) bean;
 			JSONObject returnObject = super.toJSON(bean);
 			try {
+				if (statusBean.getRequestType() != null) returnObject.put("requestType", statusBean.getRequestType());
 				if (statusBean.getOrigTimeStamp() != null) returnObject.put("origTimeStamp", statusBean.getOrigTimeStamp());
 				if (statusBean.getResponse() != null) returnObject.put("response", statusBean.getResponse());
 			} catch (JSONException e) {

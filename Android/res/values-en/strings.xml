@@ -20,10 +20,16 @@
     <string name="checkCredentials">Verifying credentials</string>
     <string name="sendInstructions">Send me instructions</string>
         
-    
+    <!--NfcScanOnDemand Activity Strings-->
+    <string name="scanTag">Scan an NFC tag or a barcode</string>
+    <string name="scanTagMenu">Scan barcode</string>
+     
+     
      <!--List Excursion Activity Strings-->
     <string name="listExcursionsHeader">Select an excursion</string>
     <string name="loadingExcursions">Loading excursions</string>
+    <string name="registerRun">Do you want to register to this run?</string>
+    
     
     <!--Map View Activity Strings-->
     <string name="mapViewHeader">Excursion</string>

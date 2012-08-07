@@ -75,7 +75,7 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (scanMenu())
 		if (menuHandler.getPropertiesAdapter().isAuthenticated()) {
-			menu.add(0, MenuHandler.SCAN, 0, "scan-todo");
+			menu.add(0, MenuHandler.SCAN, 0, getString(R.string.scanTagMenu));
 		} else {
 			menu.add(0, MenuHandler.LOGIN, 0, getString(R.string.login));
 		}

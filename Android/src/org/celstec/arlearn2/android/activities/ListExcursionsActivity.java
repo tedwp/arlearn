@@ -66,11 +66,8 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	public void onBroadcastMessage(Bundle bundle) {
 		super.onBroadcastMessage(bundle);
 		checkAuthentication();
-		Log.e("GAME", "broadcast received");
-
 		initFromDb();
 		renderExcursionList();
-
 	}
 
 	private void checkAuthentication() {
@@ -78,10 +75,6 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 			this.finish();
 		}
 	}
-
-	
-
-	
 
 	private void renderExcursionList() {
 		ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
@@ -172,7 +165,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 
 	protected void newNfcAction(final String action) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(ListExcursionsActivity.this);
-		builder.setMessage("Do you want to register to this run-i18n").setCancelable(false);
+		builder.setMessage(getString(R.string.registerRun)).setCancelable(false);
 		
 		builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {

@@ -17,8 +17,8 @@ public class ChannelClient extends GenericClient{
 		return instance;
 	}
 	
-	public void pong(long runId, String token, String from, String to, String response, long origTimeStamp) {
-		executePost(getUrlPrefix()+"/pong/"+from+"/"+to+"/"+origTimeStamp, token, response, null);
+	public void pong(long runId, String token, String from, String to, int requestType, String response, long origTimeStamp) {
+		executePost(getUrlPrefix()+"/pong/"+from+"/"+to+"/"+requestType+"/"+origTimeStamp, token, response, null);
 	}
 
 }

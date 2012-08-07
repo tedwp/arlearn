@@ -1,9 +1,7 @@
 package org.celstec.arlearn2.android.broadcast;
 
-import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.activities.NfcScanOnDemandActivity;
 import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.notification.Ping;
 import org.celstec.arlearn2.client.ChannelClient;
 import org.codehaus.jettison.json.JSONObject;
@@ -24,7 +22,7 @@ public class PingReceiver extends BroadcastReceiver {
 				new Thread(new Runnable() {
 					public void run() {
 						if (bean.getRequestType() == null) {
-							ChannelClient.getChannelClient().pong(0, "", bean.getTo(), bean.getFrom(), "", bean.getTimestamp());
+							ChannelClient.getChannelClient().pong(0, "", bean.getTo(), bean.getFrom(), Ping.PING, "", bean.getTimestamp());
 						} else {
 							processSwitchRequest(context, bean);
 						}
@@ -51,6 +49,7 @@ public class PingReceiver extends BroadcastReceiver {
 	
 	private void dbNfcRead(Context ctx, Ping bean) {
 		Intent i = null;
+		updateActivities(ctx, NfcScanOnDemandActivity.class.getCanonicalName());
 		i = new Intent(new Intent(ctx, NfcScanOnDemandActivity.class));
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		i.putExtra("to", bean.getTo());
@@ -65,7 +64,17 @@ public class PingReceiver extends BroadcastReceiver {
 		db.openForRead();
 		JSONObject allTables = db.getGenericJsonAdapter().queryAll(bean.getPayload());
 		db.close();
-		ChannelClient.getChannelClient().pong(0, "", bean.getTo(), bean.getFrom(), allTables.toString(), bean.getTimestamp());
+		ChannelClient.getChannelClient().pong(0, "", bean.getTo(), bean.getFrom(),Ping.DB_QUERY, allTables.toString(), bean.getTimestamp());
+	}
+	
+	protected void updateActivities(Context ctx, String... activities) {
+		Intent updateIntent = new Intent();
+		updateIntent.setAction("org.celstec.arlearn.updateActivities");
+		for (int i = 0; i < activities.length; i++) {
+			updateIntent.putExtra(activities[i], true);
+			updateIntent.putExtra(NfcScanOnDemandActivity.NFC_SCAN_SHUTDOWN, true);
+		}
+		ctx.sendBroadcast(updateIntent);
 	}
 
 }
