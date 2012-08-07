@@ -14,6 +14,7 @@ public class DBAdapter {
 	public static final int MYACTIONS_ADAPTER = 4;
 	public static final int MEDIA_CACHE = 5;
 	public static final int GAME_ADAPTER = 6;
+	public static final int GENERIC_JSON_ADAPTER = 7;
 	
 	private GenericDbTable[] allTables;
 
@@ -29,7 +30,7 @@ public class DBAdapter {
     }
 	
 	private void initAllTables() {
-		allTables = new GenericDbTable[7];
+		allTables = new GenericDbTable[8];
 		allTables[RUN_ADAPTER] = new RunAdapter(this);
 		allTables[GENERALITEM_ADAPTER] = new GeneralItemAdapter(this);
 		allTables[MYLOCATIONS_ADAPTER] = new MyLocations(this);
@@ -37,6 +38,7 @@ public class DBAdapter {
 		allTables[MYACTIONS_ADAPTER] = new MyActions(this);
 		allTables[MEDIA_CACHE] = new MediaCache(this);
 		allTables[GAME_ADAPTER] = new GameAdapter(this);
+		allTables[GENERIC_JSON_ADAPTER] = new GenericJsonAdapter(this);
 	}
 	
 	public RunAdapter getRunAdapter() {
@@ -45,6 +47,10 @@ public class DBAdapter {
 	
 	public GameAdapter getGameAdapter() {
 		return (GameAdapter) allTables[GAME_ADAPTER];
+	}
+	
+	public GenericJsonAdapter getGenericJsonAdapter() {
+		return (GenericJsonAdapter) allTables[GENERIC_JSON_ADAPTER];
 	}
 	
 	public void deleteRun(long currentRunId) {
@@ -57,7 +63,7 @@ public class DBAdapter {
 	}
 	
 	public class DbOpenHelper extends SQLiteOpenHelper {
-	    private static final int DATABASE_VERSION = 86;
+	    private static final int DATABASE_VERSION = 94;
 	    private static final String DATABASE_NAME = "arlearn2";
 	   
 	    DbOpenHelper(Context context) {
@@ -67,7 +73,7 @@ public class DBAdapter {
 	    
 	    public void onCreate(SQLiteDatabase db) {
 	    	for (int i = 0; i < allTables.length; i++) {
-	    		db.execSQL(allTables[i].createStatement());
+	    		if (allTables[i].createStatement()!= null) db.execSQL(allTables[i].createStatement());
 			}
 	    }
 
@@ -75,45 +81,13 @@ public class DBAdapter {
 			Log.w("upgrade", "Upgrading database from version " + oldVersion 
 	                  + " to "+ newVersion);
 			for (int i = 0; i < allTables.length; i++) {
-				db.execSQL(allTables[i].dropStatement());
+				if (allTables[i].dropStatement() != null) db.execSQL(allTables[i].dropStatement());
 			}  
             onCreate(db);
 		}
 
 	}
 	
-//	private static int refCount = 0;
-//	private static SQLiteDatabase dbInstance;
-//		
-//	public DBAdapter openForWrite() throws SQLException {
-//		if (dbInstance == null) {
-//			refCount = 0;
-//			dbInstance = DBHelper.getWritableDatabase();
-//		} else {
-//			dbInstance.o
-//		}
-//        refCount++;
-//        db = dbInstance;
-//        return this;
-//    }
-//    
-//    public DBAdapter openForRead() {
-//    	if (dbInstance == null) {
-//			refCount = 0;
-//			dbInstance = DBHelper.getWritableDatabase();
-//		} 
-//        refCount++;
-//        db = dbInstance;
-//        return this;
-//    }
-//    
-//    public void close() {
-//    	refCount--;
-//    	if (refCount == 0) {
-//    		DBHelper.close();
-//    		dbInstance = null;
-//    	}
-//    }
     
 	public DBAdapter openForWrite() throws SQLException {
         db = DBHelper.getWritableDatabase();
@@ -135,7 +109,8 @@ public class DBAdapter {
     
     public void eraseAllData() {
     	for (int i = 0; i < allTables.length; i++) {
-			db.execSQL(allTables[i].eraseAllStatement());
+    		String statement =allTables[i].eraseAllStatement();
+			if (statement != null) db.execSQL(statement);
 		}  
     }
     

@@ -26,8 +26,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
+import android.os.Message;
 
 public class ChannelAPI {
 	
@@ -43,7 +46,8 @@ public class ChannelAPI {
     private String sessionId = null;
     private String SID = null;
     private long messageId = 1;
-    private ChannelService channelListener = new ChannelListener();
+//    private ChannelService channelListener = new ChannelListener();
+    private ChannelAPINotificationService.ChannelHandler handler; // = new ChannelListener();
     private ReadyState readyState = ReadyState.CLOSED;
     private Integer TIMEOUT_MS = 500;
     private HttpClient httpClient = new DefaultHttpClient();
@@ -80,8 +84,21 @@ public class ChannelAPI {
 //    	this.channelId = createChannel(channelKey);
     	this.applicationKey = channelKey;
     	
-    	if (channelListener != null) {
-            this.channelListener = channelService;
+//    	if (channelListener != null) {
+//            this.channelListener = channelService;
+//        }
+    }
+    
+    public ChannelAPI(String URL, String channelKey, ChannelAPINotificationService.ChannelHandler handler) throws IOException, ClientProtocolException {
+    	this.clientId = null;
+    	this.BASE_URL = URL;
+    	this.requestId = 0;
+    	this.messageId = 1;
+//    	this.channelId = createChannel(channelKey);
+    	this.applicationKey = channelKey;
+    	
+    	if (handler != null) {
+            this.handler = handler;
         }
     }
     
@@ -103,9 +120,9 @@ public class ChannelAPI {
         
         
         this.applicationKey = this.channelId.substring(this.channelId.lastIndexOf("-") + 1);
-        if (channelListener != null) {
-            this.channelListener = channelService;
-        }
+//        if (channelListener != null) {
+//            this.channelListener = channelService;
+//        }
     }
     
     /**
@@ -287,7 +304,10 @@ public class ChannelAPI {
             throw new ChannelException(e);
         }
 
-        this.channelListener.onOpen();
+//        this.channelListener.onOpen();
+        if (handler != null) {
+        	Message.obtain(handler, handler.ONOPEN).sendToTarget();
+        }
     }
     
     /**
@@ -337,6 +357,12 @@ public class ChannelAPI {
                 } catch (ClientProtocolException e) {
                 } catch (IOException e) {
                 } catch (ChannelException e) {
+                } catch (IllegalStateException e) {
+                	try {
+						close();
+					} catch (IOException e1) {
+
+					}
                 }
 
                 return null;
@@ -356,15 +382,24 @@ public class ChannelAPI {
                         }
                     }
                     try {
+                    	if (parser == null) return;
                         TalkMessage msg = parser.getMessage();
+//                        channelListener.onTraffic();
+                        if (handler != null) {
+                        	Message.obtain(handler, handler.ONTRAFFIC).sendToTarget();
+                        }
                         if (msg == null) {
                             parser.close();
                             parser = null;
                         } else {
+
                             handleMessage(msg);
                         }
                     } catch (ChannelException e) {
-                        channelListener.onError(500, e.getMessage());
+//                        channelListener.onError(500, e.getMessage());
+                        if (handler != null) {
+                        	Message.obtain(handler, handler.ONERROR, e.getMessage()).sendToTarget();
+                        }
 
                         return;
                     }
@@ -405,7 +440,10 @@ public class ChannelAPI {
 
                 if (entries.get(0).getStringValue().equalsIgnoreCase("ae")) {
                     String msgValue = entries.get(1).getStringValue();
-                    this.channelListener.onMessage(msgValue);
+//                    this.channelListener.onMessage(msgValue);
+                    if (handler != null) {
+                    	Message.obtain(handler, handler.ONMESSAGE, msgValue).sendToTarget();
+                    }
                 }
             }
         } catch (InvalidMessageException e) {
@@ -735,13 +773,22 @@ public class ChannelAPI {
         if (xhr.isSuccess()) {
             this.clientId = xhr.getResponseText();
             this.readyState = ReadyState.OPEN;
-            this.channelListener.onOpen();
+//            this.channelListener.onOpen();
+            if (handler != null) {
+            	Message.obtain(handler, handler.ONOPEN).sendToTarget();
+            }
             poll();
         } else {
             this.readyState = ReadyState.CLOSING;
-            this.channelListener.onError(xhr.getStatus(), xhr.getStatusText());
+//            this.channelListener.onError(xhr.getStatus(), xhr.getStatusText());
+            if (handler != null) {
+            	Message.obtain(handler, handler.ONERROR, xhr.getStatusText()).sendToTarget();
+            }
             this.readyState = ReadyState.CLOSED;
-            this.channelListener.onClose();
+//            this.channelListener.onClose();
+            if (handler != null) {
+            	Message.obtain(handler, handler.ONCLOSE).sendToTarget();
+            }
         }
     }
 
@@ -751,7 +798,10 @@ public class ChannelAPI {
      */
     private void disconnect(XHR xhr) {
         this.readyState = ReadyState.CLOSED;
-        this.channelListener.onClose();
+//        this.channelListener.onClose();
+        if (handler != null) {
+        	Message.obtain(handler, handler.ONCLOSE).sendToTarget();
+        }
     }
 
     /**
@@ -762,11 +812,17 @@ public class ChannelAPI {
         if (xhr.isSuccess()) {
             String data = StringUtils.chomp(xhr.getResponseText());
             if (!StringUtils.isEmpty(data)) {
-                this.channelListener.onMessage(data);
+//                this.channelListener.onMessage(data);
+                if (handler != null) {
+                	Message.obtain(handler, handler.ONMESSAGE, data).sendToTarget();
+                }
             }
             poll();
         } else {
-            this.channelListener.onError(xhr.getStatus(), xhr.getStatusText());
+//            this.channelListener.onError(xhr.getStatus(), xhr.getStatusText());
+            if (handler != null) {
+            	Message.obtain(handler, handler.ONERROR, xhr.getStatusText()).sendToTarget();
+            }
         }
     }
 
@@ -802,7 +858,10 @@ public class ChannelAPI {
      */
     private void forwardSendComplete(XHR xhr) {
         if (!xhr.isSuccess()) {
-            this.channelListener.onError(xhr.getStatus(), xhr.getStatusText());
+//            this.channelListener.onError(xhr.getStatus(), xhr.getStatusText());
+            if (handler != null) {
+            	Message.obtain(handler, handler.ONERROR, xhr.getStatusText()).sendToTarget();
+            }
         }
     }
 
@@ -855,11 +914,11 @@ public class ChannelAPI {
 	 * Set a new ChannelListener
 	 * @param channelListener
 	 */
-	public void setChannelListener(ChannelService channelListener) {
-	    if (channelListener != null) {
-		    this.channelListener = channelListener;
-		}
-	}
+//	public void setChannelListener(ChannelService channelListener) {
+//	    if (channelListener != null) {
+//		    this.channelListener = channelListener;
+//		}
+//	}
     
     /**
      * This exception is thrown in case of errors.

@@ -1,73 +1,70 @@
 package org.celstec.arlearn2.android.genItemActivities;
 
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
-import org.celstec.arlearn2.android.activities.GeneralListActivity;
-import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
-import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
+import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.MyResponses;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
+import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.run.Response;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.database.MatrixCursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.ListAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-public class NarratorItemActivity extends GeneralListActivity {
+public class NarratorItemActivity extends GeneralActivity {
 
 	protected WebView webview;
 	protected TextView descriptionTextView;
 	protected NarratorItem narratorBean;
+	protected Button provideAnswerButton;
 
 	private Response[] resp;
-//	private String[] answersString = null;
-	protected ListAdapter adapter;
+	
+	protected GenericMessageListAdapter adapter;
 
-
+	public void onBroadcastMessage(Bundle bundle) {
+		super.onBroadcastMessage(bundle);
+		reloadBeanFromDb();
+		getGuiComponents();
+		loadDataToGui();
+		renderAnswers();
+	}
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.listexcursionscreen);
-//		setContentView(getContentView());
-		View headerView = getLayoutInflater().inflate(getContentView(), null);
-		ListView listView = (ListView) findViewById(android.R.id.list);
-		listView.addHeaderView(headerView, null, false);
+		setContentView(getContentView());
 		
 		unpackDataFromIntent();
 		checkIfNotification();
 		getGuiComponents();
 		loadDataToGui();
 		fireAction();
-
-//			renderAnswers();
 	}
-
-//	public boolean isOpenQuestion() {
-//		return narratorBean.getOpenQuestion() != null;
-//	}
 
 	private void fireAction() {
 		PropertiesAdapter pa = getMenuHandler().getPropertiesAdapter();
@@ -92,20 +89,42 @@ public class NarratorItemActivity extends GeneralListActivity {
 	}
 	
 	protected void getGuiComponents() {
-		// setContentView(R.layout.gi_detail_narratoritem);
-//		if (isOpenQuestion()) {
-			
-//		} else {
-//			setContentView(R.layout.gi_detail_narratoritem);
-//		}
 		webview = (WebView) findViewById(R.id.giNarratorWebView);
 		descriptionTextView = (TextView) findViewById(R.id.giNarratorDescription);
+		provideAnswerButton = (Button) findViewById(R.id.provideAnswerButton);
+		provideAnswerButton.setText(getString(R.string.ao_answer_menu));
+		if (narratorBean.getOpenQuestion() != null) {
+			provideAnswerButton.setVisibility(View.VISIBLE);
+
+			provideAnswerButton.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(NarratorItemActivity.this, AnswerQuestionActivity.class);
+					intent.putExtra("runId", menuHandler.getPropertiesAdapter().getCurrentRunId());
+					intent.putExtra("bean", ((NarratorItemActivity) NarratorItemActivity.this).getNarratorBean());
+					intent.putExtra("generalItemId", ((NarratorItemActivity) NarratorItemActivity.this).getItemId());
+					NarratorItemActivity.this.startActivity(intent);
+					
+				}
+			});
+			
+		} else {
+			provideAnswerButton.setVisibility(View.GONE);
+		}
 	}
 
 	protected void unpackDataFromIntent() {
 		GeneralItem bean = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
-		
-		narratorBean = (NarratorItem) bean;
+		narratorBean = (NarratorItem)  bean;
+	}
+	
+	private void reloadBeanFromDb() {
+		DBAdapter db = new DBAdapter(this);
+		db.openForRead();
+		narratorBean =  (NarratorItem) ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).queryById(narratorBean.getId(),menuHandler.getPropertiesAdapter().getCurrentRunId());
+		db.close();
+
 	}
 
 	protected void loadDataToGui() {
@@ -145,31 +164,106 @@ public class NarratorItemActivity extends GeneralListActivity {
 	public NarratorItem getNarratorBean() {
 		return narratorBean;
 	}
-
+	
 	private void renderAnswers() {
+		
 		DBAdapter db = new DBAdapter(this);
 		db.openForRead();
 		resp = ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).query(getMenuHandler().getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
-		db.close();
 		
-//		answersString = new String[] { "answer 1", "answer2" };
-		final String[] matrix = { "_id", "title" };
-		final String[] columns = { "title" };
-		MatrixCursor mCursor = new MatrixCursor(matrix);
 		SimpleDateFormat formatter = new SimpleDateFormat("d MMM - HH:mm:ss");
+		ArrayList<GenericListRecord> users = new ArrayList<GenericListRecord>();
+
 		if (resp != null) {
+
 			for (int i = 0; i < resp.length; i++) {
+				GenericListRecord r = new GenericListRecord();
+				r.setImageResourceId(R.drawable.cloud_up_48);
 				Date d = new Date(resp[i].getTimestamp());
-//				Bitmap bMap = BitmapFactory.decodeFile("/sdcard/test2.png");
+				double percentage = 0;
+				int dividePercentageBy = 0;
+				try {
+					JSONObject json = new JSONObject(resp[i].getResponseValue());
+					int statusAudio = 10;
+					
+					if (json.has("audioUrl")) {
+						String audioUrl = json.getString("audioUrl");
+						statusAudio = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getReplicationStatus(audioUrl);
+						percentage += ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getPercentageUploaded(audioUrl);
+						dividePercentageBy++;
+					}
+					
+					int statusImage = 10;
+					if (json.has("imageUrl")) {
+						String imageUrl = json.getString("imageUrl");
+						statusImage = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getReplicationStatus(imageUrl);
+						percentage += ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getPercentageUploaded(imageUrl);
+						dividePercentageBy++;
+					}
+					if (json.has("videoUrl")) {
+						String videoUrl = json.getString("videoUrl");
+						statusImage = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getReplicationStatus(videoUrl);
+						percentage += ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getPercentageUploaded(videoUrl);
+						dividePercentageBy++;
+					}
+					percentage /= dividePercentageBy;
+
+					if (statusImage != 10 || statusAudio != 10) {
+						int status = Math.min(statusAudio, statusImage);
+						switch (status) {
+						case MediaCache.REP_STATUS_TODO:
+							r.setImageResourceId(R.drawable.cloud_up_48);
+							break;
+						case MediaCache.REP_STATUS_SYNCING:
+							r.setImageResourceId(R.drawable.cloud_sync_48);
+							break;
+						case MediaCache.REP_STATUS_DONE:
+							r.setImageResourceId(R.drawable.cloud_ok_48);
+							break;
+
+						default:
+							break;
+						}
+					}
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 				
-				mCursor.addRow(new String[] { "" + i, formatter.format(d) });
+				r.setMessageHeader(""+formatter.format(d));
+				if (percentage == 1){
+					r.setMessageDetail(null);
+				} else{
+					r.setMessageDetail(MessageFormat.format("{0,number,#.##%}", percentage));	
+				}
+				
+
+				users.add(r);
 			}
 		}
-		startManagingCursor(mCursor);
-		final int[] layouts = { R.id.messageItem1 };
-
-		adapter = new SimpleCursorAdapter(this, R.layout.messageline, mCursor, columns, layouts);
-		setListAdapter(adapter);
+		db.close();
+		
+		LinearLayout listView = (LinearLayout) findViewById(R.id.narratoranswerlist); 
+//		adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, users);
+		adapter = new GenericMessageListAdapter(this,getContentView(), users);
+		listView.removeAllViews();
+		for (int i = 0 ; i< adapter.getCount(); i++) {
+			View v = adapter.getView(i, null, listView);
+			listView.addView(v);
+			final int id = i;
+			v.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(NarratorItemActivity.this, ViewAnswerActivity.class);
+					i.putExtra("response", resp[(int)id]);
+					startActivity(i);
+					
+				}
+			});
+			
+		}
+//		listView.setAdapter(adapter);
 	}
 	
 	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -184,14 +278,17 @@ public class NarratorItemActivity extends GeneralListActivity {
 		renderAnswers();
 	}
 	
+	
 	public boolean isGenItemActivity() {
 		return true;
 	}
-
-	@Override
+	
 	public boolean isMessage() {
 		if (narratorBean == null) return false;
 		return narratorBean.isMessage();
 	}
 	
+	public boolean showStatusLed() {
+		return true;
+	}
 }

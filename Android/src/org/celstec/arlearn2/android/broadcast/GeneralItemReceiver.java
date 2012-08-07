@@ -1,8 +1,6 @@
 package org.celstec.arlearn2.android.broadcast;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
@@ -11,7 +9,7 @@ import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.android.db.RunAdapter;
+import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.service.GeneralItemDependencyHandler;
 import org.celstec.arlearn2.android.sync.MediaCacheSyncroniser;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
@@ -27,26 +25,34 @@ import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.client.GeneralItemClient;
 import org.celstec.arlearn2.client.exception.ARLearnException;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+@SuppressLint("ParserError")
 public class GeneralItemReceiver extends BroadcastReceiver {
 
+	public static String action = "org.celstec.arlearn2.beans.notification.GeneralItemModification";
+
 	@Override
-	public void onReceive(Context context, Intent intent) {
-		Bundle extras = intent.getExtras();
-		if (extras != null) {
-			GeneralItemModification bean = (GeneralItemModification) extras.getSerializable("bean");
-			if (bean != null) {
-				processItem(context, bean);
+	public void onReceive(final Context context, final Intent intent) {
+		new Thread(new Runnable() {
+			public void run() {
+				Bundle extras = intent.getExtras();
+				if (extras != null) {
+					GeneralItemModification bean = (GeneralItemModification) extras.getSerializable("bean");
+					if (bean != null) {
+						processItem(context, bean);
+					}
+				} else {
+					syncronizeGeneralItems(context);
+				}
+				(new GeneralItemDependencyHandler(context)).checkDependencies();
+				updateActivities(context);
 			}
-		} else {
-			syncronizeGeneralItems(context);
-		}
-		(new GeneralItemDependencyHandler(context)).checkDependencies();
-		updateActivities(context);
+		}).start();
 	}
 
 	private void updateActivities(Context context) {
@@ -55,12 +61,14 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 		updateIntent.putExtra(ListMessagesActivity.class.getCanonicalName(), true);
 		updateIntent.putExtra(MapViewActivity.class.getCanonicalName(), true);
 		updateIntent.putExtra(ListMapItemsActivity.class.getCanonicalName(), true);
+		updateIntent.putExtra(NarratorItemActivity.class.getCanonicalName(), true);
 		context.sendBroadcast(updateIntent);
 	}
 
 	private void processItem(Context ctx, GeneralItemModification bean) {
 		bean.getGeneralItem().setRunId(bean.getRunId());
-		if (!canDealWithitemType(bean.getGeneralItem())) return;
+		if (!canDealWithitemType(bean.getGeneralItem()))
+			return;
 		DBAdapter db = new DBAdapter(ctx);
 		try {
 			db.openForWrite();
@@ -76,9 +84,15 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 				break;
 			case GeneralItemModification.VISIBLE:
 				if (GeneralItemDependencyHandler.itemMatchesPlayersRole(db, bean.getRunId(), bean.getGeneralItem())) {
-					if (((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).getVisiblityStatus(bean.getRunId(), bean.getGeneralItem().getId()) == GeneralItemAdapter.VISIBLE) break;
-					((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).setVisiblityStatus(bean.getRunId(), bean.getGeneralItem().getId(), GeneralItemAdapter.VISIBLE, System.currentTimeMillis());
-					(new GeneralItemDependencyHandler(ctx)).vibrateRingPhone();					
+					if (((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).getVisiblityStatus(bean.getRunId(), bean.getGeneralItem().getId()) == GeneralItemAdapter.VISIBLE)
+						break;
+					((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).setVisiblityStatus(bean.getRunId(), bean.getGeneralItem().getId(), GeneralItemAdapter.VISIBLE,
+							System.currentTimeMillis());
+					(new GeneralItemDependencyHandler(ctx)).broadcastTroughIntent(bean.getGeneralItem()); // now
+																											// this
+																											// broadcast
+																											// happens
+																											// twice
 				}
 				break;
 			// case RunModification.ALTERED:
@@ -94,14 +108,19 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 	}
 
 	private boolean canDealWithitemType(GeneralItem generalItem) {
-		if (generalItem instanceof MultipleChoiceTest) return true;
-		if (generalItem instanceof OpenUrl) return false;
-		if (generalItem instanceof NarratorItem) return true;
-		if (generalItem instanceof GeneralItem) return true;
+		if (generalItem instanceof MultipleChoiceTest)
+			return true;
+		if (generalItem instanceof OpenUrl)
+			return false;
+		if (generalItem instanceof NarratorItem)
+			return true;
+		if (generalItem instanceof GeneralItem)
+			return true;
 		return false;
 	}
 
-	private void syncronizeGeneralItems(Context context) {
+	private void syncronizeGeneralItems(final Context context) {
+
 		PropertiesAdapter pa = PropertiesAdapter.getInstance(context);
 		long currentRunId = pa.getCurrentRunId();
 		if (currentRunId <= 0)
@@ -126,6 +145,7 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 		} finally {
 			db.close();
 		}
+
 	}
 
 	private void generalItemToDb(DBAdapter db, GeneralItem item) {
@@ -150,7 +170,7 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 		rm.setRun(new Run());
 		rm.getRun().setRunId(runId);
 		Intent runIntent = new Intent();
-		runIntent.setAction("org.celstec.arlearn2.beans.notification.RunModification");
+		runIntent.setAction(RunReceiver.action);
 		runIntent.putExtra("bean", rm);
 		context.sendBroadcast(runIntent);
 	}

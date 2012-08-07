@@ -37,4 +37,10 @@ public class ChannelListener implements ChannelService{
 		System.out.println("Error Occured: " + description + " Error Code:" + errorCode);
 		System.out.println("This is the \"Defualt Class\" You Should Realy Implement Your Own Version of \"ChannelService\" :-)");
 	}
+
+	@Override
+	public void onTraffic() {
+		// TODO Auto-generated method stub
+		
+	}
 };

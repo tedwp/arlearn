@@ -27,14 +27,8 @@ import android.widget.TextView;
 
 public class AudioObjectActivity extends NarratorItemActivity {
 
-//	private String identifier;
 	private AudioPlayerDelegate apd;
 	
-	
-//	private IAudioPlayerService audioPlayerService = null;
-	
-
-
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Action completeAction = new Action();
@@ -54,9 +48,7 @@ public class AudioObjectActivity extends NarratorItemActivity {
 	}
 	
 	protected void getGuiComponents() {
-		webview = (WebView) findViewById(R.id.ao_webview);
-		descriptionTextView = (TextView) findViewById(R.id.ao_description);
-		
+		super.getGuiComponents();
 
 //		playButton = (ImageView) findViewById(R.id.ao_playButton);
 //		stopButton = (ImageView) findViewById(R.id.ao_stopButton);
@@ -80,7 +72,6 @@ public class AudioObjectActivity extends NarratorItemActivity {
 	
 	
 	private AudioObject getAudioObject() {
-//		return (AudioObject) bean;
 		return (AudioObject) narratorBean;
 	}
 	

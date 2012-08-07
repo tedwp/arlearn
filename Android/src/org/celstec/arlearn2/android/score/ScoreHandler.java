@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.db.notificationbeans.UpdateScore;
 
 import android.app.Activity;
 import android.widget.ImageView;
@@ -17,11 +16,13 @@ public class ScoreHandler {
 	public ScoreHandler(Activity activity) {
 		this.activity = activity;
 	}
-	public void setScore(UpdateScore score) {
-		if (score.getTotalScore() == null) return;
-		setScore((int) score.getTotalScore().longValue());
-		
-	}
+	
+//	public void setScore(UpdateScore score) {
+//		if (score.getTotalScore() == null) return;
+//		setScore((int) score.getTotalScore().longValue());
+//		
+//	}
+	
 	public void setScore(Integer newScore) {
 		LinearLayout ll = (LinearLayout) activity.findViewById(R.id.scoreLinearLayout);
 		ll.removeAllViews();

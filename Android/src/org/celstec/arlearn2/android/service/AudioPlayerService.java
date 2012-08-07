@@ -5,6 +5,7 @@ import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -80,14 +81,15 @@ public class AudioPlayerService extends Service {
 		}
 	}
 	
-	protected void initiateMediaPlayer(String audioFile) {
+	protected void initiateMediaPlayer(Uri audioFile) {
 		if (this.mPlayer == null) {
 			this.mPlayer = new MediaPlayer();
 		}
 		this.mPlayer.reset();
 		
 		try {
-			this.mPlayer.setDataSource(audioFile);
+			this.mPlayer.setDataSource(this, audioFile);
+//			this.mPlayer.setDataSource(audioFile);
 			this.mPlayer.prepare();
 			
 		} catch (Exception e) {

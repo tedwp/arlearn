@@ -9,7 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
-import java.net.MalformedURLException;
 
 import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.db.DBAdapter;
@@ -39,7 +38,8 @@ public class MediaCacheSyncroniser extends GenericSyncroniser {
 	}
 
 	public void runAuthenticated() {
-		boolean increase = updateCache();
+//		boolean increase = updateCache();
+		boolean increase = true;
 		if (increase) {
 			increaseDelay();
 		} else {
@@ -71,7 +71,7 @@ public class MediaCacheSyncroniser extends GenericSyncroniser {
 				File localFile = new File(mci.getLocalFile());
 				succesful = publishData(mci.getRunId(), mci.getAccount(), localFile, mci.getToken(), mci.getMimetype());
 				if (succesful) {
-					mc.updateRemotePath(mci.getItemId(), mci.buildRemotePath());
+					mc.updateRemotePath(mci.getItemId(), mci.buildRemotePath(mci.getUri()));
 					returnvalue = false;;
 				}
 			}

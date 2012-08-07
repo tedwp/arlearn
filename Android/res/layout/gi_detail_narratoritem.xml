@@ -1,40 +1,91 @@
-<LinearLayout android:id="@+id/ni_linearLayout"
-	android:layout_width="fill_parent" android:layout_height="match_parent"
-	android:layout_gravity="bottom" android:orientation="vertical"
-	android:background="@android:color/white"
-	xmlns:android="http://schemas.android.com/apk/res/android">
-	
-	<ScrollView android:id="@+id/ni_scrollView"
-	 android:layout_width="fill_parent" 
-		android:layout_height="match_parent"
-		android:layout_gravity="bottom" android:layout_weight="2"
-		android:orientation="vertical">
-		
-		<LinearLayout
-      	android:orientation="vertical"
-		android:layout_width="fill_parent" 
-		android:layout_height="fill_parent"
-		android:gravity="center_horizontal"  
-		android:layout_weight="0">
-            
-         <TextView
-            android:id="@+id/giNarratorDescription"
-            android:paddingRight="12dip"
-            android:paddingLeft="12dip"
-            android:padding="10dip"
-            android:text="hier str regels tekst."
-            android:textColor="@android:color/black"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:maxWidth="250dip"/>
-            
-	<WebView android:id="@+id/giNarratorWebView" 
-		android:layout_width="fill_parent"
-		android:layout_height="match_parent"></WebView>
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
-		</LinearLayout>
-             </ScrollView> 
-	 
-	
-	 
-	
-</LinearLayout>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ni_linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:background="@android:color/white"
+        android:orientation="vertical" >
+
+        <ScrollView
+            android:id="@+id/ni_scrollView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="bottom"
+            android:layout_weight="2"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="0"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/giNarratorDescription"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="250dip"
+                    android:padding="10dip"
+                    android:paddingLeft="12dip"
+                    android:paddingRight="12dip"
+                    android:text="hier str regels tekst."
+                    android:textColor="@android:color/black" />
+
+                <WebView
+                    android:id="@+id/giNarratorWebView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent" >
+                </WebView>
+
+                <LinearLayout
+                    android:id="@+id/narratoranswerlist"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:background="@android:color/transparent"
+                    android:cacheColorHint="#00000000" 
+                    android:orientation="vertical" >
+
+
+                </LinearLayout>
+
+               
+
+            </LinearLayout>
+           
+        </ScrollView>
+
+          <Button
+              android:id="@+id/provideAnswerButton"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="bottom"
+              android:text="Button" />
+
+  		</LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/scoreLinearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|top"
+            android:layout_marginBottom="20dip"
+            android:padding="12dip"
+            android:src="@drawable/list_icon_with_text" >
+
+            <ImageView
+                android:id="@+id/statusLed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dip"
+                android:src="@drawable/status_icon_red" />
+        </LinearLayout>
+
+        
+
+  
+</merge>

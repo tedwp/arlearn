@@ -1,6 +1,8 @@
 package org.celstec.arlearn2.android.broadcast;
 
 import java.util.Iterator;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
@@ -22,52 +24,78 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-public class RunReceiver extends BroadcastReceiver {
+public class RunReceiver extends GenericReceiver {
+	
+	public static String action = "org.celstec.arlearn2.beans.notification.RunModification";
+	private Semaphore semaphore;
 
 	@Override
-	public void onReceive(Context context, Intent intent) {
-		Bundle extras = intent.getExtras();
-		if (extras != null) {
-			RunModification bean = (RunModification) extras.getSerializable("bean");
-			if (bean != null) {
-				process(context, bean);
-			} 
-		}else {
-			syncronizeRuns(context);
-		}
-	}
+	public void onReceive(final Context context, final Intent intent) {
+		if (semaphore == null) semaphore = new Semaphore(1);
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					semaphore.acquire();
 
-	private void process(Context ctx, RunModification rm) {
-		databaseOperations(ctx, rm);
-		updateActivities(ctx);
+					Bundle extras = intent.getExtras();
+					if (extras != null) {
+						RunModification bean = (RunModification) extras.getSerializable("bean");
+						Log.e("GAME", "in thread 1");
+						if (bean != null) {
+							// process(context, bean);
+							databaseOperations(context, bean);
+						} else {
+							Log.e("GAME", "in thread 2 bean is null");	
+						}
+					} else {
+						syncronizeRuns(context);
+					}
+					updateActivities(context);
+					semaphore.release();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 	
 	private void databaseOperations(Context ctx, RunModification rm) {
-		System.out.println("inserting new Run "+Run.class.getName());
 		DBAdapter db = new DBAdapter(ctx);
 		db.openForWrite();
+		boolean updateGeneralItems = false;
 		switch (rm.getModificationType()) {
 		case RunModification.CREATED:
+			Log.e("GAME", "in thread 2 CREATED");
 			runToDb(db, rm.getRun(), ctx);
+			updateGeneralItems = true;
 			break;
 		case RunModification.DELETED:
+			Log.e("GAME", "in thread 2 DELETED");
+
 			((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).delete(rm.getRun().getRunId());
 			break;
 		case RunModification.ALTERED:
 			((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).delete(rm.getRun().getRunId());
 			((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).insert(rm.getRun());
+			updateGeneralItems = true;
 			updateGameAndUser(ctx, db, rm.getRun());
 			break;
 		default:
 			break;
 		}
 		db.close();
+		if (updateGeneralItems) {
+			Intent gimIntent = new Intent();
+			gimIntent.setAction(GeneralItemReceiver.action);
+			ctx.sendBroadcast(gimIntent);
+		}
 	}
 	
 	public  void syncronizeRuns(Context ctx) {
 		DBAdapter db = new DBAdapter(ctx);
 		db.openForWrite();
-		try {
+		try { 
 			RunList rl = RunClient.getRunClient().getRunsParticipate(PropertiesAdapter.getInstance(ctx).getFusionAuthToken());
 			if (rl.getError() == null) {
 				Iterator<Run> it = rl.getRuns().iterator();
@@ -91,15 +119,18 @@ public class RunReceiver extends BroadcastReceiver {
 	}
 	
 	private void runToDb(DBAdapter db, Run run, Context ctx){
+		Log.e("GAME", "in thread 3 "+run.getDeleted());
 		((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).insert(run);
-		updateGameAndUser(ctx, db, run);
+		if (run != null && !run.getDeleted()) updateGameAndUser(ctx, db, run);
 	}
 	
 	private void updateGameAndUser(Context ctx, DBAdapter db, Run r) {
+		Log.e("GAME", "in thread before 4 game update");
 		Game g = r.getGame();
 		PropertiesAdapter pa  = PropertiesAdapter.getInstance(ctx);
 		if (g == null) {
 			r = RunClient.getRunClient().getRun(r.getRunId(), pa.getFusionAuthToken());
+			Log.e("GAME", "in thread before 4 after game update");
 			g = r.getGame();
 		}
 		if (g != null) {
@@ -109,11 +140,9 @@ public class RunReceiver extends BroadcastReceiver {
 		db.getRunAdapter().insert(r, u.getRoles());
 	}
 	
-	private void updateActivities(Context ctx) {
-		Intent updateIntent = new Intent();
-		updateIntent.setAction("org.celstec.arlearn.updateActivities");
-		updateIntent.putExtra(ListExcursionsActivity.class.getCanonicalName(), true);
-		ctx.sendBroadcast(updateIntent);
+	protected void updateActivities(Context ctx) {
+		Log.e("GAME", "in thread 5  update activities");
+		updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName());
 	}
 	
 	private void setStatusToLogout(Context context) {

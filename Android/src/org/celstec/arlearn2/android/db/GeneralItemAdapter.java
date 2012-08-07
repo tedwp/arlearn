@@ -109,7 +109,7 @@ public class GeneralItemAdapter extends GenericDbTable {
 			initialValues.put(VISIBILITY_STATUS, NOT_INITIALISED);
 			initialValues.put(FIRST_READ, System.currentTimeMillis());
 			if (gi.getDeleted() == null) {
-				initialValues.put(DELETED, true);
+				initialValues.put(DELETED, false);
 			} else {
 				initialValues.put(DELETED, gi.getDeleted());
 			}
@@ -199,23 +199,6 @@ public class GeneralItemAdapter extends GenericDbTable {
 						gic.put(itemId, gi);
 						resultGenIt[i++] = gi;
 					}
-					
-//					gi.setId(mCursor.getLong(0));
-//					gi.setName(mCursor.getString(1));
-//					gi.setDescription(mCursor.getString(2));
-////					gi.setDependsOn(mCursor.getString(3));
-//					gi.setType(mCursor.getString(4));
-////					gi.setPayload(mCursor.getString(5));
-//					gi.setRadius(mCursor.getInt(6));
-//					gi.setShowAtTimeStamp(mCursor.getLong(7));
-//					gi.setLng(mCursor.getDouble(8));
-//					gi.setLat(mCursor.getDouble(9));
-//					gi.setRunId(mCursor.getLong(10));
-					
-//					gi.setDependsOnVisible(mCursor.getInt(11)==1);
-//					gi.setTimeVisible(mCursor.getInt(12)==1);
-//					gi.setAutoId(mCursor.getInt(13));
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

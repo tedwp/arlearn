@@ -1,13 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="fill_parent"
-    android:background="@android:color/white">
-    
-  <ListView android:id="@android:id/list"
-        android:layout_width="wrap_content"
-       android:layout_height="fill_parent"
-       android:cacheColorHint="#00000000"
-               android:background="@android:color/transparent"/>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
-</LinearLayout>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:color/white" >
+
+        <ListView
+            android:id="@+id/listRuns"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@android:color/transparent"
+            android:cacheColorHint="#00000000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/scoreLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginBottom="20dip"
+        android:padding="12dip"
+        android:src="@drawable/list_icon_with_text" >
+
+        <ImageView
+            android:id="@+id/statusLed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dip"
+            android:src="@drawable/status_icon_red" />
+    </LinearLayout>
+
+</merge>

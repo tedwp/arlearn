@@ -1,25 +1,22 @@
 package org.celstec.arlearn2.android.genItemActivities;
 
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.activities.GeneralListActivity;
+import org.celstec.arlearn2.android.activities.GeneralActivity;
 import org.celstec.arlearn2.android.db.beans.GeneralItem;
-import org.celstec.arlearn2.android.db.beans.NarratorItem;
 
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class GeneralItemActivity extends GeneralListActivity {
+public class GeneralItemActivity extends GeneralActivity {
 
 	protected WebView webview;
 	protected TextView descriptionTextView;
 	protected GeneralItem bean;
-	protected ListAdapter adapter;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,10 +29,6 @@ public class GeneralItemActivity extends GeneralListActivity {
 		unpackDataFromIntent();
 		getGuiComponents();
 		loadDataToGui();
-		// fireAction();
-
-		// if (isOpenQuestion())
-		// renderAnswers();
 	}
 
 	protected int getContentView() {
@@ -71,12 +64,6 @@ public class GeneralItemActivity extends GeneralListActivity {
 	
 	public boolean isGenItemActivity() {
 		return true;
-	}
-
-	@Override
-	public boolean isMessage() {
-		if (bean == null) return false;
-		return bean.isMessage();
 	}
 
 }

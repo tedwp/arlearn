@@ -3,7 +3,7 @@ package org.celstec.arlearn2.android.maps;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.celstec.arlearn2.android.db.notificationbeans.LocationUpdate;
+import org.celstec.arlearn2.beans.run.LocationUpdate;
 
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -40,7 +40,9 @@ public class UsersOverlay extends ItemizedOverlay {
 	}
 
 	public void updateLocation(LocationUpdate bean) {
-		overlayItems.put(bean.getUser(), new OverlayItem( new GeoPoint((int) (bean.getLat() * 1E6), (int) (bean.getLng() * 1E6)), bean.getUser(), ""));
+		//TODO define user
+		String user = "arlearn1";
+		overlayItems.put(user, new OverlayItem( new GeoPoint((int) (bean.getLat() * 1E6), (int) (bean.getLng() * 1E6)), user, ""));
 		Iterator it = overlayItems.keySet().iterator();
 		keys = new String[size()];
 		int i =0;

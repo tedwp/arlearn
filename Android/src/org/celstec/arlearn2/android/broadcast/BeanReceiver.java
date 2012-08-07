@@ -7,6 +7,7 @@ import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.RunAdapter;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.notification.GeneralItemModification;
+import org.celstec.arlearn2.beans.notification.Ping;
 import org.celstec.arlearn2.beans.notification.RunModification;
 import org.celstec.arlearn2.beans.run.Run;
 
@@ -21,29 +22,38 @@ public class BeanReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Bundle extras = intent.getExtras();
-		System.out.println("action "+intent.getAction());
+
 		if (extras != null) {
 			Serializable bean = extras.getSerializable("bean");
-			
-			if (bean instanceof RunModification) {
-				Intent runIntent = new Intent();
-				runIntent.setAction("org.celstec.arlearn2.beans.notification.RunModification");
-				runIntent.putExtra("bean", bean);
-				context.sendBroadcast(runIntent);
+			try {
+				switch (NotificationBeans.valueOf(bean.getClass().getSimpleName())) {
+				case RunModification:
+					reCast(RunReceiver.action, bean, context);
+					break;
+				case GeneralItemModification:
+					reCast("org.celstec.arlearn2.beans.notification.GeneralItemModification", bean, context);
+					break;
+				case Ping:
+					reCast("org.celstec.arlearn2.beans.notification.Ping", bean, context);
+					break;
+				default:
+					break;
+				}
+			} catch (IllegalArgumentException e) {
+				// eat this
 			}
-			if (bean instanceof GeneralItemModification) {
-				Intent gimIntent = new Intent();
-				gimIntent.setAction("org.celstec.arlearn2.beans.notification.GeneralItemModification");
-				gimIntent.putExtra("bean", bean);
-				context.sendBroadcast(gimIntent);
-//				process(context, (GeneralItemModification) bean);
-			}
-			
-			Log.w("DEBUG", "bean received"+ bean);
 		}
 	}
-	
-	
 
-	
+	private void reCast(String action, Serializable bean, Context context) {
+		Intent runIntent = new Intent();
+		runIntent.setAction(action);
+		runIntent.putExtra("bean", bean);
+		context.sendBroadcast(runIntent);
+	}
+
+	enum NotificationBeans {
+		RunModification, GeneralItemModification, Ping, Pong, LocationUpdate, Action, Response;
+	}
+
 }

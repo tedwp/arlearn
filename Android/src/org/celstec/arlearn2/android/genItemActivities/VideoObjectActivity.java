@@ -30,8 +30,6 @@ public class VideoObjectActivity extends NarratorItemActivity {
 	private boolean firststart = false;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		
 		if (!firststart) {
 			firststart = true;
 			startVideo();
@@ -46,8 +44,6 @@ public class VideoObjectActivity extends NarratorItemActivity {
 	}
 	
 	private void startVideo() {
-		
-		
 		DBAdapter db = new DBAdapter(this);
 		db.openForRead();
 		File audioFile = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getLocalFileFromIdIgnoreReplication(""+getVideoObject().getId());
@@ -69,8 +65,7 @@ public class VideoObjectActivity extends NarratorItemActivity {
 	}
 	
 	protected void getGuiComponents() {
-		webview = (WebView) findViewById(R.id.vo_webview);
-		descriptionTextView = (TextView) findViewById(R.id.vo_description);
+		super.getGuiComponents();
 		startVideoImage = (ImageView) findViewById(R.id.startVideo);
 
 	}

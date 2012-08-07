@@ -3,13 +3,13 @@ package org.celstec.arlearn2.android.menu;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnnotateActivity;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
+import org.celstec.arlearn2.android.activities.IntentIntegrator;
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.LoginActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.activities.SplashScreenActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
-import org.celstec.arlearn2.android.asynctasks.RefreshTask;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MyActions;
@@ -18,13 +18,13 @@ import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.genItemActivities.AudioObjectActivity;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.service.BackgroundService;
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManager;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
+//import org.jivesoftware.smack.Chat;
+//import org.jivesoftware.smack.ChatManager;
+//import org.jivesoftware.smack.ConnectionConfiguration;
+//import org.jivesoftware.smack.MessageListener;
+//import org.jivesoftware.smack.XMPPConnection;
+//import org.jivesoftware.smack.XMPPException;
+//import org.jivesoftware.smack.packet.Message;
 
 
 import android.app.Activity;
@@ -46,6 +46,7 @@ public class MenuHandler {
 	public static final int DELETE_ANSWER = 6;
 	public static final int RESET = 7;
 	public static final int REFRESH = 8;
+	public static final int SCAN = 9;
 
 	private Activity context;
 	private PropertiesAdapter pa;
@@ -115,9 +116,9 @@ public class MenuHandler {
 			AlertDialog alert = builder.create();
 			alert.show();
 			break;
-			
-		case REFRESH:
-			(new RefreshTask((ListExcursionsActivity)context)).execute(new Object[] {});
+		case SCAN:
+			IntentIntegrator integrator = new IntentIntegrator(context);
+			integrator.initiateScan();
 			break;
 		default:
 			break;

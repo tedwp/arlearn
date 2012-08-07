@@ -26,4 +26,6 @@ public interface ChannelService {
          * @param description
          */
         void onError(Integer errorCode, String description);
+
+		void onTraffic();
 };

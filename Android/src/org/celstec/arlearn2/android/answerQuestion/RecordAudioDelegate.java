@@ -12,6 +12,7 @@ import org.celstec.arlearn2.android.util.MediaFolders;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
@@ -313,6 +314,11 @@ public class RecordAudioDelegate {
 	public String getRecordingPath() {
 		if (this.sampleFile == null) return null;
 		return sampleFile.getAbsolutePath();
+	}
+	
+	public Uri getUri(){
+		if (this.sampleFile == null) return null;
+		return Uri.fromFile(sampleFile);
 	}
 
 	

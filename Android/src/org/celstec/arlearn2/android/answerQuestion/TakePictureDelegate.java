@@ -23,6 +23,8 @@ public class TakePictureDelegate {
 	AnnotateActivity ctx;
 	private ImageView image;
 	private File bitmapFile;
+	private Uri pictureUri;
+
 
 
 	public TakePictureDelegate(AnnotateActivity answerQuestionActivity) {
@@ -54,6 +56,7 @@ public class TakePictureDelegate {
 	}
 
 	public void onActivityResult(Intent data) {
+		pictureUri = data.getData();
 		Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
 		
 //		Bitmap thumbnail = ViewAnswerActivity.decodeFile(new File(MediaFolders.getOutgoingFilesDir(), "tmp.jpg"), 900);
@@ -101,6 +104,10 @@ public class TakePictureDelegate {
 	public String getImagePath() {
 		if (bitmapFile == null) return null;
 		return bitmapFile.getAbsolutePath();
+	}
+	
+	public Uri getUri(){
+		return pictureUri;
 	}
 
 	

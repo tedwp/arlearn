@@ -1,13 +1,9 @@
 package org.celstec.arlearn2.android.service;
 
 import org.celstec.arlearn2.android.Constants;
+import org.celstec.arlearn2.android.broadcast.ResponseService;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.android.db.notificationbeans.GeneralItem;
-import org.celstec.arlearn2.android.db.notificationbeans.LocationUpdate;
-import org.celstec.arlearn2.android.db.notificationbeans.NotificationBean;
-import org.celstec.arlearn2.android.db.notificationbeans.UpdateScore;
-import org.celstec.arlearn2.android.sync.GameSyncroniser;
 import org.celstec.arlearn2.android.sync.GeneralItemsSyncroniser;
 import org.celstec.arlearn2.android.sync.MediaCacheSyncroniser;
 import org.celstec.arlearn2.android.sync.MyActionsSyncronizer;
@@ -18,13 +14,6 @@ import org.celstec.arlearn2.android.sync.ScoreSyncroniser;
 import org.celstec.arlearn2.beans.Version;
 import org.celstec.arlearn2.client.GenericClient;
 import org.celstec.arlearn2.client.VersionClient;
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManager;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
 
 import android.app.IntentService;
 import android.content.BroadcastReceiver;
@@ -36,6 +25,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -45,7 +35,6 @@ public class BackgroundService extends IntentService {
 	private boolean continueRunning = true;
 	private LocationManager locMgr;
 	RunSyncroniser run;
-	GameSyncroniser game;
 	GeneralItemsSyncroniser gis;
 	MyLocationSyncronizer loc;
 	MyResponseSyncronizer resp;
@@ -53,11 +42,12 @@ public class BackgroundService extends IntentService {
 	MediaCacheSyncroniser mcs;
 	ScoreSyncroniser scs;
 
-	DependencyChecker depCheck;
+//	DependencyChecker depCheck;
 	
 	public BackgroundService() {
 		super("BackgroundService");
 	}
+	
 
 	@Override
 	public void onCreate() {
@@ -78,9 +68,9 @@ public class BackgroundService extends IntentService {
 		if (intent.getExtras() != null && intent.getExtras().getBoolean("exit")) {
 			continueRunning = false;
 			Toast.makeText(this, "stopping background services", Toast.LENGTH_SHORT).show();
-		} else if (intent.getExtras() != null && intent.getExtras().getBoolean("depCheck")){
-			if (depCheck != null)
-				depCheck.run();
+//		} else if (intent.getExtras() != null && intent.getExtras().getBoolean("depCheck")){
+//			if (depCheck != null)
+//				depCheck.run();
 		} else{
 			if (gis != null)
 				gis.run();
@@ -90,8 +80,7 @@ public class BackgroundService extends IntentService {
 	}
 
 	protected void resetTimes() {
-		if (run != null) run.resetDelay();
-		if (game != null) game.resetDelay();
+//		if (run != null) run.resetDelay();
 		if (gis != null) {
 			gis.resetDelay();
 			gis.run();
@@ -100,19 +89,21 @@ public class BackgroundService extends IntentService {
 		if (resp != null) resp.resetDelay();
 		if (act != null) act.resetDelay();
 		if (mcs != null) mcs.resetDelay();
-		if (depCheck != null) depCheck.resetDelay();
+//		if (depCheck != null) depCheck.resetDelay();
 		if (scs != null) scs.resetDelay();
 	}
 
 	protected void onHandleIntent(Intent intent) {
+//		IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);        
+//		registerReceiver(networkStateReceiver, filter);
+		
 		checkServerUrl();
 //		run = new RunSyncroniser(this);
-		game = new GameSyncroniser(this);
 //		gis = new GeneralItemsSyncroniser(this);
 		resp = new MyResponseSyncronizer(this);
 		act = new MyActionsSyncronizer(this);
 		mcs = new MediaCacheSyncroniser(this);
-		depCheck = new DependencyChecker(this);
+//		depCheck = new DependencyChecker(this);
 		scs = new ScoreSyncroniser(this);
 		int time = 0;
 		while (continueRunning) {
@@ -121,8 +112,7 @@ public class BackgroundService extends IntentService {
 				try {
 //					if (run.timeToExecute(time))
 //						run.run();
-					if (game.timeToExecute(time))
-						game.run();
+
 //					if (gis.timeToExecute(time))
 //						gis.run();
 //					if (loc.timeToExecute(time))
@@ -133,8 +123,8 @@ public class BackgroundService extends IntentService {
 						act.run();
 					if (mcs.timeToExecute(time))
 						mcs.run();
-					if (depCheck.timeToExecute(time))
-						depCheck.run();
+//					if (depCheck.timeToExecute(time))
+//						depCheck.run();
 					if (scs.timeToExecute(time))
 						scs.run();
 					time += 1;
@@ -145,6 +135,20 @@ public class BackgroundService extends IntentService {
 			}
 		}
 	}
+	
+	BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
+
+	    @Override
+	    public void onReceive(Context context, Intent intent) {
+	        Log.w("Network Listener", "Network Type Changed");
+	        Toast.makeText(context, "network changed", Toast.LENGTH_LONG).show();
+//	        Intent i = new Intent();
+//			i.setAction(ResponseReceiver.action);
+//			sendBroadcast(intent);
+	    }
+	};
+
+	
 	
 	private void checkServerUrl() {
 		try {
@@ -157,7 +161,6 @@ public class BackgroundService extends IntentService {
 //
 //			}
 		} catch (NameNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

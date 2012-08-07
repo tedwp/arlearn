@@ -3,7 +3,7 @@
       package="org.celstec.arlearn2.android"
       android:versionCode="4"
       android:versionName="1.1">
-    <uses-sdk android:minSdkVersion="6" />
+    <uses-sdk android:minSdkVersion="6" android:targetSdkVersion="10"/>
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
      	<uses-library android:name="com.google.android.maps" />
@@ -20,6 +20,7 @@
             </intent-filter> 
 		</activity>
 		
+		<!-- 
 		<activity android:name=".activities.DetailViewActivity"
 			android:label="test" android:theme="@style/Theme.Transparent"
 			android:screenOrientation="portrait"
@@ -29,8 +30,10 @@
 				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 		</activity>
+		 -->
 		
 		<activity android:name=".activities.LoginActivity" android:label="@string/loginHeader" />
+		<activity android:name=".activities.NfcScanOnDemandActivity" android:label="@string/loginHeader" />
 		<activity android:name=".activities.ListExcursionsActivity" android:label="@string/listExcursionsHeader" android:screenOrientation="portrait"/>
 		<activity android:name=".activities.ListMessagesActivity" android:label="@string/listMessagesHeader" android:screenOrientation="portrait" />
 		<activity android:name=".activities.MapViewActivity" android:label="@string/mapViewHeader" />
@@ -44,10 +47,13 @@
 		<activity android:name=".genItemActivities.DisplayMessageActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
 		<activity android:name=".genItemActivities.AudioObjectActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
 		<activity android:name=".genItemActivities.VideoObjectActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
+		<activity android:name=".genItemActivities.YoutubeObjectActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
 		<activity android:name=".genItemActivities.NarratorItemActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait" />
 		<activity android:name=".genItemActivities.NarratorItemSandboxActivity" android:label="@string/messageHeader" android:screenOrientation="portrait" />
 		
 		<service android:name=".service.BackgroundService" />
+		<service android:name=".broadcast.MediaService" />
+		<service android:name=".broadcast.ResponseService" />
 		<service android:name=".service.LocationService" />
 		<service android:name=".service.NotificationService" />
 		<service android:name=".service.AudioPlayerService" />
@@ -69,7 +75,12 @@
                 <action android:name="org.celstec.arlearn2.beans.notification.RunModification" />
             </intent-filter>
         </receiver>
-       <receiver android:name=".broadcast.ActionReceiver" >
+        <receiver android:name=".broadcast.PingReceiver" >
+            <intent-filter>
+                <action android:name="org.celstec.arlearn2.beans.notification.Ping" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".broadcast.ActionReceiver" >
              <intent-filter>
  				<action android:name="org.celstec.arlearn2.beans.notification.Action" />
             </intent-filter> 
@@ -89,4 +100,6 @@
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.NFC" />
+
 </manifest>

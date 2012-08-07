@@ -1,117 +1,127 @@
 package org.celstec.arlearn2.android.activities;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.asynctasks.CheckGameConfig;
-import org.celstec.arlearn2.android.asynctasks.PublishActionTask;
+import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.db.RunAdapter;
 
-import org.celstec.arlearn2.android.db.notificationbeans.NotificationBean;
+import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
+import org.celstec.arlearn2.android.list.ListitemClickInterface;
+import org.celstec.arlearn2.android.list.GenericListRecord;
+import org.celstec.arlearn2.android.list.RunListRecord;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.android.menu.MenuHandler;
-import org.celstec.arlearn2.android.service.BackgroundService;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 import org.celstec.arlearn2.android.service.LocationService;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.run.Run;
+import org.celstec.arlearn2.client.RunClient;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.MatrixCursor;
 import android.os.Bundle;
-
 
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
-
-public class ListExcursionsActivity  extends GeneralListActivity {
+public class ListExcursionsActivity extends GeneralActivity implements ListitemClickInterface {
 	private Run[] runs = null;
-	private ListAdapter adapter;
-	
-	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-		public void onReceive(Context context, Intent intent) {
-//			Object bean = (Object) intent.getExtras().getSerializable("bean");
-//			System.out.println("in execursions "+bean);
-//			if (bean.getClass().equals(org.celstec.arlearn2.android.db.notificationbeans.Run.class)) {
-			Boolean forMe = intent.getExtras().getBoolean(ListExcursionsActivity.class.getCanonicalName(), false);
-			if (forMe) {
-				checkAuthentication();
-				runs = getExcursionsFromDatabase();
-				renderExcursionList();
-			}
-		}
-	};
-	
+	private HashMap<Long, Game> games;
+	private GenericMessageListAdapter adapter;
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ChannelAPINotificationService.startService(this);
+
 		if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			this.finish();
 		} else {
 			setContentView(R.layout.listexcursionscreen);
-			
+
 		}
 	}
-	
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.e("GAME", "resume received");
+
+		initFromDb();
+		renderExcursionList();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
+
+	public void onBroadcastMessage(Bundle bundle) {
+		super.onBroadcastMessage(bundle);
+		checkAuthentication();
+		Log.e("GAME", "broadcast received");
+
+		initFromDb();
+		renderExcursionList();
+
+	}
+
 	private void checkAuthentication() {
 		if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			this.finish();
 		}
 	}
+
 	
-	public boolean onCreateOptionsMenu(Menu menu) {
-		checkAuthentication();
-		menu.add(0, EXIT, 0, getString(R.string.exit));
-//		menu.add(0, MenuHandler.RESET, 0, getString(R.string.reset));
-		menu.add(0, MenuHandler.REFRESH, 0, getString(R.string.refresh));
-		return true;
-	}
+
 	
-	
+
 	private void renderExcursionList() {
-		final String[] matrix = { "_id", "title" };
-		final String[] columns = { "title" };
-		MatrixCursor mCursor = new MatrixCursor(matrix);
+		ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
+
 		if (runs != null) {
+
 			for (int i = 0; i < runs.length; i++) {
-//				mCursor.addRow(new String[] { ""+runs[i].getRunId(), runs[i].getTitle() });
-				mCursor.addRow(new String[] { ""+i, runs[i].getTitle() });
+				RunListRecord r = new RunListRecord(runs[i], games.get(runs[i].getGameId()));
+
+				runsList.add(r);
 			}
 		}
-		startManagingCursor(mCursor);
-		final int[] layouts = {R.id.excursionItem1 };
+		ListView listView = (ListView) findViewById(R.id.listRuns);
 
-		adapter = new SimpleCursorAdapter(this, R.layout.excursion_line, mCursor,
-				columns, layouts);
-		setListAdapter(adapter);
+		adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, runsList);
+		adapter.setOnListItemClickCallback(this);
+		listView.setAdapter(adapter);
 	}
-	
-	protected void onListItemClick(ListView l, View v, int position, long id) {
+
+	public void onListItemClick(View v, int position, GenericListRecord messageListRecord) {
+		long id = position;
 		PropertiesAdapter pa = new PropertiesAdapter(this);
-		pa.setCurrentRunId(runs[(int)id].getRunId());
-//		Intent intent = new Intent(this, BackgroundService.class);
-//		startService(intent);
-		
-		if (pa.getRunStart(id) == 0) pa.setRunStart(id, System.currentTimeMillis());
+		pa.setCurrentRunId(runs[(int) id].getRunId());
+
+		if (pa.getRunStart(id) == 0)
+			pa.setRunStart(id, System.currentTimeMillis());
 		if (pa.getCurrentRunId() != -1) {
-			Intent i = null; 
+			Intent i = null;
 			DBAdapter db = new DBAdapter(this);
 			db.openForRead();
-			Game g = (Game) db.getGameAdapter().queryById(runs[(int)id].getGameId());
-//			result = (Run[]) ((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).query();
+			// Game g = (Game)
+			// db.getGameAdapter().queryById(runs[(int)id].getGameId());
+			Game g = games.get(runs[(int) id].getGameId());
+			// result = (Run[])
+			// ((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).query();
 			db.close();
 			boolean mapView = true;
-			if (g != null && g.getConfig()!=null ) {
+			if (g != null && g.getConfig() != null) {
 				mapView = g.getConfig().getMapAvailable();
-				if (g.getConfig().getLocationUpdates()!= null && !g.getConfig().getLocationUpdates().isEmpty()) {
+				if (g.getConfig().getLocationUpdates() != null && !g.getConfig().getLocationUpdates().isEmpty()) {
 					Intent intent = new Intent(this, LocationService.class);
 					intent.putExtra("bean", g.getConfig());
 					startService(intent);
@@ -122,55 +132,69 @@ public class ListExcursionsActivity  extends GeneralListActivity {
 			} else {
 				i = new Intent(this, ListMessagesActivity.class);
 			}
-			
-//			i.putExtra("runId", id);
+
+			// i.putExtra("runId", id);
 			startActivity(i);
 			ActionDispatcher.startRun(ListExcursionsActivity.this);
-			
-			Intent gimIntent = new Intent();
-			gimIntent.setAction("org.celstec.arlearn2.beans.notification.GeneralItemModification");
-			sendBroadcast(gimIntent);
-			
-//			CheckGameConfig task = new CheckGameConfig(this); //TODO remove this
-//			task.execute(new Object[] {});
+
+			// Intent gimIntent = new Intent();
+			// gimIntent.setAction(GeneralItemReceiver.action);
+			// sendBroadcast(gimIntent);
+
+			// CheckGameConfig task = new CheckGameConfig(this); //TODO remove
+			// this
+			// task.execute(new Object[] {});
 		}
-	
+
 	}
 
-	protected void onResume() {
-		super.onResume();
-		runs = getExcursionsFromDatabase();
-		renderExcursionList();
-//		registerReceiver(broadcastReceiver, new IntentFilter(NotificationService.BROADCAST_ACTION));
-//		registerReceiver(broadcastReceiver, new IntentFilter(Run.class.getName()));
-		registerReceiver(broadcastReceiver, new IntentFilter("org.celstec.arlearn.updateActivities"));
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		unregisterReceiver(broadcastReceiver);
-	}
-	
-	public Run[] getExcursionsFromDatabase() {
-		Run[] result;
+	public void initFromDb() {
 		DBAdapter db = new DBAdapter(this);
 		db.openForWrite();
-		result = (Run[]) ((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).query();
+		runs = (Run[]) ((RunAdapter) db.table(DBAdapter.RUN_ADAPTER)).query();
+		games = new HashMap<Long, Game>();
+		Log.e("GAME", "read game from db");
+		for (int i = 0; i < runs.length; i++) {
+			Game g = (Game) db.getGameAdapter().queryById(runs[i].getGameId());
+			if (g!= null) games.put(g.getGameId(), g);
+		}
+
 		db.close();
-		return result;
 	}
 
-
-	
 	public boolean isGenItemActivity() {
 		return false;
 	}
-	
-	@Override
-	public boolean isMessage() {
-		return false;
+
+	public boolean showStatusLed() {
+		return true;
 	}
-	
-	
+
+	protected void newNfcAction(final String action) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(ListExcursionsActivity.this);
+		builder.setMessage("Do you want to register to this run-i18n").setCancelable(false);
+		
+		builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		});
+		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				new Thread(new Runnable() {
+					public void run() {
+						try {
+							RunClient.getRunClient().selfRegister(getPropertiesAdapter().getFusionAuthToken(), action);
+						} catch (Exception ex) {
+							Log.e("exception", ex.getMessage(), ex);
+						}
+					}
+				}).start();
+				dialog.cancel();
+			}
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
+
+	}
 }

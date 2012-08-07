@@ -7,8 +7,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.Run;
+import org.codehaus.jettison.json.JSONException;
 
 //import org.celstec.arlearn2.android.db.beans.GeneralItem;
 //import org.celstec.arlearn2.android.db.beans.Run;
@@ -27,6 +29,9 @@ public class RunAdapter extends GenericDbTable {
 	public static final String SERVER_CREATE_TIME = "serverCreateTime";
 	public static final String GAMEID = "gameId";
 	public static final String ROLES = "roles";
+	public static final String DELETED = "deleted";
+	public static final String BEAN = "runBean";
+
 
 	public RunAdapter(DBAdapter db) {
 		super(db);
@@ -39,60 +44,15 @@ public class RunAdapter extends GenericDbTable {
 				+ SERVER_CREATE_TIME + " long not null, "
 				+ START_TIME + " long not null, "
 				+ GAMEID + " long, "
-				+ ROLES + " text);";
+				+ ROLES + " text, "
+				+ DELETED + " boolean, "
+				+ BEAN + " text);";
 	}
 	
 	protected String getTableName() {
 		return RUN_TABLE;
 	}
 	
-	@Deprecated
-	public boolean insert (List<Run> runs) {
-		if (runs.isEmpty()){
-			return true;
-		}
-		boolean returnValue = false;
-		Run[] oldRunsArray = query();
-		HashSet<Long> oldRunIds = new HashSet<Long>();
-//		HashSet<Long> updatedRunIds = new HashSet<Long>();
-		HashMap<Long, Run> newRuns = new HashMap<Long, Run>();
-		HashMap<Long, Run> oldRuns = new HashMap<Long, Run>();
-		
-		for (Run newRun : runs) {
-			newRuns.put(newRun.getRunId(), newRun);
-		}
-		for (Run oldRun : oldRunsArray) {
-			oldRunIds.add(oldRun.getRunId());
-			oldRuns.put(oldRun.getRunId(), oldRun);
-		}
-		for (Iterator iterator = newRuns.keySet().iterator(); iterator.hasNext();) {
-			Long id = (Long) iterator.next();
-			Run newRun = newRuns.get(id);
-			if (oldRunIds.contains(id)) {
-				if (newRun.getServerCreationTime().equals(oldRuns.get(id).getServerCreationTime())){
-					oldRunIds.remove(id);
-//					delete(id);
-					returnValue = true;
-//					insert(newRun);
-				} 
-				
-//				returnValue = updateRun(newRuns.get(id)) || returnValue;
-//				
-			} else {
-				insert(newRun);
-				returnValue = true;
-			}
-		}
-		deleteOldRuns(oldRunIds);
-		return returnValue;
-	}
-	
-	
-
-//	private boolean updateRun(Run r) {
-//		
-//		return false;
-//	}
 	
 	public boolean insert(Object o, List<String> roles) {
 		Run r = (Run) o;
@@ -111,7 +71,14 @@ public class RunAdapter extends GenericDbTable {
         initialValues.put(TITLE, r.getTitle());
         initialValues.put(START_TIME, r.getStartTime());
         initialValues.put(SERVER_CREATE_TIME, r.getServerCreationTime());
-        initialValues.put(ROLES, roles.toString());
+        if (roles != null) initialValues.put(ROLES, roles.toString());
+        initialValues.put(BEAN, r.toString());
+        
+        if (r.getDeleted() == null) {
+			initialValues.put(DELETED, false);
+		} else {
+			initialValues.put(DELETED, r.getDeleted());
+		}
     	return db.getSQLiteDb().insert(getTableName(), null, initialValues) != -1;	
 	}
 	
@@ -131,6 +98,13 @@ public class RunAdapter extends GenericDbTable {
         initialValues.put(TITLE, r.getTitle());
         initialValues.put(START_TIME, r.getStartTime());
         initialValues.put(SERVER_CREATE_TIME, r.getServerCreationTime());
+        initialValues.put(BEAN, r.toString());
+
+        if (r.getDeleted() == null) {
+			initialValues.put(DELETED, false);
+		} else {
+			initialValues.put(DELETED, r.getDeleted());
+		}
     	return db.getSQLiteDb().insert(getTableName(), null, initialValues) != -1;	
 		
 	}
@@ -140,8 +114,14 @@ public class RunAdapter extends GenericDbTable {
         initialValues.put(TITLE, r.getTitle());
         initialValues.put(START_TIME, r.getStartTime());
         initialValues.put(GAMEID, r.getGameId());
-        if (roles != null)  initialValues.put(ROLES, roles.toString());
+        initialValues.put(BEAN, r.toString());
 
+        if (roles != null)  initialValues.put(ROLES, roles.toString());
+        if (r.getDeleted() == null) {
+			initialValues.put(DELETED, false);
+		} else {
+			initialValues.put(DELETED, r.getDeleted());
+		}
         
 		return db.getSQLiteDb().update(getTableName(), initialValues, ID+" = "+r.getRunId(), null) != -1;
 	}
@@ -161,8 +141,10 @@ public class RunAdapter extends GenericDbTable {
 	public int delete(Long id) {
 		((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).deleteRun(id);
 		((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).deleteRun(id);
-		//todo switch following line on
 		((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).deleteRun(id);
+		((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).deleteRun(id);
+
+		//TODO extend
 		return db.getSQLiteDb().delete(getTableName(), ID+" = "+id, null);
 	}
 	
@@ -186,6 +168,16 @@ public class RunAdapter extends GenericDbTable {
 		
 		while (mCursor.moveToNext()) {
 			Run r = new Run();
+			try {
+				String json = mCursor.getString(7);
+				if (json != null) {
+					r = (Run) JsonBeanDeserializer.deserialize(mCursor.getString(7));
+				} else {
+					System.out.println("json null");
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			r.setRunId(mCursor.getLong(0));
 			r.setTitle(mCursor.getString(1));
 			r.setStartTime(mCursor.getLong(2));
@@ -198,7 +190,7 @@ public class RunAdapter extends GenericDbTable {
 	}
 	
 	public Run[] query() {
-		return query(null, null);
+		return query(DELETED + " = ?", new String[] { "0"});
 	}
 	
 	public String queryRoles(long id) {

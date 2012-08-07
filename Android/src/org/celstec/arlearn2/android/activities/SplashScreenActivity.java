@@ -2,9 +2,11 @@ package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.asynctasks.RestInvocation;
+import org.celstec.arlearn2.android.broadcast.RunReceiver;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.BackgroundService;
+import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.client.RunClient;
 
@@ -21,19 +23,22 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class SplashScreenActivity extends GeneralActivity {
-	
+
 	private boolean clicked = false;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splashscreen);
+		getPropertiesAdapter().setStatus(ChannelAPINotificationService.OFFLINE_STATUS);
 		String uri = getIntent().toURI();
-		if (uri.contains("#")) uri = uri.substring(0, uri.indexOf("#"));
+		if (uri.contains("#"))
+			uri = uri.substring(0, uri.indexOf("#"));
 		if (uri.startsWith("http://arlearn")) {
 			Intent actionIntent = new Intent();
 			actionIntent.setAction("org.celstec.arlearn2.beans.notification.Action");
-			actionIntent.putExtra("action", uri.substring(uri.lastIndexOf("/")+1));
+			actionIntent.putExtra("action", uri.substring(uri.lastIndexOf("/") + 1));
 			sendBroadcast(actionIntent);
-//			this.finish();
+			// this.finish();
 		}
 		ImageView view = (ImageView) findViewById(R.id.logo);
 		view.setOnClickListener(new OnClickListener() {
@@ -41,7 +46,7 @@ public class SplashScreenActivity extends GeneralActivity {
 				userClickedLogo();
 			}
 		});
-		SplashCounter task = new SplashCounter(); 
+		SplashCounter task = new SplashCounter();
 		task.execute(new Object[] {});
 	}
 
@@ -62,28 +67,27 @@ public class SplashScreenActivity extends GeneralActivity {
 	}
 
 	private void userClickedLogo() {
-		if (! clicked) {
-		clicked = true;
-		if (menuHandler.getPropertiesAdapter().isAuthenticated()) {
-			Intent runSyncIntent = new Intent();
-			runSyncIntent.setAction("org.celstec.arlearn2.beans.notification.RunModification");
-			sendBroadcast(runSyncIntent);
-			
-			startActivity(new Intent(SplashScreenActivity.this, ListExcursionsActivity.class));
-			Intent intent = new Intent(this, BackgroundService.class);
-			startService(intent);
-		} else {
-			startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
+		if (!clicked) {
+			clicked = true;
+			if (menuHandler.getPropertiesAdapter().isAuthenticated()) {
+//				Intent runSyncIntent = new Intent();
+//				runSyncIntent.setAction(RunReceiver.action);
+//				sendBroadcast(runSyncIntent);
 
-		}
+				startActivity(new Intent(SplashScreenActivity.this, ListExcursionsActivity.class));
+				Intent intent = new Intent(this, BackgroundService.class);
+				startService(intent);
+			} else {
+				startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
+
+			}
 		}
 	}
-	
-	
+
 	public boolean isGenItemActivity() {
 		return false;
 	}
-	
+
 	class SplashCounter extends AsyncTask<Object, String, Void> {
 
 		protected Void doInBackground(Object... params) {
@@ -101,6 +105,12 @@ public class SplashScreenActivity extends GeneralActivity {
 		protected void onProgressUpdate(String... values) {
 			userClickedLogo();
 		}
+
+	}
+
+	@Override
+	protected void newNfcAction(String action) {
+		// do nothing when tag is scanned in splashscreen
 
 	}
 

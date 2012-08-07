@@ -7,6 +7,7 @@ import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.genItemActivities.AudioObjectActivity;
 
+import android.net.Uri;
 import android.os.RemoteException;
 import android.widget.Toast;
 
@@ -34,14 +35,16 @@ public class AudioPlayerBinder extends IAudioPlayerService.Stub {
 		service.setAudioIdentifier(audioIdentifier);
 		DBAdapter db = new DBAdapter(service);
 		db.openForRead();
-		File audioFile = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getLocalFileFromIdIgnoreReplication(audioIdentifier);
-		if (audioFile == null) {
-			Toast toast = Toast.makeText(service, service.getString(R.string.downloadBusy), Toast.LENGTH_LONG);
-			toast.show();
-			db.close();
-			return;
-		}
-		service.initiateMediaPlayer(audioFile.getAbsolutePath());
+		Uri audioUri = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getUriFromIdIgnoreReplication(audioIdentifier);
+//		File audioFile = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getLocalFileFromIdIgnoreReplication(audioIdentifier);
+//		if (audioFile == null) {
+//			Toast toast = Toast.makeText(service, service.getString(R.string.downloadBusy), Toast.LENGTH_LONG);
+//			toast.show();
+//			db.close();
+//			return;
+//		}
+//		service.initiateMediaPlayer(audioFile.getAbsolutePath());
+		service.initiateMediaPlayer(audioUri);
 		db.close();
 		setVolume(1);
 		service.startPlaying();

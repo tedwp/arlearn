@@ -4,18 +4,22 @@ import java.io.File;
 
 import org.celstec.arlearn2.client.GenericClient;
 
+import android.net.Uri;
+
 public class MediaCacheItem {
 	
 	private String itemId;
 	private long runId;
 	private String account;
 	private String localFile;
+	private Uri uri;
+	
 	private String localThumbnail;
 	private String remoteFile;
 	private String mimetype;
 	private String token;
 	private boolean incomming;
-	private boolean replicated;
+	private int replicated;
 	
 	
 	public String getItemId() {
@@ -44,6 +48,12 @@ public class MediaCacheItem {
 		this.localFile = localFile;
 	}
 	
+	public Uri getUri() {
+		return uri;
+	}
+	public void setUri(Uri uri) {
+		this.uri = uri;
+	}
 	public String getLocalThumbnail() {
 		return localThumbnail;
 	}
@@ -62,10 +72,10 @@ public class MediaCacheItem {
 	public void setIncomming(boolean incomming) {
 		this.incomming = incomming;
 	}
-	public boolean isReplicated() {
+	public int getReplicated() {
 		return replicated;
 	}
-	public void setReplicated(boolean replicated) {
+	public void setReplicated(int replicated) {
 		this.replicated = replicated;
 	}
 	public String getMimetype() {
@@ -82,9 +92,24 @@ public class MediaCacheItem {
 		this.token = token;
 	}
 	
-	public String buildRemotePath() {
-		File localFile = new File(getLocalFile());
-		return  GenericClient.urlPrefix + "/uploadService/"+getRunId()+"/"+getAccount()+"/"+localFile.getName();
+	public static String getVideoId(long runId, long time){
+		return runId + ":vid:" + time;
+	}
+	
+	public static String getImageId(long runId, long time){
+		return runId + ":img:" + time;
+	}
+	
+	public static String getAudioId(long runId, long time){
+		return runId + ":audio:" + time;
+	}
+	
+	public String buildRemotePath(Uri uri) {
+		if (uri == null) {
+			File localFile = new File(getLocalFile());
+			return  GenericClient.urlPrefix + "/uploadService/"+getRunId()+"/"+getAccount()+"/"+localFile.getName();
+		}
+		return  GenericClient.urlPrefix + "/uploadService/"+getRunId()+"/"+getAccount()+"/"+uri.getLastPathSegment();
 	}
 	
 }
