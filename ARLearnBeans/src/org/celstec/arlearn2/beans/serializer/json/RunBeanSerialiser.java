@@ -12,6 +12,7 @@ public class RunBeanSerialiser extends BeanSerializer {
 		JSONObject returnObject = super.toJSON(bean);
 		try {
 			if (runBean.getRunId() != null) returnObject.put("runId", runBean.getRunId());
+			if (runBean.getDeleted() != null) returnObject.put("deleted", runBean.getDeleted());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

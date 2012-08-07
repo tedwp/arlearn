@@ -13,6 +13,7 @@ public class OpenQuestionSerializer extends BeanSerializer{
 		try {
 			returnObject.put("withAudio", openQuestion.isWithAudio());
 			returnObject.put("withPicture", openQuestion.isWithPicture());
+			returnObject.put("withVideo", openQuestion.isWithVideo());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

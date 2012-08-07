@@ -15,6 +15,7 @@ import org.celstec.arlearn2.beans.AuthResponseSerializer;
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.GamePackage;
 import org.celstec.arlearn2.beans.GamePackageSerializer;
+import org.celstec.arlearn2.beans.RunPackage;
 import org.celstec.arlearn2.beans.Version;
 import org.celstec.arlearn2.beans.VersionSerializer;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
@@ -42,9 +43,13 @@ import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.celstec.arlearn2.beans.generalItem.OpenUrl;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
+import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
 import org.celstec.arlearn2.beans.notification.GeneralItemModification;
+import org.celstec.arlearn2.beans.notification.Ping;
+import org.celstec.arlearn2.beans.notification.Pong;
 import org.celstec.arlearn2.beans.notification.RunModification;
 import org.celstec.arlearn2.beans.notification.authoring.GameCreationStatus;
+import org.celstec.arlearn2.beans.notification.authoring.RunCreationStatus;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.ActionList;
 import org.celstec.arlearn2.beans.run.ActionListSerializer;
@@ -114,6 +119,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(Game.class.getCanonicalName(), new GameSerializer());
 		customSerializerMap.put(GamesList.class.getCanonicalName(), new GamesListSerializer());
 		customSerializerMap.put(GameCreationStatus.class.getCanonicalName(), new GameCreationStatusSerializer());
+		customSerializerMap.put(RunCreationStatus.class.getCanonicalName(), new RunCreationStatus.GameCreationStatusSerializer());
 		customSerializerMap.put(Config.class.getCanonicalName(), new ConfigSerializer());
 		customSerializerMap.put(LocationUpdateConfig.class.getCanonicalName(), new LocationUpdateConfigSerializer());
 		customSerializerMap.put(Run.class.getCanonicalName(), new RunSerializer());
@@ -129,6 +135,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(MultipleChoiceTest.class.getCanonicalName(), new MultipleChoiceTestSerializer());
 		customSerializerMap.put(MultipleChoiceAnswerItem.class.getCanonicalName(), new MultipleChoiceAnswerItemSerializer());
 		customSerializerMap.put(OpenUrl.class.getCanonicalName(), OpenUrl.serializer);
+		customSerializerMap.put(YoutubeObject.class.getCanonicalName(), YoutubeObject.serializer);
 		customSerializerMap.put(User.class.getCanonicalName(), new UserSerializer());
 		customSerializerMap.put(UserList.class.getCanonicalName(), new UserListSerializer());
 		customSerializerMap.put(Team.class.getCanonicalName(), new TeamSerializer());
@@ -138,6 +145,9 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(AuthResponse.class.getCanonicalName(), new AuthResponseSerializer());
 		customSerializerMap.put(Version.class.getCanonicalName(), new VersionSerializer());
 		customSerializerMap.put(LocationUpdate.class.getCanonicalName(), new LocationUpdateSerializer());
+		customSerializerMap.put(RunPackage.class.getCanonicalName(), new RunPackage.RunPackageSerializer());
+		customSerializerMap.put(Ping.class.getCanonicalName(), new Ping.Serializer());
+		customSerializerMap.put(Pong.class.getCanonicalName(), new Pong.Serializer());
 	}
 	
 	public static JSONObject serialiseToJson(Object bean) {

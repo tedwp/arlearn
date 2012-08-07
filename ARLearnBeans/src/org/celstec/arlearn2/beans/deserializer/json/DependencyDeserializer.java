@@ -38,6 +38,7 @@ public class DependencyDeserializer extends BeanDeserializer {
 		if (AND_DEP.equals(type)) dep = toAndAction(object, type);
 		if (OR_DEP.equals(type)) dep = toOrAction(object, type);
 		if (TIME_DEP.equals(type)) dep = toTimeAction(object, type);
+		
 		super.initBean(object, dep);
 		}
 		return dep;
@@ -78,6 +79,8 @@ public class DependencyDeserializer extends BeanDeserializer {
 		if (object.has("action")) dep.setAction(object.getString("action"));
 		if (object.has("generalItemId")) dep.setGeneralItemId(object.getLong("generalItemId"));
 		if (object.has("generalItemType")) dep.setGeneralItemType(object.getString("generalItemType"));
+		if (object.has("scope")) dep.setScope(object.getInt("scope"));
+		if (object.has("role")) dep.setRole(object.getString("role"));
 		return dep;
 	}
 

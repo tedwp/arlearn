@@ -11,6 +11,8 @@ public class ActionDependency extends Dependency {
 	private String action;
 	private Long generalItemId;
 	private String generalItemType;
+	private Integer scope;
+	private String role;
 	
 	public ActionDependency() {
 		setType(ActionDependency.class.getName());
@@ -35,6 +37,22 @@ public class ActionDependency extends Dependency {
 		this.generalItemType = generalItemType;
 	}
 	
+	public Integer getScope() {
+		return scope;
+	}
+
+	public void setScope(Integer scope) {
+		this.scope = scope;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
 	@Override
 	public long satisfiedAt(List<Action> actionList) {
 		long minSatisfiedAt = Long.MAX_VALUE;
@@ -50,19 +68,15 @@ public class ActionDependency extends Dependency {
 		return minSatisfiedAt;
 	}
 	
-//	//TODO merge with method in superClass
-//	public boolean nullSafeEquals(Object act1, Object act2) {
-//		if (act2 == null || act1 == act2) return true;
-//		if (act1 == null) return false;
-//		return act1.equals(act2);
-//	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		ActionDependency other = (ActionDependency ) obj;
 		return super.equals(obj) && 
 			nullSafeEquals(getAction(), other.getAction()) &&
 			nullSafeEquals(getGeneralItemId(), other.getGeneralItemId()) &&
+			nullSafeEquals(getScope(), other.getScope()) &&
+			nullSafeEquals(getRole(), other.getRole()) &&
 			nullSafeEquals(getGeneralItemType(), other.getGeneralItemType()) ; 
 
 	}

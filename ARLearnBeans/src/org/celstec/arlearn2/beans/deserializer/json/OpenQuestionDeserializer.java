@@ -27,6 +27,8 @@ public class OpenQuestionDeserializer extends BeanDeserializer{
 			oq.setWithAudio(object.getBoolean("withAudio"));
 		if (object.has("withPicture"))
 			oq.setWithPicture(object.getBoolean("withPicture"));
+		if (object.has("withVideo"))
+			oq.setWithVideo(object.getBoolean("withVideo"));
 
 		
 	}

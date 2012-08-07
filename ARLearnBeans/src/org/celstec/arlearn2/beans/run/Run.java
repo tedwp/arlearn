@@ -12,6 +12,7 @@ public class Run extends RunBean implements Serializable{
 	private String owner;
 	private Long startTime;
 	private Long serverCreationTime;
+	private Long lastModificationDate;
 	private Game game;
 	private RunConfig runConfig;
 	
@@ -24,6 +25,7 @@ public class Run extends RunBean implements Serializable{
 			nullSafeEquals(getOwner(), other.getOwner()) && 
 			nullSafeEquals(getStartTime(), other.getStartTime()) && 
 			nullSafeEquals(getServerCreationTime(), other.getServerCreationTime()) && 
+			nullSafeEquals(getLastModificationDate(), other.getLastModificationDate()) && 
 			nullSafeEquals(getRunConfig(), other.getRunConfig()) && 
 			nullSafeEquals(getGame(), other.getGame()); 
 
@@ -73,6 +75,14 @@ public class Run extends RunBean implements Serializable{
 		this.serverCreationTime = serverCreationTime;
 	}
 	
+	public Long getLastModificationDate() {
+		return lastModificationDate;
+	}
+
+	public void setLastModificationDate(Long lastModificationDate) {
+		this.lastModificationDate = lastModificationDate;
+	}
+
 	public Game getGame() {
 		return game;
 	}
@@ -81,6 +91,7 @@ public class Run extends RunBean implements Serializable{
 		this.game = game;
 	}
 
+	
 	
 //	@Deprecated
 //	public DependsOn getGameOverDependsOn() {

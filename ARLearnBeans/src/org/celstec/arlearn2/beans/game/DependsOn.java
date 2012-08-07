@@ -2,6 +2,7 @@ package org.celstec.arlearn2.beans.game;
 
 import java.io.Serializable;
 
+@Deprecated
 public class DependsOn implements Serializable {
 	
 	public static final int TEAM_SCOPE = 0;

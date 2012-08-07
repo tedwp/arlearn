@@ -28,6 +28,7 @@ public class RunDeserializer extends RunBeanDeserializer{
 			super.initBean(object, genericBean);
 			RunConfig bean = (RunConfig) genericBean;
 			if (object.has("selfRegistration")) bean.setSelfRegistration(object.getBoolean("selfRegistration"));	
+			if (object.has("nfcTag")) bean.setNfcTag(object.getString("nfcTag"));	
 		}
 		
 	};
@@ -51,6 +52,7 @@ public class RunDeserializer extends RunBeanDeserializer{
 		if (object.has("owner")) bean.setOwner(object.getString("owner"));
 		if (object.has("startTime")) bean.setStartTime(object.getLong("startTime"));
 		if (object.has("serverCreationTime")) bean.setServerCreationTime(object.getLong("serverCreationTime"));
+		if (object.has("lastModificationDate")) bean.setLastModificationDate(object.getLong("lastModificationDate"));
 		if (object.has("game")) bean.setGame((Game) JsonBeanDeserializer.deserialize(Game.class, object.getJSONObject("game")));
 		if (object.has("runConfig")) bean.setRunConfig((RunConfig) JsonBeanDeserializer.deserialize(RunConfig.class, object.getJSONObject("runConfig"), rcd));
 		

@@ -6,6 +6,7 @@ public class MultipleChoiceAnswerItem extends Bean {
 
 	private Boolean isCorrect;
 	private String answer;
+	private String nfcTag;
 	private String id;
 
 	public MultipleChoiceAnswerItem() {
@@ -35,11 +36,20 @@ public class MultipleChoiceAnswerItem extends Bean {
 		this.answer = answer;
 	}
 	
+	public String getNfcTag() {
+		return nfcTag;
+	}
+
+	public void setNfcTag(String nfcTag) {
+		this.nfcTag = nfcTag;
+	}
+
 	public boolean equals(Object obj) {
 		MultipleChoiceAnswerItem other = (MultipleChoiceAnswerItem ) obj;
 		return super.equals(obj) && 
 			nullSafeEquals(getId(), other.getId()) && 
 			nullSafeEquals(getIsCorrect(), other.getIsCorrect()) && 
+			nullSafeEquals(getNfcTag(), other.getNfcTag()) && 
 			nullSafeEquals(getAnswer(), other.getAnswer()) ; 
 	}
 

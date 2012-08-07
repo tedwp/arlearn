@@ -36,6 +36,7 @@ public class GeneralItemDeserializer extends GameBeanDeserializer {
 		if (object.has("showAtTimeStamp")) gi.setShowAtTimeStamp(object.getLong("showAtTimeStamp"));
 		if (object.has("lng")) gi.setLng(object.getDouble("lng"));
 		if (object.has("lat")) gi.setLat(object.getDouble("lat"));
+		if (object.has("autoLaunch")) gi.setAutoLaunch(object.getBoolean("autoLaunch"));
 		if (object.has("dependsOn")) gi.setDependsOn((Dependency) JsonBeanDeserializer.deserialize(Dependency.class, object.getJSONObject("dependsOn")));
 		if (object.has("roles")) gi.setRoles(ListDeserializer.toStringList(object.getJSONArray("roles")));
 

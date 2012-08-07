@@ -19,6 +19,8 @@ public class GeneralItem extends GameBean{
 	private String description;
 
 	private Dependency dependsOn;
+	
+	public Boolean autoLaunch;
 
 	private Integer radius;
 	
@@ -109,7 +111,13 @@ public class GeneralItem extends GameBean{
 		this.dependsOn = dependsOn;
 	}
 
-	
+	public Boolean getAutoLaunch() {
+		return autoLaunch;
+	}
+
+	public void setAutoLaunch(Boolean autoLaunch) {
+		this.autoLaunch = autoLaunch;
+	}
 
 	public Integer getRadius() {
 		return radius;

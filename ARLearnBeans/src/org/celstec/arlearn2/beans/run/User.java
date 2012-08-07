@@ -78,5 +78,13 @@ public class User extends RunBean{
 		this.roles = roles;
 	}
 	
+	public static String normalizeEmail(String mail) {
+		if (mail == null) return null;
+		int posAt = mail.indexOf("@");
+		if (posAt != -1) {
+			mail = mail.substring(0, posAt);
+		}
+		return mail.replace(".", "").toLowerCase();
+	}
 	
 }

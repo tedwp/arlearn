@@ -1,5 +1,11 @@
 package org.celstec.arlearn2.beans.generalItem;
 
+import org.celstec.arlearn2.beans.Bean;
+import org.celstec.arlearn2.beans.deserializer.json.NarratorItemDeserializer;
+import org.celstec.arlearn2.beans.serializer.json.NarratorItemSerializer;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 public class YoutubeObject extends NarratorItem{
 
 	private String youtubeUrl;
@@ -16,6 +22,41 @@ public class YoutubeObject extends NarratorItem{
 		this.youtubeUrl = youtubeUrl;
 	}
 	
+	public static GeneralItemDeserializer deserializer = new NarratorItemDeserializer() {
+//		public static class YoutubeObjectDeserializer extends NarratorItemDeserializer{
+
+		@Override
+		public YoutubeObject toBean(JSONObject object) {
+			YoutubeObject bean = new YoutubeObject();
+			try {
+				initBean(object, bean);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			return bean;
+		}
+		
+		public void initBean(JSONObject object, Bean genericBean) throws JSONException {
+			super.initBean(object, genericBean);
+			YoutubeObject bean = (YoutubeObject) genericBean;
+			if (object.has("youtubeUrl")) bean.setYoutubeUrl(object.getString("youtubeUrl"));
+		}
+		
+	};
 	
+	public static GeneralItemSerializer serializer = new  NarratorItemSerializer() {
+
+		@Override
+		public JSONObject toJSON(Object bean) {
+			YoutubeObject yo = (YoutubeObject) bean;
+			JSONObject returnObject = super.toJSON(bean);
+			try {
+				if (yo.getYoutubeUrl() != null) returnObject.put("youtubeUrl", yo.getYoutubeUrl());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			return returnObject;
+		}
+	};
 
 }

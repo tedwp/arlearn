@@ -21,6 +21,7 @@ public class RunBeanDeserializer extends BeanDeserializer{
 	public void initBean(JSONObject object, Bean genericBean) throws JSONException {
 		super.initBean(object, genericBean);
 		RunBean bean = (RunBean) genericBean;
+		if (object.has("deleted")) bean.setDeleted(object.getBoolean("deleted"));
 		if (object.has("runId")) bean.setRunId(object.getLong("runId"));	
 	}
 }
