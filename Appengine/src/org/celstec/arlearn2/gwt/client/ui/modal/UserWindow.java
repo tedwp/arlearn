@@ -3,11 +3,11 @@ package org.celstec.arlearn2.gwt.client.ui.modal;
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
 import org.celstec.arlearn2.gwt.client.network.game.GameClient;
-import org.celstec.arlearn2.gwt.client.network.game.GameDataSource;
 import org.celstec.arlearn2.gwt.client.network.team.TeamClient;
 import org.celstec.arlearn2.gwt.client.network.team.TeamsDataSource;
 import org.celstec.arlearn2.gwt.client.network.user.UserClient;
 import org.celstec.arlearn2.gwt.client.ui.RunTab;
+import org.celstec.arlearn2.gwt.client.ui.RunTabUsers;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
@@ -29,11 +29,11 @@ import com.smartgwt.client.widgets.layout.HLayout;
 
 public class UserWindow  extends Window {
 
-	RunTab returnTab;
+	RunTabUsers returnTab;
 	private String[] roles;
 	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
-	public UserWindow(final long runId, final long gameId, RunTab rt) {
+	public UserWindow(final long runId, final long gameId, final RunTabUsers rt) {
 		this.returnTab = rt;
 		this.setTitle(constants.addUser());
 		setWidth(360);
@@ -119,8 +119,8 @@ public class UserWindow  extends Window {
 						new JsonCallback(){
 					
 					public void onReceived(){
-						returnTab.refreshSources();
-						returnTab.filterUsers(null);
+						rt.refreshSources();
+//						returnTab.filterUsers(null);
 						UserWindow.this.destroy();
 					};
 				});

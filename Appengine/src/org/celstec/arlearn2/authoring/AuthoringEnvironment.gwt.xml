@@ -3,6 +3,8 @@
 <module>
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.smartgwt.SmartGwt"/>
+	<inherits name="com.google.gwt.visualization.Visualization"/>
+	
 	<source path="client"/>
 	<entry-point class="org.celstec.arlearn2.authoring.client.AuthoringEnvironment"/>
 </module>

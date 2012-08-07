@@ -9,6 +9,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -61,16 +62,25 @@ public class MyRuns extends Service {
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/config/runId/{runIdentifier}")
 	public String getConfig(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
-		logger.log(Level.SEVERE, "in get config" );
 
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		logger.log(Level.SEVERE, "in get config2" );
 		RunDelegator rd = new RunDelegator(token);
 		Config c = rd.getConfig(runIdentifier);
-		logger.log(Level.SEVERE, "config "+c);
-
 		return serialise(c, accept);
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/selfRegister/tagId/{tagId}")
+	public String selfRegister(@HeaderParam("Authorization") String token, 
+			@PathParam("tagId") String tagId, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		RunDelegator rd = new RunDelegator(token);
+		return serialise(rd.selfRegister(tagId), accept);
 	}
 
 	@GET
@@ -93,9 +103,27 @@ public class MyRuns extends Service {
 		if (inRun instanceof java.lang.String)
 			return serialise(getBeanDoesNotParseException((String) inRun), accept);
 		Run run = (Run) inRun;
-		
+		run.setDeleted(false);
 		RunDelegator rd = new RunDelegator(token);
 		return serialise(rd.createRun(run), accept);
+	}
+	
+	@PUT
+	@Path("/runId/{runIdentifier}")
+	public String updateRun(@HeaderParam("Authorization") String token, String runString,
+			@PathParam("runIdentifier") Long runIdentifier, 
+			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+			@HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		
+		Object inRun = deserialise(runString, Run.class, contentType);
+		if (inRun instanceof java.lang.String)
+			return serialise(getBeanDoesNotParseException((String) inRun), accept);
+		Run run = (Run) inRun;
+		run.setDeleted(false);
+		RunDelegator rd = new RunDelegator(token);
+		return serialise(rd.updateRun(run, runIdentifier), accept);
 	}
 
 	@DELETE

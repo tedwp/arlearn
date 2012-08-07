@@ -1,22 +1,14 @@
 package org.celstec.arlearn2.gwt.client.ui.items;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
-import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
-import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 import org.celstec.arlearn2.gwt.client.ui.modal.RichTextWindow;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.types.Visibility;
-import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.util.StringUtil;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
@@ -37,6 +29,7 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 	private RichTextEditor richTextEditor;
 	private CheckboxItem openQuestionCBItem ;
 	private CheckboxItem openQuestionWithImageCBItem ;
+	private CheckboxItem openQuestionWithVideoCBItem ;
 	private CheckboxItem openQuestionWithAudioCBItem ;
 	private RadioGroupItem richTextToggle;
 	private TextAreaItem plainTextField;
@@ -74,9 +67,9 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 
 		this.addMember(form2);
 //		form2.setFields(radiusItem, latItem, lngItem, dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem);
-		form2.setFields(latItem, lngItem, sortItem, dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem);
+		form2.setFields(latItem, lngItem, sortItem, dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
 //		addField(form2,radiusItem, latItem, lngItem, dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem);
-		addField(form2, latItem, lngItem, sortItem,dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem);
+		addField(form2, latItem, lngItem, sortItem,dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
 	}
 	
 	protected void doLayoutForm1() {
@@ -132,12 +125,36 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 		openQuestionWithImageCBItem.setTitle(constants.answerWithPicture());
 		openQuestionWithImageCBItem.setShowIfCondition(new FormItemIfFunction() {  
             public boolean execute(FormItem item, Object value, DynamicForm form) {  
-            	System.out.println("form value"+form.getValue("isOpenQuestion"));
             	if (form.getValue("isOpenQuestion") == null) return false;
                 return form.getValue("isOpenQuestion").equals(Boolean.TRUE);  
             }
 
         });  
+		openQuestionWithImageCBItem.addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if ((Boolean)form2.getValue("openQuestionWithImage")) form2.setValue("openQuestionWithVideo", false);	
+			}
+		});
+		
+		openQuestionWithVideoCBItem = new CheckboxItem();
+		openQuestionWithVideoCBItem.setName("openQuestionWithVideo");
+		openQuestionWithVideoCBItem.setTitle(constants.answerWithVideo());
+		openQuestionWithVideoCBItem.setShowIfCondition(new FormItemIfFunction() {  
+            public boolean execute(FormItem item, Object value, DynamicForm form) {  
+            	if (form.getValue("isOpenQuestion") == null) return false;
+                return form.getValue("isOpenQuestion").equals(Boolean.TRUE);  
+            }
+
+        });  
+		openQuestionWithVideoCBItem.addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if ((Boolean)form2.getValue("openQuestionWithVideo")) form2.setValue("openQuestionWithImage", false);	
+			}
+		});
 		
 		openQuestionWithAudioCBItem = new CheckboxItem();
 		openQuestionWithAudioCBItem.setName("openQuestionWithAudio");
@@ -203,11 +220,12 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 		JSONObject result = super.generateObject();
 		result.put("type", new JSONString("org.celstec.arlearn2.beans.generalItem.NarratorItem"));
 		result.put("richText", new JSONString(questionHtmlLabel.getContents()));
-
+		result.put("description", new JSONString(StringUtil.unescapeHTML(questionHtmlLabel.getContents())));
 		if (form2.getValue("isOpenQuestion") != null && (Boolean) form2.getValue("isOpenQuestion")) {
 			JSONObject openQuestion = new JSONObject();
 			openQuestion.put("withPicture", JSONBoolean.getInstance( form2.getValue("openQuestionWithImage")==null?false:(Boolean) form2.getValue("openQuestionWithImage")) );
 			openQuestion.put("withAudio", JSONBoolean.getInstance( form2.getValue("openQuestionWithAudio")==null?false:(Boolean) form2.getValue("openQuestionWithAudio")) );
+			openQuestion.put("withVideo", JSONBoolean.getInstance( form2.getValue("openQuestionWithVideo")==null?false:(Boolean) form2.getValue("openQuestionWithVideo")) );
 			result.put("openQuestion", openQuestion);
 		}
 		
@@ -230,6 +248,9 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 			JSONObject openQuestion =o.get("openQuestion").isObject();
 			form2.setValue("openQuestionWithAudio", openQuestion.get("withAudio").isBoolean().booleanValue());
 			form2.setValue("openQuestionWithImage", openQuestion.get("withPicture").isBoolean().booleanValue());
+			boolean hasVideo = false;
+			if (openQuestion.containsKey("withVideo")) hasVideo= openQuestion.get("withVideo").isBoolean().booleanValue();
+			form2.setValue("openQuestionWithVideo", hasVideo);
 		}
 		form1.redraw();
 		form2.redraw();

@@ -14,6 +14,7 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 public class DeleteBlobs extends GenericBean {
 	
 	private Long runId;
+	private String account;
 
 	public DeleteBlobs() {
 		super();
@@ -22,6 +23,12 @@ public class DeleteBlobs extends GenericBean {
 	public DeleteBlobs(String token, Long runId) {
 		super(token);
 		this.runId = runId;
+	}
+	
+	public DeleteBlobs(String token, Long runId, String account) {
+		super(token);
+		this.runId = runId;
+		this.account = account;
 	}
 
 	public Long getRunId() {
@@ -32,12 +39,19 @@ public class DeleteBlobs extends GenericBean {
 		this.runId = runId;
 	}
 	
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
 
 	@Override
 	public void run() {
 		BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		for (Iterator<FilePathJDO> iterator = FilePathManager.getFilePathJDOs(pm, null, getRunId(), null).iterator(); iterator.hasNext();) {
+		for (Iterator<FilePathJDO> iterator = FilePathManager.getFilePathJDOs(pm, getAccount(), getRunId(), null).iterator(); iterator.hasNext();) {
 			FilePathJDO fpjdo = (FilePathJDO) iterator.next();
 			try {
 				blobstoreService.delete(fpjdo.getBlobKey());

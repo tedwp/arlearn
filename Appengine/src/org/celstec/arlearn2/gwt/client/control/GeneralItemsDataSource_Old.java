@@ -22,11 +22,11 @@ import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-public class GeneralItemsDataSource extends DataSource {
+public class GeneralItemsDataSource_Old extends DataSource {
 
-	public static GeneralItemsDataSource instance;
+	public static GeneralItemsDataSource_Old instance;
 
-	private GeneralItemsDataSource() {
+	private GeneralItemsDataSource_Old() {
 		DataSourceTextField pkField = new DataSourceTextField("pk",
 				"Primary key");
 		// pkField.setHidden(true);
@@ -65,9 +65,9 @@ public class GeneralItemsDataSource extends DataSource {
 		setClientOnly(true);
 	}
 
-	public static GeneralItemsDataSource getInstance() {
+	public static GeneralItemsDataSource_Old getInstance() {
 		if (instance == null)
-			instance = new GeneralItemsDataSource();
+			instance = new GeneralItemsDataSource_Old();
 		return instance;
 	}
 
@@ -92,9 +92,11 @@ public class GeneralItemsDataSource extends DataSource {
 							rec.setAttribute("runId", runId);
 							rec.setAttribute("DataSourceTextField", runId);
 							// removeData(rec);
-							// addData(rec);
+							 addData(rec);
 							final boolean last = i == giSize() - 1;
-							if (!getDeleted(i)) fetchData(new Criteria("pk", pk), new DSCallback() {
+							if (!getDeleted(i)) {
+								fetchData(new Criteria("pk", pk), new DSCallback() {
+							
 
 								@Override
 								public void execute(DSResponse response,
@@ -112,6 +114,7 @@ public class GeneralItemsDataSource extends DataSource {
 								}
 
 							});
+							}
 						}
 						if (rc != null)
 							rc.ready();

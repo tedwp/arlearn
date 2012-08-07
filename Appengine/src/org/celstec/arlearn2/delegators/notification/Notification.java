@@ -138,7 +138,7 @@ public class Notification {
 	}
 
 	public void notify(String email, String type, HashMap<String, String> params) {
-		log.severe("hashmap "+params);
+//		log.severe("hashmap "+params);
 
 //		String email = u.getEmail();
 		if (!email.contains("@"))

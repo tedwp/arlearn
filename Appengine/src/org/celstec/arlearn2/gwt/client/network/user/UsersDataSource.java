@@ -1,12 +1,17 @@
 package org.celstec.arlearn2.gwt.client.network.user;
 
+import java.util.HashMap;
+
 import org.celstec.arlearn2.gwt.client.network.DerivedFieldTask;
 import org.celstec.arlearn2.gwt.client.network.GenericClient;
 import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
 
+import com.smartgwt.client.widgets.grid.ListGridRecord;
+
 public class UsersDataSource extends GenericDataSource {
 	
 	public static UsersDataSource instance;
+	public static HashMap<String, String> rolesMapping = new HashMap<String, String>();
 
 	public static UsersDataSource getInstance() {
 		if (instance == null)
@@ -30,6 +35,24 @@ public class UsersDataSource extends GenericDataSource {
 		addField(STRING_DATA_TYPE, "roles", false, true);
 		addField(STRING_DATA_TYPE, "name", false, true);
 		addField(INTEGER_DATA_TYPE, "runId", false, true);
+		addField(BOOLEAN_DATA_TYPE, "deleted", false, true);
+		addDerivedField(new DerivedFieldTask() {
+			
+			@Override
+			public String processValue(String... value) {
+				return "status_icon_red";
+			}
+			
+			@Override
+			public String getTargetFieldName() {
+				return "status";
+			}
+			
+			@Override
+			public String[] getSourceFieldName() {
+				return new String[] {};
+			}
+		}, false, false);
 		addDerivedField(new DerivedFieldTask() {
 			
 			@Override
@@ -52,6 +75,14 @@ public class UsersDataSource extends GenericDataSource {
 				return new String[] {"runId", "teamId", "email"};
 			}
 		}, true, false);
+	}
+	
+	protected void processRecord(ListGridRecord rec) {
+		rolesMapping.put(rec.getAttribute("pk"), rec.getAttribute("roles"));
+	}
+	
+	public String getRole(String runId, String teamId, String email) {
+		return rolesMapping.get(runId+":"+teamId+":"+email);
 	}
 	
 	protected GenericClient getHttpClient() {

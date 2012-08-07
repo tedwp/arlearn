@@ -34,6 +34,11 @@ public class GenericClient {
 	protected void invokeJsonPOST(String urlPostfix, JSONObject object, final JsonCallback jcb) {
 		invokeJsonPOST(urlPostfix, object == null?"":object.toString(), jcb);
 	}
+	
+	protected void invokeJsonPUT(String urlPostfix, JSONObject object, final JsonCallback jcb) {
+		invokeJsonPUT(urlPostfix, object == null?"":object.toString(), jcb);
+	}
+	
 	protected void invokeJsonPOST(String urlPostfix, String object, final JsonCallback jcb) {
 		RequestBuilder builder = getRequestBuilder(urlPostfix,  RequestBuilder.POST);
 		builder.setHeader("Content-Type", "application/json");
@@ -48,9 +53,42 @@ public class GenericClient {
 								try {
 									JSONValue jsonValue = JSONParser
 											.parseLenient(response.getText());
-									jcb.onJsonReceived(jsonValue);
+									if (jcb != null)jcb.onJsonReceived(jsonValue);
 								} catch (JSONException e) {
-									jcb.onError();
+									if (jcb != null)jcb.onError();
+
+								}
+							}
+
+						}
+
+						@Override
+						public void onError(Request request, Throwable exception) {
+
+						}
+					});
+		} catch (RequestException e) {
+			jcb.onError();
+		}
+	}
+	
+	protected void invokeJsonPUT(String urlPostfix, String object, final JsonCallback jcb) {
+		RequestBuilder builder = getRequestBuilder(urlPostfix,  RequestBuilder.PUT);
+		builder.setHeader("Content-Type", "application/json");
+		try {
+			Request request = builder.sendRequest(object,
+					new RequestCallback() {
+
+						@Override
+						public void onResponseReceived(Request request,
+								Response response) {
+							if (200 == response.getStatusCode()) {
+								try {
+									JSONValue jsonValue = JSONParser
+											.parseLenient(response.getText());
+									if (jcb != null) jcb.onJsonReceived(jsonValue);
+								} catch (JSONException e) {
+									if (jcb != null)jcb.onError();
 
 								}
 							}
@@ -128,7 +166,7 @@ public class GenericClient {
 
 				@Override
 				public void onError(Request request, Throwable exception) {
-
+					exception.printStackTrace();
 				}
 			});
 		} catch (RequestException e) {

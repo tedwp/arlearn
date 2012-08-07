@@ -4,6 +4,7 @@ import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
 import org.celstec.arlearn2.gwt.client.network.team.TeamClient;
 import org.celstec.arlearn2.gwt.client.ui.RunTab;
+import org.celstec.arlearn2.gwt.client.ui.RunTabTeams;
 
 import com.google.gwt.core.client.GWT;
 import com.smartgwt.client.types.Alignment;
@@ -18,11 +19,11 @@ import com.smartgwt.client.widgets.layout.HLayout;
 
 public class TeamWindow extends Window {
 
-	RunTab returnTab;
+	RunTabTeams returnTab;
 	long runId;
 	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
-	public TeamWindow(final long runId, RunTab rt) {
+	public TeamWindow(final long runId, RunTabTeams rt) {
 		this.returnTab = rt;
 		this.runId = runId;
 		setWidth(360);

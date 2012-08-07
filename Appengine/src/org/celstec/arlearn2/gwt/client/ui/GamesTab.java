@@ -29,6 +29,8 @@ import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Encoding;
 import com.smartgwt.client.types.Visibility;
+import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Progressbar;
@@ -108,15 +110,15 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 	public Canvas getLeft() {
 		VLayout vLayout = new VLayout(10);
 		vLayout.addMember(getNewGameForm());
-		 vLayout.addMember(getExistingGameForm());
-		 
-		 hBar2 = new Progressbar();  
-	        hBar2.setVertical(false);  
-	        hBar2.setHeight(24);  
-	        hBar2.setWidth("*");
-	        vLayout.addMember(hBar2); 
-	        hBar2.setVisibility(Visibility.HIDDEN);
-	        
+		vLayout.addMember(getExistingGameForm());
+
+		hBar2 = new Progressbar();
+		hBar2.setVertical(false);
+		hBar2.setHeight(24);
+		hBar2.setWidth("*");
+		vLayout.addMember(hBar2);
+		hBar2.setVisibility(Visibility.HIDDEN);
+
 		return vLayout;
 	}
 
@@ -221,9 +223,9 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 
 	public Canvas getGameCanvas() {
 
-		listGrid = new GenericListGrid(false, true, true, true) {
+		listGrid = new GenericListGrid(false, true, true, true, false) {
 			protected void deleteItem(ListGridRecord rollOverRecord) {
-				GamesTab.this.deleteGame(rollOverRecord.getAttributeAsInt("gameId"));
+				GamesTab.this.deleteGame(rollOverRecord.getAttributeAsInt("gameId"), rollOverRecord.getAttributeAsString("title"));
 			}
 			protected void download(ListGridRecord rollOverRecord) {
 				GamesTab.this.download(rollOverRecord);
@@ -253,17 +255,24 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 		return listGrid;
 	}
 
-	protected void deleteGame(final int gameId) {
-		Authoring.removeTab("game:"+gameId);
-
-		GameClient.getInstance().deleteGame(gameId, new JsonCallback() {
-			
-			@Override
-			public void onJsonReceived(JSONValue jsonValue) {
-				tabSelect();
+	protected void deleteGame(final int gameId, String name) {
+		
+		SC.ask(constants.confirmDeleteUser().replace("***", name), new BooleanCallback() {
+			public void execute(Boolean value) {
+				if (value != null && value) {
+					Authoring.removeTab("game:"+gameId);
+					GameClient.getInstance().deleteGame(gameId, new JsonCallback() {
+						
+						@Override
+						public void onJsonReceived(JSONValue jsonValue) {
+							tabSelect();
+						}
+						
+					});
+				}
 			}
-			
 		});
+		
 		
 	}
 	

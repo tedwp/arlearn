@@ -40,18 +40,18 @@ public class UsersCache {
 	
 	
 	public User getUser(Long runId, String email) {
-		return (User) cache.get(USERS_PREFIX+runId+UserLoggedInManager.normalizeEmail(email));
+		return (User) cache.get(USERS_PREFIX+runId+User.normalizeEmail(email));
 	}
 	
 	public void putUser(Long runId, User u) {
 		if (u.getEmail() != null && !u.getEmail().equals("")) {
-			cache.put(USERS_PREFIX+runId+UserLoggedInManager.normalizeEmail(u.getEmail()), u);
+			cache.put(USERS_PREFIX+runId+User.normalizeEmail(u.getEmail()), u);
 		}
 	}
 
 	public void removeUser(Long runId, User u) {
 		if (u.getEmail() != null && !u.getEmail().equals("")) {
-			cache.remove(USERS_PREFIX+runId+UserLoggedInManager.normalizeEmail(u.getEmail()));
+			cache.remove(USERS_PREFIX+runId+User.normalizeEmail(u.getEmail()));
 		}
 	}
 

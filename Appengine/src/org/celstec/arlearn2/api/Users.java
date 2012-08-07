@@ -18,6 +18,8 @@ import org.celstec.arlearn2.beans.run.LocationList;
 import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.beans.run.User;
 
+import org.celstec.arlearn2.delegators.ActionDelegator;
+import org.celstec.arlearn2.delegators.ResponseDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.location.QueryLocations;
 import org.celstec.arlearn2.delegators.location.SubmitLocations;
@@ -48,11 +50,19 @@ public class Users extends Service {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/runId/{runId}/email/{email}")
-	public String deleteTeam(@HeaderParam("Authorization") String token, @PathParam("runId") Long runId, @PathParam("email") String email,
+	public String deleteUser(@HeaderParam("Authorization") String token, @PathParam("runId") Long runId, @PathParam("email") String email,
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 		UsersDelegator cu = new UsersDelegator(verifyCredentials(token));
+		
+		ActionDelegator ad = new ActionDelegator(cu);
+		ad.deleteActions(runId, email);
+		ResponseDelegator rd = new ResponseDelegator(cu);
+		rd.deleteResponses(runId, email);
+		//TODO delete reponses by user
+		//TODO delete score
+		//TODO delete progress
 		return serialise(cu.deleteUser(runId, email), accept);
 	}
 

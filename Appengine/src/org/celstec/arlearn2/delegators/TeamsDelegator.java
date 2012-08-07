@@ -34,12 +34,13 @@ public class TeamsDelegator extends GoogleDelegator {
 			team.setError("No run with given id exists");
 			return team;
 		}
-		if (team.getTeamId() == null) {
-			team.setTeamId(UUID.randomUUID().toString());
-		}
-		TeamsCache.getInstance().removeTeams(team.getRunId());
-		TeamManager.addTeam(team.getRunId(), team.getTeamId(), team.getName());
-		return team;
+		return createTeam(team.getRunId(), team.getTeamId(), team.getName());
+	}
+	
+	public Team createTeam(long runId, String teamId, String name) {
+		if (teamId == null) teamId = UUID.randomUUID().toString();
+		TeamsCache.getInstance().removeTeams(runId);
+		return TeamManager.addTeam(runId, teamId, name);
 	}
 
 	

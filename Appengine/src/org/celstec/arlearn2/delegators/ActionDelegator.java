@@ -1,11 +1,14 @@
 package org.celstec.arlearn2.delegators;
 
+import java.util.List;
 import java.util.logging.Logger;
 
+import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.ActionList;
+import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.User;
-import org.celstec.arlearn2.delegators.notification.Notification;
+import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.delegators.progressRecord.CreateProgressRecord;
 import org.celstec.arlearn2.delegators.scoreRecord.CreateScoreRecord;
 import org.celstec.arlearn2.jdo.manager.ActionManager;
@@ -46,6 +49,9 @@ public class ActionDelegator extends GoogleDelegator{
 		UsersDelegator qu = new UsersDelegator(this);
 		action.setUserEmail(qu.getCurrentUserAccount());
 		
+		RunDelegator rd = new RunDelegator(this);
+		Run r = rd.getRun(action.getRunId());
+		
 		User u = qu.getUserByEmail(action.getRunId(), action.getUserEmail());
 		if (u == null) {
 			action.setError("User not found");
@@ -61,28 +67,57 @@ public class ActionDelegator extends GoogleDelegator{
 		CreateScoreRecord csr = new CreateScoreRecord(this);
 //		csr.updateScore(action.getRunId(), action.getAction(), action.getUserEmail(), u.getTeamId());
 		csr.updateScore(action, u.getTeamId());
-		
-		ActionManager.addAction(action.getRunId(), action.getAction(), action.getUserEmail(), action.getGeneralItemId(), action.getGeneralItemType(), action.getTime());
-		(new UpdateGeneralItems(authToken, action.getRunId(), action.getAction(), action.getUserEmail())).scheduleTask();
-//		Queue queue = QueueFactory.getDefaultQueue();
-//		queue.add(TaskOptions.Builder.withUrl("/asyncTask")
-//				.param(AsyncTasksServlet.TASK, "" + AsyncTasksServlet.UPDATE_GENERAL_ITEMS)
-//				.param(AsyncTasksServlet.AUTH, authToken)
-//				.param(AsyncTasksServlet.RUNID, "" + action.getRunId())
-//				.param(AsyncTasksServlet.ACTION, action.getAction())
-//				.param(AsyncTasksServlet.EMAIL, action.getUserEmail()));
-//		queue.add(TaskOptions.Builder.withUrl("/asyncTask")
-//				.param(AsyncTasksServlet.TASK, "" + AsyncTasksServlet.UPDATE_SCORE)
-//				.param(AsyncTasksServlet.AUTH, authToken)
-//				.param(AsyncTasksServlet.RUNID, "" + action.getRunId())
-//				.param(AsyncTasksServlet.ACTION, action.getAction())
-//				.param(AsyncTasksServlet.EMAIL, action.getUserEmail()));
-		ActionCache.getInstance().removeRunAction(action.getRunId());
+		RunDelegator qr = new RunDelegator(this);
+		Run run = qr.getRun(action.getRunId());
+		ActionRelevancyPredictor arp = ActionRelevancyPredictor.getActionRelevancyPredicator(run.getGameId(), this);
+		System.out.println(arp.toString());
+		//TODO migrate these to list of relevant dependecies (getActionDependencies[])
+		boolean relevancy = arp.isRelevant(action);
+		if (relevancy || "read".equals(action.getAction())) {
+			ActionManager.addAction(action.getRunId(), action.getAction(), action.getUserEmail(), action.getGeneralItemId(), action.getGeneralItemType(), action.getTimestamp());
+			ActionCache.getInstance().removeRunAction(action.getRunId());
+			ChannelNotificator.getInstance().notify(r.getOwner(), action);
+			//TODO update score
+		} 
+		if (relevancy) {
+			(new UpdateGeneralItems(authToken, action.getRunId(), action.getAction(), action.getUserEmail(), action.getGeneralItemId(), action.getGeneralItemType())).scheduleTask();
+		}
 		return action;
 	}
+	
+	private boolean applyRelevancyFilter(Action action, List<ActionDependency> dependencies) {
+		for (ActionDependency dep: dependencies) {
+			boolean soFar = true;
+			if (dep.getAction() != null && !dep.getAction().equals(action.getAction())) soFar = false; 
+			if (dep.getGeneralItemId() != null && !dep.getGeneralItemId().equals(action.getGeneralItemId()))soFar = false; 
+			if (dep.getGeneralItemType() != null && !dep.getGeneralItemType().equals(action.getGeneralItemType())) soFar = false; 
+			if (soFar) return true;
+		}
+		return false;
+	}
+	
+//	private List<ActionDependency> getActionDependencies(Long runId) {
+//		RunDelegator qr = new RunDelegator(this);
+//		Run run = qr.getRun(runId);
+//		List<ActionDependency> gil = GeneralitemsCache.getInstance().getGameActions(run.getGameId(), null, null);
+//		if (gil == null) {
+//			System.out.println("not from cache");
+//			GeneralItemDelegator gd = new GeneralItemDelegator(this);
+//			gil = getActionDependencies(gd.getGeneralItems(run.getGameId()).getGeneralItems());
+//			GeneralitemsCache.getInstance().putGameActionsList(gil, run.getGameId(), null, null);
+//		}
+//		return gil;
+//	}
+	
+	
 
 	public void deleteActions(Long runId) {
 		ActionManager.deleteActions(runId);
+		ActionCache.getInstance().removeRunAction(runId);
+	}
+	
+	public void deleteActions(Long runId, String email) {
+		ActionManager.deleteActions(runId, email);
 		ActionCache.getInstance().removeRunAction(runId);
 	}
 	

@@ -1,6 +1,8 @@
 package org.celstec.arlearn2.delegators.notification;
 
 
+import java.util.logging.Logger;
+
 import com.google.appengine.api.channel.ChannelMessage;
 import com.google.appengine.api.channel.ChannelService;
 import com.google.appengine.api.channel.ChannelServiceFactory;
@@ -8,8 +10,10 @@ import com.google.appengine.api.channel.ChannelServiceFactory;
 public class ChannelNotificator {
 
 	private static ChannelNotificator instance;
-	
+	private static final Logger log = Logger.getLogger(ChannelNotificator.class.getName());
+
 	ChannelService channelService = ChannelServiceFactory.getChannelService();
+	
 	
 	private ChannelNotificator() {
 	}
@@ -24,6 +28,7 @@ public class ChannelNotificator {
 	}
 	
 	public void notify(String account, String message) {
+
 		channelService.sendMessage(new ChannelMessage(account, message));
 	}
 }

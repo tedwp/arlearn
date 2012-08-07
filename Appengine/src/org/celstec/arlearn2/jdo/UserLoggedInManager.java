@@ -2,6 +2,8 @@ package org.celstec.arlearn2.jdo;
 
 import javax.jdo.PersistenceManager;
 
+import org.celstec.arlearn2.beans.run.User;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
@@ -11,7 +13,7 @@ public class UserLoggedInManager {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		UsersLoggedIn uli = new UsersLoggedIn();
 		uli.setKey(authToken.hashCode());
-		uli.setUsername(normalizeEmail(email));
+		uli.setUsername(User.normalizeEmail(email));
 		try {
 			pm.makePersistent(uli);
 		} finally {
@@ -32,13 +34,6 @@ public class UserLoggedInManager {
 
 	}
 	
-	public static String normalizeEmail(String mail) {
-		if (mail == null) return null;
-		int posAt = mail.indexOf("@");
-		if (posAt != -1) {
-			mail = mail.substring(0, posAt);
-		}
-		return mail.replace(".", "").toLowerCase();
-	}
+	
 
 }

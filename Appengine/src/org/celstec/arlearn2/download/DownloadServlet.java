@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.celstec.arlearn2.beans.GamePackage;
 import org.celstec.arlearn2.beans.RunPackage;
 import org.celstec.arlearn2.beans.game.ScoreDefinitionList;
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.Team;
 import org.celstec.arlearn2.beans.run.TeamList;
 import org.celstec.arlearn2.beans.run.User;
@@ -25,6 +26,8 @@ import org.celstec.arlearn2.delegators.generalitems.QueryGeneralItems;
 import com.google.gdata.util.AuthenticationException;
 
 import java.io.*;
+import java.util.List;
+import java.util.ListIterator;
 
 public class DownloadServlet extends HttpServlet {
 
@@ -56,8 +59,19 @@ public class DownloadServlet extends HttpServlet {
 			gp.setGame(gd.getGame(gameId));
 
 			GeneralItemDelegator gid = new GeneralItemDelegator(gd);
-
+			
 			gp.setGeneralItems(gid.getGeneralItems(gameId).getGeneralItems());
+			for (ListIterator<GeneralItem> iter = gp.getGeneralItems().listIterator(gp.getGeneralItems().size()); iter.hasPrevious();){
+			    if (iter.previous().getDeleted() == true) {
+			    	iter.remove();
+				}
+			}
+//			List<GeneralItem> cloneList = gp.getGeneralItems().c
+//			for (GeneralItem gi : cloneList) {
+//				if (gi.getDeleted() == true) {
+//					gp.getGeneralItems().remove(gi);
+//				}
+//			}
 			ScoreDefinitionDelegator sd = new ScoreDefinitionDelegator(gd);
 			ScoreDefinitionList list = new ScoreDefinitionList();
 			gp.setScoreDefinitions(sd.getScoreDefinitionsList(gameId, null, null, null));
@@ -85,9 +99,13 @@ public class DownloadServlet extends HttpServlet {
 				for (User u: ul.getUsers()) {
 					for (Team t : rp.getTeams()) {
 						if (t.getTeamId().equals(u.getTeamId())){
+							u.setTeamId(null);
 							t.addUser(u);
 						}
 					}
+				}
+				for (Team t : rp.getTeams()) {
+					t.setTeamId(null);
 				}
 			}
 		} catch (AuthenticationException e) {

@@ -89,10 +89,10 @@ public class ResponseManager {
 		return pd;
 	}
 
-	public static void deleteResponses(Long runId) {
+	public static void deleteResponses(Long runId, String email) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
-			List<ResponseJDO>  list = getResponse(pm, runId, null, null, null, null);
+			List<ResponseJDO>  list = getResponse(pm, runId, null, email, null, null);
 			pm.deletePersistentAll(list);
 		} finally {
 			pm.close();

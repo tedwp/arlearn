@@ -59,26 +59,17 @@ public class UploadGameServlet extends HttpServlet {
 				InputStream stream = item.openStream();
 				if (item.isFormField()) {
 					String value = Streams.asString(stream);
-					System.out.println("Form field " + name + " with value "+ value + " detected.");
 					if ("gameId".equals(name)) gameId = Long.parseLong(value);
 					if ("auth".equals(name)) auth = value;
 					
 				} else {
-					// Image here.
-					System.out.println("File field " + name
-							+ " with file name " + item.getName()
-							+ " detected.");
 					json = Streams.asString(stream);
 
 				}
 			}
 
 			res.setContentType("text/plain");
-			// String json = slurp(req.getInputStream());
-			// json = json.substring(json.indexOf("{"));
-			System.out.println(json);
 			JSONObject jObject = new JSONObject(json);
-			System.out.println(jObject);
 			Object deserialized = JsonBeanDeserializer.deserialize(json);
 			
 			if (deserialized instanceof GamePackage && ((GamePackage) deserialized).getGame() != null)
@@ -93,35 +84,10 @@ public class UploadGameServlet extends HttpServlet {
 
 	private void unpackRun(RunPackage runPackage, HttpServletRequest req,
 			long gameId, String auth) throws AuthenticationException {
-		System.out.println(runPackage.getRun());
-		System.out.println(runPackage.getRun().getTitle());
-		Run run = runPackage.getRun();
-		run.setGameId(gameId);
-		if (run != null) {
-			RunDelegator rd = new RunDelegator(auth == null?req.getHeader("Authorization"):auth);
-			run = rd.createRun(run);
-			if (run.getRunId() != null) {
-				TeamsDelegator td = new TeamsDelegator(rd);
-				for (Iterator iterator = runPackage.getTeams().iterator(); iterator
-						.hasNext();) {
-					Team t = (Team) iterator.next();
-					t.setRunId(run.getRunId());
-					Team tDb = td.createTeam(t);
-					if (tDb.getTeamId() != null) {
-						UsersDelegator ud = new UsersDelegator(rd);
-						for (Iterator iterator2 = t.getUsers().iterator(); iterator2
-								.hasNext();) {
-							User u = (User) iterator2.next();
-							u.setTeamId(tDb.getTeamId());
-							u.setRunId(run.getRunId());
-							ud.createUser(u);
-
-						}
-					}
-				}
-
-			}
-		}
+		auth = auth == null?req.getHeader("Authorization"):auth;
+		RunUnpacker ru = new RunUnpacker(runPackage, auth, gameId);
+		
+		ru.unpack();
 
 	}
 

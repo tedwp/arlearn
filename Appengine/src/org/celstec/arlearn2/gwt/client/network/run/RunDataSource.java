@@ -30,6 +30,8 @@ public class RunDataSource extends GenericDataSource {
 		addField(INTEGER_DATA_TYPE, "gameId", false, true);
 		addField(STRING_DATA_TYPE, "title", false, true);
 		addField(STRING_DATA_TYPE, "owner", false, true);
+		addField(BOOLEAN_DATA_TYPE, "deleted", false, true);
+
 	}
 	
 	protected GenericClient getHttpClient() {

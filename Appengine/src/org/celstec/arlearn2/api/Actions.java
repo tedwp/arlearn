@@ -40,12 +40,10 @@ public class Actions extends Service {
 			return serialise(getInvalidCredentialsBean(), accept);
 		ActionDelegator ad = new ActionDelegator(token);
 		ActionList al = ad.getActionList(runIdentifier);
-//		Action a = new Action();
-//		a.setGeneralItemId(801l);
-//		a.setAction("read");
-//		al.addAction(a);
 		return serialise(al, accept);
 	}
+	
+	
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -57,19 +55,21 @@ public class Actions extends Service {
 		Object inAction = deserialise(action, Action.class, contentType);
 		if (inAction instanceof java.lang.String)
 			return serialise(getBeanDoesNotParseException((String) inAction), accept);
+		if (((Action) inAction).getTimestamp() == null) ((Action) inAction).setTimestamp(System.currentTimeMillis());
 		Action act = (new ActionDelegator(token)).createAction((Action) inAction);
 		return serialise(act, accept);
 	}
 	
 	@POST
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Path("/notify/{account}/{runId}/{gId}")
+	@Path("/notify/{account}/{runId}/{gId}/{autoLaunch}")
 	public void notify(
 			@HeaderParam("Authorization") String token, 
 			String action, 
 			@PathParam("account") String account,
 			@PathParam("runId") Long runId,
 			@PathParam("gId") Long gId,
+			@PathParam("autoLaunch") Boolean autoLaunch,
 			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
 //		Notification not = new Notification("all", runId, token);
@@ -85,6 +85,7 @@ public class Actions extends Service {
 		gim.setRunId(runId);
 		gim.setGeneralItem(new GeneralItem());
 		gim.getGeneralItem().setId(gId);
+		gim.getGeneralItem().setAutoLaunch(autoLaunch);
 		ChannelNotificator.getInstance().notify(account, gim);
 		
 	}

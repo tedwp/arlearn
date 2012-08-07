@@ -21,7 +21,7 @@ public class ActionManager {
 	public static List<Action> getActions(Long runId, String action, String userEmail, String generalItemId, String generalItemType) {
 		ArrayList<Action> returnProgressDefinitions = new ArrayList<Action>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Iterator<ActionJDO> it = getGeneralitems(pm, runId,action, userEmail, generalItemId, generalItemType).iterator();
+		Iterator<ActionJDO> it = getActionsJDO(pm, runId,action, userEmail, generalItemId, generalItemType).iterator();
 		while (it.hasNext()) {
 			returnProgressDefinitions.add(toBean((ActionJDO) it.next()));
 		}
@@ -29,7 +29,7 @@ public class ActionManager {
 
 	}
 	
-	private static List<ActionJDO> getGeneralitems(PersistenceManager pm, Long runId, String action, String userEmail, String generalItemId, String generalItemType) {
+	private static List<ActionJDO> getActionsJDO(PersistenceManager pm, Long runId, String action, String userEmail, String generalItemId, String generalItemType) {
 		Query query = pm.newQuery(ActionJDO.class);
 		Object args [] ={runId,action, userEmail, generalItemId, generalItemType};
 		query.setFilter(ManagerUtil.generateFilter(args, params, paramsNames));
@@ -85,6 +85,7 @@ public class ActionManager {
 		actionBean.setGeneralItemType(jdo.getGeneralItemType());
 		actionBean.setRunId(jdo.getRunId());
 		actionBean.setTime(jdo.getTime());
+		actionBean.setTimestamp(jdo.getTime());
 		actionBean.setUserEmail(jdo.getUserEmail());
 		return actionBean;
 	}
@@ -97,6 +98,15 @@ public class ActionManager {
 		} finally {
 			pm.close();
 		}
-
+	}
+	
+	public static void deleteActions(Long runId, String userId) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			List<ActionJDO> visToDelete =getActionsJDO(pm, runId, null, userId, null, null);
+			pm.deletePersistentAll(visToDelete);
+		} finally {
+			pm.close();
+		}
 	}
 }

@@ -1,28 +1,28 @@
 package org.celstec.arlearn2.gwt.client.ui;
 
-import java.util.HashSet;
-
 import org.celstec.arlearn2.gwt.client.Authoring;
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
-//import org.celstec.arlearn2.gwt.client.control.GameDataSource;
 import org.celstec.arlearn2.gwt.client.control.Authentication;
 import org.celstec.arlearn2.gwt.client.control.ReadyCallback;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
 import org.celstec.arlearn2.gwt.client.network.game.GameDataSource;
 import org.celstec.arlearn2.gwt.client.network.run.RunClient;
 import org.celstec.arlearn2.gwt.client.network.run.RunDataSource;
+import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
+import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.smartgwt.client.data.DSCallback;
-import com.smartgwt.client.data.DSRequest;
-import com.smartgwt.client.data.DSResponse;
-import com.smartgwt.client.data.Record;
+import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Encoding;
+import com.smartgwt.client.types.Visibility;
+import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.Progressbar;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.HiddenItem;
@@ -37,9 +37,10 @@ import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class RunsTab extends GenericTab {
+public class RunsTab extends GenericTab implements NotificationHandler {
 	private ListGrid listGrid;
-	 private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
+	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
+	private Progressbar hBar2;
 
 	public RunsTab() {
 		super("Runs");
@@ -63,6 +64,14 @@ public class RunsTab extends GenericTab {
 		VLayout vLayout = new VLayout(10);
 		vLayout.addMember(getNewRunForm());
 		vLayout.addMember(getExistingRunForm());
+
+		hBar2 = new Progressbar();
+		hBar2.setVertical(false);
+		hBar2.setHeight(24);
+		hBar2.setWidth("*");
+		vLayout.addMember(hBar2);
+		hBar2.setVisibility(Visibility.HIDDEN);
+
 		return vLayout;
 	}
 
@@ -94,19 +103,16 @@ public class RunsTab extends GenericTab {
 		button.setColSpan(4);
 		button.setAlign(Alignment.CENTER);
 
-		final DynamicForm form = getForm(constants.createNewRun(), titleRun, item,
-				new RowSpacerItem(), button);
+		final DynamicForm form = getForm(constants.createNewRun(), titleRun, item, new RowSpacerItem(), button);
 		form.setWidth(300);
 
 		button.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-			public void onClick(
-					com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-				RunClient.getInstance().createRun(form.getValue("itemID"),
-						form.getValueAsString("titleRun"), new JsonCallback() {
-							public void onJsonReceived(JSONValue jsonValue) {
-								tabSelect();
-							}
-						});
+			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+				RunClient.getInstance().createRun(form.getValue("itemID"), form.getValueAsString("titleRun"), new JsonCallback() {
+					public void onJsonReceived(JSONValue jsonValue) {
+						tabSelect();
+					}
+				});
 				titleRun.setValue("");
 				item.setValue("");
 			}
@@ -134,8 +140,7 @@ public class RunsTab extends GenericTab {
 		fileItem.setWrapTitle(false);
 
 		HiddenItem authItem = new HiddenItem("auth");
-		authItem.setValue("auth="
-				+ Authentication.getInstance().getAuthenticationToken());
+		authItem.setValue("auth=" + Authentication.getInstance().getAuthenticationToken());
 
 		ButtonItem button = new ButtonItem("submit", constants.upload());
 		// button.setStartRow(true);
@@ -145,20 +150,18 @@ public class RunsTab extends GenericTab {
 		button.setColSpan(4);
 		button.setAlign(Alignment.CENTER);
 
-		final DynamicForm form = getForm(constants.chooseARun(), fileItem, item,
-				new RowSpacerItem(), button, authItem);
+		final DynamicForm form = getForm(constants.chooseARun(), fileItem, item, new RowSpacerItem(), button, authItem);
 		form.setWidth(300);
 		form.setEncoding(Encoding.MULTIPART);
 
 		button.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-			public void onClick(
-					com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-				// gameIdItem.setValue(form.getValue("itemID"));
+			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
 				form.setCanSubmit(true);
 				form.submit();
 				item.setValue("");
-				pollForUpdate();
-				
+				NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.authoring.RunCreationStatus", RunsTab.this);
+				hBar2.setPercentDone(0);
+				hBar2.setVisibility(Visibility.VISIBLE);
 			}
 		});
 
@@ -166,54 +169,10 @@ public class RunsTab extends GenericTab {
 		form.setAction("/uploadGame/fileUpload.html");
 		return form;
 	}
+
 	
-	@Deprecated
-	private void pollForUpdate() {
-		RunDataSource.getInstance().fetchData(null, new DSCallback() {
+//	private Timer t = null;
 
-			@Override
-			public void execute(DSResponse response, Object rawData,
-					DSRequest request) {
-				HashSet<String> idSet = new HashSet<String>();
-				for (Record r : response.getData()) {
-					idSet.add(r.getAttribute("runId"));
-				}
-				t = new Timer() {
-					private int delay = 2000;
-				public void run() {
-					RunDataSource.getInstance().loadData(new ReadyCallback() {
-						@Override
-						public void ready() {
-							
-							RunDataSource.getInstance().fetchData(null, new DSCallback() {
-
-								@Override
-								public void execute(DSResponse response, Object rawData,
-										DSRequest request) {
-									HashSet<String> idSet = new HashSet<String>();
-									boolean continueTimer = true;
-									for (Record r : response.getData()) {
-										if (!idSet.contains(r.getAttribute("runId"))) continueTimer = false;
-									}
-									if (continueTimer) {
-										delay = 2 * delay;
-										t.schedule(delay);
-
-									}
-								}
-							});
-							
-						}
-					});
-				}
-			};
-			t.schedule(1000);
-			}
-		});
-	}
-
-	private int amountOfRecords = 0;
-	private Timer t = null;
 	// private DynamicForm getForm() {
 	// final DynamicForm form = new DynamicForm();
 	// form.setBorder("1px solid");
@@ -243,23 +202,22 @@ public class RunsTab extends GenericTab {
 	// }
 
 	public Canvas getRunCanvas() {
-		listGrid = new GenericListGrid(true, true, true, false) {
+		listGrid = new GenericListGrid(true, true, true, false, false) {
 			protected void deleteItem(ListGridRecord rollOverRecord) {
-				RunsTab.this.deleteRun(rollOverRecord
-						.getAttributeAsInt("runId"));
+				RunsTab.this.deleteRun(rollOverRecord.getAttributeAsInt("runId"), rollOverRecord.getAttributeAsString("title"));
 			}
 
 			protected void editItem(ListGridRecord rollOverRecord) {
 				RunsTab.this.editRun(rollOverRecord);
 			}
-			
+
 			protected void download(ListGridRecord rollOverRecord) {
 				RunsTab.this.download(rollOverRecord);
 			}
-			
+
 			protected void mapItem(ListGridRecord rollOverRecord) {
 				RunsTab.this.map(rollOverRecord);
-			} 
+			}
 		};
 
 		listGrid.setShowRollOverCanvas(true);
@@ -272,8 +230,7 @@ public class RunsTab extends GenericTab {
 		ListGridField titleGameField = new ListGridField("title", constants.run());
 		ListGridField creatorGameField = new ListGridField("owner", constants.ownerAccount());
 
-		listGrid.setFields(new ListGridField[] { titleGameField,
-				creatorGameField });
+		listGrid.setFields(new ListGridField[] { titleGameField, creatorGameField });
 		listGrid.setCanResizeFields(true);
 
 		listGrid.setPadding(5);
@@ -286,34 +243,51 @@ public class RunsTab extends GenericTab {
 				RunsTab.this.editRun(event.getRecord());
 			}
 		});
+		Criteria crit = new Criteria();
+		crit.addCriteria("deleted", false);
+		listGrid.filterData(crit);
 		return listGrid;
 	}
 
 	protected void editRun(ListGridRecord record) {
 		long runId = Long.parseLong(record.getAttribute("runId"));
-		RunTab tab = new RunTab("Run: " + record.getAttribute("title"), runId,
-				Long.parseLong(record.getAttribute("gameId")));
+		RunTab tab = new RunTab("Run: " + record.getAttribute("title"), runId, Long.parseLong(record.getAttribute("gameId")));
 		Authoring.addTab(tab, "run:" + runId);
 	}
-	
+
 	protected void map(ListGridRecord record) {
 		long runId = Long.parseLong(record.getAttribute("runId"));
-		RunMapTab tab = new RunMapTab("Run: " + record.getAttribute("title"), runId,
-				Long.parseLong(record.getAttribute("gameId")));
+		RunMapTab tab = new RunMapTab("Run: " + record.getAttribute("title"), runId, Long.parseLong(record.getAttribute("gameId")));
 		Authoring.addTab(tab, "runmap:" + runId);
 	}
-	
 
-	private void deleteRun(int runId) {
-		Authoring.removeTab("run:" + runId);
-		RunDataSource.getInstance().delete(runId);
+	private void deleteRun(final int runId, String name) {
+		SC.ask(constants.confirmDeleteUser().replace("***", name), new BooleanCallback() {
+			public void execute(Boolean value) {
+				if (value != null && value) {
+					Authoring.removeTab("run:" + runId);
+					RunDataSource.getInstance().delete(runId);
+				}
+			}
+		});
+		
 	}
-	
+
 	protected void download(ListGridRecord record) {
 		long runId = Long.parseLong(record.getAttribute("runId"));
 		String auth = Authentication.getInstance().getAuthenticationToken();
-		Window.open( "../download/run?runId="+runId+"&auth="+auth+"&type=run", "_self", "");
-		
-		
+		Window.open("../download/run?runId=" + runId + "&auth=" + auth + "&type=run", "_self", "");
+
+	}
+
+	@Override
+	public void onNotification(JSONObject bean) {
+		int status = (int) bean.get("status").isNumber().doubleValue();
+
+		hBar2.setPercentDone((int) (100/3*(status+1)));  
+		if (status == 100) {
+			hBar2.setVisibility(Visibility.HIDDEN);
+			tabSelect();
+		}
 	}
 }

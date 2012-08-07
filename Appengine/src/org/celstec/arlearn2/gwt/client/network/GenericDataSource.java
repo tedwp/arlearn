@@ -1,15 +1,21 @@
 package org.celstec.arlearn2.gwt.client.network;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.celstec.arlearn2.gwt.client.control.ReadyCallback;
 import org.celstec.arlearn2.gwt.client.control.TriggerDataSource;
 
 import com.smartgwt.client.data.Criteria;
+import com.smartgwt.client.data.DSCallback;
+import com.smartgwt.client.data.DSRequest;
+import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.DataSourceField;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -25,7 +31,7 @@ public abstract class GenericDataSource extends DataSource {
 	private List<String> attributeList = new ArrayList<String>();
 	private List<Integer> typeList = new ArrayList<Integer>();
 
-	private String pkAttribute;
+	protected String pkAttribute;
 	private HashSet<String> pkMap = new HashSet<String>();
 	private ArrayList<DerivedFieldTask> derivedTaskList = new ArrayList<DerivedFieldTask>();
 	private ArrayList<Boolean> derivedTaskPrimaryKeyList = new ArrayList<Boolean>();
@@ -102,14 +108,23 @@ public abstract class GenericDataSource extends DataSource {
 	}
 
 	public void loadDataRun(long runId) {
-		getHttpClient().getItemsForRun(runId, getCallBack());
+		getHttpClient().getItemsForRun(runId, getCallBack(null));
 	}
 
 	public void loadDataGame(long gameId) {
-		getHttpClient().getItemsForGame(gameId, getCallBack());
+		loadDataGame(gameId, null);
+	}
+	
+	public void loadDataGame(long gameId, HashMap<String,String> values) {
+		getHttpClient().getItemsForGame(gameId, getCallBack(values));
 	}
 
 	protected JsonCallback getCallBack() {
+		return getCallBack(null);
+	}
+
+		
+	protected JsonCallback getCallBack(final HashMap<String,String> values) {
 		return new JsonCallback(getBeanType()) {
 
 			@Override
@@ -153,9 +168,13 @@ public abstract class GenericDataSource extends DataSource {
 							}
 							break;
 						}
-						
-
 					}
+					if (values != null) {
+						for (Entry<String, String> entry: values.entrySet()) {
+							rec.setAttribute(entry.getKey(), entry.getValue());
+						}
+					}
+					//TODO the following is not generic and thus not elegant
 					if ("gameId".equals(pkAttribute)) {
 						TriggerDataSource.getInstance().processGameConfig(
 								rec.getAttributeAsInt("gameId"),
@@ -164,13 +183,16 @@ public abstract class GenericDataSource extends DataSource {
 					}
 					GenericDataSource.this.processDerivedFields(rec);
 					String id = "" + rec.getAttribute(pkAttribute);
-					if (pkMap.contains(id)) {
-						deleteSet.remove(id);
-						updateData(rec);
-					} else {
-						addData(rec);
-						pkMap.add(id);
-					}
+					processRecord(rec);
+					if (!filterRecord(rec)) {
+						if (pkMap.contains(id)) {
+							deleteSet.remove(id);
+							updateData(rec);
+						} else {
+							addData(rec);
+							pkMap.add(id);
+						}
+					} 
 				}
 				for (String id : deleteSet) {
 					final ListGridRecord rec = new ListGridRecord();
@@ -181,14 +203,21 @@ public abstract class GenericDataSource extends DataSource {
 				if (rc != null) {
 					rc.ready();
 				}
-
-//				if (lg != null) {
-//					lg.fetchData();
-//				}
-
+				allRecordsUpdated(values);
 			}
-
 		};
+	}
+	
+	
+	
+	protected boolean filterRecord(ListGridRecord rec) {
+		return false;
+	}
+	
+	protected void processRecord(ListGridRecord rec) {
+	}
+	
+	protected void allRecordsUpdated(HashMap<String,String> values) {
 	}
 	
 	public void clearAllData() {
@@ -203,5 +232,23 @@ public abstract class GenericDataSource extends DataSource {
 
 	public boolean isEmpty(){
 		return pkMap.isEmpty();
+	}
+	
+	public void setValue(String pk, final String fieldName, final String value) {
+//		// updateData(rec);
+		Criteria crit = new Criteria();
+		crit.addCriteria("pk", pk);
+		fetchData(crit, new DSCallback() {
+			@Override
+			public void execute(DSResponse response,
+					Object rawData, DSRequest request) {
+				Record[] records = response.getData();
+				for (Record record : records) {
+					record.setAttribute(fieldName, value);
+					updateData(record);
+
+				}
+			}
+		});
 	}
 }

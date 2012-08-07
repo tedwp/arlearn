@@ -31,6 +31,7 @@ public abstract class ResponseCallback extends JsonCallback {
 		if (jsonValue == null) return -1;
 		JSONObject game = jsonValue.get(i).isObject();
 		if (game == null) return -1;
+		if (!game.containsKey("generalItemId")) return -1;
 		return (long) game.get("generalItemId").isNumber().doubleValue();
 	}
 	

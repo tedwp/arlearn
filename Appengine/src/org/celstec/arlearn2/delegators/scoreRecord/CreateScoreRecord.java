@@ -78,12 +78,17 @@ public class CreateScoreRecord extends GoogleDelegator {
 	}
 
 	public void deleteScoreRecords(Long runId) {
-		ScoreRecordManager.deleteScoreRecords(runId);
+		ScoreRecordManager.deleteScoreRecords(runId, null);
 		ScoreRecordCache.getInstance().removeScore(runId, "user");
 		ScoreRecordCache.getInstance().removeScore(runId, "team");
 		ScoreRecordCache.getInstance().removeScore(runId, "all");		
 	}
 	
-	
+	public void deleteScoreRecords(Long runId, String account) {
+		ScoreRecordManager.deleteScoreRecords(runId, account);
+		ScoreRecordCache.getInstance().removeScore(runId, "user");
+		ScoreRecordCache.getInstance().removeScore(runId, "team");
+		ScoreRecordCache.getInstance().removeScore(runId, "all");		
+	}
 
 }

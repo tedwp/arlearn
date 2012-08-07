@@ -7,6 +7,7 @@ import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -25,35 +26,14 @@ public class TriggerDataSource extends DataSource{
 		DataSourceTextField titleField = new DataSourceTextField("name");
 		titleField.setRequired(true);
 		
+		
+		
 		DataSourceIntegerField gameIdField = new DataSourceIntegerField("gameId");
-		titleField.setRequired(true);
 		
+		DataSourceBooleanField autoLaunchField = new DataSourceBooleanField("autoLaunch");
 		
-		setFields(itemIdField,titleField, gameIdField);
+		setFields(itemIdField,titleField, gameIdField, autoLaunchField);
 		setClientOnly(true);
-
-//		ListGridRecord rec = new ListGridRecord();
-//		rec.setAttribute("itemId", "307");
-//		rec.setAttribute("name", "Planning A");
-//		addData(rec);
-//		rec = new ListGridRecord();
-//		rec.setAttribute("itemId", "406");
-//		rec.setAttribute("name", "Planning B");
-//		addData(rec);
-//		rec = new ListGridRecord();
-//		rec.setAttribute("itemId", "506");
-//		rec.setAttribute("name", "Planning C");
-//		addData(rec);
-//		
-//		 rec = new ListGridRecord();
-//		rec.setAttribute("itemId", "315");
-//		rec.setAttribute("name", "Call from hostage taker A");
-//		addData(rec);
-//		
-//		rec = new ListGridRecord();
-//		rec.setAttribute("itemId", "320");
-//		rec.setAttribute("name", "HIM team has arrived");
-//		addData(rec);
 	}
 	public static TriggerDataSource getInstance() {
 		if (instance == null) instance = new TriggerDataSource();
@@ -67,6 +47,9 @@ public class TriggerDataSource extends DataSource{
 		for (int i = 0; i< array.size();i++) {
 			final ListGridRecord rec = new ListGridRecord();
 			int itemId = (int) array.get(i).isObject().get("id").isNumber().doubleValue();
+			if (array.get(i).isObject().containsKey("autoLaunch")) {
+				rec.setAttribute("autoLaunch", array.get(i).isObject().get("autoLaunch").isBoolean().booleanValue());
+			}
 			rec.setAttribute("itemId", itemId);
 			rec.setAttribute("gameId", (int) gameId);
 			rec.setAttribute("name", array.get(i).isObject().get("name").isString().stringValue());

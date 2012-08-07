@@ -10,6 +10,8 @@ import com.google.gwt.user.client.Cookies;
 
 public class Authentication implements LoginCallback {
 
+	public static final String USERNAME_COOKIE = "org.celstec.arlearn.const.username";
+	public static final String AUTH_COOKIE = "org.celstec.arlearn.const.auth";
 	static Authentication instance;
 	
 	private Authentication() {
@@ -23,7 +25,7 @@ public class Authentication implements LoginCallback {
 	
 	public void userCredentialsReceived(String username, String password) {
 		LoginClient lc = new LoginClient(username, password);
-		Cookies.setCookie("username", username);	
+		Cookies.setCookie(USERNAME_COOKIE, username);	
 		lc.authenticate(this);
 	}
 
@@ -32,7 +34,7 @@ public class Authentication implements LoginCallback {
 		if (string.startsWith("\"")) string = string.substring(1);
 		if (string.endsWith("\"")) string = string.substring(0, string.length()-1);
 		
-		Cookies.setCookie("auth", string);	
+		Cookies.setCookie(AUTH_COOKIE, string);	
 
 		Authoring.enableTabs();
 		
@@ -41,23 +43,27 @@ public class Authentication implements LoginCallback {
 	@Override
 	public void onError() {
 		Authoring.loginIncorrect();
-		Cookies.removeCookie("auth");		
-		Cookies.removeCookie("username");		
+		Cookies.removeCookie(AUTH_COOKIE);		
+		Cookies.removeCookie(USERNAME_COOKIE);		
 	}
 	
 	public void disAuthenticate() {
-		Cookies.removeCookie("auth");		
-		Cookies.removeCookie("username");
+		Cookies.removeCookie(AUTH_COOKIE);		
+		Cookies.removeCookie(USERNAME_COOKIE);
 		Authoring.disableTabs();
 		Authoring.clearCaches();
 		NotificationSubscriber.getInstance().removeAllHandlers();
 	}
 	
 	public boolean isAuthenticated() {
-		return Cookies.getCookie("auth") != null;
+		return Cookies.getCookie(AUTH_COOKIE) != null;
 	}
 	
 	public String getAuthenticationToken() {
-		return Cookies.getCookie("auth");
+		return Cookies.getCookie(AUTH_COOKIE);
+	}
+	
+	public String getCurrentUser() {
+		return Cookies.getCookie(USERNAME_COOKIE);
 	}
 }

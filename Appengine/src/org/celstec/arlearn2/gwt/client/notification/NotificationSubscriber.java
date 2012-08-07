@@ -1,9 +1,12 @@
 package org.celstec.arlearn2.gwt.client.notification;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.celstec.arlearn2.gwt.client.network.ChannelClient;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
+import org.celstec.arlearn2.gwt.client.ui.modal.SessionTimeout;
 
 import com.google.gwt.appengine.channel.client.Channel;
 import com.google.gwt.appengine.channel.client.ChannelFactory;
@@ -20,15 +23,15 @@ public class NotificationSubscriber {
 	private static NotificationSubscriber instance;
 	private static boolean error = false;
 
-	private HashMap<String, NotificationHandler> notificationMap = new HashMap<String, NotificationHandler>();
-	
+	private HashMap<String, List<NotificationHandler>> notificationMap = new HashMap<String, List<NotificationHandler>>();
+
 	private ChannelCreatedCallback channelCreatedCallback = new ChannelCreatedCallback() {
 		@Override
 		public void onChannelCreated(Channel channel) {
 			channel.open(new SocketListener() {
 				@Override
 				public void onOpen() {
-//					Window.alert("Channel opened!");
+					// Window.alert("Channel opened!");
 				}
 
 				@Override
@@ -40,18 +43,23 @@ public class NotificationSubscriber {
 				public void onError(SocketError sError) {
 					instance = null;
 					error = true;
-					Window.alert("Error: you are no longer online. Reload this page once you're  again online" ); //TODO  i18n
+					// Window.alert("Error: you are no longer online. Reload this page once you're  again online"
+					// ); //TODO i18n
+					SessionTimeout st = new SessionTimeout();
+					st.show();
 				}
 
 				@Override
 				public void onClose() {
 					instance = null;
-					if (! error) requestToken();
-					//Window.alert("Channel closed!");
+					if (!error)
+						requestToken();
+					// Window.alert("Channel closed!");
 				}
 			});
 		}
 	};
+
 	private NotificationSubscriber() {
 		requestToken();
 	}
@@ -73,21 +81,42 @@ public class NotificationSubscriber {
 			}
 		});
 	}
-	
+
 	private void dispatchMessage(String message) {
 		JSONValue jsonValue = JSONParser.parseLenient(message);
 		JSONObject object = jsonValue.isObject();
-		if ( object != null && object.containsKey("type")) {
-			NotificationHandler handler = notificationMap.get(object.get("type").isString().stringValue());
-			if (handler != null) handler.onNotification(object);
+		if (object != null && object.containsKey("type")) {
+			List<NotificationHandler> handlers = notificationMap.get(object.get("type").isString().stringValue());
+			if (handlers != null)
+				for (NotificationHandler handler : handlers) {
+					if (handler != null)
+						handler.onNotification(object);
+				}
 		}
+		List<NotificationHandler> handlers = notificationMap.get("all");
+		if (handlers != null)
+			for (NotificationHandler handler : handlers) {
+				if (handler != null)
+					handler.onNotification(object);
+			}
+
 	}
-	
+
 	public void addNotificationHandler(String type, NotificationHandler handler) {
-		notificationMap.put(type, handler);
+		if (!notificationMap.containsKey(type)) {
+			notificationMap.put(type, new ArrayList<NotificationHandler>());
+
+		}
+		notificationMap.get(type).add(handler);
 	}
-	
+
 	public void removeAllHandlers() {
-		notificationMap = new HashMap<String, NotificationHandler>();
+
+		notificationMap = new HashMap<String, List<NotificationHandler>>();
+	}
+
+	public void reload() {
+		requestToken();
+
 	}
 }

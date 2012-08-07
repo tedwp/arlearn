@@ -13,6 +13,7 @@ import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.celstec.arlearn2.jdo.PMF;
+import org.celstec.arlearn2.jdo.classes.RunJDO;
 import org.celstec.arlearn2.jdo.classes.UserJDO;
 
 import com.google.appengine.api.datastore.Key;
@@ -46,16 +47,19 @@ public class UserManager {
 	public static List<User> getUserList(String name, String email, String teamId, Long runId) {
 		ArrayList<User> returnProgressDefinitions = new ArrayList<User>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Query query = pm.newQuery(UserJDO.class);
-		Object args [] ={name, email, teamId, runId};
-		query.setFilter(ManagerUtil.generateFilter(args, params, paramsNames));
-		query.declareParameters(ManagerUtil.generateDeclareParameters(args, types, params, paramsNames));
-		Iterator<UserJDO> it = ((List<UserJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args))).iterator();
+		Iterator<UserJDO> it = getUsers(pm, name, email, teamId, runId).iterator();
 		while (it.hasNext()) {
 			returnProgressDefinitions.add(toBean((UserJDO) it.next()));
 		}
 		return returnProgressDefinitions;
-
+	}
+	
+	public static List<UserJDO> getUsers(PersistenceManager pm, String name, String email, String teamId, Long runId) {
+		Query query = pm.newQuery(UserJDO.class);
+		Object args [] ={name, email, teamId, runId};
+		query.setFilter(ManagerUtil.generateFilter(args, params, paramsNames));
+		query.declareParameters(ManagerUtil.generateDeclareParameters(args, types, params, paramsNames));
+		return  (List<UserJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args));
 	}
 	
 	@Deprecated
@@ -120,6 +124,7 @@ public class UserManager {
 		userBean.setRunId(jdo.getRunId());
 		userBean.setTeamId(jdo.getTeamId());
 		userBean.setEmail(jdo.getEmail());
+		userBean.setDeleted(jdo.getDeleted());
 		return userBean;
 	}
 
@@ -133,7 +138,18 @@ public class UserManager {
 		} finally {
 			pm.close();
 		}
-
+	}
+	
+	public static void setStatusDeleted(long runId, String email) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			List<UserJDO> deleteList = getUsers(pm, null, email, null, runId);
+			for (UserJDO jdo: deleteList) {
+				jdo.setDeleted(true);
+			}
+		} finally {
+			pm.close();
+		}
 	}
 	
 //	private static User toBean(UserJDO jdo) {

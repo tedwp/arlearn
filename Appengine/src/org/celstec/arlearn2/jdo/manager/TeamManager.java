@@ -17,17 +17,19 @@ import com.google.appengine.api.datastore.KeyFactory;
 
 public class TeamManager {
 
-	public static void addTeam(Long runId, String teamId, String name) {
+	public static Team addTeam(Long runId, String teamId, String name) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		TeamJDO team = new TeamJDO();
 		team.setTeamId(teamId);
 		team.setName(name);
 		team.setRunId(runId);
+		Team result = toBean(team);
 		try {
 			pm.makePersistent(team);
 		} finally {
 			pm.close();
 		}
+		return result;
 	}
 
 	public static TeamList getTeams(Long runId) {

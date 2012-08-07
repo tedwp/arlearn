@@ -34,6 +34,14 @@ public abstract class ActionsCallback extends JsonCallback {
 		return (long) game.get("generalItemId").isNumber().doubleValue();
 	}
 	
+	public long getTimeStamp(int i) {
+		if (jsonValue == null) return -1;
+		JSONObject game = jsonValue.get(i).isObject();
+		if (game == null) return -1;
+		if (!game.containsKey("timestamp")) return -1;
+		return (long) game.get("timestamp").isNumber().doubleValue();
+	}
+	
 	public String getGeneralItemType(int i) {
 		if (jsonValue == null) return null;
 		JSONObject game = jsonValue.get(i).isObject();

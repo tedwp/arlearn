@@ -5,6 +5,7 @@ import javax.jdo.annotations.Persistent;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Text;
 
 @PersistenceCapable
 public class RunJDO extends RunClass{
@@ -19,13 +20,19 @@ public class RunJDO extends RunClass{
     private String owner;
 	
 	@Persistent
+    private String tagId;
+	
+	@Persistent
 	private Long startTime;
 
 	@Persistent
 	private Long serverCreationTime;
 	
 	@Persistent
-	private String gameOverDependsOn;
+	private Long lastModificationDate;
+	
+	@Persistent
+	private Text payload;
 
 	public Long getRunId() {
 		return id.getId();
@@ -64,6 +71,14 @@ public class RunJDO extends RunClass{
 		this.owner = owner;
 	}
 
+	public String getTagId() {
+		return tagId;
+	}
+
+	public void setTagId(String tagId) {
+		this.tagId = tagId;
+	}
+
 	public Long getStartTime() {
 		return startTime;
 	}
@@ -80,13 +95,23 @@ public class RunJDO extends RunClass{
 		this.serverCreationTime = serverCreationTime;
 	}
 
-	public String getGameOverDependsOn() {
-		return gameOverDependsOn;
+	public Long getLastModificationDate() {
+		return lastModificationDate;
 	}
 
-	public void setGameOverDependsOn(String gameOverDependsOn) {
-		this.gameOverDependsOn = gameOverDependsOn;
+	public void setLastModificationDate(Long lastModificationDate) {
+		this.lastModificationDate = lastModificationDate;
 	}
+
+	public Text getPayload() {
+		return payload;
+	}
+
+	public void setPayload(Text payload) {
+		this.payload = payload;
+	}
+
+	
 
 	
 }

@@ -76,10 +76,10 @@ public class ScoreRecordManager {
 		return scoreRecord;
 	}
 
-	public static void deleteScoreRecords(Long runId) {
+	public static void deleteScoreRecords(Long runId, String account) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
-			List<ScoreRecordJDO> toDelete =getScoreRecord(pm, runId, null, null, null, null, null, null);
+			List<ScoreRecordJDO> toDelete =getScoreRecord(pm, runId, account, null, null, null, null, null);
 			pm.deletePersistentAll(toDelete);
 		} finally {
 			pm.close();

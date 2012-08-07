@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	version="2.5">
+<?xml version="1.0" encoding="utf-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 	<servlet>
 		<servlet-name>Jersey REST Service</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -15,11 +10,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</servlet>
 	
 	<servlet>
-		<servlet-name>XmppNotificationServlet</servlet-name>
-		<servlet-class>org.celstec.arlearn2.tasks.XmppNotificationServlet</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>AsyncTasksServlet</servlet-name>
 		<servlet-class>org.celstec.arlearn2.tasks.AsyncTasksServlet</servlet-class>
 	</servlet>
@@ -27,6 +17,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet>
 		<servlet-name>BlobStoreServlet</servlet-name>
 		<servlet-class>org.celstec.arlearn2.upload.BlobStoreServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>BlobStoreServletIncremental</servlet-name>
+		<servlet-class>org.celstec.arlearn2.upload.BlobStoreServletIncremental</servlet-class>
 	</servlet>
 	
 	<servlet>
@@ -45,12 +40,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>XmppNotificationServlet</servlet-name>
-		<url-pattern>/xmpp/notify</url-pattern>
-	</servlet-mapping>
-
-
-	<servlet-mapping>
 		<servlet-name>AsyncTasksServlet</servlet-name>
 		<url-pattern>/asyncTask</url-pattern>
 	</servlet-mapping>
@@ -60,6 +49,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<url-pattern>/uploadService/*</url-pattern>
 	</servlet-mapping>
 
+	<servlet-mapping>
+		<servlet-name>BlobStoreServletIncremental</servlet-name>
+		<url-pattern>/uploadServiceIncremental/*</url-pattern>
+	</servlet-mapping>
+	
 	<servlet-mapping>
 		<servlet-name>UploadGameServlet</servlet-name>
 		<url-pattern>/uploadGame/*</url-pattern>
@@ -73,4 +67,18 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
+  <servlet>
+    <servlet-name>SystemServiceServlet</servlet-name>
+    <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
+    <init-param>
+      <param-name>services</param-name>
+      <param-value/>
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>SystemServiceServlet</servlet-name>
+    <url-pattern>/_ah/spi/*</url-pattern>
+  </servlet-mapping>
+
 </web-app>

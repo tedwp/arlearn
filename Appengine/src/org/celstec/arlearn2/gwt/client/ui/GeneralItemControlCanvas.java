@@ -11,7 +11,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.Window;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -185,12 +184,12 @@ public class GeneralItemControlCanvas extends VStack {
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.NarratorItem", "Narrator Item");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest", "Multiple Choice");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.VideoObject", "Video Object");
+		valueMap.put("org.celstec.arlearn2.beans.generalItem.YoutubeObject", "Youtube movie");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.AudioObject", "Audio Object");
 		return valueMap;
 	}
 
 	public void edit(JSONValue jsonValue) {
-//		Window.alert("jsonValue "+jsonValue);
 		initGeneralItemPane(jsonValue.isObject().get("type").isString().stringValue());
 		selectType.setDisabled(true);
 		giCanvas.setItemValues(jsonValue);

@@ -103,6 +103,9 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Download Item")
 	String downloadItem();
 	
+	@DefaultStringValue("Browse Item")
+	String browseItem();
+	
 	@DefaultStringValue("New Role")
 	String newRole();
 	
@@ -142,11 +145,17 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Open Question")
 	String openQuestion();
 	
+	@DefaultStringValue("NFC Enabled")
+	String isNfcEnabled();
+	
 	@DefaultStringValue("Answer with audio")
 	String answerWithAudio();
 	
 	@DefaultStringValue("Answer with picture")
 	String answerWithPicture();
+	
+	@DefaultStringValue("Answer with video")
+	String answerWithVideo();
 	
 	@DefaultStringValue("Create")
 	String create();
@@ -237,6 +246,9 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Add User")
 	String addUser();
 	
+	@DefaultStringValue("Are you sure you want to remove *** ?")
+	String confirmDeleteUser();
+	
 	@DefaultStringValue("User name")
 	String userName();
 	
@@ -248,6 +260,15 @@ public interface AuthoringConstants extends Constants {
 	
 	@DefaultStringValue("search")
 	String search();
+	
+	@DefaultStringValue("Time Out")
+	String timeOut();
+	
+	@DefaultStringValue("Reload")
+	String reload();
+	
+	@DefaultStringValue("Your session has timed out.")
+	String sessionTimeout();
 	
 	//instruction
 	

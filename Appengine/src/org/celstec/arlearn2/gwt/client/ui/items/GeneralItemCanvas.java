@@ -232,6 +232,9 @@ public abstract class GeneralItemCanvas extends VStack{
 		if ("org.celstec.arlearn2.beans.generalItem.VideoObject".equals(itemId)) {
 			return new VideoObjectCanvas(roles);	
 		}
+		if ("org.celstec.arlearn2.beans.generalItem.YoutubeObject".equals(itemId)) {
+			return new YoutubeObjectCanvas(roles);	
+		}
 		if ("org.celstec.arlearn2.beans.generalItem.AudioObject".equals(itemId)) {
 			return new AudioObjectCanvas(roles);	
 		}

@@ -42,6 +42,16 @@ public class ResponseAPI extends Service {
 	// }
 	//
 	// }
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/runId/{runIdentifier}")
+	public String getAnswers(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		ResponseDelegator rd = new ResponseDelegator(token);
+		return serialise(rd.getResponses(runIdentifier, null, null), accept);
+	}
 
 	// TODO work out and return responses
 	@GET
@@ -53,14 +63,19 @@ public class ResponseAPI extends Service {
 			return serialise(getInvalidCredentialsBean(), accept);
 
 		ResponseDelegator rd = new ResponseDelegator(token);
-		return serialise(rd.getResponses(runIdentifier, account), accept);
-//		List<Response> list = rd.getResponses(runIdentifier, account);
-//		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-//			Response response = (Response) iterator.next();
-//			System.out.println(response.getResponseValue());
-//		}
-//
-//		return "true";
+		return serialise(rd.getResponses(runIdentifier, null, account), accept);
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/runId/{runIdentifier}/itemId/{itemId}")
+	public String getAnswers(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @PathParam("itemId") Long itemId, @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+
+		ResponseDelegator rd = new ResponseDelegator(token);
+		return serialise(rd.getResponses(runIdentifier, itemId, null), accept);
 	}
 
 	@POST

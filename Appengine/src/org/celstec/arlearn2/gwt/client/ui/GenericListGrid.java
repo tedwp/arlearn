@@ -25,6 +25,7 @@ public class GenericListGrid extends ListGrid {
 	private boolean deleteable = false;
 	private boolean downloadable = false;
 	private boolean mapable = false;
+	private boolean browsable = false;
 	
 	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 	
@@ -33,11 +34,12 @@ public class GenericListGrid extends ListGrid {
 		this.deleteable = deleteable;
 	}
 	
-	public GenericListGrid(boolean editable, boolean deleteable, boolean downloadable, boolean mapable) {
+	public GenericListGrid(boolean editable, boolean deleteable, boolean downloadable, boolean mapable, boolean browsable) {
 		this.editable =editable;
 		this.deleteable = deleteable;
 		this.downloadable = downloadable;
-		this.mapable =mapable;
+		this.mapable = mapable;
+		this.browsable = browsable;
 	}
 	
  	private ListGridRecord rollOverRecord;// = this.getRecord(rowNum);  
@@ -109,6 +111,25 @@ public class GenericListGrid extends ListGrid {
 
 	             rollOverCanvas.addMember(deleteImg);  
 				}
+			if (browsable) {
+
+	             ImgButton openImg = new ImgButton();  
+	             openImg.setShowDown(false);  
+	             openImg.setShowRollOver(false);  
+	             openImg.setLayoutAlign(Alignment.CENTER);  
+	             openImg.setSrc("icon_magnify.png");  
+	             openImg.setPrompt(constants.browseItem());  
+	             openImg.setHeight(16);  
+	             openImg.setWidth(16);  
+	             openImg.addClickHandler(new ClickHandler() {  
+	                 public void onClick(ClickEvent event) {  
+	                	 browseItem( rollOverRecord);
+	                     
+	                 }  
+	             });  
+
+	             rollOverCanvas.addMember(openImg);  
+			}
 			
 			if (deleteable) {
 
@@ -146,9 +167,9 @@ public class GenericListGrid extends ListGrid {
 	} 
 	protected void download(ListGridRecord rollOverRecord) {
 	}  
-	protected void mapItem(ListGridRecord rollOverRecord) {		
-	}  
+	protected void mapItem(ListGridRecord rollOverRecord) {}  
 	
+	protected void browseItem(ListGridRecord rollOverRecord) {}  
 	
 
 }

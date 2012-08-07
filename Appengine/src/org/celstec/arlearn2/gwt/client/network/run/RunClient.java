@@ -27,6 +27,15 @@ public class RunClient extends GenericClient {
 		invokeJsonPOST(null, object, jcb);		
 	}
 	
+	public void updateRun(long runId, JSONObject run, JsonCallback jcb) {
+		invokeJsonPUT("/runId/"+runId, run.toString(), jcb);		
+
+	}
+	
+	public void runsParticapte(final JsonCallback jcb) {
+		invokeJsonGET("/participate", jcb);
+	}
+	
 	public String getUrl() {
 		return super.getUrl() + "myRuns";
 	}

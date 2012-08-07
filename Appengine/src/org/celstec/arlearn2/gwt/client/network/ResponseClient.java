@@ -19,6 +19,10 @@ public class ResponseClient extends GenericClient {
 		invokeJsonGET("/runId/"+runId+"/account/"+account, jcb);
 	}
 	
+	public void getResponses(long runId, long itemId, final JsonCallback jcb) {
+		invokeJsonGET("/runId/"+runId+"/itemId/"+itemId, jcb);
+	}
+	
 	public void createResponse(long id,long runId,String responseValue,String email, final JsonCallback jcb) {
 		JSONObject object = new JSONObject();
 		object.put("generalItemId", new JSONNumber(id));

@@ -19,6 +19,9 @@ public class RunClass {
 	
 	@Persistent
 	private Long runId;
+	
+	@Persistent
+	private Boolean deleted;
 
 	public Long getRunId() {
 		return runId;
@@ -26,6 +29,15 @@ public class RunClass {
 
 	public void setRunId(Long runId) {
 		this.runId = runId;
+	}
+	
+	public Boolean getDeleted() {
+		if (deleted == null) return false;
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 	
 }

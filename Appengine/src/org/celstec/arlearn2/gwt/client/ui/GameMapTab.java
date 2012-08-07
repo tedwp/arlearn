@@ -61,7 +61,6 @@ public class GameMapTab extends MapTab implements NotificationHandler {
 		if (mapLoaded) GeneralItemsClient.getInstance().getGeneralItemsGame(gameId, new JsonCallback() {
 			
 			public void onJsonReceived(JSONValue jsonValue) {
-				System.out.println(jsonValue);
 				if (jsonValue.isObject().containsKey("generalItems")) {
 					super.jsonValue = jsonValue.isObject().get("generalItems").isArray();
 				}

@@ -23,11 +23,14 @@ import org.celstec.arlearn2.gwt.client.network.run.RunDataSource;
 import org.celstec.arlearn2.gwt.client.network.team.TeamsDataSource;
 import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
 import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
+import org.celstec.arlearn2.gwt.client.ui.DatabaseTab;
 import org.celstec.arlearn2.gwt.client.ui.GameTab.RoleDataSource;
+import org.celstec.arlearn2.gwt.client.ui.ChannelDisplay;
 import org.celstec.arlearn2.gwt.client.ui.GamesMapTab;
 import org.celstec.arlearn2.gwt.client.ui.GamesTab;
 import org.celstec.arlearn2.gwt.client.ui.LoginWindow;
 import org.celstec.arlearn2.gwt.client.ui.RunsTab;
+import org.celstec.arlearn2.gwt.client.ui.WebServicesTab;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -115,18 +118,18 @@ public class Authoring implements EntryPoint {
 				tabHashMap.remove(toDelete);
 			}
 		});
+		
         
 		gamesTab =new GamesTab();
 		runsTab = new RunsTab();
         topTabSet.addTab(gamesTab);  
         topTabSet.addTab(runsTab);  
         
-       
-        
-        
-  
-//        topTabSet.addTab(new ActionTab());  
-
+        if (hidden) {
+			topTabSet.addTab(new DatabaseTab());
+			topTabSet.addTab(new WebServicesTab());
+			topTabSet.addTab(new ChannelDisplay());
+		}
         
         b = new IButton(constants.login());
         if (!Authentication.getInstance().isAuthenticated()) {
