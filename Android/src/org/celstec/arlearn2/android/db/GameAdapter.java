@@ -19,6 +19,7 @@ public class GameAdapter extends GenericDbTable {
 	public static final String SCORING = "scoring";
 	public static final String MAP_AVAILABLE = "mapAvailable";
 	public static final String BEAN = "bean";
+	public static final String OWNER = "owner";
 	
 	public GameAdapter(DBAdapter db) {
 		super(db);
@@ -31,7 +32,8 @@ public class GameAdapter extends GenericDbTable {
 				+ TITLE + " text not null, " 
 				+ SCORING + " boolean not null, "
 				+ BEAN + " text , "
-				+ MAP_AVAILABLE + " boolean not null);";
+				+ MAP_AVAILABLE + " boolean not null, "
+				+ OWNER + " text);";
 	}
 
 	@Override
@@ -60,6 +62,7 @@ public class GameAdapter extends GenericDbTable {
 		ContentValues cValues = new ContentValues();
 		cValues.put(ID, g.getGameId());
         cValues.put(TITLE, g.getTitle());
+        cValues.put(OWNER, g.getOwner());
         if (g.getConfig() != null) {
         	Config c = g.getConfig();
         	if (c.getMapAvailable() == null) c.setMapAvailable(true);

@@ -3,7 +3,7 @@ package org.celstec.arlearn2.client;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.beans.game.Game;
-import org.celstec.arlearn2.beans.run.Action;
+import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.network.ConnectionFactory;
 
 public class GameClient extends GenericClient{
@@ -19,6 +19,10 @@ public class GameClient extends GenericClient{
 			instance = new GameClient();
 		}
 		return instance;
+	}
+	
+	public GamesList getGames(String token) {
+		return (GamesList)  executeGet(getUrlPrefix(), token, GamesList.class);
 	}
 	
 	public Game createGame(String token, Game game) {

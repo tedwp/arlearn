@@ -19,11 +19,13 @@ public class GenericBroadcastReceiver {
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
-			Boolean forMe = intent.getExtras().getBoolean(activity.getClass().getCanonicalName(), false);
-			if (forMe) {
-				if (((ARLearnBroadcastReceiver) activity).showStatusLed())
-					LedStatus.updateStatus(activity);
-				((ARLearnBroadcastReceiver) activity).onBroadcastMessage(intent.getExtras());
+			if (intent.getExtras() != null) {
+				Boolean forMe = intent.getExtras().getBoolean(activity.getClass().getCanonicalName(), false);
+				if (forMe) {
+					if (((ARLearnBroadcastReceiver) activity).showStatusLed())
+						LedStatus.updateStatus(activity);
+					((ARLearnBroadcastReceiver) activity).onBroadcastMessage(intent.getExtras());
+				}
 			}
 		}
 	};

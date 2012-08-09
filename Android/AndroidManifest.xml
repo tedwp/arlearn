@@ -75,6 +75,11 @@
                 <action android:name="org.celstec.arlearn2.beans.notification.RunModification" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".broadcast.GameReceiver" >
+            <intent-filter>
+                <action android:name="org.celstec.arlearn2.beans.notification.GameModification" />
+            </intent-filter>
+        </receiver>
         <receiver android:name=".broadcast.PingReceiver" >
             <intent-filter>
                 <action android:name="org.celstec.arlearn2.beans.notification.Ping" />

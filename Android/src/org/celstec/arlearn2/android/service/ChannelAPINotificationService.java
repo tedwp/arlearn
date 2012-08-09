@@ -12,6 +12,7 @@ import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
+import org.celstec.arlearn2.android.broadcast.GameReceiver;
 import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.broadcast.RunReceiver;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
@@ -277,6 +278,10 @@ public class ChannelAPINotificationService extends Service {
 		Intent runSyncIntent = new Intent();
 		runSyncIntent.setAction(RunReceiver.action);
 		sendBroadcast(runSyncIntent);
+		
+		Intent gameSyncIntent = new Intent();
+		gameSyncIntent.setAction(GameReceiver.action);
+		sendBroadcast(gameSyncIntent);
 		
 		Intent gimIntent = new Intent();
 		gimIntent.setAction(GeneralItemReceiver.action);

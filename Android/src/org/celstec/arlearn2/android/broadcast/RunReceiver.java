@@ -53,8 +53,7 @@ public class RunReceiver extends GenericReceiver {
 					updateActivities(context);
 					semaphore.release();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.e("ERROR", e.getMessage(), e);
 				}
 			}
 		}).start();
@@ -145,12 +144,5 @@ public class RunReceiver extends GenericReceiver {
 		updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName());
 	}
 	
-	private void setStatusToLogout(Context context) {
-		PropertiesAdapter.getInstance(context).disAuthenticate();
-		Intent updateIntent = new Intent();
-		updateIntent.setAction("org.celstec.arlearn.updateActivities");
-		updateIntent.putExtra(ListExcursionsActivity.class.getCanonicalName(), true);
-		updateIntent.putExtra(ListMessagesActivity.class.getCanonicalName(), true);
-		context.sendBroadcast(updateIntent);
-	}
+	
 }
