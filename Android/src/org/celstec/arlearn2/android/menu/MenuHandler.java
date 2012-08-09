@@ -18,6 +18,7 @@ import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.genItemActivities.AudioObjectActivity;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.service.BackgroundService;
+import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 //import org.jivesoftware.smack.Chat;
 //import org.jivesoftware.smack.ChatManager;
 //import org.jivesoftware.smack.ConnectionConfiguration;
@@ -64,6 +65,7 @@ public class MenuHandler {
 			break;
 		case LOGOUT:
 			pa.disAuthenticate();
+			context.startService(new Intent(context, ChannelAPINotificationService.class).putExtra("stop", true));
 			context.finish();
 			context.startActivity(new Intent(context, SplashScreenActivity.class));
 			break;

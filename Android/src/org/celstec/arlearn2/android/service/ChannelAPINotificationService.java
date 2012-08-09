@@ -21,7 +21,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import edu.gvsu.cis.masl.channelAPI.ChannelAPI;
-import edu.gvsu.cis.masl.channelAPI.ChannelService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -39,9 +38,7 @@ public class ChannelAPINotificationService extends Service {
 	private ChannelThread thread;
 	private long lastTrafficTimeStamp;
 	
-	private ChannelService chatListener;
 	private ChannelAPI channel;
-	private long lastCreate;
 	private PropertiesAdapter pa;
 	 CountDownLatch startLatch;
 	 
@@ -57,31 +54,38 @@ public class ChannelAPINotificationService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (intent.getBooleanExtra("stop", false)) {
+			 stopNotificationService();
+		} else {
+			startNotificationService();
+		}
+		return START_NOT_STICKY;
+	}
+	
+	public void stopNotificationService() {
+		if (thread.channelHandler != null) {
+			Message disconnect = Message.obtain(thread.channelHandler, ChannelHandler.DISCONNECT);
+			disconnect.sendToTarget();
+		}
+	}
+	
+	public void startNotificationService() {
 		startLatch = new CountDownLatch(1);
-		if (pa == null) pa = new PropertiesAdapter(this);
+		if (pa == null)
+			pa = new PropertiesAdapter(this);
 		if (thread == null) {
 			thread = new ChannelThread(this);
 			thread.start();
 		} else {
 			startLatch.countDown();
 		}
-		
-		
-//		else {
-//			
-//		}
-		
 		try {
 			startLatch.await();
-			Message restart = Message.obtain(thread.channelHandler, 1);
+			Message restart = Message.obtain(thread.channelHandler, ChannelHandler.RESTART);
 			restart.sendToTarget();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		return START_NOT_STICKY;
 	}
 	
 	
@@ -109,37 +113,8 @@ public class ChannelAPINotificationService extends Service {
 			this.ctx = ctx;
 		}
 		
-//		private void createChatListener() {
-//			chatListener = new ChannelService() {
-//
-//				
-//
-//			};
-//		}
-
-		
-//		private void checkStopService() {
-//			if ((System.currentTimeMillis() - lastCreate) < 120000) {
-//				startChannelListener();
-//			} else {
-//				Log.i("stopSelf", "");
-//				ChannelAPINotificationService.this.stopSelf();
-//				ChannelAPINotificationService.this.thread = null;
-//			}
-//		}
-		
-		
-		
-		
 		@Override
 		public void run() {
-//			lastCreate = System.currentTimeMillis();
-//			if (chatListener == null) {
-//				createChatListener();
-//			}
-
-//			if (pa.getStatus() == OFFLINE_STATUS)
-//				startChannelListener();
 			try {
 				Looper.prepare();
 				channelHandler = new ChannelHandler();
@@ -159,35 +134,38 @@ public class ChannelAPINotificationService extends Service {
 		public final static int ONERROR = 4;
 		public final static int ONCLOSE = 5;
 		public final static int ONMESSAGE = 6;
+		public final static int DISCONNECT = 7;
 
 		@Override
 		public void handleMessage(Message message) {
 			switch (message.what) {
 			case RESTART:
-				System.out.println("restart "+message+" "+message.what);
 				restartChannel();
 				break;
 			case ONOPEN:
-				System.out.println("ONOPEN "+message+" "+message.what);
 				onOpen();
 				break;
 			case ONTRAFFIC:
-				System.out.println("ONTRAFFIC "+message+" "+message.what);
 				onTraffic();
 				break;
 			case ONERROR:
-				System.out.println("ONERROR "+message+" "+message.what);
 				onError();
 				break;
 			case ONCLOSE:
-				System.out.println("ONCLOSE "+message+" "+message.what);
 				onClose();
 				break;
 			case ONMESSAGE:
-				System.out.println("ONMESSAGE "+message+" "+message.what);
 				onMessage((String)message.obj);
 				break;
-
+			case DISCONNECT:
+				if (channel != null) {
+					try {
+						channel.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				break;
 			default:
 				break;
 			}
