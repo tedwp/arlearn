@@ -71,11 +71,11 @@ public class RunTabConfig  extends Canvas {
 		form = new DynamicForm();
 		form.setNumCols(3);
 		HeaderItem header = new HeaderItem();
-		header.setDefaultValue("Run options");
+		header.setDefaultValue(constants.runOptions());
 		
 		openRun = new CheckboxItem();
 		openRun.setName("openRun");
-		openRun.setTitle("Open run");
+		openRun.setTitle(constants.openRun());
 		openRun.setShowTitle(false);
 		openRun.setRedrawOnChange(true);
 		openRun.setEndRow(false);
@@ -85,8 +85,7 @@ public class RunTabConfig  extends Canvas {
 			
 			@Override
 			public void onItemHover(ItemHoverEvent event) {
-			 String prompt = "i18 Open run means, that the run is open to everyone and that everyone can register as a player for this run.";
-			 openRun.setPrompt(prompt);
+			 openRun.setPrompt(constants.openRunHover());
 			}
 		});
 

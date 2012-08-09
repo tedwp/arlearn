@@ -1,25 +1,34 @@
 package org.celstec.arlearn2.gwt.client.ui.items;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import org.celstec.arlearn2.gwt.client.Authoring;
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
+import org.celstec.arlearn2.gwt.client.network.generalItem.GeneralItemGameDataSource;
 
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
+import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.HiddenItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.ItemHoverEvent;
+import com.smartgwt.client.widgets.form.fields.events.ItemHoverHandler;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.IsFloatValidator;
 import com.smartgwt.client.widgets.form.validator.IsIntegerValidator;
@@ -32,12 +41,18 @@ public abstract class GeneralItemCanvas extends VStack{
 	protected HiddenItem idItem;
 	protected HiddenItem gameIdItem;
 	protected TextItem nameItem;
-	protected SelectItem selectScope;
 //	protected TextItem radiusItem;
 	protected TextItem latItem;
 	protected TextItem lngItem;
 	protected TextItem sortItem;
-	protected TextAreaItem dependencyField;
+//	protected TextAreaItem dependencyField;
+	protected CheckboxItem isAutolaunch;
+	protected CheckboxItem isSimpleDependency;
+	protected SelectItem selectAction;
+	protected SelectItem selectGeneralItem;
+	protected SelectItem selectRole;
+	protected SelectItem selectScope;
+	
 	protected SelectItem roleGrid;
 	private String dependency = null;
 	private String roles[];
@@ -46,12 +61,17 @@ public abstract class GeneralItemCanvas extends VStack{
 	private final String ORDER = "sortKey";
 	private final String GAME_ID_NAME = "gameId";
 	private final String NAME = "name";
-	private final String SCOPE = "scope";
 //	private final String RADIUS = "radius";
 	private final String LAT = "lat";
 	private final String LNG = "lng";
 	private final String ROLE = "roles";
 	private final String DEPENDENCY = "dependency";
+	private final String AUTOLAUNCH = "autoLaunch";
+	private final String SIMPLE_DEP = "simpleDep";
+	private final String ACTION_DEP = "action";
+	private final String GENITEM_DEP = "generalItemId";
+	private final String SCOPE_DEP = "scope";
+	private final String ROLE_DEP = "role";
 	
 	protected AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
@@ -69,8 +89,10 @@ public abstract class GeneralItemCanvas extends VStack{
 		createLatItem();
 		createLngItem();
 		createSortItem();
-		createDepencyItem();
+//		createDepencyItem();
 		createRoleItem();
+		createAutoLaunchComponent();
+		createSimpleDependencyComponent();
 	}
 	
 
@@ -90,13 +112,7 @@ public abstract class GeneralItemCanvas extends VStack{
 		nameItem.setValidators(cv);
 	}
 	
-	protected void createSelectScopeItem() {
-		selectScope = new SelectItem(SCOPE);
-		selectScope.setTitle("Select scope");
-		selectScope.setValueMap("user", "team", "all");
-		selectScope.setDisabled(true);
-	}
-	
+
 //	protected void createRadiusItem() {
 //		radiusItem = new TextItem(RADIUS);
 //		radiusItem.setTitle(constants.radius());
@@ -130,16 +146,16 @@ public abstract class GeneralItemCanvas extends VStack{
 		sortItem.setValidators(intValidator);
 	}
 	
-	protected void createDepencyItem(){
-		dependencyField = new TextAreaItem();  
-		dependencyField.setTitle("Plain Text");
-		dependencyField.setName(DEPENDENCY);
-		dependencyField.setShowIfCondition(new FormItemIfFunction() {  
-            public boolean execute(FormItem item, Object value, DynamicForm form) {  
-                return dependency != null;  
-            }
-        });  
-	}
+//	protected void createDepencyItem(){
+//		dependencyField = new TextAreaItem();  
+//		dependencyField.setTitle("Plain Text");
+//		dependencyField.setName(DEPENDENCY);
+//		dependencyField.setShowIfCondition(new FormItemIfFunction() {  
+//            public boolean execute(FormItem item, Object value, DynamicForm form) {  
+//                return dependency != null;  
+//            }
+//        });  
+//	}
 	
 	protected void createRoleItem() {
 		roleGrid = new SelectItem();
@@ -156,6 +172,91 @@ public abstract class GeneralItemCanvas extends VStack{
             }
         });  
 	}
+	
+	private void createAutoLaunchComponent() {
+		isAutolaunch = new CheckboxItem();
+		isAutolaunch.setName(AUTOLAUNCH);
+		isAutolaunch.setTitle(constants.autoLaunch());
+		isAutolaunch.addItemHoverHandler(new ItemHoverHandler() {
+			
+			@Override
+			public void onItemHover(ItemHoverEvent event) {
+			 
+			 isAutolaunch.setPrompt(constants.autoLaunchHover());
+			}
+		});
+	}
+	
+	private void createSimpleDependencyComponent() {
+		isSimpleDependency = new CheckboxItem();
+		isSimpleDependency.setName(SIMPLE_DEP);
+		isSimpleDependency.setTitle(constants.simpleDep());
+		isSimpleDependency.addItemHoverHandler(new ItemHoverHandler() {
+			@Override
+			public void onItemHover(ItemHoverEvent event) {
+				isSimpleDependency.setPrompt(constants.simpleDepExplain());
+			}
+		});
+		isSimpleDependency.setRedrawOnChange(true);
+		isSimpleDependency.setValue(true);
+
+		FormItemIfFunction formIf = new FormItemIfFunction() {  
+            public boolean execute(FormItem item, Object value, DynamicForm form) {  
+            	if (form.getValue(SIMPLE_DEP) == null) return false;
+
+                return form.getValue(SIMPLE_DEP).equals(Boolean.TRUE);  
+            }
+
+        };
+		selectAction = new SelectItem(ACTION_DEP);
+		selectAction.setTitle(constants.actionDep());
+		selectAction.setValueMap(createSimpleDependencyValues());
+		selectAction.setWrapTitle(false);
+		selectAction.setShowIfCondition(formIf);  
+		selectAction.setStartRow(true);
+		
+		selectGeneralItem = new SelectItem(GENITEM_DEP);
+		selectGeneralItem.setTitle(constants.generalItemDep());
+		selectGeneralItem.setValueMap(createSimpleDependencyValues());
+		selectGeneralItem.setWrapTitle(false);
+		selectGeneralItem.setDisplayField("name");
+		Criteria crit = new Criteria();
+		crit.addCriteria("deleted", false);
+		selectGeneralItem.setPickListCriteria(crit);
+		selectGeneralItem.setValueField("id");
+		selectGeneralItem.setOptionDataSource(GeneralItemGameDataSource.getInstance());
+		selectGeneralItem.setShowIfCondition(formIf);
+		selectGeneralItem.setStartRow(true);
+		
+		selectScope = new SelectItem(SCOPE_DEP);
+		selectScope.setTitle(constants.scopeDep());
+		selectScope.setValueMap(createScopeDependencyValues());
+		selectScope.setShowIfCondition(formIf);
+		selectScope.setStartRow(true);
+		
+		selectRole = new SelectItem(ROLE_DEP);
+		selectRole.setTitle(constants.roleDep());
+		selectRole.setValueMap(roles);
+		selectRole.setShowIfCondition(formIf);
+		selectRole.setStartRow(true);
+	}
+	
+	public LinkedHashMap<String, String> createSimpleDependencyValues() {
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+		valueMap.put("read", "Read");
+		valueMap.put("answer_given", "Anser given");
+		return valueMap;
+	}
+	
+	public LinkedHashMap<String, String> createScopeDependencyValues() {
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+		valueMap.put("0", "User");
+		valueMap.put("1", "Team");
+		valueMap.put("2", "All");
+		return valueMap;
+	}
+	
+	
 	
 	public void setGameId(int gameId) {
 		gameIdItem.setValue((int) gameId);
@@ -248,19 +349,40 @@ public abstract class GeneralItemCanvas extends VStack{
 		JSONObject object = new JSONObject();
 		putIntegerValue(object, ID_NAME, GAME_ID_NAME, ORDER);
 //		putIntegerValue(object, ID_NAME, GAME_ID_NAME, RADIUS);
-		putStringValue(object, NAME, SCOPE);
+		putStringValue(object, NAME);
 		putDoubleValue(object, LAT, LNG);
 		putArrayValue(object, roleGrid);
-//		if (roleGrid.getValues().length != 0) {
-//			JSONArray ar = new JSONArray();
-//			
-//			object.put("roles", ar);
-//			for (int i = 0; i <roleGrid.getValues().length; i++) {
-////				ar.put(i, roleGrid.getValues()[i]);
-//				ar.set(i, new JSONString(roleGrid.getValues()[i]));
-//			}
-//		}
+		object.put("autoLaunch", JSONBoolean.getInstance( getValue(AUTOLAUNCH)==null?false:(Boolean) getValue(AUTOLAUNCH)) );
+
 		
+		if (getValue(SIMPLE_DEP) != null && (Boolean) getValue(SIMPLE_DEP)) {
+			JSONObject actionDep = new JSONObject();
+			//{"type":"org.celstec.arlearn2.beans.dependencies.ActionDependency", "action":"manual-30"}
+			actionDep.put("type", new JSONString("org.celstec.arlearn2.beans.dependencies.ActionDependency"));
+			boolean addDep = false;
+			if (getValue(ACTION_DEP) != null) {
+				addDep = true;
+				actionDep.put("action", new JSONString((String) getValue(ACTION_DEP)));	
+			}
+			if (getValue(GENITEM_DEP) != null) {
+				addDep = true;
+				actionDep.put("generalItemId", new JSONNumber((Integer) getValue(GENITEM_DEP)));	
+			}
+			if (getValue(SCOPE_DEP) != null) {
+				addDep = true;
+				Object scope = getValue(SCOPE_DEP);
+				if (scope instanceof Integer)		{
+					actionDep.put("scope", new JSONNumber((Integer)getValue(SCOPE_DEP)));	
+				} else {
+					actionDep.put("scope", new JSONNumber(Integer.parseInt((String)  getValue(SCOPE_DEP))));	
+				}	
+			}
+			if (getValue(ROLE_DEP) != null) {
+				addDep = true;
+				actionDep.put("role", new JSONString((String)  getValue(ROLE_DEP)));	
+			}
+			if (addDep) object.put("dependsOn", actionDep);
+		}
 		return object;
 	}
 	
@@ -300,19 +422,33 @@ public abstract class GeneralItemCanvas extends VStack{
 		setValueDouble(ID_NAME, o);
 		setValueDouble(ORDER, o);
 		setValueString(NAME, o);
-		setValueString(SCOPE, o);
 //		setValueDouble(RADIUS, o);
 		setValueDouble(LAT, o);
 		setValueDouble(LNG, o);
-
-		if (o.get("dependsOn") != null) {
-			dependency = o.get("dependsOn").toString();
-//			dependencyField.setValue(dependency);
-			formMapping.get(DEPENDENCY).setValue(DEPENDENCY, dependency);
-		} else {
-			dependency = null;
-			formMapping.get(DEPENDENCY).redraw();
+		
+		if (o.get(AUTOLAUNCH) != null) {
+			formMapping.get(AUTOLAUNCH).setValue(AUTOLAUNCH, o.get(AUTOLAUNCH).isBoolean().booleanValue());
 		}
+
+		if (o.containsKey("dependsOn") && o.get("dependsOn").isObject() != null) {
+			JSONObject dep = o.get("dependsOn").isObject();
+			System.out.println(dep);
+			if (dep.containsKey("type")) {
+				formMapping.get(SIMPLE_DEP).setValue(SIMPLE_DEP, "org.celstec.arlearn2.beans.dependencies.ActionDependency".equals(dep.get("type").isString().stringValue()));
+					setValueString(ACTION_DEP, dep);
+					setValueString(ROLE_DEP, dep);
+					setValueDouble(GENITEM_DEP, dep);
+					setValueDouble(SCOPE_DEP, dep);
+			}
+			
+		}
+//			dependency = o.get("dependsOn").toString();
+////			dependencyField.setValue(dependency);
+//			formMapping.get(DEPENDENCY).setValue(DEPENDENCY, dependency);
+//		} else {
+//			dependency = null;
+//			formMapping.get(DEPENDENCY).redraw();
+//		}
 //		
 		if (o.get(ROLE) != null) {
 			JSONArray ar = o.get(ROLE).isArray();

@@ -8,6 +8,7 @@
 		android:layout_height="wrap_content" 
 		android:background="@android:drawable/editbox_background"
 		android:layout_weight="0" 
+		android:inputType="text"
 		android:hint="@string/uNameHint"/>
 	<EditText android:id="@+id/password" 
 		android:layout_width="fill_parent"
@@ -15,6 +16,7 @@
 		android:background="@android:drawable/editbox_background"
 		android:layout_weight="0" 
 		android:password="true"
+		android:inputType="textNoSuggestions|text"
 		android:hint="@string/passwordHint"/>
 
 	<CheckBox

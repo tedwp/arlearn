@@ -51,6 +51,10 @@ public class GameTeamDataSource extends GenericDataSource {
 			public String[] getSourceFieldName() {
 				return new String[] {"id", "name"};
 			}
+			@Override
+			public int getType() {
+				return STRING_DATA_TYPE;
+			}
 		}, true, false);
 	}
 

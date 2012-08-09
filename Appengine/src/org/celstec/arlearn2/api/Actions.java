@@ -21,6 +21,7 @@ import org.celstec.arlearn2.beans.run.ActionList;
 import org.celstec.arlearn2.beans.run.User;
 
 import org.celstec.arlearn2.delegators.ActionDelegator;
+import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.delegators.notification.Notification;
 import org.codehaus.jettison.json.JSONException;
@@ -62,31 +63,27 @@ public class Actions extends Service {
 	
 	@POST
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Path("/notify/{account}/{runId}/{gId}/{autoLaunch}")
+	@Path("/notify/{account}/{runId}/{gId}")
 	public void notify(
 			@HeaderParam("Authorization") String token, 
 			String action, 
 			@PathParam("account") String account,
 			@PathParam("runId") Long runId,
 			@PathParam("gId") Long gId,
-			@PathParam("autoLaunch") Boolean autoLaunch,
 			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
-//		Notification not = new Notification("all", runId, token);
-//		HashMap<String, String> hm = new HashMap<String, String>();
-//		hm.put("action", "visible");
-//		hm.put("itemId",""+gId);
-//		hm.put("name", "extra opdracht");
-//		hm.put("runId", ""+runId);
-//		not.notify(account, "GeneralItem", hm);
+
+		GeneralItemDelegator gd = new GeneralItemDelegator(token);
+		GeneralItem gi = gd.getGeneralItem(runId, gId);
+		if (gi != null && gi.getError() == null) {
+			GeneralItemModification gim = new GeneralItemModification();
+			gim.setModificationType(GeneralItemModification.VISIBLE);
+			gim.setRunId(runId);
+			gim.setGeneralItem(gi);
+			
+			ChannelNotificator.getInstance().notify(account, gim);	
+		}
 		
-		GeneralItemModification gim = new GeneralItemModification();
-		gim.setModificationType(GeneralItemModification.VISIBLE);
-		gim.setRunId(runId);
-		gim.setGeneralItem(new GeneralItem());
-		gim.getGeneralItem().setId(gId);
-		gim.getGeneralItem().setAutoLaunch(autoLaunch);
-		ChannelNotificator.getInstance().notify(account, gim);
 		
 	}
 	

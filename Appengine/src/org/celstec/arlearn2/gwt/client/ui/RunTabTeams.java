@@ -11,6 +11,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
@@ -39,6 +40,7 @@ public class RunTabTeams extends Canvas {
 		initButton();
 		
 		filterGrid();
+		setOverflow(Overflow.AUTO);
 	}
 	
 	private void initGrid() {
@@ -50,7 +52,7 @@ public class RunTabTeams extends Canvas {
 		};
 		teamGrid.setShowRollOverCanvas(true);
 		teamGrid.setWidth("100%");
-		teamGrid.setHeight(245);
+		teamGrid.setHeight(210);
 		teamGrid.setShowAllRecords(true);
 	}
 
@@ -88,7 +90,7 @@ public class RunTabTeams extends Canvas {
 		buttonLayout.setLayoutMargin(6);
 		buttonLayout.setMembersMargin(6);
 		buttonLayout.addMember(addTeamButton);
-		buttonLayout.setTop(245);
+		buttonLayout.setTop(205);
 		buttonLayout.setHeight(20);
 		buttonLayout.setWidth100();
 

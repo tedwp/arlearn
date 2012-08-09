@@ -26,7 +26,7 @@ public class YoutubeObjectCanvas extends NarratorItemCanvas {
 	
 	protected void doLayoutForm1() {
 		this.addMember(form1);
-		form1.setFields(idItem, gameIdItem, nameItem, youtubeFeed);
+		form1.setFields(idItem, gameIdItem, nameItem, youtubeFeed );
 		addField(form1,idItem, gameIdItem, nameItem, youtubeFeed);
 	}
 	

@@ -52,6 +52,12 @@ public class UsersDataSource extends GenericDataSource {
 			public String[] getSourceFieldName() {
 				return new String[] {};
 			}
+			
+			@Override
+			public int getType() {
+				return STRING_DATA_TYPE;
+			}
+			
 		}, false, false);
 		addDerivedField(new DerivedFieldTask() {
 			
@@ -73,6 +79,11 @@ public class UsersDataSource extends GenericDataSource {
 			@Override
 			public String[] getSourceFieldName() {
 				return new String[] {"runId", "teamId", "email"};
+			}
+			
+			@Override
+			public int getType() {
+				return STRING_DATA_TYPE;
 			}
 		}, true, false);
 	}

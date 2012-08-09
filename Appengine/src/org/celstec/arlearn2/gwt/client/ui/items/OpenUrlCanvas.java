@@ -29,8 +29,8 @@ public class OpenUrlCanvas extends GeneralItemCanvas {
 	
 	protected void doLayoutForm1() {
 		this.addMember(form1);
-		form1.setFields(idItem, gameIdItem, nameItem, urlItem, dependencyField, roleGrid);
-		addField(form1,idItem, gameIdItem, nameItem, urlItem, dependencyField, roleGrid);
+		form1.setFields(idItem, gameIdItem, nameItem, urlItem,  roleGrid);
+		addField(form1,idItem, gameIdItem, nameItem, urlItem,  roleGrid);
 	}
 	
 	protected void createOpenUrl() {

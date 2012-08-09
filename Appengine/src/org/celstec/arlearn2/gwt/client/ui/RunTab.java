@@ -114,7 +114,7 @@ public class RunTab extends MasterDetailTab {
 		sectionStack.setWidth(300);
 
 //		IButton expandButton = new IButton("Expand Players");
-		SectionStackSection configSection = new SectionStackSection("config");
+		SectionStackSection configSection = new SectionStackSection(constants.config());
 		configSection.setExpanded(false);
 		configSection.addItem(config);
 		sectionStack.addSection(configSection);

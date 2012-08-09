@@ -5,4 +5,5 @@ public interface DerivedFieldTask {
 	public String[] getSourceFieldName();
 	public String getTargetFieldName();
 	public String processValue(String... value);
+	public int getType();
 }

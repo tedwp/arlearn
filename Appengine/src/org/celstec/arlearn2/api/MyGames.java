@@ -87,6 +87,35 @@ public class MyGames extends Service {
 	}
 	
 	@POST
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("/config/manualtrigger/gameId/{gameIdentifier}")
+	public String installManualTrigger(@HeaderParam("Authorization") String token, 
+			String generalItem, 
+			@PathParam("gameIdentifier") Long gameIdentifier,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GameDelegator qg = new GameDelegator(token);
+		return serialise(qg.addManualTrigger(gameIdentifier, generalItem), accept);
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("config/removeManualTrigger/gameId/{gameIdentifier}/itemId/{itemIdentifier}")
+	public String removeManualTrigger(@HeaderParam("Authorization") String token, 
+			@PathParam("gameIdentifier") Long gameIdentifier, 
+			@PathParam("itemIdentifier") Long itemIdentifier, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GameDelegator qg = new GameDelegator(token);
+		return serialise(qg.removeTrigger(gameIdentifier, itemIdentifier), accept);
+
+	}
+	
+	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Path("/config/gameId/{gameIdentifier}/role")
 	public String createRole(@HeaderParam("Authorization") String token, String roleString, 

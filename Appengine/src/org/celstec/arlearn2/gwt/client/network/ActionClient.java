@@ -34,8 +34,8 @@ public class ActionClient  extends GenericClient {
 		return super.getUrl() + "actions";
 	}
 
-	public void notify(long runId, String email, String itemId, boolean autoLaunch, final JsonCallback jsonCallback) {
-		invokeJsonPOST("/notify/"+email+"/"+runId+"/"+itemId+"/"+autoLaunch, "", jsonCallback);
+	public void notify(long runId, String email, String itemId, final JsonCallback jsonCallback) {
+		invokeJsonPOST("/notify/"+email+"/"+runId+"/"+itemId, "", jsonCallback);
 		
 	}
 }

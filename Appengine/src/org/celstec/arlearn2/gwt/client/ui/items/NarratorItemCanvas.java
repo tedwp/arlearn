@@ -26,13 +26,10 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 public class NarratorItemCanvas extends GeneralItemCanvas {
-	private RichTextEditor richTextEditor;
 	private CheckboxItem openQuestionCBItem ;
 	private CheckboxItem openQuestionWithImageCBItem ;
 	private CheckboxItem openQuestionWithVideoCBItem ;
 	private CheckboxItem openQuestionWithAudioCBItem ;
-	private RadioGroupItem richTextToggle;
-	private TextAreaItem plainTextField;
 	
 	private Label questionLabel;
 	protected HTMLPane questionHtmlLabel;
@@ -66,10 +63,8 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 		this.addMember(buttonLayout);
 
 		this.addMember(form2);
-//		form2.setFields(radiusItem, latItem, lngItem, dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem);
-		form2.setFields(latItem, lngItem, sortItem, dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
-//		addField(form2,radiusItem, latItem, lngItem, dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem);
-		addField(form2, latItem, lngItem, sortItem,dependencyField, roleGrid, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
+		form2.setFields(latItem, lngItem, sortItem,  roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
+		addField(form2, latItem, lngItem, sortItem, roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
 	}
 	
 	protected void doLayoutForm1() {
@@ -114,7 +109,6 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 	}
 	
 	private void createOpenQuestionComponent() {
-		// TODO Auto-generated method stub
 		openQuestionCBItem = new CheckboxItem();
 		openQuestionCBItem.setName("isOpenQuestion");
 		openQuestionCBItem.setTitle(constants.openQuestion());
@@ -168,53 +162,6 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
         });  
 	}
 	
-//	@Override
-//	public List<FormItem> addSpecificFields() {
-//		
-//		
-//		richTextToggle = new RadioGroupItem();
-//		richTextToggle.setTitle("Text type");
-//		richTextToggle.setName("richTextToggle");
-//		richTextToggle.setValueMap("Html", "Plain text");
-//		richTextToggle.setValue("Html");
-//		richTextToggle.setRedrawOnChange(true);
-//		array.add(richTextToggle);
-//		
-//		
-//        
-//		richTextToggle.addChangedHandler(new ChangedHandler() {
-//			
-//			@Override
-//			public void onChanged(ChangedEvent event) {
-//				System.out.println(event.getValue());
-//				if (event.getValue().equals("Html")) {
-//					richTextEditor.setVisibility(Visibility.VISIBLE);
-//					
-////					plainTextField.hide();
-//				} else {
-//					richTextEditor.setVisibility(Visibility.HIDDEN);
-////					plainTextField.setVisible(true);
-////					plainTextField.show();
-//				}
-//			}
-//		});
-//		
-//		plainTextField = new TextAreaItem();  
-//        plainTextField.setTitle("Plain Text");
-//        plainTextField.setName("plainText");
-//        plainTextField.setShowIfCondition(new FormItemIfFunction() {  
-//            public boolean execute(FormItem item, Object value, DynamicForm form) {  
-//                return form.getValue("richTextToggle").equals("Plain text");  
-//            }
-//
-//        });  
-////        plainTextField.setVisible(false);
-////        plainTextField.hide();
-//        
-//        array.add(plainTextField);
-//        
-//		return array;
-//	}
 	
 	public JSONObject generateObject() {
 		JSONObject result = super.generateObject();

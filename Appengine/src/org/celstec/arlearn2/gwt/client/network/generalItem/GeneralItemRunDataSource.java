@@ -74,6 +74,10 @@ public class GeneralItemRunDataSource extends GenericDataSource {
 			public String[] getSourceFieldName() {
 				return new String[] {"type"};
 			}
+			@Override
+			public int getType() {
+				return STRING_DATA_TYPE;
+			}
 		}, false, false);
 	}
 

@@ -78,7 +78,7 @@ public abstract class GenericDataSource extends DataSource {
 			boolean hidden) {
 		derivedTaskList.add(task);
 		String attribute = task.getTargetFieldName();
-		addField(STRING_DATA_TYPE, attribute, primaryKey, hidden);
+		addField(task.getType(), attribute, primaryKey, hidden);
 		attributeList.remove(attribute);
 	}
 
@@ -89,8 +89,16 @@ public abstract class GenericDataSource extends DataSource {
 			for (int i = 0; i < sources.length; i++) {
 				values[i] = rec.getAttribute(sources[i]);
 			}
-			rec.setAttribute(task.getTargetFieldName(),
-					task.processValue(values));
+			switch (task.getType()) {
+			case STRING_DATA_TYPE:
+				rec.setAttribute(task.getTargetFieldName(),task.processValue(values));
+				break;
+			case BOOLEAN_DATA_TYPE:
+				rec.setAttribute(task.getTargetFieldName(),Boolean.parseBoolean(task.processValue(values)));
+				break;
+			default:
+				break;
+			}
 		}
 
 	}

@@ -142,6 +142,36 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Select Role")
 	String selectRole();
 	
+	@DefaultStringValue("Simple Action Based Dependency")
+	String simpleDep();
+	
+	@DefaultStringValue("Filling out the four fields below will make the item only appear if all specified conditions are met.")
+	String simpleDepExplain();
+	
+	@DefaultStringValue("Action")
+	String actionDep();
+	
+	@DefaultStringValue("Scope")
+	String scopeDep();
+	
+	@DefaultStringValue("Role")
+	String roleDep();
+	
+	@DefaultStringValue("General Item")
+	String generalItemDep();
+	
+	@DefaultStringValue("Automatically launch")
+	String autoLaunch();
+	
+	@DefaultStringValue("Automatically launch means that the item will be started automatically on the client, once all dependencies are met")
+	String autoLaunchHover();
+	
+	@DefaultStringValue("Trigger manually")
+	String manualTrigger();
+	
+	@DefaultStringValue("Tigger manually means that the game facilitator will be able to make this item visible from withing the run management console")
+	String manualTriggerHover();
+	
 	@DefaultStringValue("Open Question")
 	String openQuestion();
 	
@@ -197,6 +227,17 @@ public interface AuthoringConstants extends Constants {
 	String editDescription();
 	
 	//edit run
+	@DefaultStringValue("Config")
+	String config();
+	
+	@DefaultStringValue("Run options")
+	String runOptions();
+	
+	@DefaultStringValue("Open Run")
+	String openRun();
+	
+	@DefaultStringValue("Open run means, that the run is open to everyone and that everyone can register as a player for this run.")
+	String openRunHover();
 	
 	@DefaultStringValue("Teams")
 	String teams();

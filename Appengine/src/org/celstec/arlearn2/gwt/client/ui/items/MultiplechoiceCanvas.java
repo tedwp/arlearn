@@ -106,8 +106,8 @@ public class MultiplechoiceCanvas extends GeneralItemCanvas {
 
 	private void doLayout() {
 		this.addMember(form1);
-		form1.setFields(idItem, gameIdItem, nameItem, latItem, lngItem, sortItem, dependencyField, roleGrid);
-		addField(form1, idItem, gameIdItem, nameItem, latItem, lngItem, sortItem, dependencyField, roleGrid);
+		form1.setFields(idItem, gameIdItem, nameItem, latItem, lngItem, sortItem,  roleGrid);
+		addField(form1, idItem, gameIdItem, nameItem, latItem, lngItem, sortItem,  roleGrid);
 		this.addMember(questionLabel);
 		this.addMember(questionHtmlLabel);
 
@@ -119,8 +119,8 @@ public class MultiplechoiceCanvas extends GeneralItemCanvas {
 		this.addMember(buttonLayout);
 
 		this.addMember(form2);
-		form2.setFields(nfcEnabledCBItem, ti1, cb1, nfc1, ti2, cb2, nfc2, ti3, cb3, nfc3, ti4, cb4, nfc4, ti5, cb5, nfc5);
-		addField(form2, nfcEnabledCBItem, ti1, cb1, nfc1, ti2, cb2, nfc2, ti3, cb3, nfc3, ti4, cb4, nfc4, ti5, cb5, nfc5);
+		form2.setFields(isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem,isAutolaunch, nfcEnabledCBItem, ti1, cb1, nfc1, ti2, cb2, nfc2, ti3, cb3, nfc3, ti4, cb4, nfc4, ti5, cb5, nfc5);
+		addField(form2,isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isAutolaunch, nfcEnabledCBItem, ti1, cb1, nfc1, ti2, cb2, nfc2, ti3, cb3, nfc3, ti4, cb4, nfc4, ti5, cb5, nfc5);
 		form2.setNumCols(4);
 		form2.setColWidths(10, "*", 10);
 	}
@@ -144,6 +144,7 @@ public class MultiplechoiceCanvas extends GeneralItemCanvas {
 		nfcEnabledCBItem.setName("isNfcEnabled");
 		nfcEnabledCBItem.setTitle(constants.isNfcEnabled());
 		nfcEnabledCBItem.setRedrawOnChange(true);
+		nfcEnabledCBItem.setStartRow(true);
 	}
 
 	private void createQuestionHtmlComponent() {
