@@ -23,7 +23,7 @@ public class GameDataSource extends GenericDataSource {
 	protected void initFields() {
 		addField(INTEGER_DATA_TYPE, "gameId", true, true);
 		addField(STRING_DATA_TYPE, "title", false, true);
-		addField(STRING_DATA_TYPE, "creator", false, true);
+		addField(INTEGER_DATA_TYPE, "time", false, true);
 	}
 	
 	protected GenericClient getHttpClient() {

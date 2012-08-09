@@ -90,6 +90,15 @@ public class JsonCallback {
 			return (int) game.get(attributeName).isNumber().doubleValue();
 	}
 	
+	public long getAttributeLong(int i, String attributeName) {
+		if (jsonValue == null) return -1;
+		JSONObject game = jsonValue.get(i).isObject();
+		if (game == null) return -1;
+//		System.out.println("attribute: "+attributeName +" game");
+		if (!game.containsKey(attributeName) ) return 0;
+		return (long) game.get(attributeName).isNumber().doubleValue();
+}
+	
 	public Double getAttributeDouble(int i, String attributeName) {
 		if (jsonValue == null) return null;
 		JSONObject game = jsonValue.get(i).isObject();

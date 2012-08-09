@@ -1,5 +1,9 @@
 package org.celstec.arlearn2.gwt.client.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.bcel.generic.NEW;
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 import org.celstec.arlearn2.gwt.client.control.Authentication;
 import org.celstec.arlearn2.gwt.client.control.GeneralItemsDataSource_Old;
@@ -42,6 +46,7 @@ public class RunTabUsers extends Canvas {
 	private ListGrid userGrid;
 	private RunTab runTab;
 	private PongHandler pongHandler = new PongHandler();
+	public List<UserActionsWindow> uaws = new ArrayList<UserActionsWindow>();
 
 	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
@@ -191,6 +196,7 @@ public class RunTabUsers extends Canvas {
 	protected void browseItem(String email, String userName) {
 		UserActionsWindow uaw = new UserActionsWindow(email, userName, runTab.getRunId());
 		uaw.show();
+		uaws.add(uaw);
 
 	}
 	

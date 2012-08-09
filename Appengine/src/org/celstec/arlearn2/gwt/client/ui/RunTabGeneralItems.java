@@ -10,6 +10,7 @@ import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
 import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
 import org.celstec.arlearn2.gwt.client.ui.modal.ChartWindow;
 import org.celstec.arlearn2.gwt.client.ui.modal.OpenQuestionAnswerWindow;
+import org.celstec.arlearn2.gwt.client.ui.modal.UserActionsWindow;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
@@ -132,6 +133,9 @@ public class RunTabGeneralItems extends ListGrid  {
 						(long) bean.get("generalItemId").isNumber().doubleValue(), 
 						(long) bean.get("runId").isNumber().doubleValue(), 
 						bean.get("userEmail").isString().stringValue(), null);
+				for (UserActionsWindow u: runTab.users.uaws){
+					u.update(bean);
+				}
 			}
 			
 		}

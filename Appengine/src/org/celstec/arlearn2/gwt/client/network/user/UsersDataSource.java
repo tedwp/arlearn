@@ -6,12 +6,18 @@ import org.celstec.arlearn2.gwt.client.network.DerivedFieldTask;
 import org.celstec.arlearn2.gwt.client.network.GenericClient;
 import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
 
+import com.smartgwt.client.data.Criteria;
+import com.smartgwt.client.data.DSCallback;
+import com.smartgwt.client.data.DSRequest;
+import com.smartgwt.client.data.DSResponse;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class UsersDataSource extends GenericDataSource {
 	
 	public static UsersDataSource instance;
 	public static HashMap<String, String> rolesMapping = new HashMap<String, String>();
+	private HashMap<String, String> userTeamMap = new HashMap<String, String>();
 
 	public static UsersDataSource getInstance() {
 		if (instance == null)
@@ -90,6 +96,10 @@ public class UsersDataSource extends GenericDataSource {
 	
 	protected void processRecord(ListGridRecord rec) {
 		rolesMapping.put(rec.getAttribute("pk"), rec.getAttribute("roles"));
+		long runId = rec.getAttributeAsLong("runId");
+		String user = rec.getAttributeAsString("email");
+		String team = rec.getAttributeAsString("teamId");
+		userTeamMap.put(runId+":"+user, team);
 	}
 	
 	public String getRole(String runId, String teamId, String email) {
@@ -103,6 +113,11 @@ public class UsersDataSource extends GenericDataSource {
 	@Override
 	protected String getBeanType() {
 		return "users";
+	}
+	
+	
+	public String getTeam(long runId, String user) {
+		return userTeamMap.get(runId+":"+user);
 	}
 
 }

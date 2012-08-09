@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 import org.celstec.arlearn2.gwt.client.control.ReadyCallback;
 import org.celstec.arlearn2.gwt.client.control.TriggerDataSource;
 
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONArray;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
@@ -26,6 +28,7 @@ public abstract class GenericDataSource extends DataSource {
 	protected final int INTEGER_DATA_TYPE = 2;
 	protected final int STRING_AR_DATA_TYPE = 3;
 	protected final int BOOLEAN_DATA_TYPE = 4;
+	protected final int LONG_DATA_TYPE = 5;
 
 	private List<DataSourceField> fieldList = new ArrayList<DataSourceField>();
 	private List<String> attributeList = new ArrayList<String>();
@@ -56,6 +59,10 @@ public abstract class GenericDataSource extends DataSource {
 		case INTEGER_DATA_TYPE:
 			field = new DataSourceIntegerField(attributeName);
 			typeList.add(INTEGER_DATA_TYPE);
+			break;
+		case LONG_DATA_TYPE:
+			field = new DataSourceIntegerField(attributeName);
+			typeList.add(LONG_DATA_TYPE);
 			break;
 		case STRING_AR_DATA_TYPE:
 			field = new DataSourceTextField(attributeName);
@@ -131,7 +138,16 @@ public abstract class GenericDataSource extends DataSource {
 		return getCallBack(null);
 	}
 
+	public void addBean(JSONObject bean) {
+		JSONObject object = new JSONObject();
+		JSONArray array = new JSONArray();
+		object.put(getBeanType(), array);
+		array.set(array.size(), bean);
+		JsonCallback callback = getCallBack(null);
+		callback.onJsonReceived(object);
 		
+	}
+	
 	protected JsonCallback getCallBack(final HashMap<String,String> values) {
 		return new JsonCallback(getBeanType()) {
 
@@ -173,6 +189,15 @@ public abstract class GenericDataSource extends DataSource {
 									&& pkAttribute.equals(attributeName)) {
 								searchCrit = new Criteria();
 								searchCrit.addCriteria(pkAttribute, intValue);
+							}
+							break;
+						case LONG_DATA_TYPE:
+							long longValue = getAttributeLong(i, attributeName);
+							rec.setAttribute(attributeName, longValue);
+							if (pkAttribute != null
+									&& pkAttribute.equals(attributeName)) {
+								searchCrit = new Criteria();
+								searchCrit.addCriteria(pkAttribute, new Double[]{(double)longValue});
 							}
 							break;
 						}
