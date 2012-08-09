@@ -97,6 +97,15 @@ public class GameAdapter extends GenericDbTable {
 		
 	}
 	
+	public Game[] queryByOwner(String owner) {
+		try {
+			return query(OWNER + "= ?", new String[] { owner });
+		} catch (Exception e) {
+			return null;
+		}
+		
+	}
+	
 	
 	private Game[] query(String selection, String[] selectionArgs) {
 		Game[] resultGame = null;
