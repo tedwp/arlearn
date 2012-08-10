@@ -9,7 +9,7 @@ import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
-import android.nfc.tech.NfcA;
+import android.nfc.tech.*;
 import android.os.Parcelable;
 
 @TargetApi(10)
@@ -34,7 +34,11 @@ public class NfcReceiver {
 		}
 		mFilters = new IntentFilter[] { ndef };
 		// Setup a tech list for all NfcF tags
-		mTechLists = new String[][] { new String[] { NfcA.class.getName() } };
+		mTechLists = new String[][] { new String[] { 
+				NfcA.class.getName()
+				}, new String[] { 
+				NfcV.class.getName()
+				} };
 	}
 	
 	@TargetApi(10)
@@ -62,7 +66,18 @@ public class NfcReceiver {
 						activity.newNfcAction(ttagUrl);
 				}
 			}
+		} else if (intent.getExtras()!= null) {
+			byte [] idBytes = intent.getExtras().getByteArray("android.nfc.extra.ID");
+			if (idBytes != null) {
+				String s = "";
+				for (byte b : idBytes) {
+					s+= (((int)(b))+128);
+				}
+				activity.newNfcAction(s);
+			}
 		}
+		
 	}
+	//{android.nfc.extra.ID=[B@40d80eb0, android.nfc.extra.TAG=TAG: Tech [android.nfc.tech.NfcV, android.nfc.tech.NdefFormatable], android.nfc.extra.NDEF_MESSAGES=null}
 	
 }
