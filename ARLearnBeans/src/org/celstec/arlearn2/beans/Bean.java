@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.codehaus.jettison.json.JSONObject;
 
+@SuppressWarnings("serial")
 public class Bean  implements Serializable {
 
 	/*

@@ -53,16 +53,19 @@ public class UserActionsWindow extends Window {
 		ListGridField actionField = new ListGridField("action");
 		ListGridField accountField = new ListGridField("userEmail");
 		ListGridField teamField = new ListGridField("team");
+		ListGridField runIdField = new ListGridField("runId");
+		runIdField.setHidden(true);
+		
 
 		
-		listGrid.setFields(dateField, actionField, accountField, teamField);
+		listGrid.setFields(runIdField, dateField, actionField, accountField, teamField);
 		listGrid.setAutoFetchData(true);
 		
 		listGrid.setShowFilterEditor(true);
 		listGrid.setAllowFilterExpressions(true); 
 		AdvancedCriteria initialCriteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{  
-                new Criterion("userEmail", OperatorId.EQUALS, email)  
-                  
+                new Criterion("userEmail", OperatorId.EQUALS, email) , 
+                new Criterion("runId", OperatorId.EQUALS, runId)   
 
         });  
 		listGrid.setInitialCriteria(initialCriteria);
@@ -71,11 +74,11 @@ public class UserActionsWindow extends Window {
 		setAutoSize(true);
 	}
 
-	public void update(JSONObject bean) {
-		ActionDatasource.getInstance().addBean(bean);
-//		listGrid.fetchData();
-		
-	}
+//	public void update(JSONObject bean) {
+//		ActionDatasource.getInstance().addBean(bean);
+////		listGrid.fetchData();
+//		
+//	}
 	
 
 }

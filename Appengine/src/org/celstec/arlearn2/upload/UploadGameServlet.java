@@ -96,40 +96,40 @@ public class UploadGameServlet extends HttpServlet {
 		GameUnpacker gu = new GameUnpacker(arlPackage, auth);
 		gu.unpack();
 	}
-	private void unpackGame_old(GamePackage arlPackage, HttpServletRequest req, String auth)
-			throws AuthenticationException {
-		Game game = arlPackage.getGame();
-		if (game != null) {
-			GameDelegator gd = new GameDelegator(auth == null?req.getHeader("Authorization"):auth);
-			game.setGameId(null);
-			game = gd.createGame(game);
-			Long gameId = game.getGameId();
-			Iterator<GeneralItem> it = arlPackage.getGeneralItems().iterator();
-			GeneralItemDelegator gid = new GeneralItemDelegator(auth == null?req.getHeader("Authorization"):auth);
-
-//			CreateGeneralItems cr = new CreateGeneralItems(
-//					auth == null?req.getHeader("Authorization"):auth);
-			while (it.hasNext()) {
-				GeneralItem generalItem = (GeneralItem) it.next();
-				generalItem.setGameId(gameId);
-
-				gid.createGeneralItem(generalItem);
-			}
-			if (arlPackage.getScoreDefinitions() != null) {
-				Iterator<ScoreDefinition> scoreIterator = arlPackage
-						.getScoreDefinitions().iterator();
-				ScoreDefinitionDelegator sdd = new ScoreDefinitionDelegator(gid);
-				while (scoreIterator.hasNext()) {
-					ScoreDefinition scoreDefinition = (ScoreDefinition) scoreIterator
-							.next();
-					scoreDefinition.setGameId(gameId);
-					sdd.createScoreDefinition(scoreDefinition);
-
-				}
-			}
-		}
-
-	}
+//	private void unpackGame_old(GamePackage arlPackage, HttpServletRequest req, String auth)
+//			throws AuthenticationException {
+//		Game game = arlPackage.getGame();
+//		if (game != null) {
+//			GameDelegator gd = new GameDelegator(auth == null?req.getHeader("Authorization"):auth);
+//			game.setGameId(null);
+//			game = gd.createGame(game);
+//			Long gameId = game.getGameId();
+//			Iterator<GeneralItem> it = arlPackage.getGeneralItems().iterator();
+//			GeneralItemDelegator gid = new GeneralItemDelegator(auth == null?req.getHeader("Authorization"):auth);
+//
+////			CreateGeneralItems cr = new CreateGeneralItems(
+////					auth == null?req.getHeader("Authorization"):auth);
+//			while (it.hasNext()) {
+//				GeneralItem generalItem = (GeneralItem) it.next();
+//				generalItem.setGameId(gameId);
+//
+//				gid.createGeneralItem(generalItem);
+//			}
+//			if (arlPackage.getScoreDefinitions() != null) {
+//				Iterator<ScoreDefinition> scoreIterator = arlPackage
+//						.getScoreDefinitions().iterator();
+//				ScoreDefinitionDelegator sdd = new ScoreDefinitionDelegator(gid);
+//				while (scoreIterator.hasNext()) {
+//					ScoreDefinition scoreDefinition = (ScoreDefinition) scoreIterator
+//							.next();
+//					scoreDefinition.setGameId(gameId);
+//					sdd.createScoreDefinition(scoreDefinition);
+//
+//				}
+//			}
+//		}
+//
+//	}
 
 	public static String slurp(InputStream in) throws IOException {
 		StringBuffer out = new StringBuffer();

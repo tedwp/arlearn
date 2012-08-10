@@ -11,7 +11,9 @@ import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.cache.MyGamesCache;
+import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.manager.GameManager;
 import org.celstec.arlearn2.tasks.beans.DeleteGeneralItems;
@@ -98,7 +100,7 @@ public class GameDelegator extends GoogleDelegator {
 		return list.get(0);
 	}
 
-	public Game createGame(Game game) {
+	public Game createGame(Game game, int modificationType) {
 		UsersDelegator qu = new UsersDelegator(this);
 		String myAccount = qu.getCurrentUserAccount();
 		if (myAccount == null) {
@@ -108,6 +110,12 @@ public class GameDelegator extends GoogleDelegator {
 		game.setGameId(GameManager.addGame(game.getTitle(), myAccount, game.getCreator(), game.getFeedUrl(), game.getGameId(), game.getConfig()));
 		MyGamesCache.getInstance().removeGameList(null, null, myAccount, null, null);
 		MyGamesCache.getInstance().removeGameList(game.getGameId(), null, myAccount, null, null);
+		
+		GameModification gm = new GameModification();
+		gm.setModificationType(modificationType);
+		gm.setGame(game);
+		ChannelNotificator.getInstance().notify(myAccount, gm);
+		
 		return game;
 	}
 
@@ -130,12 +138,11 @@ public class GameDelegator extends GoogleDelegator {
 		(new DeleteScoreDefinitions(authToken, gameIdentifier)).scheduleTask();
 		(new DeleteGeneralItems(authToken, gameIdentifier)).scheduleTask();
 
-		// Queue queue = QueueFactory.getDefaultQueue();
-		// queue.add(TaskOptions.Builder.withUrl("/asyncTask")
-		// .param(AsyncTasksServlet.TASK, "" + AsyncTasksServlet.DELETE_RUNS)
-		// .param(AsyncTasksServlet.AUTH, authToken)
-		// .param(AsyncTasksServlet.GAMEID, ""+gameIdentifier)
-		// .param(AsyncTasksServlet.EMAIL, myAccount));
+		GameModification gm = new GameModification();
+		gm.setModificationType(GameModification.DELETED);
+		gm.setGame(g);
+		ChannelNotificator.getInstance().notify(myAccount, gm);
+		
 		return g;
 	}
 
@@ -149,7 +156,7 @@ public class GameDelegator extends GoogleDelegator {
 		if (c.getRoles() == null)
 			c.setRoles(new ArrayList<String>());
 		c.getRoles().add(roleString);
-		createGame(g);
+		createGame(g, GameModification.ALTERED);
 		return g;
 
 	}
@@ -173,7 +180,7 @@ public class GameDelegator extends GoogleDelegator {
 		
 			c.getManualItems().add(gi);
 		
-		createGame(g);
+		createGame(g, GameModification.ALTERED);
 		GeneralItemDelegator gd = new GeneralItemDelegator(this);
 		GeneralItem itemFromDb = gd.getGeneralItemForGame(gameIdentifier, gi.getId());
 		if (itemFromDb.getDependsOn() == null) {
@@ -202,7 +209,7 @@ public class GameDelegator extends GoogleDelegator {
 			}
 
 		}
-		createGame(g);
+		createGame(g, GameModification.ALTERED);
 		return g;
 
 	}

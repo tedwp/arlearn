@@ -6,9 +6,7 @@ import org.celstec.arlearn2.gwt.client.control.ReadyCallback;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.Window;
-import com.smartgwt.client.data.DataSource;
-import com.smartgwt.client.widgets.grid.ListGrid;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class JsonCallback {
 
@@ -28,6 +26,15 @@ public class JsonCallback {
 		this.type = type;
 	}
 	
+	public void onJsonReceivedNoProcessing(JSONValue jsonValue) {
+		if (type != null && jsonValue.isObject().get(type) != null && jsonValue.isObject().get(type).isArray() != null) {
+			this.jsonValue = jsonValue.isObject().get(type).isArray();
+		}
+		if (jsonValue.isObject() != null && jsonValue.isObject().get("error") != null){
+			Authentication.getInstance().disAuthenticate();
+		}
+	}
+	
 	public void onJsonReceived(JSONValue jsonValue) {
 			if (type != null && jsonValue.isObject().get(type) != null && jsonValue.isObject().get(type).isArray() != null) {
 				this.jsonValue = jsonValue.isObject().get(type).isArray();
@@ -36,6 +43,10 @@ public class JsonCallback {
 				Authentication.getInstance().disAuthenticate();
 			}
 			onReceived();
+	}
+	
+	public ListGridRecord processArrayEntry(int i) {
+		return null;
 	}
 	
 	public void onError(){

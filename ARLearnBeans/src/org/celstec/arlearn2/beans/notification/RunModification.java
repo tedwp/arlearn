@@ -2,8 +2,8 @@ package org.celstec.arlearn2.beans.notification;
 
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.run.Run;
-import org.celstec.arlearn2.beans.run.RunBean;
 
+@SuppressWarnings("serial")
 public class RunModification extends Bean{
 	
 	public final static int CREATED = 1;
@@ -37,6 +37,6 @@ public class RunModification extends Bean{
 		RunModification other = (RunModification ) obj;
 		return super.equals(obj) && 
 			nullSafeEquals(getRun(), other.getRun()) && 
-			nullSafeEquals(getRun(), other.getRun()); 
+			nullSafeEquals(getModificationType(), other.getModificationType()); 
 	}
 }

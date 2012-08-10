@@ -94,7 +94,7 @@ public class RunTab extends MasterDetailTab {
 	
 	public void tabSelected(TabSelectedEvent event) {
 		refreshSources();
-		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.run.Action", generalItems.actionNotificationHandler);
+//		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.run.Action", generalItems.actionNotificationHandler);
 		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.run.Response", generalItems.responseNotificationHandler);
 	}
 

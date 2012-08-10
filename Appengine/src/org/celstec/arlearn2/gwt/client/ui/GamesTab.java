@@ -164,7 +164,7 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 						(Boolean) form.getValue("withMap"),
 						new JsonCallback() {
 							public void onJsonReceived(JSONValue jsonValue) {
-								tabSelect();
+//								tabSelect();
 							}
 						});
 				titleGame.setValue("");
@@ -251,7 +251,9 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 		listGrid.setPadding(5);
 		listGrid.setWidth("100%");
 		listGrid.setHeight("100%");
-		listGrid.fetchData();
+//		listGrid.fetchData();
+		listGrid.setAutoFetchData(true);
+
 		return listGrid;
 	}
 
@@ -260,16 +262,18 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 		SC.ask(constants.confirmDeleteUser().replace("***", name), new BooleanCallback() {
 			public void execute(Boolean value) {
 				if (value != null && value) {
-					Authoring.removeTab("game:"+gameId);
-					GameClient.getInstance().deleteGame(gameId, new JsonCallback() {
-						
-						@Override
-						public void onJsonReceived(JSONValue jsonValue) {
-							tabSelect();
-						}
-						
-					});
+					GameClient.getInstance().deleteGame(gameId, null);
 				}
+//					GameClient.getInstance().deleteGame(gameId, new JsonCallback() {
+//						
+//						@Override
+//						public void onJsonReceived(JSONValue jsonValue) {
+////							tabSelect();
+//						}
+//						
+//					});
+//					Authoring.removeTab("game:"+gameId);
+//				}
 			}
 		});
 		

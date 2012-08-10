@@ -73,7 +73,6 @@ public class RunTabGeneralItems extends ListGrid  {
 		addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				if (typeEquals(GeneralItemRunDataSource.NARRATORITEM, event) || typeEquals(GeneralItemRunDataSource.AUDIOOBJECT, event)||typeEquals(GeneralItemRunDataSource.VIDEOOBJECT, event)) {
-//					String html = event.getRecord().getAttributeAsString("answer");
 					OpenQuestionAnswerWindow window = new OpenQuestionAnswerWindow(runTab.getRunId(), event.getRecord().getAttributeAsLong("id"));
 					window.show();
 				}
@@ -86,7 +85,6 @@ public class RunTabGeneralItems extends ListGrid  {
 			
 			private boolean typeEquals(String type, CellDoubleClickEvent event ) {
 				return type.equals(event.getRecord().getAttributeAsString("type"));
-//				{"imageUrl":"http:\/\/ar-learn.appspot.com\/\/uploadService\/60020\/arlearn2\/image-1929634920.jpg"}
 			}
 		});
 	}
@@ -118,28 +116,28 @@ public class RunTabGeneralItems extends ListGrid  {
 	}
 
 
-	public NotificationHandler actionNotificationHandler = new NotificationHandler() {
-		@Override
-		public void onNotification(JSONObject bean) {
-			if (
-					bean.containsKey("runId") && 
-					bean.containsKey("userEmail") && 
-					bean.containsKey("action") && 
-					bean.containsKey("generalItemId") && 
-					bean.get("action").isString().stringValue().equals("read")
-					) {
-				
-				datasource.updateAction(
-						(long) bean.get("generalItemId").isNumber().doubleValue(), 
-						(long) bean.get("runId").isNumber().doubleValue(), 
-						bean.get("userEmail").isString().stringValue(), null);
-				for (UserActionsWindow u: runTab.users.uaws){
-					u.update(bean);
-				}
-			}
-			
-		}
-	};
+//	public NotificationHandler actionNotificationHandler = new NotificationHandler() {
+//		@Override
+//		public void onNotification(JSONObject bean) {
+//			if (
+//					bean.containsKey("runId") && 
+//					bean.containsKey("userEmail") && 
+//					bean.containsKey("action") && 
+//					bean.containsKey("generalItemId") && 
+//					bean.get("action").isString().stringValue().equals("read")
+//					) {
+//				
+//				datasource.updateAction(
+//						(long) bean.get("generalItemId").isNumber().doubleValue(), 
+//						(long) bean.get("runId").isNumber().doubleValue(), 
+//						bean.get("userEmail").isString().stringValue(), null);
+//				for (UserActionsWindow u: runTab.users.uaws){
+//					u.update(bean);
+//				}
+//			}
+//			
+//		}
+//	};
 	
 	public NotificationHandler responseNotificationHandler = new NotificationHandler() {
 		@Override

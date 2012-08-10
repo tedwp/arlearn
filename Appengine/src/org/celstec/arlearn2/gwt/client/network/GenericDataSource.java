@@ -144,7 +144,11 @@ public abstract class GenericDataSource extends DataSource {
 		object.put(getBeanType(), array);
 		array.set(array.size(), bean);
 		JsonCallback callback = getCallBack(null);
-		callback.onJsonReceived(object);
+		callback.onJsonReceivedNoProcessing(object);
+		final ListGridRecord rec = callback.processArrayEntry(0);
+		String id = "" + rec.getAttribute(pkAttribute);
+		addData(rec);
+		pkMap.add(id);
 		
 	}
 	
@@ -155,68 +159,82 @@ public abstract class GenericDataSource extends DataSource {
 			public void onError() {
 			}
 
+			public void insertRecords() {
+				
+			}
+			
+			public ListGridRecord processArrayEntry(int i) {
+				final ListGridRecord rec = new ListGridRecord();
+				Criteria searchCrit = null;
+				for (int j = 0; j < attributeList.size(); j++) {
+					String attributeName = attributeList.get(j);
+					switch (typeList.get(j)) {
+					case STRING_DATA_TYPE:
+						String value = getAttributeString(i, attributeName);
+						rec.setAttribute(attributeName, value);
+						if (pkAttribute != null
+								&& pkAttribute.equals(attributeName))
+							searchCrit = new Criteria(pkAttribute, value);
+						break;
+					case STRING_AR_DATA_TYPE:
+						String arValue = getAttributeString(i, attributeName);
+						rec.setAttribute(attributeName, arValue);
+						if (pkAttribute != null
+								&& pkAttribute.equals(attributeName))
+							searchCrit = new Criteria(pkAttribute, arValue);
+						break;
+					case BOOLEAN_DATA_TYPE:
+						Boolean boolValue = getAttributeBoolean(i, attributeName);
+						rec.setAttribute(attributeName, boolValue);
+						break;
+					case INTEGER_DATA_TYPE:
+						int intValue = getAttributeInteger(i, attributeName);
+						rec.setAttribute(attributeName, intValue);
+						if (pkAttribute != null
+								&& pkAttribute.equals(attributeName)) {
+							searchCrit = new Criteria();
+							searchCrit.addCriteria(pkAttribute, intValue);
+						}
+						break;
+					case LONG_DATA_TYPE:
+						long longValue = getAttributeLong(i, attributeName);
+						rec.setAttribute(attributeName, longValue);
+						if (pkAttribute != null
+								&& pkAttribute.equals(attributeName)) {
+							searchCrit = new Criteria();
+							searchCrit.addCriteria(pkAttribute, new Double[]{(double)longValue});
+						}
+						break;
+					}
+				}
+				GenericDataSource.this.processDerivedFields(rec);
+				//TODO the following is not generic and thus not elegant
+
+				if ("gameId".equals(pkAttribute)) {
+					TriggerDataSource.getInstance().processGameConfig(
+							rec.getAttributeAsInt("gameId"),
+							getGameConfig(i));
+
+				}
+				processRecord(rec);
+				return rec;
+			}
+			
 			@Override
 			public void onReceived() {
 				HashSet<String> deleteSet = (HashSet<String>) pkMap.clone();
 				for (int i = 0; i < size(); i++) {
-					final ListGridRecord rec = new ListGridRecord();
-					Criteria searchCrit = null;
-					for (int j = 0; j < attributeList.size(); j++) {
-						String attributeName = attributeList.get(j);
-						switch (typeList.get(j)) {
-						case STRING_DATA_TYPE:
-							String value = getAttributeString(i, attributeName);
-							rec.setAttribute(attributeName, value);
-							if (pkAttribute != null
-									&& pkAttribute.equals(attributeName))
-								searchCrit = new Criteria(pkAttribute, value);
-							break;
-						case STRING_AR_DATA_TYPE:
-							String arValue = getAttributeString(i, attributeName);
-							rec.setAttribute(attributeName, arValue);
-							if (pkAttribute != null
-									&& pkAttribute.equals(attributeName))
-								searchCrit = new Criteria(pkAttribute, arValue);
-							break;
-						case BOOLEAN_DATA_TYPE:
-							Boolean boolValue = getAttributeBoolean(i, attributeName);
-							rec.setAttribute(attributeName, boolValue);
-							break;
-						case INTEGER_DATA_TYPE:
-							int intValue = getAttributeInteger(i, attributeName);
-							rec.setAttribute(attributeName, intValue);
-							if (pkAttribute != null
-									&& pkAttribute.equals(attributeName)) {
-								searchCrit = new Criteria();
-								searchCrit.addCriteria(pkAttribute, intValue);
-							}
-							break;
-						case LONG_DATA_TYPE:
-							long longValue = getAttributeLong(i, attributeName);
-							rec.setAttribute(attributeName, longValue);
-							if (pkAttribute != null
-									&& pkAttribute.equals(attributeName)) {
-								searchCrit = new Criteria();
-								searchCrit.addCriteria(pkAttribute, new Double[]{(double)longValue});
-							}
-							break;
-						}
-					}
+					final ListGridRecord rec = processArrayEntry(i);
+					
 					if (values != null) {
 						for (Entry<String, String> entry: values.entrySet()) {
 							rec.setAttribute(entry.getKey(), entry.getValue());
 						}
 					}
-					//TODO the following is not generic and thus not elegant
-					if ("gameId".equals(pkAttribute)) {
-						TriggerDataSource.getInstance().processGameConfig(
-								rec.getAttributeAsInt("gameId"),
-								getGameConfig(i));
-
-					}
-					GenericDataSource.this.processDerivedFields(rec);
+					
+					
 					String id = "" + rec.getAttribute(pkAttribute);
-					processRecord(rec);
+					
 					if (!filterRecord(rec)) {
 						if (pkMap.contains(id)) {
 							deleteSet.remove(id);

@@ -12,6 +12,7 @@ import org.celstec.arlearn2.beans.dependencies.TimeDependency;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.beans.notification.authoring.GameCreationStatus;
 import org.celstec.arlearn2.delegators.GameDelegator;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
@@ -85,7 +86,7 @@ public class GameUnpacker {
 					game.getConfig().setManualItems(null);
 				}
 			}
-			createdGame = gd.createGame(game);
+			createdGame = gd.createGame(game, GameModification.CREATED);
 		}
 	}
 

@@ -44,6 +44,7 @@ import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.celstec.arlearn2.beans.generalItem.OpenUrl;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
+import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.beans.notification.GeneralItemModification;
 import org.celstec.arlearn2.beans.notification.Ping;
 import org.celstec.arlearn2.beans.notification.Pong;
@@ -141,6 +142,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(Team.class.getCanonicalName(), new TeamSerializer());
 		customSerializerMap.put(TeamList.class.getCanonicalName(), new TeamListSerializer());
 		customSerializerMap.put(RunModification.class.getCanonicalName(), new RunModificationSerializer());
+		customSerializerMap.put(GameModification.class.getCanonicalName(), GameModification.serializer);
 		customSerializerMap.put(GeneralItemModification.class.getCanonicalName(), new GeneralItemModificationSerializer());
 		customSerializerMap.put(AuthResponse.class.getCanonicalName(), new AuthResponseSerializer());
 		customSerializerMap.put(Version.class.getCanonicalName(), new VersionSerializer());

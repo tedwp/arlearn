@@ -2,7 +2,15 @@ package org.celstec.arlearn2.gwt.client.network.game;
 
 import org.celstec.arlearn2.gwt.client.network.GenericClient;
 import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
+import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
+import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
 
+import com.google.gwt.json.client.JSONObject;
+import com.smartgwt.client.data.Criteria;
+import com.smartgwt.client.data.DSCallback;
+import com.smartgwt.client.data.DSRequest;
+import com.smartgwt.client.data.DSResponse;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class GameDataSource extends GenericDataSource {
@@ -17,6 +25,8 @@ public class GameDataSource extends GenericDataSource {
 
 	private GameDataSource() {
 		super();
+		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.GameModification", gameNotitificationHandler);
+
 	}
 	
 	@Override
@@ -41,4 +51,18 @@ public class GameDataSource extends GenericDataSource {
 		removeData(rec);
 	}
 
+	public NotificationHandler gameNotitificationHandler = new GameNotificationHandler() {
+		
+
+		@Override
+		public void onNewGame(JSONObject jsonObject) {
+			addBean(jsonObject);
+		}
+
+		@Override
+		public void onDeleteGame(long gameId) {
+			delete(gameId);
+			
+		}
+	};
 }

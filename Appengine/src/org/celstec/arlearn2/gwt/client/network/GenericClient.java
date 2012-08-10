@@ -18,114 +18,44 @@ public class GenericClient {
 	public String getUrl() {
 		return "rest/";
 	}
-	
+
 	public RequestBuilder getRequestBuilder(String urlPostfix) {
 		return getRequestBuilder(urlPostfix, RequestBuilder.GET);
 	}
-	
+
 	public RequestBuilder getRequestBuilder(String urlPostfix, RequestBuilder.Method m) {
-		String url = urlPostfix == null? getUrl(): getUrl()  +urlPostfix;
+		String url = urlPostfix == null ? getUrl() : getUrl() + urlPostfix;
 		RequestBuilder builder = new RequestBuilder(m, url);
-		builder.setHeader("Authorization", "GoogleLogin auth="+Authentication.getInstance().getAuthenticationToken());
+		builder.setHeader("Authorization", "GoogleLogin auth=" + Authentication.getInstance().getAuthenticationToken());
 		builder.setHeader("Accept", "application/json");
 		return builder;
 	}
-	
+
 	protected void invokeJsonPOST(String urlPostfix, JSONObject object, final JsonCallback jcb) {
-		invokeJsonPOST(urlPostfix, object == null?"":object.toString(), jcb);
+		invokeJsonPOST(urlPostfix, object == null ? "" : object.toString(), jcb);
 	}
-	
+
 	protected void invokeJsonPUT(String urlPostfix, JSONObject object, final JsonCallback jcb) {
-		invokeJsonPUT(urlPostfix, object == null?"":object.toString(), jcb);
+		invokeJsonPUT(urlPostfix, object == null ? "" : object.toString(), jcb);
 	}
-	
+
 	protected void invokeJsonPOST(String urlPostfix, String object, final JsonCallback jcb) {
-		RequestBuilder builder = getRequestBuilder(urlPostfix,  RequestBuilder.POST);
+		RequestBuilder builder = getRequestBuilder(urlPostfix, RequestBuilder.POST);
 		builder.setHeader("Content-Type", "application/json");
 		try {
-			Request request = builder.sendRequest(object,
-					new RequestCallback() {
+			Request request = builder.sendRequest(object, new RequestCallback() {
 
-						@Override
-						public void onResponseReceived(Request request,
-								Response response) {
-							if (200 == response.getStatusCode()) {
-								try {
-									JSONValue jsonValue = JSONParser
-											.parseLenient(response.getText());
-									if (jcb != null)jcb.onJsonReceived(jsonValue);
-								} catch (JSONException e) {
-									if (jcb != null)jcb.onError();
-
-								}
-							}
-
-						}
-
-						@Override
-						public void onError(Request request, Throwable exception) {
-
-						}
-					});
-		} catch (RequestException e) {
-			jcb.onError();
-		}
-	}
-	
-	protected void invokeJsonPUT(String urlPostfix, String object, final JsonCallback jcb) {
-		RequestBuilder builder = getRequestBuilder(urlPostfix,  RequestBuilder.PUT);
-		builder.setHeader("Content-Type", "application/json");
-		try {
-			Request request = builder.sendRequest(object,
-					new RequestCallback() {
-
-						@Override
-						public void onResponseReceived(Request request,
-								Response response) {
-							if (200 == response.getStatusCode()) {
-								try {
-									JSONValue jsonValue = JSONParser
-											.parseLenient(response.getText());
-									if (jcb != null) jcb.onJsonReceived(jsonValue);
-								} catch (JSONException e) {
-									if (jcb != null)jcb.onError();
-
-								}
-							}
-
-						}
-
-						@Override
-						public void onError(Request request, Throwable exception) {
-
-						}
-					});
-		} catch (RequestException e) {
-			jcb.onError();
-		}
-	}
-	
-	protected void invokeJsonDELETE(String urlPostfix, final JsonCallback jcb) {
-		RequestBuilder builder = getRequestBuilder(urlPostfix,  RequestBuilder.DELETE);
-		try {
-			Request request = builder.sendRequest(null, new RequestCallback() {
 				@Override
-				public void onResponseReceived(Request request,
-						Response response) {
+				public void onResponseReceived(Request request, Response response) {
 					if (200 == response.getStatusCode()) {
 						try {
-							if (response.getText().equals("")) {
-								jcb.onJsonReceived(new JSONObject());
-								return;
-							}
-							JSONValue jsonValue = JSONParser
-									.parseLenient(response.getText());
-							if (jsonValue.isObject() != null) {
+							JSONValue jsonValue = JSONParser.parseLenient(response.getText());
+							if (jcb != null)
 								jcb.onJsonReceived(jsonValue);
-							}
-
 						} catch (JSONException e) {
-							jcb.onError();
+							if (jcb != null)
+								jcb.onError();
+
 						}
 					}
 
@@ -141,18 +71,83 @@ public class GenericClient {
 		}
 	}
 
-	
+	protected void invokeJsonPUT(String urlPostfix, String object, final JsonCallback jcb) {
+		RequestBuilder builder = getRequestBuilder(urlPostfix, RequestBuilder.PUT);
+		builder.setHeader("Content-Type", "application/json");
+		try {
+			Request request = builder.sendRequest(object, new RequestCallback() {
+
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					if (200 == response.getStatusCode()) {
+						try {
+							JSONValue jsonValue = JSONParser.parseLenient(response.getText());
+							if (jcb != null)
+								jcb.onJsonReceived(jsonValue);
+						} catch (JSONException e) {
+							if (jcb != null)
+								jcb.onError();
+
+						}
+					}
+
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+
+				}
+			});
+		} catch (RequestException e) {
+			jcb.onError();
+		}
+	}
+
+	protected void invokeJsonDELETE(String urlPostfix, final JsonCallback jcb) {
+		RequestBuilder builder = getRequestBuilder(urlPostfix, RequestBuilder.DELETE);
+		try {
+			Request request = builder.sendRequest(null, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					if (200 == response.getStatusCode()) {
+						if (jcb != null) {
+							try {
+								if (response.getText().equals("")) {
+									jcb.onJsonReceived(new JSONObject());
+									return;
+								}
+								JSONValue jsonValue = JSONParser.parseLenient(response.getText());
+								if (jsonValue.isObject() != null) {
+									jcb.onJsonReceived(jsonValue);
+								}
+
+							} catch (JSONException e) {
+								jcb.onError();
+							}
+						}
+					}
+
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+
+				}
+			});
+		} catch (RequestException e) {
+			jcb.onError();
+		}
+	}
+
 	protected void invokeJsonGET(String urlPostfix, final JsonCallback jcb) {
 		RequestBuilder builder = getRequestBuilder(urlPostfix);
 		try {
 			Request request = builder.sendRequest(null, new RequestCallback() {
 				@Override
-				public void onResponseReceived(Request request,
-						Response response) {
+				public void onResponseReceived(Request request, Response response) {
 					if (200 == response.getStatusCode()) {
 						try {
-							JSONValue jsonValue = JSONParser
-									.parseLenient(response.getText());
+							JSONValue jsonValue = JSONParser.parseLenient(response.getText());
 							if (jsonValue.isObject() != null) {
 								jcb.onJsonReceived(jsonValue);
 							}
@@ -175,30 +170,30 @@ public class GenericClient {
 	}
 
 	public void getItemsForRun(long runId, JsonCallback jsonCallback) {
-		invokeJsonGET(getRunUrlPostfix(runId), jsonCallback);		
+		invokeJsonGET(getRunUrlPostfix(runId), jsonCallback);
 	}
-	
+
 	public void getItemsForGame(long gameId, JsonCallback jsonCallback) {
-		invokeJsonGET(getGameUrlPostfix(gameId), jsonCallback);		
+		invokeJsonGET(getGameUrlPostfix(gameId), jsonCallback);
 	}
-	
+
 	public void getItems(JsonCallback jsonCallback) {
-		invokeJsonGET(null, jsonCallback);		
+		invokeJsonGET(null, jsonCallback);
 	}
-	
+
 	public void deleteItemsForGame(long gameId, JsonCallback jsonCallback) {
-		invokeJsonDELETE(getGameUrlPostfix(gameId), jsonCallback);	
+		invokeJsonDELETE(getGameUrlPostfix(gameId), jsonCallback);
 	}
-	
+
 	public void deleteItemsForRun(long runId, JsonCallback jsonCallback) {
-		invokeJsonDELETE(getRunUrlPostfix(runId), jsonCallback);	
+		invokeJsonDELETE(getRunUrlPostfix(runId), jsonCallback);
 	}
-	
+
 	protected String getRunUrlPostfix(long runId) {
-		return "/runId/"+runId;
+		return "/runId/" + runId;
 	}
-	
+
 	protected String getGameUrlPostfix(long gameId) {
-		return "/gameId/"+gameId;
+		return "/gameId/" + gameId;
 	}
 }

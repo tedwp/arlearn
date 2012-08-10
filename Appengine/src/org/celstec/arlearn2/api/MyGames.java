@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.delegators.GameDelegator;
 
@@ -52,7 +53,7 @@ public class MyGames extends Service {
 			return serialise(getBeanDoesNotParseException((String) inGame), accept);
 		
 		GameDelegator cg = new GameDelegator(token);
-		return serialise(cg.createGame((Game) inGame), accept);
+		return serialise(cg.createGame((Game) inGame, GameModification.CREATED), accept);
 	}
 
 	@DELETE

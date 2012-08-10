@@ -3,8 +3,11 @@ package org.celstec.arlearn2.gwt.client.network.action;
 import org.celstec.arlearn2.gwt.client.network.DerivedFieldTask;
 import org.celstec.arlearn2.gwt.client.network.GenericClient;
 import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
+import org.celstec.arlearn2.gwt.client.network.game.GameNotificationHandler;
 import org.celstec.arlearn2.gwt.client.network.team.TeamsDataSource;
 import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
+import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
+import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
 
 import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -21,6 +24,8 @@ public class ActionDatasource extends GenericDataSource {
 
 	private ActionDatasource() {
 		super();
+		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.run.Action", actionNotitificationHandler);
+
 	}
 	
 	@Override
@@ -82,10 +87,6 @@ public class ActionDatasource extends GenericDataSource {
 		return "actions";
 	}
 
-	@Override
-	protected void processRecord(ListGridRecord rec) {
-		System.out.println("process action rec"+rec.getAttributeAsLong("timestamp"));
-	}
 	public void deleteRun(long runId) {
 		ListGridRecord rec = new ListGridRecord();
 		rec.setAttribute("runId", runId);
@@ -97,6 +98,18 @@ public class ActionDatasource extends GenericDataSource {
 		rec.setAttribute("userEmail", userEmail);
 		removeData(rec);
 	}
+	
+	public NotificationHandler actionNotitificationHandler = new NotificationHandler() {
+
+		@Override
+		public void onNotification(JSONObject bean) {
+			addBean(bean);
+			
+		}
+		
+
+		
+	};
 
 	
 	
