@@ -17,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.ActionList;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
-import org.celstec.arlearn2.beans.game.DependsOn;
 import org.celstec.arlearn2.beans.run.GameStateRecord;
 import org.celstec.arlearn2.beans.game.ProgressDefinition;
 import org.celstec.arlearn2.beans.run.Run;
@@ -194,22 +193,22 @@ public class Progress extends Service {
 //	}
 
 	// TODO make this code more generic see progress
-	public boolean checkActions(DependsOn dOn, ActionList al) {
-		Iterator<Action> it = al.getActions().iterator();
-		while (it.hasNext()) {
-			if (checkAction(dOn, (Action) it.next()))
-				return true;
-		}
-		return false;
-	}
+//	public boolean checkActions(DependsOn dOn, ActionList al) {
+//		Iterator<Action> it = al.getActions().iterator();
+//		while (it.hasNext()) {
+//			if (checkAction(dOn, (Action) it.next()))
+//				return true;
+//		}
+//		return false;
+//	}
 
-	public boolean checkAction(DependsOn dOn, Action a) {
-		if (dOn.getAction() != null && !dOn.getAction().equals(a.getAction()))
-			return false;
-		if (dOn.getGeneralItemId() != null && !dOn.getGeneralItemId().equals(a.getGeneralItemId()))
-			return false;
-		if (dOn.getGeneralItemType() != null && !dOn.getGeneralItemType().equals(a.getGeneralItemType()))
-			return false;
-		return true;
-	}
+//	public boolean checkAction(DependsOn dOn, Action a) {
+//		if (dOn.getAction() != null && !dOn.getAction().equals(a.getAction()))
+//			return false;
+//		if (dOn.getGeneralItemId() != null && !dOn.getGeneralItemId().equals(a.getGeneralItemId()))
+//			return false;
+//		if (dOn.getGeneralItemType() != null && !dOn.getGeneralItemType().equals(a.getGeneralItemType()))
+//			return false;
+//		return true;
+//	}
 }

@@ -23,7 +23,6 @@ import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.delegators.ActionDelegator;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
-import org.celstec.arlearn2.delegators.notification.Notification;
 import org.codehaus.jettison.json.JSONException;
 
 import com.google.gdata.util.AuthenticationException;

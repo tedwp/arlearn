@@ -3,7 +3,6 @@ package org.celstec.arlearn2.beans.generalItem;
 import java.util.List;
 
 import org.celstec.arlearn2.beans.dependencies.Dependency;
-import org.celstec.arlearn2.beans.game.DependsOn;
 import org.celstec.arlearn2.beans.game.GameBean;
 
 public class GeneralItem extends GameBean{
