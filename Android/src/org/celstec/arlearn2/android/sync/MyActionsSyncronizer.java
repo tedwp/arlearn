@@ -6,7 +6,6 @@ import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MyActions;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.client.ActionClient;
-import org.celstec.arlearn2.android.db.beans.BeanDeserialiser;
 
 import android.content.Context;
 import android.util.Log;

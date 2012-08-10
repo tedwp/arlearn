@@ -3,7 +3,6 @@ package org.celstec.arlearn2.android.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.celstec.arlearn2.beans.game.DependsOn;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.Action;
 

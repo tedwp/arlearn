@@ -2,11 +2,8 @@ package org.celstec.arlearn2.android.sync;
 
 import java.util.Iterator;
 
-import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
-import org.celstec.arlearn2.android.db.MyActions;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.db.RunAdapter;
 import org.celstec.arlearn2.beans.run.Run;
@@ -14,27 +11,20 @@ import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
-//import org.celstec.arlearn2.android.db.beans.Run;
-import org.celstec.arlearn2.android.genItemActivities.DisplayMessageActivity;
 import org.celstec.arlearn2.android.service.AlarmService;
 import org.celstec.arlearn2.client.GeneralItemClient;
-//import org.celstec.arlearn2.genericBeans.BeanDeserialiser;
-//import org.celstec.arlearn2.genericBeans.GeneralItem;
-//import org.celstec.arlearn2.genericBeans.GeneralItemList;
 
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.util.Log;
 
 public class GeneralItemsSyncroniser extends GenericSyncroniser {
 
 	private boolean runNextTime = false;
 
+	
 	public GeneralItemsSyncroniser(Context ctx) {
 		super(ctx);
 	}

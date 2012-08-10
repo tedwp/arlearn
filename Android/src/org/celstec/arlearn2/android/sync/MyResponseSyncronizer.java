@@ -2,12 +2,8 @@ package org.celstec.arlearn2.android.sync;
 
 import org.celstec.arlearn2.android.broadcast.ResponseService;
 import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.MyLocations;
 import org.celstec.arlearn2.android.db.MyResponses;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.android.db.beans.BeanDeserialiser;
-//import org.celstec.arlearn2.android.db.beans.LocationList;
-//import org.celstec.arlearn2.android.db.beans.Response;
 import org.celstec.arlearn2.beans.run.Response;
 import org.celstec.arlearn2.client.ResponseClient;
 

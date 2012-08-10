@@ -6,7 +6,6 @@ import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.Run;
 //import org.celstec.arlearn2.android.db.beans.GeneralItem;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
-import org.celstec.arlearn2.beans.game.DependsOn;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 

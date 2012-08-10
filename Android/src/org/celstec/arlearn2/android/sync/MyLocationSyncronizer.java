@@ -2,7 +2,6 @@ package org.celstec.arlearn2.android.sync;
 
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MyLocations;
-import org.celstec.arlearn2.android.db.beans.BeanDeserialiser;
 import org.celstec.arlearn2.beans.run.LocationList;
 import org.celstec.arlearn2.beans.run.Location;
 import org.celstec.arlearn2.client.UserClient;
