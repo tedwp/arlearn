@@ -45,11 +45,22 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 					GeneralItemModification bean = (GeneralItemModification) extras.getSerializable("bean");
 					if (bean != null) {
 						processItem(context, bean);
+						(new GeneralItemDependencyHandler(context)).checkDependencies();
+
+					} 
+					long runId = extras.getLong("runId", -1l);
+					if (runId != -1) {
+						syncronizeGeneralItems(context, runId);
+						(new GeneralItemDependencyHandler(context)).checkDependencies(runId);
+
+
 					}
+					
 				} else {
 					syncronizeGeneralItems(context);
+					(new GeneralItemDependencyHandler(context)).checkDependencies();
+
 				}
-				(new GeneralItemDependencyHandler(context)).checkDependencies();
 				updateActivities(context);
 			}
 		}).start();
@@ -118,26 +129,28 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 			return true;
 		return false;
 	}
-
 	private void syncronizeGeneralItems(final Context context) {
-
 		PropertiesAdapter pa = PropertiesAdapter.getInstance(context);
 		long currentRunId = pa.getCurrentRunId();
 		if (currentRunId <= 0)
 			return;
+		syncronizeGeneralItems(context, currentRunId);
+	}
+	private void syncronizeGeneralItems(final Context context, long runId) {
+		PropertiesAdapter pa = PropertiesAdapter.getInstance(context);
 		DBAdapter db = new DBAdapter(context);
 		db.openForWrite();
 		try {
-			GeneralItemList gl = GeneralItemClient.getGeneralItemClient().getRunGeneralItems(pa.getFusionAuthToken(), currentRunId);
+			GeneralItemList gl = GeneralItemClient.getGeneralItemClient().getRunGeneralItems(pa.getFusionAuthToken(), runId);
 
 			if (gl.getErrorCode() != null && gl.getErrorCode() == GeneralItemList.RUNNOTFOUND) {
-				notifyRunDeleted(context, currentRunId);
+				notifyRunDeleted(context, runId);
 			}
 
 			Iterator<GeneralItem> it = gl.getGeneralItems().iterator();
 			while (it.hasNext()) {
 				GeneralItem item = it.next();
-				item.setRunId(currentRunId);
+				item.setRunId(runId);
 				generalItemToDb(db, item);
 			}
 		} catch (ARLearnException ae) {

@@ -9,6 +9,8 @@ import org.celstec.arlearn2.gwt.client.control.TriggerDataSource;
 import org.celstec.arlearn2.gwt.client.network.ActionClient;
 import org.celstec.arlearn2.gwt.client.network.ChannelClient;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
+import org.celstec.arlearn2.gwt.client.network.action.ActionDatasource;
+import org.celstec.arlearn2.gwt.client.network.response.ResponseDataSource;
 import org.celstec.arlearn2.gwt.client.network.team.TeamClient;
 import org.celstec.arlearn2.gwt.client.network.team.TeamsDataSource;
 import org.celstec.arlearn2.gwt.client.network.user.UserClient;
@@ -89,6 +91,8 @@ public class RunTab extends MasterDetailTab {
 
 		setMasterCanvas(getMaster());
 		setDetailCanvas(getDetail());
+		ActionDatasource.getInstance().loadDataRun(runId);
+		ResponseDataSource.getInstance().loadDataRun(runId);
 
 	}
 	

@@ -4,6 +4,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 
+@Deprecated
 public abstract class ActionsCallback extends JsonCallback {
 
 	private JSONArray jsonValue;
@@ -31,6 +32,7 @@ public abstract class ActionsCallback extends JsonCallback {
 		if (jsonValue == null) return -1;
 		JSONObject game = jsonValue.get(i).isObject();
 		if (game == null) return -1;
+		if (game.get("generalItemId")== null) return -1;
 		return (long) game.get("generalItemId").isNumber().doubleValue();
 	}
 	

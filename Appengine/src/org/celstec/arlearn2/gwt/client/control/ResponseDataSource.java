@@ -4,6 +4,7 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
+@Deprecated
 public class ResponseDataSource extends DataSource{
 
 public static ResponseDataSource instance;

@@ -77,8 +77,7 @@ public class RunTabGeneralItems extends ListGrid  {
 					window.show();
 				}
 				if (typeEquals(GeneralItemRunDataSource.MULTIPLECHOICE, event) ) {
-					if (cw != null) cw.destroy();
-					cw = new ChartWindow(runTab.getGameId(), runTab.getRunId(), event.getRecord().getAttributeAsLong("id"));
+					ChartWindow cw = new ChartWindow(runTab.getGameId(), runTab.getRunId(), event.getRecord().getAttributeAsLong("id"));
 					cw.show();
 				}
 			}
@@ -89,8 +88,6 @@ public class RunTabGeneralItems extends ListGrid  {
 		});
 	}
 	
-	
-	private ChartWindow cw;
 	
 	private void initActionListener() {
 		// TODO Auto-generated method stub
@@ -148,7 +145,8 @@ public class RunTabGeneralItems extends ListGrid  {
 					bean.containsKey("responseValue") && 
 					bean.containsKey("generalItemId") 
 					) {
-				if (cw != null) cw.update(bean);
+//				if (cw != null) cw.update(bean);
+				//TODO let this datasource listen for updates from ResponseDatasource
 				datasource.updateResponse(
 						(long) bean.get("generalItemId").isNumber().doubleValue(), 
 						(long) bean.get("runId").isNumber().doubleValue(), 

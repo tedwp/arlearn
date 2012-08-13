@@ -68,6 +68,10 @@ public class RunReceiver extends GenericReceiver {
 			Log.e("GAME", "in thread 2 CREATED");
 			runToDb(db, rm.getRun(), ctx);
 			updateGeneralItems = true;
+			Intent gimIntent = new Intent();
+			gimIntent.putExtra("runId", rm.getRun().getRunId());
+			gimIntent.setAction(GeneralItemReceiver.action);
+			ctx.sendBroadcast(gimIntent);
 			break;
 		case RunModification.DELETED:
 			Log.e("GAME", "in thread 2 DELETED");

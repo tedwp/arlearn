@@ -15,136 +15,136 @@ import com.smartgwt.client.widgets.tab.Tab;
 
 public class ActionTab extends Tab {
 
-	public ActionTab() {
-		super("actions");
-		HLayout navLayout = new HLayout();
-		navLayout.setMembersMargin(10);
-
-		navLayout.setMembers(getActionForm(), getResponseForm());
-		this.setPane(navLayout);
-	}
-	
-	public DynamicForm getActionForm() {
-		final DynamicForm form = new DynamicForm();
-		form.setBorder("1px solid");
-		form.setWidth(345);
-		// form.setUseAllDataSourceFields(true);
-		HeaderItem header = new HeaderItem();
-		header.setDefaultValue("Create an action");
-
-		final TextItem itemId = new TextItem("itemId");
-		itemId.setTitle("General item Id");
-		itemId.setSelectOnFocus(true);
-		itemId.setWrapTitle(false);
-
-		
-		final TextItem runId = new TextItem("runId");
-		runId.setTitle("runId");
-		runId.setWrapTitle(false);
-		
-		final TextItem itemType = new TextItem("itemType");
-		itemType.setTitle("Item Type");
-		itemType.setWrapTitle(false);
-		
-		final TextItem userEmail = new TextItem("userEmail");
-		userEmail.setTitle("userEmail");
-		userEmail.setWrapTitle(false);
-		
-		final TextItem action = new TextItem("action");
-		action.setTitle("action");
-		action.setWrapTitle(false);
-
-		ButtonItem button = new ButtonItem("submit", "Submit");
-		// button.setStartRow(true);
-		button.setWidth(80);
-		button.setAlign(Alignment.RIGHT);
-
-		button.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-				ActionClient.getInstance().createAction(
-						Long.parseLong(form.getValueAsString("itemId")), 
-								Long.parseLong(form.getValueAsString("runId")), 
-								form.getValueAsString("action"), 
-								form.getValueAsString("userEmail"), 
-								form.getValueAsString("itemType"), 
-								new JsonCallback() {
-									
-									@Override
-									public void onJsonReceived(JSONValue jsonValue) {
-										// TODO Auto-generated method stub
-										
-									}
-									
-									@Override
-									public void onError() {
-										// TODO Auto-generated method stub
-										
-									}
-								});
-			}
-		});
-		form.setFields(header, itemId,runId, itemType, userEmail, action, button);
-		return form;
-	}
-	
-	public DynamicForm getResponseForm() {
-		final DynamicForm form = new DynamicForm();
-		form.setBorder("1px solid");
-		form.setWidth(345);
-		// form.setUseAllDataSourceFields(true);
-		HeaderItem header = new HeaderItem();
-		header.setDefaultValue("Create a response");
-
-		final TextItem itemId = new TextItem("itemId");
-		itemId.setTitle("General item Id");
-		itemId.setSelectOnFocus(true);
-		itemId.setWrapTitle(false);
-
-		
-		final TextItem runId = new TextItem("runId");
-		runId.setTitle("runId");
-		runId.setWrapTitle(false);
-		
-		final TextItem itemType = new TextItem("itemType");
-		itemType.setTitle("Item Type");
-		itemType.setWrapTitle(false);
-		
-		final TextItem userEmail = new TextItem("userEmail");
-		userEmail.setTitle("userEmail");
-		userEmail.setWrapTitle(false);
-		
-		final TextItem action = new TextItem("responseValue");
-		action.setTitle("responseValue");
-		action.setWrapTitle(false);
-
-		ButtonItem button = new ButtonItem("submit", "Submit");
-		// button.setStartRow(true);
-		button.setWidth(80);
-		button.setAlign(Alignment.RIGHT);
-
-		button.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-				ResponseClient.getInstance().createResponse(Long.parseLong(form.getValueAsString("itemId")), 
-								Long.parseLong(form.getValueAsString("runId")),
-								form.getValueAsString("responseValue"), 
-								form.getValueAsString("userEmail"), 
-								new JsonCallback() {
-									
-									@Override
-									public void onJsonReceived(JSONValue jsonValue) {
-										// TODO Auto-generated method stub
-										
-									}
-									
-									@Override
-									public void onError() {
-										// TODO Auto-generated method stub
-										
-									}
-								});
-			}
-		});
-		form.setFields(header, itemId,runId, itemType, userEmail, action, button);
-		return form;
-	}
+//	public ActionTab() {
+//		super("actions");
+//		HLayout navLayout = new HLayout();
+//		navLayout.setMembersMargin(10);
+//
+//		navLayout.setMembers(getActionForm(), getResponseForm());
+//		this.setPane(navLayout);
+//	}
+//	
+//	public DynamicForm getActionForm() {
+//		final DynamicForm form = new DynamicForm();
+//		form.setBorder("1px solid");
+//		form.setWidth(345);
+//		// form.setUseAllDataSourceFields(true);
+//		HeaderItem header = new HeaderItem();
+//		header.setDefaultValue("Create an action");
+//
+//		final TextItem itemId = new TextItem("itemId");
+//		itemId.setTitle("General item Id");
+//		itemId.setSelectOnFocus(true);
+//		itemId.setWrapTitle(false);
+//
+//		
+//		final TextItem runId = new TextItem("runId");
+//		runId.setTitle("runId");
+//		runId.setWrapTitle(false);
+//		
+//		final TextItem itemType = new TextItem("itemType");
+//		itemType.setTitle("Item Type");
+//		itemType.setWrapTitle(false);
+//		
+//		final TextItem userEmail = new TextItem("userEmail");
+//		userEmail.setTitle("userEmail");
+//		userEmail.setWrapTitle(false);
+//		
+//		final TextItem action = new TextItem("action");
+//		action.setTitle("action");
+//		action.setWrapTitle(false);
+//
+//		ButtonItem button = new ButtonItem("submit", "Submit");
+//		// button.setStartRow(true);
+//		button.setWidth(80);
+//		button.setAlign(Alignment.RIGHT);
+//
+//		button.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+//			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+//				ActionClient.getInstance().createAction(
+//						Long.parseLong(form.getValueAsString("itemId")), 
+//								Long.parseLong(form.getValueAsString("runId")), 
+//								form.getValueAsString("action"), 
+//								form.getValueAsString("userEmail"), 
+//								form.getValueAsString("itemType"), 
+//								new JsonCallback() {
+//									
+//									@Override
+//									public void onJsonReceived(JSONValue jsonValue) {
+//										// TODO Auto-generated method stub
+//										
+//									}
+//									
+//									@Override
+//									public void onError() {
+//										// TODO Auto-generated method stub
+//										
+//									}
+//								});
+//			}
+//		});
+//		form.setFields(header, itemId,runId, itemType, userEmail, action, button);
+//		return form;
+//	}
+//	
+//	public DynamicForm getResponseForm() {
+//		final DynamicForm form = new DynamicForm();
+//		form.setBorder("1px solid");
+//		form.setWidth(345);
+//		// form.setUseAllDataSourceFields(true);
+//		HeaderItem header = new HeaderItem();
+//		header.setDefaultValue("Create a response");
+//
+//		final TextItem itemId = new TextItem("itemId");
+//		itemId.setTitle("General item Id");
+//		itemId.setSelectOnFocus(true);
+//		itemId.setWrapTitle(false);
+//
+//		
+//		final TextItem runId = new TextItem("runId");
+//		runId.setTitle("runId");
+//		runId.setWrapTitle(false);
+//		
+//		final TextItem itemType = new TextItem("itemType");
+//		itemType.setTitle("Item Type");
+//		itemType.setWrapTitle(false);
+//		
+//		final TextItem userEmail = new TextItem("userEmail");
+//		userEmail.setTitle("userEmail");
+//		userEmail.setWrapTitle(false);
+//		
+//		final TextItem action = new TextItem("responseValue");
+//		action.setTitle("responseValue");
+//		action.setWrapTitle(false);
+//
+//		ButtonItem button = new ButtonItem("submit", "Submit");
+//		// button.setStartRow(true);
+//		button.setWidth(80);
+//		button.setAlign(Alignment.RIGHT);
+//
+//		button.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+//			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+//				ResponseClient.getInstance().createResponse(Long.parseLong(form.getValueAsString("itemId")), 
+//								Long.parseLong(form.getValueAsString("runId")),
+//								form.getValueAsString("responseValue"), 
+//								form.getValueAsString("userEmail"), 
+//								new JsonCallback() {
+//									
+//									@Override
+//									public void onJsonReceived(JSONValue jsonValue) {
+//										// TODO Auto-generated method stub
+//										
+//									}
+//									
+//									@Override
+//									public void onError() {
+//										// TODO Auto-generated method stub
+//										
+//									}
+//								});
+//			}
+//		});
+//		form.setFields(header, itemId,runId, itemType, userEmail, action, button);
+//		return form;
+//	}
 }

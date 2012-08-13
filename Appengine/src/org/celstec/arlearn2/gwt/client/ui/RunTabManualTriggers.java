@@ -2,7 +2,7 @@ package org.celstec.arlearn2.gwt.client.ui;
 
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 import org.celstec.arlearn2.gwt.client.control.TriggerDataSource;
-import org.celstec.arlearn2.gwt.client.network.ActionClient;
+import org.celstec.arlearn2.gwt.client.network.action.ActionClient;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
 import org.celstec.arlearn2.gwt.client.network.game.GameClient;
 import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;

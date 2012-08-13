@@ -4,6 +4,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 
+@Deprecated
 public abstract class ResponseCallback extends JsonCallback {
 
 	private JSONArray jsonValue;

@@ -2,7 +2,7 @@ package org.celstec.arlearn2.gwt.client.ui.modal;
 
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
-import org.celstec.arlearn2.gwt.client.network.ResponseClient;
+import org.celstec.arlearn2.gwt.client.network.response.ResponseClient;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;

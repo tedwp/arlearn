@@ -18,6 +18,7 @@ import org.celstec.arlearn2.beans.run.Action;
 
 import android.media.SoundPool.OnLoadCompleteListener;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -31,7 +32,9 @@ public class GeneralItemDependencyHandler {
 	private static SoundPool soundPool;
 	private static HashMap<Integer, Integer> soundPoolMap;
 	private static boolean soundPoolLoaded = false;
+	private boolean beep = true;	
 
+	@SuppressLint("NewApi")
 	public GeneralItemDependencyHandler(Context ctx) {
 		this.ctx = ctx;
 		if (soundPool == null) {
@@ -51,9 +54,12 @@ public class GeneralItemDependencyHandler {
 	}
 
 	public synchronized void checkDependencies() {
+		checkDependencies((new PropertiesAdapter(ctx)).getCurrentRunId());
+	}
+	public synchronized void checkDependencies(long runId) {
+		beep = (new PropertiesAdapter(ctx)).getCurrentRunId() == runId;
 		DBAdapter db = new DBAdapter(ctx);
 		db.openForWrite();
-		long runId = (new PropertiesAdapter(ctx)).getCurrentRunId();
 		List<Action> actions = ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).query(runId);
 		db.close();
 		db = new DBAdapter(ctx);
@@ -188,6 +194,7 @@ public class GeneralItemDependencyHandler {
 	public static long lastVibration = System.currentTimeMillis();
 
 	public void vibrateRingPhone() {
+		if (!beep) return;
 		long now = System.currentTimeMillis();
 		if (now - lastVibration < 1500)
 			return;

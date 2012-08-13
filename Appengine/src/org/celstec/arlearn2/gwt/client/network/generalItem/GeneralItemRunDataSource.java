@@ -7,11 +7,14 @@ import java.util.Set;
 import org.celstec.arlearn2.gwt.client.control.ReadyCallback;
 import org.celstec.arlearn2.gwt.client.network.ActionClient;
 import org.celstec.arlearn2.gwt.client.network.ActionsCallback;
+import org.celstec.arlearn2.gwt.client.network.DatasourceUpdateHandler;
 import org.celstec.arlearn2.gwt.client.network.DerivedFieldTask;
 import org.celstec.arlearn2.gwt.client.network.GenericClient;
 import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
 import org.celstec.arlearn2.gwt.client.network.ResponseCallback;
 import org.celstec.arlearn2.gwt.client.network.ResponseClient;
+import org.celstec.arlearn2.gwt.client.network.action.ActionDatasource;
+import org.celstec.arlearn2.gwt.client.network.response.ResponseDataSource;
 import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
 import org.celstec.arlearn2.gwt.client.ui.RunTab;
 
@@ -36,6 +39,8 @@ public class GeneralItemRunDataSource extends GenericDataSource {
 	public GeneralItemRunDataSource(RunTab rt) {
 		super();
 		this.runTab = rt;
+		ResponseDataSource.getInstance().addNotificationHandler(responseNotificationHandler);
+		ActionDatasource.getInstance().addNotificationHandler(actionNotificationHandler);
 	}
 	
 	@Override
@@ -112,29 +117,33 @@ public class GeneralItemRunDataSource extends GenericDataSource {
 	}
 	
 	protected void allRecordsUpdated(HashMap<String,String> values) {
-		updateResponses(runTab.getRunId(), values.get("account"), null);
-		updateActions(runTab.getRunId(), values.get("account"), null);
+		System.out.println("befire query ");
+
+		ActionDatasource.getInstance().query(actionNotificationHandler, runTab.getRunId());
+		ResponseDataSource.getInstance().query(responseNotificationHandler, runTab.getRunId());
+//		updateResponses(runTab.getRunId(), values.get("account"), null);
+//		updateActions(runTab.getRunId(), values.get("account"), null);
 	}
 	
-	private void updateActions(long runId, String account,
-			final ReadyCallback rc) {
-		ActionClient.getInstance().getActions(runId, new ActionsCallback() {
-
-			@Override
-			public void onError() {
-
-			}
-
-			@Override
-			public void onActionsReady() {
-				for (int i = 0; i < actionsSize(); i++) {
-					if ("read".equals(getAction(i))) {
-						updateAction(getGeneralItemId(i), getRunId(i), getUserEmail(i), rc);
-					}
-				}
-			}
-		});
-	}
+//	private void updateActions(long runId, String account,
+//			final ReadyCallback rc) {
+//		ActionClient.getInstance().getActions(runId, new ActionsCallback() {
+//
+//			@Override
+//			public void onError() {
+//
+//			}
+//
+//			@Override
+//			public void onActionsReady() {
+//				for (int i = 0; i < actionsSize(); i++) {
+//					if ("read".equals(getAction(i))) {
+//						updateAction(getGeneralItemId(i), getRunId(i), getUserEmail(i), rc);
+//					}
+//				}
+//			}
+//		});
+//	}
 	
 	public void updateAction(long itemId, long runId, String account, final ReadyCallback rc) {
 		Criteria crit = new Criteria();
@@ -158,24 +167,24 @@ public class GeneralItemRunDataSource extends GenericDataSource {
 		});
 	}
 	
-	private void updateResponses(long runId, String account, final ReadyCallback rc) {
-		ResponseClient.getInstance().getResponses(runId, account,
-				new ResponseCallback() {
-
-					@Override
-					public void onResponsesReady() {
-						for (int i = 0; i < responsesSize(); i++) {
-							updateResponse(getGeneralItemId(i), getRunId(i), getUserEmail(i), getResponseValue(i), rc);
-						}
-
-					}
-
-					@Override
-					public void onError() {
-					}
-				});
-
-	}
+//	private void updateResponses(long runId, String account, final ReadyCallback rc) {
+//		ResponseClient.getInstance().getResponses(runId, account,
+//				new ResponseCallback() {
+//
+//					@Override
+//					public void onResponsesReady() {
+//						for (int i = 0; i < responsesSize(); i++) {
+//							updateResponse(getGeneralItemId(i), getRunId(i), getUserEmail(i), getResponseValue(i), rc);
+//						}
+//
+//					}
+//
+//					@Override
+//					public void onError() {
+//					}
+//				});
+//
+//	}
 	
 	public void updateResponse(long itemId, long runId, String account, final String responseValue, final ReadyCallback rc) {
 		Criteria crit = new Criteria();
@@ -222,4 +231,30 @@ public class GeneralItemRunDataSource extends GenericDataSource {
 		return null;
 	}
 	
+	private DatasourceUpdateHandler responseNotificationHandler = new DatasourceUpdateHandler() {
+		
+		@Override
+		public void newRecord(Record record) {
+			updateResponse(
+					record.getAttributeAsLong(ResponseDataSource.GENERALITEMID), 
+					record.getAttributeAsLong(ResponseDataSource.RUNID), 
+					record.getAttribute(ResponseDataSource.ACCOUNT), 
+					record.getAttribute(ResponseDataSource.RESPONSEVALUE), 
+					null);
+		}
+	};
+	
+	private DatasourceUpdateHandler actionNotificationHandler = new DatasourceUpdateHandler() {
+		
+		@Override
+		public void newRecord(Record record) {
+			if ("read".equals(record.getAttribute(ActionDatasource.ACTION))) {
+				updateAction(
+						record.getAttributeAsLong(ActionDatasource.GENERALITEMID), 
+						record.getAttributeAsLong(ActionDatasource.RUNID), 
+						record.getAttribute(ActionDatasource.ACCOUNT),  
+						null);
+			}
+		}
+	};
 }

@@ -13,7 +13,12 @@ import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class ActionDatasource extends GenericDataSource {
-	
+	public static final String ACTION = "action";
+	public static final String GENERALITEMID = "generalItemId";
+	public static final String RUNID = "runId";
+	public static final String ACCOUNT = "userEmail";
+	public static final String TIMESTAMP = "timestamp";
+
 	public static ActionDatasource instance;
 
 	public static ActionDatasource getInstance() {
@@ -30,10 +35,11 @@ public class ActionDatasource extends GenericDataSource {
 	
 	@Override
 	protected void initFields() {
-		addField(INTEGER_DATA_TYPE, "runId", false, false);
-		addField(STRING_DATA_TYPE, "userEmail", false, false);
-		addField(STRING_DATA_TYPE, "action", false, false);
-		addField(LONG_DATA_TYPE, "timestamp", true, false);
+		addField(INTEGER_DATA_TYPE, RUNID, false, false);
+		addField(STRING_DATA_TYPE, ACCOUNT, false, false);
+		addField(STRING_DATA_TYPE, ACTION, false, false);
+		addField(LONG_DATA_TYPE, TIMESTAMP, true, false);
+		addField(LONG_DATA_TYPE, GENERALITEMID, true, false);
 		addDerivedField(new DerivedFieldTask() {
 			
 			@Override
@@ -48,7 +54,7 @@ public class ActionDatasource extends GenericDataSource {
 			
 			@Override
 			public String[] getSourceFieldName() {
-				return new String[] {"userEmail", "timestamp"};
+				return new String[] {ACCOUNT, TIMESTAMP};
 			}
 			@Override
 			public int getType() {
@@ -69,7 +75,7 @@ public class ActionDatasource extends GenericDataSource {
 			
 			@Override
 			public String[] getSourceFieldName() {
-				return new String[] {"runId", "userEmail"};
+				return new String[] {RUNID, ACCOUNT};
 			}
 			@Override
 			public int getType() {

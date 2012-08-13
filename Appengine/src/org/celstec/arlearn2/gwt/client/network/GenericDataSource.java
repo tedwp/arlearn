@@ -3,11 +3,13 @@ package org.celstec.arlearn2.gwt.client.network;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.celstec.arlearn2.gwt.client.control.ReadyCallback;
 import org.celstec.arlearn2.gwt.client.control.TriggerDataSource;
+import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONArray;
@@ -302,4 +304,48 @@ public abstract class GenericDataSource extends DataSource {
 			}
 		});
 	}
+	
+	public void query(final DatasourceUpdateHandler handler, long runId) {
+		Criteria crit = new Criteria();
+		crit.addCriteria("runId", ""+runId);
+		fetchData(crit, new DSCallback() {
+			@Override
+			public void execute(DSResponse response,
+					Object rawData, DSRequest request) {
+				Record[] records = response.getData();
+				for (Record record : records) {
+					System.out.println("query "+record);
+					handler.newRecord(record);
+				}
+			}
+		});
+	}
+	
+	
+	
+	@Override
+	public void addData(Record record) {
+		super.addData(record);
+		for (Iterator<DatasourceUpdateHandler> iter = updateHandlerList.iterator(); iter.hasNext();) {
+			iter.next().newRecord(record);
+		}
+	}
+
+	private List<DatasourceUpdateHandler> updateHandlerList =  new ArrayList<DatasourceUpdateHandler>();
+
+	public void addNotificationHandler(DatasourceUpdateHandler handler) {
+		updateHandlerList.add(handler);
+	}
+	
+	public void removeUpdateHandeler(DatasourceUpdateHandler handler) {
+		for (Iterator iter = updateHandlerList.iterator(); iter.hasNext();) {
+			if (iter.next()== handler)iter.remove();
+		}
+	}
+
+	public void removeAllHandlers() {
+		updateHandlerList =  new ArrayList<DatasourceUpdateHandler>();
+	}
+	
+	
 }
