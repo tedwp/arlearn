@@ -235,11 +235,17 @@ public class GeneralItemRunDataSource extends GenericDataSource {
 	}
 	
 	public void deleteRunAccount(long runId,String userEmail) {
-		ListGridRecord rec = new ListGridRecord();
-		rec.setAttribute("runId", runId);
-		rec.setAttribute("userEmail", userEmail);
-		removeData(rec);
+//		ListGridRecord rec = new ListGridRecord();
+//		rec.setAttribute("runId", runId);
+//		rec.setAttribute("userEmail", userEmail);
+//		removeData(rec);
+		Criteria crit = new Criteria();
+		crit.addCriteria("runId", ""+runId);
+		crit.addCriteria("userEmail", userEmail);
+		deleteData(crit);
 	}
+	
+	
 	
 	private DatasourceUpdateHandler responseNotificationHandler = new DatasourceUpdateHandler() {
 		

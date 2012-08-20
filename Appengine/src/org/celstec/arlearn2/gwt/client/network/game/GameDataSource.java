@@ -88,9 +88,13 @@ public class GameDataSource extends GenericDataSource {
 	}
 
 	public void delete(long gameId) {
-		ListGridRecord rec = new ListGridRecord();
-		rec.setAttribute("gameId", gameId);
-		removeData(rec);
+//		ListGridRecord rec = new ListGridRecord();
+//		rec.setAttribute("gameId", gameId);
+//		removeData(rec);
+		
+		Criteria crit = new Criteria();
+		crit.addCriteria("gameId", ""+gameId);
+		deleteData(crit);
 	}
 
 	public NotificationHandler gameNotitificationHandler = new GameNotificationHandler() {

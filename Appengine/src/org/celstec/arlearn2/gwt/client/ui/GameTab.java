@@ -183,9 +183,13 @@ public class GameTab extends MasterDetailTab {
 						});
 					} else {
 						long itemId = event.getRecord().getAttributeAsLong("id");
-						ListGridRecord rec = new ListGridRecord();
-						rec.setAttribute("itemId", itemId);
-						TriggerDataSource.getInstance().removeData(rec);
+//						ListGridRecord rec = new ListGridRecord();
+//						rec.setAttribute("itemId", itemId);
+						Criteria crit = new Criteria();
+						crit.addCriteria("itemId", ""+itemId);
+						
+//						TriggerDataSource.getInstance().removeData(rec);
+						TriggerDataSource.getInstance().deleteData(crit);
 						GameClient.getInstance().removeManualTrigger(gameId, itemId, new JsonCallback() {
 							public void onJsonReceived(JSONValue jsonValue) {
 								GeneralItemGameDataSource.getInstance().removeManualItem(event.getRecord().getAttributeAsLong("id"));

@@ -47,7 +47,7 @@ import com.smartgwt.client.widgets.layout.HLayout;
 public class RunTabUsers extends Canvas {
 
 	private ListGrid userGrid;
-	private RunTab runTab;
+	public RunTab runTab;
 	private PongHandler pongHandler = new PongHandler();
 	public List<UserActionsWindow> uaws = new ArrayList<UserActionsWindow>();
 

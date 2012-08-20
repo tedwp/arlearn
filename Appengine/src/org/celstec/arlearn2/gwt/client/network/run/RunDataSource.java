@@ -49,9 +49,12 @@ public class RunDataSource extends GenericDataSource {
 			@Override
 			public void onJsonReceived(JSONValue jsonValue) {
 				
-				ListGridRecord rec = new ListGridRecord();
-				rec.setAttribute("runId", runId);
-				removeData(rec);
+//				ListGridRecord rec = new ListGridRecord();
+//				rec.setAttribute("runId", runId);
+//				removeData(rec);
+				Criteria crit = new Criteria();
+				crit.addCriteria("runId", ""+runId);
+				deleteData(crit);
 //				RunDataSource.getInstance().loadRuns(new ReadyCallback() {
 //					
 //					@Override

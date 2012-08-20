@@ -7,6 +7,7 @@ import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -69,5 +70,18 @@ public class TriggerDataSource extends DataSource{
 		}
 	}
 	
+public void deleteData (Criteria crit) {
+		
+		fetchData(crit, new DSCallback() {
+			@Override
+			public void execute(DSResponse response,
+					Object rawData, DSRequest request) {
+				Record[] records = response.getData();
+				for (Record record : records) {
+					removeData(record);
+				}
+			}
+		});
+	}
 	
 }

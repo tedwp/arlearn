@@ -10,6 +10,11 @@ import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
 import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
 
 import com.google.gwt.json.client.JSONObject;
+import com.smartgwt.client.data.Criteria;
+import com.smartgwt.client.data.DSCallback;
+import com.smartgwt.client.data.DSRequest;
+import com.smartgwt.client.data.DSResponse;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class ActionDatasource extends GenericDataSource {
@@ -100,23 +105,37 @@ public class ActionDatasource extends GenericDataSource {
 	}
 
 	public void deleteRun(long runId) {
-		ListGridRecord rec = new ListGridRecord();
-		rec.setAttribute("runId", runId);
-		removeData(rec);
+//		ListGridRecord rec = new ListGridRecord();
+//		rec.setAttribute("runId", runId);
+//		removeData(rec);
+		
+		Criteria crit = new Criteria();
+		crit.addCriteria("runId", ""+runId);
+		deleteData(crit);
 	}
 	
 	public void deleteRunAccount(long runId,String userEmail) {
-		ListGridRecord rec = new ListGridRecord();
-		rec.setAttribute("runId", runId);
-		rec.setAttribute("userEmail", userEmail);
-		removeData(rec);
+//		ListGridRecord rec = new ListGridRecord();
+//		rec.setAttribute("runId", runId);
+//		rec.setAttribute("userEmail", userEmail);
+//		removeData(rec);
+		Criteria crit = new Criteria();
+		crit.addCriteria("runId", ""+runId);
+		crit.addCriteria("userEmail", userEmail);
+		deleteData(crit);
 	}
 	
 	public void deleteAccount(String userEmail) {
-		ListGridRecord rec = new ListGridRecord();
-		rec.setAttribute("userEmail", userEmail);
-		removeData(rec);
+//		ListGridRecord rec = new ListGridRecord();
+//		rec.setAttribute("userEmail", userEmail);
+//		removeData(rec);
+		Criteria crit = new Criteria();
+//		crit.addCriteria("runId", ""+runId);
+		crit.addCriteria("userEmail", userEmail);
+		deleteData(crit);
 	}
+	
+	
 	
 	public NotificationHandler actionNotitificationHandler = new NotificationHandler() {
 

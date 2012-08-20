@@ -349,5 +349,18 @@ public abstract class GenericDataSource extends DataSource {
 		updateHandlerList =  new ArrayList<DatasourceUpdateHandler>();
 	}
 	
-	
+	public void deleteData (Criteria crit) {
+		
+		fetchData(crit, new DSCallback() {
+			@Override
+			public void execute(DSResponse response,
+					Object rawData, DSRequest request) {
+				Record[] records = response.getData();
+				for (Record record : records) {
+					pkMap.remove(record.getAttribute(pkAttribute));
+					removeData(record);
+				}
+			}
+		});
+	}
 }

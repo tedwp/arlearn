@@ -68,7 +68,7 @@ public class RunTab extends MasterDetailTab {
 	private long gameId;
 	
 	protected RunTabUsers users;
-	protected RunTabGeneralItems generalItems;
+	public RunTabGeneralItems generalItems;
 	private RunTabTeams teams;
 	private RunTabConfig config;
 	private RunTabManualTriggers manualTriggers;
