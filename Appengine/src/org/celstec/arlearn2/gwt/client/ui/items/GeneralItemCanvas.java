@@ -179,6 +179,7 @@ public abstract class GeneralItemCanvas extends VStack{
 	private void createAutoLaunchComponent() {
 		isAutolaunch = new CheckboxItem();
 		isAutolaunch.setName(AUTOLAUNCH);
+		isAutolaunch.setStartRow(true);
 		isAutolaunch.setTitle(constants.autoLaunch());
 		isAutolaunch.addItemHoverHandler(new ItemHoverHandler() {
 			

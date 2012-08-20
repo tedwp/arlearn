@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
+import org.celstec.arlearn2.gwt.client.GeoPositioner;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.geolocation.client.Position.Coordinates;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.control.LargeMapControl;
@@ -137,6 +139,10 @@ public abstract class MapTab extends Tab {
 		map.addControl(new LargeMapControl());
 		map.addControl(new MenuMapTypeControl());
 		map.setDraggable(true);
+		if (GeoPositioner.getInstance().getCoordinates() != null) {
+			Coordinates coor = GeoPositioner.getInstance().getCoordinates();			
+			map.setCenter(LatLng.newInstance(coor.getLatitude(), coor.getLongitude()));
+		}
 		
 		map.addMapDoubleClickHandler(new MapDoubleClickHandler() {
 			

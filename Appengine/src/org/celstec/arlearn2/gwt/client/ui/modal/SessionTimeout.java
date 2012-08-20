@@ -31,7 +31,8 @@ public class SessionTimeout extends Window {
 		submitButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//todo
-				NotificationSubscriber.getInstance().reload();
+//				NotificationSubscriber.getInstance().reload();
+				com.google.gwt.user.client.Window.Location.reload();
 				SessionTimeout.this.destroy();
 			}
 		});

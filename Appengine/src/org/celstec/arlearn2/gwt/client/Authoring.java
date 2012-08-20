@@ -99,6 +99,7 @@ public class Authoring implements EntryPoint {
 	}
 	
 	public void onModuleLoad() {
+		GeoPositioner.getInstance();
 		RootPanel rootPanel = RootPanel.get("container");
 		hidden = "true".equals(com.google.gwt.user.client.Window.Location.getParameter("hidden"));
 		NotificationSubscriber not = NotificationSubscriber.getInstance();
