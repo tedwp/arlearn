@@ -146,6 +146,7 @@ public class GameTab extends MasterDetailTab {
 		listGrid.setShowRollOverCanvas(true);
 
 		listGrid.setShowAllRecords(true);
+		listGrid.setCanHover(true);
 		listGrid.setDataSource(GeneralItemGameDataSource.getInstance());
 
 		ListGridField titleGameField = new ListGridField("name", constants.title());

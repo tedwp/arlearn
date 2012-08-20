@@ -72,24 +72,25 @@ public class GenericListGrid extends ListGrid {
 			}
 			
 			if (mapable) {
-				ImgButton mapImg = new ImgButton();  
-	             mapImg.setShowDown(false);  
-	             mapImg.setShowRollOver(false);  
-	             mapImg.setLayoutAlign(Alignment.CENTER);  
-	             mapImg.setSrc("icon_maps.png");  
-	             mapImg.setPrompt(constants.mapItem());  
-	             mapImg.setHeight(16);  
-	             mapImg.setWidth(16);  
-	             mapImg.addClickHandler(new ClickHandler() {  
-	                 public void onClick(ClickEvent event) {  
-	                	 mapItem( rollOverRecord);
-	                     
-	                 }
+				
+					ImgButton mapImg = new ImgButton();
+					mapImg.setShowDown(false);
+					mapImg.setShowRollOver(false);
+					mapImg.setLayoutAlign(Alignment.CENTER);
+					mapImg.setSrc("icon_maps.png");
+					mapImg.setPrompt(constants.mapItem());
+					mapImg.setHeight(16);
+					mapImg.setWidth(16);
+					mapImg.addClickHandler(new ClickHandler() {
+						public void onClick(ClickEvent event) {
+							mapItem(rollOverRecord);
 
-					
-	             });  
+						}
 
-	             rollOverCanvas.addMember(mapImg); 
+					});
+
+					rollOverCanvas.addMember(mapImg);
+				
 			}
 			if (downloadable) {
 

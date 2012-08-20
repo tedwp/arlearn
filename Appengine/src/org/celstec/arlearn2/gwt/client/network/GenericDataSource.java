@@ -91,8 +91,9 @@ public abstract class GenericDataSource extends DataSource {
 		attributeList.remove(attribute);
 	}
 
-	protected void processDerivedFields(ListGridRecord rec) {
+	protected void processDerivedFields(ListGridRecord rec, JSONObject jsonObject) {
 		for (DerivedFieldTask task : derivedTaskList) {
+			task.setJsonSource(jsonObject);
 			String[] sources = task.getSourceFieldName();
 			String[] values = new String[sources.length];
 			for (int i = 0; i < sources.length; i++) {
@@ -209,7 +210,7 @@ public abstract class GenericDataSource extends DataSource {
 						break;
 					}
 				}
-				GenericDataSource.this.processDerivedFields(rec);
+				GenericDataSource.this.processDerivedFields(rec, jsonValue.get(i).isObject());
 				//TODO the following is not generic and thus not elegant
 
 				if ("gameId".equals(pkAttribute)) {
@@ -222,6 +223,8 @@ public abstract class GenericDataSource extends DataSource {
 				return rec;
 			}
 			
+			
+
 			@Override
 			public void onReceived() {
 				HashSet<String> deleteSet = (HashSet<String>) pkMap.clone();

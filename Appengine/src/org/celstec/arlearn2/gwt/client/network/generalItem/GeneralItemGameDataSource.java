@@ -8,6 +8,7 @@ import org.celstec.arlearn2.gwt.client.network.GenericClient;
 import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
 
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 
 public class GeneralItemGameDataSource extends GenericDataSource {
 	
@@ -61,6 +62,8 @@ public class GeneralItemGameDataSource extends GenericDataSource {
 				return STRING_DATA_TYPE;
 			}
 			
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {}
 			
 		}, false, false);
 		
@@ -85,6 +88,9 @@ public class GeneralItemGameDataSource extends GenericDataSource {
 			public int getType() {
 				return BOOLEAN_DATA_TYPE;
 			}
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {}
+			
 		}, false, false);
 		
 	}

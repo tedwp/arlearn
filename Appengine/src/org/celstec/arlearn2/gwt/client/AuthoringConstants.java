@@ -166,7 +166,7 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Automatically launch means that the item will be started automatically on the client, once all dependencies are met")
 	String autoLaunchHover();
 	
-	@DefaultStringValue("Trigger manually")
+	@DefaultStringValue("T")
 	String manualTrigger();
 	
 	@DefaultStringValue("Tigger manually means that the game facilitator will be able to make this item visible from withing the run management console")

@@ -28,6 +28,7 @@ import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Encoding;
+import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
@@ -242,10 +243,14 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 		listGrid.setShowAllRecords(true);
 		listGrid.setDataSource(GameDataSource.getInstance());
 		
+		ListGridField mapStatusField = new ListGridField("status_map", " ", 30);
+		mapStatusField.setAlign(Alignment.CENTER);
+		mapStatusField.setType(ListGridFieldType.IMAGE);
+		mapStatusField.setImageURLSuffix(".png");
 		ListGridField titleGameField = new ListGridField("title", constants.game());  
 	    ListGridField creatorGameField = new ListGridField("creator", constants.creator());  
 		
-		listGrid.setFields(new ListGridField[] { titleGameField, creatorGameField });
+		listGrid.setFields(new ListGridField[] {mapStatusField, titleGameField, creatorGameField });
 		listGrid.setCanResizeFields(true);
 
 		listGrid.setPadding(5);
@@ -264,27 +269,18 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 				if (value != null && value) {
 					GameClient.getInstance().deleteGame(gameId, null);
 				}
-//					GameClient.getInstance().deleteGame(gameId, new JsonCallback() {
-//						
-//						@Override
-//						public void onJsonReceived(JSONValue jsonValue) {
-////							tabSelect();
-//						}
-//						
-//					});
-//					Authoring.removeTab("game:"+gameId);
-//				}
 			}
 		});
-		
-		
 	}
 	
 	protected void map(ListGridRecord record) {
+		String statusMap = record.getAttribute("status_map");
+		if (statusMap == null || statusMap.equals("icon_maps")) {
 		long gameId = Long.parseLong(record.getAttribute("gameId"));
 		GameMapTab tab = new GameMapTab("Game map: " + record.getAttribute("title"), 
 				Long.parseLong(record.getAttribute("gameId")));
 		Authoring.addTab(tab, "gamemap:" + gameId);
+		}
 	}
 	
 	protected void download(ListGridRecord record) {
@@ -295,8 +291,8 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 		
 	}
 	
-	private int amountOfRecords = 0;
-	private Timer t = null;
+//	private int amountOfRecords = 0;
+//	private Timer t = null;
 
 	@Override
 	public void onNotification(JSONObject bean) {

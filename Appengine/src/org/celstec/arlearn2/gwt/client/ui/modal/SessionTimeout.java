@@ -1,7 +1,6 @@
 package org.celstec.arlearn2.gwt.client.ui.modal;
 
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
-import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
 
 import com.google.gwt.core.client.GWT;
 import com.smartgwt.client.types.Alignment;
@@ -30,8 +29,6 @@ public class SessionTimeout extends Window {
 		final IButton submitButton = new IButton(constants.reload());
 		submitButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				//todo
-//				NotificationSubscriber.getInstance().reload();
 				com.google.gwt.user.client.Window.Location.reload();
 				SessionTimeout.this.destroy();
 			}

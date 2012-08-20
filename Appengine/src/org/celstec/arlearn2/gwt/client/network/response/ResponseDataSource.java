@@ -59,6 +59,9 @@ public class ResponseDataSource extends GenericDataSource {
 			public int getType() {
 				return STRING_DATA_TYPE;
 			}
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {}
+			
 		}, true, false);
 	}
 	

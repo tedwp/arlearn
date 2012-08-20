@@ -18,6 +18,7 @@ import org.celstec.arlearn2.gwt.client.network.response.ResponseDataSource;
 import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
 import org.celstec.arlearn2.gwt.client.ui.RunTab;
 
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.smartgwt.client.data.Criteria;
@@ -83,6 +84,9 @@ public class GeneralItemRunDataSource extends GenericDataSource {
 			public int getType() {
 				return STRING_DATA_TYPE;
 			}
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {}
+			
 		}, false, false);
 	}
 

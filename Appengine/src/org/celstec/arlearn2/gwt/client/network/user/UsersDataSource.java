@@ -6,6 +6,7 @@ import org.celstec.arlearn2.gwt.client.network.DerivedFieldTask;
 import org.celstec.arlearn2.gwt.client.network.GenericClient;
 import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
 
+import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
@@ -63,6 +64,8 @@ public class UsersDataSource extends GenericDataSource {
 			public int getType() {
 				return STRING_DATA_TYPE;
 			}
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {}
 			
 		}, false, false);
 		addDerivedField(new DerivedFieldTask() {
@@ -91,6 +94,9 @@ public class UsersDataSource extends GenericDataSource {
 			public int getType() {
 				return STRING_DATA_TYPE;
 			}
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {}
+			
 		}, true, false);
 	}
 	

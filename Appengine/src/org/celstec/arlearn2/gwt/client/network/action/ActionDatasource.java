@@ -60,6 +60,9 @@ public class ActionDatasource extends GenericDataSource {
 			public int getType() {
 				return STRING_DATA_TYPE;
 			}
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {}
+			
 		}, true, false);
 		addDerivedField(new DerivedFieldTask() {
 			
@@ -81,6 +84,9 @@ public class ActionDatasource extends GenericDataSource {
 			public int getType() {
 				return STRING_DATA_TYPE;
 			}
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {}
+			
 		}, false, false);
 	}
 	

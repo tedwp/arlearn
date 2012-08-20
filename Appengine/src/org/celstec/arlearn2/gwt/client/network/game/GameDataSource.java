@@ -1,10 +1,13 @@
 package org.celstec.arlearn2.gwt.client.network.game;
 
+import org.celstec.arlearn2.gwt.client.network.DerivedFieldTask;
 import org.celstec.arlearn2.gwt.client.network.GenericClient;
 import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
+import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
 import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
 import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DSCallback;
@@ -34,6 +37,45 @@ public class GameDataSource extends GenericDataSource {
 		addField(INTEGER_DATA_TYPE, "gameId", true, true);
 		addField(STRING_DATA_TYPE, "title", false, true);
 		addField(INTEGER_DATA_TYPE, "time", false, true);
+		addDerivedField(new DerivedFieldTask() {
+			
+			private JSONObject jsonObject;
+			
+			@Override
+			public String processValue(String... value) {
+				if (jsonObject.containsKey("config")) {
+					final JSONObject config = jsonObject.get("config").isObject();
+					if (config != null && config.containsKey("mapAvailable")) {
+						if (config.get("mapAvailable").isBoolean().booleanValue() == false) {
+							return "list_icon";//System.out.println(config);
+						}
+					}
+				}
+				return "icon_maps";
+			}
+			
+			@Override
+			public String getTargetFieldName() {
+				return "status_map";
+			}
+			
+			@Override
+			public String[] getSourceFieldName() {
+				return new String[] {};
+			}
+			
+			@Override
+			public int getType() {
+				return STRING_DATA_TYPE;
+			}
+
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {
+				this.jsonObject = jsonObject;
+				
+			}
+			
+		}, false, false);
 	}
 	
 	protected GenericClient getHttpClient() {
@@ -65,4 +107,28 @@ public class GameDataSource extends GenericDataSource {
 			
 		}
 	};
+
+//	@Override
+//	protected void processJson(JSONObject jsonObject) {
+//		
+//
+//					Criteria crit = new Criteria();
+//					int gameId = (int) jsonObject.get("gameId").isNumber().doubleValue();
+//					System.out.println(gameId);
+//					crit.setAttribute("gameId", gameId);
+//					fetchData(crit, new DSCallback() {
+//						@Override
+//						public void execute(DSResponse response, Object rawData, DSRequest request) {
+//							Record[] records = response.getData();
+//							for (Record record : records) {
+//								System.out.println("record foound");
+//								record.setAttribute("status_map", "status_icon_green");
+//								updateData(record);
+//							}
+//						}
+//					});
+//				}
+//			}
+//		}
+//	}
 }

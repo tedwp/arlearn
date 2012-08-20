@@ -9,6 +9,7 @@ import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
 import org.celstec.arlearn2.gwt.client.network.generalItem.GeneralItemsClient;
 
+import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -55,6 +56,9 @@ public class GameTeamDataSource extends GenericDataSource {
 			public int getType() {
 				return STRING_DATA_TYPE;
 			}
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {}
+			
 		}, true, false);
 	}
 
