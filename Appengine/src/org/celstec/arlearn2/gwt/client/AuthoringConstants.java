@@ -269,6 +269,9 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Save")
 	String save();
 	
+	@DefaultStringValue("Discard")
+	String discard();
+	
 	@DefaultStringValue("Add Role")
 	String addRole();
 	

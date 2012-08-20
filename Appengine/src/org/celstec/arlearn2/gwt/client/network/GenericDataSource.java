@@ -314,7 +314,6 @@ public abstract class GenericDataSource extends DataSource {
 					Object rawData, DSRequest request) {
 				Record[] records = response.getData();
 				for (Record record : records) {
-					System.out.println("query "+record);
 					handler.newRecord(record);
 				}
 			}

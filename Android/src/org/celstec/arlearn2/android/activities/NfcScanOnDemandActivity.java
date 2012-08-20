@@ -19,8 +19,8 @@ public class NfcScanOnDemandActivity extends GeneralActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gi_detail_narratoritem);
-		TextView descriptionTextView = (TextView) findViewById(R.id.giNarratorDescription);
-		descriptionTextView.setVisibility(View.GONE);
+//		TextView descriptionTextView = (TextView) findViewById(R.id.giNarratorDescription);
+//		descriptionTextView.setVisibility(View.GONE);
 		Button provideAnswerButton = (Button) findViewById(R.id.provideAnswerButton);
 		provideAnswerButton.setVisibility(View.GONE);
 

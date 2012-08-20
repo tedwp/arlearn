@@ -79,7 +79,6 @@ public class WebServicesTab  extends MasterDetailTab {
 			@Override
 			public void onClick(ClickEvent event) {
 				String value = (String) selectForm.getValue("path");
-				System.out.println(value);
 				PathClient pc = new PathClient();
 				pc.getPath(value);
 			}
@@ -131,7 +130,6 @@ public class WebServicesTab  extends MasterDetailTab {
 	private ChangeHandler selectTypeChangeHandler = new ChangeHandler() {
 		public void onChange(ChangeEvent event) {
 			String selectedItem = (String) event.getValue();
-			System.out.println(selectedItem);
 			if ("participateRun".equals(selectedItem)){
 				RunClient.getInstance().runsParticapte(new JsonCallback(){
 					public void onJsonReceived(JSONValue jsonValue) {

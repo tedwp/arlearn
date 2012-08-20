@@ -138,7 +138,6 @@ public class ChannelAPI {
 		HttpGet httpGet = new HttpGet(BASE_URL + "/token?c=" + key);
 		try{
 			XHR xhr = new XHR(staticClient.execute(httpGet));
-			System.out.println(xhr.getResponseText());
 			JSONObject json = new JSONObject(xhr.getResponseText());
 			token = json.getString("token");
 		} catch (JSONException e) {
@@ -508,7 +507,6 @@ public class ChannelAPI {
 
                 if (line.contains("<")) {
                 	do {
-                		System.out.println(line);
                 		line = mReader.readLine();
                 	} while(line != null);
                 }

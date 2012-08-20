@@ -142,7 +142,6 @@ public class RunMapTab extends Tab implements NotificationHandler {
 
 	@Override
 	public void onNotification(JSONObject bean) {
-		System.out.println(bean);
 		updateUserLocation(bean.get("account").isString().stringValue(), bean.get("lat").isNumber().doubleValue(), bean.get("lng").isNumber().doubleValue());
 //		LatLng ll = LatLng.newInstance(bean.get("lat").isNumber().doubleValue(), bean.get("lng").isNumber().doubleValue());
 //		Marker m = new Marker(ll);

@@ -12,7 +12,6 @@ public abstract class GameNotificationHandler implements NotificationHandler {
 	
 	@Override
 	public void onNotification(JSONObject bean) {
-		System.out.println("notification : "+ bean);
 		if (bean.containsKey("modificationType")) {
 			if (bean.get("modificationType").isNumber().doubleValue() == CREATED) onNewGame(bean.get("game").isObject());
 			if (bean.get("modificationType").isNumber().doubleValue() == DELETED) onDeleteGame((long) bean.get("game").isObject().get("gameId").isNumber().doubleValue());

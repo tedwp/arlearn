@@ -39,7 +39,7 @@ import android.widget.TextView;
 public class NarratorItemActivity extends GeneralActivity {
 
 	protected WebView webview;
-	protected TextView descriptionTextView;
+//	protected TextView descriptionTextView;
 	protected NarratorItem narratorBean;
 	protected Button provideAnswerButton;
 
@@ -90,7 +90,7 @@ public class NarratorItemActivity extends GeneralActivity {
 	
 	protected void getGuiComponents() {
 		webview = (WebView) findViewById(R.id.giNarratorWebView);
-		descriptionTextView = (TextView) findViewById(R.id.giNarratorDescription);
+//		descriptionTextView = (TextView) findViewById(R.id.giNarratorDescription);
 		provideAnswerButton = (Button) findViewById(R.id.provideAnswerButton);
 		provideAnswerButton.setText(getString(R.string.ao_answer_menu));
 		if (narratorBean.getOpenQuestion() != null) {
@@ -135,11 +135,11 @@ public class NarratorItemActivity extends GeneralActivity {
 		} else {
 			webview.setVisibility(View.GONE);
 		}
-		if (narratorBean.getDescription() != null && !narratorBean.getDescription().trim().equals("")) {
-			descriptionTextView.setText(narratorBean.getDescription());
-		} else {
-			descriptionTextView.setVisibility(View.GONE);
-		}
+//		if (narratorBean.getDescription() != null && !narratorBean.getDescription().trim().equals("")) {
+//			descriptionTextView.setText(narratorBean.getDescription());
+//		} else {
+//			descriptionTextView.setVisibility(View.GONE);
+//		}
 		if (narratorBean.getName() != null) {
 			setTitle(narratorBean.getName());
 		}

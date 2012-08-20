@@ -25,7 +25,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical" >
 
-                <TextView
+              <!--   <TextView
                     android:id="@+id/giNarratorDescription"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
                     android:paddingLeft="12dip"
                     android:paddingRight="12dip"
                     android:text="here comes the text"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black" /> -->
 
                 <WebView
                     android:id="@+id/giNarratorWebView"

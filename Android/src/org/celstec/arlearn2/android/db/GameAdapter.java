@@ -75,6 +75,7 @@ public class GameAdapter extends GenericDbTable {
 	}
 
 	private boolean update(Game g) {
+		if (g.getError() != null) return false;
 		return db.getSQLiteDb().update(getTableName(), getContentValues(g), ID+" = "+g.getGameId(), null) != -1;
 	}
 

@@ -99,6 +99,13 @@ public class ActionDatasource extends GenericDataSource {
 		removeData(rec);
 	}
 	
+	public void deleteRunAccount(long runId,String userEmail) {
+		ListGridRecord rec = new ListGridRecord();
+		rec.setAttribute("runId", runId);
+		rec.setAttribute("userEmail", userEmail);
+		removeData(rec);
+	}
+	
 	public void deleteAccount(String userEmail) {
 		ListGridRecord rec = new ListGridRecord();
 		rec.setAttribute("userEmail", userEmail);

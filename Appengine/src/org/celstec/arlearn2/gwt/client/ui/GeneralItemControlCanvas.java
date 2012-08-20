@@ -132,21 +132,21 @@ public class GeneralItemControlCanvas extends VStack {
 	}
 
 	private void initFormButtonsEdit() {
-		IButton saveButton = new IButton("save");
+		IButton saveButton = new IButton(constants.save());
 		saveButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				JSONObject object = giCanvas.generateObject();
-				System.out.println(object);
 
 				GeneralItemsClient.getInstance().createGeneralItem(object, new JsonCallback() {
 					public void onJsonReceived(JSONValue jsonValue) {
 						if (modificationHandler != null) modificationHandler.modified();
+						selectType.setDisabled(false);
 						removeGenericControls();
 					}
 				});
 			}
 		});
-		IButton discardButton = new IButton("discard");
+		IButton discardButton = new IButton(constants.discard());
 		discardButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				selectType.setDisabled(false);

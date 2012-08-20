@@ -17,6 +17,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 
@@ -24,7 +25,7 @@ public class RunTabGeneralItems extends ListGrid  {
 
 	private RunTab runTab;
 	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
-	private GeneralItemRunDataSource datasource;
+	public GeneralItemRunDataSource datasource;
 	
 	public RunTabGeneralItems(RunTab rt) {
 		this.runTab = rt;
@@ -66,7 +67,8 @@ public class RunTabGeneralItems extends ListGrid  {
 
 		setFields(new ListGridField[] { sortKeyField, titleGameField, typeField, rolesField, readField, correctField, answerField });
 		setSortField("sortKey");
-		fetchData();
+		setAutoFetchData(true);
+
 	}
 	
 	private void initCellClickHandler() {
@@ -135,6 +137,8 @@ public class RunTabGeneralItems extends ListGrid  {
 //			
 //		}
 //	};
+	
+	
 	
 	public NotificationHandler responseNotificationHandler = new NotificationHandler() {
 		@Override

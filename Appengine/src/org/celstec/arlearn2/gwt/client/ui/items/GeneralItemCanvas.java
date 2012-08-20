@@ -5,7 +5,9 @@ import java.util.LinkedHashMap;
 
 import org.celstec.arlearn2.gwt.client.Authoring;
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
+import org.celstec.arlearn2.gwt.client.network.JsonCallback;
 import org.celstec.arlearn2.gwt.client.network.generalItem.GeneralItemGameDataSource;
+import org.celstec.arlearn2.gwt.client.network.generalItem.GeneralItemsClient;
 
 
 import com.google.gwt.core.client.GWT;
@@ -23,7 +25,6 @@ import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.HiddenItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -32,7 +33,6 @@ import com.smartgwt.client.widgets.form.fields.events.ItemHoverHandler;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.IsFloatValidator;
 import com.smartgwt.client.widgets.form.validator.IsIntegerValidator;
-import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
 public abstract class GeneralItemCanvas extends VStack{
@@ -72,6 +72,9 @@ public abstract class GeneralItemCanvas extends VStack{
 	private final String GENITEM_DEP = "generalItemId";
 	private final String SCOPE_DEP = "scope";
 	private final String ROLE_DEP = "role";
+	
+	IsFloatValidator floatValidator = new IsFloatValidator();
+	IsIntegerValidator intValidator = new IsIntegerValidator();
 	
 	protected AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
@@ -190,6 +193,7 @@ public abstract class GeneralItemCanvas extends VStack{
 	private void createSimpleDependencyComponent() {
 		isSimpleDependency = new CheckboxItem();
 		isSimpleDependency.setName(SIMPLE_DEP);
+		isSimpleDependency.setValue(false);
 		isSimpleDependency.setTitle(constants.simpleDep());
 		isSimpleDependency.addItemHoverHandler(new ItemHoverHandler() {
 			@Override
@@ -198,7 +202,6 @@ public abstract class GeneralItemCanvas extends VStack{
 			}
 		});
 		isSimpleDependency.setRedrawOnChange(true);
-		isSimpleDependency.setValue(true);
 
 		FormItemIfFunction formIf = new FormItemIfFunction() {  
             public boolean execute(FormItem item, Object value, DynamicForm form) {  
@@ -227,10 +230,33 @@ public abstract class GeneralItemCanvas extends VStack{
 		selectGeneralItem.setOptionDataSource(GeneralItemGameDataSource.getInstance());
 		selectGeneralItem.setShowIfCondition(formIf);
 		selectGeneralItem.setStartRow(true);
+		selectGeneralItem.addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				String id = selectGeneralItem.getValueAsString();
+				getActions(Long.parseLong(id));
+//				Criteria crit = new Criteria();
+//				crit.addCriteria("id", );
+//				GeneralItemGameDataSource.getInstance().fetchData(crit, new DSCallback() {
+//					@Override
+//					public void execute(DSResponse response,
+//							Object rawData, DSRequest request) {
+//						Record[] records = response.getData();
+//						for (Record record : records) {
+//							System.out.println("query "+record);
+//						}
+//					}
+//				});
+				
+			}
+		});
+		
 		
 		selectScope = new SelectItem(SCOPE_DEP);
 		selectScope.setTitle(constants.scopeDep());
 		selectScope.setValueMap(createScopeDependencyValues());
+		if (selectScope.getValue() == null) selectScope.setValue(0);
 		selectScope.setShowIfCondition(formIf);
 		selectScope.setStartRow(true);
 		
@@ -241,6 +267,8 @@ public abstract class GeneralItemCanvas extends VStack{
 		selectRole.setStartRow(true);
 	}
 	
+	
+	 
 	public LinkedHashMap<String, String> createSimpleDependencyValues() {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
 		valueMap.put("read", "Read");
@@ -369,7 +397,6 @@ public abstract class GeneralItemCanvas extends VStack{
 				actionDep.put("generalItemId", new JSONNumber((Integer) getValue(GENITEM_DEP)));	
 			}
 			if (getValue(SCOPE_DEP) != null) {
-				addDep = true;
 				Object scope = getValue(SCOPE_DEP);
 				if (scope instanceof Integer)		{
 					actionDep.put("scope", new JSONNumber((Integer)getValue(SCOPE_DEP)));	
@@ -432,7 +459,6 @@ public abstract class GeneralItemCanvas extends VStack{
 
 		if (o.containsKey("dependsOn") && o.get("dependsOn").isObject() != null) {
 			JSONObject dep = o.get("dependsOn").isObject();
-			System.out.println(dep);
 			if (dep.containsKey("type")) {
 				formMapping.get(SIMPLE_DEP).setValue(SIMPLE_DEP, "org.celstec.arlearn2.beans.dependencies.ActionDependency".equals(dep.get("type").isString().stringValue()));
 					setValueString(ACTION_DEP, dep);
@@ -485,8 +511,7 @@ public abstract class GeneralItemCanvas extends VStack{
 		}
 	};
 	
-	IsFloatValidator floatValidator = new IsFloatValidator();
-	IsIntegerValidator intValidator = new IsIntegerValidator();
+
 	
 	protected void initValidators() {
 		cv.setErrorMessage(constants.emptyValue());
@@ -497,6 +522,28 @@ public abstract class GeneralItemCanvas extends VStack{
 	public void setLocation(double lat, double lng) {
 		formMapping.get(LAT).setValue(LAT, lat);
 		formMapping.get(LNG).setValue(LNG, lng);
+	}
+	
+	public void getActions(long itemId) {
+		 GeneralItemsClient.getInstance().getGeneralItem(getValueInteger(GAME_ID_NAME), itemId, new JsonCallback(){
+			 public void onJsonReceived(JSONValue jsonValue) {
+				 LinkedHashMap<String, String> map = createSimpleDependencyValues();
+				 if (jsonValue.isObject() == null) return;
+				 if (jsonValue.isObject().get("type").isString().stringValue().equals("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest")) {
+					 JSONValue answers = jsonValue.isObject().get("answers");
+					 JSONArray answersArray = answers.isArray(); 
+					 if (answers != null) {
+						 for (int i = 0; i < answersArray.size(); i++) {
+							 JSONObject answerobject = answersArray.get(i).isObject();
+							 if (answerobject.get("id") != null) {
+								 map.put("answer_"+answerobject.get("id").isString().stringValue(), answerobject.get("answer").isString().stringValue());
+							 }
+						 }
+					 }
+				 }
+				 selectAction.setValueMap(map);
+			 }
+		 });
 	}
 	
 }

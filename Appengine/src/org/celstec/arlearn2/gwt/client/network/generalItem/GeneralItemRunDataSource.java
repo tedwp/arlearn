@@ -117,7 +117,6 @@ public class GeneralItemRunDataSource extends GenericDataSource {
 	}
 	
 	protected void allRecordsUpdated(HashMap<String,String> values) {
-		System.out.println("befire query ");
 
 		ActionDatasource.getInstance().query(actionNotificationHandler, runTab.getRunId());
 		ResponseDataSource.getInstance().query(responseNotificationHandler, runTab.getRunId());
@@ -229,6 +228,13 @@ public class GeneralItemRunDataSource extends GenericDataSource {
 			return null;
 		}
 		return null;
+	}
+	
+	public void deleteRunAccount(long runId,String userEmail) {
+		ListGridRecord rec = new ListGridRecord();
+		rec.setAttribute("runId", runId);
+		rec.setAttribute("userEmail", userEmail);
+		removeData(rec);
 	}
 	
 	private DatasourceUpdateHandler responseNotificationHandler = new DatasourceUpdateHandler() {

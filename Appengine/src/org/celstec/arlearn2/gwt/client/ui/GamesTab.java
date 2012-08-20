@@ -300,8 +300,6 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 
 	@Override
 	public void onNotification(JSONObject bean) {
-//		Window.alert("bean received " +bean.toString());
-		System.out.println(bean);
 		int status = (int) bean.get("status").isNumber().doubleValue();
 
 		hBar2.setPercentDone((int) (100/3*(status+1)));  

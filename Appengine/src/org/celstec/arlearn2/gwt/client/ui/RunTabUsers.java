@@ -9,6 +9,9 @@ import org.celstec.arlearn2.gwt.client.control.Authentication;
 import org.celstec.arlearn2.gwt.client.control.GeneralItemsDataSource_Old;
 import org.celstec.arlearn2.gwt.client.network.ChannelClient;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
+import org.celstec.arlearn2.gwt.client.network.action.ActionDatasource;
+import org.celstec.arlearn2.gwt.client.network.generalItem.GeneralItemRunDataSource;
+import org.celstec.arlearn2.gwt.client.network.response.ResponseDataSource;
 import org.celstec.arlearn2.gwt.client.network.user.UserClient;
 import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
 import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
@@ -183,6 +186,9 @@ public class RunTabUsers extends Canvas {
 		SC.ask(constants.confirmDeleteUser().replace("***", email), new BooleanCallback() {
 			public void execute(Boolean value) {
 				if (value != null && value) {
+					ActionDatasource.getInstance().deleteRunAccount(runTab.getRunId(), email);
+					ResponseDataSource.getInstance().deleteRunAccount(runTab.getRunId(), email);
+					runTab.generalItems.datasource.deleteRunAccount(runTab.getRunId(), email);
 					UserClient.getInstance().deleteUser(runTab.getRunId(), email, new JsonCallback() {
 						public void onJsonReceived(JSONValue jsonValue) {
 							runTab.refreshSources();

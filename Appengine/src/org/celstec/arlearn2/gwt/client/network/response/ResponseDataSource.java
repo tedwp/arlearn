@@ -71,6 +71,13 @@ public class ResponseDataSource extends GenericDataSource {
 		return "responses";
 	}
 	
+	public void deleteRunAccount(long runId,String userEmail) {
+		ListGridRecord rec = new ListGridRecord();
+		rec.setAttribute("runId", runId);
+		rec.setAttribute("userEmail", userEmail);
+		removeData(rec);
+	}
+	
 	public NotificationHandler responseNotitificationHandler = new NotificationHandler() {
 
 		@Override
