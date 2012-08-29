@@ -56,9 +56,13 @@ public class GameManager {
 
 	}
 
-	private static List<GameJDO> getGames(PersistenceManager pm, Long gameId, String creatorEmail, String owner, String feedUrl, String title) {
+	public static List<GameJDO> getGames(PersistenceManager pm, Long gameId, String creatorEmail, String owner, String feedUrl, String title) {
 		Query query = pm.newQuery(GameJDO.class);
 		Object args[] = { gameId, creatorEmail, owner, feedUrl, title };
+		if (ManagerUtil.generateFilter(args, params, paramsNames).trim().equals("")) {
+			query.setFilter("deleted == null");
+			return (List<GameJDO>) query.execute();
+		}
 		query.setFilter(ManagerUtil.generateFilter(args, params, paramsNames));
 		query.declareParameters(ManagerUtil.generateDeclareParameters(args, types, params, paramsNames));
 		return ((List<GameJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args)));

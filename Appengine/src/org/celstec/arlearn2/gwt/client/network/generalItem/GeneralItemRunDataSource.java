@@ -33,7 +33,9 @@ public class GeneralItemRunDataSource extends GenericDataSource {
 	public static final String MULTIPLECHOICE = "org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest";
 	public static final String NARRATORITEM = "org.celstec.arlearn2.beans.generalItem.NarratorItem";
 	public static final String VIDEOOBJECT = "org.celstec.arlearn2.beans.generalItem.VideoObject";
+	public static final String YOUTUBEOBJECT = "org.celstec.arlearn2.beans.generalItem.YoutubeObject";
 	public static final String AUDIOOBJECT = "org.celstec.arlearn2.beans.generalItem.AudioObject";
+	
 	
 	private RunTab runTab;
 
@@ -65,6 +67,7 @@ public class GeneralItemRunDataSource extends GenericDataSource {
 				String firstValue = value[0];
 				if (firstValue.contains(AUDIOOBJECT)) return "Audio Object";
 				if (firstValue.contains(VIDEOOBJECT)) return "Video Object";
+				if (firstValue.contains(YOUTUBEOBJECT)) return "Youtube Movie";
 				if (firstValue.contains(MULTIPLECHOICE)) return "Multiple Choice Test";
 				if (firstValue.contains(NARRATORITEM)) return "Narrator Item";
 				if (firstValue.contains("OpenUrl")) return "Open URL";

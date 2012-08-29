@@ -1,12 +1,11 @@
 package org.celstec.arlearn2.android.answerQuestion;
 
+
 import java.io.File;
 import java.io.FileOutputStream;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnnotateActivity;
-import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
-import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
 import org.celstec.arlearn2.android.util.MediaFolders;
 
 import android.app.AlertDialog;
@@ -14,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -38,17 +38,16 @@ public class TakePictureDelegate {
 	}
 	
 	private void initImageCapture() {
-		image.setImageResource(R.drawable.voegfototoeen);
-		bitmapFile = null;
+		image.setImageResource(R.drawable.voegfototoe);
+		pictureUri = null;
 		image.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-
+				ctx.setRecordingMedia();
+//				Intent cameraIntent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
 				Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//				bitmapFile = MediaFolders.createOutgoingJpgFile();
-//				cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(MediaFolders.getOutgoingFilesDir(), "tmp.jpg")));
-				// cameraIntent = new
-				// Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+				bitmapFile = MediaFolders.createOutgoingJpgFile();
+				cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(bitmapFile));
 				ctx.terminateRecordingOrPlaying();
 				ctx.startActivityForResult(cameraIntent, ctx.CAMERA_PIC_REQUEST);
 			}
@@ -56,24 +55,31 @@ public class TakePictureDelegate {
 	}
 
 	public void onActivityResult(Intent data) {
-		pictureUri = data.getData();
-		Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-		
-//		Bitmap thumbnail = ViewAnswerActivity.decodeFile(new File(MediaFolders.getOutgoingFilesDir(), "tmp.jpg"), 900);
-		try {
-			bitmapFile = MediaFolders.createOutgoingJpgFile();
-			FileOutputStream out = new FileOutputStream(bitmapFile);
-			thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, out);
-		} catch (Exception e) {
-			Log.e("bitmap", "failed to save", e);
-		}
-		setPictureInFrame(thumbnail);
+//		if (data != null) { // TODO: I guess data is always null when extra_ouput is set
+//		pictureUri = data.getData();
+//		pictureUri = null;
+//		if (pictureUri == null) {
+//			Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+//			try {
+//                bitmapFile = MediaFolders.createOutgoingJpgFile();
+//                FileOutputStream out = new FileOutputStream(bitmapFile);
+//                thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//                pictureUri = Uri.fromFile(bitmapFile);
+//			} catch (Exception e) {
+//                Log.e("bitmap", "failed to save", e);
+//			}
+//		}
+//		} else {
+		if (bitmapFile != null) pictureUri = Uri.fromFile(bitmapFile);
+//		}
+		setPictureInFrame();	
 		ctx.displayPublishButton();
 		
 	}
 	
-	private void setPictureInFrame(Bitmap thumbnail) {
-		image.setImageBitmap(thumbnail);
+	private void setPictureInFrame() {
+		
+		image.setImageURI(pictureUri);
 		image.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
@@ -97,17 +103,25 @@ public class TakePictureDelegate {
 			}
 		});
 	}
-	public File getBitmapFile(){
-		return bitmapFile;
-	}
-
-	public String getImagePath() {
-		if (bitmapFile == null) return null;
-		return bitmapFile.getAbsolutePath();
-	}
 	
 	public Uri getUri(){
-		return pictureUri;
+		if (bitmapFile == null && pictureUri== null) return null;
+		if (pictureUri != null) return pictureUri;
+		return Uri.fromFile(bitmapFile);
+	}
+
+	public void reset() {
+		bitmapFile = null;
+		pictureUri = null;
+		initImageCapture();
+	}
+
+	public void setPictureUri(Uri uri) {
+		pictureUri = uri;
+		if (uri != null) {
+			setPictureInFrame();
+			ctx.displayPublishButton();
+		}
 	}
 
 	

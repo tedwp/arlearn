@@ -114,7 +114,7 @@ public class RunTabConfig  extends Canvas {
 		});
 		// nfcItem.setDisabled(true);
 		
-		ButtonItem nfcScan = new ButtonItem("scan", "scan-i18");
+		ButtonItem nfcScan = new ButtonItem("scan", constants.scan());
 		nfcScan.setStartRow(false);
 		nfcScan.setEndRow(false);
 		nfcScan.setColSpan(1);
@@ -128,12 +128,12 @@ public class RunTabConfig  extends Canvas {
 		});
 
 
-		ButtonItem qrbutton = new ButtonItem("scan", "qr-i18");
-		qrbutton.setStartRow(false);
-		qrbutton.setColSpan(1);
-		qrbutton.setStartRow(false);
-		qrbutton.setEndRow(false);
-		qrbutton.setShowIfCondition(openFormFunction);
+//		ButtonItem qrbutton = new ButtonItem("scan", "qr-i18");
+//		qrbutton.setStartRow(false);
+//		qrbutton.setColSpan(1);
+//		qrbutton.setStartRow(false);
+//		qrbutton.setEndRow(false);
+//		qrbutton.setShowIfCondition(openFormFunction);
 
 		
 		ButtonItem button = new ButtonItem("submit", constants.submit());
@@ -149,7 +149,7 @@ public class RunTabConfig  extends Canvas {
 			}
 		});
 		
-		form.setFields(header, openRun, nfcTag,nfcScan,qrbutton, button);
+		form.setFields(header, openRun, nfcTag,nfcScan, button);
 		
 	}
 	

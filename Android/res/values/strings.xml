@@ -24,6 +24,7 @@
      <!--NfcScanOnDemand Activity Strings-->
      <string name="scanTag">Scan een NFC tag of een barcode</string>
      <string name="scanTagMenu">Scan barcode</string>
+     <string name="cancel">Annuleer</string>
      
      <!--List Excursion Activity Strings-->
     <string name="listExcursionsHeader">Selecteer een run</string>

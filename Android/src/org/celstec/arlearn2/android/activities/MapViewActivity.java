@@ -1,6 +1,7 @@
 package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.maps.GenericItemsOverlay;
 import org.celstec.arlearn2.android.maps.ResponsesOverlay;
@@ -65,7 +66,11 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 		// runId = intent.getExtras().getLong("runId");
 		setContentView(R.layout.map_view);
 		broadcastReceiver = new GenericBroadcastReceiver(this);
-
+		
+		Intent gimIntent = new Intent();
+		gimIntent.setAction(GeneralItemReceiver.action);
+		sendBroadcast(gimIntent);
+		
 		mv = (MapView) findViewById(R.id.map);
 		mv.setBuiltInZoomControls(true);
 		myLocation = new MyLocationOverlay(this, mv) {

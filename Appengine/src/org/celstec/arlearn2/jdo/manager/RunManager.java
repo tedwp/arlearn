@@ -10,8 +10,6 @@ import javax.jdo.Query;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.jdo.PMF;
-import org.celstec.arlearn2.jdo.classes.GameJDO;
-import org.celstec.arlearn2.jdo.classes.GeneralItemJDO;
 import org.celstec.arlearn2.jdo.classes.RunJDO;
 import org.codehaus.jettison.json.JSONException;
 
@@ -44,9 +42,13 @@ public class RunManager {
 		}
 	}
 
-	private static List<RunJDO> getRuns(PersistenceManager pm, Long runId, Long gameId, String owner, String title, String tagId) {
+	public static List<RunJDO> getRuns(PersistenceManager pm, Long runId, Long gameId, String owner, String title, String tagId) {
 		Query query = pm.newQuery(RunJDO.class);
 		Object args[] = { runId, gameId, owner, title, tagId };
+		if (ManagerUtil.generateFilter(args, params, paramsNames).trim().equals("")) {
+//			query.setFilter("deleted == null");
+			return (List<RunJDO>) query.execute();
+		}
 		query.setFilter(ManagerUtil.generateFilter(args, params, paramsNames));
 		query.declareParameters(ManagerUtil.generateDeclareParameters(args, types, params, paramsNames));
 		return (List<RunJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args));

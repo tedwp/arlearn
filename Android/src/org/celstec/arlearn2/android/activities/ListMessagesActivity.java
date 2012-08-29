@@ -3,6 +3,7 @@ package org.celstec.arlearn2.android.activities;
 import java.util.ArrayList;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
@@ -13,6 +14,7 @@ import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.MessageListRecord;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +30,9 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listexcursionscreen);
+		Intent gimIntent = new Intent();
+		gimIntent.setAction(GeneralItemReceiver.action);
+		sendBroadcast(gimIntent);
 	}
 	
 	@Override
@@ -43,8 +48,6 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 	
 	@Override
 	public void onBroadcastMessage(Bundle bundle) {
-		Log.e("BROADCAST", "list message broadcast ");
-
 		super.onBroadcastMessage(bundle);
 		doDatabaseQueryOnAuthenticated();
 	}

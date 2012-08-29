@@ -50,6 +50,8 @@ public class OpenQuestionAnswerWindow extends Window {
 
 		setIsModal(true);
 		setShowModalMask(true);
+		setShowResizer(true);
+		setCanDragResize(true);
 		centerInPage();
 
 		answerGrid = new ListGrid();
@@ -169,7 +171,7 @@ public class OpenQuestionAnswerWindow extends Window {
 			html += "<center><embed src=\"" + video + "\" autostart=\"false\" loop=\"false\" height=\"400\" ></center>";
 		}
 		if (image != null && !"".equals(image)) {
-			html += "<center><img align='center' src=\"" + image + "\"/></center>";
+			html += "<center><img align='center' width=\"350\" src=\"" + image + "\"/></center>";
 		}
 		
 		htmlFlow.setContents(html);

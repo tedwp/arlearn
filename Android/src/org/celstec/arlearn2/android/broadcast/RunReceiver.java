@@ -40,13 +40,10 @@ public class RunReceiver extends GenericReceiver {
 					Bundle extras = intent.getExtras();
 					if (extras != null) {
 						RunModification bean = (RunModification) extras.getSerializable("bean");
-						Log.e("GAME", "in thread 1");
 						if (bean != null) {
 							// process(context, bean);
 							databaseOperations(context, bean);
-						} else {
-							Log.e("GAME", "in thread 2 bean is null");	
-						}
+						} 
 					} else {
 						syncronizeRuns(context);
 					}
@@ -65,7 +62,6 @@ public class RunReceiver extends GenericReceiver {
 		boolean updateGeneralItems = false;
 		switch (rm.getModificationType()) {
 		case RunModification.CREATED:
-			Log.e("GAME", "in thread 2 CREATED");
 			runToDb(db, rm.getRun(), ctx);
 			updateGeneralItems = true;
 			Intent gimIntent = new Intent();
@@ -74,7 +70,6 @@ public class RunReceiver extends GenericReceiver {
 			ctx.sendBroadcast(gimIntent);
 			break;
 		case RunModification.DELETED:
-			Log.e("GAME", "in thread 2 DELETED");
 
 			((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).delete(rm.getRun().getRunId());
 			break;
@@ -122,18 +117,15 @@ public class RunReceiver extends GenericReceiver {
 	}
 	
 	private void runToDb(DBAdapter db, Run run, Context ctx){
-		Log.e("GAME", "in thread 3 "+run.getDeleted());
 		((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).insert(run);
 		if (run != null && !run.getDeleted()) updateGameAndUser(ctx, db, run);
 	}
 	
 	private void updateGameAndUser(Context ctx, DBAdapter db, Run r) {
-		Log.e("GAME", "in thread before 4 game update");
 		Game g = r.getGame();
 		PropertiesAdapter pa  = PropertiesAdapter.getInstance(ctx);
 		if (g == null) {
 			r = RunClient.getRunClient().getRun(r.getRunId(), pa.getFusionAuthToken());
-			Log.e("GAME", "in thread before 4 after game update");
 			g = r.getGame();
 		}
 		if (g != null) {
@@ -144,7 +136,6 @@ public class RunReceiver extends GenericReceiver {
 	}
 	
 	protected void updateActivities(Context ctx) {
-		Log.e("GAME", "in thread 5  update activities");
 		updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName());
 	}
 	

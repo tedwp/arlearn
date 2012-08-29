@@ -29,8 +29,10 @@ public class ResponseService extends IntentService {
 				updateActivities(this, NarratorItemActivity.class.getCanonicalName());
 
 			}
+		} else {
+			syncronize(this);	
 		}
-		syncronize(this);
+		
 	}
 
 	private void process(final Context context, final Response resp) {
@@ -40,6 +42,7 @@ public class ResponseService extends IntentService {
 				db.openForWrite();
 				boolean inserted = db.table(DBAdapter.MYRESPONSES_ADAPTER).insert(resp);
 				db.close();
+				syncronize(context);
 			}
 		}).start();
 	}

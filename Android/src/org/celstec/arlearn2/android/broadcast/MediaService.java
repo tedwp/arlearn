@@ -251,7 +251,6 @@ public class MediaService extends IntentService {
 				fos.write(buffer, 0, len1);
 				byteCounter +=1024;
 				if ((startTime + 1500)<System.currentTimeMillis()) {
-					Log.e("GAME", "startTime "+startTime+ "");
 					startTime = System.currentTimeMillis();
 					mc.registerBytesAvailable(url, contentLength-byteCounter);
 					updateActivities(this, ListMessagesActivity.class.getCanonicalName(), ListMapItemsActivity.class.getCanonicalName());

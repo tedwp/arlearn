@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
@@ -25,7 +26,7 @@ public class TakeVideoDelegate {
 	private ImageView video;
 	private ImageView closeButton;
 	private VideoView mVideoView;
-	private RelativeLayout videoLayout;
+	private FrameLayout videoLayout;
 	private Uri videoUri;
 
 	public TakeVideoDelegate(AnnotateActivity answerQuestionActivity) {
@@ -33,7 +34,7 @@ public class TakeVideoDelegate {
 		video = (ImageView) ctx.findViewById(R.id.videoFrame);
 		mVideoView = (VideoView) ctx.findViewById(R.id.videoView);
 		closeButton = (ImageView) ctx.findViewById(R.id.deleteVideoImage);
-		videoLayout = (RelativeLayout) ctx.findViewById(R.id.videoViewLayout);
+		videoLayout = (FrameLayout) ctx.findViewById(R.id.videoViewLayout);
 
 		initImageCapture();
 	}
@@ -44,12 +45,14 @@ public class TakeVideoDelegate {
 	
 	private void initImageCapture() {
 		video.setImageResource(R.drawable.voegfototoeen);
+		video.setVisibility(View.VISIBLE);
 		videoUri = null;
 		video.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-
+				ctx.setRecordingMedia();
 				Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
+				ctx.getRecordAudioDelegate().releaseRecorder();
 				ctx.terminateRecordingOrPlaying();
 				ctx.startActivityForResult(cameraIntent, ctx.ACTION_TAKE_VIDEO);
 			}
@@ -58,8 +61,12 @@ public class TakeVideoDelegate {
 
 	public void onActivityResult(Intent data) {
 		videoUri = data.getData();
+		setVideoInFrame();
+	}
+
+	private void setVideoInFrame() {
 		mVideoView.setVideoURI(videoUri);
-		video.setVisibility(View.INVISIBLE);
+		video.setVisibility(View.GONE);
 		mVideoView.setVisibility(View.VISIBLE);
 		videoLayout.setVisibility(View.VISIBLE);
 		
@@ -77,55 +84,23 @@ public class TakeVideoDelegate {
 				
 			}
 		});
-//		((RelativeLayout) ctx.findViewById(R.id.videoViewLayout)).setLayoutParams(new LayoutParams(mVideoView.getWidth(), mVideoView.getHeight()));
-		
-//		mVideoView.set
-//		mVideoView.start();
-//		Bitmap thumbnail = (Bitmap) data.getData();
-//		try {
-////			bitmapFile = MediaFolders.createOutgoingJpgFile();
-////			FileOutputStream out = new FileOutputStream(bitmapFile);
-////			thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, out);
-//		} catch (Exception e) {
-//			Log.e("bitmap", "failed to save", e);
-//		}
-////		setPictureInFrame(thumbnail);
 		ctx.displayPublishButton();
-		
 	}
 	
-//	private void setPictureInFrame(Bitmap thumbnail) {
-//		video.setImageBitmap(thumbnail);
-//		video.setOnClickListener(new View.OnClickListener() {
-//			public void onClick(View v) {
-//				AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-//				builder.setMessage(ctx.getString(R.string.removePicture));
-//				builder.setCancelable(false);
-//				builder.setPositiveButton(ctx.getString(R.string.yes), new DialogInterface.OnClickListener() {
-//					public void onClick(DialogInterface dialog, int id) {
-//						initImageCapture();
-//
-//						ctx.displayPublishButton();
-//					}
-//				});
-//				builder.setNegativeButton(ctx.getString(R.string.no), new DialogInterface.OnClickListener() {
-//					public void onClick(DialogInterface dialog, int id) {
-//						dialog.cancel();
-//					}
-//				});
-//				AlertDialog alert = builder.create();
-//				alert.show();
-//				// removeButton.setVisibility(removeButton.INVISIBLE);
-//			}
-//		});
-//	}
 	public Uri getUri(){
 		return videoUri;
 	}
 
-	public String getImagePath() {
-		if (videoUri == null) return null;
-		return videoUri.getPath();
+	public void setVideoUri(Uri uri) {
+		this.videoUri = uri;
+		if (uri != null) {
+			setVideoInFrame();
+		}
+	}
+
+	public void reset() {
+		videoUri = null;		
+		initImageCapture();
 	}
 
 }

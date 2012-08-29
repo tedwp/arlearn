@@ -17,18 +17,25 @@ public class AnswerQuestionActivity extends AnnotateActivity {
 		super.onCreate(savedInstanceState);
 		 generalItemId = getIntent().getLongExtra("generalItemId", 0l);
 		 narratorItemBean = (NarratorItem) getIntent().getSerializableExtra("bean");
-		 OpenQuestion oq = narratorItemBean.getOpenQuestion();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		OpenQuestion oq = narratorItemBean.getOpenQuestion();
 		 if (!oq.isWithAudio()) {
 			 rad.hide();
 		 }
 		 if (!oq.isWithPicture()) {
 			 tpd.hide();
+		 } else {
+//			 ((ImageView) findViewById(R.id.photoFrame)).setImageResource(R.drawable.voegfototoe);
+//			 ((ImageView) findViewById(R.id.photoFrame)).setVisibility(View.VISIBLE);
 		 }
 //		 tpd.hide();
 		 if (!oq.isWithVideo()) {
 			 tvd.hide();
 		 }
- 
 	}
 	
 	public Response createResponse(long currentTime) {

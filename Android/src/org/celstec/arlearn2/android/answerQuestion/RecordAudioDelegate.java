@@ -58,6 +58,7 @@ public class RecordAudioDelegate {
 		audioButtons.setVisibility(audioButtons.GONE);
 		initSoundCapture();
 	}
+	
 	public void hide() {
 		audioButtons.setVisibility(View.GONE);
 		counter.setVisibility(View.GONE);
@@ -139,9 +140,15 @@ public class RecordAudioDelegate {
 		}
 	};
 	
-	private void setStatus(int status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
+	
+	public int getStatus() {
+		return status;
+	}
+	
+	
 	private void startPlaying() {
 		stopButton.setImageResource(R.drawable.stop);
 		playButton.setImageResource(R.drawable.pause);
@@ -195,6 +202,7 @@ public class RecordAudioDelegate {
 		} else {
 			setStatus(PAUSE_WITH_AUDIO);
 		}
+		
 	}
 	
 	public void startRecording() {
@@ -213,6 +221,22 @@ public class RecordAudioDelegate {
 		startRecordButton.setImageResource(R.drawable.startaudioopname1en);
 		this.sampleFile.delete();	
 		this.sampleFile = null;
+		this.mRecorder.release();
+		this.mRecorder = null;
+		counter.setText("00:00.0");
+		audioButtons.setVisibility(audioButtons.GONE);
+		setStatus(STOPPED_NO_AUDIO);
+		ctx.displayPublishButton();
+	}
+	
+	public void removeRecording(boolean deleteSampleFile){
+		startRecordButton.setImageResource(R.drawable.startaudioopname1en);
+		if (deleteSampleFile){
+			this.sampleFile.delete();	
+		}
+		this.sampleFile = null;
+		this.mRecorder.release();
+		this.mRecorder = null;
 		counter.setText("00:00.0");
 		audioButtons.setVisibility(audioButtons.GONE);
 		setStatus(STOPPED_NO_AUDIO);
@@ -231,6 +255,11 @@ public class RecordAudioDelegate {
 		
 	}
 	
+	public void releaseRecorder() {
+		if (this.mRecorder != null) {
+			this.mRecorder.release();
+		}
+	}
 	private void setPrefsRecordingStatus(boolean status) {
 		
 		ctx.pa.setIsRecording(status);
@@ -259,15 +288,15 @@ public class RecordAudioDelegate {
 	private void initiateMediaRecorder() {
 		if (this.mRecorder == null) {
 			this.mRecorder = new MediaRecorder();
-			
 		}
 		this.mRecorder.reset();
 		this.mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 		this.mRecorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
 		this.mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
+		
 		
 		this.mRecorder.setOutputFile(this.sampleFile.getAbsolutePath());
+		System.out.println("samplefile exists "+this.sampleFile.exists());
 		try {
 			this.mRecorder.prepare();
 		} catch (IllegalStateException e) {
@@ -316,10 +345,49 @@ public class RecordAudioDelegate {
 		return sampleFile.getAbsolutePath();
 	}
 	
+	public void setRecordingPath(String path) {
+		if (path != null) sampleFile = new File(path);
+		if (sampleFile != null && sampleFile.exists()) {
+			
+				stopButton.setImageResource(R.drawable.stop);
+				playButton.setImageResource(R.drawable.play);
+			
+		}
+	}
+	
 	public Uri getUri(){
 		if (this.sampleFile == null) return null;
 		return Uri.fromFile(sampleFile);
 	}
+	
+	public void stop() {
+		switch (status) {
+		case STOPPED_WITH_AUDIO:
+			removeRecording(false);
+			break;
+		case PAUSE_WITH_AUDIO:
+			stopPlaying();
+			removeRecording(false);
+			break;
+		case PLAYBACK_AUDIO:
+			
+			stopPlaying();
+			removeRecording(false);
+			break;
+		case RECORDING_STATUS:
+			stopRecording();
+			removeRecording(false);
+			break;
+		default:
+			break;
+		}
+		
+	}
+	
+
+}
+		
+	
 
 	
-}
+

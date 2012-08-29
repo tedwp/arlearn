@@ -236,6 +236,9 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Open Run")
 	String openRun();
 	
+	@DefaultStringValue("Scan")
+	String scan();
+	
 	@DefaultStringValue("Open run means, that the run is open to everyone and that everyone can register as a player for this run.")
 	String openRunHover();
 	

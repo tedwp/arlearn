@@ -98,8 +98,6 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 	}
 
 	public void onBroadcastMessage(Bundle bundle) {
-		Log.e("BROADCAST", "broadcast "+bundle);
-
 		if (showStatusLed()) LedStatus.updateStatus(this);
 	}
 	

@@ -33,6 +33,11 @@ import android.widget.ImageView;
 
 public class AnnotateActivity extends Activity implements IGeneralActivity {
 
+	private static final String RECORDING = "recording";
+	private static final String PICTUREURI = "pictureURI";
+	private static final String VIDEOURI = "videoURI";
+	private static final String AUDIOSTATUS = "audioStatus";
+	private static final String AUDIOFILE = "audioFile";
 	private ImageView publishButton;
 	protected long runId;
 	public PropertiesAdapter pa;
@@ -40,6 +45,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 	private double lat = LAT_LNG_NOT_AVAILABLE;
 	private double lng = LAT_LNG_NOT_AVAILABLE;
 	private File sampleFile;
+	private boolean recordingMedia = false;
 	public int CAMERA_PIC_REQUEST = 0;
 	public int ACTION_TAKE_VIDEO = 1;
 
@@ -50,30 +56,53 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		//TODO read recordingMedia + save this in onStop
 		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			recordingMedia = savedInstanceState.getBoolean(RECORDING, false);
+		}
 		setContentView(R.layout.answer_question);
 		menuHandler = new MenuHandler(this);
 		pa = new PropertiesAdapter(this);
-		tpd = new TakePictureDelegate(AnnotateActivity.this);
-		rad = new RecordAudioDelegate(AnnotateActivity.this);
-		tvd = new TakeVideoDelegate(AnnotateActivity.this);
+		
 		lat = getIntent().getDoubleExtra("lat", LAT_LNG_NOT_AVAILABLE);
 		lng = getIntent().getDoubleExtra("lng", LAT_LNG_NOT_AVAILABLE);
 		runId = getIntent().getLongExtra("runId", 0);
-		displayPublishButton();
+		
+		publishButton = (ImageView) findViewById(R.id.publishAnnotation);
 		publishButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				publish();
 			}
 		});
+		tpd = new TakePictureDelegate(AnnotateActivity.this);
+		rad = new RecordAudioDelegate(AnnotateActivity.this);
+		tvd = new TakeVideoDelegate(AnnotateActivity.this);
+		if (savedInstanceState != null) {
+			tpd.setPictureUri((Uri) savedInstanceState.getParcelable(PICTUREURI));
+			tvd.setVideoUri((Uri) savedInstanceState.getParcelable(VIDEOURI));
+			rad.setStatus(savedInstanceState.getInt(AUDIOSTATUS));
+			rad.setRecordingPath(savedInstanceState.getString(AUDIOFILE));
+		}
+
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (!recordingMedia) {
+			//todo reset...
+		
+		displayPublishButton();
+		}
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == -1 && requestCode == CAMERA_PIC_REQUEST) {
-			tpd.onActivityResult(data);
+			if (tpd != null) tpd.onActivityResult(data);
 		}
 		if (resultCode == -1 && requestCode == ACTION_TAKE_VIDEO) {
-			tvd.onActivityResult(data);
+			if (tvd != null) tvd.onActivityResult(data);
 		}
 	}
 
@@ -82,9 +111,8 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 	}
 
 	public void displayPublishButton() {
-		publishButton = (ImageView) findViewById(R.id.publishAnnotation);
 //		if (rad.getRecordingPath() == null && tpd.getBitmapFile() == null && tvd.getUri() == null) {
-			if (rad.getRecordingPath() == null && tpd.getUri() == null && tvd.getUri() == null) {
+		if (rad != null && tpd != null && tvd != null && rad.getRecordingPath() == null && tpd.getUri() == null && tvd.getUri() == null) {
 			publishButton.setVisibility(View.GONE);
 		} else {
 			publishButton.setVisibility(View.VISIBLE);
@@ -160,6 +188,21 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		r.setTimestamp(currentTime);
 		return r;
 	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (!recordingMedia) {
+			tpd.reset();
+			rad.stop();
+			tvd.reset();
+			recordingMedia = false;
+		}
+	}
+	
+	public void setRecordingMedia() {
+		recordingMedia = true;
+	}
 
 	public void notifyTaskFinished() {
 
@@ -171,6 +214,19 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 
 	public boolean isGenItemActivity() {
 		return false;
+	}
+	
+	@Override
+	protected void onSaveInstanceState (Bundle outState){
+		outState.putBoolean(RECORDING, recordingMedia);
+		outState.putParcelable(PICTUREURI, tpd.getUri());
+		outState.putParcelable(VIDEOURI, tvd.getUri());
+		outState.putInt(AUDIOSTATUS, rad.getStatus());
+		outState.putString(AUDIOFILE, rad.getRecordingPath());
+	}
+	
+	public RecordAudioDelegate getRecordAudioDelegate() {
+		return rad;
 	}
 
 }

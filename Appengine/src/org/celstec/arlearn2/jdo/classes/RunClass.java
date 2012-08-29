@@ -35,6 +35,10 @@ public class RunClass {
 		if (deleted == null) return false;
 		return deleted;
 	}
+	
+	public Boolean getDeletedBis() {
+		return deleted;
+	}
 
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;

@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
+import org.celstec.arlearn2.android.broadcast.RunReceiver;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.db.RunAdapter;
@@ -45,6 +46,9 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 			this.finish();
 		} else {
 			setContentView(R.layout.listexcursionscreen);
+//			Intent runSyncIntent = new Intent();
+//			runSyncIntent.setAction(RunReceiver.action);
+//			sendBroadcast(runSyncIntent);
 
 		}
 	}
@@ -52,8 +56,6 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.e("GAME", "resume received");
-
 		initFromDb();
 		renderExcursionList();
 	}
@@ -146,7 +148,6 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 		db.openForWrite();
 		runs = (Run[]) ((RunAdapter) db.table(DBAdapter.RUN_ADAPTER)).query();
 		games = new HashMap<Long, Game>();
-		Log.e("GAME", "read game from db");
 		for (int i = 0; i < runs.length; i++) {
 			Game g = (Game) db.getGameAdapter().queryById(runs[i].getGameId());
 			if (g!= null) games.put(g.getGameId(), g);

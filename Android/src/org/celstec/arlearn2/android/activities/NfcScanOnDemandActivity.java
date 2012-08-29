@@ -1,4 +1,4 @@
-package org.celstec.arlearn2.android.activities;
+	package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.genItemActivities.MultipleChoiceActivity;
@@ -7,6 +7,7 @@ import org.celstec.arlearn2.client.ChannelClient;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,7 +23,14 @@ public class NfcScanOnDemandActivity extends GeneralActivity {
 //		TextView descriptionTextView = (TextView) findViewById(R.id.giNarratorDescription);
 //		descriptionTextView.setVisibility(View.GONE);
 		Button provideAnswerButton = (Button) findViewById(R.id.provideAnswerButton);
-		provideAnswerButton.setVisibility(View.GONE);
+		provideAnswerButton.setText(getString(R.string.cancel));
+		provideAnswerButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				NfcScanOnDemandActivity.this.finish();
+				
+			}
+		});
 
 		WebView webview = (WebView) findViewById(R.id.giNarratorWebView);
 		String summary = "<html><body><br><br><br><center><b>"+getString(R.string.scanTag)+"</b></center></body></html>";
