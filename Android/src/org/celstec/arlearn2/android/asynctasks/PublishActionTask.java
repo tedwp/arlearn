@@ -18,6 +18,7 @@ public class PublishActionTask extends RestInvocation {
 	
 	@Override
 	protected Void doInBackground(Object... params) {
+		
 		Action action = (Action) params[0];
 		DBAdapter db = new DBAdapter(callingActivity.getMenuHandler().getContext().getApplicationContext());
 		db.openForWrite();

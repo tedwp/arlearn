@@ -15,6 +15,8 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.RichTextEditor;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.events.DoubleClickEvent;
+import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
@@ -85,12 +87,10 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 //		questionHtmlLabel.setContents("Enter your description here ...");
 		questionHtmlLabel.setAlign(Alignment.LEFT);
 		
-		questionHtmlLabel.setPadding(3);
+		questionHtmlLabel.setPadding(2);
 		questionHtmlLabel.setHeight(80);
 		questionHtmlLabel.setShowEdges(true);  
-		
-		questionEditButton.setTitle("edit");
-		questionEditButton.addClickHandler(new ClickHandler() {
+		ClickHandler handler = new ClickHandler() {
 			
 			@Override
 			public void onClick(ClickEvent event) {
@@ -104,9 +104,31 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 				});
 				rtw.show();
 			}
+		};
+		questionHtmlLabel.addClickHandler(handler);
+		questionHtmlLabel.addDoubleClickHandler(new DoubleClickHandler() {
+			
+			@Override
+			public void onDoubleClick(DoubleClickEvent event) {
+				RichTextWindow rtw = new RichTextWindow(questionHtmlLabel.getContents(), constants.editDescription(), new RichTextWindow.HtmlSaver() {
+
+					@Override
+					public void htmlReady(String html) {
+						questionHtmlLabel.setContents(html);						
+					}
+					
+				});
+				rtw.show();
+				
+			}
 		});
+		
+		
+		questionEditButton.setTitle("edit");
+		questionEditButton.addClickHandler(handler);
 
 	}
+	
 	
 	private void createOpenQuestionComponent() {
 		openQuestionCBItem = new CheckboxItem();

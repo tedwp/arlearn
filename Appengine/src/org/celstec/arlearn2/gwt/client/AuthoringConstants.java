@@ -272,6 +272,12 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Save")
 	String save();
 	
+	@DefaultStringValue("Rich formatting")
+	String richFormatting();
+	
+	@DefaultStringValue("Html formatting")
+	String htmlFormatting();
+	
 	@DefaultStringValue("Discard")
 	String discard();
 	

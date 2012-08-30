@@ -45,10 +45,9 @@ public class AnswerQuestionActivity extends AnnotateActivity {
 	}
 	
 	public void publish() {
-		super.publish();
 		PropertiesAdapter pa = new PropertiesAdapter(this);
 		ActionDispatcher.publishAction(this, "answer_given", runId, pa.getUsername(), generalItemId, null);
-		
+		super.publish();		
 	}
 
 }

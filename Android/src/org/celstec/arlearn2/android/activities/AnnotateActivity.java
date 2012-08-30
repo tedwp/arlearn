@@ -129,8 +129,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 //		Uri recording = rad.getUri();
 		final Response r = createResponse(currentTime, rad.getUri(), tpd.getUri(), tvd.getUri());
 
-		setResult(1);
-		finish();
+		
 		
 	
 		Intent intent = new Intent(this, ResponseService.class);
@@ -147,6 +146,8 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		intent.putExtra(MediaService.CURRENT_TIME, currentTime);
 		intent.putExtra(MediaService.RUNID, pa.getCurrentRunId());
 		startService(intent);
+		setResult(1);
+		finish();
 	}
 
 //	public String buildRemotePath(String localFileString, long runId, String account) {
