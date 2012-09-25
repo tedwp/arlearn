@@ -35,6 +35,9 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("With map")
 	String withMap();
 	
+	@DefaultStringValue("Maps type")
+	String mapsType(); 
+	
 	@DefaultStringValue("Submit")
 	String submit();
 	

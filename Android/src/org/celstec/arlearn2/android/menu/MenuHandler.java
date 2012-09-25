@@ -3,6 +3,7 @@ package org.celstec.arlearn2.android.menu;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnnotateActivity;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
+import org.celstec.arlearn2.android.activities.GenericMapViewActivity;
 import org.celstec.arlearn2.android.activities.IntentIntegrator;
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
@@ -86,7 +87,7 @@ public class MenuHandler {
 			context.startActivity(intent);
 			break;
 		case MY_LOCATION:
-			((MapViewActivity) context).animateToMyLocation();
+			((GenericMapViewActivity) context).animateToMyLocation();
 			break;
 		case DELETE_ANSWER:
 			((ViewAnswerActivity) context).deleteAnswer();

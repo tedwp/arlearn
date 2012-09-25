@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <org.osmdroid.views.MapView
+      android:layout_width="fill_parent" 
+        android:id="@+id/map"
+        android:layout_height="fill_parent"
+        android:enabled="true"
+        android:clickable="true"/>    
+  	<ImageView 
+   		android:id="@+id/mapViewId"
+			android:src="@drawable/list_icon_with_text"
+			android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dip"
+        android:layout_gravity="left|top"
+
+        android:padding="12dip"
+        />
+        
+      <LinearLayout 
+   		android:id="@+id/scoreLinearLayout"
+			android:src="@drawable/list_icon_with_text"
+			android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dip"
+        android:layout_gravity="right|top"
+
+        android:padding="12dip"> 
+        <ImageView 
+   			android:id="@+id/statusLed"
+			android:src="@drawable/status_icon_red"
+			android:layout_width="wrap_content" 
+        	android:layout_height="wrap_content"
+        	android:layout_marginBottom="20dip"
+        	/>
+        </LinearLayout>
+  
+   <!-- TextView android:id="@+id/mapViewId" android:layout_width="wrap_content"
+	android:layout_height="wrap_content" android:layout_marginBottom="20dip"
+	android:layout_gravity="left|top" android:padding="12dip"
+
+	android:background="#55000000" android:textColor="#ffffffff"
+
+	android:text="lijst" /> -->
+</merge>

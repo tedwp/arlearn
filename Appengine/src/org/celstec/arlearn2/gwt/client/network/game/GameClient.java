@@ -64,5 +64,13 @@ public class GameClient extends GenericClient {
 	public void createRole(long gameId, String roleValue, JsonCallback jsonCallback) {
 		invokeJsonPOST("/config/gameId/"+gameId+"/role", roleValue, jsonCallback);
 	}
+	
+	public void setMapType(long gameId, int mapType, JsonCallback jsonCallback) {
+		invokeJsonPOST("/config/gameId/"+gameId+"/mapType", ""+mapType, jsonCallback);
+	}
+	
+	public void setWithMap(long gameId, Boolean withMap, JsonCallback jsonCallback) {
+		invokeJsonPOST("/config/gameId/"+gameId+"/withMap", ""+withMap, jsonCallback);
+	}
 
 }

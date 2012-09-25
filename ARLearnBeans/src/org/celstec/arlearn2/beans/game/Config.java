@@ -11,9 +11,13 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
 public class Config extends Bean {
 
+	public static final int MAP_TYPE_GOOGLE_MAPS = 0;
+	public static final int MAP_TYPE_OSM = 1;
 	
 	private Boolean scoring;
 	private Boolean mapAvailable;
+	private Integer mapType;
+	
 	public static String manualItemsType = "org.celstec.arlearn2.beans.generalItem.GeneralItem";
 	private List<GeneralItem> manualItems = new ArrayList<GeneralItem>();
 	private List<LocationUpdateConfig> locationUpdates = new ArrayList<LocationUpdateConfig>();
@@ -22,20 +26,12 @@ public class Config extends Bean {
 	@Override
 	public boolean equals(Object obj) {
 		Config other = (Config ) obj;
-		
-//		List<GeneralItem> list1 = getManualItems();list1.equals(o)
-//		List<GeneralItem> list2 = other.getManualItems();
-//		if (!(list1.size() == list2.size())) return false;
-//		for (int i = 0 ; i< list1.size();i++) {
-//			if (!(list1.get(i).equals(list2.get(i)))) return false;
-//		}
-		
 		return super.equals(obj) && 
 			nullSafeEquals(getManualItems(), other.getManualItems()) && 	
 			nullSafeEquals(getLocationUpdates(), other.getLocationUpdates()) && 	
 			nullSafeEquals(getScoring(), other.getScoring()) && 
 			nullSafeEquals(getRoles(), other.getRoles()) && 
-
+			nullSafeEquals(getMapType(), other.getMapType()) && 
 			nullSafeEquals(getMapAvailable(), other.getMapAvailable()); 
 
 	}
@@ -54,6 +50,14 @@ public class Config extends Bean {
 
 	public void setMapAvailable(Boolean mapAvailable) {
 		this.mapAvailable = mapAvailable;
+	}
+
+	public Integer getMapType() {
+		return mapType;
+	}
+
+	public void setMapType(Integer mapType) {
+		this.mapType = mapType;
 	}
 
 	public List<GeneralItem> getManualItems() {

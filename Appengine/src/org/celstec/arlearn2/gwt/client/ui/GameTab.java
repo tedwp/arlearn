@@ -22,7 +22,12 @@ import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.FormItemIfFunction;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.events.ItemHoverEvent;
+import com.smartgwt.client.widgets.form.fields.events.ItemHoverHandler;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.HoverCustomizer;
@@ -34,6 +39,7 @@ import com.smartgwt.client.widgets.grid.events.CellClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.LayoutSpacer;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
@@ -44,6 +50,7 @@ public class GameTab extends MasterDetailTab {
 	private GeneralItemControlCanvas controlItem;
 
 	private ListGrid listGrid;
+	private ConfigForm configForm;
 	private SelectItem roleGrid;
 	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
@@ -59,19 +66,35 @@ public class GameTab extends MasterDetailTab {
 
 			}
 		});
+		configForm = new ConfigForm(this);
+
 		setMasterCanvas(controlItem);
 		setDetailCanvas(initDetailCanvas());
 
 		setCanClose(true);
+	}
+	public long getGameId() {
+		return gameId;
 	}
 
 	private VLayout initDetailCanvas() {
 		VLayout rightCanvas = new VLayout();
 		rightCanvas.setHeight100();
 		rightCanvas.addMember(getListGeneralItemsCanvas());
+		 LayoutSpacer spacer = new LayoutSpacer();
+         spacer.setWidth100();
+         spacer.setHeight(5);
+         rightCanvas.addMember(spacer);
+         
 		HLayout smallConfigCanvas = new HLayout();
+		
+//		smallConfigCanvas.setPadding(3);
 		smallConfigCanvas.setHeight(100);
 		smallConfigCanvas.addMember(getRolesCanvas());
+		 LayoutSpacer vSpacer = new LayoutSpacer();
+		 vSpacer.setWidth(5);
+         smallConfigCanvas.addMember(vSpacer);
+		smallConfigCanvas.addMember(getConfigCanvas());
 		rightCanvas.addMember(smallConfigCanvas);
 		return rightCanvas;
 	}
@@ -111,6 +134,9 @@ public class GameTab extends MasterDetailTab {
 			if (array != null) {
 				GeneralItemGameDataSource.getInstance().setManualItems( array);
 			}
+		}
+		if (configForm != null) {
+			configForm.updateConfig(jsonValue);
 		}
 	}
 
@@ -226,11 +252,11 @@ public class GameTab extends MasterDetailTab {
 	private Canvas getRolesCanvas() {
 		// Canvas canvas = new Canvas();
 		VStack layout = new VStack();
-		// layout.setBorder("2px solid blue");
-
-		layout.setHeight(100);
-		Label title = new Label(constants.roles());
+		layout.setBorder("1px solid gray");
+		layout.setHeight(150);
+		Label title = new Label("<span style=\"font-size:125%; font-weight: bold;\">"+constants.roles()+"</span>");
 		title.setHeight(15);
+		layout.setWidth(200);
 		layout.addMember(title);
 
 		DynamicForm form = new DynamicForm();
@@ -260,6 +286,19 @@ public class GameTab extends MasterDetailTab {
 		// layout.setBorder("2px solid blue");
 		// canvas.setHeight("*");
 
+		return layout;
+	}
+	
+	private Canvas getConfigCanvas() {
+		VStack layout = new VStack();
+		layout.setBorder("1px solid gray");
+		layout.setHeight(150);
+		Label title = new Label("<span style=\"font-size:125%; font-weight: bold;\">"+constants.config()+"</span>");
+		title.setHeight(15);
+		layout.addMember(title);
+		
+		
+		layout.addMember(configForm.getSimpleConfiguration());
 		return layout;
 	}
 

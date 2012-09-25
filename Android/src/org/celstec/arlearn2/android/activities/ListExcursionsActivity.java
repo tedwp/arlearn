@@ -18,6 +18,7 @@ import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 import org.celstec.arlearn2.android.service.LocationService;
+import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.client.RunClient;
@@ -123,7 +124,20 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 				}
 			}
 			if (mapView) {
-				i = new Intent(this, MapViewActivity.class);
+				int view = Config.MAP_TYPE_GOOGLE_MAPS;
+				if (g.getConfig() != null && g.getConfig().getMapType() != null) {
+					view = g.getConfig().getMapType();
+				}
+				switch (view) {
+				case Config.MAP_TYPE_GOOGLE_MAPS:
+					i = new Intent(this, MapViewActivity.class);
+					break;
+				case Config.MAP_TYPE_OSM:
+					i = new Intent(this, OsmMapViewActivity.class);
+				default:
+					break;
+				}
+				
 			} else {
 				i = new Intent(this, ListMessagesActivity.class);
 			}

@@ -17,6 +17,7 @@ public class ConfigSerializer extends BeanSerializer {
 		try {
 			if (c.getScoring()!= null) returnObject.put("scoring", c.getScoring());
 			if (c.getMapAvailable()!= null) returnObject.put("mapAvailable", c.getMapAvailable());
+			if (c.getMapType()!= null) returnObject.put("mapType", c.getMapType());
 			if (c.getManualItems() != null) returnObject.put("manualItems", ListSerializer.toJSON(c.getManualItems()));
 			if (c.getLocationUpdates() != null) returnObject.put("locationUpdates", ListSerializer.toJSON(c.getLocationUpdates()));
 			if (c.getRoles() != null) returnObject.put("roles", ListSerializer.toStringList(c.getRoles()));

@@ -160,6 +160,40 @@ public class GameDelegator extends GoogleDelegator {
 		return g;
 
 	}
+	
+	public Game setWithMap(Long gameIdentifier, boolean value) {
+		Game g = getGame(gameIdentifier);
+		if (g.getError() != null)
+			return g;
+		if (g.getConfig() == null)
+			g.setConfig(new Config());
+		Config c = g.getConfig();
+		if (c.getRoles() == null)
+			c.setRoles(new ArrayList<String>());
+		
+		c.setMapAvailable(value);
+		
+		createGame(g, GameModification.ALTERED);
+		return g;
+
+	}
+	
+	public Game setMapType(Long gameIdentifier, int type) {
+		Game g = getGame(gameIdentifier);
+		if (g.getError() != null)
+			return g;
+		if (g.getConfig() == null)
+			g.setConfig(new Config());
+		Config c = g.getConfig();
+		if (c.getRoles() == null)
+			c.setRoles(new ArrayList<String>());
+		
+		c.setMapType(type);
+		
+		createGame(g, GameModification.ALTERED);
+		return g;
+
+	}
 
 	public Game addManualTrigger(Long gameIdentifier, String generalItem) {
 		Game g = getGame(gameIdentifier);

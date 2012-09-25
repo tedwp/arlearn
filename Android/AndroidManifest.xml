@@ -37,6 +37,7 @@
 		<activity android:name=".activities.ListExcursionsActivity" android:label="@string/listExcursionsHeader" android:screenOrientation="portrait"/>
 		<activity android:name=".activities.ListMessagesActivity" android:label="@string/listMessagesHeader" android:screenOrientation="portrait" />
 		<activity android:name=".activities.MapViewActivity" android:label="@string/mapViewHeader" />
+		<activity android:name=".activities.OsmMapViewActivity" android:label="@string/mapViewHeader" />
 		<activity android:name=".activities.ListMapItemsActivity" android:label="@string/mapViewHeader" />
 		<activity android:name=".activities.AnswerQuestionActivity" android:label="@string/answerQuestionHeader" android:screenOrientation="portrait"/>
 		<activity android:name=".activities.AnnotateActivity" android:label="@string/answerQuestionHeader" android:screenOrientation="portrait"/>
@@ -96,6 +97,8 @@
     
     <uses-permission android:name="android.permission.CAMERA"></uses-permission>
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_GPS"></uses-permission>

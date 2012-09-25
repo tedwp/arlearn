@@ -1,49 +1,71 @@
 package org.celstec.arlearn2.android.maps;
 
 import org.celstec.arlearn2.android.activities.GIActivitySelector;
-import org.celstec.arlearn2.android.activities.MapViewActivity;
-import org.celstec.arlearn2.android.db.GeneralItemAdapter;
+import org.celstec.arlearn2.android.activities.OsmMapViewActivity;
 import org.celstec.arlearn2.android.db.DBAdapter;
+import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-//import org.celstec.arlearn2.genericBeans.GeneralItem;
-//import org.celstec.arlearn2.genericBeans.Run;
+import org.osmdroid.DefaultResourceProxyImpl;
+import org.osmdroid.ResourceProxy;
+import org.osmdroid.api.IMapView;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedOverlay;
 
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
-import android.util.Log;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.ItemizedOverlay;
-import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
+public class OSMGeneralItemsOverlay extends ItemizedOverlay<OSMOverlayItem>{
 
-public class GenericItemsOverlay extends ItemizedOverlay {
 	
 	private GeneralItem[] gis = new GeneralItem[0]; 
-	private GenericItemOverlayItem[] overlayItems = new GenericItemOverlayItem[0]; 
-	private MapViewActivity ctx;
+	private OSMOverlayItem[] overlayItems = new OSMOverlayItem[0]; 
+	private OsmMapViewActivity ctx;
 
-	public GenericItemsOverlay(Drawable defaultMarker, MapViewActivity ctx) {
-		super(boundCenterBottom(defaultMarker));
+	public OSMGeneralItemsOverlay(Drawable defaultMarker, OsmMapViewActivity ctx) {
+		super(defaultMarker, new DefaultResourceProxyImpl(ctx));
 		this.ctx = ctx;
-//		markerHeight = ((BitmapDrawable) defaultMarker).getBitmap().getHeight();
-		populate();
 	}
 
-	protected OverlayItem createItem(int i) {
-		GeoPoint point = new GeoPoint((int) (gis[i].getLat() * 1E6), (int) (gis[i].getLng() * 1E6));
-//		return new GenericItemOverlayItem(point, gis[i].getName(),"");
-		overlayItems[i] = new GenericItemOverlayItem(gis[i], ctx);
+	@Override
+	public boolean onSnapToItem(int arg0, int arg1, Point arg2, IMapView arg3) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected OSMOverlayItem createItem(int i) {
+		overlayItems[i] = new OSMOverlayItem(gis[i], ctx);
 		return overlayItems[i];
 	}
-
+	
+//	public boolean onSingleTapConfirmed(android.view.MotionEvent e,
+//            MapView mapView) {
+//		GIActivitySelector.startActivity(ctx, gis[index]);
+//		return true;
+//	}
+	
+	
+	public boolean onSingleTapUp(android.view.MotionEvent e,
+            MapView mapView) {
+		System.out.println("onSingleTapUp");
+		return false;
+	}
+	
+//	@Override
+//	protected boolean onTap() {
+//		GIActivitySelector.startActivity(ctx, gis[index]);
+////		gis[index].startActivity(ctx);
+//		return true;
+//	}
+	
+	@Override
 	public int size() {
 		return gis.length;
 	}
@@ -52,30 +74,22 @@ public class GenericItemsOverlay extends ItemizedOverlay {
 		DBAdapter db = new DBAdapter(ctx);
 		db.openForRead();
 		gis = (GeneralItem[]) ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).queryWithLocation(this.ctx.getRunId());
-		overlayItems = new GenericItemOverlayItem[gis.length];
+		overlayItems = new OSMOverlayItem[gis.length];
 		db.close();
 		populate();
 	}
-	
-	@Override
-	protected boolean onTap(int index) {
-		GIActivitySelector.startActivity(ctx, gis[index]);
-//		gis[index].startActivity(ctx);
-		return true;
-	}
-	
+
 	protected static android.graphics.drawable.Drawable boundCenterBottom(android.graphics.drawable.Drawable balloon){
-		return ItemizedOverlay.boundCenter(balloon);
+		return GenericItemsOverlay.boundCenterBottom(balloon);
 	}
 
+	
 	 @Override
-	    public void draw(android.graphics.Canvas canvas, MapView mapView,
-	            boolean shadow)
-	    {
-	        super.draw(canvas, mapView, shadow);
-
+	public void draw(Canvas canvas, org.osmdroid.views.MapView mapView, boolean shadow) {
+		// TODO Auto-generated method stub
+		super.draw(canvas, mapView, shadow);
 	        // go through all OverlayItems and draw title for each of them
-	        for (GenericItemOverlayItem item: overlayItems)
+	        for (OSMOverlayItem item: overlayItems)
 	        {
 	            /* Converts latitude & longitude of this overlay item to coordinates on screen.
 	             * As we have called boundCenterBottom() in constructor, so these coordinates
@@ -117,5 +131,4 @@ public class GenericItemsOverlay extends ItemizedOverlay {
 
 	 private static final int FONT_SIZE = 12;
 	    private static final int TITLE_MARGIN = 3;
-	
 }

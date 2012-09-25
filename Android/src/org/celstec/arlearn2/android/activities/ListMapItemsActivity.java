@@ -10,6 +10,8 @@ import org.celstec.arlearn2.android.db.MyActions;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
+import org.celstec.arlearn2.beans.generalItem.NarratorItem;
+import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
@@ -97,8 +99,19 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 	//TODO move to other place
 	public static int getIcon(GeneralItem gi){
 		if (gi.getType().equals(MultipleChoiceTest.class.getName())) {
-			return R.drawable.multiple_choice;
-		} 
+			return R.drawable.question;
+		} else
+		if (gi.getType().equals(YoutubeObject.class.getName())) {
+			return R.drawable.youtube;
+		} else
+			if (gi.getType().equals(NarratorItem.class.getName())) {
+				if (((NarratorItem) gi).getOpenQuestion() == null) {
+					return R.drawable.info;	
+				} else {
+					return R.drawable.question;
+				}
+				
+			}
 //		else 	if (gi.getType().equals(OpenQuestion.class.getSimpleName())) {
 //			return R.drawable.speechbubble_green;
 //		}

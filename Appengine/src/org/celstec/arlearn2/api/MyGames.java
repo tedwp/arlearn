@@ -129,5 +129,31 @@ public class MyGames extends Service {
 		return serialise(qg.createRole(gameIdentifier, roleString), accept);
 	}
 	
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Path("/config/gameId/{gameIdentifier}/mapType")
+	public String setMapType(@HeaderParam("Authorization") String token, String mapType, 
+			@PathParam("gameIdentifier") Long gameIdentifier,
+			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GameDelegator qg = new GameDelegator(token);
+		return serialise(qg.setMapType(gameIdentifier, Integer.parseInt(mapType)), accept);
+	}
+	
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Path("/config/gameId/{gameIdentifier}/withMap")
+	public String setWithMap(@HeaderParam("Authorization") String token, String booleanString, 
+			@PathParam("gameIdentifier") Long gameIdentifier,
+			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GameDelegator qg = new GameDelegator(token);
+		return serialise(qg.setWithMap(gameIdentifier, Boolean.parseBoolean(booleanString)), accept);
+	}
+	
 	
 }
