@@ -25,6 +25,11 @@
 	</servlet>
 	
 	<servlet>
+		<servlet-name>BlobStoreServletWithUploadUrl</servlet-name>
+		<servlet-class>org.celstec.arlearn2.upload.BlobStoreServletWithExternalUrl</servlet-class>
+	</servlet>
+	
+	<servlet>
 		<servlet-name>UploadGameServlet</servlet-name>
 		<servlet-class>org.celstec.arlearn2.upload.UploadGameServlet</servlet-class>
 	</servlet>
@@ -52,6 +57,11 @@
 	<servlet-mapping>
 		<servlet-name>BlobStoreServletIncremental</servlet-name>
 		<url-pattern>/uploadServiceIncremental/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>BlobStoreServletWithUploadUrl</servlet-name>
+		<url-pattern>/uploadServiceWithUrl/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
