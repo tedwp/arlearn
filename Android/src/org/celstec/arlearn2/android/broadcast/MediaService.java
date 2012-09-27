@@ -91,7 +91,12 @@ public class MediaService extends IntentService {
 
 		mci.setRunId(runId);
 		mci.setAccount(username);
-		mci.setMimetype("audio/AMR");
+		mci.setMimetype(getContentResolver().getType(recordingPath));
+		if (mci.getMimetype() == null) {
+			mci.setMimetype("audio/AMR");	
+		}
+
+		
 		return mci;
 	}
 
@@ -105,8 +110,11 @@ public class MediaService extends IntentService {
 
 		mci.setRunId(runId);
 		mci.setAccount(username);
-		// mci.setMimetype("image/jpeg");
+
 		mci.setMimetype(getContentResolver().getType(imagePath));
+		if (mci.getMimetype() == null) {
+			mci.setMimetype("image/jpeg");
+		}
 
 		return mci;
 	}

@@ -1,7 +1,9 @@
 package org.celstec.arlearn2.gwt.client.network;
 
+
 import org.celstec.arlearn2.gwt.client.control.Authentication;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -12,6 +14,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
+import com.smartgwt.client.util.SC;
 
 public class GenericClient {
 
@@ -26,7 +29,9 @@ public class GenericClient {
 	public RequestBuilder getRequestBuilder(String urlPostfix, RequestBuilder.Method m) {
 		String url = urlPostfix == null ? getUrl() : getUrl() + urlPostfix;
 		RequestBuilder builder = new RequestBuilder(m, url);
-		builder.setHeader("Authorization", "GoogleLogin auth=" + Authentication.getInstance().getAuthenticationToken());
+		if (Authentication.getInstance().getAuthenticationToken() == null) return null;
+		String authorization = "GoogleLogin auth=" + Authentication.getInstance().getAuthenticationToken();
+		builder.setHeader("Authorization", authorization);
 		builder.setHeader("Accept", "application/json");
 		return builder;
 	}
@@ -141,6 +146,7 @@ public class GenericClient {
 
 	protected void invokeJsonGET(String urlPostfix, final JsonCallback jcb) {
 		RequestBuilder builder = getRequestBuilder(urlPostfix);
+		if (builder == null) return;
 		try {
 			Request request = builder.sendRequest(null, new RequestCallback() {
 				@Override

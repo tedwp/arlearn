@@ -45,6 +45,7 @@ import com.google.gwt.maps.client.event.MarkerDragEndHandler.MarkerDragEndEvent;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.MarkerOptions;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -138,6 +139,7 @@ public class Authoring implements EntryPoint {
         } else {
     	  b.setTitle(constants.logout());
         }
+        
         b.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			
 			@Override

@@ -8,6 +8,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.smartgwt.client.util.SC;
 
 public class LoginClient {
 
@@ -22,6 +23,8 @@ public class LoginClient {
 	public void authenticate(final LoginCallback lc) {
 		String url = "rest/login";
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+		builder.setHeader("accept", "application/json");
+		builder.setHeader("Content-Type", "text/plain");
 		try {
 			Request request = builder.sendRequest(username+"\n"+password,
 					new RequestCallback() {
@@ -40,6 +43,7 @@ public class LoginClient {
 									}
 
 								} catch (JSONException e) {
+									SC.say("jsonException: "+e);
 								}
 							} else {
 								
