@@ -49,6 +49,7 @@ public class MenuHandler {
 	public static final int RESET = 7;
 	public static final int REFRESH = 8;
 	public static final int SCAN = 9;
+	public static final int DOWNLOAD_MAP_TILES = 10;
 
 	private Activity context;
 	private PropertiesAdapter pa;
@@ -122,6 +123,9 @@ public class MenuHandler {
 		case SCAN:
 			IntentIntegrator integrator = new IntentIntegrator(context);
 			integrator.initiateScan();
+			break;
+		case DOWNLOAD_MAP_TILES:
+			
 			break;
 		default:
 			break;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.maps.OsmGeneralItemizedIconOverlay2;
+import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
@@ -17,6 +18,7 @@ import com.google.android.maps.GeoPoint;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.Menu;
 
 public class OsmMapViewActivity extends GenericMapViewActivity {
 
@@ -93,6 +95,13 @@ public class OsmMapViewActivity extends GenericMapViewActivity {
 	protected void makeGeneralItemVisible() {
 		super.makeGeneralItemVisible();
 		itemsOverlay.setGeneralItemList(gis);
+	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (menuHandler.getPropertiesAdapter().isAuthenticated()) {
+			menu.add(0, MenuHandler.DOWNLOAD_MAP_TILES, 0, "i18 -downloadmaptiles"); //todo getString(R.string.messagesMenu)
+		} 
+		return super.onCreateOptionsMenu(menu);
 	}
 	
 	
