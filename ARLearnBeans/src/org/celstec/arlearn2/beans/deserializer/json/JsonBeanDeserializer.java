@@ -27,6 +27,7 @@ import org.celstec.arlearn2.beans.game.ConfigDeserializer;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.LocationUpdateConfig;
 import org.celstec.arlearn2.beans.game.LocationUpdateConfigDeserializer;
+import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GameDeserializer;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
@@ -293,6 +294,7 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.GamePackage", new GamePackageDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.Game", gd);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.Config", cd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.MapRegion", new MapRegion.MapRegionDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.LocationUpdateConfig", new LocationUpdateConfigDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.RunPackage", new RunPackage.RunPackageDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.RunBean", rbd);

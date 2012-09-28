@@ -1,5 +1,8 @@
 package org.celstec.arlearn2.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -11,12 +14,19 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
+import org.celstec.arlearn2.beans.deserializer.json.ListDeserializer;
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.beans.run.User;
+import org.celstec.arlearn2.beans.serializer.json.ListSerializer;
 import org.celstec.arlearn2.delegators.GameDelegator;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 
 import com.google.gdata.util.AuthenticationException;
+import org.codehaus.jettison.json.JSONObject;
 
 @Path("/myGames")
 public class MyGames extends Service {
@@ -153,6 +163,26 @@ public class MyGames extends Service {
 			return serialise(getInvalidCredentialsBean(), accept);
 		GameDelegator qg = new GameDelegator(token);
 		return serialise(qg.setWithMap(gameIdentifier, Boolean.parseBoolean(booleanString)), accept);
+	}
+	
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Path("/config/gameId/{gameIdentifier}/mapRegion")
+	public String addMapRegion(@HeaderParam("Authorization") String token, String regions, 
+			@PathParam("gameIdentifier") Long gameIdentifier,
+			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GameDelegator qg = new GameDelegator(token);
+		try {
+			List<MapRegion> regionsBean = ListDeserializer.toBean(new JSONArray(regions), MapRegion.class);
+			return serialise(qg.setRegions(gameIdentifier, regionsBean), accept);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	

@@ -21,6 +21,7 @@ public class ConfigSerializer extends BeanSerializer {
 			if (c.getManualItems() != null) returnObject.put("manualItems", ListSerializer.toJSON(c.getManualItems()));
 			if (c.getLocationUpdates() != null) returnObject.put("locationUpdates", ListSerializer.toJSON(c.getLocationUpdates()));
 			if (c.getRoles() != null) returnObject.put("roles", ListSerializer.toStringList(c.getRoles()));
+			if (c.getMapRegions() != null) returnObject.put("mapRegions", ListSerializer.toJSON(c.getMapRegions()));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

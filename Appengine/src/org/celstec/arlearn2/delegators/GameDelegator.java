@@ -10,6 +10,7 @@ import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GamesList;
+import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.cache.MyGamesCache;
@@ -189,6 +190,23 @@ public class GameDelegator extends GoogleDelegator {
 			c.setRoles(new ArrayList<String>());
 		
 		c.setMapType(type);
+		
+		createGame(g, GameModification.ALTERED);
+		return g;
+
+	}
+	
+	public Game setRegions(Long gameIdentifier, List<MapRegion> regions) {
+		Game g = getGame(gameIdentifier);
+		if (g.getError() != null)
+			return g;
+		if (g.getConfig() == null)
+			g.setConfig(new Config());
+		Config c = g.getConfig();
+		if (c.getRoles() == null)
+			c.setRoles(new ArrayList<String>());
+		
+		c.setMapRegions(regions);
 		
 		createGame(g, GameModification.ALTERED);
 		return g;

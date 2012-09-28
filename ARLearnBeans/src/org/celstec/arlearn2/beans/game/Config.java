@@ -18,6 +18,8 @@ public class Config extends Bean {
 	private Boolean mapAvailable;
 	private Integer mapType;
 	
+	private List<MapRegion> mapRegions;
+	
 	public static String manualItemsType = "org.celstec.arlearn2.beans.generalItem.GeneralItem";
 	private List<GeneralItem> manualItems = new ArrayList<GeneralItem>();
 	private List<LocationUpdateConfig> locationUpdates = new ArrayList<LocationUpdateConfig>();
@@ -32,6 +34,7 @@ public class Config extends Bean {
 			nullSafeEquals(getScoring(), other.getScoring()) && 
 			nullSafeEquals(getRoles(), other.getRoles()) && 
 			nullSafeEquals(getMapType(), other.getMapType()) && 
+			nullSafeEquals(getMapRegions(), other.getMapRegions()) && 
 			nullSafeEquals(getMapAvailable(), other.getMapAvailable()); 
 
 	}
@@ -58,6 +61,14 @@ public class Config extends Bean {
 
 	public void setMapType(Integer mapType) {
 		this.mapType = mapType;
+	}
+
+	public List<MapRegion> getMapRegions() {
+		return mapRegions;
+	}
+
+	public void setMapRegions(List<MapRegion> mapRegions) {
+		this.mapRegions = mapRegions;
 	}
 
 	public List<GeneralItem> getManualItems() {

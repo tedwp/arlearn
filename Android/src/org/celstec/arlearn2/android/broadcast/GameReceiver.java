@@ -4,8 +4,11 @@ import java.util.Iterator;
 
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.osmPackager.RegionDownloader;
+import org.celstec.arlearn2.android.util.MediaFolders;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GamesList;
+import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.client.GameClient;
 import org.celstec.arlearn2.client.exception.ARLearnException;
 
@@ -38,6 +41,7 @@ public class GameReceiver extends GenericReceiver {
 				while (it.hasNext()) {
 					Game game = it.next();
 					db.getGameAdapter().insertGame(game);
+//					checkOsmTiles(game);
 				}
 			}
 		} catch (ARLearnException ae){
@@ -51,5 +55,17 @@ public class GameReceiver extends GenericReceiver {
 		} finally {
 			db.close();
 		}				
+	}
+	
+	private void checkOsmTiles(Game game) {
+		if (game.getConfig() == null) return;
+		if (game.getConfig().getMapRegions() == null) return;
+		RegionDownloader rd = new RegionDownloader();
+		for (MapRegion mr: game.getConfig().getMapRegions()) {
+			rd.addRegion(mr);
+		}
+		rd.downloadAllRegions("/mnt/sdcard/osmdroid/tiles/MapquestOSM");
+		
+		
 	}
 }

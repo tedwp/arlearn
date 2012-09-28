@@ -3,6 +3,7 @@ package org.celstec.arlearn2.gwt.client.network.game;
 import org.celstec.arlearn2.gwt.client.network.GenericClient;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONObject;
@@ -71,6 +72,11 @@ public class GameClient extends GenericClient {
 	
 	public void setWithMap(long gameId, Boolean withMap, JsonCallback jsonCallback) {
 		invokeJsonPOST("/config/gameId/"+gameId+"/withMap", ""+withMap, jsonCallback);
+	}
+
+	public void addMapRegion(long gameId, JSONArray array, JsonCallback jsonCallback) {
+		invokeJsonPOST("/config/gameId/"+gameId+"/mapRegion", ""+array.toString(), jsonCallback);
+		
 	}
 
 }

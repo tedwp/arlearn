@@ -36,7 +36,31 @@ public interface AuthoringConstants extends Constants {
 	String withMap();
 	
 	@DefaultStringValue("Maps type")
-	String mapsType(); 
+	String mapsType();
+	
+	@DefaultStringValue("Offline maps")
+	String offlineMaps();
+	
+	@DefaultStringValue("Define an offline region")
+	String defineOfflineRegion();
+	
+	@DefaultStringValue("Highest lattitude")
+	String latUp();
+	
+	@DefaultStringValue("Lowest lattitude")
+	String latDown();
+	
+	@DefaultStringValue("Left most longitude")
+	String lngLeft();
+	
+	@DefaultStringValue("Right most longitude")
+	String lngRight();
+	
+	@DefaultStringValue("Minimum zoomlevel")
+	String minZoom();
+	
+	@DefaultStringValue("Maximum zoomlevel")
+	String maxZoom();
 	
 	@DefaultStringValue("Submit")
 	String submit();

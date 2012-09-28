@@ -33,6 +33,7 @@ import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.beans.game.LocationUpdateConfig;
 import org.celstec.arlearn2.beans.game.LocationUpdateConfigDeserializer;
 import org.celstec.arlearn2.beans.game.LocationUpdateConfigSerializer;
+import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
@@ -122,6 +123,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(GameCreationStatus.class.getCanonicalName(), new GameCreationStatusSerializer());
 		customSerializerMap.put(RunCreationStatus.class.getCanonicalName(), new RunCreationStatus.GameCreationStatusSerializer());
 		customSerializerMap.put(Config.class.getCanonicalName(), new ConfigSerializer());
+		customSerializerMap.put(MapRegion.class.getCanonicalName(), new MapRegion.MapRegionSerializer());
 		customSerializerMap.put(LocationUpdateConfig.class.getCanonicalName(), new LocationUpdateConfigSerializer());
 		customSerializerMap.put(Run.class.getCanonicalName(), new RunSerializer());
 		customSerializerMap.put(RunList.class.getCanonicalName(), new RunListSerializer());

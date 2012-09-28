@@ -30,6 +30,7 @@ public class ConfigDeserializer extends BeanDeserializer{
 		if (object.has("manualItems")) oq.setManualItems(ListDeserializer.toBean(object.getJSONArray("manualItems"), GeneralItem.class));
 		if (object.has("locationUpdates")) oq.setLocationUpdates(ListDeserializer.toBean(object.getJSONArray("locationUpdates"), LocationUpdateConfig.class));
 		if (object.has("roles")) oq.setRoles(ListDeserializer.toStringList(object.getJSONArray("roles")));
+		if (object.has("mapRegions")) oq.setMapRegions(ListDeserializer.toBean(object.getJSONArray("mapRegions"), MapRegion.class));
 	}
 	
 }
