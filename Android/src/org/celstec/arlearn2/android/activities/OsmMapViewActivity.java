@@ -34,12 +34,12 @@ public class OsmMapViewActivity extends GenericMapViewActivity {
 		
 
 		mv = (MapView) findViewById(R.id.map);
-		mv.setTileSource(TileSourceFactory.MAPQUESTOSM);
+		mv.setTileSource(TileSourceFactory.MAPNIK);
 		mv.setClickable(true);
 		mv.setBuiltInZoomControls(true);
 
 		mv.getController().setZoom(11);
-
+//		mv.setBuiltInZoomControls(false);
 		control = mv.getController();
 		myLocation = new MyLocationOverlay(this, mv) {
 			public synchronized void onLocationChanged(Location location) {
@@ -99,7 +99,7 @@ public class OsmMapViewActivity extends GenericMapViewActivity {
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (menuHandler.getPropertiesAdapter().isAuthenticated()) {
-			menu.add(0, MenuHandler.DOWNLOAD_MAP_TILES, 0, "i18 -downloadmaptiles"); //todo getString(R.string.messagesMenu)
+			menu.add(0, MenuHandler.DOWNLOAD_MAP_TILES, 0, getString(R.string.downloadMap)); 
 		} 
 		return super.onCreateOptionsMenu(menu);
 	}

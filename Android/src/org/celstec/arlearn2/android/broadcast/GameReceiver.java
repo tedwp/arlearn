@@ -60,11 +60,11 @@ public class GameReceiver extends GenericReceiver {
 	private void checkOsmTiles(Game game) {
 		if (game.getConfig() == null) return;
 		if (game.getConfig().getMapRegions() == null) return;
-		RegionDownloader rd = new RegionDownloader();
+		RegionDownloader rd = new RegionDownloader("/mnt/sdcard/osmdroid/tiles/MapquestOSM");
 		for (MapRegion mr: game.getConfig().getMapRegions()) {
 			rd.addRegion(mr);
 		}
-		rd.downloadAllRegions("/mnt/sdcard/osmdroid/tiles/MapquestOSM");
+		rd.downloadAllRegions();
 		
 		
 	}

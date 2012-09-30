@@ -3,6 +3,7 @@ package org.celstec.arlearn2.android.menu;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnnotateActivity;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
+import org.celstec.arlearn2.android.activities.DownloadOSMMapTilesActivity;
 import org.celstec.arlearn2.android.activities.GenericMapViewActivity;
 import org.celstec.arlearn2.android.activities.IntentIntegrator;
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
@@ -125,7 +126,9 @@ public class MenuHandler {
 			integrator.initiateScan();
 			break;
 		case DOWNLOAD_MAP_TILES:
-			
+			intent = new Intent(context, DownloadOSMMapTilesActivity.class);
+			intent.putExtra("runId", getPropertiesAdapter().getCurrentRunId());
+			context.startActivity(intent);
 			break;
 		default:
 			break;

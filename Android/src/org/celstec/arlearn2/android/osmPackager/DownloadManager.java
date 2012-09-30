@@ -31,6 +31,9 @@ public class DownloadManager {
 		this.mThreadPool = Executors.newFixedThreadPool(mThreads);
 	}
 
+	public int getRemaining() {
+		return mQueue.size();
+	}
 	
 	public synchronized void add(final OSMTileInfo pTileInfo){
 		this.mQueue.add(pTileInfo);

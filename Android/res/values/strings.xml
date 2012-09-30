@@ -59,10 +59,16 @@
     
     <string name="listMessagesHeader">Message List</string>
     
+    <!-- OSM Downloader -->
+    
+    <string name="startDownloading">Start downloaden kaart</string>
+    <string name="offlineDownloadExplanation">Deze game ondersteunt het downloaden van map tegels, zodat deze app de kaart kan blijven gebruiken zelfs wanneer er geen netwerk connectie meer is. Klik op de onderstaande knop om alle relevante kaarten te downlaoden. Let op, dit kan een aanzienlijke hoeveelheid opslagcapaciteit vergen</string>    
+    <string name="downloadMap">Download kaart</string>
+    
      <!--Todo-->
      <string name="makeAnnotation">Wil je hier een aantekening maken?</string>
      <string name="reset">RESET</string>
-     <string name="refresh">REFRESH</string>
+     <string name="refresh">VERNIEUW</string>
      <string name="resetQuestion">Ben je zeker dat je al je vooruitgang wil verwijderen?</string>
      
      <string name="downloadBusy">Even geduld. Bestand is nog niet gedownloaded.</string>

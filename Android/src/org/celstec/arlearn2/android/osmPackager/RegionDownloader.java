@@ -8,9 +8,11 @@ import org.celstec.arlearn2.beans.game.MapRegion;
 public class RegionDownloader  {
 
 	private Vector<MapRegion> regions; //array of regions
+	private  DownloadManager dm;
 	
-	public RegionDownloader() {
+	public RegionDownloader(String folderName) {
 		regions = new Vector();
+		createDownloadManagerObj (folderName);
 	}
 	
 	public void addRegion(MapRegion region) {
@@ -21,30 +23,29 @@ public class RegionDownloader  {
 		regions.remove(region);
 	}
 	
-	private void downloadRegion(MapRegion region, String folderName,int zoom, DownloadManager dm) {			
+	private void downloadRegion(MapRegion region, int zoom, DownloadManager dm) {			
 		final OSMTileInfo upperLeft = getMapTileFromCoordinates(region.getLatUp(), region.getLngLeft(), zoom);
         final OSMTileInfo lowerRight = getMapTileFromCoordinates(region.getLatDown(), region.getLngRight(), zoom);
-        for(int y = upperLeft.y; y <= lowerRight.y; y++){
-            for(int x = upperLeft.x; x <= lowerRight.x; x++){
+        for(int y = upperLeft.y-1; y <= lowerRight.y+1; y++){
+            for(int x = upperLeft.x-1; x <= lowerRight.x+1; x++){
             	dm.add(new OSMTileInfo(x,y,zoom));
             }
         }
 	}
 	
-	private void downloadRegionZoomMinMax(MapRegion region, String folderName, DownloadManager dm)
+	private void downloadRegionZoomMinMax(MapRegion region, DownloadManager dm)
 	{			
-		for(int i = region.getMinZoom(); i<= region.getMaxZoom(); i++) downloadRegion(region, folderName, i, dm);
+		for(int i = region.getMinZoom(); i<= region.getMaxZoom(); i++) downloadRegion(region, i, dm);
 		
 	}
 	
-	public void downloadAllRegions(String folderName) {
+	public void downloadAllRegions() {
 		for (MapRegion r : regions) {
-			DownloadManager dm = createDownloadManagerObj (folderName);
-			downloadRegionZoomMinMax(r, folderName, dm);
+			downloadRegionZoomMinMax(r,  dm);
 		}
 	}
 	
-	public final DownloadManager createDownloadManagerObj (String folderName){
+	public  void createDownloadManagerObj (String folderName){
 	int pThreadCount = 2;
     System.out.println(getMapTileFromCoordinates(50, 6, 5));
     String pFileAppendix = "";
@@ -58,8 +59,7 @@ public class RegionDownloader  {
             .replace(File.separator + File.separator, File.separator);
     //System.out.println("variable = "+pTempBaseURL);
     
-    final DownloadManager dm = new DownloadManager(pBaseURL, pTempBaseURL, pThreadCount);
-    return dm;
+     dm = new DownloadManager(pBaseURL, pTempBaseURL, pThreadCount);
 	}
 	
 	
@@ -69,6 +69,10 @@ public class RegionDownloader  {
 	final int x = (int) Math.floor((aLon + 180) / 360 * (1 << zoom));
 
 	return new OSMTileInfo(x, y, zoom);
+	}
+	
+	public int getDownloadCount() {
+		return dm.getRemaining();
 	}
 		
 }
