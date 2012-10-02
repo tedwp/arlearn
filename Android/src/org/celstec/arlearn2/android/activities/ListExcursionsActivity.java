@@ -182,12 +182,12 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 		AlertDialog.Builder builder = new AlertDialog.Builder(ListExcursionsActivity.this);
 		builder.setMessage(getString(R.string.registerRun)).setCancelable(false);
 		
-		builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+		builder.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
 			}
 		});
-		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				new Thread(new Runnable() {
 					public void run() {

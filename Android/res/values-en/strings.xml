@@ -64,6 +64,8 @@
     <string name="startDownloading">Start downloading map</string>
     <string name="offlineDownloadExplanation">This game support downloading map tiles, so that the game can continue loading your map even when no network connection is available. Click the button below to start downloading your map. Note that this can take quite some storage space.</string>
     <string name="downloadMap">Download map</string>
+    <string name="deleteMap">Delete map</string>
+    
     
     <!--Todo-->
      <string name="makeAnnotation">Do you want to create an annotation here?</string>

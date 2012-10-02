@@ -1,14 +1,21 @@
 package org.celstec.arlearn2.android.osmPackager;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.celstec.arlearn2.beans.game.MapRegion;
+import org.osmdroid.tileprovider.util.StreamUtils;
 
 public class RegionDownloader  {
 
 	private Vector<MapRegion> regions; //array of regions
-	private  DownloadManager dm;
+	private DownloadManager dm;
 	
 	public RegionDownloader(String folderName) {
 		regions = new Vector();
@@ -75,6 +82,35 @@ public class RegionDownloader  {
 		return dm.getRemaining();
 	}
 		
+	public static void zipFolderToFile(final File pDestinationFile, final File pFolderToZip){
+		try {
+			final ZipOutputStream out = new ZipOutputStream(new FileOutputStream(pDestinationFile));
+			final String baseName = pFolderToZip.getParent();
+			addFolderToZip(pFolderToZip, out, baseName);
+			StreamUtils.closeStream(out);
+		} catch (final FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void addFolderToZip(final File folder, final ZipOutputStream zip, final String baseName) throws IOException {
+		final File[] files = folder.listFiles();
+		for (final File file : files) {
+			if (file.isDirectory()) {
+				addFolderToZip(file, zip, baseName);
+			} else {
+				final String name = file.getAbsolutePath().substring(baseName.length());
+				final ZipEntry zipEntry = new ZipEntry(name);
+				zip.putNextEntry(zipEntry);
+				final FileInputStream fileIn = new FileInputStream(file);
+				StreamUtils.copy(fileIn, zip);
+				StreamUtils.closeStream(fileIn);
+				zip.closeEntry();
+			}
+		}
+	}
 }
 	
 
