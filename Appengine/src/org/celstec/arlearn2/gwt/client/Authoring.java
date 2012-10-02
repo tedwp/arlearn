@@ -54,6 +54,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.TabBarControls;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -88,16 +89,16 @@ public class Authoring implements EntryPoint {
 	
 	
 	
-	public void onModuleLoad1() {
-		RootPanel rootPanel = RootPanel.get();
-
-		HLayout navLayout = new HLayout();
-		navLayout.setMembersMargin(10);
-		
-		navLayout.addChild(new IButton());
-		rootPanel.add(navLayout);
-		
-	}
+//	public void onModuleLoad1() {
+//		RootPanel rootPanel = RootPanel.get();
+//
+//		HLayout navLayout = new HLayout();
+//		navLayout.setMembersMargin(10);
+//		
+//		navLayout.addChild(new IButton());
+//		rootPanel.add(navLayout);
+//		
+//	}
 	
 	public void onModuleLoad() {
 		GeoPositioner.getInstance();
@@ -134,10 +135,13 @@ public class Authoring implements EntryPoint {
 		}
         
         b = new IButton(constants.login());
+        Label account;
         if (!Authentication.getInstance().isAuthenticated()) {
     	  b.setTitle(constants.login());
+    	  account = new Label("");
         } else {
     	  b.setTitle(constants.logout());
+          account = new Label(constants.account()+": "+Authentication.getInstance().getCurrentUser());
         }
         
         b.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
@@ -154,7 +158,10 @@ public class Authoring implements EntryPoint {
 			}
 		})  ;
 
-        topTabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER, b);  
+        
+        
+        
+        topTabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER, account, b);  
         
 		VLayout vLayout = new VLayout();  
         vLayout.setMembersMargin(15); 
