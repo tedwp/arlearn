@@ -48,8 +48,8 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 	private GenericBroadcastReceiver broadcastReceiver;
 
 	@Override
-	public void onBroadcastMessage(Bundle bundle) {
-		makeGeneralItemVisible();
+	public void onBroadcastMessage(Bundle bundle, boolean render) {
+		if (render) makeGeneralItemVisible();
 	}
 
 	protected boolean isRouteDisplayed() {

@@ -1,12 +1,17 @@
 package org.celstec.arlearn2.beans.notification;
 
 import org.celstec.arlearn2.beans.Bean;
+import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
+import org.celstec.arlearn2.beans.run.Location;
+import org.celstec.arlearn2.beans.run.RunConfig;
+import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public class Pong extends Ping{
 	
 	private Long origTimeStamp;
+	private Location location;
 	private Integer requestType;
 	private String response;
 
@@ -19,6 +24,14 @@ public class Pong extends Ping{
 	}
 	
 	
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
 	public Integer getRequestType() {
 		return requestType;
 	}
@@ -41,7 +54,8 @@ public class Pong extends Ping{
 		return super.equals(obj) && 
 		nullSafeEquals(getRequestType(), other.getRequestType()) && 
 		nullSafeEquals(getResponse(), other.getResponse()) && 
-		nullSafeEquals(getOrigTimeStamp(), other.getOrigTimeStamp()); 
+		nullSafeEquals(getOrigTimeStamp(), other.getOrigTimeStamp()) &&
+		nullSafeEquals(getLocation(), other.getLocation()); 
 
 	}
 	
@@ -64,6 +78,8 @@ public class Pong extends Ping{
 			if (object.has("requestType")) bean.setRequestType(object.getInt("requestType"));
 			if (object.has("origTimeStamp")) bean.setOrigTimeStamp(object.getLong("origTimeStamp"));
 			if (object.has("response")) bean.setResponse(object.getString("response"));
+			if (object.has("location")) bean.setLocation((Location) JsonBeanDeserializer.deserialize(Location.class, object.getJSONObject("location")));
+
 		}
 
 	}
@@ -78,6 +94,8 @@ public class Pong extends Ping{
 				if (statusBean.getRequestType() != null) returnObject.put("requestType", statusBean.getRequestType());
 				if (statusBean.getOrigTimeStamp() != null) returnObject.put("origTimeStamp", statusBean.getOrigTimeStamp());
 				if (statusBean.getResponse() != null) returnObject.put("response", statusBean.getResponse());
+				if (statusBean.getLocation() != null) returnObject.put("location", JsonBeanSerialiser.serialiseToJson(statusBean.getLocation()));
+
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

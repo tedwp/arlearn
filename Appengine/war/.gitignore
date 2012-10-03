@@ -1,2 +1,4 @@
 /org.celstec.arlearn2.gwt.Authoring
 /org.celstec.arlearn2.authoring.AuthoringEnvironment
+/org.celstec.arlearn2.gwtcommonlib.Library
+/org.celstec.arlearn2.ad.gwt.AmbientDisplay

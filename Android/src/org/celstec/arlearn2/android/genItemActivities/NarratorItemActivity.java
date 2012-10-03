@@ -47,12 +47,14 @@ public class NarratorItemActivity extends GeneralActivity {
 	
 	protected GenericMessageListAdapter adapter;
 
-	public void onBroadcastMessage(Bundle bundle) {
-		super.onBroadcastMessage(bundle);
+	public void onBroadcastMessage(Bundle bundle, boolean render) {
+		super.onBroadcastMessage(bundle, render);
+		if (render) {
 		reloadBeanFromDb();
 		getGuiComponents();
 		loadDataToGui();
 		renderAnswers();
+		}
 	}
 	
 	public void onCreate(Bundle savedInstanceState) {

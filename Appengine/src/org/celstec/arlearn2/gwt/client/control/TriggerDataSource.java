@@ -45,6 +45,7 @@ public class TriggerDataSource extends DataSource{
 		if (gameConfig == null) return;
 		if (gameConfig.isObject() ==null) return;
 		JSONArray array = gameConfig.get("manualItems").isArray();
+		try {
 		for (int i = 0; i< array.size();i++) {
 			final ListGridRecord rec = new ListGridRecord();
 			int itemId = (int) array.get(i).isObject().get("id").isNumber().doubleValue();
@@ -67,6 +68,9 @@ public class TriggerDataSource extends DataSource{
 					}
 				}
 			});
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

@@ -47,9 +47,9 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 	}
 	
 	@Override
-	public void onBroadcastMessage(Bundle bundle) {
-		super.onBroadcastMessage(bundle);
-		doDatabaseQueryOnAuthenticated();
+	public void onBroadcastMessage(Bundle bundle, boolean render) {
+		super.onBroadcastMessage(bundle, render);
+		if (render) doDatabaseQueryOnAuthenticated();
 	}
 
 	private void doDatabaseQueryOnAuthenticated(){

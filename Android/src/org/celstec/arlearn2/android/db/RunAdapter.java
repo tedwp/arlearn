@@ -10,7 +10,10 @@ import java.util.List;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.Run;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.codehaus.jettison.json.JSONString;
 
 //import org.celstec.arlearn2.android.db.beans.GeneralItem;
 //import org.celstec.arlearn2.android.db.beans.Run;
@@ -71,7 +74,14 @@ public class RunAdapter extends GenericDbTable {
         initialValues.put(TITLE, r.getTitle());
         initialValues.put(START_TIME, r.getStartTime());
         initialValues.put(SERVER_CREATE_TIME, r.getServerCreationTime());
-        if (roles != null) initialValues.put(ROLES, roles.toString());
+        if (roles != null) {
+        	JSONArray array = new JSONArray();
+        	for (final String role: roles) {
+        		array.put(role);
+        	}
+        	System.out.println("roles "+array);
+        	initialValues.put(ROLES, array.toString());
+        }
         initialValues.put(BEAN, r.toString());
         
         if (r.getDeleted() == null) {
@@ -116,7 +126,14 @@ public class RunAdapter extends GenericDbTable {
         initialValues.put(GAMEID, r.getGameId());
         initialValues.put(BEAN, r.toString());
 
-        if (roles != null)  initialValues.put(ROLES, roles.toString());
+        if (roles != null)  {
+        	JSONArray array = new JSONArray();
+        	for (final String role: roles) {
+        		array.put(role);
+        	}
+        	System.out.println("roles "+array);
+        	initialValues.put(ROLES, array.toString());
+        }
         if (r.getDeleted() == null) {
 			initialValues.put(DELETED, false);
 		} else {
@@ -125,6 +142,8 @@ public class RunAdapter extends GenericDbTable {
         
 		return db.getSQLiteDb().update(getTableName(), initialValues, ID+" = "+r.getRunId(), null) != -1;
 	}
+	
+	
 
 	private void deleteOldRuns(HashSet<Long> oldRunIds) {
 		for (Iterator iterator = oldRunIds.iterator(); iterator.hasNext();) {
