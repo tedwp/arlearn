@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 public interface ARLearnBroadcastReceiver {
 
-	public void onBroadcastMessage(Bundle bundle);
+	public void onBroadcastMessage(Bundle bundle, boolean render);
 	
 	public boolean showStatusLed();
 }

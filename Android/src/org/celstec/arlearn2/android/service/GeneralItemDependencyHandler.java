@@ -15,6 +15,9 @@ import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.Action;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.json.JSONArray;
 
 import android.media.SoundPool.OnLoadCompleteListener;
 
@@ -102,16 +105,35 @@ public class GeneralItemDependencyHandler {
 		}
 	}
 
+	private static boolean containsRole(JSONArray userRoles, String role) {
+		try {
+			for (int i = 0; i < userRoles.length(); i++) {
+
+				if (userRoles.get(i).equals(role))
+					return true;
+			}
+		} catch (org.json.JSONException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	public static boolean itemMatchesPlayersRole(DBAdapter db, long runId, GeneralItem gi) {
 		boolean playerHasRequiredRole = false;
-		String userRoles = db.getRunAdapter().queryRoles(runId);
+		
 		if (gi.getRoles() != null && !gi.getRoles().isEmpty()) {
-
+			String userRoles = db.getRunAdapter().queryRoles(runId);
+			
 			if (userRoles != null && !"".equals(userRoles)) {
-				for (String giRole : gi.getRoles()) {
-					if (userRoles.contains(giRole))
-						playerHasRequiredRole = true;
+				try {
+					JSONArray userRolesJson = new JSONArray(userRoles);
+					for (String giRole : gi.getRoles()) {
+						if (containsRole(userRolesJson, giRole))
+							playerHasRequiredRole = true;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+				
 			}
 		} else {
 			playerHasRequiredRole = true;

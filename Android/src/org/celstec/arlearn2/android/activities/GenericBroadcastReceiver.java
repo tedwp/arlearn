@@ -12,6 +12,7 @@ public class GenericBroadcastReceiver {
 
 	private Activity activity;
 	public static final String ACTION = "org.celstec.arlearn.updateActivities";
+	public static final String RENDER = "render";
 
 	public GenericBroadcastReceiver(Activity context) {
 		this.activity = context;
@@ -21,10 +22,11 @@ public class GenericBroadcastReceiver {
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getExtras() != null) {
 				Boolean forMe = intent.getExtras().getBoolean(activity.getClass().getCanonicalName(), false);
+				Boolean render = intent.getExtras().getBoolean(RENDER, true);
 				if (forMe) {
 					if (((ARLearnBroadcastReceiver) activity).showStatusLed())
 						LedStatus.updateStatus(activity);
-					((ARLearnBroadcastReceiver) activity).onBroadcastMessage(intent.getExtras());
+					((ARLearnBroadcastReceiver) activity).onBroadcastMessage(intent.getExtras(), render);
 				}
 			}
 		}

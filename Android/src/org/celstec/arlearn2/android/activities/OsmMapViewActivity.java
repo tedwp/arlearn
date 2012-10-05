@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.maps.OsmGeneralItemizedIconOverlay2;
 import org.celstec.arlearn2.android.menu.MenuHandler;
+import org.celstec.arlearn2.android.service.LocationService;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
@@ -78,6 +79,10 @@ public class OsmMapViewActivity extends GenericMapViewActivity {
 		myLocation.enableMyLocation();
 		itemsOverlay.setGeneralItemList(gis);
 		mv.invalidate();
+		Location loc = LocationService.getBestLocation(this);
+		lat = loc.getLatitude();
+		lng = loc.getLongitude();
+		animateToMyLocation();
 
 	}
 	

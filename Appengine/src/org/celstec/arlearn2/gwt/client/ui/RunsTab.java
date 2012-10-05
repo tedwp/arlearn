@@ -57,7 +57,6 @@ public class RunsTab extends GenericTab implements NotificationHandler {
 				listGrid.fetchData();
 			}
 		});
-
 	}
 
 	public Canvas getLeft() {

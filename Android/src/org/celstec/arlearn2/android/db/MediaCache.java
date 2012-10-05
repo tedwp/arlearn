@@ -257,6 +257,7 @@ public class MediaCache extends GenericDbTable {
 	}
 	
 	public void registerBytesAvailable(Uri uri, int bytesAvailable) {
+		if (bytesAvailable < 0) bytesAvailable = 0;
 		ContentValues newValue = new ContentValues();
 		newValue.put(BYTESAVAILABLE, bytesAvailable);
 		newValue.put(LASTBYTESDATE, System.currentTimeMillis());

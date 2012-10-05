@@ -49,7 +49,8 @@ public class Service {
 		if  ("application/json".equalsIgnoreCase(accept)) return toJson(bean);
 		if  (accept != null && accept.contains("application/json")) return toJson(bean);
 		if  ("*/*".equalsIgnoreCase(accept)) return toJson(bean);
-		return accept + " is not yet supported\n";
+		return toJson(bean);
+//		return accept + " is not yet supported\n";
 	}
 	
 	protected Object deserialise(String beanString, Class beanClass, String contentType) {

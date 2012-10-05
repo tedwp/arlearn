@@ -34,9 +34,10 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 	private double lat;
 	private long runId;
 	
-	public void onBroadcastMessage(Bundle bundle) {
-		super.onBroadcastMessage(bundle);
-		renderList();
+	public void onBroadcastMessage(Bundle bundle, boolean render) {
+		super.onBroadcastMessage(bundle, render);
+		if (render) 
+			renderList();
 	}
 	
 	@Override

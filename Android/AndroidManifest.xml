@@ -42,7 +42,7 @@
 		<activity android:name=".activities.AnswerQuestionActivity" android:label="@string/answerQuestionHeader" android:screenOrientation="portrait"/>
 		<activity android:name=".activities.AnnotateActivity" android:label="@string/answerQuestionHeader" android:screenOrientation="portrait"/>
 		<activity android:name=".activities.ViewAnswerActivity" android:label="@string/viewAnswerHeader" android:screenOrientation="portrait"/>
-		<activity android:name=".activities.DownloadOSMMapTilesActivity" android:label="@string/downloadMap" android:screenOrientation="portrait"/>
+		<activity android:name=".activities.DownloadOSMMapTilesActivity" android:label="@string/downloadMap" android:screenOrientation="portrait"  android:alwaysRetainTaskState="True" android:launchMode="singleInstance"/> 
 		
 		<activity android:name=".genItemActivities.MultipleChoiceActivity" android:finishOnTaskLaunch="true" android:label="@string/mct_header" android:screenOrientation="portrait" />
 		<activity android:name=".genItemActivities.OpenQuestionActivity" android:finishOnTaskLaunch="true" android:label="@string/mapViewHeader" android:screenOrientation="portrait"/>

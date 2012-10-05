@@ -2,10 +2,12 @@ package org.celstec.arlearn2.android.activities;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.db.DBAdapter;
@@ -42,7 +44,7 @@ public class DownloadOSMMapTilesActivity extends Activity {
 	private long gameId;
 //	private List<MapRegion> regions;
 	private List<MapRegion> regions = new ArrayList<MapRegion>();
-	private HashMap<String, MapRegionDownloader> ongoingDownloads = new HashMap<String, MapRegionDownloader>();
+	private static HashMap<String, MapRegionDownloader> ongoingDownloads; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,32 +74,47 @@ public class DownloadOSMMapTilesActivity extends Activity {
 
 		progressBar.setProgress(0);
 
-		buttonStartProgress.setOnClickListener(new Button.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (ongoingDownloads.get(regions.toString()) == null) {
-					progressBar.setVisibility(View.VISIBLE);
-					MapRegionDownloader mrd = new MapRegionDownloader();
-					mrd.execute();
-					buttonStartProgress.setClickable(false);
-					ongoingDownloads.put(regions.toString(), mrd);
-				}
-				
-				
-			}
-		});
+		
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		MapRegionDownloader mrd = ongoingDownloads.get(regions.toString()); 
-		if (mrd != null) {
-			mrd.setProgressBar(progressBar);
-		}
+		if (ongoingDownloads == null) ongoingDownloads = new HashMap<String, MapRegionDownloader>();
+		if (ongoingDownloads.get(regions.toString()) == null) {
+			buttonStartProgress.setOnClickListener(new Button.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (ongoingDownloads.get(regions.toString()) == null) {
+						progressBar.setVisibility(View.VISIBLE);
+						MapRegionDownloader mrd = new MapRegionDownloader();
+						mrd.setProgressBar(progressBar);
+						mrd.execute();
+						buttonStartProgress.setClickable(false);
+						ongoingDownloads.put(regions.toString(), mrd);
+					}
+				}
+			});
+			} else {
+				ongoingDownloads.get(regions.toString()).setProgressBar(progressBar);
+				progressBar.setVisibility(View.VISIBLE);
+			}
+		
 		renderDownloadedMaps();
 	}
+	
+//	@Override
+//	public void onSaveInstanceState(Bundle savedInstanceState) {
+//		super.onSaveInstanceState(savedInstanceState);
+//		savedInstanceState.putSerializable("ongoingDownloads", ongoingDownloads);
+//	}
+//	
+//	@Override
+//	public void onRestoreInstanceState(Bundle savedInstanceState) {
+//	  super.onRestoreInstanceState(savedInstanceState);
+//	  ongoingDownloads = (HashMap<String, MapRegionDownloader>) savedInstanceState.getSerializable("ongoingDownloads"); 
+//	}
 	
 	private String getFileSize(File file) {
 		if (file.length() < 1024)
@@ -192,25 +209,33 @@ public class DownloadOSMMapTilesActivity extends Activity {
 		}
 
 		protected Void doInBackground(Void... params) {
-			RegionDownloader rd = new RegionDownloader("/mnt/sdcard/osmdroid/tiles/Mapnik");
+			File folder = new File("/mnt/sdcard/"+System.currentTimeMillis());
+			folder.mkdir();
+			File folderNew = new File(folder, "Mapnik");
+			folderNew.mkdir();
+			try {
+			RegionDownloader rd = new RegionDownloader(folderNew.getAbsolutePath());
 			for (MapRegion mr: regions) {
 				rd.addRegion(mr);
 			}
 			rd.downloadAllRegions();
-			int remaining;
-			do {
-				SystemClock.sleep(200);
-				remaining =rd.getDownloadCount();	
-				if (remaining > progressBar.getMax()) progressBar.setMax(remaining);
-				publishProgress(progressBar.getMax()-remaining);
-			} while (remaining != 0); 
-			File sdcard = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-			File cacheDirFile = new File(sdcard, Constants.CACHE_DIR);
-			File mapsFolder = new File(cacheDirFile, "maps");
-			if (!mapsFolder.exists()) mapsFolder.mkdir();
-			 mapsFolder = new File(mapsFolder, ""+gameId);
-			if (!mapsFolder.exists()) mapsFolder.mkdir();
-			RegionDownloader.zipFolderToFile(new File("/mnt/sdcard/osmdroid/"+gameId+".zip"), mapsFolder);
+				int remaining;
+				do {
+					SystemClock.sleep(200);
+					remaining = rd.getDownloadCount();
+					if (remaining > progressBar.getMax())
+						progressBar.setMax(remaining);
+					publishProgress(progressBar.getMax() - remaining);
+				} while (remaining != 0);
+				RegionDownloader.zipFolderToFile(new File("/mnt/sdcard/osmdroid/" + gameId + ".zip"), folderNew);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				FileUtils.deleteDirectory(folder);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			publishProgress(-1);
 			return null;
 		}

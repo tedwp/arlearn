@@ -9,6 +9,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.celstec.arlearn2.android.activities.GenericBroadcastReceiver;
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
@@ -45,10 +46,11 @@ public class ChannelAPINotificationService extends Service {
 	 
 	private void broadcast() {
 		Intent updateIntent = new Intent();
-		updateIntent.setAction("org.celstec.arlearn.updateActivities");
+		updateIntent.setAction(GenericBroadcastReceiver.ACTION);
 		updateIntent.putExtra(MapViewActivity.class.getCanonicalName(), true);
 		updateIntent.putExtra(ListExcursionsActivity.class.getCanonicalName(), true);
 		updateIntent.putExtra(ListMapItemsActivity.class.getCanonicalName(), true);
+		updateIntent.putExtra(GenericBroadcastReceiver.RENDER, false);
 		sendBroadcast(updateIntent);
 
 	}

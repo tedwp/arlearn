@@ -66,11 +66,13 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 		super.onPause();
 	}
 
-	public void onBroadcastMessage(Bundle bundle) {
-		super.onBroadcastMessage(bundle);
-		checkAuthentication();
-		initFromDb();
-		renderExcursionList();
+	public void onBroadcastMessage(Bundle bundle, boolean render) {
+		super.onBroadcastMessage(bundle, render);
+		if (render) {
+			checkAuthentication();
+			initFromDb();
+			renderExcursionList();
+		}
 	}
 
 	private void checkAuthentication() {

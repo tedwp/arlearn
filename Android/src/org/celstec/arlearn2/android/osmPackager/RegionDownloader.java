@@ -33,9 +33,9 @@ public class RegionDownloader  {
 	private void downloadRegion(MapRegion region, int zoom, DownloadManager dm) {			
 		final OSMTileInfo upperLeft = getMapTileFromCoordinates(region.getLatUp(), region.getLngLeft(), zoom);
         final OSMTileInfo lowerRight = getMapTileFromCoordinates(region.getLatDown(), region.getLngRight(), zoom);
-        for(int y = upperLeft.y-1; y <= lowerRight.y+1; y++){
-            for(int x = upperLeft.x-1; x <= lowerRight.x+1; x++){
-            	dm.add(new OSMTileInfo(x,y,zoom));
+        for(int y = upperLeft.y; y <= lowerRight.y; y++){
+            for(int x = upperLeft.x; x <= lowerRight.x; x++){
+            	 dm.add(new OSMTileInfo(x,y,zoom));
             }
         }
 	}
@@ -101,7 +101,8 @@ public class RegionDownloader  {
 			if (file.isDirectory()) {
 				addFolderToZip(file, zip, baseName);
 			} else {
-				final String name = file.getAbsolutePath().substring(baseName.length());
+				String name = file.getAbsolutePath().substring(baseName.length());
+				if (name.startsWith("/")) name = name.substring(1);
 				final ZipEntry zipEntry = new ZipEntry(name);
 				zip.putNextEntry(zipEntry);
 				final FileInputStream fileIn = new FileInputStream(file);

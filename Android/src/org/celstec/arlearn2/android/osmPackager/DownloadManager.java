@@ -94,21 +94,24 @@ public class DownloadManager {
 		private void init(final OSMTileInfo pTileInfo) {
 			this.mTileInfo = pTileInfo;
 			/* Create destination file. */
-			final String filename = String.format(DownloadManager.this.mDestinationURL, this.mTileInfo.zoom, this.mTileInfo.x, this.mTileInfo.y);
-			this.mDestinationFile = new File(filename);
-
-			final File parent = this.mDestinationFile.getParentFile();
-			parent.mkdirs();
+			try {
+				final String filename = String.format(DownloadManager.this.mDestinationURL, this.mTileInfo.zoom, this.mTileInfo.x, this.mTileInfo.y);
+				this.mDestinationFile = new File(filename);
+				final File parent = this.mDestinationFile.getParentFile();
+				parent.mkdirs();
+			} catch (java.lang.NullPointerException npe) {
+				npe.printStackTrace();
+			}
 		}
 
 		
 		public void run() {
 			InputStream in = null;
 			OutputStream out = null;
+			final OSMTileInfo pTileInfo = DownloadManager.this.getNext(); 
+			init(pTileInfo);
 
-			init(DownloadManager.this.getNext());
-
-			if (mDestinationFile.exists()) {
+			if (mDestinationFile == null || mDestinationFile.exists()) {
 				return; // TODO issue 70 - make this an option
 			}
 
@@ -126,6 +129,7 @@ public class DownloadManager {
 			} catch (final Exception e) {
 				System.err.println("Error downloading: '" + this.mTileInfo + "' from URL: " + finalURL + " : " + e);
 				DownloadManager.this.add(this.mTileInfo); // try again later
+//				mQueue.remove(pTileInfo);
 			} finally {
 				StreamUtils.closeStream(in);
 				StreamUtils.closeStream(out);

@@ -56,6 +56,7 @@ import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.ActionList;
 import org.celstec.arlearn2.beans.run.ActionListSerializer;
 import org.celstec.arlearn2.beans.run.ActionSerializer;
+import org.celstec.arlearn2.beans.run.Location;
 import org.celstec.arlearn2.beans.run.LocationUpdate;
 import org.celstec.arlearn2.beans.run.LocationUpdateSerializer;
 import org.celstec.arlearn2.beans.run.Response;
@@ -124,6 +125,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(RunCreationStatus.class.getCanonicalName(), new RunCreationStatus.GameCreationStatusSerializer());
 		customSerializerMap.put(Config.class.getCanonicalName(), new ConfigSerializer());
 		customSerializerMap.put(MapRegion.class.getCanonicalName(), new MapRegion.MapRegionSerializer());
+		customSerializerMap.put(Location.class.getCanonicalName(), new Location.Serializer());
 		customSerializerMap.put(LocationUpdateConfig.class.getCanonicalName(), new LocationUpdateConfigSerializer());
 		customSerializerMap.put(Run.class.getCanonicalName(), new RunSerializer());
 		customSerializerMap.put(RunList.class.getCanonicalName(), new RunListSerializer());

@@ -3,9 +3,7 @@ package org.celstec.arlearn2.gwt.client.control;
 import org.celstec.arlearn2.gwt.client.Authoring;
 import org.celstec.arlearn2.gwt.client.network.LoginCallback;
 import org.celstec.arlearn2.gwt.client.network.LoginClient;
-import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
 import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
-
 import com.google.gwt.user.client.Cookies;
 
 public class Authentication implements LoginCallback {

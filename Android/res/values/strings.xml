@@ -62,7 +62,7 @@
     <!-- OSM Downloader -->
     
     <string name="startDownloading">Start downloaden kaart</string>
-    <string name="offlineDownloadExplanation">Deze game ondersteunt het downloaden van map tegels, zodat deze app de kaart kan blijven gebruiken zelfs wanneer er geen netwerk connectie meer is. Klik op de onderstaande knop om alle relevante kaarten te downlaoden. Let op, dit kan een aanzienlijke hoeveelheid opslagcapaciteit vergen</string>    
+    <string name="offlineDownloadExplanation">Deze game ondersteunt het downloaden van map tegels, zodat deze app de kaart kan blijven gebruiken zelfs wanneer er geen netwerk connectie meer is. Klik op de onderstaande knop om alle relevante kaarten te downloaden. Let op, dit kan een aanzienlijke hoeveelheid opslagcapaciteit vergen</string>    
     <string name="downloadMap">Download kaart</string>
     <string name="deleteMap">Verwijder kaart</string>
     

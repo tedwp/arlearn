@@ -6,6 +6,10 @@
 			<param-name>com.sun.jersey.config.property.packages</param-name>
 			<param-value>org.celstec.arlearn2.api</param-value>
 		</init-param>
+		<init-param>
+    		<param-name>com.sun.jersey.spi.container.ResourceFilters</param-name>
+    		<param-value> org.celstec.arlearn2.api.CacheFilterFactory</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	
@@ -22,6 +26,11 @@
 	<servlet>
 		<servlet-name>BlobStoreServletIncremental</servlet-name>
 		<servlet-class>org.celstec.arlearn2.upload.BlobStoreServletIncremental</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>BlobStoreServletWithUploadUrl</servlet-name>
+		<servlet-class>org.celstec.arlearn2.upload.BlobStoreServletWithExternalUrl</servlet-class>
 	</servlet>
 	
 	<servlet>
@@ -52,6 +61,11 @@
 	<servlet-mapping>
 		<servlet-name>BlobStoreServletIncremental</servlet-name>
 		<url-pattern>/uploadServiceIncremental/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>BlobStoreServletWithUploadUrl</servlet-name>
+		<url-pattern>/uploadServiceWithUrl/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>

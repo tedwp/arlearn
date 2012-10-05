@@ -2,7 +2,9 @@ package org.celstec.arlearn2.android.broadcast;
 
 import org.celstec.arlearn2.android.activities.NfcScanOnDemandActivity;
 import org.celstec.arlearn2.android.db.DBAdapter;
+import org.celstec.arlearn2.android.service.LocationService;
 import org.celstec.arlearn2.beans.notification.Ping;
+import org.celstec.arlearn2.beans.run.Location;
 import org.celstec.arlearn2.client.ChannelClient;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -22,7 +24,12 @@ public class PingReceiver extends BroadcastReceiver {
 				new Thread(new Runnable() {
 					public void run() {
 						if (bean.getRequestType() == null) {
-							ChannelClient.getChannelClient().pong(0, "", bean.getTo(), bean.getFrom(), Ping.PING, "", bean.getTimestamp());
+							android.location.Location loc = LocationService.getBestLocation(context);
+							Location locBean = new Location();
+							locBean.setLat(loc.getLatitude());
+							locBean.setLng(loc.getLongitude());
+							locBean.setAccuracy(loc.getAccuracy());
+							ChannelClient.getChannelClient().pong(0, "", bean.getTo(), bean.getFrom(), Ping.PING, locBean.toString(), bean.getTimestamp());
 						} else {
 							processSwitchRequest(context, bean);
 						}

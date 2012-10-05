@@ -97,7 +97,7 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 		ActionDispatcher.publishAction(this, action, pa.getCurrentRunId(), pa.getUsername(), null, null);
 	}
 
-	public void onBroadcastMessage(Bundle bundle) {
+	public void onBroadcastMessage(Bundle bundle, boolean render) {
 		if (showStatusLed()) LedStatus.updateStatus(this);
 	}
 	

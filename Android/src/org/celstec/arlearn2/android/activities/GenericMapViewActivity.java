@@ -55,8 +55,8 @@ public class GenericMapViewActivity extends Activity implements ARLearnBroadcast
 	}
 	
 	@Override
-	public void onBroadcastMessage(Bundle bundle) {
-		makeGeneralItemVisible();
+	public void onBroadcastMessage(Bundle bundle, boolean render) {
+		if (render) makeGeneralItemVisible();
 		
 	}
 
