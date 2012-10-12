@@ -34,9 +34,9 @@ public class OsmGeneralItemizedIconOverlay2 extends ItemizedIconOverlay<OverlayI
 		
 	}
 
-	protected static android.graphics.drawable.Drawable boundCenterBottom(android.graphics.drawable.Drawable balloon){
-	return GenericItemsOverlay.boundCenterBottom(balloon);
-}
+	protected static android.graphics.drawable.Drawable boundCenterBottom(android.graphics.drawable.Drawable balloon) {
+		return GenericItemsOverlay.boundCenterBottom(balloon);
+	}
 
 
  @Override
@@ -46,14 +46,6 @@ public void draw(Canvas canvas, org.osmdroid.views.MapView mapView, boolean shad
         // go through all OverlayItems and draw title for each of them
 	for (int i = 0; i< size(); i++){
 		OSMOverlayItem item = (OSMOverlayItem) getItem(i);
-//	}
-//        for (OSMOverlayItem item: get)
-//        {
-            /* Converts latitude & longitude of this overlay item to coordinates on screen.
-             * As we have called boundCenterBottom() in constructor, so these coordinates
-             * will be of the bottom center position of the displayed marker.
-             */
-//        	OverlayItem item = overlayItems.get(gitem);
             GeoPoint point = item.getPoint();
             Point markerBottomCenterCoords = new Point();
             mapView.getProjection().toPixels(point, markerBottomCenterCoords);

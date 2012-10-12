@@ -117,7 +117,7 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 //			return R.drawable.speechbubble_green;
 //		}
 		else 	if (gi.getType().equals(AudioObject.class.getName())) {
-			return R.drawable.audio_icon;
+			return R.drawable.speechbubble_blue;
 		}
 		return 0;
 	}

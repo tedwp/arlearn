@@ -24,7 +24,11 @@ public class OSMOverlayItem extends OverlayItem{
 	@Override
 	public Drawable getMarker(int stateBitset) {
 		int icon =ListMapItemsActivity.getIcon(gi);
-		if (icon != 0) return GenericItemsOverlay.boundCenterBottom(ctx.getResources().getDrawable(icon)); //TODO 
+		if (icon != 0) {
+			Drawable drawable = GenericItemsOverlay.boundCenterBottom(ctx.getResources().getDrawable(icon));
+			return drawable; //TODO 
+		}
+		
 		return null;
 	}
 	

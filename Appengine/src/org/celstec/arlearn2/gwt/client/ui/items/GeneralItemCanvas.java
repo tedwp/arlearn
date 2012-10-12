@@ -272,8 +272,8 @@ public abstract class GeneralItemCanvas extends VStack{
 	 
 	public LinkedHashMap<String, String> createSimpleDependencyValues() {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-		valueMap.put("read", "Read");
-		valueMap.put("answer_given", "Anser given");
+		valueMap.put("read", "Read"); //TODO i18n
+		valueMap.put("answer_given", "Answer given"); //TODO
 		return valueMap;
 	}
 	
