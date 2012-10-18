@@ -56,6 +56,8 @@ public class Service {
 	protected Object deserialise(String beanString, Class beanClass, String contentType) {
 		if  (contentType == null || "application/json".equalsIgnoreCase(contentType) ||  "*/*".equalsIgnoreCase(contentType)) 
 			return jsonDeserialise(beanString, beanClass);
+		if (contentType != null && contentType.contains("application/json"))
+			return jsonDeserialise(beanString, beanClass);
 		return contentType + " is not yet supported\n";
 	}
 	
