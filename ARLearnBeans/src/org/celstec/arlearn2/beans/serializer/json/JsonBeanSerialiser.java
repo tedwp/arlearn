@@ -42,6 +42,7 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItemSerializer;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
+import org.celstec.arlearn2.beans.generalItem.OpenBadge;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.celstec.arlearn2.beans.generalItem.OpenUrl;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
@@ -143,6 +144,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(MultipleChoiceAnswerItem.class.getCanonicalName(), new MultipleChoiceAnswerItemSerializer());
 		customSerializerMap.put(OpenUrl.class.getCanonicalName(), OpenUrl.serializer);
 		customSerializerMap.put(YoutubeObject.class.getCanonicalName(), YoutubeObject.serializer);
+		customSerializerMap.put(OpenBadge.class.getCanonicalName(), OpenBadge.serializer);
 		customSerializerMap.put(User.class.getCanonicalName(), new UserSerializer());
 		customSerializerMap.put(UserList.class.getCanonicalName(), new UserListSerializer());
 		customSerializerMap.put(Team.class.getCanonicalName(), new TeamSerializer());

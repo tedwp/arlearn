@@ -63,15 +63,4 @@ public class OpenUrl extends GeneralItem {
 
 	};
 
-	
-	public static void main(String[] args) throws JSONException {
-		GamePackage gp = new GamePackage();
-		OpenUrl ou = new OpenUrl();
-		ou.setUrl("http://www.google.com");
-		gp.addGeneralItem(ou);
-		
-		System.out.println(gp.toString());
-		System.out.println(JsonBeanDeserializer.deserialize(gp.toString()).toString());
-		
-	}
 }
