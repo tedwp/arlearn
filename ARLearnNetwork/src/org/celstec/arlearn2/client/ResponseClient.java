@@ -25,7 +25,7 @@ public class ResponseClient extends GenericClient{
 		HttpResponse httpResp = ConnectionFactory.getConnection().executePOST(getUrlPrefix(), token, "application/json", toJson(response), "application/json");
 		String entry;
 		try {
-			entry = EntityUtils.toString(httpResp.getEntity());
+			entry = EntityUtils.toString(httpResp.getEntity(), "utf-8");
 			System.out.println(entry);
 			return (Response) jsonDeserialise(entry, Response.class);
 		} catch (Exception e) {

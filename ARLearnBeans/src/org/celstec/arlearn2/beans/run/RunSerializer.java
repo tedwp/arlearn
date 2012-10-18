@@ -34,6 +34,7 @@ public class RunSerializer extends RunBeanSerialiser {
 			if (runBean.getLastModificationDate() != null) returnObject.put("lastModificationDate", runBean.getLastModificationDate());
 			if (runBean.getTitle() != null) returnObject.put("title", runBean.getTitle());
 			if (runBean.getOwner() != null) returnObject.put("owner", runBean.getOwner());
+			if (runBean.getTagId() != null) returnObject.put("tagId", runBean.getTagId());
 			if (runBean.getGame() != null) returnObject.put("game", JsonBeanSerialiser.serialiseToJson(runBean.getGame()));
 			if (runBean.getRunConfig() != null) returnObject.put("runConfig", JsonBeanSerialiser.serialiseToJson(runBean.getRunConfig(), runConfigSerializer));
 

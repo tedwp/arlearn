@@ -50,6 +50,7 @@ public class RunDeserializer extends RunBeanDeserializer{
 		if (object.has("gameId")) bean.setGameId(object.getLong("gameId"));	
 		if (object.has("title")) bean.setTitle(object.getString("title"));	
 		if (object.has("owner")) bean.setOwner(object.getString("owner"));
+		if (object.has("tagId")) bean.setOwner(object.getString("tagId"));
 		if (object.has("startTime")) bean.setStartTime(object.getLong("startTime"));
 		if (object.has("serverCreationTime")) bean.setServerCreationTime(object.getLong("serverCreationTime"));
 		if (object.has("lastModificationDate")) bean.setLastModificationDate(object.getLong("lastModificationDate"));

@@ -15,6 +15,7 @@ import org.celstec.arlearn2.beans.AuthResponseSerializer;
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.GamePackage;
 import org.celstec.arlearn2.beans.GamePackageSerializer;
+import org.celstec.arlearn2.beans.Info;
 import org.celstec.arlearn2.beans.RunPackage;
 import org.celstec.arlearn2.beans.Version;
 import org.celstec.arlearn2.beans.VersionSerializer;
@@ -108,6 +109,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 
 	static {
 		customSerializerMap.put(Bean.class.getCanonicalName(), new org.celstec.arlearn2.beans.serializer.json.BeanSerializer());
+		customSerializerMap.put(Info.class.getCanonicalName(), Info.serializer);
 		customSerializerMap.put(GeneralItem.class.getCanonicalName(), new GeneralItemSerializer());
 		customSerializerMap.put(GeneralItemList.class.getCanonicalName(), new GeneralItemListSerializer());
 		customSerializerMap.put(NarratorItem.class.getCanonicalName(), new NarratorItemSerializer());

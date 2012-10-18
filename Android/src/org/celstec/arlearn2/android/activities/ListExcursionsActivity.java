@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.android.activities;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,9 +19,11 @@ import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 import org.celstec.arlearn2.android.service.LocationService;
+import org.celstec.arlearn2.beans.AuthResponse;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.run.Run;
+import org.celstec.arlearn2.client.LoginClient;
 import org.celstec.arlearn2.client.RunClient;
 
 import android.app.AlertDialog;
@@ -88,7 +91,6 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 
 			for (int i = 0; i < runs.length; i++) {
 				RunListRecord r = new RunListRecord(runs[i], games.get(runs[i].getGameId()));
-
 				runsList.add(r);
 			}
 		}

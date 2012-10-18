@@ -242,4 +242,18 @@ public class RunDelegator extends GoogleDelegator {
 		ud.selfRegister(u, run);
 		return run;
 	}
+
+	public Run selfRegister(Long runId) {
+		UsersDelegator qu = new UsersDelegator(this);
+		String myAccount = qu.getCurrentUserAccount();
+		
+		List<Run> runList = RunManager.getRuns(runId, null, null, null, null);
+		if (!runList.isEmpty() && runList.get(0).getTagId() != null) {
+			return selfRegister(runList.get(0), myAccount);
+		} else {
+			Run run = new Run();
+			run.setError("No run with runId "+runId +" exists");
+			return run;
+		}
+	}
 }

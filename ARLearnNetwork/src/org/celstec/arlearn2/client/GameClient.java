@@ -29,7 +29,7 @@ public class GameClient extends GenericClient{
 		HttpResponse response = ConnectionFactory.getConnection().executePOST(getUrlPrefix(), token, "application/json", toJson(game), "application/json");
 		String entry;
 		try {
-			entry = EntityUtils.toString(response.getEntity());
+			entry = EntityUtils.toString(response.getEntity(), "utf-8");
 			return (Game) jsonDeserialise(entry, Game.class);
 		} catch (Exception e) {
 			e.printStackTrace();

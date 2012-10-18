@@ -24,7 +24,7 @@ public class LocationClient extends GenericClient{
 		HttpResponse response = ConnectionFactory.getConnection().executePOST(getUrlPrefix()+"/runId/"+runId, token, "application/json", toJson(locUpdate), "application/json");
 		String entry;
 		try {
-			entry = EntityUtils.toString(response.getEntity());
+			entry = EntityUtils.toString(response.getEntity(), "utf-8");
 			return (LocationUpdate) jsonDeserialise(entry, LocationUpdate.class);
 		} catch (Exception e) {
 			e.printStackTrace();

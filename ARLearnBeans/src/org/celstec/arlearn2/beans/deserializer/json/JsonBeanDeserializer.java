@@ -13,6 +13,7 @@ import java.util.Vector;
 import org.celstec.arlearn2.beans.AuthResponseDeserializer;
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.GamePackageDeserializer;
+import org.celstec.arlearn2.beans.Info;
 import org.celstec.arlearn2.beans.RunPackage;
 import org.celstec.arlearn2.beans.VersionDeserializer;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
@@ -278,6 +279,7 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMap.put(User.class, ud);
 
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.Bean", new org.celstec.arlearn2.beans.deserializer.json.BeanDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.Info", Info.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.authoring.GameCreationStatus", new GameCreationStatusDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.authoring.RunCreationStatus", new RunCreationStatus.RunCreationStatusDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.NarratorItem", nid);

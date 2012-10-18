@@ -32,7 +32,7 @@ public class RunClient extends GenericClient{
 		HttpResponse response = conn.executeGET(getUrlPrefix(), token, "application/json");
 		String entry;
 		try {
-			entry = EntityUtils.toString(response.getEntity());
+			entry = EntityUtils.toString(response.getEntity(), "utf-8");
 			Object jsonObject = jsonDeserialise(entry, RunList.class);
 			if (jsonObject instanceof String) {
 				System.err.println("token "+token);
@@ -76,7 +76,7 @@ public class RunClient extends GenericClient{
 		HttpResponse response = conn.executeGET(getUrlPrefix()+"/config/runId/"+runId, token, "application/json");
 		String entry;
 		try {
-			entry = EntityUtils.toString(response.getEntity());
+			entry = EntityUtils.toString(response.getEntity(), "utf-8");
 			Object jsonObject = jsonDeserialise(entry, Config.class);
 			
 			return (Config) jsonObject;
@@ -97,7 +97,7 @@ public class RunClient extends GenericClient{
 		HttpResponse response = ConnectionFactory.getConnection().executePOST(getUrlPrefix(), token, "application/json", toJson(run), "application/json");
 		String entry;
 		try {
-			entry = EntityUtils.toString(response.getEntity());
+			entry = EntityUtils.toString(response.getEntity(), "utf-8");
 			return (Run) jsonDeserialise(entry, Run.class);
 		} catch (Exception e) {
 			e.printStackTrace();

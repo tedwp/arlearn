@@ -26,7 +26,7 @@ public class ActionClient extends GenericClient{
 		HttpResponse response = ConnectionFactory.getConnection().executePOST(getUrlPrefix(), token, "application/json", toJson(action), "application/json");
 		String entry;
 		try {
-			entry = EntityUtils.toString(response.getEntity());
+			entry = EntityUtils.toString(response.getEntity(), "utf-8");
 			return (Action) jsonDeserialise(entry, Action.class);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -82,6 +82,19 @@ public class MyRuns extends Service {
 		RunDelegator rd = new RunDelegator(token);
 		return serialise(rd.selfRegister(tagId), accept);
 	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/selfRegister/runId/{runId}")
+	public String selfRegisterWithRunId(@HeaderParam("Authorization") String token, 
+			@PathParam("runId") Long runId, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		RunDelegator rd = new RunDelegator(token);
+		return serialise(rd.selfRegister(runId), accept);
+	}
 
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

@@ -24,7 +24,7 @@ public class LoginClient extends GenericClient{
 	public AuthResponse authenticate(String login, String password) {
 		HttpResponse response = ConnectionFactory.getConnection().executePOST(getUrlPrefix(), null, "application/json", login + "\n" + password, "text/plain");
 		try {
-			String entry = EntityUtils.toString(response.getEntity());
+			String entry = EntityUtils.toString(response.getEntity(), "utf-8");
 			return (AuthResponse) jsonDeserialise(entry, AuthResponse.class);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -10,6 +10,7 @@ public class Run extends RunBean implements Serializable{
 	private Long gameId;
 	private String title;
 	private String owner;
+	private String tagId;
 	private Long startTime;
 	private Long serverCreationTime;
 	private Long lastModificationDate;
@@ -23,6 +24,7 @@ public class Run extends RunBean implements Serializable{
 			nullSafeEquals(getGameId(), other.getGameId()) && 
 			nullSafeEquals(getTitle(), other.getTitle()) && 
 			nullSafeEquals(getOwner(), other.getOwner()) && 
+			nullSafeEquals(getTagId(), other.getTagId()) && 
 			nullSafeEquals(getStartTime(), other.getStartTime()) && 
 			nullSafeEquals(getServerCreationTime(), other.getServerCreationTime()) && 
 			nullSafeEquals(getLastModificationDate(), other.getLastModificationDate()) && 
@@ -57,6 +59,14 @@ public class Run extends RunBean implements Serializable{
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+
+	public String getTagId() {
+		return tagId;
+	}
+
+	public void setTagId(String tagId) {
+		this.tagId = tagId;
 	}
 
 	public Long getStartTime() {

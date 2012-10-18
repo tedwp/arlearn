@@ -29,7 +29,7 @@ public class ScoreClient extends GenericClient{
 		HttpResponse response = conn.executeGET(getUrlPrefix()+"/runId/"+runId, token, "application/json");
 		String entry;
 		try {
-			entry = EntityUtils.toString(response.getEntity());
+			entry = EntityUtils.toString(response.getEntity(), "utf-8");
 			return (UserScore) jsonDeserialise(entry, UserScore.class);
 		} catch (Exception e) {
 			e.printStackTrace();

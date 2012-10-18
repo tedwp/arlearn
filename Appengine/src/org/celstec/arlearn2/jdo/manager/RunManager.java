@@ -147,6 +147,7 @@ public class RunManager {
 		run.setTitle(jdo.getTitle());
 		run.setGameId(jdo.getGameId());
 		run.setOwner(jdo.getOwner());
+		run.setTagId(jdo.getTagId());
 		run.setStartTime(jdo.getStartTime());
 		run.setDeleted(jdo.getDeleted());
 		run.setServerCreationTime(jdo.getServerCreationTime());

@@ -17,8 +17,8 @@ public class GenericClient {
 //		public static String urlPrefix = "http://145.20.132.154:9999";
 //		public static String urlPrefix = "http://10.0.2.2:9999";
 //		public static String urlPrefix = "http://10.0.1.2:9999";
+		public static String urlPrefix = "http://ar-learn.appspot.com/";
 //		public static String urlPrefix = "http://streetlearn.appspot.com/";
-		public static String urlPrefix = "http://streetlearn.appspot.com/";
 
 		protected static HttpConnection	conn = ConnectionFactory.getConnection();
 
@@ -58,7 +58,7 @@ public class GenericClient {
 			HttpResponse response = conn.executeGET(url, token, "application/json");
 			try {
 				if (beanClass.equals(String.class)) return EntityUtils.toString(response.getEntity());
-				String result = EntityUtils.toString(response.getEntity());
+				String result = EntityUtils.toString(response.getEntity(), "utf-8");
 				if (result.trim().startsWith("<html><head>")) throw new ARLearnException(result);
 				Object o = jsonDeserialise(result, beanClass);
 				if (o instanceof Bean) {
@@ -78,7 +78,7 @@ public class GenericClient {
 			HttpResponse response = ConnectionFactory.getConnection().executePOST(url, token, "application/json", toJson(bean), "application/json");
 			try {
 				if (beanClass != null) {
-					return jsonDeserialise(EntityUtils.toString(response.getEntity()), beanClass);
+					return jsonDeserialise(EntityUtils.toString(response.getEntity(), "utf-8"), beanClass);
 				} 
 				return null;
 			} catch (Exception e) {
@@ -90,7 +90,7 @@ public class GenericClient {
 		protected Object executeDelete(String url, String token, @SuppressWarnings("rawtypes") Class beanClass) {
 			HttpResponse response =ConnectionFactory.getConnection().executeDELETE(url, token, "application/json");
 			try {
-				return jsonDeserialise(EntityUtils.toString(response.getEntity()), beanClass);
+				return jsonDeserialise(EntityUtils.toString(response.getEntity(), "utf-8"), beanClass);
 			} catch (Exception e) {
 				return returnError(beanClass, e);
 			}
