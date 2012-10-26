@@ -8,6 +8,8 @@ import org.celstec.arlearn2.android.activities.GIActivitySelector;
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
+import org.celstec.arlearn2.android.cache.ActionCache;
+import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MyActions;
@@ -61,39 +63,27 @@ public class GeneralItemDependencyHandler {
 	}
 	public synchronized void checkDependencies(long runId) {
 		beep = (new PropertiesAdapter(ctx)).getCurrentRunId() == runId;
+		List<Action> actions = ActionCache.getInstance().getActions(runId);
+		
 		DBAdapter db = new DBAdapter(ctx);
 		db.openForWrite();
-		List<Action> actions = ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).query(runId);
-		db.close();
-		db = new DBAdapter(ctx);
-		db.openForWrite();
+		if (actions == null) actions = ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).query(runId);
+//		db.close();
+//		db = new DBAdapter(ctx);
+//		db.openForWrite();
 		processItemsNotYetInitialised(db, runId);
-		db.close();
-		db = new DBAdapter(ctx);
-		db.openForWrite();
+//		db.close();
+//		db = new DBAdapter(ctx);
+//		db.openForWrite();
 		processItemsNotYetVisible(db, runId, actions);
 		db.close();
 	}
 
 	public void processItemsNotYetInitialised(DBAdapter db, long runId) {
+//		GeneralItem[] giArray = GeneralItemsCache.getInstance().getGeneralItems(runId);
 		GeneralItemAdapter giAdap = ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER));
-
 		GeneralItem[] giArray = (GeneralItem[]) giAdap.query(runId, GeneralItemAdapter.NOT_INITIALISED);
-		// String userRoles = db.getRunAdapter().queryRoles(runId);
 		for (int i = 0; i < giArray.length; i++) {
-			// boolean playerHasRequiredRole = false;
-			// if (giArray[i].getRoles() != null &&
-			// !giArray[i].getRoles().isEmpty()) {
-			//
-			// if (userRoles != null && !"".equals(userRoles)) {
-			// for (String giRole : giArray[i].getRoles()) {
-			// if (userRoles.contains(giRole))
-			// playerHasRequiredRole = true;
-			// }
-			// }
-			// } else {
-			// playerHasRequiredRole =true;
-			// }
 			if (itemMatchesPlayersRole(db, runId, giArray[i])) {
 				Dependency dep = giArray[i].getDependsOn();
 				if (dep == null) {

@@ -1,5 +1,8 @@
 package org.celstec.arlearn2.android.db;
 
+
+import java.util.concurrent.Semaphore;
+
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,6 +10,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class DBAdapter {
+	
+	static protected Semaphore semaphore = new Semaphore(1);
+
+	
 	public static final int RUN_ADAPTER = 0;
 	public static final int GENERALITEM_ADAPTER = 1;
 	public static final int MYLOCATIONS_ADAPTER = 2;
@@ -90,16 +97,82 @@ public class DBAdapter {
 	
     
 	public DBAdapter openForWrite() throws SQLException {
-        db = DBHelper.getWritableDatabase();
-        return this;
+		try {
+			semaphore.acquire();
+		} catch (InterruptedException e2) {
+			e2.printStackTrace();
+		}
+//		try {
+	        db = DBHelper.getWritableDatabase();
+	        return this;
+        
+//		} catch (android.database.sqlite.SQLiteException e) {
+//			return openForWrite(0);
+//		}
+    }
+	
+	public DBAdapter openForWrite(int trail) throws SQLException {
+		
+		try {
+	        db = DBHelper.getWritableDatabase();
+	        return this;
+		} catch (android.database.sqlite.SQLiteException e) {
+			if (trail > 20) {
+				Log.e("error", "retried getting a connection more then 20 times", e);
+				throw e;
+			} else {
+				try {
+					Thread.sleep(100);
+					return openForWrite(trail+1);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+					Log.e("error", "got interruptedException", e1);
+					throw e;
+				}
+			}
+			
+		}
     }
     
     public DBAdapter openForRead() {
-    	db = DBHelper.getReadableDatabase();
-        return this;
+    	try {
+			semaphore.acquire();
+		} catch (InterruptedException e2) {
+			e2.printStackTrace();
+		}
+//        try {
+        	db = DBHelper.getReadableDatabase();
+            return this;
+        
+//		} catch (android.database.sqlite.SQLiteException e) {
+//			return openForRead(0);
+//		}
+    }
+    
+    public DBAdapter openForRead(int trail) {
+        try {
+        	db = DBHelper.getReadableDatabase();
+            return this;
+		} catch (android.database.sqlite.SQLiteException e) {
+			if (trail > 20) {
+				Log.e("error", "retried getting a connection more then 20 times", e);
+				throw e;
+			} else {
+				try {
+					Thread.sleep(100);
+					return openForWrite(trail+1);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+					Log.e("error", "got interruptedException", e1);
+					throw e;
+				}
+			}
+			
+		}
     }
     
     public void close() {
+		semaphore.release();
         DBHelper.close();
     }
     

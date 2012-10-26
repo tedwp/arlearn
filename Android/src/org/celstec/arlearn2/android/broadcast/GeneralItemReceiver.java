@@ -150,8 +150,16 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 			Iterator<GeneralItem> it = gl.getGeneralItems().iterator();
 			while (it.hasNext()) {
 				GeneralItem item = it.next();
-				item.setRunId(runId);
-				generalItemToDb(db, item);
+				//todo {"type":"org.celstec.arlearn2.beans.generalItem.GeneralItemList","generalItems":[]}
+				// leads to gl.getGeneralItems() == [null]
+				if (item != null) {
+					
+					item.setRunId(runId);
+					generalItemToDb(db, item);
+				} else {
+					System.out.println("break");
+				}
+				
 			}
 		} catch (ARLearnException ae) {
 			ae.printStackTrace();

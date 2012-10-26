@@ -3,6 +3,9 @@ package org.celstec.arlearn2.android.db;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.plaf.basic.BasicSliderUI.ActionScroller;
+
+import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.Action;
 
@@ -111,7 +114,9 @@ public class MyActions extends GenericDbTable {
 	}
 	
 	public List<Action> query(long runId) {
-		return query(RUNID + "= ?  ", new String[] { ""+runId});
+		List<Action> actions = query(RUNID + "= ?  ", new String[] { ""+runId});
+		ActionCache.getInstance().setActions(runId, actions);
+		return actions;
 	}
 
 	public void confirmReplicated(Action action) {

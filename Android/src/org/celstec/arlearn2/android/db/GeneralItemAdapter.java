@@ -87,7 +87,7 @@ public class GeneralItemAdapter extends GenericDbTable {
 		if (oldItem == null || !oldItem.equals(gi)) {
 			String giJson = jbs.serialiseToJson().toString();
 			gic.remove(gi.getId());
-			queryCache = null;
+//			queryCache = null;
 			delete(gi.getId(), gi.getRunId());
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(ID, gi.getId());
@@ -139,12 +139,12 @@ public class GeneralItemAdapter extends GenericDbTable {
 		}
 	}
 
-	private static GeneralItem[] queryCache = null;
-	public GeneralItem[] query() {
-		if (queryCache != null) return queryCache;
-		queryCache = query(null, null);
-		return queryCache;
-	}
+//	private static GeneralItem[] queryCache = null;
+//	public GeneralItem[] query() {
+//		if (queryCache != null) return queryCache;
+//		queryCache = query(null, null);
+//		return queryCache;
+//	}
 	
 	public GeneralItem[] query(long runId) {
 		return query(RUNID + "= ?  and " +DELETED + " = ?", new String[] { ""+runId, "0"});
@@ -221,82 +221,54 @@ public class GeneralItemAdapter extends GenericDbTable {
 		}
 	}
 
-	@Deprecated
-	public void unblockVisibleItem_old(Action actionObject) {
-//		GeneralItem[] items = query(RUNID + "= ?  and "+VISIBILITY_STATUS + " = ? ", new String[] { ""+actionObject.getRunId(), "0"});
-//		for (int i = 0; i < items.length; i++) {
-//				boolean unblock = true;
-//				if (!(items[i].getDependsOn() == null)) {
-//					
-//				
-//				DependsOn dependsOn = items[i].getDependsOn();
-//				String scope = null;
-//				String generalItemId = null;
-//				
-//				if (dependsOn.getAction() != null) {
-//					if (!dependsOn.getAction().equals(actionObject.getAction())) unblock = false;
-//				}
-//				if (dependsOn.getGeneralItemId() != null) {
-//
-//					if (!dependsOn.getGeneralItemId().equals(actionObject.getGeneralItemId())) unblock = false;
-//				}
-//				}
-//				if (unblock) {
-////					setDependsOnVisible(items[i]);
-////					setTimeVisible(items[i].getId(), NOT_INITIALISED);
-////					GeneralItemsSyncroniser.dispatchNotification(db.getContext(), items[i], null);
-//				}
-////				GeneralItemsSyncroniser.timeInitGeneralItems(db, db.getContext(), (Run) db.table(DBAdapter.RUN_ADAPTER).queryById(actionObject.getRunId()));
-//		}
-	}
+//	@Deprecated
+//	public void unblockVisibleItem_old(Action actionObject) {
+//	}
 	
 	public void setFirstRead(Long itemId, long date) {
 			ContentValues newValue = new ContentValues();
 			newValue.put(FIRST_READ, date);
-			queryCache = null;
+//			queryCache = null;
 			db.getSQLiteDb().update(getTableName(), newValue, ID + "=? and "+FIRST_READ +" = 0", new String[] { ""+itemId });
 
 	}
 
-	@Deprecated
-	private void setDependsOnVisible_old(GeneralItem generalItem) {
-		ContentValues newValue = new ContentValues();
-//		newValue.put(DEPENDENCY_VISIBLE, true);
-		db.getSQLiteDb().update(getTableName(), newValue, ID + "=?", new String[] { "" + generalItem.getId() });
-		
-	}
+//	@Deprecated
+//	private void setDependsOnVisible_old(GeneralItem generalItem) {
+//		ContentValues newValue = new ContentValues();
+////		newValue.put(DEPENDENCY_VISIBLE, true);
+//		db.getSQLiteDb().update(getTableName(), newValue, ID + "=?", new String[] { "" + generalItem.getId() });
+//		
+//	}
 	
-	@Deprecated
-	public void setDependsOnVisible_old(Long id) {
-		ContentValues newValue = new ContentValues();
-//		newValue.put(DEPENDENCY_VISIBLE, true);
-		db.getSQLiteDb().update(getTableName(), newValue, ID + "=?", new String[] { "" + id });
-	}
+//	@Deprecated
+//	public void setDependsOnVisible_old(Long id) {
+//		ContentValues newValue = new ContentValues();
+////		newValue.put(DEPENDENCY_VISIBLE, true);
+//		db.getSQLiteDb().update(getTableName(), newValue, ID + "=?", new String[] { "" + id });
+//	}
 	
 
 
-	public void resetVisiblity(Long runId) {
-		GeneralItem[] items = query(RUNID + "= ? ", new String[] { ""+runId, "1"});
-		for (int i = 0; i < items.length; i++) {
-			queryCache = null;
-			ContentValues newValue = new ContentValues();
-//			newValue.put(DEPENDENCY_VISIBLE, false);
-			newValue.put(VISIBILITY_STATUS, NOT_INITIALISED);
-			newValue.put(FIRST_READ, 0);
-			db.getSQLiteDb().update(getTableName(), newValue, RUNID + "= ?  and "+ID + "=?", new String[] { ""+ runId, "" + items[i].getId() });
-//			ma.checkVisibility(items[i]);
-		}
-	}
+//	public void resetVisiblity(Long runId) {
+//		GeneralItem[] items = query(RUNID + "= ? ", new String[] { ""+runId, "1"});
+//		for (int i = 0; i < items.length; i++) {
+//			ContentValues newValue = new ContentValues();
+//			newValue.put(VISIBILITY_STATUS, NOT_INITIALISED);
+//			newValue.put(FIRST_READ, 0);
+//			db.getSQLiteDb().update(getTableName(), newValue, RUNID + "= ?  and "+ID + "=?", new String[] { ""+ runId, "" + items[i].getId() });
+//		}
+//	}
 
-	@Deprecated
-	public void setTimeVisible_old(Long id, int visible) {
-		ContentValues newValue = new ContentValues();
-//		newValue.put(TIME_VISIBLE, visible);
-		db.getSQLiteDb().update(getTableName(), newValue, ID + "=?", new String[] { ""+id });	
-	}
+//	@Deprecated
+//	public void setTimeVisible_old(Long id, int visible) {
+//		ContentValues newValue = new ContentValues();
+////		newValue.put(TIME_VISIBLE, visible);
+//		db.getSQLiteDb().update(getTableName(), newValue, ID + "=?", new String[] { ""+id });	
+//	}
 	
 	public void setVisiblityStatus(Long runId, Long generalItemId, int visiblityStatus, long timeAt) {
-		queryCache = null;
+//		queryCache = null;
 		ContentValues newValue = new ContentValues();
 		newValue.put(VISIBILITY_STATUS, visiblityStatus);
 		newValue.put(FIRST_READ, timeAt);

@@ -42,6 +42,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	private HashMap<Long, Game> games;
 	private GenericMessageListAdapter adapter;
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -47,7 +47,7 @@ public class MenuHandler {
 	public static final int PROVIDE_ANSWER = 4;
 	public static final int MY_LOCATION = 5;
 	public static final int DELETE_ANSWER = 6;
-	public static final int RESET = 7;
+//	public static final int RESET = 7;
 	public static final int REFRESH = 8;
 	public static final int SCAN = 9;
 	public static final int DOWNLOAD_MAP_TILES = 10;
@@ -94,33 +94,33 @@ public class MenuHandler {
 		case DELETE_ANSWER:
 			((ViewAnswerActivity) context).deleteAnswer();
 			break;
-		case RESET:
-			AlertDialog.Builder builder = new AlertDialog.Builder(context);
-			builder.setMessage(context.getString(R.string.resetQuestion))
-			       .setCancelable(false)
-			       .setPositiveButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int id) {
-			        	   DBAdapter db = new DBAdapter(context);
-			        	   db.openForWrite();
-			        	   Long runId = getPropertiesAdapter().getCurrentRunId();
-			        	   getPropertiesAdapter().setCurrentRunId(-1l);
-			        	   getPropertiesAdapter().setRunStart(runId, 0);
-			        	   MyActions ma = ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER));
-			        	   ma.deleteRun(runId);
-			        	   ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).resetVisiblity(runId);
-			        	   ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).deleteRun(runId);
-			        	   db.close();
-			        	
-			           }
-			       })
-			       .setNegativeButton(context.getString(R.string.no), new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int id) {
-			                dialog.cancel();
-			           }
-			       });
-			AlertDialog alert = builder.create();
-			alert.show();
-			break;
+//		case RESET:
+//			AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//			builder.setMessage(context.getString(R.string.resetQuestion))
+//			       .setCancelable(false)
+//			       .setPositiveButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
+//			           public void onClick(DialogInterface dialog, int id) {
+//			        	   DBAdapter db = new DBAdapter(context);
+//			        	   db.openForWrite();
+//			        	   Long runId = getPropertiesAdapter().getCurrentRunId();
+//			        	   getPropertiesAdapter().setCurrentRunId(-1l);
+//			        	   getPropertiesAdapter().setRunStart(runId, 0);
+//			        	   MyActions ma = ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER));
+//			        	   ma.deleteRun(runId);
+//			        	   ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).resetVisiblity(runId);
+//			        	   ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).deleteRun(runId);
+//			        	   db.close();
+//			        	
+//			           }
+//			       })
+//			       .setNegativeButton(context.getString(R.string.no), new DialogInterface.OnClickListener() {
+//			           public void onClick(DialogInterface dialog, int id) {
+//			                dialog.cancel();
+//			           }
+//			       });
+//			AlertDialog alert = builder.create();
+//			alert.show();
+//			break;
 		case SCAN:
 			IntentIntegrator integrator = new IntentIntegrator(context);
 			integrator.initiateScan();
