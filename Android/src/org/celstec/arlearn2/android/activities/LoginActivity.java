@@ -4,11 +4,15 @@ import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.asynctasks.AuthenticationTask;
 import org.celstec.arlearn2.android.db.DBAdapter;
+import org.celstec.arlearn2.beans.notification.Ping;
 import org.celstec.arlearn2.beans.run.User;
+import org.celstec.arlearn2.client.ChannelClient;
+import org.codehaus.jettison.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,10 +69,14 @@ public class LoginActivity extends GeneralActivity {
 		String oldAddress = User.normalizeEmail(menuHandler.getPropertiesAdapter().getUsername());
 		String newAddress = User.normalizeEmail(username);
 		if (oldAddress != null && !oldAddress.equals(newAddress)) {
-			DBAdapter db = new DBAdapter(menuHandler.getContext());
-			db.openForWrite();
-			db.eraseAllData();
-			db.close();
+			Message m = Message.obtain(DBAdapter.getDatabaseThread(menuHandler.getContext()));
+			m.obj = new DBAdapter.DatabaseTask() {
+				@Override
+				public void execute(DBAdapter db) {
+					db.eraseAllData();		
+				}
+			};
+			m.sendToTarget();
 		}
 		menuHandler.getPropertiesAdapter().setUsername(newAddress);
 	}

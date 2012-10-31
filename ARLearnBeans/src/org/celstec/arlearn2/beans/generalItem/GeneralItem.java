@@ -5,7 +5,7 @@ import java.util.List;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.game.GameBean;
 
-public class GeneralItem extends GameBean{
+public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	
 	private Long id;
 
@@ -35,8 +35,9 @@ public class GeneralItem extends GameBean{
 	
 	@Override
 	public boolean equals(Object obj) {
+		if (!super.equals(obj)) return false;
 		GeneralItem other = (GeneralItem ) obj;
-		return super.equals(obj) && 
+		return 
 			nullSafeEquals(getId(), other.getId()) &&
 			nullSafeEquals(getSortKey(), other.getSortKey()) &&
 			nullSafeEquals(getScope(), other.getScope()) &&
@@ -182,6 +183,17 @@ public class GeneralItem extends GameBean{
 
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
+	}
+
+	@Override
+	public int compareTo(GeneralItem other) {
+		if (getSortKey() == null) setSortKey(0);
+		if (other.getSortKey() == null) other.setSortKey(0);
+		int returnValue = getSortKey() - other.getSortKey();
+		if (returnValue != 0) return returnValue;
+		returnValue = getName().compareTo(other.getName());
+		if (returnValue != 0) return returnValue;
+		return getId().compareTo(other.getId());
 	}
 
 //	@Override

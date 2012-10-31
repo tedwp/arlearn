@@ -17,8 +17,9 @@ public class VideoObject extends NarratorItem {
 	}
 	
 	public boolean equals(Object obj) {
+		if (!super.equals(obj)) return false;
 		VideoObject other = (VideoObject ) obj;
-		return super.equals(obj) && 
+		return 
 			nullSafeEquals(getVideoFeed(), other.getVideoFeed()) ; 
 
 	}

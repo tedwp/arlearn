@@ -12,8 +12,9 @@ public class NarratorItem extends GeneralItem {
 	
 	@Override
 	public boolean equals(Object obj) {
+		if (!super.equals(obj)) return false;
 		NarratorItem other = (NarratorItem ) obj;
-		return super.equals(obj) && 
+		return 
 			nullSafeEquals(getVideoUrl(), other.getVideoUrl()) &&
 			nullSafeEquals(getAudioUrl(), other.getAudioUrl()) &&
 			nullSafeEquals(getImageUrl(), other.getImageUrl()) &&

@@ -1,7 +1,10 @@
 package org.celstec.arlearn2.android.maps;
 
+import java.util.TreeSet;
+
 import org.celstec.arlearn2.android.activities.GIActivitySelector;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
+import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
@@ -33,13 +36,11 @@ public class GenericItemsOverlay extends ItemizedOverlay {
 	public GenericItemsOverlay(Drawable defaultMarker, MapViewActivity ctx) {
 		super(boundCenterBottom(defaultMarker));
 		this.ctx = ctx;
-//		markerHeight = ((BitmapDrawable) defaultMarker).getBitmap().getHeight();
 		populate();
 	}
 
 	protected OverlayItem createItem(int i) {
 		GeoPoint point = new GeoPoint((int) (gis[i].getLat() * 1E6), (int) (gis[i].getLng() * 1E6));
-//		return new GenericItemOverlayItem(point, gis[i].getName(),"");
 		overlayItems[i] = new GenericItemOverlayItem(gis[i], ctx);
 		return overlayItems[i];
 	}
@@ -48,19 +49,18 @@ public class GenericItemsOverlay extends ItemizedOverlay {
 		return gis.length;
 	}
 	
-	public void syncItems(Context ctx) {
-		DBAdapter db = new DBAdapter(ctx);
-		db.openForRead();
-		gis = (GeneralItem[]) ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).queryWithLocation(this.ctx.getRunId());
+	public void syncItems(Context ctx, long runId) {
+		TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleLocations(runId, ctx);
+		if (gil != null) {
+			gis = gil.toArray(new GeneralItem[] {});
+		} 
 		overlayItems = new GenericItemOverlayItem[gis.length];
-		db.close();
 		populate();
 	}
 	
 	@Override
 	protected boolean onTap(int index) {
 		GIActivitySelector.startActivity(ctx, gis[index]);
-//		gis[index].startActivity(ctx);
 		return true;
 	}
 	

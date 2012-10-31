@@ -4,11 +4,14 @@ import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
+import org.celstec.arlearn2.android.cache.GeneralItemsCache;
+import org.celstec.arlearn2.android.cache.ResponseCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
@@ -25,9 +28,11 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import android.app.NotificationManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.Menu;
 import android.view.View;
 import android.webkit.WebView;
@@ -43,7 +48,7 @@ public class NarratorItemActivity extends GeneralActivity {
 	protected NarratorItem narratorBean;
 	protected Button provideAnswerButton;
 
-	private Response[] resp;
+	private TreeSet<Response> resp;
 	
 	protected GenericMessageListAdapter adapter;
 
@@ -122,11 +127,12 @@ public class NarratorItemActivity extends GeneralActivity {
 	}
 	
 	private void reloadBeanFromDb() {
-		DBAdapter db = new DBAdapter(this);
-		db.openForRead();
-		narratorBean =  (NarratorItem) ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).queryById(narratorBean.getId(),menuHandler.getPropertiesAdapter().getCurrentRunId());
-		db.close();
-
+		narratorBean =  (NarratorItem) GeneralItemsCache.getInstance().getGeneralItems(narratorBean.getId());
+//		DBAdapter db = new DBAdapter(this);
+//		db.openForRead();
+//		narratorBean =  (NarratorItem) ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).queryById(narratorBean.getId(),menuHandler.getPropertiesAdapter().getCurrentRunId());
+//		db.close();
+//
 	}
 
 	protected void loadDataToGui() {
@@ -167,45 +173,56 @@ public class NarratorItemActivity extends GeneralActivity {
 		return narratorBean;
 	}
 	
+	
+	
 	private void renderAnswers() {
+
+//		DBAdapter db = new DBAdapter(this);
+//		db.openForRead();
+		Long runId = getMenuHandler().getPropertiesAdapter().getCurrentRunId();
+		Long itemId = narratorBean.getId();
+		resp =ResponseCache.getInstance().getResponses(runId, itemId);
+		if (resp == null) {
+//			ResponseCache.getInstance().reloadFromDb(runId, itemId, this);
+			return;
+		}
 		
-		DBAdapter db = new DBAdapter(this);
-		db.openForRead();
-		resp = ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).query(getMenuHandler().getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
+//		resp = ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).query(getMenuHandler().getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("d MMM - HH:mm:ss");
 		ArrayList<GenericListRecord> users = new ArrayList<GenericListRecord>();
 
 		if (resp != null) {
 
-			for (int i = 0; i < resp.length; i++) {
+			for (Response response: resp) {
+//				for (int i = 0; i < resp.length; i++) {
 				GenericListRecord r = new GenericListRecord();
 				r.setImageResourceId(R.drawable.cloud_up_48);
-				Date d = new Date(resp[i].getTimestamp());
+				Date d = new Date(response.getTimestamp());
 				double percentage = 0;
 				int dividePercentageBy = 0;
 				try {
-					JSONObject json = new JSONObject(resp[i].getResponseValue());
+					JSONObject json = new JSONObject(response.getResponseValue());
 					int statusAudio = 10;
 					
 					if (json.has("audioUrl")) {
 						String audioUrl = json.getString("audioUrl");
-						statusAudio = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getReplicationStatus(audioUrl);
-						percentage += ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getPercentageUploaded(audioUrl);
+						statusAudio = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getReplicationStatus(audioUrl);
+						percentage += org.celstec.arlearn2.android.cache.MediaCache.getInstance().getPercentageUploaded(audioUrl);
 						dividePercentageBy++;
 					}
 					
 					int statusImage = 10;
 					if (json.has("imageUrl")) {
 						String imageUrl = json.getString("imageUrl");
-						statusImage = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getReplicationStatus(imageUrl);
-						percentage += ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getPercentageUploaded(imageUrl);
+						statusImage = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getReplicationStatus(imageUrl);
+						percentage += org.celstec.arlearn2.android.cache.MediaCache.getInstance().getPercentageUploaded(imageUrl);
 						dividePercentageBy++;
 					}
 					if (json.has("videoUrl")) {
 						String videoUrl = json.getString("videoUrl");
-						statusImage = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getReplicationStatus(videoUrl);
-						percentage += ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getPercentageUploaded(videoUrl);
+						statusImage = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getReplicationStatus(videoUrl);
+						percentage += org.celstec.arlearn2.android.cache.MediaCache.getInstance().getPercentageUploaded(videoUrl);
 						dividePercentageBy++;
 					}
 					percentage /= dividePercentageBy;
@@ -243,7 +260,7 @@ public class NarratorItemActivity extends GeneralActivity {
 				users.add(r);
 			}
 		}
-		db.close();
+//		db.close();
 		
 		LinearLayout listView = (LinearLayout) findViewById(R.id.narratoranswerlist); 
 //		adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, users);
@@ -258,7 +275,7 @@ public class NarratorItemActivity extends GeneralActivity {
 				@Override
 				public void onClick(View v) {
 					Intent i = new Intent(NarratorItemActivity.this, ViewAnswerActivity.class);
-					i.putExtra("response", resp[(int)id]);
+					i.putExtra("response", resp.toArray(new Response[]{})[(int)id]);
 					startActivity(i);
 					
 				}
@@ -268,11 +285,11 @@ public class NarratorItemActivity extends GeneralActivity {
 //		listView.setAdapter(adapter);
 	}
 	
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Intent i = new Intent(this, ViewAnswerActivity.class);
-		i.putExtra("response", resp[(int)id]);
-		startActivity(i);
-	}
+//	protected void onListItemClick(ListView l, View v, int position, long id) {
+//		Intent i = new Intent(this, ViewAnswerActivity.class);
+//		i.putExtra("response", resp[(int)id]);
+//		startActivity(i);
+//	}
 	
 	@Override
 	protected void onResume() {

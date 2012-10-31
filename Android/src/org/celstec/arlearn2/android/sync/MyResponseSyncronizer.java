@@ -59,26 +59,26 @@ public class MyResponseSyncronizer extends GenericSyncroniser {
 		super.setDelay(seconds);
 	}
 
-	private static void publishResponse(DBAdapter db, Response[] responses, PropertiesAdapter pa) {
-		for (Response r: responses) {
-		try {
-			Response result = ResponseClient.getResponseClient().publishAction(pa.getFusionAuthToken(), r);
-//			String jsonAsString = HttpUtils.postAsJSON(HttpUtils.serviceUrl + "response/runId/"+pa.getCurrentRunId()+"/generalItemId/itemId", pa.getFusionAuthToken(), r);
-//			Response result = (Response) (new BeanDeserialiser(jsonAsString)).deserialize(Response.class);
-			
-			MyResponses dbAdapter = ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER));
-			if (result.getError()== null) {
-				dbAdapter.confirmReplicated(result);	
-			} else {
-				//TODO
-//				increaseDelay();
-			}
-		} catch (Exception e) {
-			Log.e("exception", e.getMessage(), e);
-//			increaseDelay();
-		}
-		}
-	}
+//	private static void publishResponse(DBAdapter db, Response[] responses, PropertiesAdapter pa) {
+//		for (Response r: responses) {
+//		try {
+//			Response result = ResponseClient.getResponseClient().publishAction(pa.getFusionAuthToken(), r);
+////			String jsonAsString = HttpUtils.postAsJSON(HttpUtils.serviceUrl + "response/runId/"+pa.getCurrentRunId()+"/generalItemId/itemId", pa.getFusionAuthToken(), r);
+////			Response result = (Response) (new BeanDeserialiser(jsonAsString)).deserialize(Response.class);
+//			
+//			MyResponses dbAdapter = ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER));
+//			if (result.getError()== null) {
+//				dbAdapter.confirmReplicated(result);	
+//			} else {
+//				//TODO
+////				increaseDelay();
+//			}
+//		} catch (Exception e) {
+//			Log.e("exception", e.getMessage(), e);
+////			increaseDelay();
+//		}
+//		}
+//	}
 	
 	public void increaseDelay() {
 		if (delay < 60) {

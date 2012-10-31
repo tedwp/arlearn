@@ -2,6 +2,7 @@ package org.celstec.arlearn2.android.sync;
 
 import java.util.Iterator;
 
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
@@ -31,52 +32,52 @@ public class GeneralItemsSyncroniser extends GenericSyncroniser {
 
 	public void runAuthenticated() {
 
-		PropertiesAdapter pa = new PropertiesAdapter(ctx);
-		if (pa.getCurrentRunId() != -1) {
-			boolean increase = syncronizeItems(ctx, pa);
-			if (increase) {
-				increaseDelay();
-			} else {
-				resetDelay();
-			}
-		}
+//		PropertiesAdapter pa = new PropertiesAdapter(ctx);
+//		if (pa.getCurrentRunId() != -1) {
+//			boolean increase = syncronizeItems(ctx, pa);
+//			if (increase) {
+//				increaseDelay();
+//			} else {
+//				resetDelay();
+//			}
+//		}
 
 	}
 
-	public static boolean syncronizeItems(Context ctx, PropertiesAdapter pa) {
-		return syncronizeItems(ctx, pa, pa.getCurrentRunId());
-	}
-	
-	public static boolean syncronizeItems(Context ctx, PropertiesAdapter pa, Long currentRunId) {
-		boolean returnValue = true;
-		if (currentRunId == 0) return true;
-		try {
-			GeneralItemClient gic = GeneralItemClient.getGeneralItemClient();
-			GeneralItemList gl = gic.getRunGeneralItems(pa.getFusionAuthToken(), currentRunId);
-			DBAdapter db = new DBAdapter(ctx);
-			db.openForWrite();
-			if (gl.getErrorCode() != null && gl.getErrorCode() == GeneralItemList.RUNNOTFOUND) {
-				db.deleteRun(currentRunId);
-			}
-			Run currentRun = (Run) ((RunAdapter) db.table(DBAdapter.RUN_ADAPTER)).queryById(currentRunId);
-			Iterator<GeneralItem> it = gl.getGeneralItems().iterator();
-			while (it.hasNext()) {
-				GeneralItem item = it.next();
-				item.setRunId(currentRunId);
-				boolean newInsert = db.table(DBAdapter.GENERALITEM_ADAPTER).insert(item);
-				if (newInsert)
-					processItemForAdditionalWork(item, db);
-
-			}
-//			timeInitGeneralItems(db, ctx, currentRun);
-			
-			db.close();
-			return returnValue;
-		} catch (Exception e) {
-			Log.e("exception", e.getMessage(), e);
-			return true;
-		}
-	}
+//	public static boolean syncronizeItems(Context ctx, PropertiesAdapter pa) {
+//		return syncronizeItems(ctx, pa, pa.getCurrentRunId());
+//	}
+//	
+//	public static boolean syncronizeItems(Context ctx, PropertiesAdapter pa, Long currentRunId) {
+//		boolean returnValue = true;
+//		if (currentRunId == 0) return true;
+//		try {
+//			GeneralItemClient gic = GeneralItemClient.getGeneralItemClient();
+//			GeneralItemList gl = gic.getRunGeneralItems(pa.getFusionAuthToken(), currentRunId);
+//			DBAdapter db = new DBAdapter(ctx);
+//			db.openForWrite();
+//			if (gl.getErrorCode() != null && gl.getErrorCode() == GeneralItemList.RUNNOTFOUND) {
+//				db.deleteRun(currentRunId);
+//			}
+//			Run currentRun =  RunCache.getInstance().getRun(currentRunId);
+//			Iterator<GeneralItem> it = gl.getGeneralItems().iterator();
+//			while (it.hasNext()) {
+//				GeneralItem item = it.next();
+//				item.setRunId(currentRunId);
+//				boolean newInsert = db.table(DBAdapter.GENERALITEM_ADAPTER).insert(item);
+//				if (newInsert)
+//					processItemForAdditionalWork(item, db);
+//
+//			}
+////			timeInitGeneralItems(db, ctx, currentRun);
+//			
+//			db.close();
+//			return returnValue;
+//		} catch (Exception e) {
+//			Log.e("exception", e.getMessage(), e);
+//			return true;
+//		}
+//	}
 	
 	private static void processItemForAdditionalWork(GeneralItem item, DBAdapter db) {
 		if (item instanceof AudioObject) {
@@ -106,18 +107,19 @@ public class GeneralItemsSyncroniser extends GenericSyncroniser {
 //	}
 	
 	public static Run getCurrentRun(DBAdapter db, Long runId) {
-		return (Run) ((RunAdapter) db.table(DBAdapter.RUN_ADAPTER)).queryById(runId);
+		return RunCache.getInstance().getRun(runId);
+//		return (Run) ((RunAdapter) db.table(DBAdapter.RUN_ADAPTER)).queryById(runId);
 	}
 	
-	public static Run getCurrentRun(Context ctx, Long runId){
-		DBAdapter db = new DBAdapter(ctx);
-		try {
-			db.openForRead();
-			return getCurrentRun(db, runId);
-		} finally {
-			db.close();
-		}
-	}
+//	public static Run getCurrentRun(Context ctx, Long runId){
+//		DBAdapter db = new DBAdapter(ctx);
+//		try {
+//			db.openForRead();
+//			return getCurrentRun(db, runId);
+//		} finally {
+//			db.close();
+//		}
+//	}
 	
 
 	public static void scheduleAlarm(Context ctx, GeneralItem item, Run run) {

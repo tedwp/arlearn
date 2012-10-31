@@ -1,6 +1,7 @@
 package org.celstec.arlearn2.android.broadcast;
 
 import org.celstec.arlearn2.android.activities.NfcScanOnDemandActivity;
+import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.service.LocationService;
 import org.celstec.arlearn2.beans.notification.Ping;
@@ -12,6 +13,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 
 public class PingReceiver extends BroadcastReceiver {
 
@@ -66,12 +68,18 @@ public class PingReceiver extends BroadcastReceiver {
 		
 	}
 
-	private void dbQuery(final Context context, Ping bean) {
-		DBAdapter db = new DBAdapter(context);
-		db.openForRead();
-		JSONObject allTables = db.getGenericJsonAdapter().queryAll(bean.getPayload());
-		db.close();
-		ChannelClient.getChannelClient().pong(0, "", bean.getTo(), bean.getFrom(),Ping.DB_QUERY, allTables.toString(), bean.getTimestamp());
+	private void dbQuery(final Context context, final Ping bean) {
+		Message m = Message.obtain(DBAdapter.getDatabaseThread(context));
+		m.obj = new DBAdapter.DatabaseTask() {
+
+			@Override
+			public void execute(DBAdapter db) {
+				JSONObject allTables = db.getGenericJsonAdapter().queryAll(bean.getPayload());				
+				ChannelClient.getChannelClient().pong(0, "", bean.getTo(), bean.getFrom(),Ping.DB_QUERY, allTables.toString(), bean.getTimestamp());		
+			}
+			
+		};
+		m.sendToTarget();
 	}
 	
 	protected void updateActivities(Context ctx, String... activities) {

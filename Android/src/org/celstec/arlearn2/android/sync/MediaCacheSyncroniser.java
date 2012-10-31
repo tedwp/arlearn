@@ -47,38 +47,38 @@ public class MediaCacheSyncroniser extends GenericSyncroniser {
 		}
 	}
 
-	private boolean updateCache() {
-		DBAdapter db = new DBAdapter(ctx);
-		db.openForWrite();
-		MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
-		MediaCacheItem mci = null;
-		boolean succesful = false;
-		boolean returnvalue = true;
-		do {
-			mci = mc.getNextUnsyncedItem();
-			succesful = false;
-			if (mci != null && mci.isIncomming()) {
-				try {
-					String localPath = downloadFile(mci.getRemoteFile());
-					mc.updateLocalPath(mci.getItemId(), localPath);
-					succesful = true;
-					returnvalue = false;
-				} catch (FileNotFoundException fnf) {
-					mc.updateLocalPath(mci.getItemId(), null);
-				}
-			}
-			if (mci != null && !mci.isIncomming()) {
-				File localFile = new File(mci.getLocalFile());
-				succesful = publishData(mci.getRunId(), mci.getAccount(), localFile, mci.getToken(), mci.getMimetype());
-				if (succesful) {
-					mc.updateRemotePath(mci.getItemId(), mci.buildRemotePath(mci.getUri()));
-					returnvalue = false;;
-				}
-			}
-		} while (mci != null && succesful);
-		db.close();
-		return returnvalue;
-	}
+//	private boolean updateCache() {
+//		DBAdapter db = new DBAdapter(ctx);
+//		db.openForWrite();
+//		MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
+//		MediaCacheItem mci = null;
+//		boolean succesful = false;
+//		boolean returnvalue = true;
+//		do {
+//			mci = mc.getNextUnsyncedItem();
+//			succesful = false;
+//			if (mci != null && mci.isIncomming()) {
+//				try {
+//					String localPath = downloadFile(mci.getRemoteFile());
+//					mc.updateLocalPath(mci.getItemId(), localPath);
+//					succesful = true;
+//					returnvalue = false;
+//				} catch (FileNotFoundException fnf) {
+//					mc.updateLocalPath(mci.getItemId(), null);
+//				}
+//			}
+//			if (mci != null && !mci.isIncomming()) {
+//				File localFile = new File(mci.getLocalFile());
+//				succesful = publishData(mci.getRunId(), mci.getAccount(), localFile, mci.getToken(), mci.getMimetype());
+//				if (succesful) {
+//					mc.updateRemotePath(mci.getItemId(), mci.buildRemotePath(mci.getUri()));
+//					returnvalue = false;;
+//				}
+//			}
+//		} while (mci != null && succesful);
+//		db.close();
+//		return returnvalue;
+//	}
 
 	private boolean publishData(Long runId, String account, File file, String token, String mimeType) {
 

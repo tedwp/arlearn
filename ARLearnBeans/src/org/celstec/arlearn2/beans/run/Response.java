@@ -1,7 +1,7 @@
 package org.celstec.arlearn2.beans.run;
 
 
-public class Response extends RunBean{
+public class Response extends RunBean implements Comparable<Response>{
 	
 	
 	private Long generalItemId;
@@ -75,5 +75,10 @@ public class Response extends RunBean{
 			nullSafeEquals(getRevoked(), other.getRevoked()); 
 	}
 
-
+	@Override
+	public int compareTo(Response other) {
+		if (getTimestamp() == null) setTimestamp(0l);
+		if (other.getTimestamp() == null) other.setTimestamp(0l);
+		return (int) (getTimestamp() - other.getTimestamp());
+	}
 }

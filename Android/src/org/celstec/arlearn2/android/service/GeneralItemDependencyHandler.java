@@ -2,6 +2,7 @@ package org.celstec.arlearn2.android.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.GIActivitySelector;
@@ -9,9 +10,11 @@ import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.cache.ActionCache;
+import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
+import org.celstec.arlearn2.android.db.GeneralItemVisibility;
 import org.celstec.arlearn2.android.db.MyActions;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
@@ -28,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Message;
 import android.os.Vibrator;
 
 public class GeneralItemDependencyHandler {
@@ -57,39 +61,32 @@ public class GeneralItemDependencyHandler {
 		});
 		}
 	}
-
-	public synchronized void checkDependencies() {
-		checkDependencies((new PropertiesAdapter(ctx)).getCurrentRunId());
+	
+	public synchronized void checkDependencies(DBAdapter db) {
+		checkDependencies(db, (new PropertiesAdapter(ctx)).getCurrentRunId());
 	}
-	public synchronized void checkDependencies(long runId) {
+	
+	public void checkDependencies(DBAdapter db, long runId) {
 		beep = (new PropertiesAdapter(ctx)).getCurrentRunId() == runId;
-		List<Action> actions = ActionCache.getInstance().getActions(runId);
-		
-		DBAdapter db = new DBAdapter(ctx);
-		db.openForWrite();
-		if (actions == null) actions = ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).query(runId);
-//		db.close();
-//		db = new DBAdapter(ctx);
-//		db.openForWrite();
+		List<Action> actions = ActionCache.getInstance().getActions(runId);		
+//		if (actions == null) actions = ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).query(runId);
 		processItemsNotYetInitialised(db, runId);
-//		db.close();
-//		db = new DBAdapter(ctx);
-//		db.openForWrite();
 		processItemsNotYetVisible(db, runId, actions);
-		db.close();
 	}
 
-	public void processItemsNotYetInitialised(DBAdapter db, long runId) {
+	
+	public void processItemsNotYetInitialised(DBAdapter db, final long runId) {
 //		GeneralItem[] giArray = GeneralItemsCache.getInstance().getGeneralItems(runId);
-		GeneralItemAdapter giAdap = ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER));
-		GeneralItem[] giArray = (GeneralItem[]) giAdap.query(runId, GeneralItemAdapter.NOT_INITIALISED);
-		for (int i = 0; i < giArray.length; i++) {
-			if (itemMatchesPlayersRole(db, runId, giArray[i])) {
-				Dependency dep = giArray[i].getDependsOn();
+//		GeneralItemAdapter giAdap = ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER));
+		TreeSet<GeneralItem> items = GeneralItemVisibilityCache.getInstance().getAllNotInitializedItems(runId, ctx);
+		if (items != null) 
+		for (GeneralItem gi: items) {
+			if (itemMatchesPlayersRole(db, runId, gi)) {
+				Dependency dep = gi.getDependsOn();
 				if (dep == null) {
-					giAdap.setVisiblityStatus(runId, giArray[i].getId(), GeneralItemAdapter.VISIBLE, System.currentTimeMillis());
+					DBAdapter.getAdapter(ctx).getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, 0, GeneralItemVisibility.VISIBLE);
 				} else {
-					giAdap.setVisiblityStatus(runId, giArray[i].getId(), GeneralItemAdapter.NOT_YET_VISIBLE, System.currentTimeMillis());
+					DBAdapter.getAdapter(ctx).getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, 0, GeneralItemVisibility.NOT_YET_VISIBLE);
 				}
 			}
 		}
@@ -131,50 +128,36 @@ public class GeneralItemDependencyHandler {
 		return playerHasRequiredRole;
 	}
 
-	public void processItemsNotYetVisible(DBAdapter db, final long runId, List<Action> actions) {
-		GeneralItemAdapter giAdap = ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER));
-		final GeneralItem[] giArray = (GeneralItem[]) giAdap.query(runId, GeneralItemAdapter.NOT_YET_VISIBLE);
-		for (int i = 0; i < giArray.length; i++) {
-			if (!threads.containsKey(runId + "*" + giArray[i].getId())) {
-				Dependency dep = giArray[i].getDependsOn();
+	public void processItemsNotYetVisible(final DBAdapter db, final long runId, final List<Action> actions) {
+		Long[] itemIds = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.NOT_YET_VISIBLE);
+		for (int i = 0; i < itemIds.length; i++) {
+			if (!DBAdapter.getDatabaseThread(db.getContext()).hasMessages((int) itemIds[i].longValue())) {
+				final GeneralItem generalItem = GeneralItemsCache.getInstance().getGeneralItems(itemIds[i]); //TODO ... is not entirely safe e.g. if two runs exists messages might clash
+				if (generalItem == null)
+					return;
+				Dependency dep = generalItem.getDependsOn();
 				final long satisfiedAt = dep.satisfiedAt(actions);
-				final long itemId = giArray[i].getId();
-				final GeneralItem generalItem = giArray[i];
+				final long itemId = generalItem.getId();
 				if (satisfiedAt != -1) {
 					long currentTime = System.currentTimeMillis();
 					long satisfiedAtDelta = currentTime - satisfiedAt;
 					if (satisfiedAtDelta > 0) {
-						giAdap.setVisiblityStatus(runId, itemId, GeneralItemAdapter.VISIBLE, satisfiedAt);
+						DBAdapter.getAdapter(ctx).getGeneralItemVisibility().setVisibilityStatus(itemIds[i], runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
 						broadcastTroughIntent(generalItem);
 					} else {
-						final String threadId = runId + "*" + giArray[i].getId();
-						Runnable runnable = new Runnable() {
+						DBAdapter.DatabaseTask task = new DBAdapter.DatabaseTask() {
 
-							public void run() {
-								try {
-									long sleepTime = satisfiedAt - System.currentTimeMillis();
-									if (sleepTime < 0)
-										sleepTime = 10;
-									Thread.sleep(sleepTime);
-									DBAdapter db2 = new DBAdapter(ctx);
-									db2.openForWrite();
-									GeneralItemAdapter giAdap2 = ((GeneralItemAdapter) db2.table(DBAdapter.GENERALITEM_ADAPTER));
-									giAdap2.setVisiblityStatus(runId, itemId, GeneralItemAdapter.VISIBLE, satisfiedAt);
-									db2.close();
-
-									broadcastTroughIntent(generalItem);
-
-								} catch (InterruptedException e) {
-
-								}
-								threads.remove(threadId);
+							@Override
+							public void execute(DBAdapter db) {
+								DBAdapter.getAdapter(ctx).getGeneralItemVisibility().setVisibilityStatus(generalItem.getId(), runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
+								broadcastTroughIntent(generalItem);
 
 							}
 
 						};
-						threads.put(threadId, runnable);
-						new Thread(runnable).start();
-
+						Message m = Message.obtain();
+						m.obj = task;
+						DBAdapter.getDatabaseThread(db.getContext()).sendMessageAtTime(m, satisfiedAt);
 					}
 				}
 			}
@@ -183,10 +166,10 @@ public class GeneralItemDependencyHandler {
 
 	public void broadcastTroughIntent(GeneralItem gi) {
 		if (gi.getAutoLaunch() != null && gi.getAutoLaunch()) {
-			DBAdapter db = new DBAdapter(ctx);
-			db.openForRead();
-			gi = ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).queryById(gi.getId(), PropertiesAdapter.getInstance(ctx).getCurrentRunId());
-			db.close();
+//			DBAdapter db = new DBAdapter(ctx);
+//			db.openForRead();
+//			gi = ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).queryById(gi.getId(), PropertiesAdapter.getInstance(ctx).getCurrentRunId());
+//			db.close();
 			if (gi != null)
 				GIActivitySelector.startActivity(ctx, gi, true);
 		} else {

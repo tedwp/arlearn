@@ -20,17 +20,17 @@ public class MyLocationSyncronizer extends GenericSyncroniser {
 	
 	@Override
 	protected void runAuthenticated() {
-		DBAdapter db = new DBAdapter(ctx);
-		db.openForWrite();
-		Location locs[] = (Location[]) ((MyLocations)db.table(DBAdapter.MYLOCATIONS_ADAPTER)).query();
-//		if (locs.length > 0) Log.e("locat lat", ""+locs[0].getLat());
-		if (locs.length == 0) {
-			increaseDelay();
-		} else {
-			setDelay(myLocationSyncronizerDelay);
-			publishLocation(db, locs);
-		}
-		db.close();
+//		DBAdapter db = new DBAdapter(ctx);
+//		db.openForWrite();
+//		Location locs[] = (Location[]) ((MyLocations)db.table(DBAdapter.MYLOCATIONS_ADAPTER)).query();
+////		if (locs.length > 0) Log.e("locat lat", ""+locs[0].getLat());
+//		if (locs.length == 0) {
+//			increaseDelay();
+//		} else {
+//			setDelay(myLocationSyncronizerDelay);
+//			publishLocation(db, locs);
+//		}
+//		db.close();
 	}
 	
 	private void publishLocation(DBAdapter db, Location[] loc) {

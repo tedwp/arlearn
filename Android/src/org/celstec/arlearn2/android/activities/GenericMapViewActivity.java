@@ -1,6 +1,10 @@
 package org.celstec.arlearn2.android.activities;
 
+import java.util.TreeSet;
+
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
+import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
@@ -66,10 +70,17 @@ public class GenericMapViewActivity extends Activity implements ARLearnBroadcast
 	}
 
 	private void retrieveItemsFromDb() {
-		DBAdapter db = new DBAdapter(this);
-		db.openForRead();
-		gis = (GeneralItem[]) ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).queryWithLocation(this.getRunId());
-		db.close();
+		TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleLocations(this.getRunId(), this);
+		if (gil != null) {
+			gis = gil.toArray(new GeneralItem[] {});
+		} 
+		
+//		DBAdapter db = new DBAdapter(this);
+//		db.openForRead();
+
+		//gis = (GeneralItem[]) ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).queryWithLocation(this.getRunId());
+		//TODO query with location
+//		db.close();
 	}
 	
 	protected void makeGeneralItemVisible() {

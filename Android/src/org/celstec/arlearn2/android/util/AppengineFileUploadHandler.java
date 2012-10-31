@@ -1,11 +1,7 @@
 package org.celstec.arlearn2.android.util;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,21 +17,20 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import  org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.client.GenericClient;
 
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.InputStreamBody;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
+
+@Deprecated
 public class AppengineFileUploadHandler {
 
 	private final static int READY_TO_OPEN = 1;
@@ -58,9 +53,9 @@ public class AppengineFileUploadHandler {
 	private long totalSize;
 
 	byte[] buffer = new byte[1024];
+	
 
 	public AppengineFileUploadHandler(Context ctx, Uri uri, String mimetype, String token, Long runId, String account) {
-//		try {
 			this.mimeType = mimetype;
 			this.token = token;
 			this.account = account;
@@ -68,22 +63,6 @@ public class AppengineFileUploadHandler {
 			this.fileName = uri.getLastPathSegment();
 			this.ctx = ctx;
 			this.uri = uri;
-//			fStream = new BufferedInputStream(ctx.getContentResolver().openInputStream(uri));
-//			DBAdapter db = new DBAdapter(ctx);
-//			db.openForWrite();
-//			MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
-//			mc.registerTotalAmountofBytes(uri, fStream.available());
-//			db.close();
-//			status = READY_TO_OPEN;
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//			status = END;
-//			endWithError = true;
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			status = END;
-//			endWithError = true;
-//		}
 	}
 
 	public boolean endedwithError() {

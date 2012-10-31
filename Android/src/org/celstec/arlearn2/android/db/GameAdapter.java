@@ -1,5 +1,8 @@
 package org.celstec.arlearn2.android.db;
 
+import org.celstec.arlearn2.android.cache.GameCache;
+import org.celstec.arlearn2.android.db.RunAdapter.RunQuery;
+import org.celstec.arlearn2.android.db.RunAdapter.RunResults;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
@@ -9,6 +12,7 @@ import org.codehaus.jettison.json.JSONException;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.os.Message;
 import android.util.Log;
 
 public class GameAdapter extends GenericDbTable {
@@ -141,4 +145,44 @@ public class GameAdapter extends GenericDbTable {
 //		game.setConfig(c);
 		return game;
 	}
+
+	public void queryAll() {
+		Game[] resultsGame = null;
+		try {
+			Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), null, null, null, null, null, null, null);
+			resultsGame = new Game[mCursor.getCount()];
+			int i = 0;
+			while (mCursor.moveToNext()) {
+//				resultsGame[i++] = cursorToGame(mCursor);
+				GameCache.getInstance().putGame(cursorToGame(mCursor));
+			}
+			mCursor.close();
+//			results.onResults(resultsGame);
+		} catch (SQLException e) {
+			Log.e("sqlex", "ex", e);
+		}
+		
+//		GameQuery query = new GameQuery();
+//		query.results = results;
+//		Message m = Message.obtain(DBAdapter.getDatabaseThread(db.getContext()));
+//		m.obj = query;
+//		m.sendToTarget();
+		
+	}
+	
+
+//	public interface GameResults {
+//		public void onResults(Game[] games);
+//	}
+
+//	public class GameQuery implements DBAdapter.DatabaseTask{
+//		
+//		public GameResults results;
+//		
+//		@Override
+//		public void execute(DBAdapter db) {
+//			
+//		}
+//		
+//	}
 }

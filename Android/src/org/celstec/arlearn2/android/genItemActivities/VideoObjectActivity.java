@@ -6,6 +6,7 @@ import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
+import org.celstec.arlearn2.android.db.beans.MediaCacheItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 //import org.celstec.arlearn2.android.db.beans.AudioObject;
@@ -44,18 +45,19 @@ public class VideoObjectActivity extends NarratorItemActivity {
 	}
 	
 	private void startVideo() {
-		DBAdapter db = new DBAdapter(this);
-		db.openForRead();
-		File audioFile = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getLocalFileFromIdIgnoreReplication(""+getVideoObject().getId());
-		if (audioFile == null) {
-			Toast toast = Toast.makeText(this, getString(R.string.downloadBusy), Toast.LENGTH_LONG);
+		MediaCacheItem mc = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(""+getVideoObject().getId());
+		if (mc == null) {
+			Toast toast = Toast.makeText(this, "mc item is null", Toast.LENGTH_LONG);
 			toast.show();
-			db.close();
 			return;
 		}
-		db.close();
+		if (mc.getLocalFile() == null) {
+			Toast toast = Toast.makeText(this, getString(R.string.downloadBusy), Toast.LENGTH_LONG);
+			toast.show();
+			return;
+		}
+		File audioFile = new File(mc.getLocalFile());
 		Intent intentToPlayVideo = new Intent(Intent.ACTION_VIEW);
-//		intentToPlayVideo.setDataAndType(Uri.parse("file:///mnt/sdcard/hostage.m4v"), "video/*");
 		intentToPlayVideo.setDataAndType(Uri.parse("file://"+audioFile.getAbsolutePath()), "video/*");
 		startActivity(intentToPlayVideo);
 	}

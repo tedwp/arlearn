@@ -5,7 +5,7 @@ import java.io.Serializable;
 import org.celstec.arlearn2.beans.game.Game;
 
 
-public class Run extends RunBean implements Serializable{
+public class Run extends RunBean implements Serializable, Comparable<Run>{
 	
 	private Long gameId;
 	private String title;
@@ -124,6 +124,13 @@ public class Run extends RunBean implements Serializable{
 	public boolean timeStampCheck() {
 		//TODO implement
 		return true;
+	}
+
+	@Override
+	public int compareTo(Run o) {
+		int result = getTitle().compareToIgnoreCase(o.getTitle());
+		if (result != 0) return result;
+		return getRunId().compareTo(o.getRunId());
 	}
 	
 }

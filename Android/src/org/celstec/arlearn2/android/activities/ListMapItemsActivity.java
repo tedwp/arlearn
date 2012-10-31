@@ -1,8 +1,10 @@
 package org.celstec.arlearn2.android.activities;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
@@ -56,12 +58,16 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 			setLng(5.96);
 		}
 		
-
 //		setContentView(R.layout.list_map_items); TODO delete list_map_items
-		DBAdapter db = new DBAdapter(this);
-		db.openForRead();
-		gis = (GeneralItem[]) ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).query(this.getRunId(), GeneralItemAdapter.VISIBLE);
-		read = (long[]) ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).queryReadItems(this.getRunId());
+//		DBAdapter db = new DBAdapter(this);
+//		db.openForRead();
+		TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleItems(runId, this);
+		if (gil == null) {
+			return;
+		} 
+		gis = gil.toArray(new GeneralItem[] {});
+//		gis = (GeneralItem[]) ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).query(this.getRunId(), GeneralItemAdapter.VISIBLE);
+//		read = (long[]) ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).queryReadItems(this.getRunId());
 		
 		
 
@@ -73,17 +79,16 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 		adapter.setOnListItemClickCallback(this);
 		listView.setAdapter(adapter);
 		
-		MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
 		for (int j = 0; j < gis.length; j++) {
 			String distance = "";
 			if (!( gis[j].getLng() == null && gis[j].getLat() == null)) {
 				distance =distanceToString(GPSUtil.distance(gis[j].getLat(), gis[j].getLng(), lat, lng, GPSUtil.METERS));
 			}
-			MessageListRecord r = new MessageListRecord(gis[j], read,mc);
+			MessageListRecord r = new MessageListRecord(gis[j], runId);
 			r.setDistance(distance);
 			adapter.add(r);
 		}
-		db.close();
+//		db.close();
 		
 //		adapter.emptyList();
 //		for (int j = 0; j < gis.length; j++) {

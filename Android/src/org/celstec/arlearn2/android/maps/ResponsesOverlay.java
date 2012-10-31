@@ -1,9 +1,10 @@
 package org.celstec.arlearn2.android.maps;
 
+import java.util.TreeSet;
+
 import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
-import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.MyResponses;
+import org.celstec.arlearn2.android.cache.ResponseCache;
 import org.celstec.arlearn2.beans.run.Response;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -27,13 +28,17 @@ public class ResponsesOverlay extends ItemizedOverlay {
 		populate();
 	}
 
-	public void syncItems(Context ctx) {
-		DBAdapter db = new DBAdapter(ctx);
-		db.openForRead();
+	public void syncItems(Context ctx, long runId) {
+		TreeSet<Response> ts = ResponseCache.getInstance().getLocatedResponses(runId, ctx);
+		if (ts == null) return;
+		responses = ts.toArray(new Response[]{});
 		
-//		responses = (Response[]) ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).query();
-		responses = (Response[]) ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).queryWithLocation(this.ctx.getRunId());
-		db.close();
+//		DBAdapter db = new DBAdapter(ctx);
+//		db.openForRead();
+//		
+////		responses = (Response[]) ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).query();
+//		responses = (Response[]) ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).queryWithLocation(this.ctx.getRunId());
+//		db.close();
 		setLastFocusedIndex(-1);
 		populate();
 	}

@@ -19,28 +19,28 @@ public class RunSyncroniser extends GenericSyncroniser {
 	}
 
 	public void runAuthenticated() {
-		syncronizeRuns(ctx, pa);
+//		syncronizeRuns(ctx, pa);
 //		syncAdditionalInfo(ctx, pa);
-		increaseDelay();
+//		increaseDelay();
 	}
 
-	@Deprecated
-	public static RunList syncronizeRuns(Context ctx, PropertiesAdapter pa) {
-		String result;
-		try {
-			RunClient rc = RunClient.getRunClient();
-			RunList rl = rc.getRunsParticipate(pa.getFusionAuthToken());
-			DBAdapter db = new DBAdapter(ctx);
-			db.openForWrite();
-			if (rl.getError() == null) ((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).insert(rl.getRuns());
-			db.close();
-			return rl;
-		} catch (Exception e) {
-			Log.e("exception", e.getMessage(), e);
-		}
-		return null;
-		
-	}
+//	@Deprecated
+//	public static RunList syncronizeRuns(Context ctx, PropertiesAdapter pa) {
+//		String result;
+//		try {
+//			RunClient rc = RunClient.getRunClient();
+//			RunList rl = rc.getRunsParticipate(pa.getFusionAuthToken());
+//			DBAdapter db = new DBAdapter(ctx);
+//			db.openForWrite();
+//			if (rl.getError() == null) ((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).insert(rl.getRuns());
+//			db.close();
+//			return rl;
+//		} catch (Exception e) {
+//			Log.e("exception", e.getMessage(), e);
+//		}
+//		return null;
+//		
+//	}
 	
 //	public static void syncAdditionalInfo(Context ctx, PropertiesAdapter pa) {
 //		String result;

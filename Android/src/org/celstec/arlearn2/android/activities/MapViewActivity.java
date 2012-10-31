@@ -41,7 +41,7 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 	private double lng = -1;
 	// private long runId;
 
-	private Handler mHandler = new Handler();
+//	private Handler mHandler = new Handler();
 	private ScoreHandler scoreHandler = new ScoreHandler(this);
 	protected MenuHandler menuHandler;
 
@@ -49,7 +49,8 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 
 	@Override
 	public void onBroadcastMessage(Bundle bundle, boolean render) {
-		if (render) makeGeneralItemVisible();
+		if (render) 
+			makeGeneralItemVisible();
 	}
 
 	protected boolean isRouteDisplayed() {
@@ -60,11 +61,8 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// intent = new Intent(this, NotificationService.class);
-
-		// runId = getIntent().getLongExtra("runId", 0);
-		// runId = intent.getExtras().getLong("runId");
 		setContentView(R.layout.map_view);
+
 		broadcastReceiver = new GenericBroadcastReceiver(this);
 		
 		Intent gimIntent = new Intent();
@@ -119,7 +117,7 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 		mv.getOverlays().add(responsesOverlay);
 		mv.getOverlays().add(usersOverlay);
 		control = mv.getController();
-		mHandler.postDelayed(checkForUpdates, 10000);
+//		mHandler.postDelayed(checkForUpdates, 10000);
 		initListMapButton();
 
 	}
@@ -151,17 +149,16 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 			this.finish();
 		}
 		myLocation.enableMyLocation();
-		mHandler.removeCallbacks(checkForUpdates);
-		mHandler.post(checkForUpdates);
-		// startService(intent);
-		// registerReceiver(broadcastReceiver, new
-		// IntentFilter(NotificationService.BROADCAST_ACTION));
+//		mHandler.removeCallbacks(checkForUpdates);
+//		mHandler.post(checkForUpdates);
+
 		if (broadcastReceiver != null)
 			broadcastReceiver.onResume();
 
 		if (menuHandler.getPropertiesAdapter().isScoringEnabled() && menuHandler.getPropertiesAdapter().getTotalScore() != null && menuHandler.getPropertiesAdapter().getTotalScore() != Long.MIN_VALUE) {
 			scoreHandler.setScore((int) menuHandler.getPropertiesAdapter().getTotalScore().longValue());
 		}
+		makeGeneralItemVisible();
 		// updateStatus();
 
 	}
@@ -170,33 +167,30 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 	protected void onPause() {
 		super.onPause();
 		myLocation.disableMyLocation();
-		mHandler.removeCallbacks(checkForUpdates);
+//		mHandler.removeCallbacks(checkForUpdates);
 		if (broadcastReceiver != null)
 			broadcastReceiver.onPause();
 	}
 
-	private Runnable checkForUpdates = new Runnable() {
-
-		public void run() {
-			itemsOverlay.syncItems(MapViewActivity.this);
-			responsesOverlay.syncItems(MapViewActivity.this);
-			mHandler.postDelayed(checkForUpdates, 120000);
-		}
-	};
+//	private Runnable checkForUpdates = new Runnable() {
+//
+//		public void run() {
+//			itemsOverlay.syncItems(MapViewActivity.this);
+//			responsesOverlay.syncItems(MapViewActivity.this);
+//			mHandler.postDelayed(checkForUpdates, 120000);
+//		}
+//	};
 
 	private void makeGeneralItemVisible() {
-		// if (generalItem.getLat() ==null && generalItem.getLng() == null) {
-		// } else {
-		itemsOverlay.syncItems(this);
-		responsesOverlay.syncItems(this);
+		long runId = getRunId();
+		itemsOverlay.syncItems(this, runId);
+		responsesOverlay.syncItems(this, runId);
 		mv.invalidate();
-		// }
 	}
 
 	public long getRunId() {
 		PropertiesAdapter pa = new PropertiesAdapter(this);
 		return pa.getCurrentRunId();
-		// return runId;
 	}
 
 	public void initListMapButton() {

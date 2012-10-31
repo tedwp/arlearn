@@ -29,8 +29,9 @@ public class OpenQuestion extends Bean {
 	}
 	@Override
 	public boolean equals(Object obj) {
+		if (!super.equals(obj)) return false;
 		OpenQuestion other = (OpenQuestion ) obj;
-		return super.equals(obj) && 
+		return 
 				 nullSafeEquals(isWithVideo(), other.isWithVideo()) && 
 				 nullSafeEquals(isWithPicture(), other.isWithPicture()) && 
 				 nullSafeEquals(isWithAudio(), other.isWithAudio()); 

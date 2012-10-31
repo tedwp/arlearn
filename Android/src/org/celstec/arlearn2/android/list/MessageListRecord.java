@@ -3,6 +3,7 @@ package org.celstec.arlearn2.android.list;
 import java.text.MessageFormat;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
@@ -18,21 +19,19 @@ public class MessageListRecord extends GenericListRecord {
 	
 	private boolean read = false;
 
-	public MessageListRecord(GeneralItem generalItem, long[] readIds, MediaCache mc) {
+	public MessageListRecord(GeneralItem generalItem, long runId) {
 		setMessageHeader(generalItem.getName());
-		for (long id: readIds) {
-			if (generalItem.getId() == id) setRead(true);
-		}
+		setRead(ActionCache.getInstance().isRead(runId, generalItem.getId()));
 		String description = "";
 		if (generalItem.getType().equals(AudioObject.class.getName())){
 			AudioObject ao = (AudioObject) generalItem;
-			double percentage = mc.getPercentageUploaded(ao.getAudioFeed());
+			double percentage = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getPercentageUploaded(ao.getAudioFeed());
 			if (percentage != 1) description += MessageFormat.format("{0,number,#.##%}", percentage);
 		}
 		
 		if (generalItem.getType().equals(VideoObject.class.getName())){
 			VideoObject ao = (VideoObject) generalItem;
-			double percentage = mc.getPercentageUploaded(ao.getVideoFeed());
+			double percentage = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getPercentageUploaded(ao.getVideoFeed());
 			if (percentage != 1) description += MessageFormat.format("{0,number,#.##%}", percentage);
 			
 		}

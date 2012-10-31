@@ -173,8 +173,8 @@ public class BackgroundService extends IntentService {
 		}
 
 		public void onLocationChanged(Location location) {
-			DBAdapter db = new DBAdapter(BackgroundService.this);
-			db.openForWrite();
+//			DBAdapter db = new DBAdapter(BackgroundService.this);
+//			db.openForWrite();
 			org.celstec.arlearn2.beans.run.Location locBean = new org.celstec.arlearn2.beans.run.Location();
 			PropertiesAdapter pa = new PropertiesAdapter(BackgroundService.this);
 			String account = pa.getUsername();
@@ -183,9 +183,9 @@ public class BackgroundService extends IntentService {
 				locBean.setLat(location.getLatitude());
 				locBean.setLng(location.getLongitude());
 				locBean.setTimestamp(location.getTime());
-				db.table(DBAdapter.MYLOCATIONS_ADAPTER).insert(locBean);
+//				db.table(DBAdapter.MYLOCATIONS_ADAPTER).insert(locBean);
 			}
-			db.close();
+//			db.close();
 		}
 
 		public void onStatusChanged(String provider, int status, Bundle extras) {

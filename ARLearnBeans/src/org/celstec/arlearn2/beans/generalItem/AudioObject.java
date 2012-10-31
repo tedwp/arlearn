@@ -17,8 +17,9 @@ public class AudioObject extends NarratorItem {
 	}
 	
 	public boolean equals(Object obj) {
+		if (!super.equals(obj)) return false;
 		AudioObject other = (AudioObject ) obj;
-		return super.equals(obj) && 
+		return 
 			nullSafeEquals(getAudioFeed(), other.getAudioFeed()) ; 
 
 	}

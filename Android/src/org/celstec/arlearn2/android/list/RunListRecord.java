@@ -3,6 +3,7 @@ package org.celstec.arlearn2.android.list;
 import java.text.SimpleDateFormat;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.run.Run;
 
@@ -18,8 +19,9 @@ public class RunListRecord extends GenericListRecord {
 //	private static SimpleDateFormat formatterTime = new SimpleDateFormat("HH:mm:ss");
 
 
-	public RunListRecord(Run run, Game game) {
+	public RunListRecord(Run run) {
 		this.setId(run.getRunId());
+		Game game = GameCache.getInstance().getGame(run.getGameId());
 		if (game != null)
 		if (game.getConfig().getMapAvailable()) {
 			setImageResourceId(R.drawable.map_icon);

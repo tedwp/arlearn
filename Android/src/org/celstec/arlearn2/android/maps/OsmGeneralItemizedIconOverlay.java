@@ -54,14 +54,16 @@ public class OsmGeneralItemizedIconOverlay extends ItemizedIconOverlay<OSMOverla
 	}
 	
 	
-	public void syncItems(Context ctx) {
-		DBAdapter db = new DBAdapter(ctx);
-		db.openForRead();
-		gis = (GeneralItem[]) ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).queryWithLocation(this.ctx.getRunId());
-		overlayItems = new OSMOverlayItem[gis.length];
-		db.close();
-		populate();
-	}
+//	public void syncItems(Context ctx) {
+//		DBAdapter db = new DBAdapter(ctx);
+//		db.openForRead();
+//		//TODO read messages with location from cache
+//
+////		gis = (GeneralItem[]) ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).queryWithLocation(this.ctx.getRunId());
+//		overlayItems = new OSMOverlayItem[gis.length];
+//		db.close();
+//		populate();
+//	}
 	
 	@Override
 	public int size() {

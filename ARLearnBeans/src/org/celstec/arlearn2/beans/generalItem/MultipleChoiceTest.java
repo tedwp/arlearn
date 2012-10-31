@@ -35,8 +35,9 @@ public class MultipleChoiceTest extends GeneralItem {
 	}
 	
 	public boolean equals(Object obj) {
+		if (!super.equals(obj)) return false;
 		MultipleChoiceTest other = (MultipleChoiceTest ) obj;
-		return super.equals(obj) && 
+		return 
 			nullSafeEquals(getAnswers(), other.getAnswers()) && 
 			nullSafeEquals(getText(), other.getText()) && 
 			nullSafeEquals(getRichText(), other.getRichText()) ; 

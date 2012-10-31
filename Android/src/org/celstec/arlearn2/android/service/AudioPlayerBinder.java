@@ -3,11 +3,13 @@ package org.celstec.arlearn2.android.service;
 import java.io.File;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.genItemActivities.AudioObjectActivity;
 
 import android.net.Uri;
+import android.os.Message;
 import android.os.RemoteException;
 import android.widget.Toast;
 
@@ -30,25 +32,26 @@ public class AudioPlayerBinder extends IAudioPlayerService.Stub {
 	}
 
 	
-	public void start(String audioIdentifier, IAudioPlayerCallback callback) throws RemoteException {
+	public void start(final String audioIdentifier, IAudioPlayerCallback callback) throws RemoteException {
 		service.setCallback(callback);
 		service.setAudioIdentifier(audioIdentifier);
-		DBAdapter db = new DBAdapter(service);
-		db.openForRead();
-		Uri audioUri = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getUriFromIdIgnoreReplication(audioIdentifier);
-//		File audioFile = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getLocalFileFromIdIgnoreReplication(audioIdentifier);
-//		if (audioFile == null) {
-//			Toast toast = Toast.makeText(service, service.getString(R.string.downloadBusy), Toast.LENGTH_LONG);
-//			toast.show();
-//			db.close();
-//			return;
-//		}
-//		service.initiateMediaPlayer(audioFile.getAbsolutePath());
-		service.initiateMediaPlayer(audioUri);
-		db.close();
-		setVolume(1);
-		service.startPlaying();
-		service.setOnCompletionListener();			
+		Message m = Message.obtain(DBAdapter.getDatabaseThread(service));
+		m.obj = new DBAdapter.DatabaseTask() {
+			
+			@Override
+			public void execute(DBAdapter db) {
+				Uri audioUri = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).getUriFromIdIgnoreReplication(audioIdentifier);
+				service.initiateMediaPlayer(audioUri);
+				try {
+					setVolume(1);
+					service.startPlaying();
+					service.setOnCompletionListener();	
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		m.sendToTarget();			
 	}
 
 	

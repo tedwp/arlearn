@@ -18,6 +18,7 @@ import org.codehaus.jettison.json.JSONObject;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,23 +41,26 @@ public class ViewAnswerActivity extends GeneralActivity {
 		video = (VideoView) findViewById(R.id.videoView);
 		initGui();
 		try {
-			DBAdapter db = new DBAdapter(this);
-			db.openForRead();
-			MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
+//			DBAdapter db = new DBAdapter(this);
+//			db.openForRead();
+//			MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
 			JSONObject json = new JSONObject(resp.getResponseValue());
 			String genId = "";
 			if (resp.getGeneralItemId() != null)
 				genId = ":" + resp.getGeneralItemId();
 			if (json.has("imageUrl")) {
-				image.setVisibility(View.VISIBLE);
-				MediaCacheItem mci = mc.queryById(MediaCacheItem.getImageId(resp.getRunId(), resp.getTimestamp()));
+				image.setVisibility(View.VISIBLE);				
+				MediaCacheItem mci = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getImageId(resp.getRunId(), resp.getTimestamp()));
 				image.setImageURI(mci.getUri());
 			} else {
 				image.setVisibility(View.GONE);
 			}
 			if (json.has("videoUrl")) {
 				video.setVisibility(View.VISIBLE);
-				MediaCacheItem mci = mc.queryById(MediaCacheItem.getVideoId(resp.getRunId(), resp.getTimestamp()));
+//				MediaCacheItem mci = mc.queryById(MediaCacheItem.getVideoId(resp.getRunId(), resp.getTimestamp()));
+//				;
+
+				MediaCacheItem mci = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getVideoId(resp.getRunId(), resp.getTimestamp()));
 				video.setVideoURI(mci.getUri());
 				MediaController mediaController = new MediaController(this);
 				video.setMediaController(mediaController);
@@ -68,14 +72,15 @@ public class ViewAnswerActivity extends GeneralActivity {
 			if (json.has("audioUrl")) {
 				((LinearLayout) findViewById(R.id.playButtonsAnswer)).setVisibility(View.VISIBLE);
 
-				MediaCacheItem mci = mc.queryById(MediaCacheItem.getAudioId(resp.getRunId(), resp.getTimestamp()));
+//				MediaCacheItem mci = mc.queryById(MediaCacheItem.getAudioId(resp.getRunId(), resp.getTimestamp()));
+				MediaCacheItem mci = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getAudioId(resp.getRunId(), resp.getTimestamp()));
 				if (mci != null)
 					apd = new AudioPlayerDelegate(mci.getItemId(), this);
 
 			} else {
 				((LinearLayout) findViewById(R.id.playButtonsAnswer)).setVisibility(View.GONE);
 			}
-			db.close();
+//			db.close();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -125,10 +130,14 @@ public class ViewAnswerActivity extends GeneralActivity {
 	}
 
 	public void deleteAnswer() {
-		DBAdapter db = new DBAdapter(this);
-		db.openForWrite();
-		((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).revoke(resp);
-		db.close();
+		Message m = Message.obtain(DBAdapter.getDatabaseThread(menuHandler.getContext()));
+		m.obj = new DBAdapter.DatabaseTask() {
+			@Override
+			public void execute(DBAdapter db) {
+				((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).revoke(resp);
+			}
+		};
+		m.sendToTarget();
 		setResult(1);
 		finish();
 	}

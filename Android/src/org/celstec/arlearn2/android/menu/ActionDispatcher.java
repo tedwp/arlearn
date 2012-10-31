@@ -1,7 +1,7 @@
 package org.celstec.arlearn2.android.menu;
 
 import org.celstec.arlearn2.android.activities.IGeneralActivity;
-import org.celstec.arlearn2.android.asynctasks.PublishActionTask;
+import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.service.BackgroundService;
 import org.celstec.arlearn2.beans.run.Action;
 
@@ -19,13 +19,14 @@ public class ActionDispatcher {
 		action.setUserEmail(activity.getMenuHandler().getPropertiesAdapter().getUsername());
 
 		action.setTime(System.currentTimeMillis());
-		PublishActionTask task = new PublishActionTask(activity);
-		task.execute(new Object[] {action});
-		Context ctx = (Context) activity;
-
-		Intent intent = new Intent(ctx, BackgroundService.class);
-		intent.putExtra("depCheck", true);
-		ctx.startService(intent);
+//		PublishActionTask task = new PublishActionTask(activity);
+//		task.execute(new Object[] {action});
+		DBAdapter.getAdapter((Context) activity).getMyActions().publishAction(action);
+//		Context ctx = (Context) activity;
+//
+//		Intent intent = new Intent(ctx, BackgroundService.class);
+//		intent.putExtra("depCheck", true);
+//		ctx.startService(intent);
 	}
 	
 	public static void publishAction(IGeneralActivity activity, String actionString, Long runId, String userEmail) {
@@ -46,9 +47,9 @@ public class ActionDispatcher {
 	
 	public static void publishAction(IGeneralActivity activity, Action action) {
 		Context ctx = (Context) activity;
-		PublishActionTask task = new PublishActionTask(activity);
-		task.execute(new Object[] {action});
-		
+//		PublishActionTask task = new PublishActionTask(activity);
+//		task.execute(new Object[] {action});
+		DBAdapter.getAdapter(ctx).getMyActions().publishAction(action);
 	}
 
 }

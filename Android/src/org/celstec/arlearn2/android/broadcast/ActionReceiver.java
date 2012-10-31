@@ -36,16 +36,16 @@ public class ActionReceiver extends BroadcastReceiver {
 		}
 	}
 	
-	private void publishAction(Context context, Action action) {
-		DBAdapter db = new DBAdapter(context);
-		db.openForWrite();
-		((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).insert(action);
-		db.close();
-		if (MyActionsSyncronizer.getInstance() != null) MyActionsSyncronizer.getInstance().run();
-		Intent intent = new Intent(context, BackgroundService.class);
-		intent.putExtra("depCheck", true);
-		context.startService(intent);
-
-	}
+//	private void publishAction(Context context, Action action) {
+//		DBAdapter db = new DBAdapter(context);
+//		db.openForWrite();
+//		((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).insert(action);
+//		db.close();
+//		if (MyActionsSyncronizer.getInstance() != null) MyActionsSyncronizer.getInstance().run();
+//		Intent intent = new Intent(context, BackgroundService.class);
+//		intent.putExtra("depCheck", true);
+//		context.startService(intent);
+//
+//	}
 
 }

@@ -22,8 +22,9 @@ public class OpenUrl extends GeneralItem {
 	
 	@Override
 	public boolean equals(Object obj) {
+		if (!super.equals(obj)) return false;
 		OpenUrl other = (OpenUrl ) obj;
-		return super.equals(obj) && 
+		return 
 			nullSafeEquals(getUrl(), other.getUrl()); 
 	}
 	

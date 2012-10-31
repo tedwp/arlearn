@@ -25,21 +25,23 @@ public class MyActionsSyncronizer extends GenericSyncroniser {
 		return instance;
 	}
 
+	@Deprecated
 	@Override
 	protected synchronized void runAuthenticated() {
-		DBAdapter db = new DBAdapter(ctx);
-		db.openForWrite();
-		List<Action> actions = ((MyActions)db.table(DBAdapter.MYACTIONS_ADAPTER)).query();
-		if (actions.size() == 0) {
-			increaseDelay();
-		} else {
-			setDelay(myResponsesSyncronizerDelay);
-			publishAction(db, actions);
-		}
-		db.close();
+//		DBAdapter db = new DBAdapter(ctx);
+//		db.openForWrite();
+//		List<Action> actions = ((MyActions)db.table(DBAdapter.MYACTIONS_ADAPTER)).query();
+//		if (actions.size() == 0) {
+//			increaseDelay();
+//		} else {
+//			setDelay(myResponsesSyncronizerDelay);
+//			publishAction(db, actions);
+//		}
+//		db.close();
 		
 	}
 	
+	@Deprecated
 	private void publishAction(DBAdapter db, List<Action> responses) {
 		for (Action action: responses) {
 			ActionClient ac = ActionClient.getActionClient();

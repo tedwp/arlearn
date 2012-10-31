@@ -6,8 +6,12 @@ import java.util.List;
 import javax.swing.plaf.basic.BasicSliderUI.ActionScroller;
 
 import org.celstec.arlearn2.android.cache.ActionCache;
+import org.celstec.arlearn2.android.db.GeneralItemAdapter.GeneralItemResults;
+import org.celstec.arlearn2.android.service.GeneralItemDependencyHandler;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.Action;
+import org.celstec.arlearn2.beans.run.Run;
+import org.celstec.arlearn2.client.ActionClient;
 
 //import org.celstec.arlearn2.android.db.beans.Action;
 //import org.celstec.arlearn2.android.db.beans.GeneralItem;
@@ -17,6 +21,7 @@ import org.codehaus.jettison.json.JSONObject;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.os.Message;
 import android.util.Log;
 
 public class MyActions extends GenericDbTable {
@@ -55,21 +60,21 @@ public class MyActions extends GenericDbTable {
 
 	@Override
 	public boolean insert(Object o) {
-		Action resp = (Action) o;
+		Action action = (Action) o;
 		ContentValues initialValues = new ContentValues();
-		String id = resp.getAction() + ":" + resp.getUserEmail() + ":" + resp.getGeneralItemId() + ":" + resp.getGeneralItemType() + ":" + resp.getRunId();
+		String id = action.getAction() + ":" + action.getUserEmail() + ":" + action.getGeneralItemId() + ":" + action.getGeneralItemType() + ":" + action.getRunId();
 		if (queryById(id) == null) {
 			initialValues.put(ID, id);
-			initialValues.put(ACCOUNT, resp.getUserEmail());
-			initialValues.put(ACTION, resp.getAction());
-			if (resp.getGeneralItemId()!= null) initialValues.put(GENERAL_ITEM_ID, resp.getGeneralItemId());
-			if (resp.getGeneralItemType()!= null) initialValues.put(GENERAL_ITEM_TYPE, resp.getGeneralItemType());
-			initialValues.put(RUNID, resp.getRunId());
-			initialValues.put(TIMESTAMP, resp.getTime());
+			initialValues.put(ACCOUNT, action.getUserEmail());
+			initialValues.put(ACTION, action.getAction());
+			if (action.getGeneralItemId()!= null) initialValues.put(GENERAL_ITEM_ID, action.getGeneralItemId());
+			if (action.getGeneralItemType()!= null) initialValues.put(GENERAL_ITEM_TYPE, action.getGeneralItemType());
+			initialValues.put(RUNID, action.getRunId());
+			initialValues.put(TIMESTAMP, action.getTime());
 			initialValues.put(REPLICATED, false);
-			
-			//TODO check if this action unblocks a
-//			((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).unblockVisibleItem(resp);
+			ActionCache.getInstance().cacheAction(action.getRunId(), action);
+
+			//			((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).unblockVisibleItem(resp);
 			return db.getSQLiteDb().insert(getTableName(), null, initialValues) != -1;
 		}
 		
@@ -109,7 +114,7 @@ public class MyActions extends GenericDbTable {
 		return actions;
 	}
 
-	public List<Action> query() {
+	public List<Action> queryActionsNotReplicated() {
 		return query(REPLICATED + " = 0", null);
 	}
 	
@@ -133,6 +138,7 @@ public class MyActions extends GenericDbTable {
 			return null;
 		}
 	}
+	
 
 	public long[] queryReadItems(long runId) {
 		long[] ids = null;
@@ -151,70 +157,42 @@ public class MyActions extends GenericDbTable {
 		}
 		return ids;
 	}
+	
+	public void queryAll(DBAdapter db, long runId) {
+		ActionCache.getInstance().setRunLoaded(runId);
+		for (Action a: query(runId)) {
+			ActionCache.getInstance().cacheAction(runId, a);
+		}
+	}
+	
 
-//	public boolean checkVisibility(GeneralItem item) {
-////		try {
-//			if (item.getDependsOn() == null) return true;
-//			DependsOn dependsOn = item.getDependsOn();
-////			JSONObject dependsOn = new JSONObject(item.getDependsOn());
-////			String action = null;
-////			String scope = null;
-////			String generalItemId = null;
-////			if (dependsOn.has("action")) action = dependsOn.getString("action");
-////			if (dependsOn.has("scope")) scope = dependsOn.getString("scope");
-//			//TODO deal with scope
-////			if (dependsOn.has("generalItemId")) generalItemId = dependsOn.getString("generalItemId");
-//			int i = 0;
-//			if (dependsOn.getAction() != null) i++;
-////			if (scope != null) i++;
-//			if (dependsOn.getGeneralItemId() != null) i++;
-//			if (i == 0) return true;
-//			String selection = "";
-//			String selectionArgs[] = new String[i];
-//			i = 0;
-//			if (dependsOn.getAction() != null) {
-//				selection = ACTION + " = ? ";
-//				selectionArgs[i++] = dependsOn.getAction();
-//			}
-//			if (dependsOn.getGeneralItemId() != null){
-//				if (!selection.equals("")) selection += " and ";
-//				selection += GENERAL_ITEM_ID + " = ? ";
-//				selectionArgs[i++] = dependsOn.getGeneralItemId();
-//			}
-//			Object [] objects = query(selection, selectionArgs);
-//			return objects.length != 0;
-////		} catch (JSONException e) {
-////			e.printStackTrace();
-////		}
-////		return false;
-//		
-//	}
-//	
-//	public void unblockVisibleItems(long runId) {
-//		Action [] allActions = query(RUNID + "= ?", new String[] { ""+ runId });
-//		unblockVisibleItems(allActions, runId);
-//	}
-//	
-//	private void unblockVisibleItems(Action [] allActions, long runId) {
-//		GeneralItemAdapter giAdapter = (GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER);
-//		GeneralItem gis[] = giAdapter.queryDependencyInvisibleItems(runId);
-//		unblockVisibleItems(giAdapter, allActions, gis, runId);
-//	}
-//	
-//	private void unblockVisibleItems(GeneralItemAdapter giAdapter, Action [] allActions, GeneralItem gis[], long runId) {
-//		for (int i = 0; i < gis.length; i++) {
-//			unblockVisibleItems(giAdapter, allActions, gis[i], runId);
-//		}
-//	}
-//	
-//	private void unblockVisibleItems(GeneralItemAdapter giAdapter, Action [] allActions, GeneralItem gi, long runId) {
-//		if (gi.getDependsOn() == null) return;
-//		Dependency  dep = new Dependency(gi.getDependsOn());
-////		Dependency  dep = gi.getDependency();
-//		if (dep.allDepenciesAreMet(allActions)) {
-//			giAdapter.setDependsOnVisible(gi.getId());
-//		}
-//	}
+	public void publishAction(Action action) {
+		PublishAction pa = new PublishAction();
+		pa.action = action;
+		Message m = Message.obtain(DBAdapter.getDatabaseThread(db.getContext()));
+		m.obj = pa;
+		m.sendToTarget();
+	}
 
+	public class PublishAction implements DBAdapter.DatabaseTask{
+		public Action action;
+		
+		@Override
+		public void execute(DBAdapter db) {
+			insert(action);
+			for (Action action: queryActionsNotReplicated()) {
+				ActionClient ac = ActionClient.getActionClient();
+				Action result = ac.publishAction(PropertiesAdapter.getInstance(db.getContext()).getFusionAuthToken(), action);
+				if (result.getError()== null) {
+					confirmReplicated(result);	
+				} else {
+					if (result.getError() !=null && "User not found".equals(result.getError())) 				
+						confirmReplicated(result);	 //this is not elegant... but it mean the user was deleted, so don't try to sync in future
+				}
+			}
+			(new GeneralItemDependencyHandler(db.getContext())).checkDependencies(db);
+		}
+
+	}
 
 }

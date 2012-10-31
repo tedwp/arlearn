@@ -1,29 +1,25 @@
 package org.celstec.arlearn2.android.activities;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.broadcast.RunReceiver;
+import org.celstec.arlearn2.android.cache.GameCache;
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.android.db.RunAdapter;
 
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.RunListRecord;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
-import org.celstec.arlearn2.android.menu.MenuHandler;
-import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 import org.celstec.arlearn2.android.service.LocationService;
-import org.celstec.arlearn2.beans.AuthResponse;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.run.Run;
-import org.celstec.arlearn2.client.LoginClient;
 import org.celstec.arlearn2.client.RunClient;
 
 import android.app.AlertDialog;
@@ -32,14 +28,12 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
 public class ListExcursionsActivity extends GeneralActivity implements ListitemClickInterface {
 	private Run[] runs = null;
-	private HashMap<Long, Game> games;
+//	private HashMap<Long, Game> games;
 	private GenericMessageListAdapter adapter;
 
 
@@ -51,6 +45,9 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 			this.finish();
 		} else {
 			setContentView(R.layout.listexcursionscreen);
+			Intent runIntent = new Intent();
+			runIntent.setAction(RunReceiver.action);
+			sendBroadcast(runIntent);
 //			Intent runSyncIntent = new Intent();
 //			runSyncIntent.setAction(RunReceiver.action);
 //			sendBroadcast(runSyncIntent);
@@ -87,11 +84,11 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 
 	private void renderExcursionList() {
 		ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
-
+		runs = RunCache.getInstance().getRuns();
 		if (runs != null) {
 
 			for (int i = 0; i < runs.length; i++) {
-				RunListRecord r = new RunListRecord(runs[i], games.get(runs[i].getGameId()));
+				RunListRecord r = new RunListRecord(runs[i]);
 				runsList.add(r);
 			}
 		}
@@ -111,14 +108,15 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 			pa.setRunStart(id, System.currentTimeMillis());
 		if (pa.getCurrentRunId() != -1) {
 			Intent i = null;
-			DBAdapter db = new DBAdapter(this);
-			db.openForRead();
+//			DBAdapter db = new DBAdapter(this);
+//			db.openForRead();
 			// Game g = (Game)
 			// db.getGameAdapter().queryById(runs[(int)id].getGameId());
-			Game g = games.get(runs[(int) id].getGameId());
+			Game g = GameCache.getInstance().getGame(runs[(int) id].getGameId());
+//			Game g = games.get(runs[(int) id].getGameId());
 			// result = (Run[])
 			// ((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).query();
-			db.close();
+//			db.close();
 			boolean mapView = true;
 			if (g != null && g.getConfig() != null) {
 				mapView = g.getConfig().getMapAvailable();
@@ -163,16 +161,22 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	}
 
 	public void initFromDb() {
-		DBAdapter db = new DBAdapter(this);
-		db.openForWrite();
-		runs = (Run[]) ((RunAdapter) db.table(DBAdapter.RUN_ADAPTER)).query();
-		games = new HashMap<Long, Game>();
-		for (int i = 0; i < runs.length; i++) {
-			Game g = (Game) db.getGameAdapter().queryById(runs[i].getGameId());
-			if (g!= null) games.put(g.getGameId(), g);
+//		DBAdapter db = new DBAdapter(this);
+//		db.openForWrite();
+//		runs = (Run[]) ((RunAdapter) db.table(DBAdapter.RUN_ADAPTER)).query();
+		runs = RunCache.getInstance().getRuns();
+		if (runs == null) {
+//			RunCache.getInstance().reloadFromDb(this);
+//			GameCache.getInstance().reloadFromDb(this);
+			return;
 		}
-
-		db.close();
+//		games = new HashMap<Long, Game>();
+//		for (int i = 0; i < runs.length; i++) {
+//			Game g = (Game) db.getGameAdapter().queryById(runs[i].getGameId());
+//			if (g!= null) games.put(g.getGameId(), g);
+//		}
+//
+//		db.close();
 	}
 
 	public boolean isGenItemActivity() {
