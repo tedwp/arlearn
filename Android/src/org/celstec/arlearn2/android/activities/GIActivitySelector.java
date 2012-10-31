@@ -5,11 +5,13 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
+import org.celstec.arlearn2.beans.generalItem.OpenBadge;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
 import org.celstec.arlearn2.android.genItemActivities.AudioObjectActivity;
 import org.celstec.arlearn2.android.genItemActivities.MultipleChoiceActivity;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
+import org.celstec.arlearn2.android.genItemActivities.OpenBadgeActivity;
 import org.celstec.arlearn2.android.genItemActivities.VideoObjectActivity;
 import org.celstec.arlearn2.android.genItemActivities.YoutubeObjectActivity;
 
@@ -45,6 +47,9 @@ public class GIActivitySelector {
 		}
 		if (gi.getType().equals(YoutubeObject.class.getName())) {
 			return  YoutubeObjectActivity.class;
+		}
+		if (gi.getType().equals(OpenBadge.class.getName())) {
+			return  OpenBadgeActivity.class;
 		}
 		return  NarratorItemActivity.class;
 	}

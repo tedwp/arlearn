@@ -2,41 +2,42 @@ package org.celstec.arlearn2.beans.generalItem;
 
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.GamePackage;
-import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
-import org.celstec.arlearn2.beans.deserializer.json.ListDeserializer;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class OpenUrl extends GeneralItem {
+public class OpenBadge extends GeneralItem {
 	
-	private String url;
-
-	public String getUrl() {
-		return url;
+	private String badgeName;
+	
+	
+	public String getBadgeName() {
+		return badgeName;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+
+	public void setBadgeName(String badgeName) {
+		this.badgeName = badgeName;
 	}
-	
+
+
+
 	@Override
 	public boolean equals(Object obj) {
-		if (!super.equals(obj)) return false;
-		OpenUrl other = (OpenUrl ) obj;
-		return 
-			nullSafeEquals(getUrl(), other.getUrl()); 
+		OpenBadge other = (OpenBadge ) obj;
+		return super.equals(obj) && 
+			nullSafeEquals(getBadgeName(), other.getBadgeName()); 
+
 	}
 	
-
 	public static GeneralItemSerializer serializer = new GeneralItemSerializer(){
 
 		@Override
 		public JSONObject toJSON(Object bean) {
-			OpenUrl ou = (OpenUrl) bean;
+			OpenBadge ou = (OpenBadge) bean;
 			JSONObject returnObject = super.toJSON(bean);
 			try {
-				if (ou.getUrl() != null) returnObject.put("url", ou.getUrl());
+				if (ou.getBadgeName() != null) returnObject.put("badgeName", ou.getBadgeName());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -47,7 +48,7 @@ public class OpenUrl extends GeneralItem {
 	public static GeneralItemDeserializer deserializer = new GeneralItemDeserializer(){
 		@Override
 		public GeneralItem toBean(JSONObject object) {
-			OpenUrl gi = new OpenUrl();
+			OpenBadge gi = new OpenBadge();
 			try {
 				initBean(object, gi);
 			} catch (JSONException e) {
@@ -58,10 +59,20 @@ public class OpenUrl extends GeneralItem {
 		
 		public void initBean(JSONObject object, Bean genericBean) throws JSONException {
 			super.initBean(object, genericBean);
-			OpenUrl gi = (OpenUrl) genericBean;
-			if (object.has("url")) gi.setUrl(object.getString("url"));
+			OpenBadge gi = (OpenBadge) genericBean;
+			if (object.has("badgeName")) gi.setBadgeName(object.getString("badgeName"));
 		}
 
 	};
-
+	
+	public static void main(String[] args) throws JSONException {
+		GamePackage gp = new GamePackage();
+		OpenBadge ou = new OpenBadge();
+		ou.setBadgeName("supporter badge");
+		gp.addGeneralItem(ou);
+		
+		System.out.println(gp.toString());
+		System.out.println(JsonBeanDeserializer.deserialize(gp.toString()).toString());
+		
+	}
 }

@@ -50,6 +50,7 @@
 		<activity android:name=".genItemActivities.AudioObjectActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
 		<activity android:name=".genItemActivities.VideoObjectActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
 		<activity android:name=".genItemActivities.YoutubeObjectActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
+		<activity android:name=".genItemActivities.OpenBadgeActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
 		<activity android:name=".genItemActivities.NarratorItemActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait" />
 		<activity android:name=".genItemActivities.NarratorItemSandboxActivity" android:label="@string/messageHeader" android:screenOrientation="portrait" />
 		

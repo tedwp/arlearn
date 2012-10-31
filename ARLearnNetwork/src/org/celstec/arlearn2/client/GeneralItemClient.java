@@ -31,5 +31,9 @@ public class GeneralItemClient extends GenericClient{
 		return (GeneralItem)  o;
 	}
 	
+	public GeneralItem postGeneralItem( String token, String generalItem) {
+		return (GeneralItem) executePost(getUrlPrefix(), token, generalItem, GeneralItem.class);
+	}
+	
 
 }
