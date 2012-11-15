@@ -3,7 +3,6 @@ package org.celstec.arlearn2.android.asynctasks;
 import org.celstec.arlearn2.android.activities.IGeneralActivity;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MyActions;
-import org.celstec.arlearn2.android.service.BackgroundService;
 import org.celstec.arlearn2.android.sync.MyActionsSyncronizer;
 import org.celstec.arlearn2.beans.run.Action;
 

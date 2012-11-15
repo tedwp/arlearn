@@ -9,19 +9,18 @@ import org.celstec.arlearn2.android.activities.GIActivitySelector;
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
+import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.GeneralItemAdapter;
+import org.celstec.arlearn2.android.db.DBAdapter.DatabaseHandler;
 import org.celstec.arlearn2.android.db.GeneralItemVisibility;
-import org.celstec.arlearn2.android.db.MyActions;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.Action;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.json.JSONArray;
 
 import android.media.SoundPool.OnLoadCompleteListener;
@@ -34,62 +33,88 @@ import android.media.SoundPool;
 import android.os.Message;
 import android.os.Vibrator;
 
-public class GeneralItemDependencyHandler {
+public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 
-	private Context ctx;
-	private HashMap<String, Runnable> threads = new HashMap<String, Runnable>();
+//	private Context ctx;
 	private static SoundPool soundPool;
 	private static HashMap<Integer, Integer> soundPoolMap;
 	private static boolean soundPoolLoaded = false;
-	private boolean beep = true;	
+	private boolean beep = true;
 
-	@SuppressLint("NewApi")
-	public GeneralItemDependencyHandler(Context ctx) {
-		this.ctx = ctx;
-		if (soundPool == null) {
-		soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
-		soundPoolMap = new HashMap<Integer, Integer>();
-		soundPoolMap.put(1, soundPool.load(ctx, R.raw.multi_new, 1));
-		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
-
-			@Override
-			public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-				soundPoolLoaded = true;
-				System.out.println("sound pool is loaded "+soundPoolLoaded);
-
-			}
-		});
+	public GeneralItemDependencyHandler() {
+	}
+	
+	public void addTaskToQueue(Context ctx) {
+		DatabaseHandler dbHandler = DBAdapter.getDatabaseThread(ctx);
+		if (!dbHandler.hasMessages(DBAdapter.DEPENDENCIES_MESSAGE)) {
+			Message m = Message.obtain(dbHandler);
+			m.obj = this;
+			m.what = DBAdapter.DEPENDENCIES_MESSAGE;
+			dbHandler.sendMessageDelayed(m, 500);
 		}
 	}
 	
-	public synchronized void checkDependencies(DBAdapter db) {
-		checkDependencies(db, (new PropertiesAdapter(ctx)).getCurrentRunId());
+	@Override
+	public void execute(DBAdapter db) {
+		if (soundPool == null) {
+			initSoundPool(db.getContext());
+		}
+		checkDependencies(db);
+		ActivityUpdater.updateActivities(db.getContext(), 
+				ListMessagesActivity.class.getCanonicalName(), 
+				MapViewActivity.class.getCanonicalName(), 
+				ListMapItemsActivity.class.getCanonicalName(), 
+				NarratorItemActivity.class.getCanonicalName());
 	}
 	
-	public void checkDependencies(DBAdapter db, long runId) {
-		beep = (new PropertiesAdapter(ctx)).getCurrentRunId() == runId;
-		List<Action> actions = ActionCache.getInstance().getActions(runId);		
-//		if (actions == null) actions = ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).query(runId);
-		processItemsNotYetInitialised(db, runId);
-		processItemsNotYetVisible(db, runId, actions);
+	private synchronized void initSoundPool(Context ctx) {
+		if (soundPool == null) {
+			soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
+			soundPoolMap = new HashMap<Integer, Integer>();
+			soundPoolMap.put(1, soundPool.load(ctx, R.raw.multi_new, 1));
+			soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
+
+				@Override
+				public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+					soundPoolLoaded = true;
+				}
+			});
+		}
 	}
 
-	
+	public synchronized void checkDependencies(DBAdapter db) {
+		System.out.println("checking dependencies " + System.currentTimeMillis());
+		checkDependencies(db, (new PropertiesAdapter(db.getContext())).getCurrentRunId());
+	}
+
+	public void checkDependencies(DBAdapter db, long runId) {
+		beep = (new PropertiesAdapter(db.getContext())).getCurrentRunId() == runId;
+		List<Action> actions = ActionCache.getInstance().getActions(runId);
+		// if (actions == null) actions = ((MyActions)
+		// db.table(DBAdapter.MYACTIONS_ADAPTER)).query(runId);
+		if (actions != null) {
+			processItemsNotYetInitialised(db, runId);
+			processItemsNotYetVisible(db, runId, actions);
+		}
+	}
+
 	public void processItemsNotYetInitialised(DBAdapter db, final long runId) {
-//		GeneralItem[] giArray = GeneralItemsCache.getInstance().getGeneralItems(runId);
-//		GeneralItemAdapter giAdap = ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER));
-		TreeSet<GeneralItem> items = GeneralItemVisibilityCache.getInstance().getAllNotInitializedItems(runId, ctx);
-		if (items != null) 
-		for (GeneralItem gi: items) {
-			if (itemMatchesPlayersRole(db, runId, gi)) {
-				Dependency dep = gi.getDependsOn();
-				if (dep == null) {
-					DBAdapter.getAdapter(ctx).getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, 0, GeneralItemVisibility.VISIBLE);
-				} else {
-					DBAdapter.getAdapter(ctx).getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, 0, GeneralItemVisibility.NOT_YET_VISIBLE);
+		// GeneralItem[] giArray =
+		// GeneralItemsCache.getInstance().getGeneralItems(runId);
+		// GeneralItemAdapter giAdap = ((GeneralItemAdapter)
+		// db.table(DBAdapter.GENERALITEM_ADAPTER));
+		TreeSet<GeneralItem> items = GeneralItemVisibilityCache.getInstance().getAllNotInitializedItems(runId);
+		if (items != null)
+			for (GeneralItem gi : items) {
+				if (itemMatchesPlayersRole(db, runId, gi)) {
+					Dependency dep = gi.getDependsOn();
+//					if (dep == null) {
+//						DBAdapter.getAdapter(db.getContext()).getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, 0, GeneralItemVisibility.VISIBLE);
+//					} else {
+						DBAdapter.getAdapter(db.getContext()).getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, 0, GeneralItemVisibility.NOT_YET_VISIBLE);
+//					}
 				}
 			}
-		}
 	}
 
 	private static boolean containsRole(JSONArray userRoles, String role) {
@@ -104,12 +129,13 @@ public class GeneralItemDependencyHandler {
 		}
 		return false;
 	}
+
 	public static boolean itemMatchesPlayersRole(DBAdapter db, long runId, GeneralItem gi) {
 		boolean playerHasRequiredRole = false;
-		
+
 		if (gi.getRoles() != null && !gi.getRoles().isEmpty()) {
 			String userRoles = db.getRunAdapter().queryRoles(runId);
-			
+
 			if (userRoles != null && !"".equals(userRoles)) {
 				try {
 					JSONArray userRolesJson = new JSONArray(userRoles);
@@ -120,7 +146,7 @@ public class GeneralItemDependencyHandler {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 			}
 		} else {
 			playerHasRequiredRole = true;
@@ -132,25 +158,44 @@ public class GeneralItemDependencyHandler {
 		Long[] itemIds = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.NOT_YET_VISIBLE);
 		for (int i = 0; i < itemIds.length; i++) {
 			if (!DBAdapter.getDatabaseThread(db.getContext()).hasMessages((int) itemIds[i].longValue())) {
-				final GeneralItem generalItem = GeneralItemsCache.getInstance().getGeneralItems(itemIds[i]); //TODO ... is not entirely safe e.g. if two runs exists messages might clash
+				final GeneralItem generalItem = GeneralItemsCache.getInstance().getGeneralItems(itemIds[i]); // TODO
+																												// ...
+																												// is
+																												// not
+																												// entirely
+																												// safe
+																												// e.g.
+																												// if
+																												// two
+																												// runs
+																												// exists
+																												// messages
+																												// might
+																												// clash
 				if (generalItem == null)
 					return;
 				Dependency dep = generalItem.getDependsOn();
-				final long satisfiedAt = dep.satisfiedAt(actions);
+				long satisfiedAtTemp = -1;
+				if (dep != null) {
+					satisfiedAtTemp = dep.satisfiedAt(actions);
+				} else {
+					satisfiedAtTemp = 0;
+				}
+				final long satisfiedAt = satisfiedAtTemp;
 				final long itemId = generalItem.getId();
 				if (satisfiedAt != -1) {
 					long currentTime = System.currentTimeMillis();
 					long satisfiedAtDelta = currentTime - satisfiedAt;
 					if (satisfiedAtDelta > 0) {
-						DBAdapter.getAdapter(ctx).getGeneralItemVisibility().setVisibilityStatus(itemIds[i], runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
-						broadcastTroughIntent(generalItem);
+						db.getGeneralItemVisibility().setVisibilityStatus(itemIds[i], runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
+						broadcastTroughIntent(generalItem, db.getContext(), runId);
 					} else {
 						DBAdapter.DatabaseTask task = new DBAdapter.DatabaseTask() {
 
 							@Override
 							public void execute(DBAdapter db) {
-								DBAdapter.getAdapter(ctx).getGeneralItemVisibility().setVisibilityStatus(generalItem.getId(), runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
-								broadcastTroughIntent(generalItem);
+								db.getGeneralItemVisibility().setVisibilityStatus(generalItem.getId(), runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
+								broadcastTroughIntent(generalItem, db.getContext(), runId);
 
 							}
 
@@ -164,12 +209,9 @@ public class GeneralItemDependencyHandler {
 		}
 	}
 
-	public void broadcastTroughIntent(GeneralItem gi) {
+	public void broadcastTroughIntent(GeneralItem gi, Context ctx, long runId) {
+		if (new PropertiesAdapter(ctx).getCurrentRunId() != runId) return;
 		if (gi.getAutoLaunch() != null && gi.getAutoLaunch()) {
-//			DBAdapter db = new DBAdapter(ctx);
-//			db.openForRead();
-//			gi = ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).queryById(gi.getId(), PropertiesAdapter.getInstance(ctx).getCurrentRunId());
-//			db.close();
 			if (gi != null)
 				GIActivitySelector.startActivity(ctx, gi, true);
 		} else {
@@ -182,27 +224,28 @@ public class GeneralItemDependencyHandler {
 		}
 
 		if (gi != null)
-			vibrateRingPhone();
+			vibrateRingPhone(ctx);
 
 	}
 
 	public static long lastVibration = System.currentTimeMillis();
 
-	public void vibrateRingPhone() {
-		if (!beep) return;
+	public void vibrateRingPhone(Context ctx) {
+		if (!beep)
+			return;
 		long now = System.currentTimeMillis();
 		if (now - lastVibration < 1500)
 			return;
 		lastVibration = now;
 		System.out.println("before play sound");
-		playSound(1);
+		playSound(1, ctx);
 		System.out.println("after play sound");
 		Vibrator vibrator = (Vibrator) ctx.getSystemService(Context.VIBRATOR_SERVICE);
 		vibrator.vibrate(new long[] { 0, 200, 200, 500, 200, 200 }, -1);
 
 	}
 
-	public void playSound(final int sound) {
+	public void playSound(final int sound, Context ctx) {
 		AudioManager mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
 		float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
 		float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -212,14 +255,14 @@ public class GeneralItemDependencyHandler {
 
 		Thread waitThread = new Thread() {
 			public void run() {
-				
+
 				int counter = 0;
 				try {
-					System.out.println("before while "+counter + " "+ soundPoolLoaded+" " + (!soundPoolLoaded && counter < 20));
+					System.out.println("before while " + counter + " " + soundPoolLoaded + " " + (!soundPoolLoaded && counter < 20));
 					while (!soundPoolLoaded && counter < 20) {
 						sleep(200);
 						counter++;
-						System.out.println("in while "+counter + " "+ soundPoolLoaded+" " + (!soundPoolLoaded && counter < 20));
+						System.out.println("in while " + counter + " " + soundPoolLoaded + " " + (!soundPoolLoaded && counter < 20));
 
 					}
 				} catch (InterruptedException e) {
@@ -229,8 +272,9 @@ public class GeneralItemDependencyHandler {
 			}
 		};
 		waitThread.run();
-		
 
 		System.out.println("in play sound");
 	}
+
+	
 }

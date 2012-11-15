@@ -5,6 +5,7 @@ import java.util.TreeSet;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
@@ -70,7 +71,7 @@ public class GenericMapViewActivity extends Activity implements ARLearnBroadcast
 	}
 
 	private void retrieveItemsFromDb() {
-		TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleLocations(this.getRunId(), this);
+		TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleLocations(this.getRunId());
 		if (gil != null) {
 			gis = gil.toArray(new GeneralItem[] {});
 		} 
@@ -85,6 +86,10 @@ public class GenericMapViewActivity extends Activity implements ARLearnBroadcast
 	
 	protected void makeGeneralItemVisible() {
 		retrieveItemsFromDb();
+		Long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
+		if (runId == null || RunCache.getInstance().getRun(runId) == null) {
+			this.finish();
+		}
 //		itemsOverlay.syncItems(this);
 //		responsesOverlay.syncItems(this);
 //		mv.invalidate();

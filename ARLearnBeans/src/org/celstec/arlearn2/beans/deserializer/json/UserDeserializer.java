@@ -24,6 +24,7 @@ public class UserDeserializer extends RunBeanDeserializer{
 		if (object.has("name")) bean.setName(object.getString("name"));
 		if (object.has("teamId")) bean.setTeamId(object.getString("teamId"));
 		if (object.has("email")) bean.setEmail(object.getString("email"));
+		if (object.has("fullEmail")) bean.setFullEmail(object.getString("fullEmail"));
 		if (object.has("roles")) bean.setRoles(ListDeserializer.toStringList(object.getJSONArray("roles")));
 
 	}

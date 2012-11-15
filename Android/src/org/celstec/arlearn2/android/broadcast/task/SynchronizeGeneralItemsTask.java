@@ -1,19 +1,26 @@
 package org.celstec.arlearn2.android.broadcast.task;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
+import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.asynctasks.network.NetworkTask;
+import org.celstec.arlearn2.android.asynctasks.network.NetworkTaskHandler;
 import org.celstec.arlearn2.android.broadcast.RunReceiver;
 import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
+import org.celstec.arlearn2.android.db.GeneralItemVisibility;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.db.DBAdapter.DatabaseHandler;
 import org.celstec.arlearn2.android.db.MyActions.PublishAction;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.service.GeneralItemDependencyHandler;
@@ -30,11 +37,26 @@ import org.celstec.arlearn2.client.exception.ARLearnException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Message;
+import android.util.Log;
 
 public class SynchronizeGeneralItemsTask implements NetworkTask {
 
-	public Context ctx;
-	public Long runId;
+	private Context ctx;
+	private Long runId;
+	
+	private Long gameId;
+	
+	private static HashSet<Long> allIds = new HashSet<Long>();
+	
+	public SynchronizeGeneralItemsTask(Context ctx, Long runId) {
+		this.ctx = ctx;
+		this.runId = runId;
+	}
+	
+	public SynchronizeGeneralItemsTask(Long gameId, Context ctx) {
+		this(ctx, null);
+		this.gameId = gameId;
+	}
 
 	public Long getRunId() {
 		return runId;
@@ -44,35 +66,52 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 		this.runId = runId;
 	}
 	
+	private synchronized void addRunId(long runId) {
+		allIds.add(this.runId);
+	}
+	
 	@Override
 	public void execute() {
-		if (runId == null) setRunId();
+		
 		if (runId != null && runId > 0) {
-			buildCache();
-			syncronizeGeneralItems();
+			addRunId(runId);
+			allIds.remove(runId);
+			PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
+			syncronizeGeneralItems(pa);
+			syncronizeVisibleGeneralItems(pa);
+		}
+		if (gameId != null) {
+			PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
+			syncronizeGeneralItemsGame(pa);
 		}
 			
 	}
-
-
-	private void setRunId() {
-		PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
-		runId = pa.getCurrentRunId();
-		syncronizeGeneralItems();
-	}
 	
-	private void syncronizeGeneralItems() {
-		PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
-		try {
-			if (runId == null) return;
-			final GeneralItemList gl = GeneralItemClient.getGeneralItemClient().getRunGeneralItems(pa.getFusionAuthToken(), runId);
+	public void addTaskToQueue(Context ctx) {
+		NetworkTaskHandler nwHandler = NetworkQueue.getNetworkTaskHandler();
+		if (runId != null && !allIds.contains(runId)) {
+			buildCache();
+			addRunId(runId);
+			Message m = Message.obtain(nwHandler);
+			m.obj = this;
+			m.what = NetworkTaskHandler.SYNC_GENERALITEMS;
+			m.sendToTarget();
+		}
+		if (gameId != null) {
+			Message m = Message.obtain(nwHandler);
+			m.obj = this;
+			m.what = NetworkTaskHandler.SYNC_GENERALITEMS;
+			m.sendToTarget();
+		}
+	}
 
+	
+	private void syncronizeGeneralItems(PropertiesAdapter pa) {
+		try {
+			final GeneralItemList gl = GeneralItemClient.getGeneralItemClient().getRunGeneralItemsAll(pa.getFusionAuthToken(), runId);
 			if (gl.getErrorCode() != null && gl.getErrorCode() == GeneralItemList.RUNNOTFOUND) {
 				notifyRunDeleted(ctx);
 			}
-
-			
-			
 			Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
 			m.obj =  new DBAdapter.DatabaseTask () {
 
@@ -81,38 +120,34 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 					Iterator<GeneralItem> it = gl.getGeneralItems().iterator();
 					while (it.hasNext()) {
 						GeneralItem item = it.next();
-						if (item != null) {
-							
-							item.setRunId(runId);
+						if (item != null) {						
 							generalItemToDb(db, item);
 						} else {
 							System.out.println("break");
 						}
 						
 					}
-					(new GeneralItemDependencyHandler(ctx)).checkDependencies(db);
-					ActivityUpdater.updateActivities(ctx, 
-							ListMessagesActivity.class.getCanonicalName(), 
-							MapViewActivity.class.getCanonicalName(), 
-							ListMapItemsActivity.class.getCanonicalName(), 
-							NarratorItemActivity.class.getCanonicalName());
-					
+					db.getMediaCacheGeneralItems().listItemsToCache();
+					(new GeneralItemDependencyHandler()).addTaskToQueue(db.getContext());
 				}
 				
 				protected void generalItemToDb(DBAdapter db, GeneralItem item) {
 					boolean newInsert = db.getGeneralItemAdapter().insert(item);
-					if (newInsert) {
-						if (item instanceof AudioObject) {
-							AudioObject aItem = (AudioObject) item;
-							((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).addIncommingObject(aItem.getId(), aItem.getAudioFeed(), aItem.getRunId());
-							MediaCacheSyncroniser.getInstance().resetDelay();
-						}
-						if (item instanceof VideoObject) {
-							VideoObject vItem = (VideoObject) item;
-							((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).addIncommingObject(vItem.getId(), vItem.getVideoFeed(), vItem.getRunId());
-							MediaCacheSyncroniser.getInstance().resetDelay();
-						}
-					}
+					
+					
+					//todo remove this
+//					if (newInsert) {
+//						if (item instanceof AudioObject) {
+//							AudioObject aItem = (AudioObject) item;
+//							((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).addIncommingObject(aItem.getId(), aItem.getAudioFeed(), aItem.getRunId());
+//							MediaCacheSyncroniser.getInstance().resetDelay();
+//						}
+//						if (item instanceof VideoObject) {
+//							VideoObject vItem = (VideoObject) item;
+//							((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).addIncommingObject(vItem.getId(), vItem.getVideoFeed(), vItem.getRunId());
+//							MediaCacheSyncroniser.getInstance().resetDelay();
+//						}
+//					}
 				}
 			};
 			m.sendToTarget();
@@ -121,6 +156,79 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 			ae.printStackTrace();
 		}
 		
+	}
+	
+	private void syncronizeVisibleGeneralItems(PropertiesAdapter pa) {
+		try {
+			final GeneralItemList gl = GeneralItemClient.getGeneralItemClient().getRunGeneralItemsVisible(pa.getFusionAuthToken(), runId);
+			final List<Long> newVisibleItems = new ArrayList<Long>();
+			Iterator<GeneralItem> it = gl.getGeneralItems().iterator();
+			while (it.hasNext()) {
+				GeneralItem item = it.next();
+				if (!GeneralItemVisibilityCache.getInstance().isVisible(runId, item.getId())) {
+					newVisibleItems.add(item.getId());
+				}
+			}
+			if (!newVisibleItems.isEmpty()) {
+				
+			Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
+			m.obj =  new DBAdapter.DatabaseTask () {
+
+				@Override
+				public void execute(DBAdapter db) {
+					for (long itemId : newVisibleItems) {
+						db.getGeneralItemVisibility().setVisibilityStatus(itemId, runId, 0, GeneralItemVisibility.VISIBLE);
+					}
+					ActivityUpdater.updateActivities(ctx, 
+							ListMessagesActivity.class.getCanonicalName(), 
+							MapViewActivity.class.getCanonicalName(), 
+							ListMapItemsActivity.class.getCanonicalName(), 
+							NarratorItemActivity.class.getCanonicalName());
+					
+				}
+			};
+			m.sendToTarget();
+			}
+		} catch (ARLearnException ae) {
+			ae.printStackTrace();
+		}
+	}
+	
+	private void syncronizeGeneralItemsGame(PropertiesAdapter pa) {
+		try {
+			final GeneralItemList gl = GeneralItemClient.getGeneralItemClient().getGameGeneralItems(pa.getFusionAuthToken(), gameId);
+			if (gl.getErrorCode() != null) {
+				return;
+			}
+			Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
+			m.obj =  new DBAdapter.DatabaseTask () {
+
+				@Override
+				public void execute(DBAdapter db) {
+					Iterator<GeneralItem> it = gl.getGeneralItems().iterator();
+					while (it.hasNext()) {
+						GeneralItem item = it.next();
+						if (item != null) {						
+							generalItemToDb(db, item);
+						} else {
+							System.out.println("break");
+						}
+						
+					}
+					db.getMediaCacheGeneralItems().listItemsToCache();
+					(new GeneralItemMediaSyncTask(ctx, gameId)).addTaskToQueue(ctx);
+
+				}
+				
+				protected void generalItemToDb(DBAdapter db, GeneralItem item) {
+					boolean newInsert = db.getGeneralItemAdapter().insert(item);
+					
+				}
+			};
+			m.sendToTarget();
+		} catch (ARLearnException ae) {
+			ae.printStackTrace();
+		}
 	}
 	
 	private void notifyRunDeleted(Context context) {
@@ -134,26 +242,25 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 		context.sendBroadcast(runIntent);
 	}
 	
-	private void buildCache() {
+	public void buildCache() {
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
 		m.obj =  new DBAdapter.DatabaseTask () {
 
 			@Override
 			public void execute(DBAdapter db) {
 				buildCache(db);
+				db.getMediaCacheGeneralItems().listItemsToCache();
 			}
 		};
 		m.sendToTarget();
 	}
 	
 	private void buildCache(DBAdapter db) {
- 
 		db.getMyActions().queryAll(db, runId);
 		db.getGeneralItemAdapter().queryAll(db); //todo filter gameId
 		db.getGeneralItemVisibility().queryAll(db, runId);
 		db.getMediaCache().queryAll(db, runId);
 		db.getMyResponses().queryAll(db, runId);
-		
 		ActivityUpdater.updateActivities(ctx, ListMessagesActivity.class.getCanonicalName(),
 				MapViewActivity.class.getCanonicalName(),
 				ListMapItemsActivity.class.getCanonicalName(),

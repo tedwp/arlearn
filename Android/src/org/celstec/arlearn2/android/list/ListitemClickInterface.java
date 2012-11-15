@@ -8,4 +8,5 @@ public interface ListitemClickInterface {
 //	public void onListItemClick(ListView l, View v, int position, long id);
 
 	public void onListItemClick(View v, int position, GenericListRecord messageListRecord);
+	public boolean setOnLongClickListener(View v, int position, GenericListRecord messageListRecord);
 }

@@ -48,24 +48,24 @@ public class GeneralItemVisibility extends GenericDbTable {
 	protected String getTableName() {
 		return GENERALITEM_VISIBILITY_TABLE;
 	}
-
-	@Override
-	public boolean insert(Object o) {
-		return false;
-	}
 	
-	public void setVisibilityStatus(long itemId, long runId, long satisfiedAt, int status) {
-		VisibilityTask task = new VisibilityTask();
-		task.itemId = itemId;
-		task.runId = runId;
-		task.status = status;
-		task.satisfiedAt = satisfiedAt;
-		Message m = Message.obtain(DBAdapter.getDatabaseThread(db.getContext()));
-		m.obj = task;
-		m.sendToTarget();
+	public void setVisibilityStatus(long itemId, Long runId, long satisfiedAt, int status) {
+		String whereArgs = GENERAL_ITEM_ID + " = " + itemId+ " and "+RUNID + " = "+runId;
+		if (runId == null) {
+			whereArgs = GENERAL_ITEM_ID + " = " + itemId;
+		}
+		db.getSQLiteDb().delete(getTableName(), whereArgs, null);
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(GENERAL_ITEM_ID, itemId);
+		initialValues.put(RUNID, runId);
+		initialValues.put(SHOW_AT, satisfiedAt);
+		initialValues.put(VISIBILITY_STATUS, status);
+		db.getSQLiteDb().insert(getTableName(), null, initialValues);
+		if (satisfiedAt < System.currentTimeMillis()) GeneralItemVisibilityCache.getInstance().put(runId, itemId, status);
 	}
 	
 	public int deleteRun(long runId) {
+		GeneralItemVisibilityCache.getInstance().remove(runId);
 		return db.getSQLiteDb().delete(getTableName(), RUNID + " = " + runId, null);
 	}
 	
@@ -108,31 +108,19 @@ public class GeneralItemVisibility extends GenericDbTable {
 //		
 //	}
 	
-	public class VisibilityTask implements DBAdapter.DatabaseTask{
-		
-		public Long itemId;
-		public Long runId;
-		public Long satisfiedAt;
-		public int status;
-		
-		@Override
-		public void execute(DBAdapter db) {
-			db.getSQLiteDb().delete(getTableName(), GENERAL_ITEM_ID + " = " + itemId+ " and "+RUNID + " = "+runId, null);
-			ContentValues initialValues = new ContentValues();
-			initialValues.put(GENERAL_ITEM_ID, itemId);
-			initialValues.put(RUNID, runId);
-			initialValues.put(SHOW_AT, satisfiedAt);
-			initialValues.put(VISIBILITY_STATUS, status);
-			db.getSQLiteDb().insert(getTableName(), null, initialValues);
-			if (satisfiedAt < System.currentTimeMillis()) GeneralItemVisibilityCache.getInstance().put(runId, itemId, status);
-			ActivityUpdater.updateActivities(db.getContext(), 
-					ListMessagesActivity.class.getCanonicalName(), 
-					MapViewActivity.class.getCanonicalName(), 
-					ListMapItemsActivity.class.getCanonicalName(), 
-					NarratorItemActivity.class.getCanonicalName());
-		}
-		
-	}
+//	public class VisibilityTask implements DBAdapter.DatabaseTask{
+//		
+//		public Long itemId;
+//		public Long runId;
+//		public Long satisfiedAt;
+//		public int status;
+//		
+//		@Override
+//		public void execute(DBAdapter db) {
+//			
+//		}
+//		
+//	}
 
 	public void queryAll(DBAdapter db, long runId) {
 		Run[] resultRuns = null;

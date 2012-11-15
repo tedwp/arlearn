@@ -26,6 +26,7 @@ import org.celstec.arlearn2.tasks.beans.DeleteScoreRecords;
 import org.celstec.arlearn2.tasks.beans.DeleteTeams;
 import org.celstec.arlearn2.tasks.beans.DeleteUsers;
 import org.celstec.arlearn2.tasks.beans.DeleteVisibleItems;
+import org.celstec.arlearn2.tasks.beans.UpdateGeneralItemsVisibility;
 import org.celstec.arlearn2.util.RunsCache;
 
 import com.google.gdata.util.AuthenticationException;
@@ -94,9 +95,7 @@ public class RunDelegator extends GoogleDelegator {
 			Run r = getRun(user.getRunId());
 			if (r != null) {
 			logger.severe("run is null? "+r);
-			logger.severe("user is null?"+user);
-			logger.severe("user is null?"+user.getRunId());
-			logger.severe("user is null?"+user.getDeleted());
+
 			r.setDeleted(user.getDeleted());
 			rl.addRun(r);
 			} else {
@@ -170,7 +169,9 @@ public class RunDelegator extends GoogleDelegator {
 //		RunManager.deleteRun(r.getRunId());
 		RunManager.setStatusDeleted(r.getRunId());
 		RunsCache.getInstance().removeRun(r.getRunId());
-		(new DeleteVisibleItems(authToken, r.getRunId())).scheduleTask();
+		(new UpdateGeneralItemsVisibility(authToken, r.getRunId(), null, 2)).scheduleTask();
+
+//		(new DeleteVisibleItems(authToken, r.getRunId())).scheduleTask();
 		(new DeleteActions(authToken, r.getRunId())).scheduleTask();
 		(new DeleteTeams(authToken, r.getRunId(), null)).scheduleTask();
 		(new DeleteBlobs(authToken, r.getRunId())).scheduleTask();

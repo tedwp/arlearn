@@ -13,6 +13,7 @@ import org.celstec.arlearn2.android.activities.GenericBroadcastReceiver;
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
+import org.celstec.arlearn2.android.broadcast.BeanReceiver;
 import org.celstec.arlearn2.android.broadcast.GameReceiver;
 import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.broadcast.RunReceiver;
@@ -46,12 +47,12 @@ public class ChannelAPINotificationService extends Service {
 	 
 	private void broadcast() {
 		Intent updateIntent = new Intent();
-		updateIntent.setAction(GenericBroadcastReceiver.ACTION);
-		updateIntent.putExtra(MapViewActivity.class.getCanonicalName(), true);
-		updateIntent.putExtra(ListExcursionsActivity.class.getCanonicalName(), true);
-		updateIntent.putExtra(ListMapItemsActivity.class.getCanonicalName(), true);
-		updateIntent.putExtra(GenericBroadcastReceiver.RENDER, false);
-		sendBroadcast(updateIntent);
+//		updateIntent.setAction(GenericBroadcastReceiver.ACTION);
+//		updateIntent.putExtra(MapViewActivity.class.getCanonicalName(), true);
+//		updateIntent.putExtra(ListExcursionsActivity.class.getCanonicalName(), true);
+//		updateIntent.putExtra(ListMapItemsActivity.class.getCanonicalName(), true);
+//		updateIntent.putExtra(GenericBroadcastReceiver.RENDER, false);
+//		sendBroadcast(updateIntent);
 
 	}
 
@@ -246,7 +247,7 @@ public class ChannelAPINotificationService extends Service {
 		try {
 			Serializable messageSerializeable = (Serializable) JsonBeanDeserializer.deserialize(message);
 			Intent intent = new Intent();
-			intent.setAction("org.celstec.arlearn.beanbroadcast");
+			intent.setAction(BeanReceiver.action);
 			intent.putExtra("bean", messageSerializeable);
 			ChannelAPINotificationService.this.sendBroadcast(intent);
 		} catch (JSONException e) {

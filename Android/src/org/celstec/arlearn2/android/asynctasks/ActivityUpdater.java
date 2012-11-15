@@ -2,6 +2,8 @@ package org.celstec.arlearn2.android.asynctasks;
 
 import org.celstec.arlearn2.android.genItemActivities.AudioObjectActivity;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
+import org.celstec.arlearn2.android.genItemActivities.OpenBadgeActivity;
+import org.celstec.arlearn2.android.genItemActivities.ScanTagActivity;
 import org.celstec.arlearn2.android.genItemActivities.VideoObjectActivity;
 import org.celstec.arlearn2.android.genItemActivities.YoutubeObjectActivity;
 
@@ -20,6 +22,8 @@ public class ActivityUpdater {
 				updateIntent.putExtra(AudioObjectActivity.class.getCanonicalName(), true); 
 				updateIntent.putExtra(VideoObjectActivity.class.getCanonicalName(), true);
 				updateIntent.putExtra(YoutubeObjectActivity.class.getCanonicalName(), true);
+				updateIntent.putExtra(ScanTagActivity.class.getCanonicalName(), true);
+				updateIntent.putExtra(OpenBadgeActivity.class.getCanonicalName(), true);
 			}
 		}
 		ctx.sendBroadcast(updateIntent);

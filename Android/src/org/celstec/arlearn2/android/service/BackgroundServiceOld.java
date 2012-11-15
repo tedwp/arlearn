@@ -30,7 +30,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-public class BackgroundService extends IntentService {
+public class BackgroundServiceOld extends IntentService {
 
 	private boolean continueRunning = true;
 	private LocationManager locMgr;
@@ -44,7 +44,7 @@ public class BackgroundService extends IntentService {
 
 //	DependencyChecker depCheck;
 	
-	public BackgroundService() {
+	public BackgroundServiceOld() {
 		super("BackgroundService");
 	}
 	
@@ -176,7 +176,7 @@ public class BackgroundService extends IntentService {
 //			DBAdapter db = new DBAdapter(BackgroundService.this);
 //			db.openForWrite();
 			org.celstec.arlearn2.beans.run.Location locBean = new org.celstec.arlearn2.beans.run.Location();
-			PropertiesAdapter pa = new PropertiesAdapter(BackgroundService.this);
+			PropertiesAdapter pa = new PropertiesAdapter(BackgroundServiceOld.this);
 			String account = pa.getUsername();
 			if (pa != null) {
 				locBean.setAccount(pa.getUsername());

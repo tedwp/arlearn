@@ -5,8 +5,10 @@ import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.db.DBAdapter;
+import org.celstec.arlearn2.android.db.GeneralItemVisibility;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
+import org.celstec.arlearn2.android.service.GeneralItemDependencyHandler;
 import org.celstec.arlearn2.android.sync.MediaCacheSyncroniser;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
@@ -59,6 +61,7 @@ public class CreateNewGItemTask implements  DBAdapter.DatabaseTask {
 	public void execute(DBAdapter db) {
 		GeneralItem item = GeneralItemClient.getGeneralItemClient().getRunGeneralItem(authToken, runId, generalItemId);
 		generalItemToDb(db, item);
+		(new GeneralItemDependencyHandler()).addTaskToQueue(db.getContext());
 		ActivityUpdater.updateActivities(db.getContext(), 
 				ListMessagesActivity.class.getCanonicalName(), 
 				MapViewActivity.class.getCanonicalName(), 
@@ -69,19 +72,21 @@ public class CreateNewGItemTask implements  DBAdapter.DatabaseTask {
 	
 	//TODO this method is double
 	protected void generalItemToDb(DBAdapter db, GeneralItem item) {
+		
 		boolean newInsert = db.getGeneralItemAdapter().insert(item);
-		if (newInsert) {
-			if (item instanceof AudioObject) {
-				AudioObject aItem = (AudioObject) item;
-				((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).addIncommingObject(aItem.getId(), aItem.getAudioFeed(), aItem.getRunId());
-				MediaCacheSyncroniser.getInstance().resetDelay();
-			}
-			if (item instanceof VideoObject) {
-				VideoObject vItem = (VideoObject) item;
-				((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).addIncommingObject(vItem.getId(), vItem.getVideoFeed(), vItem.getRunId());
-				MediaCacheSyncroniser.getInstance().resetDelay();
-			}
-		}
+		db.getGeneralItemVisibility().setVisibilityStatus(item.getId(), null, 0, GeneralItemVisibility.NOT_INITIALISED);
+//		if (newInsert) {
+//			if (item instanceof AudioObject) {
+//				AudioObject aItem = (AudioObject) item;
+//				((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).addIncommingObject(aItem.getId(), aItem.getAudioFeed(), aItem.getRunId());
+//				MediaCacheSyncroniser.getInstance().resetDelay();
+//			}
+//			if (item instanceof VideoObject) {
+//				VideoObject vItem = (VideoObject) item;
+//				((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).addIncommingObject(vItem.getId(), vItem.getVideoFeed(), vItem.getRunId());
+//				MediaCacheSyncroniser.getInstance().resetDelay();
+//			}
+//		}
 	}
 	
 }

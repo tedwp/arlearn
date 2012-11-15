@@ -47,9 +47,11 @@ public abstract class GenericBean  implements Runnable{
 		while (fields.hasNext()) {
 			Field field = (Field) fields.next();
 			try {
+				 if (!java.lang.reflect.Modifier.isStatic(field.getModifiers())) {
 				Method m = getClass().getMethod(getBeanMethodName(field.getName()));
 				Object value = m.invoke(this);
 				if (value !=null) to = to.param(field.getName(),value.toString());
+				 }
 			} catch(NoSuchMethodException e){
 				if (!"log".equals(field.getName()))
 				log.log(Level.WARNING, e.getMessage(), e);

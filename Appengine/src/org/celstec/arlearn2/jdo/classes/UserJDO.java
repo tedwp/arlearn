@@ -22,6 +22,9 @@ public class UserJDO extends RunClass {
 	@Persistent
 	private Text payload;
 	
+	@Persistent
+	private Long lastModificationDate;
+	
 	public String getTeamId() {
 		return teamId;
 	}
@@ -62,5 +65,13 @@ public class UserJDO extends RunClass {
 
 	public void setPayload(Text payload) {
 		this.payload = payload;
+	}
+	
+	public Long getLastModificationDate() {
+		return lastModificationDate;
+	}
+
+	public void setLastModificationDate(Long lastModificationDate) {
+		this.lastModificationDate = lastModificationDate;
 	}
 }

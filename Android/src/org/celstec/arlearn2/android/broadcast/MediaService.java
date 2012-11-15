@@ -129,84 +129,31 @@ public class MediaService extends IntentService {
 			public void execute(DBAdapter db) {
 				MediaCacheItem[] mcis = db.getMediaCache().getNextUnsyncedItems();
 				for (int i = 0; i < mcis.length; i++) {
-					if (mcis[i].isIncomming()) {
-						synchronizeIncommingFile(mcis[i]);
-					} else {
+					if (!mcis[i].isIncomming()) {
+//						synchronizeIncommingFile(mcis[i]);
+//					} else {
 						synchronizeOutgoingUri(mcis[i]);
 					}
 				}
+
+				
 			}
 		};
 		m.sendToTarget();
-		
-		
-//		new Thread(new Runnable() {
-//			public void run() {
-//
-////				DBAdapter db = null;
-////				try {
-////					db = new DBAdapter(context);
-////					db.openForWrite();
-////					MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
-////					mc.reset();
-////					MediaCacheItem[] mcis;
-//
-//					mcis = mc.getNextUnsyncedItems();
-//					CountDownLatch latch = new CountDownLatch(mcis.length);
-//					for (int i = 0; i < mcis.length; i++) {
-//
-//						if (mcis[i].isIncomming()) {
-//							synchronizeIncommingFile(mcis[i], mc, latch);
-//						} else {
-//							synchronizeOutgoingUri(context, mcis[i], mc, latch);
-//						}
-//					}
-//
-//					
-//					latch.await();
-//					db.close();
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//					if (db != null)
-//						db.close();
-//				} finally {
-//					// syncing = false;
-//				}
-//			}
-//		}).start();
-
 	}
 
-	private void synchronizeIncommingFile(final MediaCacheItem mci) {
-		DBAdapter.getAdapter(this).getMediaCache().setReplicationStatus(mci.getItemId(), MediaCache.REP_STATUS_SYNCING);
-		
-		DownloadFileTask task = new DownloadFileTask();
-		task.url = mci.getRemoteFile();
-		task.ctx = this;
-		task.itemId = mci.getItemId();
-		
-		Message m = Message.obtain(NetworkQueue.getNetworkTaskHandler());
-		m.obj = task;
-		m.sendToTarget();
-		
-//		new Thread(new Runnable() {
-//			public void run() {
-//				try {
-//					String localPath = downloadFile(mci.getRemoteFile());
-//					mc.updateLocalPath(mci.getItemId(), localPath);
-//					if (localPath == null) {
-//						mc.setReplicationStatus(mci.getItemId(), MediaCache.REP_STATUS_TODO);
-//					}
-//				} catch (FileNotFoundException fnf) {
-//					mc.setReplicationStatus(mci.getItemId(), MediaCache.REP_STATUS_TODO);
-//					mc.updateLocalPath(mci.getItemId(), null);
-//				} finally {
-//					latch.countDown();
-//				}
-//
-//			}
-//		}).start();
-	}
+//	private void synchronizeIncommingFile(final MediaCacheItem mci) {
+//		DBAdapter.getAdapter(this).getMediaCache().setReplicationStatus(mci.getItemId(), MediaCache.REP_STATUS_SYNCING);
+//		
+//		DownloadFileTask task = new DownloadFileTask();
+//		task.url = mci.getRemoteFile();
+//		task.ctx = this;
+//		task.itemId = mci.getItemId();
+//		
+//		Message m = Message.obtain(NetworkQueue.getNetworkTaskHandler());
+//		m.obj = task;
+//		m.sendToTarget();
+//	}
 
 	private void synchronizeOutgoingUri(final MediaCacheItem mci) {
 		// File localFile = new File(mci.getLocalFile());

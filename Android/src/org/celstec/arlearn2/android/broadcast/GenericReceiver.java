@@ -23,7 +23,7 @@ public abstract class GenericReceiver extends BroadcastReceiver{
 	
 
 	//TODO stop channelapi
-	protected void setStatusToLogout(Context context) {
+	public static void setStatusToLogout(Context context) {
 		PropertiesAdapter.getInstance(context).disAuthenticate();
 		Intent updateIntent = new Intent();
 		updateIntent.setAction("org.celstec.arlearn.updateActivities");

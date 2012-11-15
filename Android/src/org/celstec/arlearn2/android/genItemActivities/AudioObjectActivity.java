@@ -38,7 +38,7 @@ public class AudioObjectActivity extends NarratorItemActivity {
 		completeAction.setGeneralItemId(getAudioObject().getId());
 		completeAction.setGeneralItemType(getAudioObject().getType());
 		
-		apd =  new AudioPlayerDelegate(""+getAudioObject().getId(), this, completeAction);
+		apd =  new AudioPlayerDelegate(getAudioObject().getId(), this, completeAction);
 		apd.setPlayButton((ImageView) findViewById(R.id.ao_playButton));
 		apd.setStopButton((ImageView) findViewById(R.id.ao_stopButton));
 	}

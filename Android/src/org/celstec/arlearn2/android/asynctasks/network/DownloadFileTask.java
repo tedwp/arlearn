@@ -9,28 +9,101 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.celstec.arlearn2.android.Constants;
+import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
+import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
+import org.celstec.arlearn2.android.activities.ListMessagesActivity;
+import org.celstec.arlearn2.android.activities.MapViewActivity;
+import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
+import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
+import org.celstec.arlearn2.android.cache.GeneralItemsCache;
+import org.celstec.arlearn2.android.cache.MediaCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.MediaCache;
+import org.celstec.arlearn2.android.db.MediaCacheGeneralItems;
+import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
+import org.celstec.arlearn2.beans.generalItem.AudioObject;
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.VideoObject;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
+import android.os.Message;
 import android.util.Log;
 
 public class DownloadFileTask implements NetworkTask{
 
-	public String url;
+	private String url;
 	public Context ctx;
-	public String itemId;
+	public Long itemId;
+	public Long[] allIds;
+	public Long gameId;
+	private boolean restartTask = false;
 	
 	@Override
 	public void execute() {
 		try {
-			String localPath = downloadFile();
+			if (itemId == null) {
+				setItemId();
+			}
+			if (itemId == null)
+				return;
+			GeneralItem gi = GeneralItemsCache.getInstance().getGeneralItems(itemId);
+			if (gi != null) {
+				url = getRemoteFile(gi);
+				if (url != null) {
+					setReplicationStatus(itemId, MediaCacheGeneralItems.REP_STATUS_SYNCING, null);
+					Uri localUri = Uri.fromFile(new File(downloadFile()));
+					setReplicationStatus(itemId, MediaCacheGeneralItems.REP_STATUS_DONE, localUri);
+					MediaCache.getInstance().localToDownloadRemove(gameId, itemId);
+				}
+			}
 		} catch (FileNotFoundException fnf) {
-			
-			DBAdapter.getAdapter(ctx).getMediaCache().setReplicationStatus(itemId, MediaCache.REP_STATUS_TODO);
-			DBAdapter.getAdapter(ctx).getMediaCache().updateLocalPath(itemId, null);
+			setReplicationStatus(itemId, MediaCacheGeneralItems.REP_STATUS_TODO, null);
 		}
+		if (restartTask) {
+			this.itemId = null;
+			Message m = Message.obtain(NetworkQueue.getNetworkTaskHandler());
+			m.obj = this;
+			m.sendToTarget();
+		}
+		ActivityUpdater.updateActivities(ctx, 
+				ListExcursionsActivity.class.getCanonicalName(), 
+				ListMessagesActivity.class.getCanonicalName(), 
+				ListMapItemsActivity.class.getCanonicalName());
+	}
+	
+	private void setItemId() {
+		for (int i = 0; i < allIds.length; i++) {
+			if (allIds[i] != null) {
+				itemId = allIds[i];
+				allIds[i] = null;
+				restartTask = true;
+				return;
+			}
+		}
+		
+	}
+
+	private void setReplicationStatus(final Long itemId, final int status, final Uri localUri) {
+		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
+		m.obj = new DBAdapter.DatabaseTask() {
+			@Override
+			public void execute(DBAdapter db) {
+				db.getMediaCacheGeneralItems().setReplicationStatus(itemId, status, localUri);
+			}
+		};
+		m.sendToTarget();
+	}
+	
+	private String getRemoteFile(GeneralItem gi) {
+		if (gi instanceof AudioObject) {
+			return ((AudioObject) gi).getAudioFeed();
+		}
+		if (gi instanceof VideoObject) {
+			return ((VideoObject) gi).getVideoFeed();
+		}
+		return null;
 	}
 	
 	private String downloadFile() throws FileNotFoundException {
@@ -68,7 +141,8 @@ public class DownloadFileTask implements NetworkTask{
 				byteCounter +=1024;
 				if ((startTime + 1500)<System.currentTimeMillis()) {
 					startTime = System.currentTimeMillis();
-					DBAdapter.getAdapter(ctx).getMediaCache().registerBytesAvailable(url, contentLength-byteCounter);
+//					DBAdapter.getAdapter(ctx).getMediaCache().registerBytesAvailable(url, contentLength-byteCounter);
+					MediaCache.getInstance().setBytesUploaded(itemId, byteCounter);
 				}
 			}
 			fos.flush();
@@ -99,7 +173,11 @@ public class DownloadFileTask implements NetworkTask{
 		File incommingDir = new File(cacheDirFile, Constants.INCOMMING);
 		if (!incommingDir.exists())
 			incommingDir.mkdir();
-		return incommingDir;
+		File gameDir = new File(incommingDir, ""+gameId);
+		if (!gameDir.exists())
+			gameDir.mkdir();
+		
+		return gameDir;
 	}
 	
 	private String getURLSuffix(String url) {

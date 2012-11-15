@@ -42,21 +42,25 @@ public class MediaCache extends GenericDbTable {
 
 	@Override
 	public String createStatement() {
-		return "create table " + MEDIACACHE_TABLE + " (" + ITEM_ID + " text primary key, " // 0
-				+ RUN_ID + " long, " + ACCOUNT + " text, " + LOCAL_FILE + " text, " // 3
-				+ REMOTE_FILE + " text, " + INCOMMING + " boolean not null, " + REPLICATED + " integer, "// 6
-				+ MIMETYPE + " text, " + URI + " text, "// 8
-				+ BYTESTOTAL + " long, " + BYTESAVAILABLE + " long, " + APPENGINEFILEPATH + " text, " + LASTBYTESDATE + " long);";
+		return "create table " + MEDIACACHE_TABLE + " (" + 
+				ITEM_ID + " text primary key, " // 0
+				+ RUN_ID + " long, " + 
+				ACCOUNT + " text, " + 
+				LOCAL_FILE + " text, " // 3
+				+ REMOTE_FILE + " text, " + 
+				INCOMMING + " boolean not null, " + 
+				REPLICATED + " integer, "// 6
+				+ MIMETYPE + " text, " + 
+				URI + " text, "// 8
+				+ BYTESTOTAL + " long, " + 
+				BYTESAVAILABLE + " long, " + 
+				APPENGINEFILEPATH + " text, " + 
+				LASTBYTESDATE + " long);";
 	}
 
 	@Override
 	protected String getTableName() {
 		return MEDIACACHE_TABLE;
-	}
-
-	@Override
-	public boolean insert(Object o) {
-		return false;
 	}
 
 	public boolean addIncommingObject(Long identifier, String remoteFile, Long runid) {

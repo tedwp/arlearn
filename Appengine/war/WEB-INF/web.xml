@@ -39,8 +39,18 @@
 	</servlet>
 	
 	<servlet>
+		<servlet-name>UploadUserContentServlet</servlet-name>
+		<servlet-class>org.celstec.arlearn2.upload.UploadUserContentServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
 		<servlet-name>DownloadServlet</servlet-name>
 		<servlet-class>org.celstec.arlearn2.download.DownloadServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>UserContentServlet</servlet-name>
+		<servlet-class>org.celstec.arlearn2.download.UserContentServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
@@ -74,8 +84,18 @@
 	</servlet-mapping>
 	
 	<servlet-mapping>
+		<servlet-name>UploadUserContentServlet</servlet-name>
+		<url-pattern>/uploadUserContent/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
 		<servlet-name>DownloadServlet</servlet-name>
 		<url-pattern>/download/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>UserContentServlet</servlet-name>
+		<url-pattern>/user/*</url-pattern>
 	</servlet-mapping>
 	
 	<welcome-file-list>

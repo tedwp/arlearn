@@ -3,10 +3,12 @@ package org.celstec.arlearn2.android.genItemActivities;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.OpenBadge;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -25,7 +27,7 @@ public class OpenBadgeActivity extends GeneralActivity {
 		unpackDataFromIntent();
 		getGuiComponents();
 		loadDataToGui();
-
+		fireReadAction(badgeBean);
 	}
 
 	protected int getContentView() {
@@ -40,33 +42,19 @@ public class OpenBadgeActivity extends GeneralActivity {
 	protected void getGuiComponents() {
 		webview = (WebView) findViewById(R.id.giNarratorWebView);
 		provideAnswerButton = (Button) findViewById(R.id.provideAnswerButton);
-
 	}
 
 	protected void loadDataToGui() {
-
-//		String html = "<html>";
-//		html += "<head>";
-//		html += "<script src=\"http://beta.openbadges.org/issuer.js\"></script>";
-//		html += "</head>";
-//		html += "</html>";
-		webview.loadUrl("http://sharetec.celstec.org/sandbox/badges.html");
-		webview.getSettings().setJavaScriptEnabled(true);
-		
-//		webview.loadUrl("javascript:alert('hallo'))");
-		provideAnswerButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				webview.loadUrl("javascript:OpenBadges.issue(['http://sharetec.celstec.org/sandbox/badgeassertion.json'])");
-
-			}
-		});
-//		webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+		PropertiesAdapter pa = PropertiesAdapter.getInstance(this);
+		Intent intent = new Intent(
+				Intent.ACTION_VIEW, 
+				Uri.parse("http://ar-learn.appspot.com/issuebadge.jsp?runId="+pa.getCurrentRunId()+"&itemId="+badgeBean.getId()+"&email="+pa.getUsername()));
+		intent.addCategory(Intent.CATEGORY_BROWSABLE);
+		startActivity(intent);
+		this.finish();
 		if (badgeBean.getName() != null) {
 			setTitle(badgeBean.getName());
 		}
-
 	}
 
 	@Override

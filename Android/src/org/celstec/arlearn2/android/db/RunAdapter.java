@@ -2,37 +2,30 @@ package org.celstec.arlearn2.android.db;
 
 //import org.celstec.arlearn2.genericBeans.Run;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
+import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
+import org.celstec.arlearn2.android.activities.MapViewActivity;
+import org.celstec.arlearn2.android.activities.OsmMapViewActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
-import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
-import org.celstec.arlearn2.android.asynctasks.network.NetworkTask;
+import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.RunCache;
-import org.celstec.arlearn2.android.db.GeneralItemVisibility.VisibilityTask;
+import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.game.Game;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.Run;
-import org.celstec.arlearn2.beans.run.RunList;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.client.RunClient;
 import org.celstec.arlearn2.client.UserClient;
-import org.celstec.arlearn2.client.exception.ARLearnException;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.codehaus.jettison.json.JSONString;
-
-//import org.celstec.arlearn2.android.db.beans.GeneralItem;
-//import org.celstec.arlearn2.android.db.beans.Run;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +37,7 @@ import android.util.Log;
 public class RunAdapter extends GenericDbTable {
 
 	public static final String RUN_TABLE = "run";
-	public static final String ID = "id";
+	public static final String ID = "idfield";
 	public static final String TITLE = "title";
 	public static final String START_TIME = "startTime";
 	public static final String SERVER_CREATE_TIME = "serverCreateTime";
@@ -313,9 +306,15 @@ public class RunAdapter extends GenericDbTable {
 				((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).deleteRun(runId);
 				db.getSQLiteDb().delete(getTableName(), ID+" = "+runId, null);
 				RunCache.getInstance().delete(runId);
+				ActionCache.getInstance().delete(runId);
 				db.getGeneralItemVisibility().deleteRun(runId);
 				GeneralItemVisibilityCache.getInstance().remove(runId);
-				ActivityUpdater.updateActivities(db.getContext(), ListExcursionsActivity.class.getCanonicalName());
+				ActivityUpdater.updateActivities(db.getContext(), ListExcursionsActivity.class.getCanonicalName(), 
+						ListMessagesActivity.class.getCanonicalName(),
+						OsmMapViewActivity.class.getCanonicalName(),
+						MapViewActivity.class.getCanonicalName(), 
+						ListMapItemsActivity.class.getCanonicalName(), 
+						NarratorItemActivity.class.getCanonicalName());
 			} catch (SQLException e) {
 				Log.e("sqlex", "ex", e);
 			}
@@ -323,50 +322,55 @@ public class RunAdapter extends GenericDbTable {
 		
 	}
 	
-	public boolean insert(Object o) {
-		
+	public void insert(Run run) {
+		List<Run> runs = new ArrayList<Run>();
+		runs.add(run);
+		insert(runs);
+	}
+	
+	public void insert(List<Run> runs) {
 		InsertRunTask task = new InsertRunTask();
-		task.run = (Run)  o;
-		
+		task.runs = runs;
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(db.getContext()));
 		m.obj = task;
 		m.sendToTarget();
-		return true;
+		
 	}
 	
 	public class InsertRunTask implements DBAdapter.DatabaseTask{
 		
-		public Run run;
+		public List<Run> runs;
 		
 		@Override
 		public void execute(DBAdapter db) {
-			Run cachedRun = RunCache.getInstance().getRun(run.getRunId());
-			if (run.equals(cachedRun)) return;
-			Run oldRun = (Run) queryById(run.getRunId());
-			if (oldRun != null) {
-				if (!oldRun.equals(run)) {
-					update(run, null);
-				} else {
-					RunCache.getInstance().put(run);
-					return;	
+			for (Iterator<Run> iterator = runs.iterator(); iterator.hasNext();) {
+				Run run = iterator.next();
+				Run cachedRun = RunCache.getInstance().getRun(run.getRunId());
+				if (!run.equals(cachedRun)) {
+					Run oldRun = (Run) queryById(run.getRunId());
+					if (oldRun != null) {
+						if (!oldRun.equals(run)) {
+							update(run, null);
+						} else {
+							RunCache.getInstance().put(run);
+						}
+					} else {
+						ContentValues initialValues = new ContentValues();
+						initialValues.put(ID, run.getRunId());
+						initialValues.put(TITLE, run.getTitle());
+						initialValues.put(START_TIME, run.getStartTime());
+						initialValues.put(SERVER_CREATE_TIME, run.getServerCreationTime());
+						initialValues.put(BEAN, run.toString());
+						boolean runDeleted = (run.getDeleted() != null) && run.getDeleted();
+						initialValues.put(DELETED, runDeleted);
+						db.getSQLiteDb().insert(getTableName(), null, initialValues);
+						if (!runDeleted)
+							updateGame(db, run);
+						RunCache.getInstance().put(run);
+					}
+
 				}
 			}
-			
-			ContentValues initialValues = new ContentValues();
-			initialValues.put(ID, run.getRunId());
-	        initialValues.put(TITLE, run.getTitle());
-	        initialValues.put(START_TIME, run.getStartTime());
-	        initialValues.put(SERVER_CREATE_TIME, run.getServerCreationTime());
-	        initialValues.put(BEAN, run.toString());
-
-	        if (run.getDeleted() == null) {
-				initialValues.put(DELETED, false);
-			} else {
-				initialValues.put(DELETED, run.getDeleted());
-			}
-	    	db.getSQLiteDb().insert(getTableName(), null, initialValues);
-	    	updateGame(db, run);
-			RunCache.getInstance().put(run);
 			ActivityUpdater.updateActivities(db.getContext(), ListExcursionsActivity.class.getCanonicalName());
 		}
 		
@@ -397,6 +401,8 @@ public class RunAdapter extends GenericDbTable {
 			updateIntent.putExtra(ListMessagesActivity.class.getCanonicalName(), true);
 			context.sendBroadcast(updateIntent);
 		}
+
+		
 		
 	
 	

@@ -40,10 +40,14 @@ public class BeanDeserialiser {
 
 	private Object parseString (Field field, String value) {
 		if (value == null) return value;
+		try {
 		if (field.getType().getName().equals("int") || field.getType().getName().equals("java.lang.Integer")) return new Integer(Integer.parseInt(value));
 		if (field.getType().getName().equals("long") || field.getType().getName().equals("java.lang.Long")) return new Long(Long.parseLong(value));
 		if (field.getType().getName().equals("double") || field.getType().getName().equals("java.lang.Double")) return new Double(Double.parseDouble(value));
 		if (field.getType().getName().equals("boolean") || field.getType().getName().equals("java.lang.Boolean")) return new Boolean(Boolean.parseBoolean(value));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
 		return value;
 	}
 	private boolean processField(Class beanCls, Field field, Object returnObject) {

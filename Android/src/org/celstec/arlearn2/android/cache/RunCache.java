@@ -26,18 +26,27 @@ public class RunCache extends GenericCache {
 	}
 	
 	public Run[] getRuns() {
-		return allRuns.toArray(new Run[]{});
+		synchronized (allRuns) {
+			return allRuns.toArray(new Run[] {});
+		}
 	}
 	
 	public void put(Run r) {
 		delete(r.getRunId());
-		runToGameId.put(r.getRunId(), r.getGameId());
-		if (r.getDeleted()!= null && !r.getDeleted()) allRuns.add(r);
+		synchronized (runToGameId) {
+			runToGameId.put(r.getRunId(), r.getGameId());
+		}
+
+		if (r.getDeleted() != null && !r.getDeleted()) {
+			synchronized (allRuns) {
+				allRuns.add(r);
+			}
+		}
 	}
 	
 	public Run getRun(Long runId) {
 		for (Run run: allRuns) {
-			if (run.getRunId() == runId) return run;
+			if (run.getRunId().equals(runId)) return run;
 		}
 		return null;
 	}
@@ -48,7 +57,9 @@ public class RunCache extends GenericCache {
 			Run nextRun = iterator.next();
 			if (nextRun.getRunId().equals(runId))  toDelete = nextRun;
 		}
-		if (toDelete != null) allRuns.remove(toDelete);
+		synchronized (allRuns) {
+			if (toDelete != null) allRuns.remove(toDelete);	
+		}
 	}
 	
 }

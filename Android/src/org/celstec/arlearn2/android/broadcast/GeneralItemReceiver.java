@@ -1,35 +1,20 @@
 package org.celstec.arlearn2.android.broadcast;
 
-import java.util.Iterator;
 
-import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
-import org.celstec.arlearn2.android.activities.ListMessagesActivity;
-import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.broadcast.task.CreateNewGItemTask;
 import org.celstec.arlearn2.android.broadcast.task.DeleteItemTask;
 import org.celstec.arlearn2.android.broadcast.task.MakeGeneralItemVisibleTask;
 import org.celstec.arlearn2.android.broadcast.task.SynchronizeGeneralItemsTask;
 import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.GeneralItemAdapter;
-import org.celstec.arlearn2.android.db.GeneralItemVisibility;
-import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
-import org.celstec.arlearn2.android.service.GeneralItemDependencyHandler;
-import org.celstec.arlearn2.android.sync.MediaCacheSyncroniser;
-import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
+import org.celstec.arlearn2.beans.generalItem.OpenBadge;
 import org.celstec.arlearn2.beans.generalItem.OpenUrl;
-import org.celstec.arlearn2.beans.generalItem.VideoObject;
+import org.celstec.arlearn2.beans.generalItem.ScanTag;
 import org.celstec.arlearn2.beans.notification.GeneralItemModification;
-import org.celstec.arlearn2.beans.notification.RunModification;
-import org.celstec.arlearn2.beans.run.Run;
-import org.celstec.arlearn2.client.GeneralItemClient;
-import org.celstec.arlearn2.client.exception.ARLearnException;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -37,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 
 @SuppressLint("ParserError")
 public class GeneralItemReceiver extends BroadcastReceiver {
@@ -45,7 +31,6 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(final Context context, final Intent intent) {
-
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
 			GeneralItemModification bean = (GeneralItemModification) extras.getSerializable("bean");
@@ -53,16 +38,11 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 				processItem(context, bean);
 			}
 		} else {
-			SynchronizeGeneralItemsTask task = new SynchronizeGeneralItemsTask();
-			task.ctx = context;
-			Message m = Message.obtain(NetworkQueue.getNetworkTaskHandler());
-			m.obj = task;
-			m.sendToTarget();
+			(new SynchronizeGeneralItemsTask(context, (new PropertiesAdapter(context)).getCurrentRunId())).addTaskToQueue(context);
 		}
 	}
 
 	private void processItem(Context ctx, GeneralItemModification bean) {
-		bean.getGeneralItem().setRunId(bean.getRunId());
 		if (!canDealWithitemType(bean.getGeneralItem()))
 			return;
 
@@ -102,6 +82,10 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 		if (generalItem instanceof NarratorItem)
 			return true;
 		if (generalItem instanceof GeneralItem)
+			return true;
+		if (generalItem instanceof OpenBadge)
+			return true;
+		if (generalItem instanceof ScanTag)
 			return true;
 		return false;
 	}

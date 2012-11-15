@@ -5,12 +5,10 @@ import java.util.logging.Logger;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.User;
-import org.celstec.arlearn2.delegators.ActionDelegator;
 import org.celstec.arlearn2.delegators.ActionRelevancyPredictor;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
-import org.celstec.arlearn2.delegators.generalitems.QueryGeneralItems;
 
 import com.google.gdata.util.AuthenticationException;
 
@@ -22,6 +20,8 @@ public class UpdateGeneralItems extends GenericBean{
 	private Long generalItemId;
 	private String generalItemType;
 	
+	private static final Logger log = Logger.getLogger(UpdateGeneralItems.class.getName());
+
 	public UpdateGeneralItems() {
 		
 	}
@@ -75,7 +75,6 @@ public class UpdateGeneralItems extends GenericBean{
 		this.userEmail = userEmail;
 	}
 
-	private static final Logger log = Logger.getLogger(UpdateGeneralItems.class.getName());
 
 	
 	@Override

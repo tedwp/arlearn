@@ -8,25 +8,48 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class OpenBadge extends GeneralItem {
 	
-	private String badgeName;
+	private String badgeUrl;
+	private String image;
+	private String evidence;
 	
 	
-	public String getBadgeName() {
-		return badgeName;
+	public String getBadgeUrl() {
+		return badgeUrl;
 	}
 
 
-	public void setBadgeName(String badgeName) {
-		this.badgeName = badgeName;
+	public void setBadgeUrl(String badgeurl) {
+		this.badgeUrl = badgeurl;
 	}
 
+
+
+	public String getImage() {
+		return image;
+	}
+
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+
+	public String getEvidence() {
+		return evidence;
+	}
+
+
+	public void setEvidence(String evidence) {
+		this.evidence = evidence;
+	}
 
 
 	@Override
 	public boolean equals(Object obj) {
+		if (!super.equals(obj)) return false;
 		OpenBadge other = (OpenBadge ) obj;
-		return super.equals(obj) && 
-			nullSafeEquals(getBadgeName(), other.getBadgeName()); 
+		return  
+			nullSafeEquals(getBadgeUrl(), other.getBadgeUrl()); 
 
 	}
 	
@@ -37,7 +60,9 @@ public class OpenBadge extends GeneralItem {
 			OpenBadge ou = (OpenBadge) bean;
 			JSONObject returnObject = super.toJSON(bean);
 			try {
-				if (ou.getBadgeName() != null) returnObject.put("badgeName", ou.getBadgeName());
+				if (ou.getBadgeUrl() != null) returnObject.put("badgeUrl", ou.getBadgeUrl());
+				if (ou.getImage() != null) returnObject.put("image", ou.getImage());
+				if (ou.getEvidence() != null) returnObject.put("evidence", ou.getEvidence());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -60,7 +85,9 @@ public class OpenBadge extends GeneralItem {
 		public void initBean(JSONObject object, Bean genericBean) throws JSONException {
 			super.initBean(object, genericBean);
 			OpenBadge gi = (OpenBadge) genericBean;
-			if (object.has("badgeName")) gi.setBadgeName(object.getString("badgeName"));
+			if (object.has("badgeUrl")) gi.setBadgeUrl(object.getString("badgeUrl"));
+			if (object.has("image")) gi.setImage(object.getString("image"));
+			if (object.has("evidence")) gi.setEvidence(object.getString("evidence"));
 		}
 
 	};
@@ -68,7 +95,7 @@ public class OpenBadge extends GeneralItem {
 	public static void main(String[] args) throws JSONException {
 		GamePackage gp = new GamePackage();
 		OpenBadge ou = new OpenBadge();
-		ou.setBadgeName("supporter badge");
+		ou.setBadgeUrl("supporter badge");
 		gp.addGeneralItem(ou);
 		
 		System.out.println(gp.toString());

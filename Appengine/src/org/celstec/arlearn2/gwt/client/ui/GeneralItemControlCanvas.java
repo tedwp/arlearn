@@ -2,6 +2,7 @@ package org.celstec.arlearn2.gwt.client.ui;
 
 import java.util.LinkedHashMap;
 
+import org.celstec.arlearn2.gwt.client.Authoring;
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
 import org.celstec.arlearn2.gwt.client.network.generalItem.GeneralItemsClient;
@@ -183,9 +184,12 @@ public class GeneralItemControlCanvas extends VStack {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.NarratorItem", "Narrator Item");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest", "Multiple Choice");
+		valueMap.put("org.celstec.arlearn2.beans.generalItem.SingleChoiceTest", "Single Choice");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.VideoObject", "Video Object");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.YoutubeObject", "Youtube movie");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.AudioObject", "Audio Object");
+		if (Authoring.hidden) valueMap.put("org.celstec.arlearn2.beans.generalItem.OpenBadge", "Mozilla Open Badge");
+		if (Authoring.hidden) valueMap.put("org.celstec.arlearn2.beans.generalItem.ScanTag", "Scan Tag");
 		return valueMap;
 	}
 

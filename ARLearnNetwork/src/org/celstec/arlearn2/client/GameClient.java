@@ -25,6 +25,10 @@ public class GameClient extends GenericClient{
 		return (GamesList)  executeGet(getUrlPrefix(), token, GamesList.class);
 	}
 	
+	public Game getGame(String token, Long gameId) {
+		return (Game)  executeGet(getUrlPrefix()+"/gameId/"+gameId, token, Game.class);
+	}
+	
 	public Game createGame(String token, Game game) {
 		HttpResponse response = ConnectionFactory.getConnection().executePOST(getUrlPrefix(), token, "application/json", toJson(game), "application/json");
 		String entry;

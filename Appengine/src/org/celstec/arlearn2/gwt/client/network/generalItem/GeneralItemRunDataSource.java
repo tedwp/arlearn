@@ -71,6 +71,8 @@ public class GeneralItemRunDataSource extends GenericDataSource {
 				if (firstValue.contains(MULTIPLECHOICE)) return "Multiple Choice Test";
 				if (firstValue.contains(NARRATORITEM)) return "Narrator Item";
 				if (firstValue.contains("OpenUrl")) return "Open URL";
+				if (firstValue.contains("OpenBadge")) return "Mozilla Open Badge";
+				if (firstValue.contains("ScanTag")) return "Scan Tag";
 				return firstValue;
 			}
 			

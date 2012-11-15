@@ -41,9 +41,12 @@ public class GeneralItemGameDataSource extends GenericDataSource {
 				if (firstValue.contains("AudioObject")) return "Audio Object";
 				if (firstValue.contains("VideoObject")) return "Video Object";
 				if (firstValue.contains("MultipleChoiceTest")) return "Multiple Choice Test";
+				if (firstValue.contains("SingleChoiceTest")) return "Single Choice Test";
 				if (firstValue.contains("NarratorItem")) return "Narrator Item";
 				if (firstValue.contains("OpenUrl")) return "Open URL";
 				if (firstValue.contains("YoutubeObject")) return "Youtube movie";
+				if (firstValue.contains("OpenBadge")) return "Mozilla Open Badge";
+				if (firstValue.contains("ScanTag")) return "Scan Tag";
 				return firstValue;
 			}
 			

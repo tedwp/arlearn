@@ -19,6 +19,7 @@ import org.celstec.arlearn2.tasks.beans.DeleteActions;
 import org.celstec.arlearn2.tasks.beans.DeleteBlobs;
 import org.celstec.arlearn2.tasks.beans.DeleteResponses;
 import org.celstec.arlearn2.tasks.beans.DeleteScoreRecords;
+import org.celstec.arlearn2.tasks.beans.UpdateGeneralItemsVisibility;
 
 import com.google.gdata.util.AuthenticationException;
 
@@ -44,6 +45,8 @@ public class UsersDelegator extends GoogleDelegator {
 		rm.setModificationType(RunModification.CREATED);
 		rm.setRun((new RunDelegator(this)).getRun(u.getRunId()));
 		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
+		
+		(new UpdateGeneralItemsVisibility(authToken, u.getRunId(), u.getEmail(), 1)).scheduleTask();
 		
 		return u;
 	}
@@ -169,6 +172,7 @@ public class UsersDelegator extends GoogleDelegator {
 		(new DeleteBlobs(authToken, runId, email)).scheduleTask();
 		(new DeleteResponses(authToken, runId, email)).scheduleTask();
 		(new DeleteScoreRecords(authToken, runId, email)).scheduleTask();
+		(new UpdateGeneralItemsVisibility(authToken, runId, email, 2)).scheduleTask();
 		notifyRunDeleted(runId, email);
 		
 		return user;

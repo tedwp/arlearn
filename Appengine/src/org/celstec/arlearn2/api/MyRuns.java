@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.api;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,10 +17,21 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.game.Config;
+import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
+import org.celstec.arlearn2.beans.generalItem.OpenBadge;
+import org.celstec.arlearn2.beans.generalItem.OpenBadgeAssertion;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.RunList;
 import org.celstec.arlearn2.beans.run.User;
+import org.celstec.arlearn2.cache.GeneralitemsCache;
+import org.celstec.arlearn2.cache.MyGamesCache;
 import org.celstec.arlearn2.delegators.RunDelegator;
+import org.celstec.arlearn2.jdo.manager.GameManager;
+import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
+import org.celstec.arlearn2.jdo.manager.RunManager;
+import org.celstec.arlearn2.jdo.manager.UserManager;
 
 import com.google.gdata.util.AuthenticationException;
 
@@ -147,5 +159,38 @@ public class MyRuns extends Service {
 			return serialise(getInvalidCredentialsBean(), accept);
 		RunDelegator rd = new RunDelegator(token);
 		return serialise(rd.deleteRun(runIdentifier), accept);
+	}
+	
+	@GET
+	@Path("/badge/{runIdentifier}/{itemId}/{userId}")
+	 @Produces("application/json")
+	public String getBadge(@PathParam("runIdentifier") Long runId, @PathParam("itemId") String itemId, @PathParam("userId") String email) {
+		List<Run> runList = RunManager.getRuns(runId, null, null, null, null);
+		if (runList.isEmpty())
+			return null;
+		Run r = runList.get(0);
+		List<User> users = UserManager.getUserList(null, email, null, runId);
+		if (users.isEmpty())
+			return null;
+		GeneralItemList gil = new GeneralItemList();
+			gil.setGeneralItems(GeneralItemManager.getGeneralitems(r.getGameId(), itemId, null));
+			GeneralitemsCache.getInstance().putGeneralItemList(gil, r.getGameId(), itemId, null);
+		if (gil == null || gil.getGeneralItems() == null || gil.getGeneralItems().isEmpty()) {
+			return null;
+		}
+		GeneralItem gi = gil.getGeneralItems().get(0);
+		OpenBadge ob = (OpenBadge) gi;
+		OpenBadgeAssertion ou = new OpenBadgeAssertion();
+		ou.setRecipient(users.get(0).getFullEmail());
+		ou.setEvidence(ob.getEvidence());
+//		ou.setExpires("2013-06-01");
+//		ou.setIssued_on("2012-10-11");
+		ou.setBadge_name(ob.getName());
+		ou.setBadge_image(ob.getImage());
+		ou.setBadge_description(ob.getDescription());
+		ou.setBadge_criteria("/badges/html5-basic");
+		ou.setBadge_issuer_origin(ob.getBadgeUrl());
+		ou.setBadge_issuer_name("celstec");
+		return serialise(ou, "application/json").replace("\\/", "/");
 	}
 }

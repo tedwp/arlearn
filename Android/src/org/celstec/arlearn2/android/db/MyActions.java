@@ -3,21 +3,9 @@ package org.celstec.arlearn2.android.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.plaf.basic.BasicSliderUI.ActionScroller;
-
+import org.celstec.arlearn2.android.broadcast.task.PublishActionTask;
 import org.celstec.arlearn2.android.cache.ActionCache;
-import org.celstec.arlearn2.android.db.GeneralItemAdapter.GeneralItemResults;
-import org.celstec.arlearn2.android.service.GeneralItemDependencyHandler;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.Action;
-import org.celstec.arlearn2.beans.run.Run;
-import org.celstec.arlearn2.client.ActionClient;
-
-//import org.celstec.arlearn2.android.db.beans.Action;
-//import org.celstec.arlearn2.android.db.beans.GeneralItem;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -49,8 +37,8 @@ public class MyActions extends GenericDbTable {
 				+ GENERAL_ITEM_ID + " text, " + 
 				GENERAL_ITEM_TYPE + " text, " + 
 				RUNID + " long not null, " + 
-				TIMESTAMP + " long not null," + REPLICATED
-				+ " boolean not null);";
+				TIMESTAMP + " long not null," + 
+				REPLICATED+ " boolean not null);";
 	}
 
 	@Override
@@ -58,11 +46,10 @@ public class MyActions extends GenericDbTable {
 		return MYACTIONS_TABLE;
 	}
 
-	@Override
-	public boolean insert(Object o) {
-		Action action = (Action) o;
+	
+	public boolean insert(Action action, boolean replicated) {
 		ContentValues initialValues = new ContentValues();
-		String id = action.getAction() + ":" + action.getUserEmail() + ":" + action.getGeneralItemId() + ":" + action.getGeneralItemType() + ":" + action.getRunId();
+		String id = action.getAction() + ":" + action.getUserEmail() + ":" + action.getGeneralItemId() + ":" + action.getGeneralItemType() + ":" + action.getRunId()+":"+action.getTime();
 		if (queryById(id) == null) {
 			initialValues.put(ID, id);
 			initialValues.put(ACCOUNT, action.getUserEmail());
@@ -71,7 +58,7 @@ public class MyActions extends GenericDbTable {
 			if (action.getGeneralItemType()!= null) initialValues.put(GENERAL_ITEM_TYPE, action.getGeneralItemType());
 			initialValues.put(RUNID, action.getRunId());
 			initialValues.put(TIMESTAMP, action.getTime());
-			initialValues.put(REPLICATED, false);
+			initialValues.put(REPLICATED, replicated);
 			ActionCache.getInstance().cacheAction(action.getRunId(), action);
 
 			//			((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).unblockVisibleItem(resp);
@@ -120,16 +107,11 @@ public class MyActions extends GenericDbTable {
 	
 	public List<Action> query(long runId) {
 		List<Action> actions = query(RUNID + "= ?  ", new String[] { ""+runId});
-		ActionCache.getInstance().setActions(runId, actions);
+//		ActionCache.getInstance().setActions(runId, actions);
 		return actions;
 	}
 
-	public void confirmReplicated(Action action) {
-		ContentValues newValue = new ContentValues();
-		newValue.put(REPLICATED, true);
-		db.getSQLiteDb().update(getTableName(), newValue, TIMESTAMP + "=?", new String[] { "" + action.getTime() });
-
-	}
+	
 
 	public Object queryById(Object id) {
 		try {
@@ -179,19 +161,28 @@ public class MyActions extends GenericDbTable {
 		
 		@Override
 		public void execute(DBAdapter db) {
-			insert(action);
+			insert(action, false);
 			for (Action action: queryActionsNotReplicated()) {
-				ActionClient ac = ActionClient.getActionClient();
-				Action result = ac.publishAction(PropertiesAdapter.getInstance(db.getContext()).getFusionAuthToken(), action);
-				if (result.getError()== null) {
-					confirmReplicated(result);	
-				} else {
-					if (result.getError() !=null && "User not found".equals(result.getError())) 				
-						confirmReplicated(result);	 //this is not elegant... but it mean the user was deleted, so don't try to sync in future
-				}
+				(new PublishActionTask(db.getContext(), action)).addTaskToQueue(db.getContext());
 			}
-			(new GeneralItemDependencyHandler(db.getContext())).checkDependencies(db);
 		}
+
+	}
+	
+	public void confirmReplicated(final Action action) {
+		DBAdapter.DatabaseTask task = new DBAdapter.DatabaseTask() {
+			
+			@Override
+			public void execute(DBAdapter db) {
+				ContentValues newValue = new ContentValues();
+				newValue.put(REPLICATED, true);
+				db.getSQLiteDb().update(getTableName(), newValue, TIMESTAMP + "= ?", new String[] { "" + action.getTime() });
+			}
+		};
+		
+		Message m = Message.obtain(DBAdapter.getDatabaseThread(db.getContext()));
+		m.obj = task;
+		m.sendToTarget();
 
 	}
 

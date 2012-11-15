@@ -1,7 +1,5 @@
 package org.celstec.arlearn2.client;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 
@@ -19,7 +17,15 @@ public class GeneralItemClient extends GenericClient{
 		return instance;
 	}
 	
-	public GeneralItemList getRunGeneralItems(String token, Long runId) {
+	public GeneralItemList getGameGeneralItems(String token, Long gameId) {
+		return (GeneralItemList) executeGet(getUrlPrefix()+"/gameId/"+gameId, token, GeneralItemList.class);
+	}
+	
+	public GeneralItemList getRunGeneralItemsAll(String token, Long runId) {
+		return (GeneralItemList)  executeGet(getUrlPrefix()+"/runId/"+runId+"/all", token, GeneralItemList.class);
+	}
+	
+	public GeneralItemList getRunGeneralItemsVisible(String token, Long runId) {
 		return (GeneralItemList)  executeGet(getUrlPrefix()+"/runId/"+runId, token, GeneralItemList.class);
 	}
 	

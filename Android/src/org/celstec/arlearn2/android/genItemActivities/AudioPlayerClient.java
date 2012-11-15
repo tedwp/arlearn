@@ -18,6 +18,7 @@ public class AudioPlayerClient extends IAudioPlayerCallback.Stub{
 	
 	private int status;
 	private String audioIdentifier;
+	private Long itemIdentifier;
 	private boolean audioStartedByActivity;
 	private Action completeAction;
 	private  IGeneralActivity ctx;
@@ -29,7 +30,17 @@ public class AudioPlayerClient extends IAudioPlayerCallback.Stub{
 		setAudioIdentifier(audioIdentifier);
 	}
 	
+	public AudioPlayerClient(Long audioIdentifier) {
+		this.itemIdentifier = audioIdentifier;
+	}
+	
 	public AudioPlayerClient(String audioIdentifier, Action completeAction, IGeneralActivity ctx) {
+		this(audioIdentifier);
+		this.completeAction = completeAction;
+		this.ctx = ctx;
+	}
+	
+	public AudioPlayerClient(Long audioIdentifier, Action completeAction, IGeneralActivity ctx) {
 		this(audioIdentifier);
 		this.completeAction = completeAction;
 		this.ctx = ctx;
@@ -91,7 +102,11 @@ public class AudioPlayerClient extends IAudioPlayerCallback.Stub{
 		setStatus(PLAYING);
 		audioStartedByActivity = true;
 		try {
-			audioPlayerService.start(getAudioIdentifier(), this);
+			if (getAudioIdentifier() != null) {
+				audioPlayerService.start(getAudioIdentifier(), this);
+			} else {
+				audioPlayerService.startItem(itemIdentifier, this);
+			}
 		} catch (RemoteException e) {
 			Log.e("error while starting playing", e.getMessage(), e);
 		}

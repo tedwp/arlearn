@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.cache.GameCache;
+import org.celstec.arlearn2.android.cache.MediaCache;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.run.Run;
 
@@ -18,6 +19,7 @@ public class RunListRecord extends GenericListRecord {
 	private static SimpleDateFormat formatterDay = new SimpleDateFormat("d MMM \n HH:mm:ss");
 //	private static SimpleDateFormat formatterTime = new SimpleDateFormat("HH:mm:ss");
 
+	private Long gameId;
 
 	public RunListRecord(Run run) {
 		this.setId(run.getRunId());
@@ -30,7 +32,17 @@ public class RunListRecord extends GenericListRecord {
 		}
 		setMessageHeader(run.getTitle());
 		
-		if (game != null)setMessageDetail(game.getTitle()+" ("+game.getCreator()+")");
+		if (game != null) {
+			gameId = game.getGameId();
+			int amount = MediaCache.getInstance().getAmountOfItemsToDownload(game.getGameId());
+			String message = null;
+			if (amount == 0) {
+				message = game.getTitle()+" ("+game.getCreator()+")";
+			} else {
+				message = game.getTitle()+" ("+amount+ " uncached)";
+			}
+			setMessageDetail(message);
+		}
 		if (run.getLastModificationDate() != null) setRightDetail(formatterDay.format(run.getLastModificationDate()));
 	}
 
@@ -50,5 +62,19 @@ public class RunListRecord extends GenericListRecord {
 		}
 		return v;
 	}
+
+
+
+	public Long getGameId() {
+		return gameId;
+	}
+
+
+
+	public void setGameId(Long gameId) {
+		this.gameId = gameId;
+	}
+	
+	
 
 }

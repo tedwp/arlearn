@@ -5,6 +5,7 @@ import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
@@ -57,11 +58,15 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 			setLat(50.878);
 			setLng(5.96);
 		}
+		Long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
+		if (runId == null || RunCache.getInstance().getRun(runId) == null) {
+			this.finish();
+		}
 		
 //		setContentView(R.layout.list_map_items); TODO delete list_map_items
 //		DBAdapter db = new DBAdapter(this);
 //		db.openForRead();
-		TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleItems(runId, this);
+		TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleItems(runId);
 		if (gil == null) {
 			return;
 		} 
@@ -172,7 +177,10 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 		GIActivitySelector.startActivity(this, gis[position]);
 		
 	}
-	
+	@Override
+	public boolean setOnLongClickListener(View v, int position, GenericListRecord messageListRecord) {
+		return false;
+	}
 	public boolean showStatusLed() {
 		return true;
 	}

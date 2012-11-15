@@ -32,7 +32,7 @@ public class ActionCache {
 	}
 	
 	public boolean isRead(long runId, long itemId) {
-		if (readMap.containsKey(runId)) return false;
+		if (!readMap.containsKey(runId)) return false;
 		if (!readMap.get(runId).containsKey(itemId)) return false;
 		return true; 
 	}
@@ -41,26 +41,50 @@ public class ActionCache {
 		return actionsMap.get(runId);
 	}
 	
-	public void setActions(Long runId, List<Action> actions) {
-		this.actionsMap.put(runId,  actions);
-	}
+//	public void setActions(Long runId, List<Action> actions) {
+//		this.actionsMap.put(runId,  actions);
+//	}
 	
 	public void flushCache(Long runId) {
-		actionsMap.remove(runId);
+		synchronized (actionsMap) {
+			actionsMap.remove(runId);
+		}
 	}
 	
 	
 	public void setRunLoaded(long runId) {
-		loadedRuns.add(runId);		
+		synchronized (loadedRuns) {
+			loadedRuns.add(runId);		
+		}
 	}
 	
 	public void cacheAction(long runId, Action a) {
-		if (actionsMap.get(runId) == null) actionsMap.put(runId, new ArrayList<Action>());
-		if (readMap.get(runId) == null) readMap.put(runId, new HashMap<Long, Action>());
-		actionsMap.get(runId).add(a);
-		if ("read".equals(a.getAction()) && a.getGeneralItemId() != null) {
-			readMap.get(runId).put(a.getGeneralItemId(), a);
+		synchronized (actionsMap) {
+			synchronized (readMap) {
+				if (actionsMap.get(runId) == null)
+					actionsMap.put(runId, new ArrayList<Action>());
+				if (readMap.get(runId) == null)
+					readMap.put(runId, new HashMap<Long, Action>());
+				actionsMap.get(runId).add(a);
+				if ("read".equals(a.getAction()) && a.getGeneralItemId() != null) {
+					readMap.get(runId).put(a.getGeneralItemId(), a);
+				}
+			}
 		}
+	}
+
+	public void delete(Long runId) {
+		synchronized (actionsMap) {
+			loadedRuns.remove(runId);
+		}
+		synchronized (actionsMap) {
+
+			actionsMap.remove(runId);
+		}
+		synchronized (readMap) {
+			readMap.remove(runId);
+		}
+
 	}
 	
 }

@@ -79,19 +79,19 @@ public class GeneralItemsSyncroniser extends GenericSyncroniser {
 //		}
 //	}
 	
-	private static void processItemForAdditionalWork(GeneralItem item, DBAdapter db) {
-		if (item instanceof AudioObject) {
-			AudioObject aItem = (AudioObject) item;
-			((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).addIncommingObject(aItem.getId(), aItem.getAudioFeed(), aItem.getRunId());
-			MediaCacheSyncroniser.getInstance().resetDelay();
-		}
-		if (item instanceof VideoObject) {
-			VideoObject vItem = (VideoObject) item;
-			((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).addIncommingObject(vItem.getId(), vItem.getVideoFeed(), vItem.getRunId());
-			MediaCacheSyncroniser.getInstance().resetDelay();
-		}
-		
-	}
+//	private static void processItemForAdditionalWork(GeneralItem item, DBAdapter db) {
+//		if (item instanceof AudioObject) {
+//			AudioObject aItem = (AudioObject) item;
+//			((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).addIncommingObject(aItem.getId(), aItem.getAudioFeed(), aItem.getRunId());
+//			MediaCacheSyncroniser.getInstance().resetDelay();
+//		}
+//		if (item instanceof VideoObject) {
+//			VideoObject vItem = (VideoObject) item;
+//			((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).addIncommingObject(vItem.getId(), vItem.getVideoFeed(), vItem.getRunId());
+//			MediaCacheSyncroniser.getInstance().resetDelay();
+//		}
+//		
+//	}
 
 //	public static void timeInitGeneralItems(DBAdapter db, Context ctx, Run currentRun){
 //		GeneralItemAdapter giAdapter = (GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER);

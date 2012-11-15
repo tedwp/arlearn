@@ -34,15 +34,16 @@ public class GeneralItemVisibilityCache {
 	}
 	
 	
-	public TreeSet<GeneralItem> getAllItems(long runId, Context ctx) {
+	public TreeSet<GeneralItem> getAllItems(long runId) {
 		if (itemIdToStatus == null) {
 			return null;
 		}
 		TreeSet<GeneralItem> resultList = new TreeSet<GeneralItem>();
 		GeneralItem old = null ;
+		//TODO concurrent mod exception -> iterator
 		for (Map.Entry<Long, GeneralItem> entry :GeneralItemsCache.getInstance().getGeneralItemsWithGameId(RunCache.getInstance().getGameId(runId)).entrySet()){
 			Integer status = itemIdToStatus.get(runId+"*"+entry.getValue().getId());
-			if (status == null) {
+			if (status == null && (entry.getValue().getDeleted() == null || !entry.getValue().getDeleted())) {
 				put(runId, entry.getValue().getId(), GeneralItemVisibility.NOT_INITIALISED);
 			} 
 			resultList.add(entry.getValue());
@@ -50,8 +51,8 @@ public class GeneralItemVisibilityCache {
 		return resultList;
 	}
 	
-	public TreeSet<GeneralItem> getAllNotInitializedItems(long runId,  Context ctx) {
-		TreeSet<GeneralItem> resultList =getAllItems(runId, ctx);
+	public TreeSet<GeneralItem> getAllNotInitializedItems(long runId) {
+		TreeSet<GeneralItem> resultList =getAllItems(runId);
 		if (resultList == null) return null;
 		for (Iterator<GeneralItem> iterator = resultList.iterator(); iterator.hasNext();) {
 			GeneralItem gi = iterator.next();
@@ -62,8 +63,8 @@ public class GeneralItemVisibilityCache {
 		return resultList;
 	}
 	
-	public TreeSet<GeneralItem> getAllVisibleItems(long runId,  Context ctx) {
-		TreeSet<GeneralItem> resultList =getAllItems(runId, ctx);
+	public TreeSet<GeneralItem> getAllVisibleItems(long runId) {
+		TreeSet<GeneralItem> resultList =getAllItems(runId);
 		if (resultList == null) return null;
 		for (Iterator<GeneralItem> iterator = resultList.iterator(); iterator.hasNext();) {
 			GeneralItem gi = iterator.next();
@@ -74,8 +75,8 @@ public class GeneralItemVisibilityCache {
 		return resultList;
 	}
 	
-	public TreeSet<GeneralItem> getAllVisibleMessages(long runId,  Context ctx) {
-		TreeSet<GeneralItem> resultList =getAllVisibleItems(runId, ctx);
+	public TreeSet<GeneralItem> getAllVisibleMessages(long runId) {
+		TreeSet<GeneralItem> resultList =getAllVisibleItems(runId);
 		if (resultList == null) return null;
 		for (Iterator<GeneralItem> iterator = resultList.iterator(); iterator.hasNext();) {
 			GeneralItem gi = iterator.next();
@@ -86,8 +87,8 @@ public class GeneralItemVisibilityCache {
 		return resultList;
 	}
 	
-	public TreeSet<GeneralItem> getAllVisibleLocations(long runId,  Context ctx) {
-		TreeSet<GeneralItem> resultList =getAllVisibleItems(runId, ctx);
+	public TreeSet<GeneralItem> getAllVisibleLocations(long runId) {
+		TreeSet<GeneralItem> resultList =getAllVisibleItems(runId);
 		if (resultList == null) return null;
 		for (Iterator<GeneralItem> iterator = resultList.iterator(); iterator.hasNext();) {
 			GeneralItem gi = iterator.next();
@@ -102,16 +103,29 @@ public class GeneralItemVisibilityCache {
 		loadedRuns.add(runId);		
 	}
 
-	public void put(long runId, long itemId, int status) {
-		itemIdToStatus.put(runId+"*"+itemId, status);
-		
+	public void put(Long runId, long itemId, int status) {
+		synchronized (itemIdToStatus) {
+			if (runId == null) {
+					for (Long runIdent: loadedRuns) {
+						itemIdToStatus.put(runIdent+"*"+itemId, status);
+					}
+			} else {
+				itemIdToStatus.put(runId+"*"+itemId, status);			
+			}
+		}
 	}
 	
 	public void remove(long runId) {
+		synchronized (itemIdToStatus) {
 		for (String key: itemIdToStatus.keySet().toArray(new String[]{})) {
 			if (key.startsWith(runId+"*")) {
 				itemIdToStatus.remove(key);
 			}
 		}
+		}
+	}
+
+	public boolean isVisible(long runId, Long id) {
+		return (itemIdToStatus.get(runId+"*"+id)!= null && itemIdToStatus.get(runId+"*"+id) == GeneralItemVisibility.VISIBLE);
 	}
 }

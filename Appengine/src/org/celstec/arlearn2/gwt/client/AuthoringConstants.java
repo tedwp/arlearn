@@ -190,8 +190,14 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Automatically launch")
 	String autoLaunch();
 	
+	@DefaultStringValue("Automatically start QR reader")
+	String autoLaunchQR();
+	
 	@DefaultStringValue("Automatically launch means that the item will be started automatically on the client, once all dependencies are met")
 	String autoLaunchHover();
+	
+	@DefaultStringValue("Automatically launch the QR code reader as soon as this item is selected")
+	String autoLaunchQRCodeHover();
 	
 	@DefaultStringValue("T")
 	String manualTrigger();

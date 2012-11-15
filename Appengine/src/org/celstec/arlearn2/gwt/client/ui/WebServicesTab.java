@@ -24,6 +24,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.HeaderItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
@@ -42,6 +43,7 @@ public class WebServicesTab  extends MasterDetailTab {
 	private VLayout rightCanvas;
 	private Canvas detailCanvas;
 	private String[] columns;
+	private TextAreaItem messageItem;
 	
 	public WebServicesTab() {
 		super("WS tab");
@@ -98,9 +100,9 @@ public class WebServicesTab  extends MasterDetailTab {
 		postTi.setName("path");
 		postTi.setTitle("type url path");
 		
-		TextItem postTiPay = new TextItem();
-		postTiPay.setName("payload");
-		postTiPay.setTitle("post payload");
+//		TextItem postTiPay = new TextItem();
+//		postTiPay.setName("payload");
+//		postTiPay.setTitle("post payload");
 		
 		ButtonItem postBi = new ButtonItem();
 		postBi.setTitle("post to path");
@@ -110,11 +112,11 @@ public class WebServicesTab  extends MasterDetailTab {
 			public void onClick(ClickEvent event) {
 				String value = (String) postForm.getValue("path");
 				PathClient pc = new PathClient();
-				pc.postPath(value, (String) postForm.getValue("payload"));
+				pc.postPath(value, messageItem.getValueAsString());
 			}
 		});
 		
-		postForm.setFields(headerPost, postTi, postTiPay, postBi);
+		postForm.setFields(headerPost, postTi, postBi);
 		
 
 		returnStack.addMember(postForm);
@@ -155,9 +157,33 @@ public class WebServicesTab  extends MasterDetailTab {
 	}
 
 	public Canvas getListGeneralItemsCanvas() {
-		detailCanvas = new Canvas();
-
-		return detailCanvas;
+		
+		 final DynamicForm form = new DynamicForm();  
+	       
+	        form.setIsGroup(true);  
+	        form.setWidth100();
+	        form.setHeight100();  
+	        form.setNumCols(2);  
+	        form.setColWidths(60, "*");  
+	        //form.setBorder("1px solid blue");  
+	        form.setPadding(5);  
+	        form.setCanDragResize(true);  
+	        form.setResizeFrom("R");  
+	          
+	       
+	  
+	        messageItem = new TextAreaItem();  
+	        messageItem.setShowTitle(false);  
+	        messageItem.setLength(5000);  
+	        messageItem.setColSpan(2);  
+	        messageItem.setWidth("*");  
+	        messageItem.setHeight("*");  
+	  
+	        form.setFields(messageItem);  
+	          
+	        form.draw();  
+	        detailCanvas = form;
+		return form;
 	}
 	private void initGrid(JSONArray rowsArray) {
 		
@@ -236,7 +262,7 @@ public class WebServicesTab  extends MasterDetailTab {
 		
 		JsonCallback dummyCb =  new JsonCallback() {
 			public void onJsonReceived(JSONValue jsonValue) {
-				
+				messageItem.setValue(jsonValue.toString());
 			}
 			
 			public void onError(){
@@ -246,6 +272,10 @@ public class WebServicesTab  extends MasterDetailTab {
 		};
 		public void getPath(String path) {
 			invokeJsonGET(path, dummyCb);
+		}
+		
+		public void getPath(String path, JsonCallback jc) {
+			invokeJsonGET(path, jc);
 		}
 		
 		public void postPath(String path, String postMessage) {

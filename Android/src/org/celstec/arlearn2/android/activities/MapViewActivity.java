@@ -2,6 +2,7 @@ package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.maps.GenericItemsOverlay;
 import org.celstec.arlearn2.android.maps.ResponsesOverlay;
@@ -148,6 +149,10 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 		if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			this.finish();
 		}
+		Long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
+		if (runId == null || RunCache.getInstance().getRun(runId) == null) {
+			this.finish();
+		}
 		myLocation.enableMyLocation();
 //		mHandler.removeCallbacks(checkForUpdates);
 //		mHandler.post(checkForUpdates);
@@ -183,7 +188,7 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 
 	private void makeGeneralItemVisible() {
 		long runId = getRunId();
-		itemsOverlay.syncItems(this, runId);
+		itemsOverlay.syncItems(runId);
 		responsesOverlay.syncItems(this, runId);
 		mv.invalidate();
 	}

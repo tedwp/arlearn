@@ -8,10 +8,12 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import org.celstec.arlearn2.beans.run.VisibleItem;
+import org.celstec.arlearn2.cache.VisibleGeneralItemsCache;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.RunJDO;
 import org.celstec.arlearn2.jdo.classes.VisibleItemsJDO;;
 
+@Deprecated
 public class VisibleItemsManager {
 
 	private static final String params[] = new String[]{"runId", "generalItemId", "email", "teamId"};

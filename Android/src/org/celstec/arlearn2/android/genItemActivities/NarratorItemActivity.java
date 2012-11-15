@@ -12,6 +12,7 @@ import org.celstec.arlearn2.android.activities.GeneralActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.cache.ResponseCache;
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
@@ -55,6 +56,10 @@ public class NarratorItemActivity extends GeneralActivity {
 	public void onBroadcastMessage(Bundle bundle, boolean render) {
 		super.onBroadcastMessage(bundle, render);
 		if (render) {
+			Long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
+			if (runId == null || RunCache.getInstance().getRun(runId) == null) {
+				this.finish();
+			}
 		reloadBeanFromDb();
 		getGuiComponents();
 		loadDataToGui();

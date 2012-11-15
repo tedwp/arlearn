@@ -45,20 +45,23 @@ public class VideoObjectActivity extends NarratorItemActivity {
 	}
 	
 	private void startVideo() {
-		MediaCacheItem mc = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(""+getVideoObject().getId());
-		if (mc == null) {
-			Toast toast = Toast.makeText(this, "mc item is null", Toast.LENGTH_LONG);
-			toast.show();
-			return;
-		}
-		if (mc.getLocalFile() == null) {
+//		MediaCacheItem mc = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(""+getVideoObject().getId());
+		Uri videoUri = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getLocalUri(getVideoObject().getId());
+//		if (mc == null) {
+//			Toast toast = Toast.makeText(this, "mc item is null", Toast.LENGTH_LONG);
+//			toast.show();
+//			return;
+//		}
+		if (videoUri == null) {
 			Toast toast = Toast.makeText(this, getString(R.string.downloadBusy), Toast.LENGTH_LONG);
 			toast.show();
 			return;
 		}
-		File audioFile = new File(mc.getLocalFile());
+//		File audioFile = new File(mc.getLocalFile());
 		Intent intentToPlayVideo = new Intent(Intent.ACTION_VIEW);
-		intentToPlayVideo.setDataAndType(Uri.parse("file://"+audioFile.getAbsolutePath()), "video/*");
+		
+//		intentToPlayVideo.setDataAndType(Uri.parse("file://"+audioFile.getAbsolutePath()), "video/*");
+		intentToPlayVideo.setDataAndType(videoUri, "video/*");
 		startActivity(intentToPlayVideo);
 	}
 	

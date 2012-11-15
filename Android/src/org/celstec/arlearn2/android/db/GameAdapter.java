@@ -45,8 +45,7 @@ public class GameAdapter extends GenericDbTable {
 		return GAME_TABLE;
 	}
 
-	@Override
-	public boolean insert(Object o) {
+	public boolean insert(Game o) {
 		return insertGame((Game) o);
 	}
 	

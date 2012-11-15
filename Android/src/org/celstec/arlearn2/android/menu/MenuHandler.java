@@ -19,7 +19,6 @@ import org.celstec.arlearn2.android.db.MyResponses;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.genItemActivities.AudioObjectActivity;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
-import org.celstec.arlearn2.android.service.BackgroundService;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 //import org.jivesoftware.smack.Chat;
 //import org.jivesoftware.smack.ChatManager;
@@ -73,9 +72,9 @@ public class MenuHandler {
 			context.startActivity(new Intent(context, SplashScreenActivity.class));
 			break;
 		case EXIT:
-			intent = new Intent(context, BackgroundService.class);
-			intent.putExtra("exit", true);
-			context.startService(intent);
+//			intent = new Intent(context, BackgroundService.class);
+//			intent.putExtra("exit", true);
+//			context.startService(intent);
 			context.finish();
 			break;
 		case MESSAGES:

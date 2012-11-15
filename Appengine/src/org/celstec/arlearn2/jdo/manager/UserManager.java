@@ -1,21 +1,23 @@
 package org.celstec.arlearn2.jdo.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.celstec.arlearn2.jdo.PMF;
-import org.celstec.arlearn2.jdo.classes.RunJDO;
 import org.celstec.arlearn2.jdo.classes.UserJDO;
+import org.datanucleus.store.appengine.query.JDOCursorHelper;
 
+import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Text;
@@ -33,6 +35,8 @@ public class UserManager {
 		user.setName(bean.getName());
 		user.setRunId(bean.getRunId());
 		user.setEmail(bean.getEmail());
+		user.setLastModificationDate(System.currentTimeMillis());
+
 		user.setId();
 		JsonBeanSerialiser jbs = new JsonBeanSerialiser(bean);
 		user.setPayload(new Text(jbs.serialiseToJson().toString()));
@@ -140,17 +144,39 @@ public class UserManager {
 		}
 	}
 	
+	public static void deleteUser(PersistenceManager pm, UserJDO userJDO) {
+		pm.deletePersistent(userJDO);
+	}
+	
 	public static void setStatusDeleted(long runId, String email) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			List<UserJDO> deleteList = getUsers(pm, null, email, null, runId);
 			for (UserJDO jdo: deleteList) {
 				jdo.setDeleted(true);
+				jdo.setLastModificationDate(System.currentTimeMillis());
 			}
 		} finally {
 			pm.close();
 		}
 	}
+	private final static int LIMIT = 20;
+
+	
+	public static List<UserJDO> listAllUsers(PersistenceManager pm, String cursorString) {
+		javax.jdo.Query query = pm.newQuery(UserJDO.class);
+		if (cursorString != null) {
+			Cursor cursor = Cursor.fromWebSafeString(cursorString);
+			Map<String, Object> extensionMap = new HashMap<String, Object>();
+			extensionMap.put(JDOCursorHelper.CURSOR_EXTENSION, cursor);
+			query.setExtensions(extensionMap);
+		}
+		query.setRange(0, LIMIT);
+		return (List<UserJDO>) query.execute();
+	}
+
+	
+
 	
 //	private static User toBean(UserJDO jdo) {
 //		if (jdo == null) return null;

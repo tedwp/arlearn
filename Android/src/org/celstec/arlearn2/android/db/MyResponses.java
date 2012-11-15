@@ -38,9 +38,7 @@ public class MyResponses extends GenericDbTable {
 		return MYRESPONSES_TABLE;
 	}
 
-	@Override
-	public boolean insert(Object o) {
-		Response resp = (Response) o;
+	public boolean insert(Response resp) {
 		ResponseCache.getInstance().put(resp);
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(ACCOUNT, resp.getUserEmail());

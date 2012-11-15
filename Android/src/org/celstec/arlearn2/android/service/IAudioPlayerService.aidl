@@ -11,6 +11,8 @@ interface IAudioPlayerService {
 	void setAudioIdentifier(String audioIdentifier);
 	
 	void start(String identifier, IAudioPlayerCallback callback);
+
+	void startItem(long identifier, IAudioPlayerCallback callback);
 	
 	void play();
 	

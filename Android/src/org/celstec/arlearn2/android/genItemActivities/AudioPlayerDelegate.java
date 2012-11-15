@@ -36,7 +36,7 @@ public class AudioPlayerDelegate {
 		}
 	}
 	
-	public AudioPlayerDelegate(String identifier, AudioObjectActivity ctx, Action action) {
+	public AudioPlayerDelegate(Long identifier, AudioObjectActivity ctx, Action action) {
 		this.ctx = ctx;
 		
 		if (action == null) {

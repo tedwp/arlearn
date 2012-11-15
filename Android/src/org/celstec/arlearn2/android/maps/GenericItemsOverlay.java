@@ -49,8 +49,8 @@ public class GenericItemsOverlay extends ItemizedOverlay {
 		return gis.length;
 	}
 	
-	public void syncItems(Context ctx, long runId) {
-		TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleLocations(runId, ctx);
+	public void syncItems(long runId) {
+		TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleLocations(runId);
 		if (gil != null) {
 			gis = gil.toArray(new GeneralItem[] {});
 		} 

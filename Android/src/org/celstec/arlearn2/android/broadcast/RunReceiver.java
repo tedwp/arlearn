@@ -7,6 +7,7 @@ import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.asynctasks.network.NetworkTask;
+import org.celstec.arlearn2.android.broadcast.task.SynchronizeRunsTask;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
@@ -24,6 +25,9 @@ import android.os.Message;
 public class RunReceiver extends GenericReceiver {
 
 	public static String action = "org.celstec.arlearn2.beans.notification.RunModification";
+	
+//	public static long lastSyncWithCloud = 0 ;
+//	public static final long timeBetweenTwoCloudSyncs = 300000;
 
 	// private Semaphore semaphore;
 
@@ -36,9 +40,26 @@ public class RunReceiver extends GenericReceiver {
 				databaseOperations(context, bean);
 			}
 		} else {
-			syncRunsWithcloud(context);
+			(new SynchronizeRunsTask(context)).addTaskToQueue(context);
+			buildCache(context);
 		}
-		updateActivities(context);
+		ActivityUpdater.updateActivities(context, ListExcursionsActivity.class.getCanonicalName());
+
+	}
+	
+	private void buildCache(final Context ctx) {
+		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
+		m.obj = new DBAdapter.DatabaseTask() {
+
+			@Override
+			public void execute(DBAdapter db) {
+				db.getRunAdapter().queryAll();
+				db.getGameAdapter().queryAll();
+				ActivityUpdater.updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName());
+			}
+		};
+		m.sendToTarget();
+
 	}
 
 	private void databaseOperations(Context ctx, RunModification rm) {
@@ -75,77 +96,57 @@ public class RunReceiver extends GenericReceiver {
 		}
 	}
 
-	protected void updateActivities(Context ctx) {
-		updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName());
-	}
+	
 
-	public void syncRunsWithcloud(Context ctx) {
+//	public void syncRunsWithcloud(Context ctx) {
+//		lastSyncWithCloud = System.currentTimeMillis();
+//		SyncWithCloud task = new SyncWithCloud();
+//		task.ctx = ctx;
+//		Message m = Message.obtain(NetworkQueue.getThread());
+//		m.obj = task;
+//		m.sendToTarget();
 
-		SyncWithCloud task = new SyncWithCloud();
-		task.ctx = ctx;
-		Message m = Message.obtain(NetworkQueue.getThread());
-		m.obj = task;
-		m.sendToTarget();
+//	}
 
-		buildCache(ctx);
-	}
+//	public class SyncWithCloud implements NetworkTask {
+//
+//		public Context ctx;
+//
+//		@Override
+//		public void execute() {
+//			try {
+//				final RunList rl = RunClient.getRunClient().getRunsParticipate(PropertiesAdapter.getInstance(ctx).getFusionAuthToken());
+//				Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
+//				m.obj = new DBAdapter.DatabaseTask() {
+//
+//					@Override
+//					public void execute(DBAdapter db) {
+//						if (rl.getError() == null) {
+//							db.getRunAdapter().insert(rl.getRuns());
+//						}
+//
+//					}
+//				};
+//				m.sendToTarget();
+//
+//			} catch (ARLearnException ae) {
+//				if (ae.invalidCredentials()) {
+//
+//					Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
+//					m.obj = new DBAdapter.DatabaseTask() {
+//
+//						@Override
+//						public void execute(DBAdapter db) {
+//							setStatusToLogout(db.getContext());
+//						}
+//					};
+//					m.sendToTarget();
+//				}
+//
+//			}
+//		}
+//
+//	}
 
-	public class SyncWithCloud implements NetworkTask {
-
-		public Context ctx;
-
-		@Override
-		public void execute() {
-			try {
-				final RunList rl = RunClient.getRunClient().getRunsParticipate(PropertiesAdapter.getInstance(ctx).getFusionAuthToken());
-				Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
-				m.obj = new DBAdapter.DatabaseTask() {
-
-					@Override
-					public void execute(DBAdapter db) {
-						if (rl.getError() == null) {
-							Iterator<Run> it = rl.getRuns().iterator();
-							while (it.hasNext()) {
-								Run run = it.next();
-								db.getRunAdapter().insert(run);
-							}
-						}
-
-					}
-				};
-				m.sendToTarget();
-
-			} catch (ARLearnException ae) {
-				if (ae.invalidCredentials()) {
-
-					Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
-					m.obj = new DBAdapter.DatabaseTask() {
-
-						@Override
-						public void execute(DBAdapter db) {
-							setStatusToLogout(db.getContext());
-						}
-					};
-					m.sendToTarget();
-				}
-
-			}
-		}
-
-	}
-
-	private void buildCache(final Context ctx) {
-		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
-		m.obj = new DBAdapter.DatabaseTask() {
-
-			@Override
-			public void execute(DBAdapter db) {
-				db.getRunAdapter().queryAll();
-				db.getGameAdapter().queryAll();
-				ActivityUpdater.updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName());
-			}
-		};
-		m.sendToTarget();
-
-	}
+	
 }

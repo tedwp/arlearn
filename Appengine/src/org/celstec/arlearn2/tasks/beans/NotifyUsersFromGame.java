@@ -9,9 +9,11 @@ import org.celstec.arlearn2.beans.notification.RunModification;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
+import org.celstec.arlearn2.cache.VisibleGeneralItemsCache;
 import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
+import org.celstec.arlearn2.jdo.manager.GeneralItemVisibilityManager;
 import org.codehaus.jettison.json.JSONException;
 
 import com.google.gdata.util.AuthenticationException;
@@ -68,11 +70,26 @@ public class NotifyUsersFromGame extends GenericBean {
 			gim.setGeneralItem((GeneralItem) JsonBeanDeserializer.deserialize(gi));
 			
 			for (User u : ul.getUsers()) {
+				if (u.getDeleted() == null || !u.getDeleted()) {
 //				RunModification rm = new RunModification();
 //				rm.setModificationType(RunModification.CREATED);
 //				rm.setRun((new RunDelegator(ud)).getRun(getRunId()));
-				
+				VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, u.getEmail());
+				if (modificationType == GeneralItemModification.CREATED) {
+					if (gim.getGeneralItem().getDependsOn() == null && (gim.getGeneralItem().getDeleted() == null || !gim.getGeneralItem().getDeleted())) {
+						GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), getRunId(), u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS);
+					}
+				}
+				if (modificationType == GeneralItemModification.VISIBLE) {
+					if (gim.getGeneralItem().getDeleted() == null || !gim.getGeneralItem().getDeleted()) {
+						GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), getRunId(), u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS);
+					}
+				}
+				if (modificationType == GeneralItemModification.DELETED) {
+					GeneralItemVisibilityManager.delete(getRunId(), gim.getGeneralItem().getId(), u.getEmail(), null);
+				}
 				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
+				}
 			}
 		} catch (AuthenticationException e) {
 			e.printStackTrace();

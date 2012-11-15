@@ -4,6 +4,7 @@ import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
+import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemVisibility;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
@@ -34,15 +35,21 @@ public class MakeGeneralItemVisibleTask implements  DBAdapter.DatabaseTask {
 	@Override
 	public void execute(DBAdapter db) {
 		if (GeneralItemDependencyHandler.itemMatchesPlayersRole(db, runId, gi)) {
-			db.getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, System.currentTimeMillis(), GeneralItemVisibility.VISIBLE);
-																									
+			boolean wasVisible = GeneralItemVisibilityCache.getInstance().isVisible(runId, gi.getId());
+			GeneralItemDependencyHandler depHandler= new GeneralItemDependencyHandler();
+			if (!wasVisible) {
+				db.getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, System.currentTimeMillis(), GeneralItemVisibility.VISIBLE);
+				depHandler.broadcastTroughIntent(gi, db.getContext(), runId);
+			}
+			depHandler.addTaskToQueue(db.getContext());
 		}
-		(new GeneralItemDependencyHandler(db.getContext())).checkDependencies(db);
-		ActivityUpdater.updateActivities(db.getContext(), 
-				ListMessagesActivity.class.getCanonicalName(), 
-				MapViewActivity.class.getCanonicalName(), 
-				ListMapItemsActivity.class.getCanonicalName(), 
-				NarratorItemActivity.class.getCanonicalName());
+		
+//		(new GeneralItemDependencyHandler(db.getContext())).checkDependencies(db);
+//		ActivityUpdater.updateActivities(db.getContext(), 
+//				ListMessagesActivity.class.getCanonicalName(), 
+//				MapViewActivity.class.getCanonicalName(), 
+//				ListMapItemsActivity.class.getCanonicalName(), 
+//				NarratorItemActivity.class.getCanonicalName());
 	}
 
 }

@@ -21,9 +21,11 @@ import org.celstec.arlearn2.beans.run.ActionList;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.cache.GeneralitemsCache;
+import org.celstec.arlearn2.cache.VisibleGeneralItemsCache;
 import org.celstec.arlearn2.delegators.generalitems.VisibleItemsList;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
+import org.celstec.arlearn2.jdo.manager.GeneralItemVisibilityManager;
 import org.celstec.arlearn2.tasks.beans.NotifyRunsFromGame;
 import org.htmlparser.util.Translate;
 
@@ -42,10 +44,13 @@ public class GeneralItemDelegator extends GoogleDelegator {
 	public GeneralItem createGeneralItem(GeneralItem gi) {
 		if (gi.getDescription() != null) gi.setDescription(Translate.decode(gi.getDescription()).replaceAll("\\<.*?>",""));
 		GeneralitemsCache.getInstance().removeGeneralItemList(gi.getGameId());
+		
 		gi.setDeleted(false);
 		GeneralItemManager.addGeneralItem(gi);
 		(new NotifyRunsFromGame(authToken, gi.getGameId(), gi, GeneralItemModification.CREATED)).scheduleTask();
-
+		if (gi.getDependsOn() != null) {
+			GeneralItemVisibilityManager.delete(null, gi.getId(), null, null);	
+		} 		
 		return gi;
 	}
 
@@ -135,6 +140,7 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		return getGeneralItems(run.getGameId());
 	}
 
+	@Deprecated
 	public GeneralItemList getNonPickableItems(Long runIdentifier, String userIdentifier) {
 		GeneralItemList returnItemList = getGeneralItemsRun(runIdentifier);
 		List<GeneralItem> gl = returnItemList.getGeneralItems();
@@ -146,6 +152,38 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		}
 		return returnItemList;
 	}
+	
+	public GeneralItemList getVisibleItems(Long runIdentifier, String userIdentifier) {
+		GeneralItemList gil = VisibleGeneralItemsCache.getInstance().getVisibleGeneralitems(runIdentifier, userIdentifier);
+		if (gil == null) {
+			gil = new GeneralItemList();
+			RunDelegator qr = new RunDelegator(this);
+			Run run = qr.getRun(runIdentifier);
+			if (run == null) {
+				GeneralItemList il = new GeneralItemList();
+				il.setError("run not found");
+				il.setErrorCode(Bean.RUNNOTFOUND);
+				return il;
+			}
+			
+			List<Long> visibleItemIds = GeneralItemVisibilityManager.getVisibleItems(runIdentifier, userIdentifier);
+			GeneralItemList generalItemList = getGeneralItems(run.getGameId());
+
+			for (Iterator<GeneralItem> iterator = generalItemList.getGeneralItems().iterator(); iterator.hasNext();) {
+				GeneralItem item = iterator.next();
+				if (item.getDeleted() == null || !item.getDeleted())
+				if (visibleItemIds.contains(item.getId())) {
+					gil.addGeneralItem(item); 
+				}
+				
+			}
+			VisibleGeneralItemsCache.getInstance().putVisibleGeneralItemList(gil, runIdentifier, userIdentifier);
+		}
+		return gil;
+	}
+
+	
+	
 
 	public void checkActionEffect(Action action, long runId, User u) {
 		if (u == null) {

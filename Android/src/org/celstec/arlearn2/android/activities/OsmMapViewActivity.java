@@ -3,6 +3,7 @@ package org.celstec.arlearn2.android.activities;
 import java.util.ArrayList;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.maps.OsmGeneralItemizedIconOverlay2;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.LocationService;
@@ -76,6 +77,10 @@ public class OsmMapViewActivity extends GenericMapViewActivity {
 	}
 	protected void onResume() {
 		super.onResume();
+		Long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
+		if (runId == null || RunCache.getInstance().getRun(runId) == null) {
+			this.finish();
+		}
 		myLocation.enableMyLocation();
 		itemsOverlay.setGeneralItemList(gis);
 		mv.invalidate();

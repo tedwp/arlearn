@@ -2,10 +2,10 @@ package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.asynctasks.RestInvocation;
+import org.celstec.arlearn2.android.broadcast.ActionReceiver;
 import org.celstec.arlearn2.android.broadcast.RunReceiver;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.menu.MenuHandler;
-import org.celstec.arlearn2.android.service.BackgroundService;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.client.RunClient;
@@ -35,7 +35,7 @@ public class SplashScreenActivity extends GeneralActivity {
 			uri = uri.substring(0, uri.indexOf("#"));
 		if (uri.startsWith("http://arlearn")) {
 			Intent actionIntent = new Intent();
-			actionIntent.setAction("org.celstec.arlearn2.beans.notification.Action");
+			actionIntent.setAction(ActionReceiver.action);
 			actionIntent.putExtra("action", uri.substring(uri.lastIndexOf("/") + 1));
 			sendBroadcast(actionIntent);
 			// this.finish();
@@ -75,8 +75,8 @@ public class SplashScreenActivity extends GeneralActivity {
 //				sendBroadcast(runSyncIntent);
 
 				startActivity(new Intent(SplashScreenActivity.this, ListExcursionsActivity.class));
-				Intent intent = new Intent(this, BackgroundService.class);
-				startService(intent);
+//				Intent intent = new Intent(this, BackgroundService.class);
+//				startService(intent);
 			} else {
 				startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
 

@@ -14,6 +14,7 @@ public class UserSerializer extends RunBeanSerialiser {
 			if (runBean.getTeamId() != null) returnObject.put("teamId", runBean.getTeamId());
 			if (runBean.getName() != null) returnObject.put("name", runBean.getName());
 			if (runBean.getEmail() != null) returnObject.put("email", runBean.getEmail());
+			if (runBean.getFullEmail() != null) returnObject.put("fullEmail", runBean.getFullEmail());
 			if (runBean.getRoles() != null) returnObject.put("roles", ListSerializer.toStringList(runBean.getRoles()));
 
 		} catch (JSONException e) {

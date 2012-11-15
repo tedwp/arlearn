@@ -20,7 +20,10 @@ public class GenericJsonAdapter extends GenericDbTable {
 		
 		Cursor mCursor = null;
 		try {
-			mCursor = db.getSQLiteDb().rawQuery("select * from "+tableName, null);
+			String queryString = "select * from "+tableName;
+			if (tableName.equals("myActions")) queryString += " where replicated = 0";
+			if (tableName.equals("run")) queryString += " where deleted = 0";
+			mCursor = db.getSQLiteDb().rawQuery(queryString, null);
 //			mCursor = db.getSQLiteDb().query(true, getTableName(), null, null, null, null, null, null, null);
 			int i = 0;
 			String columnNames[] = mCursor.getColumnNames();
@@ -61,11 +64,6 @@ public class GenericJsonAdapter extends GenericDbTable {
 	@Override
 	protected String getTableName() {
 		return null;
-	}
-
-	@Override
-	public boolean insert(Object o) {
-		return false;
 	}
 	
 	public String eraseAllStatement() {

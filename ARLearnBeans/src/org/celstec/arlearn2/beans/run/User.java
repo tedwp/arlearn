@@ -9,6 +9,7 @@ public class User extends RunBean{
 
 	private String teamId;
 	private String email;
+	private String fullEmail;
 	private String name;
 
 	private List<String> roles;
@@ -26,6 +27,7 @@ public class User extends RunBean{
 		return super.equals(obj) && 
 			nullSafeEquals(getTeamId(), other.getTeamId()) &&
 			nullSafeEquals(getEmail(), other.getEmail()) &&
+			nullSafeEquals(getFullEmail(), other.getFullEmail()) &&
 			nullSafeEquals(getName(), other.getName()) &&
 			nullSafeEquals(getRoles(), other.getRoles()) ; 
 	}
@@ -44,6 +46,14 @@ public class User extends RunBean{
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getFullEmail() {
+		return fullEmail;
+	}
+
+	public void setFullEmail(String fullEmail) {
+		this.fullEmail = fullEmail;
 	}
 
 	public String getName() {

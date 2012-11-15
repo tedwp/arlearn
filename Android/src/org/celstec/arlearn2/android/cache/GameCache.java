@@ -31,7 +31,9 @@ public class GameCache extends GenericCache {
 	}
 	
 	public void putGame(long gameId, Game game) {
-		gameMap.put(gameId, game);
+		synchronized (gameMap) {
+			gameMap.put(gameId, game);
+		}
 	}
 
 //	public void reloadFromDb(final Context ctx) {

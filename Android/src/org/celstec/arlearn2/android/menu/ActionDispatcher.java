@@ -2,7 +2,6 @@ package org.celstec.arlearn2.android.menu;
 
 import org.celstec.arlearn2.android.activities.IGeneralActivity;
 import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.service.BackgroundService;
 import org.celstec.arlearn2.beans.run.Action;
 
 import android.content.Context;

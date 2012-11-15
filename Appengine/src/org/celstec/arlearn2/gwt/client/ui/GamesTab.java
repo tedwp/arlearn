@@ -170,14 +170,13 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 				button, authItem);
 		form.setEncoding(Encoding.MULTIPART);
 
+		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.authoring.GameCreationStatus", GamesTab.this);
 
 		button.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 			public void onClick(
 					com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-//				gameIdItem.setValue(form.getValue("itemID"));
 				form.setCanSubmit(true);
 				form.submit();
-				NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.authoring.GameCreationStatus", GamesTab.this);
 				hBar2.setPercentDone(0);
 				hBar2.setVisibility(Visibility.VISIBLE);
 				

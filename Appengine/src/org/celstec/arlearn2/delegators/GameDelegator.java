@@ -36,6 +36,10 @@ public class GameDelegator extends GoogleDelegator {
 	public GameDelegator(GoogleDelegator gd) {
 		super(gd);
 	}
+	
+	public GameDelegator() {
+		super();
+	}
 
 	public GamesList getGames() {
 		GamesList gl = new GamesList();
@@ -74,6 +78,14 @@ public class GameDelegator extends GoogleDelegator {
 		}
 		return list.get(0);
 	}
+	
+	public Game getGameWithoutAccount(Long gameId) {
+		List<Game> list = GameManager.getGames(gameId, null, null, null, null);
+		if (list.isEmpty()) {
+			return null;
+		}
+		return list.get(0);
+	}
 
 	public Game getUnOwnedGame(Long gameId) {
 		List<Game> list = MyGamesCache.getInstance().getGameList(gameId, null, null, null, null);
@@ -100,8 +112,12 @@ public class GameDelegator extends GoogleDelegator {
 		}
 		return list.get(0);
 	}
-
+	
 	public Game createGame(Game game, int modificationType) {
+		return createGame(game, modificationType, true);
+	}
+	
+	public Game createGame(Game game, int modificationType, boolean notify) {
 		UsersDelegator qu = new UsersDelegator(this);
 		String myAccount = qu.getCurrentUserAccount();
 		if (myAccount == null) {
@@ -115,7 +131,7 @@ public class GameDelegator extends GoogleDelegator {
 		GameModification gm = new GameModification();
 		gm.setModificationType(modificationType);
 		gm.setGame(game);
-		ChannelNotificator.getInstance().notify(myAccount, gm);
+		if (notify) ChannelNotificator.getInstance().notify(myAccount, gm);
 		
 		return game;
 	}

@@ -72,6 +72,8 @@ public class DatabaseTab extends MasterDetailTab {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
 		
 		valueMap.put("mediaCache", "MediaItemCache");
+		valueMap.put("mediaCacheGeneralItems", "mediaCacheGeneralItems");
+
 		valueMap.put("game", "Game");
 		valueMap.put("run", "Run");
 		valueMap.put("generalItems", "GeneralItems");

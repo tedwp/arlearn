@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.broadcast.GameReceiver;
 import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.broadcast.RunReceiver;
 import org.celstec.arlearn2.android.cache.GameCache;
@@ -45,14 +46,18 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 			this.finish();
 		} else {
 			setContentView(R.layout.listexcursionscreen);
-			Intent runIntent = new Intent();
-			runIntent.setAction(RunReceiver.action);
-			sendBroadcast(runIntent);
+			syncRuns();
 //			Intent runSyncIntent = new Intent();
 //			runSyncIntent.setAction(RunReceiver.action);
 //			sendBroadcast(runSyncIntent);
 
 		}
+	}
+	
+	private void syncRuns() {
+		Intent runIntent = new Intent();
+		runIntent.setAction(RunReceiver.action);
+		sendBroadcast(runIntent);
 	}
 
 	@Override
@@ -99,6 +104,29 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 		listView.setAdapter(adapter);
 	}
 
+	@Override
+	public boolean setOnLongClickListener(View v, int position, final GenericListRecord messageListRecord) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("cache this game? - i18").setPositiveButton("yes - i18", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				RunListRecord rlr = (RunListRecord) messageListRecord;
+				if (rlr.getGameId() != null) {
+					Intent runIntent = new Intent();
+					runIntent.setAction(GameReceiver.action);
+					runIntent.putExtra(GameReceiver.GAME_ID, rlr.getGameId());
+					sendBroadcast(runIntent);
+				}
+			}
+		}).setNegativeButton("no - i18", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				// User cancelled the dialog
+			}
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
+		return true;
+	}
+	
 	public void onListItemClick(View v, int position, GenericListRecord messageListRecord) {
 		long id = position;
 		PropertiesAdapter pa = new PropertiesAdapter(this);
@@ -161,22 +189,10 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	}
 
 	public void initFromDb() {
-//		DBAdapter db = new DBAdapter(this);
-//		db.openForWrite();
-//		runs = (Run[]) ((RunAdapter) db.table(DBAdapter.RUN_ADAPTER)).query();
 		runs = RunCache.getInstance().getRuns();
 		if (runs == null) {
-//			RunCache.getInstance().reloadFromDb(this);
-//			GameCache.getInstance().reloadFromDb(this);
 			return;
 		}
-//		games = new HashMap<Long, Game>();
-//		for (int i = 0; i < runs.length; i++) {
-//			Game g = (Game) db.getGameAdapter().queryById(runs[i].getGameId());
-//			if (g!= null) games.put(g.getGameId(), g);
-//		}
-//
-//		db.close();
 	}
 
 	public boolean isGenItemActivity() {
@@ -214,4 +230,6 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 		alert.show();
 
 	}
+
+	
 }

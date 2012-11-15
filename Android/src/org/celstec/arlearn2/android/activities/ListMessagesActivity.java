@@ -1,14 +1,17 @@
 package org.celstec.arlearn2.android.activities;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.broadcast.ActionReceiver;
 import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
@@ -38,6 +41,10 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 		Intent gimIntent = new Intent();
 		gimIntent.setAction(GeneralItemReceiver.action);
 		sendBroadcast(gimIntent);
+		
+		Intent actionIntent = new Intent();
+		actionIntent.setAction(ActionReceiver.action);
+		sendBroadcast(actionIntent);
 	}
 
 	@Override
@@ -63,12 +70,18 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 			this.finish();
 		} else {
 			Long runId = getMenuHandler().getPropertiesAdapter().getCurrentRunId();
-			if (runId != null) {
-				TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleMessages(runId, this);
+			if (runId == null || RunCache.getInstance().getRun(runId) == null) {
+				this.finish();
+			} else 	{
+				TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleMessages(runId);
 				if (gil != null) {
-					gis = gil.toArray(new GeneralItem[] {});
+					gis = new GeneralItem[gil.size()];
+					int i = 0;
+					for (Iterator<GeneralItem> iterator = gil.iterator(); iterator.hasNext();) {
+						gis[i++] = (GeneralItem) iterator.next();
+					}
 					renderMessagesList();
-				} 
+				}
 			}
 		}
 	}
@@ -90,7 +103,11 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 	@Override
 	public void onListItemClick(View v, int position, GenericListRecord messageListRecord) {
 		GIActivitySelector.startActivity(this, gis[position]);
-
+	}
+	
+	@Override
+	public boolean setOnLongClickListener(View v, int position, GenericListRecord messageListRecord) {
+		return false;
 	}
 
 	public boolean isGenItemActivity() {

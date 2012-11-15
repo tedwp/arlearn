@@ -44,7 +44,13 @@ public class TriggerDataSource extends DataSource{
 	public void processGameConfig(long gameId, JSONObject gameConfig) {	
 		if (gameConfig == null) return;
 		if (gameConfig.isObject() ==null) return;
-		JSONArray array = gameConfig.get("manualItems").isArray();
+		JSONArray array = null;
+		if (gameConfig.get("manualItems") == null) {
+			array = new JSONArray();
+		} else {
+			array = gameConfig.get("manualItems").isArray();	
+		}
+		
 		try {
 		for (int i = 0; i< array.size();i++) {
 			final ListGridRecord rec = new ListGridRecord();

@@ -88,7 +88,7 @@ public class GeneralItems extends Service {
 		GeneralItemDelegator gid = new GeneralItemDelegator(token);
 		UsersDelegator ud = new UsersDelegator(gid);
 		String email = ud.getCurrentUserAccount();
-		return serialise(gid.getNonPickableItems(runIdentifier, email), accept);
+		return serialise(gid.getVisibleItems(runIdentifier, email), accept);
 	}
 	
 	@GET

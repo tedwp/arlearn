@@ -3,7 +3,7 @@
       package="org.celstec.arlearn2.android"
       android:versionCode="11"
       android:versionName="1.2 (code 11)">
-    <uses-sdk android:minSdkVersion="6" android:targetSdkVersion="10"/>
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="10"/>
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
      	<uses-library android:name="com.google.android.maps" />
@@ -34,25 +34,27 @@
 		
 		<activity android:name=".activities.LoginActivity" android:label="@string/loginHeader" />
 		<activity android:name=".activities.NfcScanOnDemandActivity" android:label="@string/loginHeader" />
-		<activity android:name=".activities.ListExcursionsActivity" android:label="@string/listExcursionsHeader" android:screenOrientation="portrait"/>
-		<activity android:name=".activities.ListMessagesActivity" android:label="@string/listMessagesHeader" android:screenOrientation="portrait" />
+		<activity android:name=".activities.ListExcursionsActivity" android:label="@string/listExcursionsHeader"/>
+		<activity android:name=".activities.ListMessagesActivity" android:label="@string/listMessagesHeader" />
 		<activity android:name=".activities.MapViewActivity" android:label="@string/mapViewHeader" />
 		<activity android:name=".activities.OsmMapViewActivity" android:label="@string/mapViewHeader" />
 		<activity android:name=".activities.ListMapItemsActivity" android:label="@string/mapViewHeader" />
-		<activity android:name=".activities.AnswerQuestionActivity" android:label="@string/answerQuestionHeader" android:screenOrientation="portrait"/>
-		<activity android:name=".activities.AnnotateActivity" android:label="@string/answerQuestionHeader" android:screenOrientation="portrait"/>
-		<activity android:name=".activities.ViewAnswerActivity" android:label="@string/viewAnswerHeader" android:screenOrientation="portrait"/>
-		<activity android:name=".activities.DownloadOSMMapTilesActivity" android:label="@string/downloadMap" android:screenOrientation="portrait"  android:alwaysRetainTaskState="True" android:launchMode="singleInstance"/> 
+		<activity android:name=".activities.AnswerQuestionActivity" android:label="@string/answerQuestionHeader" />
+		<activity android:name=".activities.AnnotateActivity" android:label="@string/answerQuestionHeader" />
+		<activity android:name=".activities.ViewAnswerActivity" android:label="@string/viewAnswerHeader" />
+		<activity android:name=".activities.DownloadOSMMapTilesActivity" android:label="@string/downloadMap" android:alwaysRetainTaskState="True" android:launchMode="singleInstance"/> 
 		
-		<activity android:name=".genItemActivities.MultipleChoiceActivity" android:finishOnTaskLaunch="true" android:label="@string/mct_header" android:screenOrientation="portrait" />
-		<activity android:name=".genItemActivities.OpenQuestionActivity" android:finishOnTaskLaunch="true" android:label="@string/mapViewHeader" android:screenOrientation="portrait"/>
-		<activity android:name=".genItemActivities.DisplayMessageActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
-		<activity android:name=".genItemActivities.AudioObjectActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
-		<activity android:name=".genItemActivities.VideoObjectActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
-		<activity android:name=".genItemActivities.YoutubeObjectActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
-		<activity android:name=".genItemActivities.OpenBadgeActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
-		<activity android:name=".genItemActivities.NarratorItemActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait" />
-		<activity android:name=".genItemActivities.NarratorItemSandboxActivity" android:label="@string/messageHeader" android:screenOrientation="portrait" />
+		<activity android:name=".genItemActivities.MultipleChoiceActivity" android:finishOnTaskLaunch="true" android:label="@string/mct_header"  android:configChanges="orientation|keyboardHidden"/>
+		<activity android:name=".genItemActivities.SingleChoiceActivity" android:finishOnTaskLaunch="true" android:label="@string/mct_header"  android:configChanges="orientation|keyboardHidden"/>
+		<activity android:name=".genItemActivities.OpenQuestionActivity" android:finishOnTaskLaunch="true" android:label="@string/mapViewHeader" android:configChanges="orientation|keyboardHidden"/>
+		<activity android:name=".genItemActivities.DisplayMessageActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:configChanges="orientation|keyboardHidden"/>
+		<activity android:name=".genItemActivities.AudioObjectActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:configChanges="orientation|keyboardHidden"/>
+		<activity android:name=".genItemActivities.VideoObjectActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:configChanges="orientation|keyboardHidden"/>
+		<activity android:name=".genItemActivities.YoutubeObjectActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:configChanges="orientation|keyboardHidden"/>
+		<activity android:name=".genItemActivities.OpenBadgeActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:configChanges="orientation|keyboardHidden"/>
+		<activity android:name=".genItemActivities.ScanTagActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:configChanges="orientation|keyboardHidden"/>
+		<activity android:name=".genItemActivities.NarratorItemActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:configChanges="orientation|keyboardHidden"/>
+		<activity android:name=".genItemActivities.NarratorItemSandboxActivity" android:label="@string/messageHeader"  />
 		
 		<service android:name=".service.BackgroundService" />
 		<service android:name=".broadcast.MediaService" />
@@ -91,6 +93,13 @@
         <receiver android:name=".broadcast.ActionReceiver" >
              <intent-filter>
  				<action android:name="org.celstec.arlearn2.beans.notification.Action" />
+            </intent-filter> 
+
+        </receiver>
+        
+         <receiver android:name=".broadcast.NetworkSwitcher" >
+             <intent-filter>
+ 				<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter> 
 
         </receiver>

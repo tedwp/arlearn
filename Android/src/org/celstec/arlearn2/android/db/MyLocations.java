@@ -36,9 +36,8 @@ public class MyLocations  extends GenericDbTable {
 		return MYLOCATIONS_TABLE;
 	}
 
-	@Override
-	public boolean insert(Object o) {
-		Location loc = (Location) o;
+	
+	public boolean insert(Location loc) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(ACCOUNT, loc.getAccount());
         initialValues.put(LAT, loc.getLat());

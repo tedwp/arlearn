@@ -46,6 +46,13 @@ public class GenericMessageListAdapter extends ArrayAdapter<GenericListRecord> {
 				
 			}
 		});
+		v.setOnLongClickListener(new View.OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				return callback.setOnLongClickListener(v, position, messages.get(position));
+			}
+		});
 		return v;
 	}
 	public void setOnListItemClickCallback(ListitemClickInterface callback) {

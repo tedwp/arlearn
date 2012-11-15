@@ -52,10 +52,7 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 			nullSafeEquals(getRoles(), other.getRoles()) ; 
 	}
 
-	/*
-	 * Only relevant for the Android client
-	 */
-	private Long runId;
+	
 	
 	public GeneralItem() {
 		setType(getClass().getName());
@@ -162,14 +159,6 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	public boolean timeStampCheck() {
 		//TODO implement
 		return true;
-	}
-
-	public Long getRunId() {
-		return runId;
-	}
-
-	public void setRunId(Long runId) {
-		this.runId = runId;
 	}
 	
 	public boolean isMessage() {

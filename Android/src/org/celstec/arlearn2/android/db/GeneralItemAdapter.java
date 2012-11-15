@@ -40,8 +40,8 @@ public class GeneralItemAdapter extends GenericDbTable {
 
 	public String createStatement() {
 		return "create table " + GENERALITEM_TABLE + " (" 
-				+ ID + " text, " //0
-				+ GAMEID + " long, "
+				+ ID + " text primary key, " //0
+				+ GAMEID + " long not null, "
 				+ PAYLOAD + " text, " 
 				+ DELETED + " boolean, "
 				+ LAST_MODIFICATION_DATE + " long, "
@@ -63,6 +63,7 @@ public class GeneralItemAdapter extends GenericDbTable {
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(ID, gi.getId());
 			initialValues.put(PAYLOAD, giJson );
+			initialValues.put(GAMEID, gi.getGameId());
 			if (gi.getDeleted() == null) {
 				initialValues.put(DELETED, false);
 			} else {

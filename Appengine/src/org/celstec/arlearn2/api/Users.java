@@ -42,8 +42,11 @@ public class Users extends Service {
 		User user = (User) inUser;
 		 
 		UsersDelegator qu = verifyCredentials(token);
-		if (user.getEmail() == null)
+		user.setFullEmail(user.getEmail());
+		if (user.getEmail() == null) {
 			user.setEmail(qu.getCurrentUserAccount());
+		} 
+			
 		return serialise(qu.createUser(user), accept);
 	}
 

@@ -59,7 +59,7 @@ public class NotifyRunsFromGame extends GenericBean {
 			RunDelegator rd = new RunDelegator("auth=" + getToken());
 			List<Run> runList = rd.getRunsForGame(gameId);
 			for (Run r: runList) {
-				(new NotifyUsersFromGame(getToken(), r.getRunId(), gi, modificationType)).scheduleTask();
+				if (r.getDeleted() == null || !r.getDeleted()) (new NotifyUsersFromGame(getToken(), r.getRunId(), gi, modificationType)).scheduleTask();
 
 			}
 		} catch (AuthenticationException e) {

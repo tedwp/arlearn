@@ -1,8 +1,10 @@
 package org.celstec.arlearn2.jdo.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -12,7 +14,9 @@ import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.RunJDO;
 import org.codehaus.jettison.json.JSONException;
+import org.datanucleus.store.appengine.query.JDOCursorHelper;
 
+import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.Text;
 
 public class RunManager {
@@ -46,14 +50,14 @@ public class RunManager {
 		Query query = pm.newQuery(RunJDO.class);
 		Object args[] = { runId, gameId, owner, title, tagId };
 		if (ManagerUtil.generateFilter(args, params, paramsNames).trim().equals("")) {
-//			query.setFilter("deleted == null");
+			// query.setFilter("deleted == null");
 			return (List<RunJDO>) query.execute();
 		}
 		query.setFilter(ManagerUtil.generateFilter(args, params, paramsNames));
 		query.declareParameters(ManagerUtil.generateDeclareParameters(args, types, params, paramsNames));
 		return (List<RunJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args));
 	}
-	
+
 	public static List<Run> getRuns(Long runId, Long gameId, String owner, String title, String tagId) {
 		ArrayList<Run> returnRuns = new ArrayList<Run>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -69,7 +73,6 @@ public class RunManager {
 
 	}
 
-
 	public static void deleteRun(Long runId) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
@@ -81,11 +84,16 @@ public class RunManager {
 
 	}
 	
+	public static void deleteRun(PersistenceManager pm, RunJDO runJDO) {
+		pm.deletePersistent(runJDO);
+		
+	}
+
 	public static void setStatusDeleted(long runId) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			List<RunJDO> deleteList = getRuns(pm, runId, null, null, null, null);
-			for (RunJDO jdo: deleteList) {
+			for (RunJDO jdo : deleteList) {
 				jdo.setDeleted(true);
 				jdo.setLastModificationDate(System.currentTimeMillis());
 			}
@@ -93,25 +101,25 @@ public class RunManager {
 			pm.close();
 		}
 	}
-	
+
 	public static void setLastModificationDate(long runId, long timestamp) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			List<RunJDO> deleteList = getRuns(pm, runId, null, null, null, null);
-			for (RunJDO jdo: deleteList) {
+			for (RunJDO jdo : deleteList) {
 				jdo.setLastModificationDate(timestamp);
 			}
 		} finally {
 			pm.close();
 		}
 	}
-	
+
 	public static void updateRun(long runId, Run run) {
 		run.setGame(null);
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			List<RunJDO> updateList = getRuns(pm, runId, null, null, null, null);
-			for (RunJDO jdo: updateList) {
+			for (RunJDO jdo : updateList) {
 				jdo.setPayload(new Text(run.toString()));
 				jdo.setLastModificationDate(System.currentTimeMillis());
 				jdo.setTitle(run.getTitle());
@@ -128,8 +136,7 @@ public class RunManager {
 			pm.close();
 		}
 	}
-	
-	
+
 	private static Run toBean(RunJDO jdo) {
 		if (jdo == null)
 			return null;
@@ -154,5 +161,21 @@ public class RunManager {
 		run.setLastModificationDate(jdo.getLastModificationDate());
 		return run;
 	}
+
+	private final static int LIMIT = 10;
+
+	public static List<RunJDO> listAllRuns(PersistenceManager pm, String cursorString) {
+		javax.jdo.Query query = pm.newQuery(RunJDO.class);
+		if (cursorString != null) {
+			Cursor cursor = Cursor.fromWebSafeString(cursorString);
+			Map<String, Object> extensionMap = new HashMap<String, Object>();
+			extensionMap.put(JDOCursorHelper.CURSOR_EXTENSION, cursor);
+			query.setExtensions(extensionMap);
+		}
+		query.setRange(0, LIMIT);
+		return (List<RunJDO>) query.execute();
+	}
+
+	
 
 }

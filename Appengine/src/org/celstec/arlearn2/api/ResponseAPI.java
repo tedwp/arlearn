@@ -77,6 +77,18 @@ public class ResponseAPI extends Service {
 		ResponseDelegator rd = new ResponseDelegator(token);
 		return serialise(rd.getResponses(runIdentifier, itemId, null), accept);
 	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/runId/{runIdentifier}/itemId/{itemId}/account/{account}")
+	public String getAnswers(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @PathParam("itemId") Long itemId, @PathParam("account") String account, @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+
+		ResponseDelegator rd = new ResponseDelegator(token);
+		return serialise(rd.getResponses(runIdentifier, itemId, account), accept);
+	}
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

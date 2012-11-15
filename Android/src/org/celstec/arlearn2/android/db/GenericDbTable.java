@@ -12,7 +12,7 @@ public abstract class GenericDbTable {
 
 	protected abstract String getTableName();
 
-	public abstract boolean insert(Object o);
+//	public abstract boolean insert(Object o);
 	
 	public int delete(Object o){ return -1;}
 	

@@ -42,7 +42,7 @@ public class GameUnpacker {
 			UsersDelegator qu = new UsersDelegator(auth);
 			String myAccount = qu.getCurrentUserAccount();
 			
-			createGame(true);
+			createGame(true, false);
 			status.setGameId(createdGame.getGameId());
 			status.setStatus(GameCreationStatus.GAME_CREATED);
 			ChannelNotificator.getInstance().notify(myAccount, status);
@@ -57,7 +57,7 @@ public class GameUnpacker {
 			updateManualItems();
 			status.setStatus(GameCreationStatus.PROCESSED_MANUAL_ITEMS);
 			ChannelNotificator.getInstance().notify(myAccount, status);
-			createGame(false);
+			createGame(false, true);
 			status.setStatus(100);
 			ChannelNotificator.getInstance().notify(myAccount, status);
 		} catch (AuthenticationException e) {
@@ -75,7 +75,7 @@ public class GameUnpacker {
 		game.getConfig().setManualItems(manualItems);
 	}
 
-	private void createGame(boolean resetId) throws AuthenticationException {
+	private void createGame(boolean resetId, boolean notify) throws AuthenticationException {
 		Game game = gamePackage.getGame();
 		if (game != null) {
 			GameDelegator gd = new GameDelegator(auth);
@@ -86,7 +86,7 @@ public class GameUnpacker {
 					game.getConfig().setManualItems(null);
 				}
 			}
-			createdGame = gd.createGame(game, GameModification.CREATED);
+			createdGame = gd.createGame(game, GameModification.CREATED, notify);
 		}
 	}
 

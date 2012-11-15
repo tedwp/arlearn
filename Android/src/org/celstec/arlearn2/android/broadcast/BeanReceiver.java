@@ -19,6 +19,8 @@ import android.util.Log;
 
 public class BeanReceiver extends BroadcastReceiver {
 
+	public static String action = "org.celstec.arlearn.beanbroadcast";
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Bundle extras = intent.getExtras();
