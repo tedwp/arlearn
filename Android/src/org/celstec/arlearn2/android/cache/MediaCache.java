@@ -49,18 +49,6 @@ public class MediaCache {
 		return idToMediaCacheItem.get(id);
 	}
 
-	// public void reloadFromDb(final long runId, final Context ctx) {
-	// DBAdapter.getAdapter(ctx).getMediaCache().queryUploadStatus(runId, new
-	// UploadStatus() {
-	//
-	// @Override
-	// public void onResults(String remoteFilePath, int repStatus, double
-	// percentage) {
-	//
-	// }
-	// });
-	// }
-
 	public void putReplicationstatus(String remoteFilePath, int repStatus) {
 		synchronized (replicationStatus) {
 		replicationStatus.put(remoteFilePath, repStatus);

@@ -1,8 +1,15 @@
 package org.celstec.arlearn2.android.activities;
 
+import java.net.ResponseCache;
+
 import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.asynctasks.AuthenticationTask;
+import org.celstec.arlearn2.android.cache.ActionCache;
+import org.celstec.arlearn2.android.cache.GameCache;
+import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
+import org.celstec.arlearn2.android.cache.GenericCache;
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.beans.notification.Ping;
 import org.celstec.arlearn2.beans.run.User;
@@ -74,6 +81,8 @@ public class LoginActivity extends GeneralActivity {
 				@Override
 				public void execute(DBAdapter db) {
 					db.eraseAllData();		
+					GenericCache.emptyAllCaches();
+					
 				}
 			};
 			m.sendToTarget();

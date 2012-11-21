@@ -44,11 +44,6 @@ public class DownloadManager {
 		final OSMTileInfo tile = this.mQueue.poll();
 
 		final int remaining = this.mQueue.size();
-		if(remaining % 10 == 0 && remaining > 0) {
-			System.out.print("(" + remaining +")");
-		} else {
-			System.out.print(".");
-		}
 
 		this.notify();
 		return tile;

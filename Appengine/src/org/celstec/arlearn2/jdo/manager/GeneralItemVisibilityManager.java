@@ -26,16 +26,19 @@ public class GeneralItemVisibilityManager {
 		VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, email);
 
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		GeneralItemVisibilityJDO visJdo = new GeneralItemVisibilityJDO();
-		visJdo.setEmail(email);
-		visJdo.setGeneralItemId(generalItemId);
-		visJdo.setRunId(runId);
-		visJdo.setStatus(status);
-		try {
-			pm.makePersistent(visJdo);
-		} finally {
-			pm.close();
+		if (getGeneralitemVisibility(pm, runId, generalItemId, email, VISIBLE_STATUS).isEmpty()) { //TODO change this when disappear on is introduced.
+			GeneralItemVisibilityJDO visJdo = new GeneralItemVisibilityJDO();
+			visJdo.setEmail(email);
+			visJdo.setGeneralItemId(generalItemId);
+			visJdo.setRunId(runId);
+			visJdo.setStatus(status);
+			try {
+				pm.makePersistent(visJdo);
+			} finally {
+				pm.close();
+			}
 		}
+		
 	}
 	
 	public static List<Long> getVisibleItems(Long runId, String email) {

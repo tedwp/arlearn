@@ -237,7 +237,6 @@ public class ChannelAPINotificationService extends Service {
 	}
 	
 	public void onOpen() {
-		System.out.println("on Open");
 		pa.setStatus(ChannelAPINotificationService.ONLINE_STATUS);
 		broadcast();
 
@@ -270,11 +269,7 @@ public class ChannelAPINotificationService extends Service {
 		pa.setStatus(ChannelAPINotificationService.OFFLINE_STATUS);
 		broadcast();
 		pa.setStatus(ChannelAPINotificationService.ONLINE_STATUS);
-
 		broadcast();
-
-
-		System.out.println("on traffic "+lastTrafficTimeStamp);
 	}
 	
 	public void resync() {

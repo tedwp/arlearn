@@ -7,13 +7,19 @@ import org.celstec.arlearn2.beans.run.Run;
 
 public class RunCache extends GenericCache {
 	private static RunCache instance;
-	
+
 	private HashMap<Long, Long> runToGameId = new HashMap<Long, Long>();
 	private TreeSet<Run> allRuns = new TreeSet<Run>();
-	
+
 	private RunCache() {
 	}
 
+	public void empty() {
+		runToGameId = new HashMap<Long, Long>();
+		allRuns = new TreeSet<Run>();
+	}
+
+		
 	public static RunCache getInstance() {
 		if (instance == null) {
 			instance = new RunCache();

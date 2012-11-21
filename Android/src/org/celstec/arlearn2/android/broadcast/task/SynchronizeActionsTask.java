@@ -68,7 +68,7 @@ public class SynchronizeActionsTask implements NetworkTask {
 	}
 
 	private void syncronizeActions() {
-		PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
+		final PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
 		try {
 			if (runId == null) return;
 			final ActionList al = ActionClient.getActionClient().getRunActions(pa.getFusionAuthToken(), runId);
@@ -79,11 +79,10 @@ public class SynchronizeActionsTask implements NetworkTask {
 					Iterator<Action> it = al.getActions().iterator();
 					while (it.hasNext()) {
 						Action a = it.next();
-						if (a != null) {
+
+						if (a != null && pa.getUsername() != null && pa.getUsername().equals(a.getUserEmail())) {
 							db.getMyActions().insert(a, true);
-						} else {
-							System.out.println("break");
-						}		
+						} 	
 					}
 					(new GeneralItemDependencyHandler()).addTaskToQueue(db.getContext());
 

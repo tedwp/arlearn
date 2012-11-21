@@ -22,6 +22,12 @@ public class GeneralItemVisibilityCache {
 
 	private GeneralItemVisibilityCache() {
 	}
+	
+	public void empty() {
+		itemIdToStatus = new HashMap<String, Integer>();
+		loadedRuns = new HashSet<Long>();
+
+	}
 
 	public boolean runLoaded(Long runId) {
 		return loadedRuns.contains(runId);
@@ -56,7 +62,7 @@ public class GeneralItemVisibilityCache {
 		if (resultList == null) return null;
 		for (Iterator<GeneralItem> iterator = resultList.iterator(); iterator.hasNext();) {
 			GeneralItem gi = iterator.next();
-			if (itemIdToStatus.get(runId+"*"+gi.getId())!= GeneralItemVisibility.NOT_INITIALISED) {
+			if (itemIdToStatus.get(runId+"*"+gi.getId()) == null || itemIdToStatus.get(runId+"*"+gi.getId())!= GeneralItemVisibility.NOT_INITIALISED) {
 				iterator.remove();
 			}
 		}
@@ -68,7 +74,7 @@ public class GeneralItemVisibilityCache {
 		if (resultList == null) return null;
 		for (Iterator<GeneralItem> iterator = resultList.iterator(); iterator.hasNext();) {
 			GeneralItem gi = iterator.next();
-			if (itemIdToStatus.get(runId+"*"+gi.getId())!= GeneralItemVisibility.VISIBLE) {
+			if (itemIdToStatus.get(runId+"*"+gi.getId()) == null ||itemIdToStatus.get(runId+"*"+gi.getId())!= GeneralItemVisibility.VISIBLE) {
 				iterator.remove();
 			}
 		}

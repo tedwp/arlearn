@@ -43,9 +43,13 @@ public class AudioPlayerBinder extends IAudioPlayerService.Stub {
 		service.setCallback(callback);
 		service.setAudioIdentifier(audioIdentifier);
 		String localFile = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(audioIdentifier).getLocalFile(); //idToMediaCacheItem.get("144008")
-		if (localFile == null) return;
-		Uri audioUri = Uri.fromFile(new File(localFile));
-		startUri(audioUri);
+		if (localFile != null) {
+			Uri audioUri = Uri.fromFile(new File(localFile));
+			startUri(audioUri);
+		} else {
+			Uri audioUri = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(audioIdentifier).getUri();
+			startUri(audioUri);
+		}
 	}
 	
 	private void startUri(Uri audioUri) {

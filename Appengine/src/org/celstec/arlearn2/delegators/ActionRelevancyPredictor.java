@@ -95,10 +95,12 @@ public class ActionRelevancyPredictor implements Serializable{
 	
 	private List<ActionDependency> getActionDependencies(BooleanDependency depsIn) {
 		ArrayList<ActionDependency> deps = new ArrayList<ActionDependency>();
+		List<Dependency> depList = depsIn.getDependencies();
+		if (depList == null) return deps;
 		for (Dependency dep: depsIn.getDependencies()) {
 			deps.addAll(getActionDependencies(dep));
 		}
-		return  new ArrayList<ActionDependency>();
+		return  deps;
 	}
 	
 	private List<ActionDependency> getActionDependencies(TimeDependency depsIn) {

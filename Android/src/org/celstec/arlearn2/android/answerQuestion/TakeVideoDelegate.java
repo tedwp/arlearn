@@ -17,8 +17,10 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 public class TakeVideoDelegate {
@@ -27,6 +29,7 @@ public class TakeVideoDelegate {
 	private ImageView closeButton;
 	private VideoView mVideoView;
 	private FrameLayout videoLayout;
+	private TextView addVideoCaption;
 	private Uri videoUri;
 
 	public TakeVideoDelegate(AnnotateActivity answerQuestionActivity) {
@@ -35,6 +38,7 @@ public class TakeVideoDelegate {
 		mVideoView = (VideoView) ctx.findViewById(R.id.videoView);
 		closeButton = (ImageView) ctx.findViewById(R.id.deleteVideoImage);
 		videoLayout = (FrameLayout) ctx.findViewById(R.id.videoViewLayout);
+		addVideoCaption = (TextView) ctx.findViewById(R.id.addCaption);
 
 		initImageCapture();
 	}
@@ -43,8 +47,12 @@ public class TakeVideoDelegate {
 		video.setVisibility(View.GONE);
 	}
 	
+	public void setCaption() {
+		addVideoCaption.setText(ctx.getString(R.string.addVideo));
+	}
+	
 	private void initImageCapture() {
-		video.setImageResource(R.drawable.voegfototoeen);
+		video.setImageResource(R.drawable.add_video);
 		video.setVisibility(View.VISIBLE);
 		videoUri = null;
 		video.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +75,7 @@ public class TakeVideoDelegate {
 	private void setVideoInFrame() {
 		mVideoView.setVideoURI(videoUri);
 		video.setVisibility(View.GONE);
+		((LinearLayout) ctx.findViewById(R.id.mediaFrame)).setVisibility(View.GONE);
 		mVideoView.setVisibility(View.VISIBLE);
 		videoLayout.setVisibility(View.VISIBLE);
 		
@@ -78,6 +87,8 @@ public class TakeVideoDelegate {
 			
 			public void onClick(View v) {
 				video.setVisibility(View.VISIBLE);
+				((LinearLayout) ctx.findViewById(R.id.mediaFrame)).setVisibility(View.VISIBLE);
+
 				videoLayout.setVisibility(View.GONE);
 				mVideoView.setVisibility(View.GONE);
 				videoLayout.invalidate();
@@ -100,7 +111,7 @@ public class TakeVideoDelegate {
 
 	public void reset() {
 		videoUri = null;		
-		initImageCapture();
+//		initImageCapture();
 	}
 
 }

@@ -32,16 +32,10 @@ public class ResponsesOverlay extends ItemizedOverlay {
 		TreeSet<Response> ts = ResponseCache.getInstance().getLocatedResponses(runId, ctx);
 		if (ts == null) return;
 		responses = ts.toArray(new Response[]{});
-		
-//		DBAdapter db = new DBAdapter(ctx);
-//		db.openForRead();
-//		
-////		responses = (Response[]) ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).query();
-//		responses = (Response[]) ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).queryWithLocation(this.ctx.getRunId());
-//		db.close();
 		setLastFocusedIndex(-1);
 		populate();
 	}
+	
 	@Override
 	protected OverlayItem createItem(int i) {
 		JSONObject json;

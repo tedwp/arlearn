@@ -46,7 +46,6 @@ public class UploadFileTask implements NetworkTask {
 
 	@Override
 	public void execute() {
-		DBAdapter.getAdapter(ctx).getMediaCache().setReplicationStatus(mcItemId, MediaCache.REP_STATUS_SYNCING);
 		String uploadUrl = requestExternalUrl();
 		if (uploadUrl == null) {
 			endWithError = true;
@@ -158,8 +157,6 @@ public class UploadFileTask implements NetworkTask {
 		public void write(int b) throws IOException {
 			out.write(b);
 			this.transferred++;
-			System.out.println("transferred " + this.transferred);
-
 		}
 
 	}

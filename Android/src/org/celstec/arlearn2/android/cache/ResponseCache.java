@@ -30,6 +30,12 @@ public class ResponseCache {
 		return instance;
 	}
 	
+	public void empty() {
+		 responseMap = new HashMap<String, TreeSet<Response>>();
+		 locatedResponses = new HashMap<Long, TreeSet<Response>>();
+	}
+
+	
 	public TreeSet<Response> getLocatedResponses(long runId, Context ctx) {
 		if (!locatedResponses.containsKey(runId)) return null;
 		return (TreeSet<Response>) locatedResponses.get(runId).clone();
@@ -64,9 +70,11 @@ public class ResponseCache {
 
 	public void put(Response response) {
 		String key = getKey(response);
-		if (responseMap.get(key) == null) {
-			responseMap.put(key, new TreeSet<Response>());	
+		synchronized (responseMap) {
+			if (responseMap.get(key) == null) {
+				responseMap.put(key, new TreeSet<Response>());
+			}
+			responseMap.get(key).add(response);
 		}
-		responseMap.get(key).add(response);
 	}
 }

@@ -90,7 +90,6 @@ public class RunAdapter extends GenericDbTable {
         	for (final String role: roles) {
         		array.put(role);
         	}
-        	System.out.println("roles "+array);
         	initialValues.put(ROLES, array.toString());
         }
         initialValues.put(BEAN, r.toString());
@@ -117,7 +116,6 @@ public class RunAdapter extends GenericDbTable {
         	for (final String role: roles) {
         		array.put(role);
         	}
-        	System.out.println("roles "+array);
         	initialValues.put(ROLES, array.toString());
         }
         if (r.getDeleted() == null) {
@@ -171,9 +169,7 @@ public class RunAdapter extends GenericDbTable {
 				String json = mCursor.getString(7);
 				if (json != null) {
 					r = (Run) JsonBeanDeserializer.deserialize(mCursor.getString(7));
-				} else {
-					System.out.println("json null");
-				}
+				} 
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

@@ -296,7 +296,6 @@ public class RecordAudioDelegate {
 		
 		
 		this.mRecorder.setOutputFile(this.sampleFile.getAbsolutePath());
-		System.out.println("samplefile exists "+this.sampleFile.exists());
 		try {
 			this.mRecorder.prepare();
 		} catch (IllegalStateException e) {

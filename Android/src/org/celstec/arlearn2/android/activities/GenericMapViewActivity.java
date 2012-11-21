@@ -118,7 +118,6 @@ public class GenericMapViewActivity extends Activity implements ARLearnBroadcast
 	public void initListMapButton() {
 		ImageView tv = (ImageView) findViewById(R.id.mapViewId);
 		if (tv == null) {
-			System.out.println("tv is null");
 			return;
 		}
 		tv.setOnClickListener(new OnClickListener() {

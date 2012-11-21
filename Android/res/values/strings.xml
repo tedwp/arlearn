@@ -20,7 +20,6 @@
     <string name="checkCredentials">Verificatie wachtwoord</string>
     <string name="sendInstructions">Send me instructions</string>
     
-    
      <!--NfcScanOnDemand Activity Strings-->
      <string name="scanTag">Scan een NFC tag of een barcode</string>
      <string name="scanTagMenu">Scan barcode</string>
@@ -30,6 +29,7 @@
     <string name="listExcursionsHeader">Selecteer een run</string>
     <string name="loadingExcursions">Excursies worden geladen\n Even geduld</string>
     <string name="registerRun">Wil je je voor deze run registreren?</string>
+    <string name="cacheGame">Wil je dit spel downloaden voor offline gebruik?</string>
     
     <!--Map View Activity Strings-->
     <string name="mapViewHeader">Excursie</string>
@@ -49,18 +49,18 @@
     <string name="removePicture">Deze afbeelding verwijderen?</string>
     <string name="gpsOff">GPS uitgeschakeld. Zet gps aan en publiceer opnieuw. </string>
     <string name="nothingToPublish">Niets te publiceren</string>
-    
+    <string name="addVideo">Maak video</string>
+    <string name="addPicture">Maak een foto</string>
+      
     <!--Display Message Activity Strings-->
     <string name="messageHeader">Message</string>
     
      <!-- View Answer Activity Strings-->
     <string name="viewAnswerHeader">uw antwoord</string>
     <string name="deleteAnswer">delete answer</string>
-    
     <string name="listMessagesHeader">Message List</string>
     
     <!-- OSM Downloader -->
-    
     <string name="startDownloading">Start downloaden kaart</string>
     <string name="offlineDownloadExplanation">Deze game ondersteunt het downloaden van map tegels, zodat deze app de kaart kan blijven gebruiken zelfs wanneer er geen netwerk connectie meer is. Klik op de onderstaande knop om alle relevante kaarten te downloaden. Let op, dit kan een aanzienlijke hoeveelheid opslagcapaciteit vergen</string>    
     <string name="downloadMap">Download kaart</string>

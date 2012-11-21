@@ -19,6 +19,10 @@ public class GeneralItemsCache extends GenericCache {
 	private GeneralItemsCache() {
 
 	}
+	public void empty() {
+		itemsForGameIdMap = new HashMap<Long, HashMap<Long, GeneralItem>>();
+		itemsMap = new HashMap<Long, GeneralItem>();
+	}
 
 	// public boolean runLoaded(Long runId) {
 	// return loadedRuns.contains(runId);

@@ -24,6 +24,8 @@
      <!--List Excursion Activity Strings-->
     <string name="listExcursionsHeader">Selecteer een excursie</string>
     <string name="loadingExcursions">Excursies worden geladen\n Even geduld</string>
+    <string name="registerRun">Wil je je voor deze run registreren?</string>
+    <string name="cacheGame">Wil je dit spel downloaden voor offline gebruik?</string>
     
     <!--Map View Activity Strings-->
     <string name="mapViewHeader">Excursie</string>
@@ -43,6 +45,8 @@
     <string name="removePicture">Deze afbeelding verwijderen?</string>
     <string name="gpsOff">GPS uitgeschakeld. Zet gps aan en publiceer opnieuw. </string>
     <string name="nothingToPublish">Niets te publiceren</string>
+    <string name="addVideo">Maak video</string>
+    <string name="addPicture">Maak een foto</string>
     
     <!--Display Message Activity Strings-->
     <string name="messageHeader">Bericht</string>

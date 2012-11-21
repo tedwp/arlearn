@@ -58,15 +58,11 @@ public class OsmMapViewActivity extends GenericMapViewActivity {
 
 			@Override
 			public boolean onItemLongPress(int index, OverlayItem arg1) {
-        		System.out.println("longPress "+index);
-
 				return false;
 			}
 
 			@Override
 			public boolean onItemSingleTapUp(int index, OverlayItem arg1) {
-				// TODO Auto-generated method stub
-        		System.out.println("onItemSingleTapUp "+index);
         		GIActivitySelector.startActivity(OsmMapViewActivity.this, gis[index]);
 				return false;
 			}
@@ -85,8 +81,14 @@ public class OsmMapViewActivity extends GenericMapViewActivity {
 		itemsOverlay.setGeneralItemList(gis);
 		mv.invalidate();
 		Location loc = LocationService.getBestLocation(this);
-		lat = loc.getLatitude();
-		lng = loc.getLongitude();
+		if (loc != null) {
+			lat = loc.getLatitude();
+			lng = loc.getLongitude();	
+		} else {
+			lat = 50.877802d;
+			lng = 5.957238d;
+		}
+		
 		animateToMyLocation();
 
 	}

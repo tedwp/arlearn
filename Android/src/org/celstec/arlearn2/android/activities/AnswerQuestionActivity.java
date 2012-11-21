@@ -1,11 +1,13 @@
 package org.celstec.arlearn2.android.activities;
 
+import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.celstec.arlearn2.beans.run.Response;
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class AnswerQuestionActivity extends AnnotateActivity {
 	
@@ -25,16 +27,23 @@ public class AnswerQuestionActivity extends AnnotateActivity {
 		OpenQuestion oq = narratorItemBean.getOpenQuestion();
 		 if (!oq.isWithAudio()) {
 			 rad.hide();
+			 
+		 }
+		 if (!oq.isWithPicture() &&!oq.isWithVideo()) {
+			 ((TextView) findViewById(R.id.addCaption)).setText("");
 		 }
 		 if (!oq.isWithPicture()) {
 			 tpd.hide();
 		 } else {
+			 tpd.setCaption();
 //			 ((ImageView) findViewById(R.id.photoFrame)).setImageResource(R.drawable.voegfototoe);
 //			 ((ImageView) findViewById(R.id.photoFrame)).setVisibility(View.VISIBLE);
 		 }
 //		 tpd.hide();
 		 if (!oq.isWithVideo()) {
 			 tvd.hide();
+		 } else {
+			 tvd.setCaption();
 		 }
 	}
 	

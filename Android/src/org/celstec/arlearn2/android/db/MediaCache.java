@@ -194,17 +194,21 @@ public class MediaCache extends GenericDbTable {
 		m.obj = new DBAdapter.DatabaseTask() {
 			@Override
 			public void execute(DBAdapter db) {
-				ContentValues newValue = new ContentValues();
-				newValue.put(REPLICATED, replicationStatus);
-				db.getSQLiteDb().update(getTableName(), newValue, ITEM_ID + "= ?", new String[] { "" + itemId });
-				MediaCacheItem mci = queryById(itemId);
-				org.celstec.arlearn2.android.cache.MediaCache.getInstance().putReplicationstatus(mci.getRemoteFile(), replicationStatus);
-				ActivityUpdater.updateActivities(db.getContext(), NarratorItemActivity.class.getCanonicalName(), ListMessagesActivity.class.getCanonicalName(),
-						ListMapItemsActivity.class.getCanonicalName());
+				setReplicationStatus(db, itemId, replicationStatus);
 
 			}
 		};
 		m.sendToTarget();
+	}
+	
+	public void setReplicationStatus(DBAdapter db, final String itemId, final int replicationStatus) {
+		ContentValues newValue = new ContentValues();
+		newValue.put(REPLICATED, replicationStatus);
+		db.getSQLiteDb().update(getTableName(), newValue, ITEM_ID + "= ?", new String[] { "" + itemId });
+		MediaCacheItem mci = queryById(itemId);
+		org.celstec.arlearn2.android.cache.MediaCache.getInstance().putReplicationstatus(mci.getRemoteFile(), replicationStatus);
+		ActivityUpdater.updateActivities(db.getContext(), NarratorItemActivity.class.getCanonicalName(), ListMessagesActivity.class.getCanonicalName(),
+				ListMapItemsActivity.class.getCanonicalName());
 	}
 
 	public File getLocalFile(String audioFeed) {
@@ -403,6 +407,7 @@ public class MediaCache extends GenericDbTable {
 
 		@Override
 		public void execute(DBAdapter db) {
+			org.celstec.arlearn2.android.cache.MediaCache.getInstance().put(mci, 0);
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(ITEM_ID, mci.getItemId());
 			initialValues.put(LOCAL_FILE, mci.getLocalFile());

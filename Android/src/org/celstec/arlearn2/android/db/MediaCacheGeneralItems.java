@@ -66,8 +66,6 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 		try {
 			HashMap<Long, String> allMediaURLs =  new HashMap<Long, String>();
 			for (Long gameId : GeneralItemsCache.getInstance().getCachedGameIds() ) {
-//				System.out.println("gameId "+gameId);
-//				System.out.println("gameId "+GeneralItemsCache.getInstance().getGeneralItemsWithGameId(gameId).values());
 				for (GeneralItem gi : GeneralItemsCache.getInstance().getGeneralItemsWithGameId(gameId).values()) {
 					if (MediaCache.getInstance().getLocalUri(gi.getId()) == null) {
 						if (gi instanceof AudioObject) {

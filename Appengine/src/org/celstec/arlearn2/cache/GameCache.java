@@ -4,8 +4,6 @@ import java.util.HashSet;
 
 import com.google.appengine.api.utils.SystemProperty;
 
-import net.sf.jsr107cache.Cache;
-
 public abstract class GameCache extends GenericCache {
 
 	private static String GAMECACHE_CK_PREFIX = SystemProperty.applicationVersion.get()+"GameCache:CK";

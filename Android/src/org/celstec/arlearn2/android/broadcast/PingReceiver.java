@@ -75,7 +75,6 @@ public class PingReceiver extends BroadcastReceiver {
 			@Override
 			public void execute(DBAdapter db) {
 				JSONObject allTables = db.getGenericJsonAdapter().queryAll(bean.getPayload());		
-				System.out.println(bean.getPayload());
 				ChannelClient.getChannelClient().pong(0, "", bean.getTo(), bean.getFrom(),Ping.DB_QUERY, allTables.toString(), bean.getTimestamp());		
 			}
 			

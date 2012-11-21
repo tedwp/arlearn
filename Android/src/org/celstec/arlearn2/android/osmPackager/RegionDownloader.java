@@ -54,7 +54,6 @@ public class RegionDownloader  {
 	
 	public  void createDownloadManagerObj (String folderName){
 	int pThreadCount = 2;
-    System.out.println(getMapTileFromCoordinates(50, 6, 5));
     String pFileAppendix = "";
     String pBaseURL = "http://tile.openstreetmap.org/%d/%d/%d.png";
     final String pTempBaseURL = folderName

@@ -21,6 +21,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Visibility;
+import com.smartgwt.client.util.StringUtil;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.HTMLPane;
@@ -293,6 +294,8 @@ public class MultiplechoiceCanvas extends GeneralItemCanvas {
 		JSONObject result = super.generateObject();
 		result.put("type", new JSONString("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest"));
 		result.put("richText", new JSONString(questionHtmlLabel.getContents()));
+		result.put("description", new JSONString(StringUtil.unescapeHTML(questionHtmlLabel.getContents())));
+
 
 		JSONArray ansArray = new JSONArray();
 		result.put("answers", ansArray);

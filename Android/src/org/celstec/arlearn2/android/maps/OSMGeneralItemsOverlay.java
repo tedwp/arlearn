@@ -54,7 +54,6 @@ public class OSMGeneralItemsOverlay extends ItemizedOverlay<OSMOverlayItem>{
 	
 	public boolean onSingleTapUp(android.view.MotionEvent e,
             MapView mapView) {
-		System.out.println("onSingleTapUp");
 		return false;
 	}
 	

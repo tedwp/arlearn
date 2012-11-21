@@ -17,11 +17,14 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class TakePictureDelegate {
 
 	AnnotateActivity ctx;
 	private ImageView image;
+	private TextView addImageCaption;
+
 	private File bitmapFile;
 	private Uri pictureUri;
 
@@ -30,6 +33,8 @@ public class TakePictureDelegate {
 	public TakePictureDelegate(AnnotateActivity answerQuestionActivity) {
 		this.ctx = answerQuestionActivity;
 		image = (ImageView) ctx.findViewById(R.id.photoFrame);
+		addImageCaption = (TextView) ctx.findViewById(R.id.addCaption);
+
 		initImageCapture();
 	}
 
@@ -37,9 +42,15 @@ public class TakePictureDelegate {
 		image.setVisibility(View.GONE);
 	}
 	
+	public void setCaption() {
+		addImageCaption.setText(ctx.getString(R.string.addPicture));
+
+	}
+	
 	private void initImageCapture() {
-		image.setImageResource(R.drawable.voegfototoe);
+		image.setImageResource(R.drawable.add_picture);
 		pictureUri = null;
+
 		image.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {

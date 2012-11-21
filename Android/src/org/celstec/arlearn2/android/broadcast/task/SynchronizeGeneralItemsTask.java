@@ -122,10 +122,7 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 						GeneralItem item = it.next();
 						if (item != null) {						
 							generalItemToDb(db, item);
-						} else {
-							System.out.println("break");
-						}
-						
+						} 
 					}
 					db.getMediaCacheGeneralItems().listItemsToCache();
 					(new GeneralItemDependencyHandler()).addTaskToQueue(db.getContext());
@@ -210,10 +207,7 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 						GeneralItem item = it.next();
 						if (item != null) {						
 							generalItemToDb(db, item);
-						} else {
-							System.out.println("break");
-						}
-						
+						} 
 					}
 					db.getMediaCacheGeneralItems().listItemsToCache();
 					(new GeneralItemMediaSyncTask(ctx, gameId)).addTaskToQueue(ctx);

@@ -7,8 +7,10 @@ import java.util.List;
 
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
+import org.celstec.arlearn2.beans.dependencies.AndDependency;
 import org.celstec.arlearn2.beans.dependencies.BooleanDependency;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
+import org.celstec.arlearn2.beans.dependencies.OrDependency;
 import org.celstec.arlearn2.beans.dependencies.TimeDependency;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.game.Game;
@@ -204,6 +206,8 @@ public class GeneralItemDelegator extends GoogleDelegator {
 				gim.setModificationType(GeneralItemModification.VISIBLE);
 				gim.setRunId(runId);
 				gim.setGeneralItem(generalItem);
+				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS);
+
 				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
 //				if ("answer_300_mct11.2_correct".equals(action.getAction())){
 //					ChannelNotificator.getInstance().notify(u.getEmail().replace("mobilea", "mobileb"), gim);
@@ -249,10 +253,12 @@ public class GeneralItemDelegator extends GoogleDelegator {
 //		if (role != null && !hasRole(u, role)) return false;
 //		Integer scope = dep.getScope();
 //		if (scope == null) scope = Dependency.USER_SCOPE;
-		if (dep instanceof ActionDependency) {
-			if (checkActions(((ActionDependency) dep), al, u, uMap))
-				return gi.timeStampCheck();
-		}
+//		if (dep instanceof ActionDependency) {
+//			if (checkActions(((ActionDependency) dep), al, u, uMap))
+//				return gi.timeStampCheck();
+//		}
+		if (checkActions(dep, al, u, uMap))
+			return gi.timeStampCheck();
 		return false;
 	}
 
@@ -264,6 +270,18 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		return false;
 	}
 
+	public boolean checkActions(Dependency dep, ActionList al, User u, HashMap<String, User> uMap) {
+		if (dep instanceof ActionDependency) {
+			return checkActions(((ActionDependency) dep), al, u, uMap);
+		}
+		if (dep instanceof AndDependency) {
+			return checkActions(((AndDependency) dep), al, u, uMap);
+		}
+		if (dep instanceof OrDependency) {
+			return checkActions(((OrDependency) dep), al, u, uMap);
+		}
+		return false;
+	}
 	public boolean checkActions(ActionDependency dOn, ActionList al, User u, HashMap<String, User> uMap) {
 		Iterator<Action> it = al.getActions().iterator();
 		while (it.hasNext()) {
@@ -271,6 +289,24 @@ public class GeneralItemDelegator extends GoogleDelegator {
 				return true;
 		}
 		return false;
+	}
+	
+	public boolean checkActions(AndDependency andDep, ActionList al, User u, HashMap<String, User> uMap) {
+		boolean result = true;
+		for (Dependency dOn : andDep.getDependencies()) {
+				result = result && checkActions(dOn, al, u, uMap);
+			if (!result) return false;
+		}
+		return result;
+	}
+	
+	public boolean checkActions(OrDependency orDep, ActionList al, User u, HashMap<String, User> uMap) {
+		boolean result = false;
+		for (Dependency dOn : orDep.getDependencies()) {
+				result = result || checkActions(dOn, al, u, uMap);
+			if (result) return true;
+		}
+		return result;
 	}
 
 	public boolean checkAction(ActionDependency dOn, Action a, User u, HashMap<String, User> uMap) {

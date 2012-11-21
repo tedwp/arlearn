@@ -4,31 +4,52 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <LinearLayout 
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
             android:orientation="vertical" 
         android:layout_weight="1" >
 
+ <LinearLayout
+     android:id="@+id/mediaFrame"
+     android:layout_width="wrap_content"
+     android:layout_height="fill_parent"
+     android:layout_gravity="center"
+     android:orientation="vertical" >
+
         <ImageView
             android:id="@+id/photoFrame"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+			android:layout_height="wrap_content"
+            
             android:layout_gravity="center"
             android:paddingTop="15px"
             android:scaleType="fitCenter"
-            android:src="@drawable/voegfototoeen" />
+            android:src="@drawable/add_picture" />
 
         <ImageView
             android:id="@+id/videoFrame"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+			android:layout_height="wrap_content"
+
             android:layout_gravity="center"
             android:paddingTop="15px"
             android:scaleType="fitCenter"
-            android:src="@drawable/voegfototoeen" />
-
+            android:src="@drawable/add_video" />
+         
+         <TextView
+            android:id="@+id/addCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dip"
+            android:layout_marginTop="6dip"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:typeface="monospace" />
+	</LinearLayout>
          <FrameLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/videoViewLayout"

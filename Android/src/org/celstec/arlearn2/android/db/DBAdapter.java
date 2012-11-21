@@ -101,7 +101,7 @@ public class DBAdapter {
 	}
 	
 	public class DbOpenHelper extends SQLiteOpenHelper {
-	    private static final int DATABASE_VERSION = 110;
+	    private static final int DATABASE_VERSION = 113;
 	    private static final String DATABASE_NAME = "arlearn2";
 	   
 	    DbOpenHelper(Context context) {

@@ -41,38 +41,35 @@ public class ViewAnswerActivity extends GeneralActivity {
 		video = (VideoView) findViewById(R.id.videoView);
 		initGui();
 		try {
-//			DBAdapter db = new DBAdapter(this);
-//			db.openForRead();
-//			MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
 			JSONObject json = new JSONObject(resp.getResponseValue());
 			String genId = "";
 			if (resp.getGeneralItemId() != null)
 				genId = ":" + resp.getGeneralItemId();
 			if (json.has("imageUrl")) {
-				image.setVisibility(View.VISIBLE);				
 				MediaCacheItem mci = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getImageId(resp.getRunId(), resp.getTimestamp()));
-				image.setImageURI(mci.getUri());
+				if (mci != null) {
+					image.setVisibility(View.VISIBLE);
+					image.setImageURI(mci.getUri());
+				}
 			} else {
 				image.setVisibility(View.GONE);
 			}
 			if (json.has("videoUrl")) {
-				video.setVisibility(View.VISIBLE);
-//				MediaCacheItem mci = mc.queryById(MediaCacheItem.getVideoId(resp.getRunId(), resp.getTimestamp()));
-//				;
-
 				MediaCacheItem mci = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getVideoId(resp.getRunId(), resp.getTimestamp()));
-				video.setVideoURI(mci.getUri());
-				MediaController mediaController = new MediaController(this);
-				video.setMediaController(mediaController);
-				video.requestFocus();
-				video.seekTo(1);
+				if (mci != null) {
+					video.setVisibility(View.VISIBLE);
+					video.setVideoURI(mci.getUri());
+					MediaController mediaController = new MediaController(this);
+					video.setMediaController(mediaController);
+					video.requestFocus();
+					video.seekTo(1);
+				}
 			} else {
 				video.setVisibility(View.GONE);
 			}
 			if (json.has("audioUrl")) {
 				((LinearLayout) findViewById(R.id.playButtonsAnswer)).setVisibility(View.VISIBLE);
 
-//				MediaCacheItem mci = mc.queryById(MediaCacheItem.getAudioId(resp.getRunId(), resp.getTimestamp()));
 				MediaCacheItem mci = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getAudioId(resp.getRunId(), resp.getTimestamp()));
 				if (mci != null)
 					apd = new AudioPlayerDelegate(mci.getItemId(), this);
@@ -80,7 +77,6 @@ public class ViewAnswerActivity extends GeneralActivity {
 			} else {
 				((LinearLayout) findViewById(R.id.playButtonsAnswer)).setVisibility(View.GONE);
 			}
-//			db.close();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

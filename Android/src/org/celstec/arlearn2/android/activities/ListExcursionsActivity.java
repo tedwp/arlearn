@@ -107,7 +107,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	@Override
 	public boolean setOnLongClickListener(View v, int position, final GenericListRecord messageListRecord) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("cache this game? - i18").setPositiveButton("yes - i18", new DialogInterface.OnClickListener() {
+		builder.setMessage(getString(R.string.cacheGame)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				RunListRecord rlr = (RunListRecord) messageListRecord;
 				if (rlr.getGameId() != null) {
@@ -117,7 +117,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 					sendBroadcast(runIntent);
 				}
 			}
-		}).setNegativeButton("no - i18", new DialogInterface.OnClickListener() {
+		}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				// User cancelled the dialog
 			}

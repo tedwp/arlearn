@@ -86,5 +86,11 @@ public class ActionCache {
 		}
 
 	}
+
+	public void empty() {
+		actionsMap = new HashMap<Long, List<Action>>();
+		readMap = new HashMap<Long, HashMap<Long, Action>>();
+		loadedRuns = new HashSet<Long>();
+	}
 	
 }

@@ -10,6 +10,7 @@ import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
+import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.cache.ResponseCache;
 import org.celstec.arlearn2.android.cache.RunCache;
@@ -64,6 +65,9 @@ public class NarratorItemActivity extends GeneralActivity {
 		getGuiComponents();
 		loadDataToGui();
 		renderAnswers();
+		if (narratorBean != null && !narratorBean.getId().equals(bundle.getLong(ActivityUpdater.ITEM_NO_TO_CLOSE, narratorBean.getId()))) {
+			this.finish();
+		}
 		}
 	}
 	

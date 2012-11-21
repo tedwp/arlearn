@@ -23,13 +23,13 @@
     <!--NfcScanOnDemand Activity Strings-->
     <string name="scanTag">Scan an NFC tag or a barcode</string>
     <string name="scanTagMenu">Scan barcode</string>
-     
+    <string name="cancel">Cancel</string>
      
      <!--List Excursion Activity Strings-->
     <string name="listExcursionsHeader">Select an excursion</string>
     <string name="loadingExcursions">Loading excursions</string>
     <string name="registerRun">Do you want to register to this run?</string>
-    
+    <string name="cacheGame">Do you want to download this game for offline usuage?</string>
     
     <!--Map View Activity Strings-->
     <string name="mapViewHeader">Excursion</string>
@@ -49,6 +49,8 @@
     <string name="removePicture">Delete this image?</string>
     <string name="gpsOff">GPS is switchedoff. Switch on GPS, and try again </string>
     <string name="nothingToPublish">Nothing to publish</string>
+    <string name="addVideo">Add video</string>
+    <string name="addPicture">Make picture</string>
     
     <!--Display Message Activity Strings-->
     <string name="messageHeader">Message</string>
@@ -56,16 +58,13 @@
      <!-- View Answer Activity Strings-->
     <string name="viewAnswerHeader">your answer</string>
     <string name="deleteAnswer">delete answer</string>
-    
     <string name="listMessagesHeader">Message List</string>
     
-    <!-- OSM Downloader -->
-    
+    <!-- OSM Downloader -->  
     <string name="startDownloading">Start downloading map</string>
     <string name="offlineDownloadExplanation">This game support downloading map tiles, so that the game can continue loading your map even when no network connection is available. Click the button below to start downloading your map. Note that this can take quite some storage space.</string>
     <string name="downloadMap">Download map</string>
     <string name="deleteMap">Delete map</string>
-    
     
     <!--Todo-->
      <string name="makeAnnotation">Do you want to create an annotation here?</string>

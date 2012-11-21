@@ -83,15 +83,12 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 	}
 
 	public synchronized void checkDependencies(DBAdapter db) {
-		System.out.println("checking dependencies " + System.currentTimeMillis());
 		checkDependencies(db, (new PropertiesAdapter(db.getContext())).getCurrentRunId());
 	}
 
 	public void checkDependencies(DBAdapter db, long runId) {
 		beep = (new PropertiesAdapter(db.getContext())).getCurrentRunId() == runId;
 		List<Action> actions = ActionCache.getInstance().getActions(runId);
-		// if (actions == null) actions = ((MyActions)
-		// db.table(DBAdapter.MYACTIONS_ADAPTER)).query(runId);
 		if (actions != null) {
 			processItemsNotYetInitialised(db, runId);
 			processItemsNotYetVisible(db, runId, actions);
@@ -99,10 +96,7 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 	}
 
 	public void processItemsNotYetInitialised(DBAdapter db, final long runId) {
-		// GeneralItem[] giArray =
-		// GeneralItemsCache.getInstance().getGeneralItems(runId);
-		// GeneralItemAdapter giAdap = ((GeneralItemAdapter)
-		// db.table(DBAdapter.GENERALITEM_ADAPTER));
+
 		TreeSet<GeneralItem> items = GeneralItemVisibilityCache.getInstance().getAllNotInitializedItems(runId);
 		if (items != null)
 			for (GeneralItem gi : items) {
@@ -212,8 +206,11 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 	public void broadcastTroughIntent(GeneralItem gi, Context ctx, long runId) {
 		if (new PropertiesAdapter(ctx).getCurrentRunId() != runId) return;
 		if (gi.getAutoLaunch() != null && gi.getAutoLaunch()) {
-			if (gi != null)
+			if (gi != null) {
+				ActivityUpdater.closeActivities(ctx, gi.getId(), NarratorItemActivity.class.getCanonicalName());
 				GIActivitySelector.startActivity(ctx, gi, true);
+			}
+				
 		} else {
 			Intent updateIntent = new Intent();
 			updateIntent.setAction("org.celstec.arlearn.updateActivities");
@@ -237,9 +234,7 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 		if (now - lastVibration < 1500)
 			return;
 		lastVibration = now;
-		System.out.println("before play sound");
 		playSound(1, ctx);
-		System.out.println("after play sound");
 		Vibrator vibrator = (Vibrator) ctx.getSystemService(Context.VIBRATOR_SERVICE);
 		vibrator.vibrate(new long[] { 0, 200, 200, 500, 200, 200 }, -1);
 
@@ -250,7 +245,6 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 		float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
 		float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		final float volume = streamVolumeCurrent / streamVolumeMax;
-		System.out.println("in play sound");
 		/* Play the sound with the correct volume */
 
 		Thread waitThread = new Thread() {
@@ -258,11 +252,9 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 
 				int counter = 0;
 				try {
-					System.out.println("before while " + counter + " " + soundPoolLoaded + " " + (!soundPoolLoaded && counter < 20));
 					while (!soundPoolLoaded && counter < 20) {
 						sleep(200);
 						counter++;
-						System.out.println("in while " + counter + " " + soundPoolLoaded + " " + (!soundPoolLoaded && counter < 20));
 
 					}
 				} catch (InterruptedException e) {
@@ -272,8 +264,6 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 			}
 		};
 		waitThread.run();
-
-		System.out.println("in play sound");
 	}
 
 	
