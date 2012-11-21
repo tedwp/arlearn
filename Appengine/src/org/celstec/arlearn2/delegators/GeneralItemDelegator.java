@@ -12,7 +12,6 @@ import org.celstec.arlearn2.beans.dependencies.BooleanDependency;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.dependencies.OrDependency;
 import org.celstec.arlearn2.beans.dependencies.TimeDependency;
-import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
@@ -201,27 +200,42 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		Iterator<GeneralItem> it = getNonVisibleItems(getAllGeneralItems(runId), vil).iterator();
 		while (it.hasNext()) {
 			GeneralItem generalItem = (GeneralItem) it.next();
-			if (influencedBy(generalItem, action) && isVisible(generalItem, al, u)) {
+			long visAt;
+			if (influencedByAppear(generalItem, action) && (visAt = isVisible(generalItem, al, u))!=-1) {
 				GeneralItemModification gim = new GeneralItemModification();
 				gim.setModificationType(GeneralItemModification.VISIBLE);
 				gim.setRunId(runId);
 				gim.setGeneralItem(generalItem);
-				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS);
+				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS, visAt);
 
 				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
-//				if ("answer_300_mct11.2_correct".equals(action.getAction())){
-//					ChannelNotificator.getInstance().notify(u.getEmail().replace("mobilea", "mobileb"), gim);
-//					ChannelNotificator.getInstance().notify(u.getEmail().replace("mobilea", "mobilec"), gim);
-//				}
+			}
+			long disAt;
+			if (influencedByDisappear(generalItem, action) && ( disAt =hasDisappeared(generalItem, al, u)) != -1) {
+				GeneralItemModification gim = new GeneralItemModification();
+				gim.setModificationType(GeneralItemModification.DISAPPEARED);
+				gim.setRunId(runId);
+				gim.setGeneralItem(generalItem);
+				
+				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getEmail(), GeneralItemVisibilityManager.DISAPPEARED_STATUS, disAt);
+				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
 				
 			}
+			
+			
 		}
 
 	}
 	
-	private boolean influencedBy(GeneralItem gi, Action action) {
+	private boolean influencedByAppear(GeneralItem gi, Action action) {
 		boolean result = false;
 		if (gi.getDependsOn() != null) result = result || influencedBy (gi.getDependsOn(), action);
+		return result;
+	}
+	
+	private boolean influencedByDisappear(GeneralItem gi, Action action) {
+		boolean result = false;
+		if (gi.getDisappearOn() != null) result = result || influencedBy (gi.getDisappearOn(), action);
 		return result;
 	}
 
@@ -243,24 +257,26 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		return false;
 	}
 
-	public boolean isVisible(GeneralItem gi, ActionList al, User u) {
+	public long isVisible(GeneralItem gi, ActionList al, User u) {
 		if (gi.getDependsOn() == null )
-			return gi.timeStampCheck();
+			return 0l;
 		UsersDelegator ud = new UsersDelegator(this);
 		HashMap<String, User> uMap = ud.getUserMap(u.getRunId());
 		Dependency dep = gi.getDependsOn();
-//		String role = dep.getRole();
-//		if (role != null && !hasRole(u, role)) return false;
-//		Integer scope = dep.getScope();
-//		if (scope == null) scope = Dependency.USER_SCOPE;
-//		if (dep instanceof ActionDependency) {
-//			if (checkActions(((ActionDependency) dep), al, u, uMap))
-//				return gi.timeStampCheck();
-//		}
-		if (checkActions(dep, al, u, uMap))
-			return gi.timeStampCheck();
-		return false;
+		return checkActions(dep, al, u, uMap);
+			
 	}
+	
+	public long hasDisappeared(GeneralItem gi, ActionList al, User u) {
+		Dependency dep = gi.getDisappearOn();
+		if (dep == null )
+			return 0l;
+		UsersDelegator ud = new UsersDelegator(this);
+		HashMap<String, User> uMap = ud.getUserMap(u.getRunId());
+		return checkActions(dep, al, u, uMap);
+
+	}
+
 
 	private boolean hasRole(User u, String role) {
 		if (u.getRoles() == null) return false;
@@ -270,7 +286,7 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		return false;
 	}
 
-	public boolean checkActions(Dependency dep, ActionList al, User u, HashMap<String, User> uMap) {
+	public long checkActions(Dependency dep, ActionList al, User u, HashMap<String, User> uMap) {
 		if (dep instanceof ActionDependency) {
 			return checkActions(((ActionDependency) dep), al, u, uMap);
 		}
@@ -280,62 +296,93 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		if (dep instanceof OrDependency) {
 			return checkActions(((OrDependency) dep), al, u, uMap);
 		}
-		return false;
+		if (dep instanceof TimeDependency) {
+			return checkActions(((TimeDependency) dep), al, u, uMap);
+		}
+		return -1;
 	}
-	public boolean checkActions(ActionDependency dOn, ActionList al, User u, HashMap<String, User> uMap) {
+	public long checkActions(ActionDependency dOn, ActionList al, User u, HashMap<String, User> uMap) {
 		Iterator<Action> it = al.getActions().iterator();
+		long minTime = -1;
 		while (it.hasNext()) {
-			if (checkAction(dOn, (Action) it.next(),u, uMap))
-				return true;
+			long actionCheck = checkAction(dOn, (Action) it.next(),u, uMap); 
+			if (actionCheck != -1) {
+				if (minTime == -1) {
+					minTime = actionCheck;
+				} else {
+					minTime = Math.min(minTime, actionCheck);
+				}
+			}
 		}
-		return false;
+		return minTime;
 	}
 	
-	public boolean checkActions(AndDependency andDep, ActionList al, User u, HashMap<String, User> uMap) {
+	public long checkActions(TimeDependency dOn, ActionList al, User u, HashMap<String, User> uMap) {
+		if (dOn.getOffset() == null|| dOn.getTimeDelta() == null) return -1;
+		return checkActions(((ActionDependency) dOn.getOffset()), al, u, uMap) + dOn.getTimeDelta();
+	}
+	
+	public long checkActions(AndDependency andDep, ActionList al, User u, HashMap<String, User> uMap) {
 		boolean result = true;
+		long maxTime = -1;
 		for (Dependency dOn : andDep.getDependencies()) {
-				result = result && checkActions(dOn, al, u, uMap);
-			if (!result) return false;
+			long time = checkActions(dOn, al, u, uMap);
+			result = result && (time != -1); 
+			if (!result) return -1;
+			if (maxTime == -1) {
+				maxTime = time;
+			} else {
+				maxTime = Math.max(maxTime, time);
+			}
 		}
-		return result;
+		return maxTime;
 	}
 	
-	public boolean checkActions(OrDependency orDep, ActionList al, User u, HashMap<String, User> uMap) {
+	public long checkActions(OrDependency orDep, ActionList al, User u, HashMap<String, User> uMap) {
 		boolean result = false;
+		long minTime = -1;
 		for (Dependency dOn : orDep.getDependencies()) {
-				result = result || checkActions(dOn, al, u, uMap);
-			if (result) return true;
+			long time = checkActions(dOn, al, u, uMap);
+			if (time != -1) {
+				result = true;
+				if (minTime == -1) {
+					minTime = time;
+				} else {
+					minTime = Math.min(minTime, time);
+				}
+			}
 		}
-		return result;
+		return minTime;
 	}
 
-	public boolean checkAction(ActionDependency dOn, Action a, User u, HashMap<String, User> uMap) {
-		if (a == null) return false;
+	public long checkAction(ActionDependency dOn, Action a, User u, HashMap<String, User> uMap) {
+		if (a == null) return -1;
 //		UsersDelegator ud = new UsersDelegator(this);
 //		User actionUser = ud.getUserByEmail(u.getRunId(), a.getUserEmail());
 		Integer scope = dOn.getScope();
 		if (scope == null) scope = Dependency.USER_SCOPE;
 		switch (scope) {
 		case Dependency.USER_SCOPE:
-			if (!a.getUserEmail().equals(u.getEmail())) return false;
+			if (!a.getUserEmail().equals(u.getEmail())) return -1;
 			break;
 		case Dependency.TEAM_SCOPE:
-			if (!uMap.get(a.getUserEmail()).getTeamId().equals(u.getTeamId())) return false;
+			if (!uMap.get(a.getUserEmail()).getTeamId().equals(u.getTeamId())) return -1;
 			break;
 
 		default:
 			break;
 		}
 		String role = dOn.getRole();
-		if (role != null && !hasRole(uMap.get(a.getUserEmail()), role)) return false;
+		if (role != null && !hasRole(uMap.get(a.getUserEmail()), role)) return -1;
 		
 		if (dOn.getAction() != null && !dOn.getAction().equals(a.getAction()))
-			return false;
+			return -1;
 		if (dOn.getGeneralItemId() != null && !dOn.getGeneralItemId().equals(a.getGeneralItemId()))
-			return false;
+			return -1;
 		if (dOn.getGeneralItemType() != null && !dOn.getGeneralItemType().equals(a.getGeneralItemType()))
-			return false;
-		return true;
+			return -1;
+		if (a.getTime() == null) return 0;
+		return a.getTime();
 	}
 
 	public List<GeneralItem> getNonVisibleItems(GeneralItemList giList, VisibleItemsList vil) {

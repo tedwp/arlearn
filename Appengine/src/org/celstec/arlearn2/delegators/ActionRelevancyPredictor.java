@@ -31,8 +31,6 @@ public class ActionRelevancyPredictor implements Serializable{
 //		ActionRelevancyPredictor arp = GeneralitemsCache.getInstance().getActionsPredicator(gameId);
 		ActionRelevancyPredictor arp = null; //GeneralitemsCache.getInstance().getActionsPredicator(gameId);
 		if (arp == null) {
-			System.out.println("not from cache");
-//			gil = getActionDependencies(gd.getGeneralItems(run.getGameId()).getGeneralItems());
 			GeneralItemDelegator gid = new GeneralItemDelegator(gd);
 			arp = new ActionRelevancyPredictor();
 			arp.init(gameId, gid);
@@ -42,34 +40,36 @@ public class ActionRelevancyPredictor implements Serializable{
 	}
 	
 	private void init(long gameId, GeneralItemDelegator gid) {
-		
 		for (GeneralItem gi: gid.getGeneralItems(gameId).getGeneralItems()) {
-			Dependency dep = gi.getDependsOn();
-			if (dep != null) {
-				List<ActionDependency> itemDependencies = getActionDependencies(dep);
-				dependencies.addAll(itemDependencies);
-				for (ActionDependency aDep: itemDependencies) {
-					if (aDep.getRole() != null) addRoleDependencies(aDep.getRole(), aDep);
-					if (aDep.getScope() != null) {
-						switch (aDep.getScope()) {
-						case Dependency.USER_SCOPE:
-							userDependencies.add(aDep);
-							break;
-						case Dependency.TEAM_SCOPE:
-							teamDependencies.add(aDep);
-							break;
-						case Dependency.ALL_SCOPE:
-							allDependencies.add(aDep);
-							break;
-						default:
-							break;
-						}
-					}else {
-						userDependencies.addAll(itemDependencies);
+			init(gi.getDependsOn());
+			init(gi.getDisappearOn());			
+		}
+	}
+	private void init(Dependency dep) {
+		if (dep != null) {
+			List<ActionDependency> itemDependencies = getActionDependencies(dep);
+			dependencies.addAll(itemDependencies);
+			for (ActionDependency aDep: itemDependencies) {
+				if (aDep.getRole() != null) addRoleDependencies(aDep.getRole(), aDep);
+				if (aDep.getScope() != null) {
+					switch (aDep.getScope()) {
+					case Dependency.USER_SCOPE:
+						userDependencies.add(aDep);
+						break;
+					case Dependency.TEAM_SCOPE:
+						teamDependencies.add(aDep);
+						break;
+					case Dependency.ALL_SCOPE:
+						allDependencies.add(aDep);
+						break;
+					default:
+						break;
 					}
+				}else {
+					userDependencies.addAll(itemDependencies);
 				}
-				
 			}
+			
 		}
 	}
 	

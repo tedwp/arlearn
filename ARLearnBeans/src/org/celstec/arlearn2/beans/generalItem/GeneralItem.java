@@ -18,6 +18,8 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	private String description;
 
 	private Dependency dependsOn;
+
+	private Dependency disappearOn;
 	
 	public Boolean autoLaunch;
 
@@ -44,6 +46,7 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 			nullSafeEquals(getName(), other.getName()) &&
 			nullSafeEquals(getDescription(), other.getDescription()) &&
 			nullSafeEquals(getDependsOn(), other.getDependsOn()) &&
+			nullSafeEquals(getDisappearOn(), other.getDisappearOn()) &&
 			nullSafeEquals(getRadius(), other.getRadius()) &&
 			nullSafeEquals(getShowAtTimeStamp(), other.getShowAtTimeStamp()) &&
 			nullSafeEquals(getLng(), other.getLng()) &&
@@ -106,6 +109,14 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 
 	public void setDependsOn(Dependency dependsOn) {
 		this.dependsOn = dependsOn;
+	}
+	
+	public Dependency getDisappearOn() {
+		return disappearOn;
+	}
+
+	public void setDisappearOn(Dependency disappearOn) {
+		this.disappearOn = disappearOn;
 	}
 
 	public Boolean getAutoLaunch() {

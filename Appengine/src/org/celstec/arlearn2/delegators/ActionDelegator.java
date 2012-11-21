@@ -70,15 +70,12 @@ public class ActionDelegator extends GoogleDelegator{
 		RunDelegator qr = new RunDelegator(this);
 		Run run = qr.getRun(action.getRunId());
 		ActionRelevancyPredictor arp = ActionRelevancyPredictor.getActionRelevancyPredicator(run.getGameId(), this);
-		System.out.println(arp.toString());
+
 		//TODO migrate these to list of relevant dependecies (getActionDependencies[])
 		boolean relevancy = arp.isRelevant(action);
-//		if (relevancy || "read".equals(action.getAction())) {
 			ActionManager.addAction(action.getRunId(), action.getAction(), action.getUserEmail(), action.getGeneralItemId(), action.getGeneralItemType(), action.getTimestamp());
 			ActionCache.getInstance().removeRunAction(action.getRunId());
 			ChannelNotificator.getInstance().notify(r.getOwner(), action);
-			//TODO update score
-//		} 
 		if (relevancy) {
 			(new UpdateGeneralItems(authToken, action.getRunId(), action.getAction(), action.getUserEmail(), action.getGeneralItemId(), action.getGeneralItemType())).scheduleTask();
 		}

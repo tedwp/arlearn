@@ -1,6 +1,5 @@
 package org.celstec.arlearn2.api;
 
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;

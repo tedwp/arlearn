@@ -87,7 +87,7 @@ public class UpdateGeneralItemsVisibility extends GenericBean{
 		if (gil != null && gil.getGeneralItems() != null) {
 			for (GeneralItem gi: gil.getGeneralItems()) {
 				if (gi.getDependsOn() == null && (gi.getDeleted() == null || !gi.getDeleted())) {
-					GeneralItemVisibilityManager.setItemVisible(gi.getId(), getRunId(), getUserEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS);
+					GeneralItemVisibilityManager.setItemVisible(gi.getId(), getRunId(), getUserEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS, System.currentTimeMillis());
 				}
 			}
 		}

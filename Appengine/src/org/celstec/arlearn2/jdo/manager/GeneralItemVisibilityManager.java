@@ -14,33 +14,39 @@ import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.GeneralItemVisibilityJDO;
 
 public class GeneralItemVisibilityManager {
-	
+
 	public static final int VISIBLE_STATUS = 1;
 	public static final int DISAPPEARED_STATUS = 2;
 
-	private static final String params[] = new String[]{"runId", "generalItemId", "email" , "status"};
-	private static final String paramsNames[] = new String[]{"runIdParam", "generalItemIdParam", "emailParam", "statusParam"};
-	private static final String types[] = new String[]{"Long","Long", "String", "Integer"};
-	
-	public static void setItemVisible(Long generalItemId, Long runId, String email, Integer status)  {
+	private static final String params[] = new String[] { "runId", "generalItemId", "email", "status" };
+	private static final String paramsNames[] = new String[] { "runIdParam", "generalItemIdParam", "emailParam", "statusParam" };
+	private static final String types[] = new String[] { "Long", "Long", "String", "Integer" };
+
+	public static void setItemVisible(Long generalItemId, Long runId, String email, Integer status, long timeStamp) {
 		VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, email);
 
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		if (getGeneralitemVisibility(pm, runId, generalItemId, email, VISIBLE_STATUS).isEmpty()) { //TODO change this when disappear on is introduced.
-			GeneralItemVisibilityJDO visJdo = new GeneralItemVisibilityJDO();
-			visJdo.setEmail(email);
-			visJdo.setGeneralItemId(generalItemId);
-			visJdo.setRunId(runId);
-			visJdo.setStatus(status);
-			try {
+		List<GeneralItemVisibilityJDO> listVisiblity = getGeneralitemVisibility(pm, runId, generalItemId, email, status);
+		try {
+			if (listVisiblity.isEmpty()) {
+				GeneralItemVisibilityJDO visJdo = new GeneralItemVisibilityJDO();
+				visJdo.setEmail(email);
+				visJdo.setGeneralItemId(generalItemId);
+				visJdo.setRunId(runId);
+				visJdo.setStatus(status);
+				visJdo.setTimeStamp(timeStamp);
 				pm.makePersistent(visJdo);
-			} finally {
-				pm.close();
+			} else {
+				for (GeneralItemVisibilityJDO vis : listVisiblity) {
+					vis.setTimeStamp(timeStamp);
+				}
 			}
+		} finally {
+			pm.close();
 		}
-		
+
 	}
-	
+
 	public static List<Long> getVisibleItems(Long runId, String email) {
 		ArrayList<Long> returnProgressDefinitions = new ArrayList<Long>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -50,28 +56,29 @@ public class GeneralItemVisibilityManager {
 		}
 		return returnProgressDefinitions;
 	}
-	
+
 	private static List<GeneralItemVisibilityJDO> getGeneralitemVisibility(PersistenceManager pm, Long runId, Long generalItemId, String email, Integer status) {
 		Query query = pm.newQuery(GeneralItemVisibilityJDO.class);
-		Object args [] ={runId, generalItemId, email, status};
+		Object args[] = { runId, generalItemId, email, status };
 		query.setFilter(ManagerUtil.generateFilter(args, params, paramsNames));
 		query.declareParameters(ManagerUtil.generateDeclareParameters(args, types, params, paramsNames));
 		return (List<GeneralItemVisibilityJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args));
 	}
-	
-	public static void delete(Long runId, String email){
+
+	public static void delete(Long runId, String email) {
 		delete(runId, null, email, null);
 	}
+
 	protected static final Logger logger = Logger.getLogger(GeneralItemVisibilityManager.class.getName());
 
-	public static void delete(Long runId, Long generalItemId, String email, Integer status){
+	public static void delete(Long runId, Long generalItemId, String email, Integer status) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
-			List< GeneralItemVisibilityJDO> deleteList = getGeneralitemVisibility(pm, runId, generalItemId, email, status);
+			List<GeneralItemVisibilityJDO> deleteList = getGeneralitemVisibility(pm, runId, generalItemId, email, status);
 			pm.deletePersistentAll(deleteList);
 		} finally {
 			pm.close();
 		}
 	}
-	
+
 }

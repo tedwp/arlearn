@@ -52,6 +52,11 @@ public abstract class GeneralItemCanvas extends VStack{
 	protected SelectItem selectGeneralItem;
 	protected SelectItem selectRole;
 	protected SelectItem selectScope;
+	protected CheckboxItem isDisapperOnDependency;
+	protected SelectItem disAppearOnAction;
+	protected SelectItem disAppearOnGeneralItem;
+	protected SelectItem disAppearOnRole;
+	protected SelectItem disAppearOnScope;
 	
 	protected SelectItem roleGrid;
 	private String dependency = null;
@@ -72,6 +77,12 @@ public abstract class GeneralItemCanvas extends VStack{
 	private final String GENITEM_DEP = "generalItemId";
 	private final String SCOPE_DEP = "scope";
 	private final String ROLE_DEP = "role";
+	
+	private final String DIS_SIMPLE_DEP = "disAppearDep";
+	private final String DIS_ACTION_DEP = "disAppearAction";
+	private final String DIS_GENITEM_DEP = "disAppeargeneralItemId";
+	private final String DIS_SCOPE_DEP = "disAppearscope";
+	private final String DIS_ROLE_DEP = "disAppearrole";
 	
 	IsFloatValidator floatValidator = new IsFloatValidator();
 	IsIntegerValidator intValidator = new IsIntegerValidator();
@@ -96,6 +107,8 @@ public abstract class GeneralItemCanvas extends VStack{
 		createRoleItem();
 		createAutoLaunchComponent();
 		createSimpleDependencyComponent();
+		
+		createDisapperOnDependencyComponent();
 	}
 	
 
@@ -191,7 +204,7 @@ public abstract class GeneralItemCanvas extends VStack{
 		});
 	}
 	
-	private void createSimpleDependencyComponent() {
+	private void createSimpleDependencyComponent() { // createDisapperOnDependencyComponent
 		isSimpleDependency = new CheckboxItem();
 		isSimpleDependency.setName(SIMPLE_DEP);
 		isSimpleDependency.setValue(false);
@@ -204,21 +217,22 @@ public abstract class GeneralItemCanvas extends VStack{
 		});
 		isSimpleDependency.setRedrawOnChange(true);
 
-		FormItemIfFunction formIf = new FormItemIfFunction() {  
-            public boolean execute(FormItem item, Object value, DynamicForm form) {  
-            	if (form.getValue(SIMPLE_DEP) == null) return false;
+		FormItemIfFunction formIf = new FormItemIfFunction() {
+			public boolean execute(FormItem item, Object value, DynamicForm form) {
+				if (form.getValue(SIMPLE_DEP) == null)
+					return false;
 
-                return form.getValue(SIMPLE_DEP).equals(Boolean.TRUE);  
-            }
+				return form.getValue(SIMPLE_DEP).equals(Boolean.TRUE);
+			}
 
-        };
+		};
 		selectAction = new SelectItem(ACTION_DEP);
 		selectAction.setTitle(constants.actionDep());
 		selectAction.setValueMap(createSimpleDependencyValues());
 		selectAction.setWrapTitle(false);
-		selectAction.setShowIfCondition(formIf);  
+		selectAction.setShowIfCondition(formIf);
 		selectAction.setStartRow(true);
-		
+
 		selectGeneralItem = new SelectItem(GENITEM_DEP);
 		selectGeneralItem.setTitle(constants.generalItemDep());
 		selectGeneralItem.setValueMap(createSimpleDependencyValues());
@@ -232,40 +246,92 @@ public abstract class GeneralItemCanvas extends VStack{
 		selectGeneralItem.setShowIfCondition(formIf);
 		selectGeneralItem.setStartRow(true);
 		selectGeneralItem.addChangedHandler(new ChangedHandler() {
-			
+
 			@Override
 			public void onChanged(ChangedEvent event) {
 				String id = selectGeneralItem.getValueAsString();
 				getActions(Long.parseLong(id));
-//				Criteria crit = new Criteria();
-//				crit.addCriteria("id", );
-//				GeneralItemGameDataSource.getInstance().fetchData(crit, new DSCallback() {
-//					@Override
-//					public void execute(DSResponse response,
-//							Object rawData, DSRequest request) {
-//						Record[] records = response.getData();
-//						for (Record record : records) {
-//							System.out.println("query "+record);
-//						}
-//					}
-//				});
-				
 			}
 		});
-		
-		
+
 		selectScope = new SelectItem(SCOPE_DEP);
 		selectScope.setTitle(constants.scopeDep());
 		selectScope.setValueMap(createScopeDependencyValues());
-		if (selectScope.getValue() == null) selectScope.setValue(0);
+		if (selectScope.getValue() == null)
+			selectScope.setValue(0);
 		selectScope.setShowIfCondition(formIf);
 		selectScope.setStartRow(true);
-		
+
 		selectRole = new SelectItem(ROLE_DEP);
 		selectRole.setTitle(constants.roleDep());
 		selectRole.setValueMap(roles);
 		selectRole.setShowIfCondition(formIf);
 		selectRole.setStartRow(true);
+	}
+	
+	
+	private void createDisapperOnDependencyComponent() {
+		isDisapperOnDependency = new CheckboxItem();
+		isDisapperOnDependency.setName(DIS_SIMPLE_DEP);
+		isDisapperOnDependency.setValue(false);
+		isDisapperOnDependency.setTitle(constants.disappearDep());
+		isDisapperOnDependency.addItemHoverHandler(new ItemHoverHandler() {
+			@Override
+			public void onItemHover(ItemHoverEvent event) {
+				isDisapperOnDependency.setPrompt(constants.disappearDepExplain());
+			}
+		});
+		isDisapperOnDependency.setRedrawOnChange(true);
+
+		FormItemIfFunction formIf = new FormItemIfFunction() {  
+            public boolean execute(FormItem item, Object value, DynamicForm form) {  
+            	if (form.getValue(DIS_SIMPLE_DEP) == null) return false;
+
+                return form.getValue(DIS_SIMPLE_DEP).equals(Boolean.TRUE);  
+            }
+
+        };
+		disAppearOnAction = new SelectItem(DIS_ACTION_DEP);
+		disAppearOnAction.setTitle(constants.actionDep());
+		disAppearOnAction.setValueMap(createSimpleDependencyValues());
+		disAppearOnAction.setWrapTitle(false);
+		disAppearOnAction.setShowIfCondition(formIf);  
+		disAppearOnAction.setStartRow(true);
+		
+		disAppearOnGeneralItem = new SelectItem(DIS_GENITEM_DEP);
+		disAppearOnGeneralItem.setTitle(constants.generalItemDep());
+		disAppearOnGeneralItem.setValueMap(createSimpleDependencyValues());
+		disAppearOnGeneralItem.setWrapTitle(false);
+		disAppearOnGeneralItem.setDisplayField("name");
+		Criteria crit = new Criteria();
+		crit.addCriteria("deleted", false);
+		disAppearOnGeneralItem.setPickListCriteria(crit);
+		disAppearOnGeneralItem.setValueField("id");
+		disAppearOnGeneralItem.setOptionDataSource(GeneralItemGameDataSource.getInstance());
+		disAppearOnGeneralItem.setShowIfCondition(formIf);
+		disAppearOnGeneralItem.setStartRow(true);
+		disAppearOnGeneralItem.addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				String id = disAppearOnGeneralItem.getValueAsString();
+				getActions(Long.parseLong(id));
+			}
+		});
+		
+		
+		disAppearOnScope = new SelectItem(SCOPE_DEP);
+		disAppearOnScope.setTitle(constants.scopeDep());
+		disAppearOnScope.setValueMap(createScopeDependencyValues());
+		if (disAppearOnScope.getValue() == null) disAppearOnScope.setValue(0);
+		disAppearOnScope.setShowIfCondition(formIf);
+		disAppearOnScope.setStartRow(true);
+		
+		disAppearOnRole = new SelectItem(DIS_ROLE_DEP);
+		disAppearOnRole.setTitle(constants.roleDep());
+		disAppearOnRole.setValueMap(roles);
+		disAppearOnRole.setShowIfCondition(formIf);
+		disAppearOnRole.setStartRow(true);
 	}
 	
 	
@@ -349,9 +415,21 @@ public abstract class GeneralItemCanvas extends VStack{
 		}
 	}
 	
+	protected void setValueDouble(String constantName, String name, JSONObject o){
+		if (formMapping.get(constantName) != null) {
+			if (o.get(name)!= null && o.get(name).isNumber() != null) formMapping.get(constantName).setValue(constantName, o.get(name).isNumber().doubleValue());
+		}
+	}
+	
 	protected void setValueString(String name, JSONObject o){
 		if (formMapping.get(name) != null) {
 			if (o.get(name)!= null && o.get(name).isString() != null) formMapping.get(name).setValue(name, o.get(name).isString().stringValue());
+		}
+	}
+	
+	protected void setValueString(String constantName, String name, JSONObject o){
+		if (formMapping.get(constantName) != null) {
+			if (o.get(name)!= null && o.get(name).isString() != null) formMapping.get(constantName).setValue(constantName, o.get(name).isString().stringValue());
 		}
 	}
 	
@@ -394,33 +472,42 @@ public abstract class GeneralItemCanvas extends VStack{
 
 		
 		if (getValue(SIMPLE_DEP) != null && (Boolean) getValue(SIMPLE_DEP)) {
-			JSONObject actionDep = new JSONObject();
-			//{"type":"org.celstec.arlearn2.beans.dependencies.ActionDependency", "action":"manual-30"}
-			actionDep.put("type", new JSONString("org.celstec.arlearn2.beans.dependencies.ActionDependency"));
-			boolean addDep = false;
-			if (getValue(ACTION_DEP) != null) {
-				addDep = true;
-				actionDep.put("action", new JSONString((String) getValue(ACTION_DEP)));	
-			}
-			if (getValue(GENITEM_DEP) != null) {
-				addDep = true;
-				actionDep.put("generalItemId", new JSONNumber((Integer) getValue(GENITEM_DEP)));	
-			}
-			if (getValue(SCOPE_DEP) != null) {
-				Object scope = getValue(SCOPE_DEP);
-				if (scope instanceof Integer)		{
-					actionDep.put("scope", new JSONNumber((Integer)getValue(SCOPE_DEP)));	
-				} else {
-					actionDep.put("scope", new JSONNumber(Integer.parseInt((String)  getValue(SCOPE_DEP))));	
-				}	
-			}
-			if (getValue(ROLE_DEP) != null) {
-				addDep = true;
-				actionDep.put("role", new JSONString((String)  getValue(ROLE_DEP)));	
-			}
-			if (addDep) object.put("dependsOn", actionDep);
+			JSONObject actionDep = generateDependency(ACTION_DEP, GENITEM_DEP, SCOPE_DEP, ROLE_DEP);
+			if (actionDep != null) object.put("dependsOn", actionDep);
+		}
+		if (getValue(DIS_SIMPLE_DEP) != null && (Boolean) getValue(DIS_SIMPLE_DEP)) {
+			JSONObject actionDep = generateDependency(DIS_ACTION_DEP, DIS_GENITEM_DEP, DIS_SCOPE_DEP, DIS_ROLE_DEP);
+			if (actionDep != null) object.put("disappearOn", actionDep);
 		}
 		return object;
+	}
+	
+	private JSONObject generateDependency(String actionDepString, String genItemString, String scopeDepString, String roleDepString) {
+		JSONObject actionDep = new JSONObject();
+		actionDep.put("type", new JSONString("org.celstec.arlearn2.beans.dependencies.ActionDependency"));
+		boolean addDep = false;
+		if (getValue(actionDepString) != null) {
+			addDep = true;
+			actionDep.put("action", new JSONString((String) getValue(actionDepString)));	
+		}
+		if (getValue(genItemString) != null) {
+			addDep = true;
+			actionDep.put("generalItemId", new JSONNumber((Integer) getValue(genItemString)));	
+		}
+		if (getValue(scopeDepString) != null) {
+			Object scope = getValue(scopeDepString);
+			if (scope instanceof Integer)		{
+				actionDep.put("scope", new JSONNumber((Integer)getValue(scopeDepString)));	
+			} else {
+				actionDep.put("scope", new JSONNumber(Integer.parseInt((String)  getValue(scopeDepString))));	
+			}	
+		}
+		if (getValue(roleDepString) != null) {
+			addDep = true;
+			actionDep.put("role", new JSONString((String)  getValue(roleDepString)));	
+		}
+		if (!addDep) return null;
+		return actionDep;
 	}
 	
 	protected void putArrayValue(JSONObject object, SelectItem... items) {
@@ -475,6 +562,17 @@ public abstract class GeneralItemCanvas extends VStack{
 					setValueString(ROLE_DEP, dep);
 					setValueDouble(GENITEM_DEP, dep);
 					setValueDouble(SCOPE_DEP, dep);
+			}
+			
+		}
+		if (o.containsKey("disappearOn") && o.get("disappearOn").isObject() != null) {
+			JSONObject dep = o.get("disappearOn").isObject();
+			if (dep.containsKey("type")) {
+				formMapping.get(DIS_SIMPLE_DEP).setValue(DIS_SIMPLE_DEP, "org.celstec.arlearn2.beans.dependencies.ActionDependency".equals(dep.get("type").isString().stringValue()));
+					setValueString(DIS_ACTION_DEP, ACTION_DEP, dep);
+					setValueString(DIS_ROLE_DEP, ROLE_DEP, dep);
+					setValueDouble(DIS_GENITEM_DEP, GENITEM_DEP, dep);
+					setValueDouble(DIS_SCOPE_DEP, SCOPE_DEP, dep);
 			}
 			
 		}

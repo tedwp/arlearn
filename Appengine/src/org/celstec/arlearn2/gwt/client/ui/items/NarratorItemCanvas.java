@@ -64,9 +64,11 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 
 		this.addMember(buttonLayout);
 
-		this.addMember(form2);
-		form2.setFields(latItem, lngItem, sortItem,  roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
-		addField(form2, latItem, lngItem, sortItem, roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
+		this.addMember(form2);								 
+		
+		form2.setFields(latItem, lngItem, sortItem,  roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
+		addField(form2, latItem, lngItem, sortItem, roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
+
 	}
 	
 	protected void doLayoutForm1() {

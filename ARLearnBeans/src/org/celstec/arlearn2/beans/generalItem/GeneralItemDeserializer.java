@@ -38,6 +38,7 @@ public class GeneralItemDeserializer extends GameBeanDeserializer {
 		if (object.has("lat")) gi.setLat(object.getDouble("lat"));
 		if (object.has("autoLaunch")) gi.setAutoLaunch(object.getBoolean("autoLaunch"));
 		if (object.has("dependsOn")) gi.setDependsOn((Dependency) JsonBeanDeserializer.deserialize(Dependency.class, object.getJSONObject("dependsOn")));
+		if (object.has("disappearOn")) gi.setDisappearOn((Dependency) JsonBeanDeserializer.deserialize(Dependency.class, object.getJSONObject("disappearOn")));
 		if (object.has("roles")) gi.setRoles(ListDeserializer.toStringList(object.getJSONArray("roles")));
 
 	}
