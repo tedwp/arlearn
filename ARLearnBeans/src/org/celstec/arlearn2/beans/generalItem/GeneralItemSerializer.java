@@ -25,7 +25,10 @@ public class GeneralItemSerializer extends GameBeanSerializer{
 			if (gi.getShowAtTimeStamp() != null) returnObject.put("showAtTimeStamp", gi.getShowAtTimeStamp());
 			if (gi.getLng() != null) returnObject.put("lng", gi.getLng());
 			if (gi.getLat() != null) returnObject.put("lat", gi.getLat());
+			if (gi.getVisibleAt() != null) returnObject.put("visibleAt", gi.getVisibleAt());
+			if (gi.getDisappearAt() != null) returnObject.put("disappearAt", gi.getDisappearAt());
 			if (gi.getAutoLaunch() != null) returnObject.put("autoLaunch", gi.getAutoLaunch());
+			if (gi.getShowCountDown() != null) returnObject.put("showCountDown", gi.getShowCountDown());
 			if (gi.getIconUrl() != null) returnObject.put("iconUrl", gi.getIconUrl());
 			if (gi.getRoles() != null) returnObject.put("roles", ListSerializer.toStringList(gi.getRoles()));
 

@@ -4,6 +4,7 @@ package org.celstec.arlearn2.android.broadcast;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.broadcast.task.CreateNewGItemTask;
 import org.celstec.arlearn2.android.broadcast.task.DeleteItemTask;
+import org.celstec.arlearn2.android.broadcast.task.MakeGeneralItemDisappearedTask;
 import org.celstec.arlearn2.android.broadcast.task.MakeGeneralItemVisibleTask;
 import org.celstec.arlearn2.android.broadcast.task.SynchronizeGeneralItemsTask;
 import org.celstec.arlearn2.android.db.DBAdapter;
@@ -63,6 +64,11 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 			((MakeGeneralItemVisibleTask) task).setRunId(bean.getRunId());
 			((MakeGeneralItemVisibleTask) task).setGi(bean.getGeneralItem());
 
+			break;
+		case GeneralItemModification.DISAPPEARED:
+			task = new MakeGeneralItemDisappearedTask();
+			((MakeGeneralItemDisappearedTask) task).setRunId(bean.getRunId());
+			((MakeGeneralItemDisappearedTask) task).setGi(bean.getGeneralItem());
 			break;
 		default:
 			break;

@@ -2,6 +2,7 @@ package org.celstec.arlearn2.delegators;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -154,8 +155,8 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		return returnItemList;
 	}
 	
-	public GeneralItemList getVisibleItems(Long runIdentifier, String userIdentifier) {
-		GeneralItemList gil = VisibleGeneralItemsCache.getInstance().getVisibleGeneralitems(runIdentifier, userIdentifier);
+	public GeneralItemList getItems(Long runIdentifier, String userIdentifier, Integer status) {
+		GeneralItemList gil = VisibleGeneralItemsCache.getInstance().getVisibleGeneralitems(runIdentifier, userIdentifier, status);
 		if (gil == null) {
 			gil = new GeneralItemList();
 			RunDelegator qr = new RunDelegator(this);
@@ -167,18 +168,24 @@ public class GeneralItemDelegator extends GoogleDelegator {
 				return il;
 			}
 			
-			List<Long> visibleItemIds = GeneralItemVisibilityManager.getVisibleItems(runIdentifier, userIdentifier);
+			HashMap<Long, Long> visibleItemIds = GeneralItemVisibilityManager.getItems(runIdentifier, userIdentifier, status);
 			GeneralItemList generalItemList = getGeneralItems(run.getGameId());
 
 			for (Iterator<GeneralItem> iterator = generalItemList.getGeneralItems().iterator(); iterator.hasNext();) {
 				GeneralItem item = iterator.next();
 				if (item.getDeleted() == null || !item.getDeleted())
-				if (visibleItemIds.contains(item.getId())) {
+				if (visibleItemIds.containsKey(item.getId())) {
+					if (status == GeneralItemVisibilityManager.VISIBLE_STATUS) {
+						item.setVisibleAt(visibleItemIds.get(item.getId()));
+					}
+					if (status == GeneralItemVisibilityManager.DISAPPEARED_STATUS) {
+						item.setDisappearAt(visibleItemIds.get(item.getId()));
+					}
 					gil.addGeneralItem(item); 
 				}
 				
 			}
-			VisibleGeneralItemsCache.getInstance().putVisibleGeneralItemList(gil, runIdentifier, userIdentifier);
+			VisibleGeneralItemsCache.getInstance().putVisibleGeneralItemList(gil, runIdentifier, userIdentifier, status);
 		}
 		return gil;
 	}
@@ -192,12 +199,18 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		}
 		ActionDelegator qa = new ActionDelegator(this);
 		ActionList al = qa.getActionList(runId);
+		GeneralItemDelegator gid = new GeneralItemDelegator(this);
+		GeneralItemList visableGIs =  gid.getItems(runId, u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS);
+		GeneralItemList disappearedGIs =  gid.getItems(runId, u.getEmail(), GeneralItemVisibilityManager.DISAPPEARED_STATUS);
+		
 		VisibleItemDelegator vid = new VisibleItemDelegator(this);
+		
 		VisibleItemsList vil = vid.getVisibleItems(runId, null, u.getEmail(), u.getTeamId());
 		vil.merge(vid.getVisibleItems(runId, null, null, u.getTeamId()));
 		vil.merge(vid.getVisibleItems(runId, null, u.getEmail(), null));
 
-		Iterator<GeneralItem> it = getNonVisibleItems(getAllGeneralItems(runId), vil).iterator();
+		List<GeneralItem> nonVisibleItems = getNonVisibleItems(getAllGeneralItems(runId), visableGIs);
+		Iterator<GeneralItem> it = nonVisibleItems.iterator();
 		while (it.hasNext()) {
 			GeneralItem generalItem = (GeneralItem) it.next();
 			long visAt;
@@ -206,25 +219,29 @@ public class GeneralItemDelegator extends GoogleDelegator {
 				gim.setModificationType(GeneralItemModification.VISIBLE);
 				gim.setRunId(runId);
 				gim.setGeneralItem(generalItem);
+				generalItem.setVisibleAt(visAt);
 				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS, visAt);
 
 				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
 			}
+			
+		}
+		List<GeneralItem> notDisappearedItems =  getNotDisappearedItems(getAllGeneralItems(runId), disappearedGIs);
+		it = notDisappearedItems.iterator();
+		while (it.hasNext()) {
+			GeneralItem generalItem = (GeneralItem) it.next();
 			long disAt;
 			if (influencedByDisappear(generalItem, action) && ( disAt =hasDisappeared(generalItem, al, u)) != -1) {
 				GeneralItemModification gim = new GeneralItemModification();
 				gim.setModificationType(GeneralItemModification.DISAPPEARED);
 				gim.setRunId(runId);
 				gim.setGeneralItem(generalItem);
+				generalItem.setDisappearAt(disAt);
 				
 				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getEmail(), GeneralItemVisibilityManager.DISAPPEARED_STATUS, disAt);
-				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
-				
-			}
-			
-			
+				ChannelNotificator.getInstance().notify(u.getEmail(), gim);	
+			}	
 		}
-
 	}
 	
 	private boolean influencedByAppear(GeneralItem gi, Action action) {
@@ -242,7 +259,7 @@ public class GeneralItemDelegator extends GoogleDelegator {
 	private boolean influencedBy(Dependency dependsOn, Action action) {
 		if (dependsOn == null) return false;
 		if (dependsOn instanceof ActionDependency) {
-			if (action.getAction() == null) return false;
+			if (((ActionDependency)dependsOn).getAction() == null && action.getAction() != null) return false;
 			return ((ActionDependency)dependsOn).getAction().equals(action.getAction());
 		}
 		if (dependsOn instanceof TimeDependency) return influencedBy(((TimeDependency)dependsOn).getOffset(), action);
@@ -319,6 +336,8 @@ public class GeneralItemDelegator extends GoogleDelegator {
 	
 	public long checkActions(TimeDependency dOn, ActionList al, User u, HashMap<String, User> uMap) {
 		if (dOn.getOffset() == null|| dOn.getTimeDelta() == null) return -1;
+		long time = checkActions(((ActionDependency) dOn.getOffset()), al, u, uMap);
+		if (time == -1) return -1;
 		return checkActions(((ActionDependency) dOn.getOffset()), al, u, uMap) + dOn.getTimeDelta();
 	}
 	
@@ -385,14 +404,51 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		return a.getTime();
 	}
 
-	public List<GeneralItem> getNonVisibleItems(GeneralItemList giList, VisibleItemsList vil) {
+	
+	
+	public List<GeneralItem> getNonVisibleItems(GeneralItemList allItems, GeneralItemList filterAway) {
 		List<GeneralItem> returnItems = new ArrayList();
-		for (GeneralItem item : giList.getGeneralItems()) {
-			if (vil.getVisibleItem(item.getId()) == null)
+		long currentTime = System.currentTimeMillis();
+		HashSet<Long> idsToRemove = new HashSet<Long>();
+		for (Iterator iterator = filterAway.getGeneralItems().iterator(); iterator.hasNext();) {
+			GeneralItem generalItem = (GeneralItem) iterator.next();
+			if (generalItem.getVisibleAt() == null) {
+				idsToRemove.add(generalItem.getId());
+			} else if (generalItem.getVisibleAt() < currentTime) {
+				idsToRemove.add(generalItem.getId());
+			}
+		}
+		
+		for (GeneralItem item : allItems.getGeneralItems()) {
+			if (!idsToRemove.contains(item.getId())) {
 				returnItems.add(item);
+			}
 		}
 		return returnItems;
 
 	}
+	
+	public List<GeneralItem> getNotDisappearedItems(GeneralItemList allItems, GeneralItemList filterAway) {
+		List<GeneralItem> returnItems = new ArrayList();
+		long currentTime = System.currentTimeMillis();
+		HashSet<Long> idsToRemove = new HashSet<Long>();
+		for (Iterator iterator = filterAway.getGeneralItems().iterator(); iterator.hasNext();) {
+			GeneralItem generalItem = (GeneralItem) iterator.next();
+			if (generalItem.getDisappearAt() == null) {
+				idsToRemove.add(generalItem.getId());
+			} else if (generalItem.getDisappearAt() < currentTime) {
+				idsToRemove.add(generalItem.getId());
+			}
+		}
+		
+		for (GeneralItem item : allItems.getGeneralItems()) {
+			if (!idsToRemove.contains(item.getId())) {
+				returnItems.add(item);
+			}
+		}
+		return returnItems;
+
+	}
+
 
 }

@@ -96,8 +96,9 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 	}
 
 	public void processItemsNotYetInitialised(DBAdapter db, final long runId) {
-
-		TreeSet<GeneralItem> items = GeneralItemVisibilityCache.getInstance().getAllNotInitializedItems(runId);
+		//DBAdapter.getAdapter(db.getContext()).getGeneralItemVisibility().getAllNotInitializedItems(runId);
+//		TreeSet<GeneralItem> items = GeneralItemVisibilityCache.getInstance().getAllNotInitializedItems(runId);
+		TreeSet<GeneralItem> items = null; //TODO
 		if (items != null)
 			for (GeneralItem gi : items) {
 				if (itemMatchesPlayersRole(db, runId, gi)) {

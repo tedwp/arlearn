@@ -1,6 +1,7 @@
 package org.celstec.arlearn2.jdo.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -8,8 +9,8 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.cache.VisibleGeneralItemsCache;
-import org.celstec.arlearn2.delegators.GoogleDelegator;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.GeneralItemVisibilityJDO;
 
@@ -23,12 +24,11 @@ public class GeneralItemVisibilityManager {
 	private static final String types[] = new String[] { "Long", "Long", "String", "Integer" };
 
 	public static void setItemVisible(Long generalItemId, Long runId, String email, Integer status, long timeStamp) {
-		VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, email);
-
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		List<GeneralItemVisibilityJDO> listVisiblity = getGeneralitemVisibility(pm, runId, generalItemId, email, status);
 		try {
 			if (listVisiblity.isEmpty()) {
+				VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, email, status);
 				GeneralItemVisibilityJDO visJdo = new GeneralItemVisibilityJDO();
 				visJdo.setEmail(email);
 				visJdo.setGeneralItemId(generalItemId);
@@ -38,7 +38,10 @@ public class GeneralItemVisibilityManager {
 				pm.makePersistent(visJdo);
 			} else {
 				for (GeneralItemVisibilityJDO vis : listVisiblity) {
-					vis.setTimeStamp(timeStamp);
+					if (vis.getTimeStamp()== null || !vis.getTimeStamp().equals(timeStamp))  {
+						vis.setTimeStamp(timeStamp);
+						VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, email, status);
+					}
 				}
 			}
 		} finally {
@@ -47,12 +50,17 @@ public class GeneralItemVisibilityManager {
 
 	}
 
-	public static List<Long> getVisibleItems(Long runId, String email) {
-		ArrayList<Long> returnProgressDefinitions = new ArrayList<Long>();
+	public static HashMap<Long, Long> getVisibleItems(Long runId, String email) {
+		return getItems(runId, email, VISIBLE_STATUS);
+	}
+	
+	public static HashMap<Long,Long> getItems(Long runId, String email, int status) {
+		HashMap<Long, Long> returnProgressDefinitions = new HashMap<Long, Long>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Iterator<GeneralItemVisibilityJDO> it = getGeneralitemVisibility(pm, runId, null, email, VISIBLE_STATUS).iterator();
+		Iterator<GeneralItemVisibilityJDO> it = getGeneralitemVisibility(pm, runId, null, email, status).iterator();
 		while (it.hasNext()) {
-			returnProgressDefinitions.add(((GeneralItemVisibilityJDO) it.next()).getGeneralItemId());
+			GeneralItemVisibilityJDO gi = ((GeneralItemVisibilityJDO) it.next());
+			returnProgressDefinitions.put(gi.getGeneralItemId(), gi.getTimeStamp());
 		}
 		return returnProgressDefinitions;
 	}
@@ -66,12 +74,15 @@ public class GeneralItemVisibilityManager {
 	}
 
 	public static void delete(Long runId, String email) {
+		VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, email, GeneralItemVisibilityManager.VISIBLE_STATUS);
+		VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, email, GeneralItemVisibilityManager.DISAPPEARED_STATUS);
 		delete(runId, null, email, null);
 	}
 
 	protected static final Logger logger = Logger.getLogger(GeneralItemVisibilityManager.class.getName());
 
 	public static void delete(Long runId, Long generalItemId, String email, Integer status) {
+		
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			List<GeneralItemVisibilityJDO> deleteList = getGeneralitemVisibility(pm, runId, generalItemId, email, status);

@@ -321,7 +321,7 @@ public class RecordAudioDelegate {
 		    	   defaultCountingText = minutes+":"+seconds+"."+tens;
 		       }
 	    	   counter.setText(defaultCountingText);
-		    	   if (status == RECORDING_STATUS || status == PLAYBACK_AUDIO) {
+	    	   if (status == RECORDING_STATUS || status == PLAYBACK_AUDIO) {
 			       mHandler.postDelayed(this, 100);		    	   
 		       } else {
 		    	   mHandler.removeCallbacks(this);

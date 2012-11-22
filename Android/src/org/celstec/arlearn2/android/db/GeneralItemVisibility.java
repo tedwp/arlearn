@@ -19,16 +19,16 @@ import android.util.Log;
 
 public class GeneralItemVisibility extends GenericDbTable {
 	
-	public static final int NOT_INITIALISED = 0;
-	public static final int NOT_YET_VISIBLE = 1;
-	public static final int VISIBLE = 2;
-	public static final int NO_LONGER_VISIBLE = 3;
+	public static final int NOT_INITIALISED = -1;
+	public static final int NOT_YET_VISIBLE = 0;
+	public static final int VISIBLE = 1;
+	public static final int NO_LONGER_VISIBLE = 2;
 	
 	public static final String GENERALITEM_VISIBILITY_TABLE = "generalItemsVisibility";
 	
 	public static final String GENERAL_ITEM_ID = "id";// 0
 	public static final String RUNID = "runId";//10
-	public static final String SHOW_AT = "showAtTimeStamp";// 7
+	public static final String SATISFIED_AT = "satisfiedAt";// 7
 	public static final String VISIBILITY_STATUS = "visibilityStatus";//11
 
 	public GeneralItemVisibility(DBAdapter db) {
@@ -39,7 +39,7 @@ public class GeneralItemVisibility extends GenericDbTable {
 	public String createStatement() {
 		 return "create table " + GENERALITEM_VISIBILITY_TABLE + " (" 
 				+ GENERAL_ITEM_ID + " long, " //0 
-				+ SHOW_AT + " long , "  
+				+ SATISFIED_AT + " long , "  
 				+ RUNID + " long ,"
 				+ VISIBILITY_STATUS+" int);";
 	}
@@ -50,18 +50,27 @@ public class GeneralItemVisibility extends GenericDbTable {
 	}
 	
 	public void setVisibilityStatus(long itemId, Long runId, long satisfiedAt, int status) {
-		String whereArgs = GENERAL_ITEM_ID + " = " + itemId+ " and "+RUNID + " = "+runId;
+		String whereArgs = GENERAL_ITEM_ID + " = " + itemId+ " and "+RUNID + " = "+runId + " and "+SATISFIED_AT +" > "+satisfiedAt +" and "+VISIBILITY_STATUS + " = "+status;
 		if (runId == null) {
 			whereArgs = GENERAL_ITEM_ID + " = " + itemId;
 		}
+		long oldSatisfiedAt = query(itemId, runId, status);
+		if (oldSatisfiedAt == -1 || oldSatisfiedAt > satisfiedAt) {
+			db.getSQLiteDb().delete(getTableName(), whereArgs, null);
+			ContentValues initialValues = new ContentValues();
+			initialValues.put(GENERAL_ITEM_ID, itemId);
+			initialValues.put(RUNID, runId);
+			initialValues.put(SATISFIED_AT, satisfiedAt);
+			initialValues.put(VISIBILITY_STATUS, status);
+			db.getSQLiteDb().insert(getTableName(), null, initialValues);
+			GeneralItemVisibilityCache.getInstance().put(runId, itemId, status, satisfiedAt);
+		}
+	}
+	
+	public void resetAllRunsVisibility (long itemId) {
+		String whereArgs = GENERAL_ITEM_ID + " = " + itemId;
 		db.getSQLiteDb().delete(getTableName(), whereArgs, null);
-		ContentValues initialValues = new ContentValues();
-		initialValues.put(GENERAL_ITEM_ID, itemId);
-		initialValues.put(RUNID, runId);
-		initialValues.put(SHOW_AT, satisfiedAt);
-		initialValues.put(VISIBILITY_STATUS, status);
-		db.getSQLiteDb().insert(getTableName(), null, initialValues);
-		if (satisfiedAt < System.currentTimeMillis()) GeneralItemVisibilityCache.getInstance().put(runId, itemId, status);
+		//TODO update cache
 	}
 	
 	public int deleteRun(long runId) {
@@ -70,65 +79,36 @@ public class GeneralItemVisibility extends GenericDbTable {
 	}
 	
 	public Long[] query(long runId, int status) {
-		Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), null, VISIBILITY_STATUS + " = ? and "+RUNID + " = ?", new String[]{""+status, ""+runId}, null, null, null, null);
+		Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), new String[]{GENERAL_ITEM_ID, SATISFIED_AT}, VISIBILITY_STATUS + " = ? and "+RUNID + " = ?", new String[]{""+status, ""+runId}, null, null, null, null);
 		Long[] result  = new Long[mCursor.getCount()];
 		int i = 0;
 		while (mCursor.moveToNext()) {
 			Long itemId = mCursor.getLong(0);
+			Long satisfiedAt = mCursor.getLong(1);
 			result[i++] = itemId;
-			GeneralItemVisibilityCache.getInstance().put(runId, itemId, status);
+			GeneralItemVisibilityCache.getInstance().put(runId, itemId, status, satisfiedAt);
 		}
-//		results.onResults(result);
 		mCursor.close();
 		return result;
-//		VisibilityQuery query = new VisibilityQuery();
-//		query.status = status;
-//		query.results = results;
-//		query.runId = runId;
-//		Message m = Message.obtain(DBAdapter.getDatabaseThread(db.getContext()));
-//		m.obj = query;
-//		m.sendToTarget();
 	}
 	
-//	public interface VisibilityResults {
-//		
-//		public void onResults(Long itemIds[]);
-//	}
-//	
-//	public class VisibilityQuery implements DBAdapter.DatabaseTask{
-//		
-//		public int status;
-//		public long runId;
-//		public VisibilityResults results;
-//		
-//		@Override
-//		public void execute(DBAdapter db) {
-//			
-//		}
-//		
-//	}
+	public Long query(long itemId, long runId, int status) {
+		Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), new String[] {SATISFIED_AT}, VISIBILITY_STATUS + " = ? and "+RUNID + " = ? and "+GENERAL_ITEM_ID + " = ?", new String[]{""+status, ""+runId, ""+itemId}, null, null, null, null);
+		long result = -1;
+		
+		if (mCursor.moveToNext()) {
+			result = mCursor.getLong(0);
+		}
+		mCursor.close();
+		return result;
+	}
 	
-//	public class VisibilityTask implements DBAdapter.DatabaseTask{
-//		
-//		public Long itemId;
-//		public Long runId;
-//		public Long satisfiedAt;
-//		public int status;
-//		
-//		@Override
-//		public void execute(DBAdapter db) {
-//			
-//		}
-//		
-//	}
-
 	public void queryAll(DBAdapter db, long runId) {
 		Run[] resultRuns = null;
 		try {
-			Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), null, RUNID + " = ?", new String[] { ""+runId}, null, null, null, null);
+			Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), new String[]{GENERAL_ITEM_ID, VISIBILITY_STATUS, SATISFIED_AT }, RUNID + " = ?", new String[] { ""+runId}, null, null, null, null);
 			while (mCursor.moveToNext()) {
-//				results.onResult(mCursor.getLong(2), mCursor.getLong(0), mCursor.getInt(3), mCursor.getLong(1));
-				GeneralItemVisibilityCache.getInstance().put(mCursor.getLong(2), mCursor.getLong(0), mCursor.getInt(3));
+				GeneralItemVisibilityCache.getInstance().put(runId, mCursor.getLong(0), mCursor.getInt(1), mCursor.getLong(2) );
 			}
 			GeneralItemVisibilityCache.getInstance().setRunLoaded(runId);
 			mCursor.close();

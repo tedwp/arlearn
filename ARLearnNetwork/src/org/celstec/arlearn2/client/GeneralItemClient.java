@@ -22,11 +22,15 @@ public class GeneralItemClient extends GenericClient{
 	}
 	
 	public GeneralItemList getRunGeneralItemsAll(String token, Long runId) {
-		return (GeneralItemList)  executeGet(getUrlPrefix()+"/runId/"+runId+"/all", token, GeneralItemList.class);
+		return (GeneralItemList) executeGet(getUrlPrefix()+"/runId/"+runId+"/all", token, GeneralItemList.class);
 	}
 	
 	public GeneralItemList getRunGeneralItemsVisible(String token, Long runId) {
-		return (GeneralItemList)  executeGet(getUrlPrefix()+"/runId/"+runId, token, GeneralItemList.class);
+		return (GeneralItemList) executeGet(getUrlPrefix()+"/runId/"+runId, token, GeneralItemList.class);
+	}
+	
+	public GeneralItemList getRunGeneralItemsDisappeared(String token, Long runId) {
+		return (GeneralItemList) executeGet(getUrlPrefix()+"/runId/"+runId +"/disappeared", token, GeneralItemList.class);
 	}
 	
 	public GeneralItem getRunGeneralItem(String token, Long runId, long itemId) {

@@ -4,14 +4,13 @@ import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
-import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemVisibility;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.service.GeneralItemDependencyHandler;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
-public class MakeGeneralItemVisibleTask implements  DBAdapter.DatabaseTask {
+public class MakeGeneralItemDisappearedTask implements  DBAdapter.DatabaseTask {
 	
 	private GeneralItem gi;
 	private Long runId;
@@ -34,21 +33,17 @@ public class MakeGeneralItemVisibleTask implements  DBAdapter.DatabaseTask {
 
 	@Override
 	public void execute(DBAdapter db) {
-		if (GeneralItemDependencyHandler.itemMatchesPlayersRole(db, runId, gi)) {
-			boolean wasVisible = GeneralItemVisibilityCache.getInstance().isVisible(runId, gi.getId());
-			Long appearAt = gi.getShowAtTimeStamp();
-			if (appearAt == null || appearAt == -1) {
-				appearAt = System.currentTimeMillis();
-			}
 			GeneralItemDependencyHandler depHandler= new GeneralItemDependencyHandler();
-			if (!wasVisible) {
-				db.getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, appearAt, GeneralItemVisibility.VISIBLE);
-				depHandler.broadcastTroughIntent(gi, db.getContext(), runId);
+			Long disAt = gi.getDisappearAt();
+			if (disAt == null || disAt == -1) {
+				disAt = System.currentTimeMillis();
 			}
-			depHandler.addTaskToQueue(db.getContext());
-		}
-		
-
+			db.getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, disAt, GeneralItemVisibility.NO_LONGER_VISIBLE);
+			ActivityUpdater.updateActivities(db.getContext(), 
+					ListMessagesActivity.class.getCanonicalName(), 
+					MapViewActivity.class.getCanonicalName(), 
+					ListMapItemsActivity.class.getCanonicalName(), 
+					NarratorItemActivity.class.getCanonicalName());
 	}
 
 }

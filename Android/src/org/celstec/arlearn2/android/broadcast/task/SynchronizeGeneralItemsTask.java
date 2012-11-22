@@ -79,6 +79,7 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 			PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
 			syncronizeGeneralItems(pa);
 			syncronizeVisibleGeneralItems(pa);
+			syncronizeDisappearedGeneralItems(pa);
 		}
 		if (gameId != null) {
 			PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
@@ -158,12 +159,12 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 	private void syncronizeVisibleGeneralItems(PropertiesAdapter pa) {
 		try {
 			final GeneralItemList gl = GeneralItemClient.getGeneralItemClient().getRunGeneralItemsVisible(pa.getFusionAuthToken(), runId);
-			final List<Long> newVisibleItems = new ArrayList<Long>();
+			final List<GeneralItem> newVisibleItems = new ArrayList<GeneralItem>();
 			Iterator<GeneralItem> it = gl.getGeneralItems().iterator();
 			while (it.hasNext()) {
 				GeneralItem item = it.next();
 				if (!GeneralItemVisibilityCache.getInstance().isVisible(runId, item.getId())) {
-					newVisibleItems.add(item.getId());
+					newVisibleItems.add(item);
 				}
 			}
 			if (!newVisibleItems.isEmpty()) {
@@ -173,8 +174,8 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 
 				@Override
 				public void execute(DBAdapter db) {
-					for (long itemId : newVisibleItems) {
-						db.getGeneralItemVisibility().setVisibilityStatus(itemId, runId, 0, GeneralItemVisibility.VISIBLE);
+					for (GeneralItem item : newVisibleItems) {
+						db.getGeneralItemVisibility().setVisibilityStatus(item.getId(), runId, item.getVisibleAt(), GeneralItemVisibility.VISIBLE);
 					}
 					ActivityUpdater.updateActivities(ctx, 
 							ListMessagesActivity.class.getCanonicalName(), 
@@ -190,6 +191,42 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 			ae.printStackTrace();
 		}
 	}
+	
+	private void syncronizeDisappearedGeneralItems(PropertiesAdapter pa) {
+		final GeneralItemList gl = GeneralItemClient.getGeneralItemClient().getRunGeneralItemsDisappeared(pa.getFusionAuthToken(), runId);
+		
+		System.out.println(gl);
+		final List<GeneralItem> newDissapearItems = new ArrayList<GeneralItem>();
+		Iterator<GeneralItem> it = gl.getGeneralItems().iterator();
+		while (it.hasNext()) {
+			GeneralItem item = it.next();
+			long disAt = GeneralItemVisibilityCache.getInstance().disappearedAt(runId, item.getId());
+			if (disAt == -1 || item.getDisappearAt() < disAt) {
+				newDissapearItems.add(item);
+			}
+		}
+		if (!newDissapearItems.isEmpty()) {
+			
+			Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
+			m.obj =  new DBAdapter.DatabaseTask () {
+
+				@Override
+				public void execute(DBAdapter db) {
+					for (GeneralItem item : newDissapearItems) {
+						db.getGeneralItemVisibility().setVisibilityStatus(item.getId(), runId, item.getDisappearAt(), GeneralItemVisibility.NO_LONGER_VISIBLE);
+					}
+					ActivityUpdater.updateActivities(ctx, 
+							ListMessagesActivity.class.getCanonicalName(), 
+							MapViewActivity.class.getCanonicalName(), 
+							ListMapItemsActivity.class.getCanonicalName(), 
+							NarratorItemActivity.class.getCanonicalName());
+					
+				}
+			};
+			m.sendToTarget();
+			}
+	}
+
 	
 	private void syncronizeGeneralItemsGame(PropertiesAdapter pa) {
 		try {

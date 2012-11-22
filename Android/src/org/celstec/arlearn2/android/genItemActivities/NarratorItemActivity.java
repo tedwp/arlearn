@@ -9,8 +9,12 @@ import java.util.TreeSet;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
+import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
+import org.celstec.arlearn2.android.activities.ListMessagesActivity;
+import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
+import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.cache.ResponseCache;
 import org.celstec.arlearn2.android.cache.RunCache;
@@ -19,6 +23,7 @@ import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.MyResponses;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.db.DBAdapter.DatabaseHandler;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
@@ -34,6 +39,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
 import android.view.View;
@@ -46,13 +52,15 @@ import android.widget.TextView;
 public class NarratorItemActivity extends GeneralActivity {
 
 	protected WebView webview;
-//	protected TextView descriptionTextView;
+	protected TextView countDownTextView;
 	protected NarratorItem narratorBean;
 	protected Button provideAnswerButton;
 
 	private TreeSet<Response> resp;
 	
 	protected GenericMessageListAdapter adapter;
+
+	private Handler mHandler = new Handler();
 
 	public void onBroadcastMessage(Bundle bundle, boolean render) {
 		super.onBroadcastMessage(bundle, render);
@@ -61,13 +69,13 @@ public class NarratorItemActivity extends GeneralActivity {
 			if (runId == null || RunCache.getInstance().getRun(runId) == null) {
 				this.finish();
 			}
-		reloadBeanFromDb();
-		getGuiComponents();
-		loadDataToGui();
-		renderAnswers();
-		if (narratorBean != null && !narratorBean.getId().equals(bundle.getLong(ActivityUpdater.ITEM_NO_TO_CLOSE, narratorBean.getId()))) {
-			this.finish();
-		}
+			reloadBeanFromDb();
+			getGuiComponents();
+			loadDataToGui();
+			renderAnswers();
+			if (narratorBean != null && !narratorBean.getId().equals(bundle.getLong(ActivityUpdater.ITEM_NO_TO_CLOSE, narratorBean.getId()))) {
+				this.finish();
+			}
 		}
 	}
 	
@@ -81,6 +89,39 @@ public class NarratorItemActivity extends GeneralActivity {
 		loadDataToGui();
 		fireAction();
 	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mHandler.removeCallbacks(counterTask);
+	}
+	
+	private Runnable counterTask = new Runnable() {
+		public void run() {
+			Long disappearTime = GeneralItemVisibilityCache.getInstance().disappearedAt(menuHandler.getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
+			if (disappearTime == null || disappearTime == -1) {
+				mHandler.removeCallbacks(counterTask);
+				return;
+			}
+			long millis = (disappearTime - System.currentTimeMillis());
+			if (millis <= 0) {
+				NarratorItemActivity.this.finish();
+			}
+			String defaultCountingText = "";
+			int tens = ((int)millis / 100) %10;
+		       int seconds = (int) (millis / 1000);
+		       int minutes = seconds / 60;
+		       seconds     = seconds % 60;
+		       if (seconds < 10) {
+		    	   defaultCountingText = minutes+":0"+seconds+"."+tens;
+		       } else {
+		    	   defaultCountingText = minutes+":"+seconds+"."+tens;
+		       }
+			countDownTextView.setText(defaultCountingText);
+		     mHandler.postDelayed(counterTask, 100);		    	   
+
+		}
+	};
 
 	private void fireAction() {
 		PropertiesAdapter pa = getMenuHandler().getPropertiesAdapter();
@@ -106,7 +147,7 @@ public class NarratorItemActivity extends GeneralActivity {
 	
 	protected void getGuiComponents() {
 		webview = (WebView) findViewById(R.id.giNarratorWebView);
-//		descriptionTextView = (TextView) findViewById(R.id.giNarratorDescription);
+		countDownTextView = (TextView) findViewById(R.id.timeLeftBeforeDisappear);
 		provideAnswerButton = (Button) findViewById(R.id.provideAnswerButton);
 		provideAnswerButton.setText(getString(R.string.ao_answer_menu));
 		if (narratorBean.getOpenQuestion() != null) {
@@ -137,11 +178,6 @@ public class NarratorItemActivity extends GeneralActivity {
 	
 	private void reloadBeanFromDb() {
 		narratorBean =  (NarratorItem) GeneralItemsCache.getInstance().getGeneralItems(narratorBean.getId());
-//		DBAdapter db = new DBAdapter(this);
-//		db.openForRead();
-//		narratorBean =  (NarratorItem) ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).queryById(narratorBean.getId(),menuHandler.getPropertiesAdapter().getCurrentRunId());
-//		db.close();
-//
 	}
 
 	protected void loadDataToGui() {
@@ -151,6 +187,17 @@ public class NarratorItemActivity extends GeneralActivity {
 //			webview.loadData(html, "text/html", "utf-8");
 		} else {
 			webview.setVisibility(View.GONE);
+		}
+		if (narratorBean.getShowCountDown() != null && narratorBean.getShowCountDown()) {
+			long disappearTime = GeneralItemVisibilityCache.getInstance().disappearedAt(menuHandler.getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
+			if (disappearTime == -1) {
+				countDownTextView.setVisibility(View.INVISIBLE);	
+			} else {
+				countDownTextView.setVisibility(View.VISIBLE);
+				
+			}
+		} else {
+			countDownTextView.setVisibility(View.INVISIBLE);
 		}
 //		if (narratorBean.getDescription() != null && !narratorBean.getDescription().trim().equals("")) {
 //			descriptionTextView.setText(narratorBean.getDescription());
@@ -291,19 +338,15 @@ public class NarratorItemActivity extends GeneralActivity {
 			});
 			
 		}
-//		listView.setAdapter(adapter);
 	}
 	
-//	protected void onListItemClick(ListView l, View v, int position, long id) {
-//		Intent i = new Intent(this, ViewAnswerActivity.class);
-//		i.putExtra("response", resp[(int)id]);
-//		startActivity(i);
-//	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		renderAnswers();
+	     mHandler.postDelayed(counterTask, 100);		    	   
+
 	}
 	
 	

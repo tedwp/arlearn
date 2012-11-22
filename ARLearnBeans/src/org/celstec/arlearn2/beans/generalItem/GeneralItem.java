@@ -35,6 +35,12 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	
 	private List<String> roles;
 	
+	private Long visibleAt;
+	
+	private Long disappearAt;
+	
+	private Boolean showCountDown;
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (!super.equals(obj)) return false;
@@ -52,6 +58,7 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 			nullSafeEquals(getLng(), other.getLng()) &&
 			nullSafeEquals(getLat(), other.getLat()) &&
 			nullSafeEquals(getIconUrl(), other.getIconUrl()) &&
+			nullSafeEquals(getShowCountDown(), other.getShowCountDown()) &&
 			nullSafeEquals(getRoles(), other.getRoles()) ; 
 	}
 
@@ -167,11 +174,6 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 		this.iconUrl = iconUrl;
 	}
 	
-	public boolean timeStampCheck() {
-		//TODO implement
-		return true;
-	}
-	
 	public boolean isMessage() {
 		return (getLat() == null && getLng() == null);
 	}
@@ -196,10 +198,29 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 		return getId().compareTo(other.getId());
 	}
 
-//	@Override
-//	public boolean equals(Object obj) {
-//		return this.toString().equals(obj.toString());
-//	}
+	public Long getVisibleAt() {
+		return visibleAt;
+	}
+
+	public void setVisibleAt(Long visibleAt) {
+		this.visibleAt = visibleAt;
+	}
+
+	public Long getDisappearAt() {
+		return disappearAt;
+	}
+
+	public void setDisappearAt(Long disappearAt) {
+		this.disappearAt = disappearAt;
+	}
+
+	public Boolean getShowCountDown() {
+		return showCountDown;
+	}
+
+	public void setShowCountDown(Boolean showCountDown) {
+		this.showCountDown = showCountDown;
+	}
 	
 	
 	
