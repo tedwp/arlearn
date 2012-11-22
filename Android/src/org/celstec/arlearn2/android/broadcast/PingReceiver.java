@@ -28,9 +28,11 @@ public class PingReceiver extends BroadcastReceiver {
 						if (bean.getRequestType() == null) {
 							android.location.Location loc = LocationService.getBestLocation(context);
 							Location locBean = new Location();
-							locBean.setLat(loc.getLatitude());
-							locBean.setLng(loc.getLongitude());
-							locBean.setAccuracy(loc.getAccuracy());
+							if (loc != null) {
+								locBean.setLat(loc.getLatitude());
+								locBean.setLng(loc.getLongitude());
+								locBean.setAccuracy(loc.getAccuracy());
+							}
 							ChannelClient.getChannelClient().pong(0, "", bean.getTo(), bean.getFrom(), Ping.PING, locBean.toString(), bean.getTimestamp());
 						} else {
 							processSwitchRequest(context, bean);

@@ -116,12 +116,12 @@ public class DBAdapter {
 	    }
 
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			Log.w("upgrade", "Upgrading database from version " + oldVersion 
-	                  + " to "+ newVersion);
-			for (int i = 0; i < allTables.length; i++) {
-				if (allTables[i].dropStatement() != null) db.execSQL(allTables[i].dropStatement());
-			}  
-            onCreate(db);
+//			Log.w("upgrade", "Upgrading database from version " + oldVersion 
+//	                  + " to "+ newVersion);
+//			for (int i = 0; i < allTables.length; i++) {
+//				if (allTables[i].dropStatement() != null) db.execSQL(allTables[i].dropStatement());
+//			}  
+//            onCreate(db);
 		}
 
 	}

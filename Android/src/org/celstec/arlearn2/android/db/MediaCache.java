@@ -211,6 +211,13 @@ public class MediaCache extends GenericDbTable {
 				ListMapItemsActivity.class.getCanonicalName());
 	}
 
+	public void resetOnGoingSyncs() {
+		ContentValues newValue = new ContentValues();
+		newValue.put(REPLICATED, REP_STATUS_TODO);
+		db.getSQLiteDb().update(getTableName(), newValue, REPLICATED + "= ?", new String[] { "" + REP_STATUS_SYNCING });
+		
+	}
+	
 	public File getLocalFile(String audioFeed) {
 		MediaCacheItem[] results = query(REPLICATED + " = ? and " + REMOTE_FILE + " = ?", new String[] { "1", audioFeed }, 1);
 		if (results.length == 0)
@@ -490,5 +497,7 @@ public class MediaCache extends GenericDbTable {
 		}
 		
 	}
+
+	
 
 }

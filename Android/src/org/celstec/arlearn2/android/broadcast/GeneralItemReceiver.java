@@ -1,11 +1,12 @@
 package org.celstec.arlearn2.android.broadcast;
 
 
-import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.broadcast.task.CreateNewGItemTask;
 import org.celstec.arlearn2.android.broadcast.task.DeleteItemTask;
+import org.celstec.arlearn2.android.broadcast.task.GeneralItemMediaSyncTask;
 import org.celstec.arlearn2.android.broadcast.task.MakeGeneralItemVisibleTask;
 import org.celstec.arlearn2.android.broadcast.task.SynchronizeGeneralItemsTask;
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
@@ -22,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 
 @SuppressLint("ParserError")
 public class GeneralItemReceiver extends BroadcastReceiver {
@@ -38,7 +38,14 @@ public class GeneralItemReceiver extends BroadcastReceiver {
 				processItem(context, bean);
 			}
 		} else {
-			(new SynchronizeGeneralItemsTask(context, (new PropertiesAdapter(context)).getCurrentRunId())).addTaskToQueue(context);
+			Long runId = (new PropertiesAdapter(context)).getCurrentRunId();
+			if (runId != null) {
+				(new SynchronizeGeneralItemsTask(context, runId)).addTaskToQueue(context);
+				Long gameId = RunCache.getInstance().getGameId(runId);
+				if (gameId != null)
+					(new SynchronizeGeneralItemsTask(gameId, context)).addTaskToQueue(context);
+			}
+
 		}
 	}
 

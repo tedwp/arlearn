@@ -54,7 +54,6 @@ public class GeneralItemMediaSyncTask implements NetworkTask {
 
 	private void download(Long itemIds[]) {
 		DownloadFileTask task = new DownloadFileTask();
-//		task.url = getRemoteFile(gi);
 		task.ctx = ctx;
 		task.allIds = itemIds;
 		task.gameId = gameId;

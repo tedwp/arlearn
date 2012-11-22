@@ -9,10 +9,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.celstec.arlearn2.android.activities.GenericBroadcastReceiver;
-import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
-import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
-import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.broadcast.BeanReceiver;
 import org.celstec.arlearn2.android.broadcast.GameReceiver;
 import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
@@ -46,7 +42,7 @@ public class ChannelAPINotificationService extends Service {
 	 CountDownLatch startLatch;
 	 
 	private void broadcast() {
-		Intent updateIntent = new Intent();
+//		Intent updateIntent = new Intent();
 //		updateIntent.setAction(GenericBroadcastReceiver.ACTION);
 //		updateIntent.putExtra(MapViewActivity.class.getCanonicalName(), true);
 //		updateIntent.putExtra(ListExcursionsActivity.class.getCanonicalName(), true);

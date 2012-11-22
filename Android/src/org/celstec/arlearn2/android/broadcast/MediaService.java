@@ -2,6 +2,7 @@ package org.celstec.arlearn2.android.broadcast;
 
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.asynctasks.network.DownloadFileTask;
+import org.celstec.arlearn2.android.asynctasks.network.NetworkTaskHandler;
 import org.celstec.arlearn2.android.asynctasks.network.UploadFileTask;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
@@ -125,6 +126,9 @@ public class MediaService extends IntentService {
 		m.obj =  new DBAdapter.DatabaseTask(){
 			@Override
 			public void execute(DBAdapter db) {
+				if (!NetworkQueue.getNetworkTaskHandler().hasMessages(NetworkTaskHandler.SYNC_USER_MEDIA)) {
+					db.getMediaCache().resetOnGoingSyncs();
+				}
 				MediaCacheItem[] mcis = db.getMediaCache().getNextUnsyncedItems();
 				for (int i = 0; i < mcis.length; i++) {
 					if (!mcis[i].isIncomming()) {
@@ -152,6 +156,7 @@ public class MediaService extends IntentService {
 		task.mcItemId = mci.getItemId();
 		
 		Message m = Message.obtain(NetworkQueue.getNetworkTaskHandler());
+		m.what = NetworkTaskHandler.SYNC_USER_MEDIA;
 		m.obj = task;
 		m.sendToTarget();
 	}

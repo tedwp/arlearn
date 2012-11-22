@@ -3,6 +3,8 @@ package org.celstec.arlearn2.android.activities;
 import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.broadcast.ActionReceiver;
+import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.cache.RunCache;
@@ -36,6 +38,14 @@ public class GenericMapViewActivity extends Activity implements ARLearnBroadcast
 		super.onCreate(savedInstanceState);
 		broadcastReceiver = new GenericBroadcastReceiver(this);
 		initListMapButton();
+		
+		Intent gimIntent = new Intent();
+		gimIntent.setAction(GeneralItemReceiver.action);
+		sendBroadcast(gimIntent);
+		
+		Intent actionIntent = new Intent();
+		actionIntent.setAction(ActionReceiver.action);
+		sendBroadcast(actionIntent);
 	}
 	
 	protected void onResume() {

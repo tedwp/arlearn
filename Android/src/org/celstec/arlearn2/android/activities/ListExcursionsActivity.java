@@ -1,15 +1,12 @@
 package org.celstec.arlearn2.android.activities;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.broadcast.GameReceiver;
-import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.broadcast.RunReceiver;
 import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.cache.RunCache;
-import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
@@ -34,7 +31,6 @@ import android.widget.ListView;
 
 public class ListExcursionsActivity extends GeneralActivity implements ListitemClickInterface {
 	private Run[] runs = null;
-//	private HashMap<Long, Game> games;
 	private GenericMessageListAdapter adapter;
 
 
@@ -47,10 +43,6 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 		} else {
 			setContentView(R.layout.listexcursionscreen);
 			syncRuns();
-//			Intent runSyncIntent = new Intent();
-//			runSyncIntent.setAction(RunReceiver.action);
-//			sendBroadcast(runSyncIntent);
-
 		}
 	}
 	

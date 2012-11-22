@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Message;
 import android.os.RemoteException;
 //import android.widget.Toast;
+import android.widget.Toast;
 
 public class AudioPlayerBinder extends IAudioPlayerService.Stub {
 
@@ -36,7 +37,13 @@ public class AudioPlayerBinder extends IAudioPlayerService.Stub {
 		service.setCallback(callback);
 		service.setAudioIdentifier(""+audioIdentifier);
 		Uri audioUri = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getLocalUri(audioIdentifier);
-		if (audioUri != null) startUri(audioUri);
+		if (audioUri != null) {
+			startUri(audioUri);
+		} else {
+			Toast toast = Toast.makeText(service, service.getString(R.string.downloadBusy), Toast.LENGTH_LONG);
+			toast.show();
+			callback.stop(""+audioIdentifier);
+		}
 		
 	}
 	public void start(final String audioIdentifier, IAudioPlayerCallback callback) throws RemoteException {
