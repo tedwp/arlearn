@@ -18,12 +18,14 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	private String description;
 
 	private Dependency dependsOn;
+
+	private Dependency disappearOn;
 	
 	public Boolean autoLaunch;
 
 	private Integer radius;
 	
-	private Long showAtTimeStamp;
+//	private Long showAtTimeStamp;
 
 	private Double lng;
 
@@ -32,6 +34,12 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	private String iconUrl;
 	
 	private List<String> roles;
+	
+	private Long visibleAt;
+	
+	private Long disappearAt;
+	
+	private Boolean showCountDown;
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -44,11 +52,13 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 			nullSafeEquals(getName(), other.getName()) &&
 			nullSafeEquals(getDescription(), other.getDescription()) &&
 			nullSafeEquals(getDependsOn(), other.getDependsOn()) &&
+			nullSafeEquals(getDisappearOn(), other.getDisappearOn()) &&
 			nullSafeEquals(getRadius(), other.getRadius()) &&
-			nullSafeEquals(getShowAtTimeStamp(), other.getShowAtTimeStamp()) &&
+//			nullSafeEquals(getShowAtTimeStamp(), other.getShowAtTimeStamp()) &&
 			nullSafeEquals(getLng(), other.getLng()) &&
 			nullSafeEquals(getLat(), other.getLat()) &&
 			nullSafeEquals(getIconUrl(), other.getIconUrl()) &&
+			nullSafeEquals(getShowCountDown(), other.getShowCountDown()) &&
 			nullSafeEquals(getRoles(), other.getRoles()) ; 
 	}
 
@@ -107,6 +117,14 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	public void setDependsOn(Dependency dependsOn) {
 		this.dependsOn = dependsOn;
 	}
+	
+	public Dependency getDisappearOn() {
+		return disappearOn;
+	}
+
+	public void setDisappearOn(Dependency disappearOn) {
+		this.disappearOn = disappearOn;
+	}
 
 	public Boolean getAutoLaunch() {
 		return autoLaunch;
@@ -124,13 +142,7 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 		this.radius = radius;
 	}
 
-	public Long getShowAtTimeStamp() {
-		return showAtTimeStamp;
-	}
-
-	public void setShowAtTimeStamp(Long showAtTimeStamp) {
-		this.showAtTimeStamp = showAtTimeStamp;
-	}
+	
 
 	public Double getLng() {
 		return lng;
@@ -154,11 +166,6 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 
 	public void setIconUrl(String iconUrl) {
 		this.iconUrl = iconUrl;
-	}
-	
-	public boolean timeStampCheck() {
-		//TODO implement
-		return true;
 	}
 	
 	public boolean isMessage() {
@@ -185,10 +192,29 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 		return getId().compareTo(other.getId());
 	}
 
-//	@Override
-//	public boolean equals(Object obj) {
-//		return this.toString().equals(obj.toString());
-//	}
+	public Long getVisibleAt() {
+		return visibleAt;
+	}
+
+	public void setVisibleAt(Long visibleAt) {
+		this.visibleAt = visibleAt;
+	}
+
+	public Long getDisappearAt() {
+		return disappearAt;
+	}
+
+	public void setDisappearAt(Long disappearAt) {
+		this.disappearAt = disappearAt;
+	}
+
+	public Boolean getShowCountDown() {
+		return showCountDown;
+	}
+
+	public void setShowCountDown(Boolean showCountDown) {
+		this.showCountDown = showCountDown;
+	}
 	
 	
 	

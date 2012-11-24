@@ -77,12 +77,12 @@ public class NotifyUsersFromGame extends GenericBean {
 				VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, u.getEmail());
 				if (modificationType == GeneralItemModification.CREATED) {
 					if (gim.getGeneralItem().getDependsOn() == null && (gim.getGeneralItem().getDeleted() == null || !gim.getGeneralItem().getDeleted())) {
-						GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), getRunId(), u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS);
+						GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), getRunId(), u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS, System.currentTimeMillis());
 					}
 				}
 				if (modificationType == GeneralItemModification.VISIBLE) {
 					if (gim.getGeneralItem().getDeleted() == null || !gim.getGeneralItem().getDeleted()) {
-						GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), getRunId(), u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS);
+						GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), getRunId(), u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS, System.currentTimeMillis());
 					}
 				}
 				if (modificationType == GeneralItemModification.DELETED) {

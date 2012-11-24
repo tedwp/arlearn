@@ -15,6 +15,9 @@ public class GeneralItemVisibilityJDO extends RunClass {
 	@Persistent
 	private Integer status;
 
+	@Persistent
+	private Long timeStamp;
+	
 	public Long getGeneralItemId() {
 		return generalItemId;
 	}
@@ -38,4 +41,14 @@ public class GeneralItemVisibilityJDO extends RunClass {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+
+	public Long getTimeStamp() {
+		return timeStamp;
+	}
+
+	public void setTimeStamp(Long timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+	
+	
 }

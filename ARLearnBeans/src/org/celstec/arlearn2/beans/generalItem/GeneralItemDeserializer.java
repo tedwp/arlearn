@@ -33,11 +33,15 @@ public class GeneralItemDeserializer extends GameBeanDeserializer {
 		if (object.has("description")) gi.setDescription(object.getString("description"));
 		if (object.has("iconUrl")) gi.setIconUrl(object.getString("iconUrl"));
 		if (object.has("radius")) gi.setRadius(object.getInt("radius"));
-		if (object.has("showAtTimeStamp")) gi.setShowAtTimeStamp(object.getLong("showAtTimeStamp"));
+//		if (object.has("showAtTimeStamp")) gi.setShowAtTimeStamp(object.getLong("showAtTimeStamp"));
 		if (object.has("lng")) gi.setLng(object.getDouble("lng"));
 		if (object.has("lat")) gi.setLat(object.getDouble("lat"));
+		if (object.has("visibleAt")) gi.setVisibleAt(object.getLong("visibleAt"));
+		if (object.has("disappearAt")) gi.setDisappearAt(object.getLong("disappearAt"));
 		if (object.has("autoLaunch")) gi.setAutoLaunch(object.getBoolean("autoLaunch"));
+		if (object.has("showCountDown")) gi.setShowCountDown(object.getBoolean("showCountDown"));
 		if (object.has("dependsOn")) gi.setDependsOn((Dependency) JsonBeanDeserializer.deserialize(Dependency.class, object.getJSONObject("dependsOn")));
+		if (object.has("disappearOn")) gi.setDisappearOn((Dependency) JsonBeanDeserializer.deserialize(Dependency.class, object.getJSONObject("disappearOn")));
 		if (object.has("roles")) gi.setRoles(ListDeserializer.toStringList(object.getJSONArray("roles")));
 
 	}

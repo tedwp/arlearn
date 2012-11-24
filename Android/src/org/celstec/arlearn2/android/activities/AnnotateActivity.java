@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.answerQuestion.RecordAudioDelegate;
 import org.celstec.arlearn2.android.answerQuestion.TakePictureDelegate;
+import org.celstec.arlearn2.android.answerQuestion.TakeTextNoteDelegate;
 import org.celstec.arlearn2.android.answerQuestion.TakeVideoDelegate;
 import org.celstec.arlearn2.android.broadcast.MediaService;
 import org.celstec.arlearn2.android.broadcast.ResponseService;
@@ -29,7 +30,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 public class AnnotateActivity extends Activity implements IGeneralActivity {
 
@@ -52,6 +55,8 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 	protected TakePictureDelegate tpd;
 	protected TakeVideoDelegate tvd;
 	protected RecordAudioDelegate rad;
+	protected TakeTextNoteDelegate tntd;
+	
 	protected MenuHandler menuHandler;
 
 	@Override
@@ -78,6 +83,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		tpd = new TakePictureDelegate(AnnotateActivity.this);
 		rad = new RecordAudioDelegate(AnnotateActivity.this);
 		tvd = new TakeVideoDelegate(AnnotateActivity.this);
+		tntd = new TakeTextNoteDelegate(AnnotateActivity.this);
 		if (savedInstanceState != null) {
 			tpd.setPictureUri((Uri) savedInstanceState.getParcelable(PICTUREURI));
 			tvd.setVideoUri((Uri) savedInstanceState.getParcelable(VIDEOURI));
@@ -111,8 +117,14 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 	}
 
 	public void displayPublishButton() {
-//		if (rad.getRecordingPath() == null && tpd.getBitmapFile() == null && tvd.getUri() == null) {
-		if (rad != null && tpd != null && tvd != null && rad.getRecordingPath() == null && tpd.getUri() == null && tvd.getUri() == null) {
+		if (
+				rad != null && 
+				tpd != null && tvd != null && 
+				rad.getRecordingPath() == null && 
+				tpd.getUri() == null && 
+				tvd.getUri() == null &&
+				tntd != null &&
+				tntd.getText() == null) {
 			publishButton.setVisibility(View.GONE);
 		} else {
 			publishButton.setVisibility(View.VISIBLE);
@@ -126,26 +138,24 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 
 		final long currentTime = System.currentTimeMillis();
 		final String recordingPath = rad.getRecordingPath();
-//		Uri recording = rad.getUri();
-		final Response r = createResponse(currentTime, rad.getUri(), tpd.getUri(), tvd.getUri());
-
-		
-		
+		final Response r = createResponse(currentTime, rad.getUri(), tpd.getUri(), tvd.getUri(), tntd.getText());
 	
 		Intent intent = new Intent(this, ResponseService.class);
 		intent.putExtra("bean", r);
 		startService(intent);
 		
-		intent = new Intent(this, MediaService.class);
-		intent.putExtra(MediaService.NEW_MEDIA, rad.getUri() != null || tpd.getUri() != null||tvd.getUri()!= null);
-		intent.putExtra(MediaService.RECORDING_PATH, rad.getUri());
-//		intent.putExtra(MediaService.IMAGE_PATH, imagePath);
-		intent.putExtra(MediaService.IMAGE_PATH, tpd.getUri());
-		intent.putExtra(MediaService.VIDEO_URI, tvd.getUri());
-		intent.putExtra(MediaService.USERNAME, pa.getUsername());
-		intent.putExtra(MediaService.CURRENT_TIME, currentTime);
-		intent.putExtra(MediaService.RUNID, pa.getCurrentRunId());
-		startService(intent);
+		if (rad != null && tpd != null && tvd != null && (rad.getRecordingPath() == null || tpd.getUri() == null || tvd.getUri() == null)) {
+			intent = new Intent(this, MediaService.class);
+			intent.putExtra(MediaService.NEW_MEDIA, rad.getUri() != null || tpd.getUri() != null || tvd.getUri() != null);
+			intent.putExtra(MediaService.RECORDING_PATH, rad.getUri());
+			// intent.putExtra(MediaService.IMAGE_PATH, imagePath);
+			intent.putExtra(MediaService.IMAGE_PATH, tpd.getUri());
+			intent.putExtra(MediaService.VIDEO_URI, tvd.getUri());
+			intent.putExtra(MediaService.USERNAME, pa.getUsername());
+			intent.putExtra(MediaService.CURRENT_TIME, currentTime);
+			intent.putExtra(MediaService.RUNID, pa.getCurrentRunId());
+			startService(intent);
+		}
 		setResult(1);
 		finish();
 	}
@@ -157,7 +167,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 	public String buildRemotePath(Uri uri, long runId, String account) {
 		return GenericClient.urlPrefix + "/uploadService/" + runId + "/" + account + "/" + uri.getLastPathSegment();
 	}
-	public Response createResponse(long currentTime, Uri recordingUri, Uri imageUri, Uri videoUri) {
+	public Response createResponse(long currentTime, Uri recordingUri, Uri imageUri, Uri videoUri, String text) {
 		Response r = createResponse(currentTime);
 		JSONObject jsonResponse = new JSONObject();
 		try {
@@ -169,6 +179,9 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 			}
 			if (videoUri != null) {
 				jsonResponse.put("videoUrl", buildRemotePath(videoUri, runId, pa.getUsername()));
+			}
+			if (text != null) {
+				jsonResponse.put("text", text);
 			}
 			if (lat != LAT_LNG_NOT_AVAILABLE)
 				jsonResponse.put("lat", lat);

@@ -9,6 +9,7 @@ public class GeneralItemModification extends Bean{
 	public final static int DELETED = 2;
 	public final static int ALTERED = 3;
 	public final static int VISIBLE = 4;
+	public final static int DISAPPEARED = 5;
 	
 	private Integer modificationType;
 	private Long runId;

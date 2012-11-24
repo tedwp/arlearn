@@ -24,6 +24,7 @@ import org.celstec.arlearn2.delegators.UsersDelegator;
 //import org.celstec.arlearn2.delegators.generalitems.CreateGeneralItems;
 //import org.celstec.arlearn2.delegators.generalitems.QueryGeneralItems;
 import org.celstec.arlearn2.delegators.inventory.UpdateInventoryRecord;
+import org.celstec.arlearn2.jdo.manager.GeneralItemVisibilityManager;
 import org.codehaus.jettison.json.JSONObject;
 
 import com.google.gdata.util.AuthenticationException;
@@ -88,7 +89,20 @@ public class GeneralItems extends Service {
 		GeneralItemDelegator gid = new GeneralItemDelegator(token);
 		UsersDelegator ud = new UsersDelegator(gid);
 		String email = ud.getCurrentUserAccount();
-		return serialise(gid.getVisibleItems(runIdentifier, email), accept);
+		return serialise(gid.getItems(runIdentifier, email, GeneralItemVisibilityManager.VISIBLE_STATUS), accept);
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/runId/{runIdentifier}/disappeared")
+	public String getRunGeneralItemsDisappeared(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @DefaultValue("application/json") @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GeneralItemDelegator gid = new GeneralItemDelegator(token);
+		UsersDelegator ud = new UsersDelegator(gid);
+		String email = ud.getCurrentUserAccount();
+		return serialise(gid.getItems(runIdentifier, email, GeneralItemVisibilityManager.DISAPPEARED_STATUS), accept);
 	}
 	
 	@GET

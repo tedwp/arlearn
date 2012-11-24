@@ -12,6 +12,7 @@ public class OpenQuestionSerializer extends BeanSerializer{
 		JSONObject returnObject = super.toJSON(bean);
 		try {
 			returnObject.put("withAudio", openQuestion.isWithAudio());
+			returnObject.put("withText", openQuestion.isWithText());
 			returnObject.put("withPicture", openQuestion.isWithPicture());
 			returnObject.put("withVideo", openQuestion.isWithVideo());
 		} catch (JSONException e) {

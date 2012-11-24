@@ -122,23 +122,23 @@ public class GeneralItemsSyncroniser extends GenericSyncroniser {
 //	}
 	
 
-	public static void scheduleAlarm(Context ctx, GeneralItem item, Run run) {
-		Intent alarmIntent = new Intent(ctx, AlarmService.class);
-		alarmIntent.putExtra("generalItem", item);
-//		if (run == null) {
-//			run = getCurrentRun(ctx, item.getRunId());
+//	public static void scheduleAlarm(Context ctx, GeneralItem item, Run run) {
+//		Intent alarmIntent = new Intent(ctx, AlarmService.class);
+//		alarmIntent.putExtra("generalItem", item);
+////		if (run == null) {
+////			run = getCurrentRun(ctx, item.getRunId());
+////		}
+//		alarmIntent.putExtra("run", run);
+//		if (item.getShowAtTimeStamp() == 0) {
+//			ctx.startService(alarmIntent);
+//		} else {
+//			PropertiesAdapter pa = new PropertiesAdapter(ctx);
+//			long when = pa.getRunStart(run.getRunId()) + item.getShowAtTimeStamp();
+//			PendingIntent pi = PendingIntent.getService(ctx, 1, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+//			AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+//			am.cancel(pi);
+//			am.set(AlarmManager.RTC_WAKEUP, when, pi);
 //		}
-		alarmIntent.putExtra("run", run);
-		if (item.getShowAtTimeStamp() == 0) {
-			ctx.startService(alarmIntent);
-		} else {
-			PropertiesAdapter pa = new PropertiesAdapter(ctx);
-			long when = pa.getRunStart(run.getRunId()) + item.getShowAtTimeStamp();
-			PendingIntent pi = PendingIntent.getService(ctx, 1, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-			AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
-			am.cancel(pi);
-			am.set(AlarmManager.RTC_WAKEUP, when, pi);
-		}
-	}
+//	}
 
 }

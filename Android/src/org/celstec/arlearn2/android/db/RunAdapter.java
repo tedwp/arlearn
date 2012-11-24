@@ -16,6 +16,7 @@ import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
+import org.celstec.arlearn2.android.cache.ResponseCache;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
@@ -274,17 +275,11 @@ public class RunAdapter extends GenericDbTable {
 	}
 	
 	public void delete(Long id) {
-		
-
 		RunDelete task = new RunDelete();
 		task.runId = id;
-		
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(db.getContext()));
 		m.obj = task;
 		m.sendToTarget();
-		
-		//TODO extend
-//		return db.getSQLiteDb().delete(getTableName(), ID+" = "+id, null);
 	}
 	
 	public class RunDelete implements DBAdapter.DatabaseTask{
@@ -301,10 +296,13 @@ public class RunAdapter extends GenericDbTable {
 				((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).deleteRun(runId);
 				((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).deleteRun(runId);
 				db.getSQLiteDb().delete(getTableName(), ID+" = "+runId, null);
+				
 				RunCache.getInstance().delete(runId);
 				ActionCache.getInstance().delete(runId);
-				db.getGeneralItemVisibility().deleteRun(runId);
 				GeneralItemVisibilityCache.getInstance().remove(runId);
+				org.celstec.arlearn2.android.cache.MediaCache.getInstance().remove(runId);
+				ResponseCache.getInstance().remove(runId);
+				
 				ActivityUpdater.updateActivities(db.getContext(), ListExcursionsActivity.class.getCanonicalName(), 
 						ListMessagesActivity.class.getCanonicalName(),
 						OsmMapViewActivity.class.getCanonicalName(),
@@ -341,6 +339,9 @@ public class RunAdapter extends GenericDbTable {
 		public void execute(DBAdapter db) {
 			for (Iterator<Run> iterator = runs.iterator(); iterator.hasNext();) {
 				Run run = iterator.next();
+				if (run.getDeleted() != null && run.getDeleted()) {
+					delete(run.getRunId());
+				} else {
 				Run cachedRun = RunCache.getInstance().getRun(run.getRunId());
 				if (!run.equals(cachedRun)) {
 					Run oldRun = (Run) queryById(run.getRunId());
@@ -364,7 +365,7 @@ public class RunAdapter extends GenericDbTable {
 							updateGame(db, run);
 						RunCache.getInstance().put(run);
 					}
-
+					}
 				}
 			}
 			ActivityUpdater.updateActivities(db.getContext(), ListExcursionsActivity.class.getCanonicalName());

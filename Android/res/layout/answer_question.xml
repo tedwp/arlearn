@@ -4,105 +4,218 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout 
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        android:id="@+id/allOpenQuestionItems"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-            android:orientation="vertical" 
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:gravity="top|center_horizontal"
+        android:orientation="vertical" >
 
- <LinearLayout
-     android:id="@+id/mediaFrame"
-     android:layout_width="wrap_content"
-     android:layout_height="fill_parent"
-     android:layout_gravity="center"
-     android:orientation="vertical" >
-
-        <ImageView
-            android:id="@+id/photoFrame"
-            android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-            
-            android:layout_gravity="center"
-            android:paddingTop="15px"
-            android:scaleType="fitCenter"
-            android:src="@drawable/add_picture" />
-
-        <ImageView
-            android:id="@+id/videoFrame"
-            android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-
-            android:layout_gravity="center"
-            android:paddingTop="15px"
-            android:scaleType="fitCenter"
-            android:src="@drawable/add_video" />
-         
-         <TextView
-            android:id="@+id/addCaption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="6dip"
-            android:layout_marginTop="6dip"
+        <LinearLayout
+            android:id="@+id/videoOrPicture"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text=""
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:typeface="monospace" />
-	</LinearLayout>
-         <FrameLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/videoViewLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center"
-            android:scaleType="fitCenter"
-            android:visibility="invisible"
-            android:background="@android:color/white" >
-        <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center"
-            android:paddingTop="15px"
-            android:scaleType="fitCenter"
-             >
+            android:gravity="top|center_horizontal"
+            android:orientation="vertical" >
 
-            <VideoView
-                android:id="@+id/videoView"
+            <LinearLayout
+                android:id="@+id/picture"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-               
+                android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:paddingTop="15px"
-                android:scaleType="fitCenter"
-                 />
+                android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/deleteVideoImage"
+                <ImageView
+                    android:id="@+id/photoFrame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingTop="15px"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/add_picture" />
+
+                <TextView
+                    android:id="@+id/addCaptionPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dip"
+                    android:layout_marginTop="6dip"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="@string/addPicture"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:typeface="monospace" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/video"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                 android:layout_alignTop="@id/videoView"
-                 android:layout_alignRight="@id/videoView"
-                android:background="#0000"
-                android:scaleType="fitXY"
-                android:src="@drawable/close_48" />
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="gone" >
 
-        </RelativeLayout>
-        </FrameLayout>
-        
-        <FrameLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/videoViewLayout"
-            android:layout_width="wrap_content"
+                 <ImageView
+                    android:id="@+id/videoFrame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingTop="15px"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/add_video" />
+
+                <TextView
+                    android:id="@+id/addCaptionVideo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dip"
+                    android:layout_marginTop="6dip"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="@string/addVideo"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:typeface="monospace" />
+                
+                <RelativeLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/videoIconRelativeLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:paddingTop="15px"
+                    android:scaleType="fitCenter" >
+
+                    <VideoView
+                        android:id="@+id/videoView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:paddingTop="15px"
+                        android:scaleType="fitCenter" />
+
+                    <ImageView
+                        android:id="@+id/deleteVideoImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignRight="@id/videoView"
+                        android:layout_alignTop="@id/videoView"
+                        android:background="#0000"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/close_48" />
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/textOrAudio"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="top|center_horizontal"
+            android:orientation="vertical" >
+
+            <LinearLayout
+				android:id="@+id/audio"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/timeRecording"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dip"
+                    android:layout_marginTop="6dip"
+                    android:gravity="center_horizontal"
+                    android:text="@string/annotateCounterReset"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:typeface="monospace" />
+
+                <ImageView
+                    android:id="@+id/startRecording"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:maxWidth="200px"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/startaudioopname1en" />
+
+                <LinearLayout
+                    android:id="@+id/audioButtons"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="top|center_horizontal"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/recordButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0"
+                        android:src="@drawable/stop" />
+
+                    <ImageView
+                        android:id="@+id/playButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0"
+                        android:src="@drawable/play" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/text"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="5px"
+                android:layout_weight="0"
+                android:gravity="top"
+                android:visibility="gone"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="6dip"
+                    android:layout_marginTop="6dip"
+                    android:gravity="center_horizontal"
+                    android:text="Add remark - i 18"
+                    android:typeface="monospace" />
+
+                <EditText
+                    android:id="@+id/editOpenQuestionText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:gravity="top"
+                    android:hint="" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/publishAnnotation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:paddingTop="15px"
             android:scaleType="fitCenter"
-            android:visibility="invisible" >
-            
-            </FrameLayout>
+            android:src="@drawable/publiceeren" />
     </LinearLayout>
 
     <LinearLayout
@@ -110,73 +223,21 @@
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:gravity="center_horizontal"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
         <TextView
-            android:id="@+id/timeRecording"
+            android:id="@+id/timeLeftBeforeDisappear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dip"
             android:layout_marginTop="6dip"
-            android:layout_weight="1"
+            android:background="@color/red"
             android:gravity="center_horizontal"
             android:text="@string/annotateCounterReset"
             android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/white"
             android:typeface="monospace" />
     </LinearLayout>
-
-    <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0" >
-
-        <ImageView
-            android:id="@+id/startRecording"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center"
-            android:maxWidth="200px"
-            android:scaleType="fitCenter"
-            android:src="@drawable/startaudioopname1en" />
-    </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/audioButtons"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:gravity="top|center_horizontal"
-        android:orientation="horizontal" >
-
-        <ImageView
-            android:id="@+id/recordButton"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="0"
-            android:src="@drawable/stop" />
-
-        <ImageView
-            android:id="@+id/playButton"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="0"
-            android:src="@drawable/play" />
-    </LinearLayout>
-
-    <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0" >
-
-        <ImageView
-            android:id="@+id/publishAnnotation"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center"
-            android:scaleType="fitCenter"
-            android:src="@drawable/publiceeren" />
-    </FrameLayout>
 
 </LinearLayout>

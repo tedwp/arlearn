@@ -3,7 +3,16 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
+    <TextView
+        android:id="@+id/answerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dip"
+        android:layout_marginTop="6dip"
+        android:gravity="center_horizontal"
+        android:text="test"
+        android:typeface="monospace" />
+    
     <LinearLayout
         android:id="@+id/playButtonsAnswer"
         android:layout_width="fill_parent"

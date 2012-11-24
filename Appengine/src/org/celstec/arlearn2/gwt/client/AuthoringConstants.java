@@ -187,6 +187,12 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("General Item")
 	String generalItemDep();
 	
+	@DefaultStringValue("Disappear condition") //TODO i18
+	String disappearDep();
+	
+	@DefaultStringValue("Filling out the four fields below will make the item disappear from the user's screen if all specified conditions are met.") //TODO i18
+	String disappearDepExplain();
+	
 	@DefaultStringValue("Automatically launch")
 	String autoLaunch();
 	
@@ -213,6 +219,9 @@ public interface AuthoringConstants extends Constants {
 	
 	@DefaultStringValue("Answer with audio")
 	String answerWithAudio();
+	
+	@DefaultStringValue("Answer with text") //TODO i18
+	String answerWithText();
 	
 	@DefaultStringValue("Answer with picture")
 	String answerWithPicture();

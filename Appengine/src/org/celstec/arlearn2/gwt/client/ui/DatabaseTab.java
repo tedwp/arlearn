@@ -73,10 +73,10 @@ public class DatabaseTab extends MasterDetailTab {
 		
 		valueMap.put("mediaCache", "MediaItemCache");
 		valueMap.put("mediaCacheGeneralItems", "mediaCacheGeneralItems");
-
 		valueMap.put("game", "Game");
 		valueMap.put("run", "Run");
 		valueMap.put("generalItems", "GeneralItems");
+		valueMap.put("generalItemsVisibility", "GeneralItemsVisibility");
 		valueMap.put("myLocations", "Locations");
 		valueMap.put("myResponses", "Responses");
 		valueMap.put("myActions", "Actions");

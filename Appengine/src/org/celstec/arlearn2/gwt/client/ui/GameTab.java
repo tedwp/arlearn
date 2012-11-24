@@ -175,6 +175,8 @@ public class GameTab extends MasterDetailTab {
 		listGrid.setCanHover(true);
 		listGrid.setDataSource(GeneralItemGameDataSource.getInstance());
 
+		ListGridField idField = new ListGridField("id", "id");
+		idField.setHidden(true);
 		ListGridField titleGameField = new ListGridField("name", constants.title());
 		ListGridField typeField = new ListGridField("simpleName", constants.type());
 		ListGridField rolesField = new ListGridField("roles", constants.roles());
@@ -235,7 +237,7 @@ public class GameTab extends MasterDetailTab {
 			}
 		});
 
-		listGrid.setFields(new ListGridField[] { sortKeyField, titleGameField, typeField, manualTriggerField, rolesField });
+		listGrid.setFields(new ListGridField[] { idField, sortKeyField, titleGameField, typeField, manualTriggerField, rolesField });
 		listGrid.setSortField("sortKey");
 		listGrid.setCanResizeFields(true);
 
