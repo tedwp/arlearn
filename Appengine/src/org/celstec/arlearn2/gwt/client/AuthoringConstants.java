@@ -220,6 +220,9 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Answer with audio")
 	String answerWithAudio();
 	
+	@DefaultStringValue("Answer with text") //TODO i18
+	String answerWithText();
+	
 	@DefaultStringValue("Answer with picture")
 	String answerWithPicture();
 	

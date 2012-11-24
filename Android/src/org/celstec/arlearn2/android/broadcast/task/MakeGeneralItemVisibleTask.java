@@ -36,16 +36,18 @@ public class MakeGeneralItemVisibleTask implements  DBAdapter.DatabaseTask {
 	public void execute(DBAdapter db) {
 		if (GeneralItemDependencyHandler.itemMatchesPlayersRole(db, runId, gi)) {
 			boolean wasVisible = GeneralItemVisibilityCache.getInstance().isVisible(runId, gi.getId());
-			Long appearAt = gi.getShowAtTimeStamp();
+			Long appearAt = gi.getVisibleAt();
 			if (appearAt == null || appearAt == -1) {
 				appearAt = System.currentTimeMillis();
 			}
-			GeneralItemDependencyHandler depHandler= new GeneralItemDependencyHandler();
+//			GeneralItemDependencyHandler depHandler= new GeneralItemDependencyHandler();
 			if (!wasVisible) {
 				db.getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, appearAt, GeneralItemVisibility.VISIBLE);
-				depHandler.broadcastTroughIntent(gi, db.getContext(), runId);
+				ForceUpdateTask.scheduleEvent(db.getContext(), runId, false, null);
+
+//				depHandler.broadcastTroughIntent(gi, db.getContext(), runId);
 			}
-			depHandler.addTaskToQueue(db.getContext());
+//			depHandler.addTaskToQueue(db.getContext());
 		}
 		
 

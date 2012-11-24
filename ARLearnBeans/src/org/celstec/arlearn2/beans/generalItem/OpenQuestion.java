@@ -5,6 +5,7 @@ import org.celstec.arlearn2.beans.Bean;
 public class OpenQuestion extends Bean {
 
 	private boolean withAudio;
+	private boolean withText;
 	private boolean withPicture;
 	private boolean withVideo;
 	
@@ -13,6 +14,12 @@ public class OpenQuestion extends Bean {
 	}
 	public void setWithAudio(boolean withAudio) {
 		this.withAudio = withAudio;
+	}
+	public boolean isWithText() {
+		return withText;
+	}
+	public void setWithText(boolean withText) {
+		this.withText = withText;
 	}
 	public boolean isWithPicture() {
 		return withPicture;
@@ -34,6 +41,7 @@ public class OpenQuestion extends Bean {
 		return 
 				 nullSafeEquals(isWithVideo(), other.isWithVideo()) && 
 				 nullSafeEquals(isWithPicture(), other.isWithPicture()) && 
+				 nullSafeEquals(isWithText(), other.isWithText()) && 
 				 nullSafeEquals(isWithAudio(), other.isWithAudio()); 
 
 	}

@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 public class ViewAnswerActivity extends GeneralActivity {
@@ -76,6 +77,14 @@ public class ViewAnswerActivity extends GeneralActivity {
 
 			} else {
 				((LinearLayout) findViewById(R.id.playButtonsAnswer)).setVisibility(View.GONE);
+			}
+			
+			if (json.has("text")) {
+				((TextView) findViewById(R.id.answerText)).setVisibility(View.VISIBLE);
+				((TextView) findViewById(R.id.answerText)).setText(json.getString("text"));
+
+			} else {
+				((TextView) findViewById(R.id.answerText)).setVisibility(View.GONE);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

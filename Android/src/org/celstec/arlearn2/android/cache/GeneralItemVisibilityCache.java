@@ -18,17 +18,19 @@ public class GeneralItemVisibilityCache {
 	private static GeneralItemVisibilityCache instance;
 	
 	private HashSet<String> notInitialisedItems = new HashSet<String>();
+	private HashSet<String> notyetvisibleItems = new HashSet<String>();
 	private HashMap<String, Long> visibleItems = new HashMap<String, Long>();
 	private HashMap<String, Long> disappearedItems = new HashMap<String, Long>();
 	
-//	private HashMap<String, Integer> itemIdToStatus = new HashMap<String, Integer>();
 	private Set<Long> loadedRuns = new HashSet<Long>();
 
 	private GeneralItemVisibilityCache() {
 	}
 	
 	public void empty() {
-//		itemIdToStatus = new HashMap<String, Integer>();
+		notyetvisibleItems = new HashSet<String>();
+		notInitialisedItems = new HashSet<String>();
+
 		visibleItems = new HashMap<String, Long>();
 		disappearedItems = new HashMap<String, Long>();
 		
@@ -39,6 +41,7 @@ public class GeneralItemVisibilityCache {
 	public boolean runLoaded(Long runId) {
 		return loadedRuns.contains(runId);
 	}
+	
 	public static GeneralItemVisibilityCache getInstance() {
 		if (instance == null) {
 			instance = new GeneralItemVisibilityCache();
@@ -46,6 +49,25 @@ public class GeneralItemVisibilityCache {
 		return instance;
 	}
 	
+	public TreeSet<GeneralItem> getAllNotInitializedItems(long runId) {
+		TreeSet<GeneralItem> resultList = new TreeSet<GeneralItem>();
+		for (String key: notInitialisedItems) {
+			long id = keyToGeneralItemId(key);
+			GeneralItem gi = GeneralItemsCache.getInstance().getGeneralItems(id);
+			if (gi != null) resultList.add(gi);
+		}
+		return resultList;
+	}
+	
+	public TreeSet<GeneralItem> getAllNotYetVisible(long runId) {
+		TreeSet<GeneralItem> resultList = new TreeSet<GeneralItem>();
+		for (String key: notyetvisibleItems) {
+			long id = keyToGeneralItemId(key);
+			GeneralItem gi = GeneralItemsCache.getInstance().getGeneralItems(id);
+			if (gi != null) resultList.add(gi);
+		}
+		return resultList;
+	}
 	
 //	public TreeSet<GeneralItem> getAllItems(long runId) {
 //		long now = System.currentTimeMillis();
@@ -91,6 +113,13 @@ public class GeneralItemVisibilityCache {
 //		return resultList;
 //	}
 	
+	private  long keyToGeneralItemId(String key) {
+		if (!key.contains("*")) return -1;
+		String id = key.substring(key.indexOf("*")+1);
+		return Long.parseLong(id);
+	}
+	
+
 	public TreeSet<GeneralItem> getAllVisibleItems(long runId) {
 		long now = System.currentTimeMillis();
 		TreeSet<GeneralItem> resultList = new TreeSet<GeneralItem>();
@@ -147,7 +176,27 @@ public class GeneralItemVisibilityCache {
 
 	public void put(Long runId, long itemId, int status, long satisfiedAt) {
 		switch (status) {
+		case GeneralItemVisibility.NOT_INITIALISED:
+			synchronized (notInitialisedItems) {
+				notInitialisedItems.add(getKey(runId, itemId));
+			}
+			break;
+		case GeneralItemVisibility.NOT_YET_VISIBLE:
+			synchronized (notInitialisedItems) {
+				notInitialisedItems.remove(getKey(runId, itemId));
+			}
+			synchronized (notyetvisibleItems) {
+				
+				notyetvisibleItems.add(getKey(runId, itemId));
+			}
+			break;
 		case GeneralItemVisibility.VISIBLE:
+			synchronized (notInitialisedItems) {
+				notInitialisedItems.remove(getKey(runId, itemId));
+			}
+			synchronized (notyetvisibleItems) {
+				notyetvisibleItems.remove(getKey(runId, itemId));
+			}
 			synchronized (visibleItems) {
 				visibleItems.put(getKey(runId, itemId), satisfiedAt);
 			}
@@ -174,22 +223,28 @@ public class GeneralItemVisibilityCache {
 	public void remove(long runId) {
 		remove(visibleItems, runId);
 		remove(disappearedItems, runId);
-		synchronized (notInitialisedItems) {
-			for (Iterator<String> iterator = notInitialisedItems.iterator(); iterator.hasNext();) {
-				if (iterator.next().startsWith(runId + "*")) {
-					iterator.remove();
-				}
-
-			}
-		}
+		remove(notInitialisedItems, runId);
+		remove(notyetvisibleItems, runId);
+		
 	}
 	
-	public void remove(HashMap<String, Long> hm, long runId) {
+	private void remove(HashMap<String, Long> hm, long runId) {
 		synchronized (hm) {
 			for (String key : hm.keySet().toArray(new String[] {})) {
 				if (key.startsWith(runId + "*")) {
 					hm.remove(key);
 				}
+			}
+		}
+	}
+	
+	private void remove(HashSet<String> hs, long runId) {
+		synchronized (hs) {
+			for (Iterator<String> iterator = hs.iterator(); iterator.hasNext();) {
+				if (iterator.next().startsWith(runId + "*")) {
+					iterator.remove();
+				}
+
 			}
 		}
 	}

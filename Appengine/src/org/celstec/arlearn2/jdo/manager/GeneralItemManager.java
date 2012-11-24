@@ -44,7 +44,7 @@ public class GeneralItemManager {
 		gi.setLng(bean.getLng());
 		gi.setName(bean.getName());
 		gi.setRadius(bean.getRadius());
-		gi.setShowAtTimeStamp(bean.getShowAtTimeStamp());
+//		gi.setShowAtTimeStamp(bean.getShowAtTimeStamp());
 		gi.setType(bean.getType());
 		gi.setIconUrl(bean.getIconUrl());
 		gi.setDeleted(false);
@@ -111,7 +111,7 @@ public class GeneralItemManager {
 		gi.setName(jdo.getName());
 		gi.setRadius(jdo.getRadius());
 		gi.setScope(jdo.getScope());
-		gi.setShowAtTimeStamp(jdo.getShowAtTimeStamp());
+//		gi.setShowAtTimeStamp(jdo.getShowAtTimeStamp());
 		gi.setType(jdo.getType());
 		gi.setIconUrl(jdo.getIconUrl());
 		gi.setDeleted(jdo.getDeleted());

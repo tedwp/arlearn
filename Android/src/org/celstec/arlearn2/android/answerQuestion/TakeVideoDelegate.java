@@ -25,38 +25,28 @@ import android.widget.VideoView;
 
 public class TakeVideoDelegate {
 	AnnotateActivity ctx;
-	private ImageView video;
+	private ImageView videoFrame;
 	private ImageView closeButton;
-	private VideoView mVideoView;
-	private FrameLayout videoLayout;
-	private TextView addVideoCaption;
+	private VideoView videoView;
+	private RelativeLayout videoIconRelativeLayout;
+	private TextView addCaptionVideo;
 	private Uri videoUri;
 
 	public TakeVideoDelegate(AnnotateActivity answerQuestionActivity) {
 		this.ctx = answerQuestionActivity;
-		video = (ImageView) ctx.findViewById(R.id.videoFrame);
-		mVideoView = (VideoView) ctx.findViewById(R.id.videoView);
+		videoFrame = (ImageView) ctx.findViewById(R.id.videoFrame);
+		videoView = (VideoView) ctx.findViewById(R.id.videoView);
 		closeButton = (ImageView) ctx.findViewById(R.id.deleteVideoImage);
-		videoLayout = (FrameLayout) ctx.findViewById(R.id.videoViewLayout);
-		addVideoCaption = (TextView) ctx.findViewById(R.id.addCaption);
+		videoIconRelativeLayout = (RelativeLayout) ctx.findViewById(R.id.videoIconRelativeLayout);
+		addCaptionVideo = (TextView) ctx.findViewById(R.id.addCaptionVideo);
 
 		initImageCapture();
 	}
 
-	public void hide() {
-		video.setVisibility(View.GONE);
-	}
-	
-	public void setCaption() {
-		addVideoCaption.setText(ctx.getString(R.string.addVideo));
-	}
-	
 	private void initImageCapture() {
-		video.setImageResource(R.drawable.add_video);
-		video.setVisibility(View.VISIBLE);
+		showIconToRecordVideo();
 		videoUri = null;
-		video.setOnClickListener(new View.OnClickListener() {
-			
+		videoFrame.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				ctx.setRecordingMedia();
 				Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
@@ -73,30 +63,39 @@ public class TakeVideoDelegate {
 	}
 
 	private void setVideoInFrame() {
-		mVideoView.setVideoURI(videoUri);
-		video.setVisibility(View.GONE);
-		((LinearLayout) ctx.findViewById(R.id.mediaFrame)).setVisibility(View.GONE);
-		mVideoView.setVisibility(View.VISIBLE);
-		videoLayout.setVisibility(View.VISIBLE);
+		videoView.setVideoURI(videoUri);
+		showRecordedVideo();
 		
 		MediaController mc = new MediaController(ctx);
-		mVideoView.setMediaController(mc);
-		mVideoView.requestFocus();
-		mVideoView.seekTo(1);
+		videoView.setMediaController(mc);
+		videoView.requestFocus();
+		videoView.seekTo(1);
 		closeButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				video.setVisibility(View.VISIBLE);
-				((LinearLayout) ctx.findViewById(R.id.mediaFrame)).setVisibility(View.VISIBLE);
-
-				videoLayout.setVisibility(View.GONE);
-				mVideoView.setVisibility(View.GONE);
-				videoLayout.invalidate();
-				
+				showIconToRecordVideo();
 			}
 		});
 		ctx.displayPublishButton();
 	}
+	
+	private void showRecordedVideo() {
+		videoIconRelativeLayout.setVisibility(View.VISIBLE);
+		videoView.setVisibility(View.VISIBLE);
+		videoFrame.setVisibility(View.GONE);
+		addCaptionVideo.setVisibility(View.GONE);
+
+
+	}
+	
+	private void showIconToRecordVideo() {
+		videoIconRelativeLayout.setVisibility(View.GONE);
+		videoView.setVisibility(View.GONE);
+		videoFrame.setVisibility(View.VISIBLE);
+		addCaptionVideo.setVisibility(View.VISIBLE);
+	}
+	
+	
 	
 	public Uri getUri(){
 		return videoUri;
@@ -111,7 +110,6 @@ public class TakeVideoDelegate {
 
 	public void reset() {
 		videoUri = null;		
-//		initImageCapture();
 	}
 
 }

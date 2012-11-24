@@ -32,6 +32,10 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 	private CheckboxItem openQuestionWithImageCBItem ;
 	private CheckboxItem openQuestionWithVideoCBItem ;
 	private CheckboxItem openQuestionWithAudioCBItem ;
+	private CheckboxItem openQuestionWithTextCBItem ;
+	
+	private final static String OPENQUESTIONWITHAUTDIO = "openQuestionWithAudio";
+	private final static String OPENQUESTIONWITHTEXT = "openQuestionWithText";
 	
 	private Label questionLabel;
 	protected HTMLPane questionHtmlLabel;
@@ -66,8 +70,8 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 
 		this.addMember(form2);								 
 		
-		form2.setFields(latItem, lngItem, sortItem,  roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
-		addField(form2, latItem, lngItem, sortItem, roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
+		form2.setFields(latItem, lngItem, sortItem,  roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithTextCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
+		addField(form2, latItem, lngItem, sortItem, roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithTextCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
 
 	}
 	
@@ -175,7 +179,7 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 		});
 		
 		openQuestionWithAudioCBItem = new CheckboxItem();
-		openQuestionWithAudioCBItem.setName("openQuestionWithAudio");
+		openQuestionWithAudioCBItem.setName(OPENQUESTIONWITHAUTDIO);
 		openQuestionWithAudioCBItem.setTitle(constants.answerWithAudio());
 		openQuestionWithAudioCBItem.setShowIfCondition(new FormItemIfFunction() {  
             public boolean execute(FormItem item, Object value, DynamicForm form) {
@@ -183,7 +187,35 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
                 return form.getValue("isOpenQuestion").equals(Boolean.TRUE);  
             }
 
+        });
+		openQuestionWithAudioCBItem.addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (form2.getValue(OPENQUESTIONWITHTEXT) == null) form2.setValue(OPENQUESTIONWITHTEXT, false);	
+
+				if ((Boolean)form2.getValue(OPENQUESTIONWITHTEXT)) form2.setValue(OPENQUESTIONWITHTEXT, false);	
+			}
+		});
+		
+		openQuestionWithTextCBItem = new CheckboxItem();
+		openQuestionWithTextCBItem.setName(OPENQUESTIONWITHTEXT);
+		openQuestionWithTextCBItem.setTitle(constants.answerWithText());
+		openQuestionWithTextCBItem.setShowIfCondition(new FormItemIfFunction() {  
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+            	if (form.getValue("isOpenQuestion") == null) return false;
+                return form.getValue("isOpenQuestion").equals(Boolean.TRUE);  
+            }
+
         });  
+		openQuestionWithTextCBItem.addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (form2.getValue(OPENQUESTIONWITHAUTDIO) == null) form2.setValue(OPENQUESTIONWITHAUTDIO, false);	
+				if ((Boolean)form2.getValue(OPENQUESTIONWITHAUTDIO)) form2.setValue(OPENQUESTIONWITHAUTDIO, false);	
+			}
+		});
 	}
 	
 	
@@ -195,7 +227,8 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 		if (form2.getValue("isOpenQuestion") != null && (Boolean) form2.getValue("isOpenQuestion")) {
 			JSONObject openQuestion = new JSONObject();
 			openQuestion.put("withPicture", JSONBoolean.getInstance( form2.getValue("openQuestionWithImage")==null?false:(Boolean) form2.getValue("openQuestionWithImage")) );
-			openQuestion.put("withAudio", JSONBoolean.getInstance( form2.getValue("openQuestionWithAudio")==null?false:(Boolean) form2.getValue("openQuestionWithAudio")) );
+			openQuestion.put("withText", JSONBoolean.getInstance( form2.getValue(OPENQUESTIONWITHTEXT)==null?false:(Boolean) form2.getValue(OPENQUESTIONWITHTEXT)) );
+			openQuestion.put("withAudio", JSONBoolean.getInstance( form2.getValue(OPENQUESTIONWITHAUTDIO)==null?false:(Boolean) form2.getValue(OPENQUESTIONWITHAUTDIO)) );
 			openQuestion.put("withVideo", JSONBoolean.getInstance( form2.getValue("openQuestionWithVideo")==null?false:(Boolean) form2.getValue("openQuestionWithVideo")) );
 			result.put("openQuestion", openQuestion);
 		}
@@ -217,7 +250,11 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 		if (o.get("openQuestion") != null) {
 			form2.setValue("isOpenQuestion", true);
 			JSONObject openQuestion =o.get("openQuestion").isObject();
-			form2.setValue("openQuestionWithAudio", openQuestion.get("withAudio").isBoolean().booleanValue());
+			form2.setValue(OPENQUESTIONWITHAUTDIO, openQuestion.get("withAudio").isBoolean().booleanValue());
+			boolean hasText = false;
+			if (openQuestion.containsKey("withText")) hasText= openQuestion.get("withText").isBoolean().booleanValue();
+			form2.setValue(OPENQUESTIONWITHTEXT, hasText);
+			
 			form2.setValue("openQuestionWithImage", openQuestion.get("withPicture").isBoolean().booleanValue());
 			boolean hasVideo = false;
 			if (openQuestion.containsKey("withVideo")) hasVideo= openQuestion.get("withVideo").isBoolean().booleanValue();

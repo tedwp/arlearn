@@ -25,7 +25,7 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 
 	private Integer radius;
 	
-	private Long showAtTimeStamp;
+//	private Long showAtTimeStamp;
 
 	private Double lng;
 
@@ -54,7 +54,7 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 			nullSafeEquals(getDependsOn(), other.getDependsOn()) &&
 			nullSafeEquals(getDisappearOn(), other.getDisappearOn()) &&
 			nullSafeEquals(getRadius(), other.getRadius()) &&
-			nullSafeEquals(getShowAtTimeStamp(), other.getShowAtTimeStamp()) &&
+//			nullSafeEquals(getShowAtTimeStamp(), other.getShowAtTimeStamp()) &&
 			nullSafeEquals(getLng(), other.getLng()) &&
 			nullSafeEquals(getLat(), other.getLat()) &&
 			nullSafeEquals(getIconUrl(), other.getIconUrl()) &&
@@ -142,13 +142,7 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 		this.radius = radius;
 	}
 
-	public Long getShowAtTimeStamp() {
-		return showAtTimeStamp;
-	}
-
-	public void setShowAtTimeStamp(Long showAtTimeStamp) {
-		this.showAtTimeStamp = showAtTimeStamp;
-	}
+	
 
 	public Double getLng() {
 		return lng;

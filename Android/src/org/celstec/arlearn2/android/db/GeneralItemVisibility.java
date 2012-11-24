@@ -1,10 +1,17 @@
 package org.celstec.arlearn2.android.db;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeSet;
+
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
+import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
+import org.celstec.arlearn2.android.cache.GeneralItemsCache;
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.RunAdapter.RunQuery;
 import org.celstec.arlearn2.android.db.RunAdapter.RunResults;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
@@ -57,6 +64,12 @@ public class GeneralItemVisibility extends GenericDbTable {
 		long oldSatisfiedAt = query(itemId, runId, status);
 		if (oldSatisfiedAt == -1 || oldSatisfiedAt > satisfiedAt) {
 			db.getSQLiteDb().delete(getTableName(), whereArgs, null);
+			if (status == VISIBLE || status == NOT_YET_VISIBLE || status == NOT_YET_VISIBLE) {
+				db.getSQLiteDb().delete(getTableName(), GENERAL_ITEM_ID + " = " + itemId+ " and "+RUNID + " = "+runId + " and "+VISIBILITY_STATUS + " = "+NOT_INITIALISED, null);
+			}
+			if (status == VISIBLE || status == NOT_YET_VISIBLE) {
+				db.getSQLiteDb().delete(getTableName(), GENERAL_ITEM_ID + " = " + itemId+ " and "+RUNID + " = "+runId + " and "+VISIBILITY_STATUS + " = "+NOT_YET_VISIBLE, null);
+			}
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(GENERAL_ITEM_ID, itemId);
 			initialValues.put(RUNID, runId);
@@ -104,16 +117,57 @@ public class GeneralItemVisibility extends GenericDbTable {
 	}
 	
 	public void queryAll(DBAdapter db, long runId) {
+		HashMap<Long, GeneralItem> result = (HashMap<Long, GeneralItem>) GeneralItemsCache.getInstance().getGeneralItemsWithGameId(RunCache.getInstance().getGameId(runId)).clone();
 		Run[] resultRuns = null;
 		try {
 			Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), new String[]{GENERAL_ITEM_ID, VISIBILITY_STATUS, SATISFIED_AT }, RUNID + " = ?", new String[] { ""+runId}, null, null, null, null);
 			while (mCursor.moveToNext()) {
-				GeneralItemVisibilityCache.getInstance().put(runId, mCursor.getLong(0), mCursor.getInt(1), mCursor.getLong(2) );
+				long itemId = mCursor.getLong(0);
+				GeneralItemVisibilityCache.getInstance().put(runId, itemId, mCursor.getInt(1), mCursor.getLong(2) );
+				result.remove(itemId);
+			}
+			for (Map.Entry<Long, GeneralItem> e :result.entrySet()) {
+				GeneralItemVisibilityCache.getInstance().put(runId, e.getKey(), NOT_INITIALISED, -1 );
 			}
 			GeneralItemVisibilityCache.getInstance().setRunLoaded(runId);
 			mCursor.close();
 		} catch (SQLException e) {
 			Log.e("sqlex", "ex", e);
+		}
+	}
+
+	public TreeSet<VisibilityEvent> getNextEvent(DBAdapter db, long runId) {
+		Cursor mCursor = null;
+		TreeSet<VisibilityEvent> returnEvents = new TreeSet<VisibilityEvent>();
+		try {
+			mCursor = db.getSQLiteDb().query(true, getTableName(), new String[] { GENERAL_ITEM_ID, VISIBILITY_STATUS, SATISFIED_AT },
+					RUNID + " = ? and " + SATISFIED_AT + " > " + System.currentTimeMillis(), new String[] { "" + runId }, null, null, SATISFIED_AT + " ASC", null);
+			while (mCursor.moveToNext()) {
+				VisibilityEvent e = new VisibilityEvent();
+				e.itemId = mCursor.getLong(0);
+				e.status = mCursor.getInt(1);
+				e.satisfiedAt = mCursor.getLong(2);
+				returnEvents.add(e);
+			}
+		} catch (SQLException ex) {
+			Log.e("sqlex", "ex", ex);
+		} finally {
+			if (mCursor != null)
+				mCursor.close();
+		}
+		return returnEvents;
+
+	}
+	
+	public class VisibilityEvent implements Comparable<VisibilityEvent>{
+		public long itemId;
+		public Integer status;
+		public Long satisfiedAt;
+		
+		@Override
+		public int compareTo(VisibilityEvent o) {
+			if (satisfiedAt.equals(o.satisfiedAt)) return status.compareTo( o.status);
+			return satisfiedAt.compareTo(o.satisfiedAt);
 		}
 	}
 	

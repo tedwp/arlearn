@@ -107,12 +107,12 @@ public class GeneralItemDelegator extends GoogleDelegator {
 
 		List<GeneralItem> gl = returnItemList.getGeneralItems();
 		long runDuration = (qr).getRunDuration(runIdentifier);
-		for (int i = gl.size() - 1; i >= 0; i--) {
-			if (gl.get(i).getShowAtTimeStamp() != null && gl.get(i).getShowAtTimeStamp() > runDuration) {
-				gl.remove(i);
-				continue;
-			}
-		}
+//		for (int i = gl.size() - 1; i >= 0; i--) {
+//			if (gl.get(i).getShowAtTimeStamp() != null && gl.get(i).getShowAtTimeStamp() > runDuration) {
+//				gl.remove(i);
+//				continue;
+//			}
+//		}
 		return returnItemList;
 	}
 

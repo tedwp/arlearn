@@ -22,7 +22,7 @@ public class GeneralItemSerializer extends GameBeanSerializer{
 			if (gi.getDependsOn() != null) returnObject.put("dependsOn", JsonBeanSerialiser.serialiseToJson(gi.getDependsOn()));
 			if (gi.getDisappearOn() != null) returnObject.put("disappearOn", JsonBeanSerialiser.serialiseToJson(gi.getDisappearOn()));
 			if (gi.getRadius() != null) returnObject.put("radius", gi.getRadius());
-			if (gi.getShowAtTimeStamp() != null) returnObject.put("showAtTimeStamp", gi.getShowAtTimeStamp());
+//			if (gi.getShowAtTimeStamp() != null) returnObject.put("showAtTimeStamp", gi.getShowAtTimeStamp());
 			if (gi.getLng() != null) returnObject.put("lng", gi.getLng());
 			if (gi.getLat() != null) returnObject.put("lat", gi.getLat());
 			if (gi.getVisibleAt() != null) returnObject.put("visibleAt", gi.getVisibleAt());

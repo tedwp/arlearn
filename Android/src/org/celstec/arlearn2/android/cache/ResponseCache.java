@@ -44,22 +44,7 @@ public class ResponseCache {
 	public TreeSet<Response> getResponses(long runId, long generalItemId) {
 		return responseMap.get(runId+"*"+generalItemId);
 	}
-	
-//	public void reloadFromDb(final long runId, final long generalItemId, final Context ctx) {
-//		DBAdapter.getAdapter(ctx).getMyResponses().query(runId, generalItemId, new ResponseResults() {
-//			
-//			@Override
-//			public void onResults(Response[] responses) {
-//				String key = getKey(runId, generalItemId);
-//				if (responseMap.get(key) == null) {
-//					responseMap.put(key, new TreeSet<Response>());	
-//				}
-//				for (Response response : responses){
-//					responseMap.get(key).add(response);
-//				}
-//			}
-//		}); 
-//	}
+
 	
 	private String getKey(Response response) {
 		return response.getRunId()+"*"+response.getGeneralItemId();
@@ -75,6 +60,19 @@ public class ResponseCache {
 				responseMap.put(key, new TreeSet<Response>());
 			}
 			responseMap.get(key).add(response);
+		}
+	}
+	
+	public void remove(long runId) {
+		synchronized (responseMap) {
+			for (String key : responseMap.keySet()) {
+				if (key.startsWith(runId + "*")) {
+					responseMap.remove(key);
+				}
+			}
+		}
+		synchronized (locatedResponses) {
+			locatedResponses.remove(runId);
 		}
 	}
 }

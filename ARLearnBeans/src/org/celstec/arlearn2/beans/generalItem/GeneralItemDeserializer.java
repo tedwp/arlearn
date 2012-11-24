@@ -33,7 +33,7 @@ public class GeneralItemDeserializer extends GameBeanDeserializer {
 		if (object.has("description")) gi.setDescription(object.getString("description"));
 		if (object.has("iconUrl")) gi.setIconUrl(object.getString("iconUrl"));
 		if (object.has("radius")) gi.setRadius(object.getInt("radius"));
-		if (object.has("showAtTimeStamp")) gi.setShowAtTimeStamp(object.getLong("showAtTimeStamp"));
+//		if (object.has("showAtTimeStamp")) gi.setShowAtTimeStamp(object.getLong("showAtTimeStamp"));
 		if (object.has("lng")) gi.setLng(object.getDouble("lng"));
 		if (object.has("lat")) gi.setLat(object.getDouble("lat"));
 		if (object.has("visibleAt")) gi.setVisibleAt(object.getLong("visibleAt"));

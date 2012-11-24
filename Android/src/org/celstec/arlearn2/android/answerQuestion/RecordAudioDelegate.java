@@ -3,11 +3,8 @@ package org.celstec.arlearn2.android.answerQuestion;
 import java.io.File;
 import java.io.IOException;
 
-import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnnotateActivity;
-import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
-import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.util.MediaFolders;
 
 import android.media.MediaPlayer;
@@ -59,22 +56,10 @@ public class RecordAudioDelegate {
 		initSoundCapture();
 	}
 	
-	public void hide() {
-		audioButtons.setVisibility(View.GONE);
-		counter.setVisibility(View.GONE);
-		stopButton.setVisibility(View.GONE);
-		startRecordButton.setVisibility(View.GONE);
-		playButton.setVisibility(View.GONE);
-		
-	}
 	private void initSoundCapture() {
-
 		counter = (TextView) ctx.findViewById(R.id.timeRecording);
 		counter.setText(ctx.getString(R.string.annotateCounterReset));
 		
-//		removeButton = (ImageView) findViewById(R.id.removeButton);
-//		removeButton.setVisibility(removeButton.INVISIBLE);
-
 		stopButton = (ImageView) ctx.findViewById(R.id.recordButton);
 		stopButton.setOnClickListener(stopListener);
 		

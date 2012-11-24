@@ -2,6 +2,7 @@ package org.celstec.arlearn2.android.cache;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.celstec.arlearn2.android.db.beans.MediaCacheItem;
@@ -51,7 +52,7 @@ public class MediaCache {
 
 	public void putReplicationstatus(String remoteFilePath, int repStatus) {
 		synchronized (replicationStatus) {
-		replicationStatus.put(remoteFilePath, repStatus);
+			replicationStatus.put(remoteFilePath, repStatus);
 		}
 	}
 
@@ -70,6 +71,23 @@ public class MediaCache {
 		}
 		synchronized (idToMediaCacheItem) {
 			idToMediaCacheItem.put(mci.getItemId(), mci);
+		}
+	}
+
+	public void remove(long runId) {
+		synchronized (idToMediaCacheItem) {
+			synchronized (replicationStatus) {
+				synchronized (percentageUploaded) {
+					for (Iterator<MediaCacheItem> iterator = idToMediaCacheItem.values().iterator(); iterator.hasNext();) {
+						MediaCacheItem mci = iterator.next();
+						if (mci.getRunId() == runId) {
+							percentageUploaded.remove(mci.getRemoteFile());
+							replicationStatus.remove(mci.getRemoteFile());
+							iterator.remove();
+						}
+					}
+				}
+			}
 		}
 	}
 

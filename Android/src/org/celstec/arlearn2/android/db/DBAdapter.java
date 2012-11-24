@@ -101,7 +101,7 @@ public class DBAdapter {
 	}
 	
 	public class DbOpenHelper extends SQLiteOpenHelper {
-	    private static final int DATABASE_VERSION = 114;
+	    private static final int DATABASE_VERSION = 115;
 	    private static final String DATABASE_NAME = "arlearn2";
 	   
 	    DbOpenHelper(Context context) {
@@ -162,6 +162,7 @@ public class DBAdapter {
     
     
     public static final int DEPENDENCIES_MESSAGE = 1;
+    public static final int FORCE_UPDATE_MESSAGE = 2;
     
     private static DatabaseThread thread;
     public static DatabaseHandler getDatabaseThread(Context ctx) {

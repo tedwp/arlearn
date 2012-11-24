@@ -232,19 +232,12 @@ public class NarratorItemActivity extends GeneralActivity {
 	
 	
 	private void renderAnswers() {
-
-//		DBAdapter db = new DBAdapter(this);
-//		db.openForRead();
 		Long runId = getMenuHandler().getPropertiesAdapter().getCurrentRunId();
 		Long itemId = narratorBean.getId();
 		resp =ResponseCache.getInstance().getResponses(runId, itemId);
 		if (resp == null) {
-//			ResponseCache.getInstance().reloadFromDb(runId, itemId, this);
 			return;
 		}
-		
-//		resp = ((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).query(getMenuHandler().getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
-		
 		SimpleDateFormat formatter = new SimpleDateFormat("d MMM - HH:mm:ss");
 		ArrayList<GenericListRecord> users = new ArrayList<GenericListRecord>();
 
@@ -267,6 +260,11 @@ public class NarratorItemActivity extends GeneralActivity {
 						percentage += org.celstec.arlearn2.android.cache.MediaCache.getInstance().getPercentageUploaded(audioUrl);
 						dividePercentageBy++;
 					}
+					if (json.has("text")) {
+						statusAudio =org.celstec.arlearn2.android.db.MediaCache.REP_STATUS_DONE;
+						percentage =1;
+						dividePercentageBy++;
+					}
 					
 					int statusImage = 10;
 					if (json.has("imageUrl")) {
@@ -281,7 +279,9 @@ public class NarratorItemActivity extends GeneralActivity {
 						percentage += org.celstec.arlearn2.android.cache.MediaCache.getInstance().getPercentageUploaded(videoUrl);
 						dividePercentageBy++;
 					}
-					percentage /= dividePercentageBy;
+					
+						percentage /= dividePercentageBy;
+					
 
 					if (statusImage != 10 || statusAudio != 10) {
 						int status = Math.min(statusAudio, statusImage);
@@ -316,10 +316,8 @@ public class NarratorItemActivity extends GeneralActivity {
 				users.add(r);
 			}
 		}
-//		db.close();
 		
 		LinearLayout listView = (LinearLayout) findViewById(R.id.narratoranswerlist); 
-//		adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, users);
 		adapter = new GenericMessageListAdapter(this,getContentView(), users);
 		listView.removeAllViews();
 		for (int i = 0 ; i< adapter.getCount(); i++) {
