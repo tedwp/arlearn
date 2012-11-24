@@ -100,7 +100,7 @@ public class NarratorItemActivity extends GeneralActivity {
 		public void run() {
 			Long disappearTime = GeneralItemVisibilityCache.getInstance().disappearedAt(menuHandler.getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
 			if (disappearTime == null || disappearTime == -1) {
-				mHandler.removeCallbacks(counterTask);
+				mHandler.postDelayed(counterTask, 1000);
 				return;
 			}
 			long millis = (disappearTime - System.currentTimeMillis());
@@ -343,7 +343,7 @@ public class NarratorItemActivity extends GeneralActivity {
 	protected void onResume() {
 		super.onResume();
 		renderAnswers();
-	     mHandler.postDelayed(counterTask, 100);		    	   
+	     mHandler.postDelayed(counterTask, 1000);		    	   
 
 	}
 	

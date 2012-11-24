@@ -189,7 +189,7 @@ public class GeneralItemControlCanvas extends VStack {
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.YoutubeObject", "Youtube movie");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.AudioObject", "Audio Object");
 		if (Authoring.hidden) valueMap.put("org.celstec.arlearn2.beans.generalItem.OpenBadge", "Mozilla Open Badge");
-		if (Authoring.hidden) valueMap.put("org.celstec.arlearn2.beans.generalItem.ScanTag", "Scan Tag");
+		valueMap.put("org.celstec.arlearn2.beans.generalItem.ScanTag", "Scan Tag");
 		return valueMap;
 	}
 

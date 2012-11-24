@@ -57,6 +57,7 @@ public abstract class GeneralItemCanvas extends VStack{
 	protected SelectItem disAppearOnGeneralItem;
 	protected SelectItem disAppearOnRole;
 	protected SelectItem disAppearOnScope;
+	protected CheckboxItem showCountDownCb;
 	
 	protected SelectItem roleGrid;
 	private String dependency = null;
@@ -83,6 +84,7 @@ public abstract class GeneralItemCanvas extends VStack{
 	private final String DIS_GENITEM_DEP = "disAppeargeneralItemId";
 	private final String DIS_SCOPE_DEP = "disAppearscope";
 	private final String DIS_ROLE_DEP = "disAppearrole";
+	private final String SHOW_COUNTDOWN = "showCountDown";
 	
 	IsFloatValidator floatValidator = new IsFloatValidator();
 	IsIntegerValidator intValidator = new IsIntegerValidator();
@@ -332,6 +334,13 @@ public abstract class GeneralItemCanvas extends VStack{
 		disAppearOnRole.setValueMap(roles);
 		disAppearOnRole.setShowIfCondition(formIf);
 		disAppearOnRole.setStartRow(true);
+		
+		showCountDownCb = new CheckboxItem();
+		showCountDownCb.setName(SHOW_COUNTDOWN);
+		showCountDownCb.setValue(false);
+		showCountDownCb.setTitle(constants.showCountDown());
+		showCountDownCb.setShowIfCondition(formIf);
+		showCountDownCb.setStartRow(true);
 	}
 	
 	
@@ -455,7 +464,7 @@ public abstract class GeneralItemCanvas extends VStack{
 		if (Authoring.hidden && "org.celstec.arlearn2.beans.generalItem.OpenBadge".equals(itemId)) {
 			return new OpenBadgeCanvas(roles);	
 		}
-		if (Authoring.hidden && "org.celstec.arlearn2.beans.generalItem.ScanTag".equals(itemId)) {
+		if ("org.celstec.arlearn2.beans.generalItem.ScanTag".equals(itemId)) {
 			return new ScanTagCanvas(roles);	
 		}
 		return new MultiplechoiceCanvas(roles);
@@ -477,6 +486,8 @@ public abstract class GeneralItemCanvas extends VStack{
 		}
 		if (getValue(DIS_SIMPLE_DEP) != null && (Boolean) getValue(DIS_SIMPLE_DEP)) {
 			JSONObject actionDep = generateDependency(DIS_ACTION_DEP, DIS_GENITEM_DEP, DIS_SCOPE_DEP, DIS_ROLE_DEP);
+			
+			if (getValue(SHOW_COUNTDOWN) != null) object.put(SHOW_COUNTDOWN, JSONBoolean.getInstance((Boolean) getValue(SHOW_COUNTDOWN)));
 			if (actionDep != null) object.put("disappearOn", actionDep);
 		}
 		return object;
@@ -575,6 +586,9 @@ public abstract class GeneralItemCanvas extends VStack{
 					setValueDouble(DIS_SCOPE_DEP, SCOPE_DEP, dep);
 			}
 			
+		}
+		if (o.containsKey(SHOW_COUNTDOWN) && o.get(SHOW_COUNTDOWN).isBoolean() != null) {
+			formMapping.get(SHOW_COUNTDOWN).setValue(SHOW_COUNTDOWN, o.get(SHOW_COUNTDOWN).isBoolean().booleanValue());
 		}
 //			dependency = o.get("dependsOn").toString();
 ////			dependencyField.setValue(dependency);

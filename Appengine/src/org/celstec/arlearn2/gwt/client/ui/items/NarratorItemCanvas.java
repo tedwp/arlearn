@@ -70,8 +70,8 @@ public class NarratorItemCanvas extends GeneralItemCanvas {
 
 		this.addMember(form2);								 
 		
-		form2.setFields(latItem, lngItem, sortItem,  roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithTextCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
-		addField(form2, latItem, lngItem, sortItem, roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithTextCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
+		form2.setFields(latItem, lngItem, sortItem,  roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithTextCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
+		addField(form2, latItem, lngItem, sortItem, roleGrid, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, isAutolaunch, openQuestionCBItem, openQuestionWithAudioCBItem, openQuestionWithTextCBItem, openQuestionWithImageCBItem, openQuestionWithVideoCBItem);
 
 	}
 	

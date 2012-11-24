@@ -184,6 +184,9 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Role")
 	String roleDep();
 	
+	@DefaultStringValue("Show Count Down") //Todo i18
+	String showCountDown();
+	
 	@DefaultStringValue("General Item")
 	String generalItemDep();
 	
