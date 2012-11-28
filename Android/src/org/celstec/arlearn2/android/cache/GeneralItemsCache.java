@@ -55,6 +55,7 @@ public class GeneralItemsCache extends GenericCache {
 	}
 
 	public void put(GeneralItem gi) {
+		if (gi.getDeleted() !=null && gi.getDeleted()) return;
 		synchronized (itemsMap) {
 			itemsMap.put(gi.getId(), gi);
 		}
@@ -63,6 +64,18 @@ public class GeneralItemsCache extends GenericCache {
 				itemsForGameIdMap.put(gi.getGameId(), new HashMap<Long, GeneralItem>());
 			}
 			itemsForGameIdMap.get(gi.getGameId()).put(gi.getId(), gi);
+		}
+	}
+	
+	public void removeItem(GeneralItem gi) {
+		synchronized (itemsMap) {
+			itemsMap.remove(gi.getId());
+		}
+		synchronized (itemsForGameIdMap) {
+			HashMap<Long, GeneralItem> map = itemsForGameIdMap.get(gi.getGameId());
+			if (map != null) {
+				map.remove(gi.getId());
+			}
 		}
 	}
 

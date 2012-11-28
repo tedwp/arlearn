@@ -117,7 +117,7 @@ public class NarratorItemActivity extends GeneralActivity {
 		       } else {
 		    	   defaultCountingText = minutes+":"+seconds+"."+tens;
 		       }
-			countDownTextView.setText(defaultCountingText);
+		     if (countDownTextView != null) countDownTextView.setText(defaultCountingText);
 		     mHandler.postDelayed(counterTask, 100);		    	   
 
 		}
@@ -188,7 +188,7 @@ public class NarratorItemActivity extends GeneralActivity {
 		} else {
 			webview.setVisibility(View.GONE);
 		}
-		if (narratorBean.getShowCountDown() != null && narratorBean.getShowCountDown()) {
+		if (countDownTextView != null && narratorBean.getShowCountDown() != null && narratorBean.getShowCountDown()) {
 			long disappearTime = GeneralItemVisibilityCache.getInstance().disappearedAt(menuHandler.getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
 			if (disappearTime == -1) {
 				countDownTextView.setVisibility(View.INVISIBLE);	
@@ -197,7 +197,7 @@ public class NarratorItemActivity extends GeneralActivity {
 				
 			}
 		} else {
-			countDownTextView.setVisibility(View.INVISIBLE);
+			if (countDownTextView != null) countDownTextView.setVisibility(View.INVISIBLE);
 		}
 //		if (narratorBean.getDescription() != null && !narratorBean.getDescription().trim().equals("")) {
 //			descriptionTextView.setText(narratorBean.getDescription());

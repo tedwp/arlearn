@@ -7,6 +7,7 @@ import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemVisibility;
 import org.celstec.arlearn2.android.db.MediaCache;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.service.GeneralItemDependencyHandler;
 import org.celstec.arlearn2.android.sync.MediaCacheSyncroniser;
@@ -76,6 +77,8 @@ public class CreateNewGItemTask implements  DBAdapter.DatabaseTask {
 		boolean newInsert = db.getGeneralItemAdapter().insert(item);
 //		db.getGeneralItemVisibility().setVisibilityStatus(item.getId(), null, 0, GeneralItemVisibility.NOT_INITIALISED);
 		db.getGeneralItemVisibility().resetAllRunsVisibility(item.getId());
+		Long runId = PropertiesAdapter.getInstance(db.getContext()).getCurrentRunId();
+		db.getGeneralItemVisibility().queryAll(db, runId);
 	}
 	
 }

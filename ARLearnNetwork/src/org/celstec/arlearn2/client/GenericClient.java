@@ -4,7 +4,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
-import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.celstec.arlearn2.client.exception.ARLearnException;
 import org.celstec.arlearn2.network.ConnectionFactory;

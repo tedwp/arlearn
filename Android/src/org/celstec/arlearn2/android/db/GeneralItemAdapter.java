@@ -84,6 +84,7 @@ public class GeneralItemAdapter extends GenericDbTable {
 	}
 	
 	public int delete(long id) {
+		GeneralItemsCache.getInstance().removeItem(GeneralItemsCache.getInstance().getGeneralItems(id));
 		return db.getSQLiteDb().delete(getTableName(), ID + " = " + id, null);
 	}
 	

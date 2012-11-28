@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.celstec.arlearn2.android"
-      android:versionCode="16"
-      android:versionName="1.2 (code 16)">
+      android:versionCode="19"
+      android:versionName="1.2 (code 19)">
+      
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="10"/>
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
@@ -106,12 +107,11 @@
 
     </application>
     
-    <uses-permission android:name="android.permission.CAMERA"></uses-permission>
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" ></uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" ></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_GPS"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"></uses-permission>
 	<uses-permission android:name="android.permission.DEVICE_POWER"></uses-permission>
@@ -120,5 +120,10 @@
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.NFC" />
+    
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.AUTOFOCUS" android:required="false" />
+    <uses-feature android:name="android.hardware.location.GPS" android:required="false" />
+    <uses-feature android:name="android.hardware.LOCATION" android:required="false" />
 
 </manifest>

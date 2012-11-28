@@ -178,6 +178,7 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 	}
 	
 	private void syncronizeDisappearedGeneralItems(PropertiesAdapter pa) {
+		try {
 		final GeneralItemList gl = GeneralItemClient.getGeneralItemClient().getRunGeneralItemsDisappeared(pa.getFusionAuthToken(), runId);
 		
 		System.out.println(gl);
@@ -210,6 +211,9 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 			};
 			m.sendToTarget();
 			}
+		} catch (Exception e) {
+			//TODO makee this exception go away
+		}
 	}
 
 	
