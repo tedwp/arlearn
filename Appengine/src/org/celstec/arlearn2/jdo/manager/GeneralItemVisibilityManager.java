@@ -60,6 +60,7 @@ public class GeneralItemVisibilityManager {
 		Iterator<GeneralItemVisibilityJDO> it = getGeneralitemVisibility(pm, runId, null, email, status).iterator();
 		while (it.hasNext()) {
 			GeneralItemVisibilityJDO gi = ((GeneralItemVisibilityJDO) it.next());
+			if (gi.getTimeStamp() == null) gi.setTimeStamp(0l);
 			returnProgressDefinitions.put(gi.getGeneralItemId(), gi.getTimeStamp());
 		}
 		return returnProgressDefinitions;

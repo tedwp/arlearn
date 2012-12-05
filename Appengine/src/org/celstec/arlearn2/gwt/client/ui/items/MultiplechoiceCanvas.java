@@ -125,13 +125,14 @@ public class MultiplechoiceCanvas extends GeneralItemCanvas {
 		this.addMember(buttonLayout);
 
 		this.addMember(form2);
-		form2.setFields(isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem,isAutolaunch, nfcEnabledCBItem, 
+		isDisapperOnDependency.setStartRow(true);
+		form2.setFields(isSimpleDependency, selectGeneralItem, selectAction, selectRole, selectScope,   isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime,isAutolaunch, nfcEnabledCBItem, 
 				ti1, cb1, nfc1, id1, 
 				ti2, cb2, nfc2, id2,
 				ti3, cb3, nfc3, id3,
 				ti4, cb4, nfc4, id4,
 				ti5, cb5, nfc5, id5);
-		addField(form2,isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isAutolaunch, nfcEnabledCBItem, 
+		addField(form2,isSimpleDependency, selectGeneralItem, selectAction, selectRole, selectScope,   isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime, isAutolaunch, nfcEnabledCBItem, 
 				ti1, cb1, nfc1, id1, 
 				ti2, cb2, nfc2, id2,
 				ti3, cb3, nfc3, id3,

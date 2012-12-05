@@ -40,8 +40,8 @@ public class OpenBadgeCanvas  extends GeneralItemCanvas {
 	
 	protected void doLayoutForm1() {
 		this.addMember(form1);
-		form1.setFields(idItem, gameIdItem, nameItem, sortItem, descriptionItem, badgePngItem, badgeUrlItem, evidenceItem, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isAutolaunch, roleGrid);
-		addField(form1,idItem, gameIdItem, nameItem, sortItem, descriptionItem, badgePngItem, badgeUrlItem, evidenceItem, isSimpleDependency, selectAction, selectScope, selectRole, selectGeneralItem, isAutolaunch, roleGrid);
+		form1.setFields(idItem, gameIdItem, nameItem, sortItem, descriptionItem, badgePngItem, badgeUrlItem, evidenceItem, isSimpleDependency, selectGeneralItem, selectAction, selectRole, selectScope, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime,  isAutolaunch, roleGrid);
+		addField(form1,idItem, gameIdItem, nameItem, sortItem, descriptionItem, badgePngItem, badgeUrlItem, evidenceItem, isSimpleDependency, selectGeneralItem, selectAction, selectRole, selectScope, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime,  isAutolaunch, roleGrid);
 	}
 	
 	protected void createBadgeUrl() {

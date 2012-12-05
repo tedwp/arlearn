@@ -171,7 +171,7 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 					long currentTime = System.currentTimeMillis();
 					long satisfiedAtDelta = currentTime - satisfiedAt;
 					db.getGeneralItemVisibility().setVisibilityStatus(itemIds[i], runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
-					if (satisfiedAtDelta > 0) {
+					if (satisfiedAtDelta > 0 && satisfiedAtDelta < 30000) {
 						broadcastTroughIntent(generalItem, db.getContext(), runId);
 					} else {
 						ForceUpdateTask.scheduleEvent(db.getContext(), runId, false, null);

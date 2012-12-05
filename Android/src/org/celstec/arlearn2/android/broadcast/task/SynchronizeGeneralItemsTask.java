@@ -85,6 +85,7 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 			PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
 			syncronizeGeneralItemsGame(pa);
 		}
+		(new GeneralItemDependencyHandler()).addTaskToQueue(ctx);
 			
 	}
 	
@@ -152,6 +153,7 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 					newVisibleItems.add(item);
 				}
 			}
+			System.out.println("before loop"+newVisibleItems.size());
 			if (!newVisibleItems.isEmpty()) {
 				
 			Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
@@ -159,7 +161,13 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 
 				@Override
 				public void execute(DBAdapter db) {
+					System.out.println("in execute"+newVisibleItems.size());
+					System.out.println("in execute"+newVisibleItems);
 					for (GeneralItem item : newVisibleItems) {
+						System.out.println("item "+item);
+						if (item.getVisibleAt() == null) {
+							item.setVisibleAt(0l);
+						}
 						db.getGeneralItemVisibility().setVisibilityStatus(item.getId(), runId, item.getVisibleAt(), GeneralItemVisibility.VISIBLE);
 					}
 					ActivityUpdater.updateActivities(ctx, 

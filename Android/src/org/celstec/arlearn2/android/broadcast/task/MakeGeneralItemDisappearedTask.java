@@ -33,7 +33,7 @@ public class MakeGeneralItemDisappearedTask implements  DBAdapter.DatabaseTask {
 
 	@Override
 	public void execute(DBAdapter db) {
-			GeneralItemDependencyHandler depHandler= new GeneralItemDependencyHandler();
+//			GeneralItemDependencyHandler depHandler= new GeneralItemDependencyHandler();
 			Long disAt = gi.getDisappearAt();
 			if (disAt == null || disAt == -1) {
 				disAt = System.currentTimeMillis();

@@ -58,6 +58,8 @@ public abstract class GeneralItemCanvas extends VStack{
 	protected SelectItem disAppearOnRole;
 	protected SelectItem disAppearOnScope;
 	protected CheckboxItem showCountDownCb;
+	protected SelectItem disTime;
+
 	
 	protected SelectItem roleGrid;
 	private String dependency = null;
@@ -85,6 +87,7 @@ public abstract class GeneralItemCanvas extends VStack{
 	private final String DIS_SCOPE_DEP = "disAppearscope";
 	private final String DIS_ROLE_DEP = "disAppearrole";
 	private final String SHOW_COUNTDOWN = "showCountDown";
+	private final String DIS_TIME = "disTime";
 	
 	IsFloatValidator floatValidator = new IsFloatValidator();
 	IsIntegerValidator intValidator = new IsIntegerValidator();
@@ -341,6 +344,15 @@ public abstract class GeneralItemCanvas extends VStack{
 		showCountDownCb.setTitle(constants.showCountDown());
 		showCountDownCb.setShowIfCondition(formIf);
 		showCountDownCb.setStartRow(true);
+		
+		disTime = new SelectItem();
+		disTime.setName(DIS_TIME);
+		disTime.setValue("-1");
+		disTime.setValueMap(createDisappearTimes());
+		disTime.setTitle("i18 dis time");
+		disTime.setShowIfCondition(formIf);
+		disTime.setStartRow(true);
+		
 	}
 	
 	
@@ -357,6 +369,19 @@ public abstract class GeneralItemCanvas extends VStack{
 		valueMap.put("0", "User");
 		valueMap.put("1", "Team");
 		valueMap.put("2", "All");
+		return valueMap;
+	}
+	
+	public LinkedHashMap<String, String> createDisappearTimes() {
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+		valueMap.put(  "-1", "no time");
+		valueMap.put(  "10000", "10s");
+		valueMap.put(  "30000", "30s");
+		valueMap.put(  "60000", "1m");
+		valueMap.put( "120000", "2m");
+		valueMap.put( "300000", "5m");
+		valueMap.put( "600000", "10m");
+		valueMap.put("1800000", "30m");
 		return valueMap;
 	}
 	
@@ -481,11 +506,11 @@ public abstract class GeneralItemCanvas extends VStack{
 
 		
 		if (getValue(SIMPLE_DEP) != null && (Boolean) getValue(SIMPLE_DEP)) {
-			JSONObject actionDep = generateDependency(ACTION_DEP, GENITEM_DEP, SCOPE_DEP, ROLE_DEP);
+			JSONObject actionDep = generateDependency(ACTION_DEP, GENITEM_DEP, SCOPE_DEP, ROLE_DEP, null);
 			if (actionDep != null) object.put("dependsOn", actionDep);
 		}
 		if (getValue(DIS_SIMPLE_DEP) != null && (Boolean) getValue(DIS_SIMPLE_DEP)) {
-			JSONObject actionDep = generateDependency(DIS_ACTION_DEP, DIS_GENITEM_DEP, DIS_SCOPE_DEP, DIS_ROLE_DEP);
+			JSONObject actionDep = generateDependency(DIS_ACTION_DEP, DIS_GENITEM_DEP, DIS_SCOPE_DEP, DIS_ROLE_DEP, DIS_TIME);
 			
 			if (getValue(SHOW_COUNTDOWN) != null) object.put(SHOW_COUNTDOWN, JSONBoolean.getInstance((Boolean) getValue(SHOW_COUNTDOWN)));
 			if (actionDep != null) object.put("disappearOn", actionDep);
@@ -493,7 +518,14 @@ public abstract class GeneralItemCanvas extends VStack{
 		return object;
 	}
 	
-	private JSONObject generateDependency(String actionDepString, String genItemString, String scopeDepString, String roleDepString) {
+	private JSONObject generateDependency(String actionDepString, String genItemString, String scopeDepString, String roleDepString, String disTime) {
+		if (disTime != null && getValue(disTime) != null && !getValue(disTime).equals("-1")) {
+			System.out.println("time "+getValue(disTime));
+			JSONObject timeDep = new JSONObject();
+			timeDep.put("type", new JSONString("org.celstec.arlearn2.beans.dependencies.TimeDependency"));
+			timeDep.put("timeDelta", new JSONNumber(Long.parseLong((String)getValue(disTime))));
+			
+		}
 		JSONObject actionDep = new JSONObject();
 		actionDep.put("type", new JSONString("org.celstec.arlearn2.beans.dependencies.ActionDependency"));
 		boolean addDep = false;
@@ -518,6 +550,15 @@ public abstract class GeneralItemCanvas extends VStack{
 			actionDep.put("role", new JSONString((String)  getValue(roleDepString)));	
 		}
 		if (!addDep) return null;
+		if (disTime != null && getValue(disTime) != null && !getValue(disTime).equals("-1")) {
+			System.out.println("time "+getValue(disTime));
+			JSONObject timeDep = new JSONObject();
+			timeDep.put("type", new JSONString("org.celstec.arlearn2.beans.dependencies.TimeDependency"));
+			timeDep.put("timeDelta", new JSONNumber(Long.parseLong((String)getValue(disTime))));
+			timeDep.put("offset", actionDep);
+			return timeDep;
+			
+		}
 		return actionDep;
 	}
 	
@@ -579,11 +620,22 @@ public abstract class GeneralItemCanvas extends VStack{
 		if (o.containsKey("disappearOn") && o.get("disappearOn").isObject() != null) {
 			JSONObject dep = o.get("disappearOn").isObject();
 			if (dep.containsKey("type")) {
-				formMapping.get(DIS_SIMPLE_DEP).setValue(DIS_SIMPLE_DEP, "org.celstec.arlearn2.beans.dependencies.ActionDependency".equals(dep.get("type").isString().stringValue()));
-					setValueString(DIS_ACTION_DEP, ACTION_DEP, dep);
-					setValueString(DIS_ROLE_DEP, ROLE_DEP, dep);
-					setValueDouble(DIS_GENITEM_DEP, GENITEM_DEP, dep);
-					setValueDouble(DIS_SCOPE_DEP, SCOPE_DEP, dep);
+				formMapping.get(DIS_SIMPLE_DEP).setValue(DIS_SIMPLE_DEP, false);
+				if ("org.celstec.arlearn2.beans.dependencies.ActionDependency".equals(dep.get("type").isString().stringValue())) {
+					formMapping.get(DIS_SIMPLE_DEP).setValue(DIS_SIMPLE_DEP, true);
+				}
+				if ("org.celstec.arlearn2.beans.dependencies.TimeDependency".equals(dep.get("type").isString().stringValue())) {
+					if (dep.get("offset") != null && dep.get("offset").isObject() != null && "org.celstec.arlearn2.beans.dependencies.ActionDependency".equals(dep.get("offset").isObject().get("type").isString().stringValue())) {
+						formMapping.get(DIS_SIMPLE_DEP).setValue(DIS_SIMPLE_DEP, true);
+						formMapping.get(DIS_TIME).setValue(DIS_TIME, ""+((long)dep.get("timeDelta").isNumber().doubleValue()));
+						dep = dep.get("offset").isObject();
+					}
+				}
+				
+				setValueString(DIS_ACTION_DEP, ACTION_DEP, dep);
+				setValueString(DIS_ROLE_DEP, ROLE_DEP, dep);
+				setValueDouble(DIS_GENITEM_DEP, GENITEM_DEP, dep);
+				setValueDouble(DIS_SCOPE_DEP, SCOPE_DEP, dep);
 			}
 			
 		}

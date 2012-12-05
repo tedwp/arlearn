@@ -219,6 +219,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/counterLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
@@ -228,8 +229,8 @@
 
         <TextView
             android:id="@+id/timeLeftBeforeDisappear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_marginLeft="6dip"
             android:layout_marginTop="6dip"
             android:background="@color/red"

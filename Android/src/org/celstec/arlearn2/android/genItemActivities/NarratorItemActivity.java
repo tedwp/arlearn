@@ -191,13 +191,13 @@ public class NarratorItemActivity extends GeneralActivity {
 		if (countDownTextView != null && narratorBean.getShowCountDown() != null && narratorBean.getShowCountDown()) {
 			long disappearTime = GeneralItemVisibilityCache.getInstance().disappearedAt(menuHandler.getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
 			if (disappearTime == -1) {
-				countDownTextView.setVisibility(View.INVISIBLE);	
+				countDownTextView.setVisibility(View.GONE);	
 			} else {
 				countDownTextView.setVisibility(View.VISIBLE);
 				
 			}
 		} else {
-			if (countDownTextView != null) countDownTextView.setVisibility(View.INVISIBLE);
+			if (countDownTextView != null) countDownTextView.setVisibility(View.GONE);
 		}
 //		if (narratorBean.getDescription() != null && !narratorBean.getDescription().trim().equals("")) {
 //			descriptionTextView.setText(narratorBean.getDescription());

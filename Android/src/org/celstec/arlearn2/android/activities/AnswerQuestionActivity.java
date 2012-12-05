@@ -78,16 +78,19 @@ public class AnswerQuestionActivity extends AnnotateActivity {
 	private Runnable counterTask = new Runnable() {
 		public void run() {
 			countDownTextView = (TextView) findViewById(R.id.timeLeftBeforeDisappear);
+			
 			GeneralItem gi = GeneralItemsCache.getInstance().getGeneralItems(generalItemId);
 			if (gi == null) {
-				countDownTextView.setVisibility(View.INVISIBLE);
+				((LinearLayout) findViewById(R.id.counterLayout)).setVisibility(View.INVISIBLE);
 			}
 			if (gi.getShowCountDown() != null && gi.getShowCountDown()) {
 				long disappearTime = GeneralItemVisibilityCache.getInstance().disappearedAt(menuHandler.getPropertiesAdapter().getCurrentRunId(), gi.getId());
 				if (disappearTime == -1) {
-					countDownTextView.setVisibility(View.INVISIBLE);
+//					countDownTextView.setVisibility(View.INVISIBLE);
+					((LinearLayout) findViewById(R.id.counterLayout)).setVisibility(View.INVISIBLE);
 				} else {
-					countDownTextView.setVisibility(View.VISIBLE);
+//					countDownTextView.setVisibility(View.VISIBLE);
+					((LinearLayout) findViewById(R.id.counterLayout)).setVisibility(View.VISIBLE);
 					long millis = (disappearTime - System.currentTimeMillis());
 					if (millis <= 0) {
 						AnswerQuestionActivity.this.finish();
@@ -107,7 +110,8 @@ public class AnswerQuestionActivity extends AnnotateActivity {
 					mHandler.postDelayed(counterTask, 100);
 				}
 			} else {
-				countDownTextView.setVisibility(View.INVISIBLE);
+//				countDownTextView.setVisibility(View.INVISIBLE);
+				((LinearLayout) findViewById(R.id.counterLayout)).setVisibility(View.INVISIBLE);
 			}
 		}
 	};
