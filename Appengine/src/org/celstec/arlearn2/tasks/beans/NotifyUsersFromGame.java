@@ -10,6 +10,7 @@ import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.cache.VisibleGeneralItemsCache;
+import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
@@ -76,7 +77,7 @@ public class NotifyUsersFromGame extends GenericBean {
 //				rm.setRun((new RunDelegator(ud)).getRun(getRunId()));
 				VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, u.getEmail());
 				if (modificationType == GeneralItemModification.CREATED) {
-					if (gim.getGeneralItem().getDependsOn() == null && (gim.getGeneralItem().getDeleted() == null || !gim.getGeneralItem().getDeleted())) {
+					if (gim.getGeneralItem().getDependsOn() == null && GeneralItemDelegator.itemMatchesUserRoles(gim.getGeneralItem(), u.getRoles()) && (gim.getGeneralItem().getDeleted() == null || !gim.getGeneralItem().getDeleted())) {
 						GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), getRunId(), u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS, System.currentTimeMillis());
 					}
 				}

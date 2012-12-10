@@ -16,7 +16,6 @@ import com.google.gwt.appengine.channel.client.ChannelFactory.ChannelCreatedCall
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.Window;
 
 public class NotificationSubscriber {
 

@@ -4,7 +4,9 @@ import java.util.logging.Logger;
 
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
+import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
+import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.jdo.manager.GeneralItemVisibilityManager;
 
 import com.google.gdata.util.AuthenticationException;
@@ -83,10 +85,12 @@ public class UpdateGeneralItemsVisibility extends GenericBean{
 			log.severe("exception "+e.getMessage());
 			return;
 		}
+		UsersDelegator ud = new UsersDelegator(gid);
+		User u = ud.getUserByEmail(getRunId(), getUserEmail());
 		GeneralItemList gil = gid.getGeneralItemsRun(getRunId());
 		if (gil != null && gil.getGeneralItems() != null) {
 			for (GeneralItem gi: gil.getGeneralItems()) {
-				if (gi.getDependsOn() == null && (gi.getDeleted() == null || !gi.getDeleted())) {
+				if (gi.getDependsOn() == null && GeneralItemDelegator.itemMatchesUserRoles(gi, u.getRoles()) && (gi.getDeleted() == null || !gi.getDeleted())) {
 					GeneralItemVisibilityManager.setItemVisible(gi.getId(), getRunId(), getUserEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS, System.currentTimeMillis());
 				}
 			}

@@ -57,7 +57,7 @@ public class LoginWindow  extends Window {
 	        
 	        button.addClickHandler(new ClickHandler() {  
 	            public void onClick(ClickEvent event) {  
-	            	Authentication.getInstance().userCredentialsReceived(form.getValueAsString("account"), form.getValueAsString("pw"));
+	            	Authentication.getInstance().userCredentialsReceived(form.getValueAsString("account").trim(), form.getValueAsString("pw"));
 	            }  
 	        });  
 	        button.setStartRow(true);

@@ -214,7 +214,7 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		while (it.hasNext()) {
 			GeneralItem generalItem = (GeneralItem) it.next();
 			long visAt;
-			if (influencedByAppear(generalItem, action) && (visAt = isVisible(generalItem, al, u))!=-1) {
+			if (influencedByAppear(generalItem, action) && (visAt = isVisible(generalItem, al, u))!=-1 && itemMatchesUserRoles(generalItem, u.getRoles())) {
 				GeneralItemModification gim = new GeneralItemModification();
 				gim.setModificationType(GeneralItemModification.VISIBLE);
 				gim.setRunId(runId);
@@ -242,6 +242,22 @@ public class GeneralItemDelegator extends GoogleDelegator {
 				ChannelNotificator.getInstance().notify(u.getEmail(), gim);	
 			}	
 		}
+	}
+	
+	public static boolean itemMatchesUserRoles(GeneralItem generalItem, List<String> list) {
+		if (generalItem.getRoles() == null) return true;
+		if (generalItem.getRoles().isEmpty()) return true;
+		for (String itemRole: generalItem.getRoles()) {
+			if (!userRoleListContainsRole(list, itemRole)) return false;
+		}
+		return true;
+	}
+	
+	private static  boolean userRoleListContainsRole(List<String> list, String itemRole) {
+		for (String userRole: list) {
+			if (itemRole.equalsIgnoreCase(userRole)) return true;
+		}
+		return false;
 	}
 	
 	private boolean influencedByAppear(GeneralItem gi, Action action) {
