@@ -9,6 +9,7 @@ import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.smartgwt.client.data.Record;
 
 public class GeneralItemGameDataSource extends GenericDataSource {
 	
@@ -98,6 +99,22 @@ public class GeneralItemGameDataSource extends GenericDataSource {
 		
 	}
 	
+	@Override
+	public void addData(Record record) {
+		super.addData(record);
+		generalItems.put(Long.parseLong(record.getAttribute("id")), record);
+	}
+	
+	@Override
+	public void removeData(Record record) {
+		super.removeData(record);
+		generalItems.remove(Long.parseLong(record.getAttribute("id")));
+	}
+	
+	public Record getGeneralItem(Long id) {
+		return generalItems.get(id);
+	}
+	
 	protected GenericClient getHttpClient() {
 		return GeneralItemsClient.getInstance();
 	}
@@ -108,6 +125,8 @@ public class GeneralItemGameDataSource extends GenericDataSource {
 	}
 
 	HashMap<String, Boolean> manualItemsMap = new HashMap<String, Boolean>();
+	HashMap<Long, Record> generalItems = new HashMap<Long, Record>();
+	
 	public void setManualItems(JSONArray array) {
 		for (int i = 0; i< array.size(); i++) {
 			manualItemsMap.put(""+array.get(i).isObject().get("id"), true);
