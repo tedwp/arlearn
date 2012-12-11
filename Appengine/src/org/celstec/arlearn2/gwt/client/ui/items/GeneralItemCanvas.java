@@ -576,7 +576,6 @@ public abstract class GeneralItemCanvas extends VStack{
 				actionDep.put("action", new JSONString((String) getValue(actionDepString)));	
 			}	
 		}
-		
 		if (getValue(genItemString) != null) {
 			addDep = true;
 			actionDep.put("generalItemId", new JSONNumber((Integer) getValue(genItemString)));	
