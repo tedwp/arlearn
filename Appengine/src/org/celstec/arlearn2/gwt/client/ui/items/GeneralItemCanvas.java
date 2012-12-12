@@ -380,7 +380,7 @@ public abstract class GeneralItemCanvas extends VStack{
 		disTime.setName(DIS_TIME);
 		disTime.setValue("-1");
 		disTime.setValueMap(createDisappearTimes());
-		disTime.setTitle("i18 dis time");
+		disTime.setTitle(constants.disTime());
 		disTime.setShowIfCondition(formIf);
 		disTime.setStartRow(true);
 		

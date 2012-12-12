@@ -46,28 +46,28 @@ public class OpenBadgeCanvas  extends GeneralItemCanvas {
 	
 	protected void createBadgeUrl() {
 		badgeUrlItem = new TextItem(BADGE_URL);
-		badgeUrlItem.setTitle("Badge Url - i18");
+		badgeUrlItem.setTitle(constants.badgeUrl());
 		badgeUrlItem.setSelectOnFocus(true);
 		badgeUrlItem.setWrapTitle(false);
 	}
 	
 	protected void createDescription() {
 		descriptionItem = new TextItem(DESCRIPTION);
-		descriptionItem.setTitle("Badge Description - i18");
+		descriptionItem.setTitle(constants.badgeDescription());
 		descriptionItem.setSelectOnFocus(true);
 		descriptionItem.setWrapTitle(false);
 	}
 	
 	private void createEvidence() {
 		evidenceItem = new TextItem(EVIDENCE);
-		evidenceItem.setTitle("Evidence");
+		evidenceItem.setTitle(constants.badgeEvidence());
 		evidenceItem.setSelectOnFocus(true);
 		evidenceItem.setWrapTitle(false);
 		
 	}
 	private void createImage() {
 		badgePngItem = new TextItem(IMAGE);
-		badgePngItem.setTitle("Image");
+		badgePngItem.setTitle(constants.badgeImage());
 		badgePngItem.setSelectOnFocus(true);
 		badgePngItem.setWrapTitle(false);
 		

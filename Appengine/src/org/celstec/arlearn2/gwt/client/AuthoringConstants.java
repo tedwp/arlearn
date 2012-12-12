@@ -169,7 +169,7 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Select Role")
 	String selectRole();
 	
-	@DefaultStringValue("Simple Action Based Dependency")
+	@DefaultStringValue("Appear condition")
 	String simpleDep();
 	
 	@DefaultStringValue("Filling out the four fields below will make the item only appear if all specified conditions are met.")
@@ -184,16 +184,19 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Role")
 	String roleDep();
 	
-	@DefaultStringValue("Show Count Down") //Todo i18
+	@DefaultStringValue("Show Count Down")
 	String showCountDown();
+	
+	@DefaultStringValue("Time delay")
+	String disTime();
 	
 	@DefaultStringValue("General Item")
 	String generalItemDep();
 	
-	@DefaultStringValue("Disappear condition") //TODO i18
+	@DefaultStringValue("Disappear condition")
 	String disappearDep();
 	
-	@DefaultStringValue("Filling out the four fields below will make the item disappear from the user's screen if all specified conditions are met.") //TODO i18
+	@DefaultStringValue("Filling out the four fields below will make the item disappear from the user's screen if all specified conditions are met.") 
 	String disappearDepExplain();
 	
 	@DefaultStringValue("Automatically launch")
@@ -223,7 +226,7 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Answer with audio")
 	String answerWithAudio();
 	
-	@DefaultStringValue("Answer with text") //TODO i18
+	@DefaultStringValue("Answer with text") 
 	String answerWithText();
 	
 	@DefaultStringValue("Answer with picture")
@@ -231,6 +234,18 @@ public interface AuthoringConstants extends Constants {
 	
 	@DefaultStringValue("Answer with video")
 	String answerWithVideo();
+	
+	@DefaultStringValue("Badge Url")
+	String badgeUrl();
+	
+	@DefaultStringValue("Description")
+	String badgeDescription();
+	
+	@DefaultStringValue("Evidence")
+	String badgeEvidence();
+	
+	@DefaultStringValue("Badge Image")
+	String badgeImage();
 	
 	@DefaultStringValue("Create")
 	String create();
