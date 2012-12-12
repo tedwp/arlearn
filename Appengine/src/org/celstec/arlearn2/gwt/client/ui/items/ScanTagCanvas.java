@@ -96,8 +96,8 @@ public class ScanTagCanvas extends GeneralItemCanvas {
 	
 	protected void doLayoutForm2() {
 		this.addMember(form2);
-		form2.setFields( isSimpleDependency, selectGeneralItem, selectAction, selectRole, selectScope, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime, isAutolaunch, sortItem, roleGrid);
-		addField(form2, isSimpleDependency, selectGeneralItem, selectAction, selectRole, selectScope, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime, isAutolaunch, sortItem, roleGrid);
+		form2.setFields( isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime, isAutolaunch, sortItem, roleGrid);
+		addField(form2, isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime, isAutolaunch, sortItem, roleGrid);
 	}
 
 	

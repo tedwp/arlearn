@@ -15,7 +15,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import  org.apache.http.protocol.HttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.BasicHttpContext;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
