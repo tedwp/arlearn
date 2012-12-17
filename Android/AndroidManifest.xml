@@ -36,6 +36,7 @@
 		<activity android:name=".activities.LoginActivity" android:label="@string/loginHeader" />
 		<activity android:name=".activities.NfcScanOnDemandActivity" android:label="@string/loginHeader" />
 		<activity android:name=".activities.ListExcursionsActivity" android:label="@string/listExcursionsHeader"/>
+		<activity android:name=".activities.ListGamesActivity" android:label="@string/listExcursionsHeader"/>
 		<activity android:name=".activities.ListMessagesActivity" android:label="@string/listMessagesHeader" />
 		<activity android:name=".activities.MapViewActivity" android:label="@string/mapViewHeader" />
 		<activity android:name=".activities.OsmMapViewActivity" android:label="@string/mapViewHeader" />

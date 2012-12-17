@@ -3,6 +3,7 @@ package org.celstec.arlearn2.android.delegators;
 import java.util.Iterator;
 
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
+import org.celstec.arlearn2.android.activities.ListGamesActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.broadcast.task.SynchronizeGamesTask;
 import org.celstec.arlearn2.android.broadcast.task.SynchronizeUserTask;
@@ -52,7 +53,7 @@ public class GameDelegator {
 					updateOccured = updateOccured || db.getGameAdapter().insertGame(game);
 				}
 				if (updateOccured) {
-					ActivityUpdater.updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName());
+					ActivityUpdater.updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName(), ListGamesActivity.class.getCanonicalName());
 				}
 
 			}
