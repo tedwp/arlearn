@@ -8,6 +8,7 @@ import org.celstec.arlearn2.android.broadcast.task.SynchronizeGamesTask;
 import org.celstec.arlearn2.android.broadcast.task.SynchronizeUserTask;
 import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
+import org.celstec.arlearn2.android.delegators.game.CreateGameTask;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.beans.run.RunList;
@@ -75,6 +76,12 @@ public class GameDelegator {
 		m.sendToTarget();
 	}
 	
-	
+	public void createGame(Context ctx, String gameTitle, String gameAuthor, boolean withMap) {
+		CreateGameTask cgTask = new CreateGameTask(ctx);
+		cgTask.setAuthor(gameAuthor);
+		cgTask.setGameTitle(gameTitle);
+		cgTask.setWithMap(withMap);
+		cgTask.addTaskToQueue(ctx);
+	}
 
 }
