@@ -20,13 +20,9 @@ import android.widget.ListView;
 
 public class ListGamesActivity extends GeneralActivity implements ListitemClickInterface {
 	
-	private String CLASSNAME = this.getClass().getName();
-
 	List<Game> vGames = null;
-	private long lSelectedGameId = 0L;
 	ArrayList<String> lGameTitles;
 	private GameListAdapter adapter;
-	private String sOwner = "arlearn5";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,7 +111,7 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 			
 		Intent intent = null;				
 		GameListRecord glr = (GameListRecord) genericListRecord;
-		lSelectedGameId = vGames.get(position).getGameId();
+		long lSelectedGameId = vGames.get(position).getGameId();
 		
 //		switch (glr.getAction()) {
 //		case 0:
