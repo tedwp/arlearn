@@ -36,7 +36,8 @@
 		<activity android:name=".activities.LoginActivity" android:label="@string/loginHeader" />
 		<activity android:name=".activities.NfcScanOnDemandActivity" android:label="@string/loginHeader" />
 		<activity android:name=".activities.ListExcursionsActivity" android:label="@string/listExcursionsHeader"/>
-		<activity android:name=".activities.ListGamesActivity" android:label="@string/listExcursionsHeader"/>
+		<activity android:name=".activities.ListGamesActivity" android:label="@string/listGamesHeader"/>
+		<activity android:name=".activities.NewGameActivity" android:label="@string/newGameHeader"/>
 		<activity android:name=".activities.ListMessagesActivity" android:label="@string/listMessagesHeader" />
 		<activity android:name=".activities.MapViewActivity" android:label="@string/mapViewHeader" />
 		<activity android:name=".activities.OsmMapViewActivity" android:label="@string/mapViewHeader" />
@@ -115,7 +116,6 @@
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" ></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_GPS"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"></uses-permission>
-	<uses-permission android:name="android.permission.DEVICE_POWER"></uses-permission>
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.VIBRATE" />

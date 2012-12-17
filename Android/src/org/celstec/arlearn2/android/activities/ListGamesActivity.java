@@ -169,9 +169,8 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 	}	
 
 	public void onButtonNewGameClick(View v) {
-//		Intent intent = new Intent(ListGamesActivity.this, NewGameActivity.class);
-//		intent.putExtra("existingGames", vGames);
-//		ListGamesActivity.this.startActivity(intent);			
+		Intent intent = new Intent(ListGamesActivity.this, NewGameActivity.class);
+		ListGamesActivity.this.startActivity(intent);			
 	}	
 
 

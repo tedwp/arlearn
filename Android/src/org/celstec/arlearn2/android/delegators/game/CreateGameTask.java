@@ -37,7 +37,7 @@ public class CreateGameTask implements NetworkTask {
 		return gameTitle;
 	}
 
-	public void setGameTitle(String game) {
+	public void setGameTitle(String gameTitle) {
 		this.gameTitle = gameTitle;
 	}
 
