@@ -34,6 +34,10 @@ public class GameDelegator {
 		(new SynchronizeGamesTask(ctx, gameId)).addTaskToQueue(ctx);
 	}
 	
+	public void fetchMyGamesFromServer(Context ctx) {
+		(new SynchronizeGamesTask(ctx)).addTaskToQueue(ctx);
+	}
+	
 	public void saveServerGamesToAndroidDb(final Context ctx, final GamesList gl) {
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
 		m.obj = new DBAdapter.DatabaseTask() {
