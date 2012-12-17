@@ -7,6 +7,7 @@ import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.OpenBadge;
 import org.celstec.arlearn2.beans.generalItem.ScanTag;
+import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.SingleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
@@ -16,6 +17,7 @@ import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.genItemActivities.OpenBadgeActivity;
 import org.celstec.arlearn2.android.genItemActivities.ScanTagActivity;
 import org.celstec.arlearn2.android.genItemActivities.SingleChoiceActivity;
+import org.celstec.arlearn2.android.genItemActivities.SingleChoiceImageActivity;
 import org.celstec.arlearn2.android.genItemActivities.VideoObjectActivity;
 import org.celstec.arlearn2.android.genItemActivities.YoutubeObjectActivity;
 
@@ -45,6 +47,9 @@ public class GIActivitySelector {
 		}
 		if (gi.getType().equals(SingleChoiceTest.class.getName())) {
 			 return SingleChoiceActivity.class;
+		}
+		if (gi.getType().equals(SingleChoiceImageTest.class.getName())) {
+			 return SingleChoiceImageActivity.class;
 		}
 		if (gi.getType().equals(AudioObject.class.getName())) {
 			return  AudioObjectActivity.class;

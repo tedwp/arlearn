@@ -309,7 +309,7 @@ public class MultiplechoiceCanvas extends GeneralItemCanvas {
 		return result;
 	}
 
-	private void generateAnswer(JSONArray ansArray, String textId, String cbId, int i) {
+	protected void generateAnswer(JSONArray ansArray, String textId, String cbId, int i) {
 		if (form2.getValue(textId) != null) {
 			JSONObject answer = new JSONObject();
 			answer.put("answer", new JSONString(form2.getValueAsString(textId)));

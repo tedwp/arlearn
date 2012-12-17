@@ -519,6 +519,9 @@ public abstract class GeneralItemCanvas extends VStack{
 		if ("org.celstec.arlearn2.beans.generalItem.SingleChoiceTest".equals(itemId)) {
 			return new SingleChoiceCanvas(roles);	
 		}
+		if ("org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest".equals(itemId)) {
+			return new SingleChoiceImageCanvas(roles);	
+		}
 		if (Authoring.hidden && "org.celstec.arlearn2.beans.generalItem.OpenUrl".equals(itemId)) {
 			return new OpenUrlCanvas(roles);	
 		}

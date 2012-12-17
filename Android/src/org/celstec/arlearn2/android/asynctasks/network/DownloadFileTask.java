@@ -22,6 +22,9 @@ import org.celstec.arlearn2.android.db.MediaCacheGeneralItems;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem;
+import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 
 import android.content.ContentValues;
@@ -102,6 +105,13 @@ public class DownloadFileTask implements NetworkTask{
 		}
 		if (gi instanceof VideoObject) {
 			return ((VideoObject) gi).getVideoFeed();
+		}
+		if (gi instanceof SingleChoiceImageTest) {
+			SingleChoiceImageTest test = (SingleChoiceImageTest) gi;
+			int i = 0;
+			for (MultipleChoiceAnswerItem imageAnswer: test.getAnswers()){
+				return ((MultipleChoiceImageAnswerItem) imageAnswer).getImageUrl();
+			}
 		}
 		return null;
 	}

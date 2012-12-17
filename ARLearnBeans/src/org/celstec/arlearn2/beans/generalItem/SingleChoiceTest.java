@@ -44,7 +44,7 @@ public class SingleChoiceTest extends GeneralItem {
 	
 	public boolean equals(Object obj) {
 		if (!super.equals(obj)) return false;
-		MultipleChoiceTest other = (MultipleChoiceTest ) obj;
+		SingleChoiceTest other = (SingleChoiceTest ) obj;
 		return 
 			nullSafeEquals(getAnswers(), other.getAnswers()) && 
 			nullSafeEquals(getText(), other.getText()) && 
@@ -56,7 +56,7 @@ public class SingleChoiceTest extends GeneralItem {
 
 		@Override
 		public JSONObject toJSON(Object bean) {
-			MultipleChoiceTest mct = (MultipleChoiceTest) bean;
+			SingleChoiceTest mct = (SingleChoiceTest) bean;
 			JSONObject returnObject = super.toJSON(bean);
 			try {
 				if (mct.getText() != null) returnObject.put("text", mct.getText());
@@ -73,8 +73,8 @@ public class SingleChoiceTest extends GeneralItem {
 	public static GeneralItemDeserializer deserializer = new GeneralItemDeserializer(){
 
 		@Override
-		public MultipleChoiceTest toBean(JSONObject object) {
-			MultipleChoiceTest mct = new MultipleChoiceTest();
+		public SingleChoiceTest toBean(JSONObject object) {
+			SingleChoiceTest mct = new SingleChoiceTest();
 			try {
 				initBean(object, mct);
 			} catch (JSONException e) {
@@ -85,7 +85,7 @@ public class SingleChoiceTest extends GeneralItem {
 		
 		public void initBean(JSONObject object, Bean genericBean) throws JSONException {
 			super.initBean(object, genericBean);
-			MultipleChoiceTest mctItem = (MultipleChoiceTest) genericBean;
+			SingleChoiceTest mctItem = (SingleChoiceTest) genericBean;
 			if (object.has("richText")) mctItem.setRichText(object.getString("richText"));
 			if (object.has("text")) mctItem.setText(object.getString("text"));
 			if (object.has("answers")) mctItem.setAnswers(ListDeserializer.toBean(object.getJSONArray("answers"), MultipleChoiceAnswerItem.class));
