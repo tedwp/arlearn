@@ -29,7 +29,7 @@ public class CreateGameTask implements NetworkTask {
 
 		Message m = Message.obtain(nwHandler);
 		m.obj = this;
-		m.what = NetworkTaskHandler.CREATE_GAME;
+		m.what = NetworkTaskHandler.GAME_CREATE;
 		m.sendToTarget();
 	}
 	

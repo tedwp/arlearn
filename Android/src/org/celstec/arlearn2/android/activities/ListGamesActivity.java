@@ -13,6 +13,8 @@ import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
 import org.celstec.arlearn2.beans.game.Game;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -111,34 +113,29 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 			
 		Intent intent = null;				
 		GameListRecord glr = (GameListRecord) genericListRecord;
+		final Game selectedGame = vGames.get(position);
 		long lSelectedGameId = vGames.get(position).getGameId();
 		
-//		switch (glr.getAction()) {
-//		case 0:
-//			// Delete game
-//			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//			builder.setMessage("Are you sure you to delete game "+vGames[position].getTitle()+"?")
-//			       .setCancelable(false)
-//			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//			           public void onClick(DialogInterface dialog, int id) {
-//			        	   
-//			        	   	Log.d(CLASSNAME, "Clicked yes "+lSelectedGameId);
-//			        	   	Intent in = new Intent(ListGamesActivity.this, DeleteGameActivity.class);
-//			    			in.putExtra("selectedGameId", lSelectedGameId);
-//			    			ListGamesActivity.this.startActivity(in);
-//			           }
-//			       })
-//			       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//			           public void onClick(DialogInterface dialog, int id) {
-//			        	   
-//			        	   	Log.d(CLASSNAME, "Clicked NO "+lSelectedGameId);
-//			                dialog.cancel();
-//			           }
-//			       });
-//			AlertDialog alert = builder.create();
-//			alert.show();
-//									
-//			break;
+		switch (glr.getAction()) {
+		case 0:
+			// Delete game
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Are you sure you to delete game "+selectedGame.getTitle()+"?")
+			       .setCancelable(false)
+			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			        	   GameDelegator.getInstance().deleteGame(ListGamesActivity.this, selectedGame.getGameId());
+			           }
+			       })
+			       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			                dialog.cancel();
+			           }
+			       });
+			AlertDialog alert = builder.create();
+			alert.show();
+									
+			break;
 //		case 1:
 //			// Edit game
 //			Log.d(CLASSNAME, "Clicked edit game "+position);
@@ -162,9 +159,9 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 //			ListGamesActivity.this.startActivity(intent);			
 //			break;
 //
-//		default:
-//			break;
-//		}
+		default:
+			break;
+		}
 		
 	}	
 

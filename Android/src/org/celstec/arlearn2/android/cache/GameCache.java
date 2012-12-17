@@ -59,4 +59,21 @@ public class GameCache extends GenericCache {
 		}
 		return result;
 	}
+
+	public void deleteGame(Long gameId) {
+		synchronized (gameMap) {
+			gameMap.remove(gameId);
+		}
+		synchronized (myGames) {
+			for (String account: myGames.keySet()) {
+				Iterator<Game>it = myGames.get(account).iterator();
+				while (it.hasNext()) {
+					if (it.next().getGameId().equals(gameId)) {
+						it.remove();
+					}
+				}
+			}
+		}
+		
+	}
 }
