@@ -22,7 +22,7 @@ import android.widget.ListView;
 
 public class ListGamesActivity extends GeneralActivity implements ListitemClickInterface {
 	
-	List<Game> vGames = null;
+	Game [] vGames = null;
 	ArrayList<String> lGameTitles;
 	private GameListAdapter adapter;
 
@@ -94,10 +94,10 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 		adapter = new GameListAdapter(this, R.layout.listgamescreen, alGenericListRecord);
 		adapter.setOnListItemClickCallback(this);
 		
-		vGames = GameCache.getInstance().getGames(PropertiesAdapter.getInstance(this).getUsername());
+		vGames = GameCache.getInstance().getGames(PropertiesAdapter.getInstance(this).getUsername()).toArray(new Game[]{});
 		
 		if (vGames != null) {
-			if (!vGames.isEmpty()){
+			if (vGames.length != 0){
 				for (Game game: vGames) {
 					GameListRecord r = new GameListRecord(game);
 					lGameTitles.add(game.getTitle());
@@ -113,8 +113,8 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 			
 		Intent intent = null;				
 		GameListRecord glr = (GameListRecord) genericListRecord;
-		final Game selectedGame = vGames.get(position);
-		long lSelectedGameId = vGames.get(position).getGameId();
+		final Game selectedGame = vGames[position];
+		long lSelectedGameId = selectedGame.getGameId();
 		
 		switch (glr.getAction()) {
 		case 0:

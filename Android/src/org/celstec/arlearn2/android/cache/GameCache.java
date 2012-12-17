@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.celstec.arlearn2.beans.game.Game;
 
@@ -13,7 +15,7 @@ public class GameCache extends GenericCache {
 	private static GameCache instance;
 
 	private HashMap<Long, Game> gameMap = new HashMap<Long, Game>();
-	private HashMap<String, HashSet<Game>> myGames = new HashMap<String, HashSet<Game>>();
+	private HashMap<String, HashMap<Long, Game>> myGames = new HashMap<String, HashMap<Long, Game>>();
 
 	private GameCache() {
 	}
@@ -45,17 +47,17 @@ public class GameCache extends GenericCache {
 		putGame(g.getGameId(), g);
 		if (g.getOwner() != null) {
 			if (!myGames.containsKey(g.getOwner()))
-				myGames.put(g.getOwner(), new HashSet<Game>());
-			myGames.get(g.getOwner()).add(g);
+				myGames.put(g.getOwner(), new HashMap<Long, Game>());
+			myGames.get(g.getOwner()).put(g.getGameId(), g);
 		}
 	}
 	
-	public List<Game> getGames(String account) {
-		if (myGames.get(account) == null) return new ArrayList<Game>();
-		ArrayList<Game> result =  new ArrayList<Game>();
-		Iterator<Game> it = myGames.get(account).iterator();
+	public Set<Game> getGames(String account) {
+		if (myGames.get(account) == null) return new TreeSet<Game>();
+		TreeSet<Game> result =  new TreeSet<Game>();
+		Iterator<Long> it = myGames.get(account).keySet().iterator();
 		while (it.hasNext()) {
-			result.add(it.next());
+			result.add(myGames.get(account).get(it.next()));
 		}
 		return result;
 	}
@@ -66,11 +68,8 @@ public class GameCache extends GenericCache {
 		}
 		synchronized (myGames) {
 			for (String account: myGames.keySet()) {
-				Iterator<Game>it = myGames.get(account).iterator();
-				while (it.hasNext()) {
-					if (it.next().getGameId().equals(gameId)) {
-						it.remove();
-					}
+				if (myGames.get(account).containsKey(gameId)) {
+					myGames.get(account).remove(gameId);
 				}
 			}
 		}
