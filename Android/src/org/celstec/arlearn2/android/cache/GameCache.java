@@ -1,6 +1,10 @@
 package org.celstec.arlearn2.android.cache;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 import org.celstec.arlearn2.beans.game.Game;
 
@@ -9,6 +13,7 @@ public class GameCache extends GenericCache {
 	private static GameCache instance;
 
 	private HashMap<Long, Game> gameMap = new HashMap<Long, Game>();
+	private HashMap<String, HashSet<Game>> myGames = new HashMap<String, HashSet<Game>>();
 
 	private GameCache() {
 	}
@@ -38,6 +43,20 @@ public class GameCache extends GenericCache {
 
 	public void putGame(Game g) {
 		putGame(g.getGameId(), g);
-		
+		if (g.getOwner() != null) {
+			if (!myGames.containsKey(g.getOwner()))
+				myGames.put(g.getOwner(), new HashSet<Game>());
+			myGames.get(g.getOwner()).add(g);
+		}
+	}
+	
+	public List<Game> getGames(String account) {
+		if (myGames.get(account) == null) return new ArrayList<Game>();
+		ArrayList<Game> result =  new ArrayList<Game>();
+		Iterator<Game> it = myGames.get(account).iterator();
+		while (it.hasNext()) {
+			result.add(it.next());
+		}
+		return result;
 	}
 }
