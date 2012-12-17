@@ -8,6 +8,8 @@
     <string name="login">LOGIN</string>
     <string name="logout">LOGOUT</string>
     <string name="exit">EXIT</string>
+    <string name="creategame">GAMES</string>
+    
     
      <!--Login Activity Strings-->
     <string name="loginHeader">Aanmelden met uw Google account</string>
@@ -65,6 +67,35 @@
     <string name="offlineDownloadExplanation">Deze game ondersteunt het downloaden van map tegels, zodat deze app de kaart kan blijven gebruiken zelfs wanneer er geen netwerk connectie meer is. Klik op de onderstaande knop om alle relevante kaarten te downloaden. Let op, dit kan een aanzienlijke hoeveelheid opslagcapaciteit vergen</string>    
     <string name="downloadMap">Download kaart</string>
     <string name="deleteMap">Verwijder kaart</string>
+    
+    <!--Game authoring Activity Strings-->
+    <string name="buttonNewGameText">New Game</string>
+    <string name="buttonNewGeneralItemText">New Item</string>
+    <string name="buttonNewRunText">New Run</string>
+    <string name="buttonNewTeamText">New Team</string>    
+    <string name="listGamesHeader">Game List</string>
+    <string name="listRunsHeader">Run List</string>
+	<string name="listTeamsHeader">Teams List</string>
+	<string name="newTeamHeader">New Team</string>
+	<string name="editTeamHeader">Team description</string>
+	<string name="newRunHeader">New run</string>
+	<string name="editRunHeader">Run description</string>    
+    <string name="newGameHeader">New Game</string>
+    <string name="editGameHeader">Game description</string>
+    <string name="deleteGameHeader">Delete game</string>
+    <string name="listGeneralItemHeader">General Items List</string>
+    <string name="newGeneralItemHeader">General Item</string>
+    <string name="tvName">Name</string>
+    <string name="tvAuthor">Author</string>
+    <string name="tvGIName">Item name</string>
+    <string name="tvGIDesc">Description</string>
+    <string name="tvGILatitude">Latitude</string>
+    <string name="tvGILongitude">Longitude</string>
+    <string name="tvGIOrder">Order</string>
+    <string name="cbGISabd">Simple action based dependency</string>
+    <string name="cbGIAl">Automatically launch</string>
+    <string name="cbGIOq">Open question</string>
+    <string name="tvGIUrl">URL</string>
     
      <!--Todo-->
      <string name="makeAnnotation">Wil je hier een aantekening maken?</string>

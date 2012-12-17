@@ -59,6 +59,7 @@ public class SplashScreenActivity extends GeneralActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			menu.add(0, MenuHandler.LOGOUT, 0, getString(R.string.logout));
+			menu.add(0, MenuHandler.GAME_AUTHOR, 0, getString(R.string.creategame));
 		} else {
 			menu.add(0, MenuHandler.LOGIN, 0, getString(R.string.login));
 		}

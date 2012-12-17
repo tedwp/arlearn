@@ -7,6 +7,7 @@ import org.celstec.arlearn2.android.activities.DownloadOSMMapTilesActivity;
 import org.celstec.arlearn2.android.activities.GenericMapViewActivity;
 import org.celstec.arlearn2.android.activities.IntentIntegrator;
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
+import org.celstec.arlearn2.android.activities.ListGamesActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.LoginActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
@@ -50,6 +51,8 @@ public class MenuHandler {
 	public static final int REFRESH = 8;
 	public static final int SCAN = 9;
 	public static final int DOWNLOAD_MAP_TILES = 10;
+	public static final int GAME_AUTHOR = 11;
+
 
 	private Activity context;
 	private PropertiesAdapter pa;
@@ -77,6 +80,9 @@ public class MenuHandler {
 //			context.startService(intent);
 			context.finish();
 			break;
+		case GAME_AUTHOR:
+			context.startActivity(new Intent(context, ListGamesActivity.class));
+			break;	
 		case MESSAGES:
 			context.startActivity(new Intent(context, ListMessagesActivity.class));
 			break;
