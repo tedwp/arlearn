@@ -101,7 +101,7 @@ public class DBAdapter {
 	}
 	
 	public class DbOpenHelper extends SQLiteOpenHelper {
-	    private static final int DATABASE_VERSION = 115;
+	    private static final int DATABASE_VERSION = 117;
 	    private static final String DATABASE_NAME = "arlearn2";
 	   
 	    DbOpenHelper(Context context) {
@@ -116,12 +116,12 @@ public class DBAdapter {
 	    }
 
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//			Log.w("upgrade", "Upgrading database from version " + oldVersion 
-//	                  + " to "+ newVersion);
-//			for (int i = 0; i < allTables.length; i++) {
-//				if (allTables[i].dropStatement() != null) db.execSQL(allTables[i].dropStatement());
-//			}  
-//            onCreate(db);
+			Log.w("upgrade", "Upgrading database from version " + oldVersion 
+	                  + " to "+ newVersion);
+			for (int i = 0; i < allTables.length; i++) {
+				if (allTables[i].dropStatement() != null) db.execSQL(allTables[i].dropStatement());
+			}  
+            onCreate(db);
 		}
 
 	}

@@ -73,4 +73,29 @@ public class GenericListRecord {
 		return v;
 	}
 	
+	public boolean equals(GenericListRecord other) {
+		if (messageDetail == null) {
+			if (other.messageDetail != null)
+				return false;
+		} else {
+			if (!messageDetail.equals(other.messageDetail))
+				return false;
+		}
+		if (messageHeader == null) {
+			if (other.messageHeader != null)
+				return false;
+		} else {
+			if (!messageHeader.equals(other.messageHeader))
+				return false;
+		}
+		if (rightDetail == null) {
+			if (other.rightDetail != null)
+				return false;
+		} else {
+			if (!rightDetail.equals(other.rightDetail))
+				return false;
+		}
+		return true;
+	}
+	
 }

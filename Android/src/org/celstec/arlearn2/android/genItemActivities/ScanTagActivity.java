@@ -5,6 +5,7 @@ import org.celstec.arlearn2.android.activities.GeneralActivity;
 import org.celstec.arlearn2.android.activities.IntentIntegrator;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.ActionsDelegator;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.OpenBadge;
@@ -97,7 +98,7 @@ public class ScanTagActivity extends GeneralActivity {
 	@Override
 	protected void newNfcAction(String action) {
 		PropertiesAdapter pa = getMenuHandler().getPropertiesAdapter();
-		ActionDispatcher.publishAction(this, action, pa.getCurrentRunId(), pa.getUsername(), scanTag.getId(), scanTag.getClass().getName());
+		ActionsDelegator.getInstance().publishAction(this, action, pa.getCurrentRunId(), pa.getUsername(), scanTag.getId(), scanTag.getClass().getName());
 		this.finish();
 	}
 }

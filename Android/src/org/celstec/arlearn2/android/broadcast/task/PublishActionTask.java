@@ -5,14 +5,12 @@ import org.celstec.arlearn2.android.asynctasks.network.NetworkTask;
 import org.celstec.arlearn2.android.asynctasks.network.NetworkTaskHandler;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.android.db.MyActions.PublishAction;
-import org.celstec.arlearn2.android.service.GeneralItemDependencyHandler;
+import org.celstec.arlearn2.android.delegators.ActionsDelegator;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.client.ActionClient;
 
 import android.content.Context;
 import android.os.Message;
-import android.util.Log;
 
 public class PublishActionTask implements NetworkTask {
 
@@ -38,10 +36,12 @@ public class PublishActionTask implements NetworkTask {
 		Action result = ac.publishAction(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), action);
 		result.setTime(action.getTime());
 		if (result.getError() == null) {
-			DBAdapter.getAdapter(ctx).getMyActions().confirmReplicated(result);
+			ActionsDelegator.getInstance().confirmReplicated(ctx, result);
+//			DBAdapter.getAdapter(ctx).getMyActions().confirmReplicated(result);
 		} else {
 			if (result.getError() != null && "User not found".equals(result.getError()))
-				DBAdapter.getAdapter(ctx).getMyActions().confirmReplicated(result);
+				ActionsDelegator.getInstance().confirmReplicated(ctx, result);
+//				DBAdapter.getAdapter(ctx).getMyActions().confirmReplicated(result);
 			// this is not elegant... but its mean that the user was deleted, so don't try to sync in future
 		}
 

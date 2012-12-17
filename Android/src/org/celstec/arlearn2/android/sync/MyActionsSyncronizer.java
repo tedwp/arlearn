@@ -41,21 +41,21 @@ public class MyActionsSyncronizer extends GenericSyncroniser {
 		
 	}
 	
-	@Deprecated
-	private void publishAction(DBAdapter db, List<Action> responses) {
-		for (Action action: responses) {
-			ActionClient ac = ActionClient.getActionClient();
-			Action result = ac.publishAction(pa.getFusionAuthToken(), action);
-			MyActions dbAdapter = ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER));
-			if (result.getError()== null) {
-				dbAdapter.confirmReplicated(result);	
-			} else {
-				if (result.getError() !=null && "User not found".equals(result.getError())) 				
-					dbAdapter.confirmReplicated(result);	 //this is not elegant... but it mean the user was deleted, so don't try to sync in future
-				increaseDelay();
-			}
-		}
-	}
+//	@Deprecated
+//	private void publishAction(DBAdapter db, List<Action> responses) {
+//		for (Action action: responses) {
+//			ActionClient ac = ActionClient.getActionClient();
+//			Action result = ac.publishAction(pa.getFusionAuthToken(), action);
+//			MyActions dbAdapter = ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER));
+//			if (result.getError()== null) {
+//				dbAdapter.confirmReplicated(result);	
+//			} else {
+//				if (result.getError() !=null && "User not found".equals(result.getError())) 				
+//					dbAdapter.confirmReplicated(result);	 //this is not elegant... but it mean the user was deleted, so don't try to sync in future
+//				increaseDelay();
+//			}
+//		}
+//	}
 	public void setDelay(int seconds) {
 		super.setDelay(seconds);
 	}

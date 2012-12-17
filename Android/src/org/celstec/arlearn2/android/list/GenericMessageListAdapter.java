@@ -55,12 +55,24 @@ public class GenericMessageListAdapter extends ArrayAdapter<GenericListRecord> {
 		});
 		return v;
 	}
+	
 	public void setOnListItemClickCallback(ListitemClickInterface callback) {
 		this.callback = callback;
 	}
 
 	protected int listLineResourceId() {
 		return R.layout.list_map_generic_line;
+	}
+	
+	public boolean isEqual(ArrayList<GenericListRecord> newMessages) {
+		if (messages == null || newMessages == null) return false;
+		if (messages.size() != newMessages.size()) return false;
+		for (int i=0; i< messages.size(); i++) {
+			if (!messages.get(i).equals(newMessages.get(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

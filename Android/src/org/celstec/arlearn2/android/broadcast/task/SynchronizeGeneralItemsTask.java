@@ -21,7 +21,6 @@ import org.celstec.arlearn2.android.db.GeneralItemVisibility;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.db.DBAdapter.DatabaseHandler;
-import org.celstec.arlearn2.android.db.MyActions.PublishAction;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.service.GeneralItemDependencyHandler;
 import org.celstec.arlearn2.android.sync.MediaCacheSyncroniser;

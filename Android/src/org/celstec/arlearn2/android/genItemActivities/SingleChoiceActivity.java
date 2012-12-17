@@ -7,6 +7,7 @@ import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
 import org.celstec.arlearn2.android.broadcast.ResponseService;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.ActionsDelegator;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
@@ -87,8 +88,8 @@ public class SingleChoiceActivity extends GeneralActivity {
 			responseValueJson.put("answer", selected.getAnswer());
 			if (selected.getId() != null) {
 				PropertiesAdapter pa = getMenuHandler().getPropertiesAdapter();
-				ActionDispatcher.publishAction(SingleChoiceActivity.this, "answer_" + selected.getId(), pa.getCurrentRunId(), pa.getUsername(), mct.getId(), mct.getType());
-				ActionDispatcher.publishAction(SingleChoiceActivity.this, "answer_given", pa.getCurrentRunId(), pa.getUsername(), mct.getId(), mct.getType());
+				ActionsDelegator.getInstance().publishAction(SingleChoiceActivity.this, "answer_" + selected.getId(), pa.getCurrentRunId(), pa.getUsername(), mct.getId(), mct.getType());
+				ActionsDelegator.getInstance().publishAction(SingleChoiceActivity.this, "answer_given", pa.getCurrentRunId(), pa.getUsername(), mct.getId(), mct.getType());
 
 			}
 			r.setResponseValue(responseValueJson.toString());

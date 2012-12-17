@@ -4,6 +4,7 @@ import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.ActionsDelegator;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
@@ -124,7 +125,8 @@ public class AnswerQuestionActivity extends AnnotateActivity {
 
 	public void publish() {
 		PropertiesAdapter pa = new PropertiesAdapter(this);
-		ActionDispatcher.publishAction(this, "answer_given", runId, pa.getUsername(), generalItemId, null);
+		ActionsDelegator.getInstance().publishAction(this, "answer_given", runId, pa.getUsername(), generalItemId, null);
+//		ActionDispatcher.publishAction(this, "answer_given", runId, pa.getUsername(), generalItemId, null);
 		super.publish();
 	}
 

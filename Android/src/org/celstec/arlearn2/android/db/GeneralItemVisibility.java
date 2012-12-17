@@ -116,6 +116,15 @@ public class GeneralItemVisibility extends GenericDbTable {
 		return result;
 	}
 	
+	public boolean isVisible(long itemId, long runId) {
+		Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), new String[] {VISIBILITY_STATUS}, VISIBILITY_STATUS + " = ? and "+RUNID + " = ? and "+GENERAL_ITEM_ID + " = ?", new String[]{""+VISIBLE, ""+runId, ""+itemId}, null, null, null, null);
+		try {
+			return mCursor.getColumnCount() >= 1;
+		} finally {
+			mCursor.close();
+		}
+	}
+	
 	public void queryAll(DBAdapter db, long runId) {
 		HashMap<Long, GeneralItem> result = (HashMap<Long, GeneralItem>) GeneralItemsCache.getInstance().getGeneralItemsWithGameId(RunCache.getInstance().getGameId(runId)).clone();
 		Run[] resultRuns = null;

@@ -1,6 +1,7 @@
 package org.celstec.arlearn2.android.genItemActivities;
 
 import org.celstec.arlearn2.android.activities.IGeneralActivity;
+import org.celstec.arlearn2.android.delegators.ActionsDelegator;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.android.service.IAudioPlayerCallback;
 import org.celstec.arlearn2.android.service.IAudioPlayerService;
@@ -145,7 +146,7 @@ public class AudioPlayerClient extends IAudioPlayerCallback.Stub{
 	public void stop(String id) throws RemoteException {
 		if (completeAction != null) {
 			completeAction.setTime(System.currentTimeMillis());
-			ActionDispatcher.publishAction(ctx, completeAction);
+			ActionsDelegator.getInstance().publishAction((Context) ctx, completeAction);
 		}
 		setStatus(STOPPED);
 	}

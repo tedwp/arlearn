@@ -148,42 +148,31 @@ public class MyActions extends GenericDbTable {
 	}
 	
 
-	public void publishAction(Action action) {
-		PublishAction pa = new PublishAction();
-		pa.action = action;
-		Message m = Message.obtain(DBAdapter.getDatabaseThread(db.getContext()));
-		m.obj = pa;
-		m.sendToTarget();
-	}
-
-	public class PublishAction implements DBAdapter.DatabaseTask{
-		public Action action;
-		
-		@Override
-		public void execute(DBAdapter db) {
-			insert(action, false);
-			for (Action action: queryActionsNotReplicated()) {
-				(new PublishActionTask(db.getContext(), action)).addTaskToQueue(db.getContext());
-			}
-		}
-
-	}
+//	public void publishAction(Action action) {
+//		PublishAction pa = new PublishAction();
+//		pa.action = action;
+//		Message m = Message.obtain(DBAdapter.getDatabaseThread(db.getContext()));
+//		m.obj = pa;
+//		m.sendToTarget();
+//	}
+//
+//	public class PublishAction implements DBAdapter.DatabaseTask{
+//		public Action action;
+//		
+//		@Override
+//		public void execute(DBAdapter db) {
+//			insert(action, false);
+//			for (Action action: queryActionsNotReplicated()) {
+//				(new PublishActionTask(db.getContext(), action)).addTaskToQueue(db.getContext());
+//			}
+//		}
+//
+//	}
 	
-	public void confirmReplicated(final Action action) {
-		DBAdapter.DatabaseTask task = new DBAdapter.DatabaseTask() {
-			
-			@Override
-			public void execute(DBAdapter db) {
-				ContentValues newValue = new ContentValues();
-				newValue.put(REPLICATED, true);
-				db.getSQLiteDb().update(getTableName(), newValue, TIMESTAMP + "= ?", new String[] { "" + action.getTime() });
-			}
-		};
-		
-		Message m = Message.obtain(DBAdapter.getDatabaseThread(db.getContext()));
-		m.obj = task;
-		m.sendToTarget();
-
+	public void confirmReplicated(long timeStamp, String action) {
+		ContentValues newValue = new ContentValues();
+		newValue.put(REPLICATED, true);
+		db.getSQLiteDb().update(getTableName(), newValue, TIMESTAMP + "= ? and "+ACTION + " = ?", new String[] { "" + timeStamp , action });
 	}
 
 }

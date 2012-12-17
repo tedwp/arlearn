@@ -19,6 +19,7 @@ import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.DBAdapter.DatabaseHandler;
 import org.celstec.arlearn2.android.db.GeneralItemVisibility;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.VisibleGeneralItemsDelegator;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
@@ -168,27 +169,30 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 				final long satisfiedAt = satisfiedAtTemp;
 				final long itemId = generalItem.getId();
 				if (satisfiedAt != -1) {
-					long currentTime = System.currentTimeMillis();
-					long satisfiedAtDelta = currentTime - satisfiedAt;
-					db.getGeneralItemVisibility().setVisibilityStatus(itemIds[i], runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
-					if (satisfiedAtDelta > 0 && satisfiedAtDelta < 30000) {
-						broadcastTroughIntent(generalItem, db.getContext(), runId);
-					} else {
-						ForceUpdateTask.scheduleEvent(db.getContext(), runId, false, null);
-//						DBAdapter.DatabaseTask task = new DBAdapter.DatabaseTask() {
-//
-//							@Override
-//							public void execute(DBAdapter db) {
-//								db.getGeneralItemVisibility().setVisibilityStatus(generalItem.getId(), runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
-//								broadcastTroughIntent(generalItem, db.getContext(), runId);
-//
-//							}
-//
-//						};
-//						Message m = Message.obtain();
-//						m.obj = task;
-//						DBAdapter.getDatabaseThread(db.getContext()).sendMessageAtTime(m, satisfiedAt);
-					}
+					generalItem.setVisibleAt(satisfiedAt);
+					VisibleGeneralItemsDelegator.getInstance().checkRoleAndMakeItemVisible(db, runId, generalItem);
+					
+//					long currentTime = System.currentTimeMillis();
+//					long satisfiedAtDelta = currentTime - satisfiedAt;
+//					db.getGeneralItemVisibility().setVisibilityStatus(itemIds[i], runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
+//					if (satisfiedAtDelta > 0 && satisfiedAtDelta < 30000) {
+//						broadcastTroughIntent(generalItem, db.getContext(), runId);
+//					} else {
+//						ForceUpdateTask.scheduleEvent(db.getContext(), runId, false, null);
+////						DBAdapter.DatabaseTask task = new DBAdapter.DatabaseTask() {
+////
+////							@Override
+////							public void execute(DBAdapter db) {
+////								db.getGeneralItemVisibility().setVisibilityStatus(generalItem.getId(), runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
+////								broadcastTroughIntent(generalItem, db.getContext(), runId);
+////
+////							}
+////
+////						};
+////						Message m = Message.obtain();
+////						m.obj = task;
+////						DBAdapter.getDatabaseThread(db.getContext()).sendMessageAtTime(m, satisfiedAt);
+//					}
 				}
 			}
 		}

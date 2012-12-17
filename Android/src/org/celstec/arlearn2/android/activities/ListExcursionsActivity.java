@@ -8,6 +8,8 @@ import org.celstec.arlearn2.android.broadcast.RunReceiver;
 import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.ActionsDelegator;
+import org.celstec.arlearn2.android.delegators.RunDelegator;
 
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
@@ -42,20 +44,20 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 			this.finish();
 		} else {
 			setContentView(R.layout.listexcursionscreen);
-			syncRuns();
+			RunDelegator.getInstance().synchronizeRunsWithServer(this);
+//			syncRuns();
 		}
 	}
 	
-	private void syncRuns() {
-		Intent runIntent = new Intent();
-		runIntent.setAction(RunReceiver.action);
-		sendBroadcast(runIntent);
-	}
+//	private void syncRuns() {
+////		Intent runIntent = new Intent();
+////		runIntent.setAction(RunReceiver.action);
+////		sendBroadcast(runIntent);
+//	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		initFromDb();
 		renderExcursionList();
 	}
 
@@ -68,7 +70,6 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 		super.onBroadcastMessage(bundle, render);
 		if (render) {
 			checkAuthentication();
-			initFromDb();
 			renderExcursionList();
 		}
 	}
@@ -81,7 +82,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 
 	private void renderExcursionList() {
 		ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
-		runs = RunCache.getInstance().getRuns();
+		runs = RunDelegator.getInstance().getRuns();
 		if (runs != null) {
 
 			for (int i = 0; i < runs.length; i++) {
@@ -90,10 +91,11 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 			}
 		}
 		ListView listView = (ListView) findViewById(R.id.listRuns);
-
-		adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, runsList);
-		adapter.setOnListItemClickCallback(this);
-		listView.setAdapter(adapter);
+		if (adapter == null || !adapter.isEqual(runsList)) {
+			adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, runsList);
+			adapter.setOnListItemClickCallback(this);
+			listView.setAdapter(adapter);
+		}
 	}
 
 	@Override
@@ -122,21 +124,14 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	public void onListItemClick(View v, int position, GenericListRecord messageListRecord) {
 		long id = position;
 		PropertiesAdapter pa = new PropertiesAdapter(this);
-		pa.setCurrentRunId(runs[(int) id].getRunId());
+		Long runId = runs[(int) id].getRunId();
+		pa.setCurrentRunId(runId);
 
 		if (pa.getRunStart(id) == 0)
 			pa.setRunStart(id, System.currentTimeMillis());
 		if (pa.getCurrentRunId() != -1) {
 			Intent i = null;
-//			DBAdapter db = new DBAdapter(this);
-//			db.openForRead();
-			// Game g = (Game)
-			// db.getGameAdapter().queryById(runs[(int)id].getGameId());
 			Game g = GameCache.getInstance().getGame(runs[(int) id].getGameId());
-//			Game g = games.get(runs[(int) id].getGameId());
-			// result = (Run[])
-			// ((RunAdapter)db.table(DBAdapter.RUN_ADAPTER)).query();
-//			db.close();
 			boolean mapView = true;
 			if (g != null && g.getConfig() != null) {
 				mapView = g.getConfig().getMapAvailable();
@@ -145,30 +140,31 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 					intent.putExtra("bean", g.getConfig());
 					startService(intent);
 				}
-			}
-			if (mapView) {
-				int view = Config.MAP_TYPE_GOOGLE_MAPS;
-				if (g.getConfig() != null && g.getConfig().getMapType() != null) {
-					view = g.getConfig().getMapType();
-				}
-				switch (view) {
-				case Config.MAP_TYPE_GOOGLE_MAPS:
-					i = new Intent(this, MapViewActivity.class);
-					break;
-				case Config.MAP_TYPE_OSM:
-					i = new Intent(this, OsmMapViewActivity.class);
-				default:
-					break;
-				}
-				
-			} else {
-				i = new Intent(this, ListMessagesActivity.class);
-			}
+			
+				if (mapView) {
+					int view = Config.MAP_TYPE_GOOGLE_MAPS;
+					if (g.getConfig() != null && g.getConfig().getMapType() != null) {
+						view = g.getConfig().getMapType();
+					}
+					switch (view) {
+					case Config.MAP_TYPE_GOOGLE_MAPS:
+						i = new Intent(this, MapViewActivity.class);
+						break;
+					case Config.MAP_TYPE_OSM:
+						i = new Intent(this, OsmMapViewActivity.class);
+					default:
+						break;
+					}
 
-			// i.putExtra("runId", id);
-			startActivity(i);
-			ActionDispatcher.startRun(ListExcursionsActivity.this);
+				} else {
+					i = new Intent(this, ListMessagesActivity.class);
+				}
 
+				// i.putExtra("runId", id);
+				startActivity(i);
+				// ActionDispatcher.startRun(ListExcursionsActivity.this);
+				ActionsDelegator.getInstance().publishStartRunActon(this, runId, pa.getUsername());
+			}
 			// Intent gimIntent = new Intent();
 			// gimIntent.setAction(GeneralItemReceiver.action);
 			// sendBroadcast(gimIntent);
@@ -178,13 +174,6 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 			// task.execute(new Object[] {});
 		}
 
-	}
-
-	public void initFromDb() {
-		runs = RunCache.getInstance().getRuns();
-		if (runs == null) {
-			return;
-		}
 	}
 
 	public boolean isGenItemActivity() {

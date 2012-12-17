@@ -11,6 +11,7 @@ import org.celstec.arlearn2.android.broadcast.task.SynchronizeRunsTask;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.beans.notification.RunModification;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.RunList;
@@ -40,8 +41,8 @@ public class RunReceiver extends GenericReceiver {
 				databaseOperations(context, bean);
 			}
 		} else {
-			(new SynchronizeRunsTask(context)).addTaskToQueue(context);
-			buildCache(context);
+//			(new SynchronizeRunsTask(context)).addTaskToQueue(context);
+//			buildCache(context);
 		}
 		ActivityUpdater.updateActivities(context, ListExcursionsActivity.class.getCanonicalName());
 
@@ -66,7 +67,8 @@ public class RunReceiver extends GenericReceiver {
 		boolean updateGeneralItems = false;
 		switch (rm.getModificationType()) {
 		case RunModification.CREATED:
-			DBAdapter.getAdapter(ctx).getRunAdapter().insert(rm.getRun());
+			RunDelegator.getInstance().saveServerRunToAndroidDb(ctx, rm.getRun());
+//			DBAdapter.getAdapter(ctx).getRunAdapter().insert(rm.getRun());
 			updateGeneralItems = true;
 			Intent gimIntent = new Intent();
 			gimIntent.putExtra("runId", rm.getRun().getRunId()); // TODO
@@ -80,9 +82,11 @@ public class RunReceiver extends GenericReceiver {
 		case RunModification.DELETED:
 			DBAdapter.getAdapter(ctx).getRunAdapter().delete(rm.getRun().getRunId());
 			break;
-		case RunModification.ALTERED:
+		case RunModification.ALTERED: //TODO do we really want to delete all Run data?
 			DBAdapter.getAdapter(ctx).getRunAdapter().delete(rm.getRun().getRunId());
-			DBAdapter.getAdapter(ctx).getRunAdapter().insert(rm.getRun());
+	
+			RunDelegator.getInstance().saveServerRunToAndroidDb(ctx, rm.getRun());
+//			DBAdapter.getAdapter(ctx).getRunAdapter().insert(rm.getRun());
 
 			updateGeneralItems = true;
 			break;
@@ -95,58 +99,5 @@ public class RunReceiver extends GenericReceiver {
 			ctx.sendBroadcast(gimIntent);
 		}
 	}
-
-	
-
-//	public void syncRunsWithcloud(Context ctx) {
-//		lastSyncWithCloud = System.currentTimeMillis();
-//		SyncWithCloud task = new SyncWithCloud();
-//		task.ctx = ctx;
-//		Message m = Message.obtain(NetworkQueue.getThread());
-//		m.obj = task;
-//		m.sendToTarget();
-
-//	}
-
-//	public class SyncWithCloud implements NetworkTask {
-//
-//		public Context ctx;
-//
-//		@Override
-//		public void execute() {
-//			try {
-//				final RunList rl = RunClient.getRunClient().getRunsParticipate(PropertiesAdapter.getInstance(ctx).getFusionAuthToken());
-//				Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
-//				m.obj = new DBAdapter.DatabaseTask() {
-//
-//					@Override
-//					public void execute(DBAdapter db) {
-//						if (rl.getError() == null) {
-//							db.getRunAdapter().insert(rl.getRuns());
-//						}
-//
-//					}
-//				};
-//				m.sendToTarget();
-//
-//			} catch (ARLearnException ae) {
-//				if (ae.invalidCredentials()) {
-//
-//					Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
-//					m.obj = new DBAdapter.DatabaseTask() {
-//
-//						@Override
-//						public void execute(DBAdapter db) {
-//							setStatusToLogout(db.getContext());
-//						}
-//					};
-//					m.sendToTarget();
-//				}
-//
-//			}
-//		}
-//
-//	}
-
 	
 }

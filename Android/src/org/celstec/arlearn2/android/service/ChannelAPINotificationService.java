@@ -14,6 +14,7 @@ import org.celstec.arlearn2.android.broadcast.GameReceiver;
 import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.broadcast.RunReceiver;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.client.GenericClient;
 import org.codehaus.jettison.json.JSONException;
@@ -269,9 +270,10 @@ public class ChannelAPINotificationService extends Service {
 	}
 	
 	public void resync() {
-		Intent runSyncIntent = new Intent();
-		runSyncIntent.setAction(RunReceiver.action);
-		sendBroadcast(runSyncIntent);
+//		Intent runSyncIntent = new Intent();
+//		runSyncIntent.setAction(RunReceiver.action);
+//		sendBroadcast(runSyncIntent);
+		RunDelegator.getInstance().synchronizeRunsWithServer(this);
 		
 		Intent gameSyncIntent = new Intent();
 		gameSyncIntent.setAction(GameReceiver.action);

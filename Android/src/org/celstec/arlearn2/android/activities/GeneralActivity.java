@@ -2,6 +2,7 @@ package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.ActionsDelegator;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
@@ -94,7 +95,7 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 	}
 	
 	protected void newNfcAction(String action) {
-		ActionDispatcher.publishAction(this, action, pa.getCurrentRunId(), pa.getUsername(), null, null);
+		ActionsDelegator.getInstance().publishAction(this, action, pa.getCurrentRunId(), pa.getUsername(), null, null);
 	}
 
 	public void onBroadcastMessage(Bundle bundle, boolean render) {
@@ -131,8 +132,7 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 			generalItemId = item.getId();
 			generalItemType = item.getClass().getName();
 		}
-		ActionDispatcher.publishAction(this, "read", pa.getCurrentRunId(), pa.getUsername(), generalItemId, generalItemType);
-
+		ActionsDelegator.getInstance().publishAction(this, "read", pa.getCurrentRunId(), pa.getUsername(), generalItemId, generalItemType);
 	}
 	
 	public boolean showStatusLed() {

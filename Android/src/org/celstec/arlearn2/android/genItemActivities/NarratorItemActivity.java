@@ -24,6 +24,7 @@ import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.MyResponses;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.db.DBAdapter.DatabaseHandler;
+import org.celstec.arlearn2.android.delegators.ActionsDelegator;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
@@ -131,7 +132,7 @@ public class NarratorItemActivity extends GeneralActivity {
 			generalItemId = narratorBean.getId();
 			generalItemType = narratorBean.getClass().getName();
 		} 
-		ActionDispatcher.publishAction(this, "read", pa.getCurrentRunId(), pa.getUsername(), generalItemId, generalItemType);
+		ActionsDelegator.getInstance().publishAction(this, "read", pa.getCurrentRunId(), pa.getUsername(), generalItemId, generalItemType);
 
 	}
 
