@@ -3,7 +3,7 @@ package org.celstec.arlearn2.beans.game;
 import java.io.Serializable;
 
 
-public class Game extends GameBean implements Serializable{
+public class Game extends GameBean implements Serializable, Comparable<Game>{
 	
 	private String title;
 	private String creator;
@@ -69,6 +69,12 @@ public class Game extends GameBean implements Serializable{
 
 	}
 	
+	@Override
+	public int compareTo(Game o) {
+		int result = getTitle().compareToIgnoreCase(o.getTitle());
+		if (result != 0) return result;
+		return getGameId().compareTo(o.getGameId());
+	}
 	
 }
 
