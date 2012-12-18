@@ -23,7 +23,6 @@ import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
-import org.celstec.arlearn2.android.util.AppengineFileUploadHandler.CountingOutputStream;
 import org.celstec.arlearn2.client.GenericClient;
 
 import android.content.Context;
