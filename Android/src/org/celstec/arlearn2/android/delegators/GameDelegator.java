@@ -6,14 +6,13 @@ import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
 import org.celstec.arlearn2.android.activities.ListGamesActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.broadcast.task.SynchronizeGamesTask;
-import org.celstec.arlearn2.android.broadcast.task.SynchronizeUserTask;
 import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.delegators.game.CreateGameTask;
 import org.celstec.arlearn2.android.delegators.game.DeleteGameTask;
+import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GamesList;
-import org.celstec.arlearn2.beans.run.RunList;
 
 import android.content.Context;
 import android.os.Message;
@@ -79,17 +78,24 @@ public class GameDelegator {
 	}
 	
 	public void createGame(Context ctx, String gameTitle, String gameAuthor, boolean withMap) {
-		CreateGameTask cgTask = new CreateGameTask(ctx);
-		cgTask.setAuthor(gameAuthor);
-		cgTask.setGameTitle(gameTitle);
-		cgTask.setWithMap(withMap);
-		cgTask.addTaskToQueue(ctx);
+		Game newGame = new Game();
+		newGame.setCreator(gameAuthor);
+		newGame.setTitle(gameTitle);
+
+		Config newConfig = new Config();
+		newConfig.setMapAvailable(withMap);
+		newGame.setConfig(newConfig);
+		createGame(ctx, newGame);
 	}
 
 	public void deleteGame(Context ctx, long gameId) {
 		DeleteGameTask dgTask = new DeleteGameTask(ctx);
 		dgTask.setGameId(gameId);
 		dgTask.addTaskToQueue(ctx);
-		
+	}
+
+		public void createGame(Context ctx, Game game) {
+		CreateGameTask cgTask = new CreateGameTask(ctx, game);
+		cgTask.addTaskToQueue(ctx);
 	}
 }

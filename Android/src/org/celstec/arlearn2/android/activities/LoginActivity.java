@@ -66,9 +66,6 @@ public class LoginActivity extends GeneralActivity {
 		dialog.show();
 		String username = ((EditText) findViewById(R.id.email)).getText() + "";
 		String password = ((EditText) findViewById(R.id.password)).getText() + "";
-		//TODO Delete
-		username = "arlearn1";
-		password = "arl3arn123";
 		Boolean sendInstructions = ((CheckBox) findViewById(R.id.sendInstructions)).isChecked();
 		storeUsername(username);
 		menuHandler.getPropertiesAdapter().setPassword(password);

@@ -9,6 +9,7 @@ import org.celstec.arlearn2.network.ConnectionFactory;
 public class GameClient extends GenericClient{
 
 	private static GameClient instance;
+	private static final int ERROR_DESERIALIZING = 1;
 
 	private GameClient() {
 		super("/myGames");

@@ -18,12 +18,16 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 public class NewGameActivity extends GeneralActivity {
-	private Button ngButton;
+	protected Button ngButton;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		initGuiElements();
+	}
+	
+	protected void initGuiElements() {
 		setContentView(R.layout.newgamescreen);
+
 		((EditText) findViewById(R.id.etNewGame)).addTextChangedListener(checkWatcher);
 		((EditText) findViewById(R.id.etAuthor)).addTextChangedListener(checkWatcher);
 		
@@ -34,7 +38,6 @@ public class NewGameActivity extends GeneralActivity {
 			}
 		});
 		ngButton.setEnabled(false);
-
 	}
 	
 	

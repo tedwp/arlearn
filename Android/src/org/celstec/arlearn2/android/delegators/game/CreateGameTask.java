@@ -11,17 +11,17 @@ import org.celstec.arlearn2.client.GameClient;
 import android.content.Context;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 public class CreateGameTask implements NetworkTask {
 
 	private Context ctx;
-
-	private String gameTitle;
-	private String author;
-	private Boolean withMap = true;
 	
-	public CreateGameTask(Context ctx) {
+	private Game game;
+	
+	public CreateGameTask(Context ctx, Game game) {
 		this.ctx = ctx;
+		this.game = game;
 	}
 
 	public void addTaskToQueue(Context ctx) {
@@ -33,48 +33,15 @@ public class CreateGameTask implements NetworkTask {
 		m.sendToTarget();
 	}
 	
-	public String getGameTitle() {
-		return gameTitle;
-	}
-
-	public void setGameTitle(String gameTitle) {
-		this.gameTitle = gameTitle;
-	}
-
-	public String getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-	public Boolean getWithMap() {
-		return withMap;
-	}
-
-	public void setWithMap(Boolean withMap) {
-		this.withMap = withMap;
-	}
-
 	@Override
 	public void execute() {
-		Game newGame = new Game();
-		newGame.setCreator(getAuthor());
-		newGame.setTitle(getGameTitle());
 
-		Config newConfig = new Config();
-		newConfig.setMapAvailable(getWithMap());
-		newGame.setConfig(newConfig);
-		
-		
-
-		Game g = GameClient.getGameClient().createGame(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), newGame);
+		Game g = GameClient.getGameClient().createGame(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), game);
 		if (g.getErrorCode() != null) {
 			if (g.getErrorCode() == 0) { //TODO reactivate the following code
-				//TODO
+				Toast.makeText(ctx, "update/creation of this game failed", Toast.LENGTH_LONG).show();
 			}
-		}
+		} 
 	}
 
 
