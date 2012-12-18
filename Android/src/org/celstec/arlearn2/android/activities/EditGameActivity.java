@@ -36,7 +36,7 @@ public class EditGameActivity extends NewGameActivity {
 		ngButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onClickUpdateButton();
-
+				EditGameActivity.this.finish();
 			}
 		});
 		ngButton.setEnabled(false);
@@ -59,11 +59,11 @@ public class EditGameActivity extends NewGameActivity {
 		Game g = new Game();
 		Config c = new Config();
 		g.setConfig(c);
-
 		g.setGameId(selectedGame.getGameId());
 		g.setTitle(((EditText) findViewById(R.id.etNewGame)).getText() + "");
 		g.setCreator(((EditText) findViewById(R.id.etAuthor)).getText() + "");
 		c.setMapAvailable(((CheckBox) findViewById(R.id.cbWithMap)).isChecked());
+		
 		GameDelegator.getInstance().createGame(this, g);
 	}
 

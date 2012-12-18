@@ -51,41 +51,6 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 		}
 	}
 	
-//	protected void syncronizeLocalDatabaseFromServer(Context ctx) {
-//		
-//		DBAdapter db = new DBAdapter(ctx);
-//		db.openForWrite();
-//		try { 
-//			
-//			
-//			GamesList gl = GameClient.getGameClient().getGames(PropertiesAdapter.getInstance(ctx).getFusionAuthToken());
-//			if (gl.getError() == null) {
-//
-////TOD check this
-////				db.getGameAdapter().emptyTable();
-//				
-//				Iterator<Game> it = gl.getGames().iterator();
-//				while (it.hasNext()) {
-//					Game game = it.next();
-//					db.getGameAdapter().insertGame(game);
-//					Log.e("Synchronizing games:", game.getTitle() + ".");
-//				}
-//			}
-//		} catch (ARLearnException ae){
-//			if (ae.invalidCredentials()) {
-//			}
-//			
-//		} catch (Exception e) {
-//			Log.e("exception", e.getMessage(), e);
-//			
-//		} finally {
-//			db.close();
-//		}				
-//	}
-
-	
-
-
 	private void renderGamesList() {
 				
 		ArrayList<GenericListRecord> alGenericListRecord = new ArrayList<GenericListRecord>();
@@ -139,7 +104,6 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 		case 1:
 			// Edit game
 			intent = new Intent(ListGamesActivity.this, EditGameActivity.class);
-//			intent.putExtra("existingGames", lGameTitles);
 			intent.putExtra("selectedGame", vGames[position]);
 			ListGamesActivity.this.startActivity(intent);			
 			break;
