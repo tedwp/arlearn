@@ -38,6 +38,8 @@
 		<activity android:name=".activities.ListExcursionsActivity" android:label="@string/listExcursionsHeader"/>
 		<activity android:name=".activities.ListGamesActivity" android:label="@string/listGamesHeader"/>
 		<activity android:name=".activities.NewGameActivity" android:label="@string/newGameHeader"/>
+		<activity android:name=".activities.EditGameActivity" android:label="@string/editGameHeader" />
+		
 		<activity android:name=".activities.ListMessagesActivity" android:label="@string/listMessagesHeader" />
 		<activity android:name=".activities.MapViewActivity" android:label="@string/mapViewHeader" />
 		<activity android:name=".activities.OsmMapViewActivity" android:label="@string/mapViewHeader" />

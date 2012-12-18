@@ -136,14 +136,13 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 			alert.show();
 									
 			break;
-//		case 1:
-//			// Edit game
-//			Log.d(CLASSNAME, "Clicked edit game "+position);
-//			intent = new Intent(ListGamesActivity.this, EditGameActivity.class);
+		case 1:
+			// Edit game
+			intent = new Intent(ListGamesActivity.this, EditGameActivity.class);
 //			intent.putExtra("existingGames", lGameTitles);
-//			intent.putExtra("selectedGame", vGames[position]);
-//			ListGamesActivity.this.startActivity(intent);			
-//			break;
+			intent.putExtra("selectedGame", vGames[position]);
+			ListGamesActivity.this.startActivity(intent);			
+			break;
 //		case 2:
 //			// Show runs
 //			Log.d(CLASSNAME, "Clicked show runs "+position);
