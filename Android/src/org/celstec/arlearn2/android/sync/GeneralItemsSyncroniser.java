@@ -7,11 +7,7 @@ import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.db.RunAdapter;
-import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
-import org.celstec.arlearn2.beans.generalItem.VideoObject;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.android.service.AlarmService;
 import org.celstec.arlearn2.client.GeneralItemClient;
 
@@ -106,10 +102,10 @@ public class GeneralItemsSyncroniser extends GenericSyncroniser {
 //		}
 //	}
 	
-	public static Run getCurrentRun(DBAdapter db, Long runId) {
-		return RunCache.getInstance().getRun(runId);
-//		return (Run) ((RunAdapter) db.table(DBAdapter.RUN_ADAPTER)).queryById(runId);
-	}
+//	public static Run getCurrentRun(DBAdapter db, Long runId) {
+//		return RunCache.getInstance().getRun(runId);
+////		return (Run) ((RunAdapter) db.table(DBAdapter.RUN_ADAPTER)).queryById(runId);
+//	}
 	
 //	public static Run getCurrentRun(Context ctx, Long runId){
 //		DBAdapter db = new DBAdapter(ctx);

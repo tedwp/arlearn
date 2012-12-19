@@ -3,9 +3,7 @@ package org.celstec.arlearn2.android.sync;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.db.RunAdapter;
-import org.celstec.arlearn2.beans.run.Run;
-import org.celstec.arlearn2.beans.run.RunList;
-import org.celstec.arlearn2.beans.run.User;
+
 import org.celstec.arlearn2.client.RunClient;
 import org.celstec.arlearn2.client.UserClient;
 
