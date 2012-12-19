@@ -5,15 +5,16 @@ import android.os.Message;
 import android.util.Log;
 
 public class NetworkTaskHandler extends Handler {
-    public static final int SYNC_GENERALITEMS = 1;
+	public static final int SYNC_GENERALITEMS = 1;
     public static final int SYNC_ACTIONS = 2;
     public static final int PUBLISH_ACTION = 3;
     public static final int SYNC_GAMES = 4;
     public static final int SYNC_RUNS = 5;
     public static final int SYNC_GI_MEDIA = 6;
     public static final int SYNC_USER_MEDIA = 7;
-    public static final int CREATE_GAME = 8;
-    public static final int SYNC_PARTICIPATING_GAME = 9;
+    public static final int GAME_CREATE = 8;
+    public static final int GAME_DELETE = 9;
+    public static final int SYNC_PARTICIPATING_GAME = 10;
 
 
 	@Override
