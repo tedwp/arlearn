@@ -4,15 +4,15 @@ import java.util.Iterator;
 
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
-import org.celstec.arlearn2.android.broadcast.task.SynchronizeGamesTask;
-import org.celstec.arlearn2.android.broadcast.task.SynchronizeUserTask;
 import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.delegators.game.CreateGameTask;
+import org.celstec.arlearn2.android.delegators.game.QueryGamesTask;
+import org.celstec.arlearn2.android.delegators.game.SynchronizeGamesTask;
+import org.celstec.arlearn2.android.delegators.game.SynchronizeParticipatingGameTask;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GamesList;
-import org.celstec.arlearn2.beans.run.RunList;
 
 import android.content.Context;
 import android.os.Message;
@@ -32,12 +32,29 @@ public class GameDelegator {
 		return instance;
 	}
 	
+	public void initGamesFromDb(Context ctx) {
+		(new QueryGamesTask()).addTaskToQueue(ctx);
+	}
+	
+	public Game getGame(Long gameId) {
+		Game game = GameCache.getInstance().getGame(gameId);
+		if (game != null) {
+			return game;
+		}
+		//TODO database update
+		return null;
+	}
+	
 	public void synchronizeGameWithServer(Context ctx, Long gameId) {
 		(new SynchronizeGamesTask(ctx, gameId)).addTaskToQueue(ctx);
 	}
 	
 	public void fetchMyGamesFromServer(Context ctx) {
 		(new SynchronizeGamesTask(ctx)).addTaskToQueue(ctx);
+	}
+	
+	public void fetchParticipatingGameFromServer(Context ctx, Long runId) {
+		(new SynchronizeParticipatingGameTask(ctx, runId)).addTaskToQueue(ctx);
 	}
 	
 	public void saveServerGamesToAndroidDb(final Context ctx, final GamesList gl) {
