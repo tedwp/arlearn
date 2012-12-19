@@ -5,7 +5,7 @@ import android.os.Message;
 import android.util.Log;
 
 public class NetworkTaskHandler extends Handler {
-    public static final int SYNC_GENERALITEMS = 1;
+	public static final int SYNC_GENERALITEMS = 1;
     public static final int SYNC_ACTIONS = 2;
     public static final int PUBLISH_ACTION = 3;
     public static final int SYNC_GAMES = 4;
