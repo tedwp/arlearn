@@ -44,15 +44,15 @@ public class GeneralItemMediaSyncTask implements NetworkTask {
 	@Override
 	public void execute() {
 		if (gameId != null) {
-			Set<Long> itemIds = MediaCache.getInstance().getToDownloadItems(gameId);
+			Set<String> itemIds = MediaCache.getInstance().getToDownloadItems(gameId);
 			if (itemIds != null && !itemIds.isEmpty()) {
-				download(itemIds.toArray(new Long[]{}));
+				download(itemIds.toArray(new String[]{}));
 				
 			}
 		}
 	}
 
-	private void download(Long itemIds[]) {
+	private void download(String itemIds[]) {
 		DownloadFileTask task = new DownloadFileTask();
 		task.ctx = ctx;
 		task.allIds = itemIds;

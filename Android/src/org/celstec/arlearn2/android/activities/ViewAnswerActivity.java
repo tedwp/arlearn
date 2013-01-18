@@ -47,7 +47,7 @@ public class ViewAnswerActivity extends GeneralActivity {
 			if (resp.getGeneralItemId() != null)
 				genId = ":" + resp.getGeneralItemId();
 			if (json.has("imageUrl")) {
-				MediaCacheItem mci = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getImageId(resp.getRunId(), resp.getTimestamp()));
+				MediaCacheItem mci = null; //TODO org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getImageId(resp.getRunId(), resp.getTimestamp()));
 				if (mci != null) {
 					image.setVisibility(View.VISIBLE);
 					image.setImageURI(mci.getUri());
@@ -56,7 +56,7 @@ public class ViewAnswerActivity extends GeneralActivity {
 				image.setVisibility(View.GONE);
 			}
 			if (json.has("videoUrl")) {
-				MediaCacheItem mci = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getVideoId(resp.getRunId(), resp.getTimestamp()));
+				MediaCacheItem mci = null; //TODO org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getVideoId(resp.getRunId(), resp.getTimestamp()));
 				if (mci != null) {
 					video.setVisibility(View.VISIBLE);
 					video.setVideoURI(mci.getUri());
@@ -71,9 +71,9 @@ public class ViewAnswerActivity extends GeneralActivity {
 			if (json.has("audioUrl")) {
 				((LinearLayout) findViewById(R.id.playButtonsAnswer)).setVisibility(View.VISIBLE);
 
-				MediaCacheItem mci = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getAudioId(resp.getRunId(), resp.getTimestamp()));
+				MediaCacheItem mci = null; //org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getAudioId(resp.getRunId(), resp.getTimestamp()));
 				if (mci != null)
-					apd = new AudioPlayerDelegate(mci.getItemId(), this);
+					apd = new AudioPlayerDelegate(""+mci.getItemId(), this);
 
 			} else {
 				((LinearLayout) findViewById(R.id.playButtonsAnswer)).setVisibility(View.GONE);

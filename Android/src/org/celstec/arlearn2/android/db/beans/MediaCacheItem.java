@@ -8,7 +8,8 @@ import android.net.Uri;
 
 public class MediaCacheItem {
 	
-	private String itemId;
+	private Long itemId;
+	private String localId;
 	private long runId;
 	private String account;
 	private String localFile;
@@ -22,13 +23,19 @@ public class MediaCacheItem {
 	private int replicated;
 	
 	
-	public String getItemId() {
+	public Long getItemId() {
 		return itemId;
 	}
-	public void setItemId(String itemId) {
+	public void setItemId(Long itemId) {
 		this.itemId = itemId;
 	}
 	
+	public String getLocalId() {
+		return localId;
+	}
+	public void setLocalId(String localId) {
+		this.localId = localId;
+	}
 	public long getRunId() {
 		return runId;
 	}

@@ -154,7 +154,7 @@ public class MediaCache extends GenericDbTable {
 	
 	private MediaCacheItem cursorToMediaCacheItem(Cursor mCursor ) {
 		MediaCacheItem mci = new MediaCacheItem();
-		mci.setItemId(mCursor.getString(0));
+		mci.setItemId(Long.parseLong(mCursor.getString(0))); //TODO this will make it crash
 		mci.setRunId(mCursor.getLong(1));
 		mci.setAccount(mCursor.getString(2));
 		mci.setLocalFile(mCursor.getString(3));

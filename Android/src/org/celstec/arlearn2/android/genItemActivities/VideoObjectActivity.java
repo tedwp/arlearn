@@ -46,7 +46,7 @@ public class VideoObjectActivity extends NarratorItemActivity {
 	
 	private void startVideo() {
 //		MediaCacheItem mc = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(""+getVideoObject().getId());
-		Uri videoUri = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getLocalUri(getVideoObject().getId());
+		Uri videoUri = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getLocalUri(getVideoObject().getId(), "video");
 //		if (mc == null) {
 //			Toast toast = Toast.makeText(this, "mc item is null", Toast.LENGTH_LONG);
 //			toast.show();

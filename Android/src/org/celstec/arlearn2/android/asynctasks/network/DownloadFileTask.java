@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 
 import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
@@ -36,16 +37,16 @@ import android.util.Log;
 
 public class DownloadFileTask implements NetworkTask{
 
-	private String url;
+	private HashMap<String, String> urls;
 	public Context ctx;
 	public Long itemId;
-	public Long[] allIds;
+	public String localId;
+	public String[] allIds;
 	public Long gameId;
 	private boolean restartTask = false;
 	
 	@Override
 	public void execute() {
-		try {
 			if (itemId == null) {
 				setItemId();
 			}
@@ -53,17 +54,22 @@ public class DownloadFileTask implements NetworkTask{
 				return;
 			GeneralItem gi = GeneralItemsCache.getInstance().getGeneralItems(itemId);
 			if (gi != null) {
-				url = getRemoteFile(gi);
-				if (url != null) {
-					setReplicationStatus(itemId, MediaCacheGeneralItems.REP_STATUS_SYNCING, null);
-					Uri localUri = Uri.fromFile(new File(downloadFile()));
-					setReplicationStatus(itemId, MediaCacheGeneralItems.REP_STATUS_DONE, localUri);
-					MediaCache.getInstance().localToDownloadRemove(gameId, itemId);
+				urls = getRemoteFile(gi);
+				
+				if (!urls.isEmpty()) {
+					for (String key : urls.keySet()) {
+						try {
+							setReplicationStatus(itemId, key,MediaCacheGeneralItems.REP_STATUS_SYNCING, null);
+							Uri localUri = Uri.fromFile(new File(downloadFile(urls.get(key), key)));
+							setReplicationStatus(itemId, key, MediaCacheGeneralItems.REP_STATUS_DONE, localUri);
+							MediaCache.getInstance().localToDownloadRemove(gameId, itemId, key);
+						} catch (FileNotFoundException fnf) {
+							setReplicationStatus(itemId, key, MediaCacheGeneralItems.REP_STATUS_TODO, null);
+							fnf.printStackTrace();
+						} 
+					}
 				}
 			}
-		} catch (FileNotFoundException fnf) {
-			setReplicationStatus(itemId, MediaCacheGeneralItems.REP_STATUS_TODO, null);
-		}
 		if (restartTask) {
 			this.itemId = null;
 			Message m = Message.obtain(NetworkQueue.getNetworkTaskHandler());
@@ -79,7 +85,8 @@ public class DownloadFileTask implements NetworkTask{
 	private void setItemId() {
 		for (int i = 0; i < allIds.length; i++) {
 			if (allIds[i] != null) {
-				itemId = allIds[i];
+				itemId = MediaCache.itemIdFromKey(allIds[i]);
+				localId =MediaCache.localIdFromKey(allIds[i]); 
 				allIds[i] = null;
 				restartTask = true;
 				return;
@@ -88,36 +95,43 @@ public class DownloadFileTask implements NetworkTask{
 		
 	}
 
-	private void setReplicationStatus(final Long itemId, final int status, final Uri localUri) {
+	private void setReplicationStatus(final Long itemId, final String localId, final int status, final Uri localUri) {
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
 		m.obj = new DBAdapter.DatabaseTask() {
 			@Override
 			public void execute(DBAdapter db) {
-				db.getMediaCacheGeneralItems().setReplicationStatus(itemId, status, localUri);
+				db.getMediaCacheGeneralItems().setReplicationStatus(itemId, localId, status, localUri);
 			}
 		};
 		m.sendToTarget();
 	}
 	
-	private String getRemoteFile(GeneralItem gi) {
+	private HashMap<String, String> getRemoteFile(GeneralItem gi) {
+		HashMap<String, String> hm = new HashMap<String, String>();
 		if (gi instanceof AudioObject) {
-			return ((AudioObject) gi).getAudioFeed();
+			hm.put("audio", ((AudioObject) gi).getAudioFeed());
 		}
 		if (gi instanceof VideoObject) {
-			return ((VideoObject) gi).getVideoFeed();
+			hm.put("video", ((VideoObject) gi).getVideoFeed());
 		}
 		if (gi instanceof SingleChoiceImageTest) {
 			SingleChoiceImageTest test = (SingleChoiceImageTest) gi;
 			int i = 0;
 			for (MultipleChoiceAnswerItem imageAnswer: test.getAnswers()){
-				return ((MultipleChoiceImageAnswerItem) imageAnswer).getImageUrl();
+				MultipleChoiceImageAnswerItem mciai = (MultipleChoiceImageAnswerItem) imageAnswer;
+				hm.put(mciai.getId(), mciai.getImageUrl());
+				if (mciai.getAudioUrl() != null) {
+					hm.put(mciai.getId()+":a", mciai.getAudioUrl());
+
+				}
 			}
 		}
-		return null;
+		return hm;
 	}
 	
-	private String downloadFile() throws FileNotFoundException {
+	private String downloadFile(String url, String localId) throws FileNotFoundException {
 		try {
+			
 			URL myFileUrl = new URL(url);
 			File outputFile = urlToCacheFile(url);
 			HttpURLConnection.setFollowRedirects(false); // new
@@ -126,7 +140,7 @@ public class DownloadFileTask implements NetworkTask{
 			if (conn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
 				url = conn.getHeaderField("location");
 				conn.disconnect();
-				return downloadFile();
+				return downloadFile(url, localId);
 			}
 			conn.connect();
 
@@ -152,7 +166,7 @@ public class DownloadFileTask implements NetworkTask{
 				if ((startTime + 1500)<System.currentTimeMillis()) {
 					startTime = System.currentTimeMillis();
 //					DBAdapter.getAdapter(ctx).getMediaCache().registerBytesAvailable(url, contentLength-byteCounter);
-					MediaCache.getInstance().setBytesUploaded(itemId, byteCounter);
+					MediaCache.getInstance().setBytesUploaded(itemId, localId, byteCounter);
 				}
 			}
 			fos.flush();

@@ -72,7 +72,7 @@ public class MediaService extends IntentService {
 
 	private MediaCacheItem createMediaCacheAudioItem(long currentTime, long runId, Uri recordingPath, String username) {
 		MediaCacheItem mci = new MediaCacheItem();
-		mci.setItemId(MediaCacheItem.getAudioId(runId, currentTime));
+		mci.setItemId(Long.parseLong(MediaCacheItem.getAudioId(runId, currentTime))); //TODO adapt
 
 		// mci.setItemId(runId + ":audio:" + currentTime);
 		// mci.setLocalFile(recordingPath);
@@ -92,7 +92,7 @@ public class MediaService extends IntentService {
 	private MediaCacheItem createMediaCacheImageItem(long currentTime, long runId, Uri imagePath, String username) {
 		MediaCacheItem mci = new MediaCacheItem();
 		// mci.setItemId(runId + ":img:" + currentTime);
-		mci.setItemId(MediaCacheItem.getImageId(runId, currentTime));
+		mci.setItemId(Long.parseLong(MediaCacheItem.getImageId(runId, currentTime))); //TODO this ain't a long
 		// mci.setLocalFile(imagePath);
 		// mci.setLocalThumbnail(getThumbnail(imagePath));
 		mci.setUri(imagePath);
@@ -111,7 +111,7 @@ public class MediaService extends IntentService {
 	private MediaCacheItem createMediaCacheVideoItem(long currentTime, long runId, Uri videoUri, String username) {
 		MediaCacheItem mci = new MediaCacheItem();
 		// mci.setItemId(runId + ":vid:" + currentTime);
-		mci.setItemId(MediaCacheItem.getVideoId(runId, currentTime));
+		mci.setItemId(Long.parseLong(MediaCacheItem.getVideoId(runId, currentTime))); //TODO this ain't a long
 		mci.setUri(videoUri);
 		mci.setRunId(runId);
 		mci.setAccount(username);
@@ -132,7 +132,7 @@ public class MediaService extends IntentService {
 				MediaCacheItem[] mcis = db.getMediaCache().getNextUnsyncedItems();
 				for (int i = 0; i < mcis.length; i++) {
 					if (!mcis[i].isIncomming()) {
-						db.getMediaCache().setReplicationStatus(db, mcis[i].getItemId(), MediaCache.REP_STATUS_SYNCING);
+						db.getMediaCache().setReplicationStatus(db, ""+mcis[i].getItemId(), MediaCache.REP_STATUS_SYNCING);
 						synchronizeOutgoingUri(mcis[i]);
 					}
 				}
@@ -143,7 +143,7 @@ public class MediaService extends IntentService {
 
 	private void synchronizeOutgoingUri(final MediaCacheItem mci) {
 		// File localFile = new File(mci.getLocalFile());
-		DBAdapter.getAdapter(this).getMediaCache().updateRemotePath(mci.getItemId(), mci.buildRemotePath(mci.getUri()));
+		DBAdapter.getAdapter(this).getMediaCache().updateRemotePath(""+mci.getItemId(), mci.buildRemotePath(mci.getUri()));
 		
 		UploadFileTask task = new UploadFileTask();
 		task.mimeType = mci.getMimetype();
@@ -153,7 +153,7 @@ public class MediaService extends IntentService {
 		task.fileName =  mci.getUri().getLastPathSegment();
 		task.uri = mci.getUri();
 		task.ctx = this;
-		task.mcItemId = mci.getItemId();
+		task.mcItemId = ""+mci.getItemId();
 		
 		Message m = Message.obtain(NetworkQueue.getNetworkTaskHandler());
 		m.what = NetworkTaskHandler.SYNC_USER_MEDIA;

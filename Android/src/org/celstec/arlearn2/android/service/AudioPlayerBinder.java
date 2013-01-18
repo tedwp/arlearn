@@ -36,7 +36,7 @@ public class AudioPlayerBinder extends IAudioPlayerService.Stub {
 	public void startItem(final long audioIdentifier, IAudioPlayerCallback callback) throws RemoteException {
 		service.setCallback(callback);
 		service.setAudioIdentifier(""+audioIdentifier);
-		Uri audioUri = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getLocalUri(audioIdentifier);
+		Uri audioUri = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getLocalUri(audioIdentifier, "audio");
 		if (audioUri != null) {
 			startUri(audioUri);
 		} else {
@@ -49,12 +49,12 @@ public class AudioPlayerBinder extends IAudioPlayerService.Stub {
 	public void start(final String audioIdentifier, IAudioPlayerCallback callback) throws RemoteException {
 		service.setCallback(callback);
 		service.setAudioIdentifier(audioIdentifier);
-		String localFile = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(audioIdentifier).getLocalFile(); //idToMediaCacheItem.get("144008")
+		String localFile = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(Long.parseLong(audioIdentifier), "audio").getLocalFile(); //idToMediaCacheItem.get("144008")
 		if (localFile != null) {
 			Uri audioUri = Uri.fromFile(new File(localFile));
 			startUri(audioUri);
 		} else {
-			Uri audioUri = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(audioIdentifier).getUri();
+			Uri audioUri = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(Long.parseLong(audioIdentifier), "audio").getUri();
 			startUri(audioUri);
 		}
 	}

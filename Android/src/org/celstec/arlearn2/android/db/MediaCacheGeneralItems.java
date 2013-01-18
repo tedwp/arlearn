@@ -28,6 +28,7 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 	public static final String MEDIACACHE_TABLE = "mediaCacheGeneralItems";
 
 	public static final String ITEM_ID = "itemId";
+	public static final String LOCAL_ID = "localId";
 	public static final String GAME_ID = "gameId";
 
 	public static final String REMOTE_FILE = "remoteFile";
@@ -48,14 +49,15 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 	@Override
 	public String createStatement() {
 		return "create table " + MEDIACACHE_TABLE + " (" +
-				ITEM_ID + " long primary key, " +
+				ITEM_ID + " long, " +
 				GAME_ID + " long, " + 
 				REMOTE_FILE + " text, " + 
 				URI + " text, " +
 				REPLICATED + " integer, " +
 				MIMETYPE + " text, " + 
 				BYTESTOTAL + " long, " + 
-				BYTESAVAILABLE + " long);";
+				BYTESAVAILABLE + " long, " +
+				LOCAL_ID + " text);";
 	}
 
 	@Override
@@ -67,42 +69,55 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 	public void listItemsToCache() {
 		Cursor mCursor = null;
 		try {
-			HashMap<Long, String> allMediaURLs =  new HashMap<Long, String>();
+			HashMap<String, String> allMediaURLs =  new HashMap<String, String>();
 			for (Long gameId : GeneralItemsCache.getInstance().getCachedGameIds() ) {
 				for (GeneralItem gi : GeneralItemsCache.getInstance().getGeneralItemsWithGameId(gameId).values()) {
-					if (MediaCache.getInstance().getLocalUri(gi.getId()) == null) {
 						if (gi instanceof AudioObject) {
-							allMediaURLs.put(gi.getId(), ((AudioObject) gi).getAudioFeed());
+							if (MediaCache.getInstance().getLocalUri(gi.getId(), "audio") == null) {
+								allMediaURLs.put(gi.getId()+":audio", ((AudioObject) gi).getAudioFeed());
+							}
 						}
 						if (gi instanceof VideoObject) {
-							allMediaURLs.put(gi.getId(), ((VideoObject) gi).getVideoFeed());
+							if (MediaCache.getInstance().getLocalUri(gi.getId(), "video") == null) {
+								allMediaURLs.put(gi.getId()+":video", ((VideoObject) gi).getVideoFeed());
+							}
 						}
 						if (gi instanceof SingleChoiceImageTest) {
 							SingleChoiceImageTest test = (SingleChoiceImageTest) gi;
 							int i = 0;
 							for (MultipleChoiceAnswerItem imageAnswer: test.getAnswers()){
-								allMediaURLs.put(gi.getId(), ((MultipleChoiceImageAnswerItem) imageAnswer).getImageUrl());
+								if (MediaCache.getInstance().getLocalUri(gi.getId(), imageAnswer.getId()) == null) {
+									MultipleChoiceImageAnswerItem answer = (MultipleChoiceImageAnswerItem) imageAnswer;
+									allMediaURLs.put(gi.getId()+":"+answer.getId(), answer.getImageUrl());
+									if (answer.getAudioUrl() != null) {
+										allMediaURLs.put(gi.getId()+":"+answer.getId()+":a", answer.getAudioUrl());	
+									}
+								}
 							}
-						}
+						
 					}
 				}
 			}
 			
 			
-			mCursor = db.getSQLiteDb().query(true, getTableName(), new String[]{ITEM_ID, GAME_ID, REPLICATED, URI}, null, null, null, null, null, null);
+			mCursor = db.getSQLiteDb().query(true, getTableName(), new String[]{ITEM_ID, LOCAL_ID, GAME_ID, REPLICATED, URI}, null, null, null, null, null, null);
 			while (mCursor.moveToNext()) {
 				Long itemId = mCursor.getLong(0);
-				Long gameId = mCursor.getLong(1);
-				allMediaURLs.remove(itemId);
-				if (mCursor.getInt(2) == REP_STATUS_TODO) MediaCache.getInstance().localToDownload(gameId, itemId);
-				if (mCursor.getInt(2) == REP_STATUS_DONE) MediaCache.getInstance().putLocalURI(itemId, Uri.parse(mCursor.getString(3)));
+				String localId = mCursor.getString(1);
+				Long gameId = mCursor.getLong(2);
+				allMediaURLs.remove(itemId+":"+localId);
+				if (mCursor.getInt(3) == REP_STATUS_TODO) MediaCache.getInstance().localToDownload(gameId, itemId, localId);
+				if (mCursor.getInt(3) == REP_STATUS_DONE) MediaCache.getInstance().putLocalURI(itemId, localId, Uri.parse(mCursor.getString(4)));
 
 			}
 			
-			for (Long id : allMediaURLs.keySet()) {
+			for (String key : allMediaURLs.keySet()) {
+				Long id = Long.parseLong(key.substring(0, key.indexOf(":"))); //TODO check if this is done ok
+				String localId = key.substring(key.indexOf(":")+1);
 				ContentValues initialValues = new ContentValues();
 				GeneralItem gi = GeneralItemsCache.getInstance().getGeneralItems(id);
 				initialValues.put(ITEM_ID, id);
+				initialValues.put(LOCAL_ID, localId);
 				initialValues.put(GAME_ID, gi.getGameId());
 				initialValues.put(REMOTE_FILE, allMediaURLs.get(id));
 				initialValues.put(REPLICATED, REP_STATUS_TODO);
@@ -119,12 +134,13 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 	public MediaCacheItem getNextUnsyncedItem() {
 		Cursor mCursor = null;
 		try {
-			mCursor = db.getSQLiteDb().query(true, getTableName(), new String[]{ITEM_ID, REMOTE_FILE}, REPLICATED + " = ? ", new String[] { "" + REP_STATUS_TODO }, null, null, null, null);
+			mCursor = db.getSQLiteDb().query(true, getTableName(), new String[]{ITEM_ID, LOCAL_ID, REMOTE_FILE}, REPLICATED + " = ? ", new String[] { "" + REP_STATUS_TODO }, null, null, null, null);
 			if (mCursor.getCount() == 0) return null;
 			if (mCursor.moveToNext()) {
 				MediaCacheItem mci = new MediaCacheItem();
-				mci.setItemId(""+mCursor.getLong(0));
-				mci.setRemoteFile(mCursor.getString(1));
+				mci.setItemId(mCursor.getLong(0));
+				mci.setLocalId(mCursor.getString(1));
+				mci.setRemoteFile(mCursor.getString(2));
 				return mci;
 			}
 		} catch (SQLException e) {
@@ -137,15 +153,15 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 
 	}
 	
-	public void setReplicationStatus(final Long itemId, final int replicationStatus, Uri localUri) {
+	public void setReplicationStatus(final Long itemId, final String localId, final int replicationStatus, Uri localUri) {
 		MediaCache.getInstance().putReplicationstatus(""+itemId, replicationStatus);
 		ContentValues newValue = new ContentValues();
 		newValue.put(REPLICATED, replicationStatus);
 		if (localUri != null) {
 			newValue.put(URI, localUri.toString());
-			MediaCache.getInstance().putLocalURI(itemId, localUri);
+			MediaCache.getInstance().putLocalURI(itemId, localId, localUri);
 		}
-		db.getSQLiteDb().update(getTableName(), newValue, ITEM_ID + "= ?", new String[] { "" + itemId });
+		db.getSQLiteDb().update(getTableName(), newValue, ITEM_ID + "= ? and "+LOCAL_ID + " = ?", new String[] { "" + itemId, localId });
 		
 		
 	}
