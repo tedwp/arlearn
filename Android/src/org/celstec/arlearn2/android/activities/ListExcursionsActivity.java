@@ -3,19 +3,16 @@ package org.celstec.arlearn2.android.activities;
 import java.util.ArrayList;
 
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.broadcast.GameReceiver;
-import org.celstec.arlearn2.android.broadcast.RunReceiver;
 import org.celstec.arlearn2.android.cache.GameCache;
-import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.ActionsDelegator;
+import org.celstec.arlearn2.android.delegators.GameDelegator;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
 
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.RunListRecord;
-import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.android.service.LocationService;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
@@ -45,6 +42,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 		} else {
 			setContentView(R.layout.listexcursionscreen);
 			RunDelegator.getInstance().synchronizeRunsWithServer(this);
+			GameDelegator.getInstance().synchronizeGamesWithServer(this);
 //			syncRuns();
 		}
 	}
@@ -104,12 +102,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 		builder.setMessage(getString(R.string.cacheGame)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				RunListRecord rlr = (RunListRecord) messageListRecord;
-				if (rlr.getGameId() != null) {
-					Intent runIntent = new Intent();
-					runIntent.setAction(GameReceiver.action);
-					runIntent.putExtra(GameReceiver.GAME_ID, rlr.getGameId());
-					sendBroadcast(runIntent);
-				}
+				GameDelegator.getInstance().downloadGameContent(ListExcursionsActivity.this, rlr.getGameId());
 			}
 		}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {

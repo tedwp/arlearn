@@ -159,20 +159,20 @@ public class AppengineFileUploadHandler {
 			multipartContent.addPart("uploaded_file", new InputStreamBody(is, mimeType, fileName));
 			totalSize = is.available();
 			
-			DBAdapter db = new DBAdapter(ctx);
-			db.openForWrite();
-			MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
-			mc.registerTotalAmountofBytes(uri, (int)  totalSize);
-			db.close();
+//			DBAdapter db = new DBAdapter(ctx);
+//			db.openForWrite();
+//			MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
+//			mc.registerTotalAmountofBytes(uri, (int)  totalSize);
+//			db.close();
 			
 			httpPost.setEntity(multipartContent);
 
 			HttpResponse response = httpClient.execute(httpPost, httpContext);
 			httpPost.getEntity();
 			
-			db.openForWrite();
-			mc.registerBytesAvailable(uri, 0);
-			db.close();
+//			db.openForWrite();
+//			mc.registerBytesAvailable(uri, 0);
+//			db.close();
 			updateActivities(ctx, NarratorItemActivity.class.getCanonicalName());
 			
 		} catch (Exception e) {
@@ -241,9 +241,9 @@ public class AppengineFileUploadHandler {
 	            	System.out.println("transferred "+this.transferred);
 	            	DBAdapter db = new DBAdapter(ctx);
 					db.openForWrite();
-					MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
-					mc.registerBytesAvailable(uri, (int) (totalSize-transferred));
-					db.close();
+//					MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
+//					mc.registerBytesAvailable(uri, (int) (totalSize-transferred));
+//					db.close();
 					updateActivities(ctx, NarratorItemActivity.class.getCanonicalName());
 					lastUpdateActivities = System.currentTimeMillis();
 	            }

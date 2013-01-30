@@ -10,6 +10,7 @@ import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.MyActions;
+import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
@@ -35,7 +36,6 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 
 	private double lng;
 	private double lat;
-	private long runId;
 	
 	public void onBroadcastMessage(Bundle bundle, boolean render) {
 		super.onBroadcastMessage(bundle, render);
@@ -47,6 +47,8 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listexcursionscreen);
+
+		RunDelegator.getInstance().loadRun(this, getPropertiesAdapter().getCurrentRunId());
 	}
 	
 	private void renderList(){
@@ -63,21 +65,12 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 			this.finish();
 		}
 		
-//		setContentView(R.layout.list_map_items); TODO delete list_map_items
-//		DBAdapter db = new DBAdapter(this);
-//		db.openForRead();
 		TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleItems(runId);
 		if (gil == null) {
 			return;
 		} 
 		gis = gil.toArray(new GeneralItem[] {});
-//		gis = (GeneralItem[]) ((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).query(this.getRunId(), GeneralItemAdapter.VISIBLE);
-//		read = (long[]) ((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).queryReadItems(this.getRunId());
-		
-		
-
 		ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
-
 		ListView listView = (ListView) findViewById(R.id.listRuns); 
 
 		adapter = new GenericMessageListAdapter(this,R.layout.listexcursionscreen, runsList);
@@ -93,18 +86,6 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 			r.setDistance(distance);
 			adapter.add(r);
 		}
-//		db.close();
-		
-//		adapter.emptyList();
-//		for (int j = 0; j < gis.length; j++) {
-//			String distance = "";
-//			if (!( gis[j].getLng() == null && gis[j].getLat() == null)) {
-//				distance =distanceToString(GPSUtil.distance(gis[j].getLat(), gis[j].getLng(), lat, lng, GPSUtil.METERS));
-//			}
-//			MessageListAdapter.MessageLine ml = (adapter).new MessageLine(gis[j].getId(), gis[j].getName(), distance, false); 
-//	        adapter.addMessageLine(ml);
-//		}
-//		adapter.setReadMessages(read);
 	}
 
 	//TODO move to other place
@@ -140,10 +121,6 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 		this.lat = lat;
 	}
 	
-	public long getRunId(){
-		return runId;
-	}
-	
 	public String distanceToString(double distance) {
 		if (distance > 1) {
 			return ((int) distance) + " m";
@@ -157,7 +134,6 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 		if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			this.finish();
 		} else {
-			runId = getIntent().getLongExtra("runId", 0);
 			renderList();
 		}
 	

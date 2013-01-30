@@ -1,8 +1,8 @@
 package org.celstec.arlearn2.android.broadcast;
 
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
-import org.celstec.arlearn2.android.broadcast.task.SynchronizeActionsTask;
-import org.celstec.arlearn2.android.broadcast.task.SynchronizeGeneralItemsTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeActionsTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGeneralItemsTask;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.client.ActionClient;

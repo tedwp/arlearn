@@ -3,8 +3,7 @@ package org.celstec.arlearn2.android.list;
 import java.text.SimpleDateFormat;
 
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.cache.GameCache;
-import org.celstec.arlearn2.android.cache.MediaCache;
+import org.celstec.arlearn2.android.delegators.GameDelegator;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.run.Run;
 
@@ -17,13 +16,12 @@ public class RunListRecord extends GenericListRecord {
 
 	
 	private static SimpleDateFormat formatterDay = new SimpleDateFormat("d MMM \n HH:mm:ss");
-//	private static SimpleDateFormat formatterTime = new SimpleDateFormat("HH:mm:ss");
 
 	private Long gameId;
 
 	public RunListRecord(Run run) {
 		this.setId(run.getRunId());
-		Game game = GameCache.getInstance().getGame(run.getGameId());
+		Game game = GameDelegator.getInstance().getGame(run.getGameId());
 		if (game != null)
 		if (game.getConfig().getMapAvailable()) {
 			setImageResourceId(R.drawable.map_icon);
@@ -34,7 +32,7 @@ public class RunListRecord extends GenericListRecord {
 		
 		if (game != null) {
 			gameId = game.getGameId();
-			int amount = MediaCache.getInstance().getAmountOfItemsToDownload(game.getGameId());
+			int amount = GameDelegator.getInstance().getAmountOfUncachedItems(game.getGameId());
 			String message = null;
 			if (amount == 0) {
 				message = game.getTitle()+" ("+game.getCreator()+")";

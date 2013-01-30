@@ -25,8 +25,10 @@ import org.celstec.arlearn2.android.db.MyResponses;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.db.DBAdapter.DatabaseHandler;
 import org.celstec.arlearn2.android.delegators.ActionsDelegator;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.GenericListRecord;
+import org.celstec.arlearn2.android.list.ItemResponseListRecord;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
@@ -57,8 +59,6 @@ public class NarratorItemActivity extends GeneralActivity {
 	protected NarratorItem narratorBean;
 	protected Button provideAnswerButton;
 
-	private TreeSet<Response> resp;
-	
 	protected GenericMessageListAdapter adapter;
 
 	private Handler mHandler = new Handler();
@@ -200,11 +200,6 @@ public class NarratorItemActivity extends GeneralActivity {
 		} else {
 			if (countDownTextView != null) countDownTextView.setVisibility(View.GONE);
 		}
-//		if (narratorBean.getDescription() != null && !narratorBean.getDescription().trim().equals("")) {
-//			descriptionTextView.setText(narratorBean.getDescription());
-//		} else {
-//			descriptionTextView.setVisibility(View.GONE);
-//		}
 		if (narratorBean.getName() != null) {
 			setTitle(narratorBean.getName());
 		}
@@ -233,90 +228,16 @@ public class NarratorItemActivity extends GeneralActivity {
 	
 	
 	private void renderAnswers() {
-		Long runId = getMenuHandler().getPropertiesAdapter().getCurrentRunId();
-		Long itemId = narratorBean.getId();
-		resp =ResponseCache.getInstance().getResponses(runId, itemId);
+		final TreeSet<Response> resp = GeneralItemsDelegator.getInstance().getResponses(getMenuHandler().getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
 		if (resp == null) {
 			return;
 		}
-		SimpleDateFormat formatter = new SimpleDateFormat("d MMM - HH:mm:ss");
 		ArrayList<GenericListRecord> users = new ArrayList<GenericListRecord>();
 
-		if (resp != null) {
-
 			for (Response response: resp) {
-//				for (int i = 0; i < resp.length; i++) {
-				GenericListRecord r = new GenericListRecord();
-				r.setImageResourceId(R.drawable.cloud_up_48);
-				Date d = new Date(response.getTimestamp());
-				double percentage = 0;
-				int dividePercentageBy = 0;
-				try {
-					JSONObject json = new JSONObject(response.getResponseValue());
-					int statusAudio = 10;
-					
-					if (json.has("audioUrl")) {
-						String audioUrl = json.getString("audioUrl");
-						statusAudio = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getReplicationStatus(audioUrl);
-						percentage += org.celstec.arlearn2.android.cache.MediaCache.getInstance().getPercentageUploaded(audioUrl);
-						dividePercentageBy++;
-					}
-					if (json.has("text")) {
-						statusAudio =org.celstec.arlearn2.android.db.MediaCache.REP_STATUS_DONE;
-						percentage =1;
-						dividePercentageBy++;
-					}
-					
-					int statusImage = 10;
-					if (json.has("imageUrl")) {
-						String imageUrl = json.getString("imageUrl");
-						statusImage = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getReplicationStatus(imageUrl);
-						percentage += org.celstec.arlearn2.android.cache.MediaCache.getInstance().getPercentageUploaded(imageUrl);
-						dividePercentageBy++;
-					}
-					if (json.has("videoUrl")) {
-						String videoUrl = json.getString("videoUrl");
-						statusImage = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getReplicationStatus(videoUrl);
-						percentage += org.celstec.arlearn2.android.cache.MediaCache.getInstance().getPercentageUploaded(videoUrl);
-						dividePercentageBy++;
-					}
-					
-						percentage /= dividePercentageBy;
-					
-
-					if (statusImage != 10 || statusAudio != 10) {
-						int status = Math.min(statusAudio, statusImage);
-						switch (status) {
-						case MediaCache.REP_STATUS_TODO:
-							r.setImageResourceId(R.drawable.cloud_up_48);
-							break;
-						case MediaCache.REP_STATUS_SYNCING:
-							r.setImageResourceId(R.drawable.cloud_sync_48);
-							break;
-						case MediaCache.REP_STATUS_DONE:
-							r.setImageResourceId(R.drawable.cloud_ok_48);
-							break;
-
-						default:
-							break;
-						}
-					}
-					
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				
-				r.setMessageHeader(""+formatter.format(d));
-				if (percentage == 1){
-					r.setMessageDetail(null);
-				} else{
-					r.setMessageDetail(MessageFormat.format("{0,number,#.##%}", percentage));	
-				}
-				
-
+				GenericListRecord r = new ItemResponseListRecord(getMenuHandler().getPropertiesAdapter().getCurrentRunId(), response);
 				users.add(r);
 			}
-		}
 		
 		LinearLayout listView = (LinearLayout) findViewById(R.id.narratoranswerlist); 
 		adapter = new GenericMessageListAdapter(this,getContentView(), users);
@@ -344,10 +265,8 @@ public class NarratorItemActivity extends GeneralActivity {
 	protected void onResume() {
 		super.onResume();
 		renderAnswers();
-	     mHandler.postDelayed(counterTask, 1000);		    	   
-
-	}
-	
+		mHandler.postDelayed(counterTask, 1000);
+	}	
 	
 	public boolean isGenItemActivity() {
 		return true;

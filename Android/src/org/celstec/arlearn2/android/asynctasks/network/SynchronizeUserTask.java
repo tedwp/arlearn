@@ -1,8 +1,6 @@
-package org.celstec.arlearn2.android.broadcast.task;
+package org.celstec.arlearn2.android.asynctasks.network;
 
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
-import org.celstec.arlearn2.android.asynctasks.network.NetworkTask;
-import org.celstec.arlearn2.android.asynctasks.network.NetworkTaskHandler;
 import org.celstec.arlearn2.android.broadcast.GenericReceiver;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.RunDelegator;

@@ -2,7 +2,7 @@ package org.celstec.arlearn2.android.delegators;
 
 import java.util.Iterator;
 
-import org.celstec.arlearn2.android.broadcast.task.PublishActionTask;
+import org.celstec.arlearn2.android.asynctasks.network.PublishActionTask;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.service.GeneralItemDependencyHandler;
 import org.celstec.arlearn2.beans.run.Action;

@@ -84,18 +84,6 @@ public class PropertiesAdapter {
 		editor.commit();
 	}
 
-	public void setIsPlaying(boolean isPlaying) {
-		SharedPreferences.Editor editor = getDefaultPrefs().edit();
-		editor.putBoolean(Constants.PLAYING, isPlaying);
-		editor.commit();
-	}
-	
-	public boolean isPlaying() {
-		return getDefaultPrefs().getBoolean(Constants.PLAYING, false);
-	}
-	
-	
-
 	public void setIsRecording(boolean status) {
 		SharedPreferences.Editor editor = getDefaultPrefs().edit();
 		editor.putBoolean(Constants.RECORDING, status);
@@ -145,5 +133,30 @@ public class PropertiesAdapter {
 	
 	public int getStatus() {
 		return getDefaultPrefs().getInt(Constants.STATUS, 0);
+	}
+	
+	public void setGameLastSynchronizationDate(long time) {
+		SharedPreferences.Editor editor = getDefaultPrefs().edit();
+		editor.putLong(Constants.GAME_LAST_SYNC_DATE, time);
+		editor.commit();
+	}
+	
+	public long getGameLastSynchronizationDate() {
+		return getDefaultPrefs().getLong(Constants.GAME_LAST_SYNC_DATE, 0);
+	}
+	
+	public void setRunLastSynchronizationDate(long time) {
+		SharedPreferences.Editor editor = getDefaultPrefs().edit();
+		editor.putLong(Constants.RUN_LAST_SYNC_DATE, time);
+		editor.commit();
+	}
+	
+	public long getRunLastSynchronizationDate() {
+		return getDefaultPrefs().getLong(Constants.RUN_LAST_SYNC_DATE, 0);
+	}
+	
+	public void databaseReset() {
+		setGameLastSynchronizationDate(0);
+		setRunLastSynchronizationDate(0);
 	}
 }

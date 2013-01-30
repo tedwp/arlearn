@@ -2,8 +2,10 @@ package org.celstec.arlearn2.android.genItemActivities;
 
 import java.util.HashMap;
 
+import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
@@ -17,6 +19,7 @@ import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -27,8 +30,9 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 	private Long itemId;
 	private String account;
 	private static SoundPool soundPool;
-	private static HashMap<Integer, Integer> soundPoolMap;
-	private static SparseArray<Uri> imageMap = new SparseArray<Uri>();
+	private static HashMap<String, Integer> soundPoolMap;
+	// private static SparseArray<Uri> imageMap = new SparseArray<Uri>();
+	private HashMap<String, Uri> mediaObjects = null;
 
 	private SingleChoiceImageTest mct;
 	private ImageView selectedView;
@@ -43,25 +47,40 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		runId = getMenuHandler().getPropertiesAdapter().getCurrentRunId();
 		account = getMenuHandler().getPropertiesAdapter().getUsername();
 		setContentView(R.layout.gi_detail_imagechoice);
-		itemId = getIntent().getExtras().getLong("id"); // TODO make constant
+		itemId = getIntent().getExtras().getLong(Constants.ITEM_ID);
 		GeneralItem bean = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
 		mct = (SingleChoiceImageTest) bean; // TODO check casting
 
+		mediaObjects = GeneralItemsDelegator.getInstance().getLocalMediaUriMap(mct);
 		initSoundPool();
 		initMediaMaps();
+		initWebView();
 		initTableView();
 	}
-	
+
 	private void initMediaMaps() {
-		for (int i = 0; i < mct.getAnswers().size(); i++) {
-			Uri soundUri = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getLocalUri(mct.getId(), mct.getAnswers().get(i).getId() + ":a");
-			int soundId = soundPool.load(soundUri.getPath(), 1);
-			soundPoolMap.put(i, soundId);
-			imageMap.put(i,  org.celstec.arlearn2.android.cache.MediaCache.getInstance().getLocalUri(mct.getId(), mct.getAnswers().get(i).getId()));
+		for (String key : mediaObjects.keySet()) {
+			if (key.endsWith(":a")) {
+				soundPoolMap.put(key, soundPool.load(mediaObjects.get(key).getPath(), 1));
+			}
+		}
+		if (mediaObjects.containsKey(GeneralItemsDelegator.AUDIO_LOCAL_ID)) {
+			soundPoolMap.put(GeneralItemsDelegator.AUDIO_LOCAL_ID, soundPool.load(mediaObjects.get(GeneralItemsDelegator.AUDIO_LOCAL_ID).getPath(), 1));
+
+		}
+	}
+	
+	private void initWebView() {
+		WebView webview = (WebView) findViewById(R.id.mct_webview);
+		if (mct.getRichText() != null) {
+			String html = mct.getRichText();
+			webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+		} else {
+			webview.setVisibility(View.GONE);
 		}
 	}
 
@@ -70,6 +89,7 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 		TableRow row = null;
 
 		for (int i = 0; i < mct.getAnswers().size(); i++) {
+			final String answerId = mct.getAnswers().get(i).getId();
 			if ((i % COLUMNS) == 0) {
 				System.out.println("new row");
 				if (row != null) {
@@ -80,12 +100,11 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 			}
 			final ImageView im = new ImageView(this);
 			im.setPadding(5, 5, 5, 5);
-
-			if (imageMap.get(i) != null) {
-				im.setImageURI(imageMap.get(i));
+			Uri imageUri = mediaObjects.get(answerId + ":i");
+			if (imageUri != null) {
+				im.setImageURI(imageUri);
 			}
 			row.addView(im);
-			final int indexfinal = i;
 			im.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -99,28 +118,40 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 						selectedView.setBackgroundDrawable(null);
 					im.setBackgroundDrawable(drawable);
 					selectedView = im;
-					playSound(indexfinal);
+					playSound(answerId+":a");
 				}
 			});
 
 		}
 		tableView.addView(row);
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (soundPoolMap != null) {
+			playSound(GeneralItemsDelegator.AUDIO_LOCAL_ID);
+		}
+		
+	}
 
 	private void initSoundPool() {
 		if (soundPool == null) {
-			soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
-			soundPoolMap = new HashMap<Integer, Integer>();
+			soundPool = new SoundPool(mediaObjects.size(), AudioManager.STREAM_MUSIC, 100);
+			soundPoolMap = new HashMap<String, Integer>();
 
 		}
 	}
 
-	public void playSound(final int sound) {
-		AudioManager mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-		float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		final float volume = streamVolumeCurrent / streamVolumeMax;
-		soundPool.play(soundPoolMap.get(sound), volume, volume, 1, 0, 1f);
+	public void playSound(String soundKey) {
+		if (soundPoolMap.get(soundKey) != null) {
+			AudioManager mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+			float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+			float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+			final float volume = streamVolumeCurrent / streamVolumeMax;
+
+			soundPool.play(soundPoolMap.get(soundKey), volume, volume, 1, 0, 1f);
+		}
 	}
 
 }

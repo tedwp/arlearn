@@ -1,6 +1,8 @@
 package org.celstec.arlearn2.android.broadcast;
 
-import org.celstec.arlearn2.android.broadcast.task.SynchronizeRunsTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeRunsTask;
+import org.celstec.arlearn2.android.delegators.GameDelegator;
+import org.celstec.arlearn2.android.delegators.RunDelegator;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -29,14 +31,16 @@ public class NetworkSwitcher extends BroadcastReceiver {
 	}
 
 	public void resyncRuns(Context context) {
-		SynchronizeRunsTask.resetCloudSyncTime();
-		broadCast(context, RunReceiver.action);
+//		SynchronizeRunsTask.resetCloudSyncTime();
+//		broadCast(context, RunReceiver.action);
+		RunDelegator.getInstance().synchronizeRunsWithServer(context);
+		GameDelegator.getInstance().synchronizeGamesWithServer(context);
 	}
 	
-	private void broadCast(Context context, String action) {
-		Intent runIntent = new Intent();
-		runIntent.setAction(action);
-		context.sendBroadcast(runIntent);
-	}
+//	private void broadCast(Context context, String action) {
+//		Intent runIntent = new Intent();
+//		runIntent.setAction(action);
+//		context.sendBroadcast(runIntent);
+//	}
 
 }

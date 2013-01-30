@@ -11,7 +11,7 @@ import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
-import org.celstec.arlearn2.android.broadcast.task.ForceUpdateTask;
+import org.celstec.arlearn2.android.asynctasks.db.ForceUpdateTask;
 import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.cache.MediaUploadCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.MyResponses;
@@ -17,6 +18,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.Menu;
@@ -70,10 +72,10 @@ public class ViewAnswerActivity extends GeneralActivity {
 			}
 			if (json.has("audioUrl")) {
 				((LinearLayout) findViewById(R.id.playButtonsAnswer)).setVisibility(View.VISIBLE);
-
-				MediaCacheItem mci = null; //org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getAudioId(resp.getRunId(), resp.getTimestamp()));
-				if (mci != null)
-					apd = new AudioPlayerDelegate(""+mci.getItemId(), this);
+				Uri localAudio = MediaUploadCache.getInstance(resp.getRunId()).getLocalUri(json.getString("audioUrl"));
+//				MediaCacheItem mci = null; //org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getAudioId(resp.getRunId(), resp.getTimestamp()));
+				if (localAudio != null)
+					apd = new AudioPlayerDelegate(localAudio, this);
 
 			} else {
 				((LinearLayout) findViewById(R.id.playButtonsAnswer)).setVisibility(View.GONE);
@@ -151,8 +153,8 @@ public class ViewAnswerActivity extends GeneralActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		System.gc();
-		if (apd != null)
-			apd.unbind();
+//		if (apd != null)
+//			apd.unbind();
 	}
 
 	@Override

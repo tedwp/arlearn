@@ -10,10 +10,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.android.broadcast.BeanReceiver;
-import org.celstec.arlearn2.android.broadcast.GameReceiver;
 import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
-import org.celstec.arlearn2.android.broadcast.RunReceiver;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.GameDelegator;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.client.GenericClient;
@@ -275,9 +274,11 @@ public class ChannelAPINotificationService extends Service {
 //		sendBroadcast(runSyncIntent);
 		RunDelegator.getInstance().synchronizeRunsWithServer(this);
 		
-		Intent gameSyncIntent = new Intent();
-		gameSyncIntent.setAction(GameReceiver.action);
-		sendBroadcast(gameSyncIntent);
+//		Intent gameSyncIntent = new Intent();
+//		gameSyncIntent.setAction(GameReceiver.action);
+//		sendBroadcast(gameSyncIntent);
+		GameDelegator.getInstance().synchronizeGamesWithServer(this);
+		
 		
 		Intent gimIntent = new Intent();
 		gimIntent.setAction(GeneralItemReceiver.action);

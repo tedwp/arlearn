@@ -4,6 +4,10 @@
 	android:background="@android:color/white"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	
+	<WebView  android:id="@+id/mct_webview"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content" />
+	
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:id="@+id/multipleChoiceImageTable"
@@ -11,7 +15,5 @@
         android:layout_weight=".90"
         android:stretchColumns="1"
             >
-        
-        
     </TableLayout>
 </LinearLayout>

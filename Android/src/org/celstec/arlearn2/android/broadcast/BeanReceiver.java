@@ -2,20 +2,11 @@ package org.celstec.arlearn2.android.broadcast;
 
 import java.io.Serializable;
 
-import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.GeneralItemAdapter;
-import org.celstec.arlearn2.android.db.RunAdapter;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.notification.GeneralItemModification;
-import org.celstec.arlearn2.beans.notification.Ping;
-import org.celstec.arlearn2.beans.notification.RunModification;
-import org.celstec.arlearn2.beans.run.Run;
-
+import org.celstec.arlearn2.android.delegators.RunDelegator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 public class BeanReceiver extends BroadcastReceiver {
 
@@ -30,7 +21,8 @@ public class BeanReceiver extends BroadcastReceiver {
 			try {
 				switch (NotificationBeans.valueOf(bean.getClass().getSimpleName())) {
 				case RunModification:
-					reCast(RunReceiver.action, bean, context);
+					RunDelegator.getInstance().synchronizeRunsWithServer(context);
+//					reCast(RunReceiver.action, bean, context);
 					break;
 				case GeneralItemModification:
 					reCast("org.celstec.arlearn2.beans.notification.GeneralItemModification", bean, context);

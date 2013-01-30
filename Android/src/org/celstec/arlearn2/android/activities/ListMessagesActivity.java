@@ -16,6 +16,7 @@ import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.MyActions;
+import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
 import org.celstec.arlearn2.android.list.GenericListRecord;
@@ -45,6 +46,8 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 		Intent actionIntent = new Intent();
 		actionIntent.setAction(ActionReceiver.action);
 		sendBroadcast(actionIntent);
+		
+		RunDelegator.getInstance().loadRun(this, getPropertiesAdapter().getCurrentRunId());
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package org.celstec.arlearn2.android.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.celstec.arlearn2.android.broadcast.task.PublishActionTask;
+import org.celstec.arlearn2.android.asynctasks.network.PublishActionTask;
 import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.beans.run.Action;
 import android.content.ContentValues;

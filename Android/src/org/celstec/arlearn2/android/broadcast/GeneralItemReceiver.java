@@ -1,11 +1,11 @@
 package org.celstec.arlearn2.android.broadcast;
 
 
-import org.celstec.arlearn2.android.broadcast.task.CreateNewGItemTask;
-import org.celstec.arlearn2.android.broadcast.task.DeleteItemTask;
-import org.celstec.arlearn2.android.broadcast.task.MakeGeneralItemDisappearedTask;
-import org.celstec.arlearn2.android.broadcast.task.MakeGeneralItemVisibleTask;
-import org.celstec.arlearn2.android.broadcast.task.SynchronizeGeneralItemsTask;
+import org.celstec.arlearn2.android.asynctasks.db.CreateNewGItemTask;
+import org.celstec.arlearn2.android.asynctasks.db.DeleteItemTask;
+import org.celstec.arlearn2.android.asynctasks.db.MakeGeneralItemDisappearedTask;
+import org.celstec.arlearn2.android.asynctasks.db.MakeGeneralItemVisibleTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGeneralItemsTask;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;

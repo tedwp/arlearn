@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
-import org.celstec.arlearn2.android.broadcast.task.SynchronizeRunsTask;
+import org.celstec.arlearn2.android.asynctasks.db.LoadMediaUploadToCache;
+import org.celstec.arlearn2.android.asynctasks.network.DownloadFileTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeRunsTask;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
@@ -76,14 +78,11 @@ public class RunDelegator {
 							RunCache.getInstance().put(run);
 						}
 					} else {
-						System.out.println("hier");
 						boolean runDeleted = false;
 						if (run.getDeleted() != null) {
 							runDeleted = run.getDeleted();
 						}
-						System.out.println("hier");
 						db.getRunAdapter().insertBeta(run);
-						System.out.println("hier");
 						if (!runDeleted) {
 							UserDelegator.getInstance().synchronizeUserWithServer(db.getContext(), run.getRunId(), PropertiesAdapter.getInstance(db.getContext()).getUsername());
 							GameDelegator.getInstance().synchronizeGameWithServer(db.getContext(), run.getGameId());
@@ -100,6 +99,17 @@ public class RunDelegator {
 	public Run[] getRuns() {
 		Run[] runs = RunCache.getInstance().getRuns();
 		return runs;
+	}
+	
+	public void loadRun(Context ctx, Long runId) {
+		Run r = RunCache.getInstance().getRun(runId);
+		if (r != null) {
+			(new LoadMediaUploadToCache(runId)).run(ctx);
+			GameDelegator.getInstance().loadGameToCache(ctx, r.getGameId());
+			DownloadFileTask syncTask = new DownloadFileTask();
+			syncTask.gameId = r.getGameId();
+			syncTask.run(ctx);
+		}
 	}
 	
 }

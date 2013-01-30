@@ -1,26 +1,19 @@
 package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.asynctasks.RestInvocation;
+import org.celstec.arlearn2.android.asynctasks.db.CleanUpFilesThatAreNotInDatabase;
+import org.celstec.arlearn2.android.asynctasks.db.LoadRunsAndGamesToCache;
 import org.celstec.arlearn2.android.broadcast.ActionReceiver;
-import org.celstec.arlearn2.android.broadcast.RunReceiver;
-import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
-import org.celstec.arlearn2.beans.game.Config;
-import org.celstec.arlearn2.client.RunClient;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 public class SplashScreenActivity extends GeneralActivity {
 
@@ -48,6 +41,12 @@ public class SplashScreenActivity extends GeneralActivity {
 		});
 		SplashCounter task = new SplashCounter();
 		task.execute(new Object[] {});
+		
+		LoadRunsAndGamesToCache gameAndRunsTask = new LoadRunsAndGamesToCache();
+		gameAndRunsTask.run(this);
+		
+		CleanUpFilesThatAreNotInDatabase cleanUpTask = new CleanUpFilesThatAreNotInDatabase();
+		cleanUpTask.run(this);
 	}
 
 	@Override

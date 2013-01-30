@@ -12,6 +12,7 @@ public class NetworkTaskHandler extends Handler {
     public static final int SYNC_RUNS = 5;
     public static final int SYNC_GI_MEDIA = 6;
     public static final int SYNC_USER_MEDIA = 7;
+    public static final int SYNC_UPLOAD_MEDIA = 8;
 
 
 	@Override

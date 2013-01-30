@@ -16,6 +16,7 @@ import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
+import org.celstec.arlearn2.android.cache.MediaUploadCache;
 import org.celstec.arlearn2.android.cache.ResponseCache;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
@@ -76,6 +77,7 @@ public class RunAdapter extends GenericDbTable {
 		initialValues.put(START_TIME, run.getStartTime());
 		initialValues.put(SERVER_CREATE_TIME, run.getServerCreationTime());
 		initialValues.put(BEAN, run.toString());
+		initialValues.put(GAMEID, run.getGameId());
 		initialValues.put(DELETED, runDeleted);
 		db.getSQLiteDb().insert(getTableName(), null, initialValues);
 	}
@@ -317,14 +319,16 @@ public class RunAdapter extends GenericDbTable {
 				db.getGeneralItemVisibility().deleteRun(runId);
 //				((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).deleteRun(id);
 				((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).deleteRun(runId);
-				((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).deleteRun(runId);
+//				((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).deleteRun(runId);
+				((MediaCacheUpload) db.table(DBAdapter.MEDIA_CACHE_UPLOAD)).deleteRun(runId);
 				((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).deleteRun(runId);
 				db.getSQLiteDb().delete(getTableName(), ID+" = "+runId, null);
 				
 				RunCache.getInstance().delete(runId);
 				ActionCache.getInstance().delete(runId);
 				GeneralItemVisibilityCache.getInstance().remove(runId);
-				org.celstec.arlearn2.android.cache.MediaCache.getInstance().remove(runId);
+				MediaUploadCache.getInstance(runId).remove();
+//				org.celstec.arlearn2.android.cache.MediaCache.getInstance().remove(runId);
 				ResponseCache.getInstance().remove(runId);
 				
 				ActivityUpdater.updateActivities(db.getContext(), ListExcursionsActivity.class.getCanonicalName(), 

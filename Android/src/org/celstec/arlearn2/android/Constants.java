@@ -14,6 +14,8 @@ public class Constants {
 	public static final String INCOMMING = "incomming";
 	public static final String OUTGOING = "outgoing";
 	public static final String RUN = "run_";
+	public static final String GAME_LAST_SYNC_DATE = "gameLastSyncDate";
+	public static final String RUN_LAST_SYNC_DATE = "runLastSyncDate";
 	public static String FUSION_SERVICE = "fusiontables";
 	public static String TOKEN = "Token";
 	public static String CURRENT_RUN = "CurrentRun";

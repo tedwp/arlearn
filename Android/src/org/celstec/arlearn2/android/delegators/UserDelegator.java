@@ -1,6 +1,6 @@
 package org.celstec.arlearn2.android.delegators;
 
-import org.celstec.arlearn2.android.broadcast.task.SynchronizeUserTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeUserTask;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.beans.run.User;
 

@@ -10,6 +10,8 @@ import org.celstec.arlearn2.android.answerQuestion.RecordAudioDelegate;
 import org.celstec.arlearn2.android.answerQuestion.TakePictureDelegate;
 import org.celstec.arlearn2.android.answerQuestion.TakeTextNoteDelegate;
 import org.celstec.arlearn2.android.answerQuestion.TakeVideoDelegate;
+import org.celstec.arlearn2.android.asynctasks.db.RegisterUploadInDbTask;
+import org.celstec.arlearn2.android.asynctasks.network.UploadFileSyncTask;
 import org.celstec.arlearn2.android.broadcast.MediaService;
 import org.celstec.arlearn2.android.broadcast.ResponseService;
 import org.celstec.arlearn2.android.db.DBAdapter;
@@ -144,18 +146,25 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		intent.putExtra("bean", r);
 		startService(intent);
 		
-		if (rad != null && tpd != null && tvd != null && (rad.getRecordingPath() == null || tpd.getUri() == null || tvd.getUri() == null)) {
-			intent = new Intent(this, MediaService.class);
-			intent.putExtra(MediaService.NEW_MEDIA, rad.getUri() != null || tpd.getUri() != null || tvd.getUri() != null);
-			intent.putExtra(MediaService.RECORDING_PATH, rad.getUri());
-			// intent.putExtra(MediaService.IMAGE_PATH, imagePath);
-			intent.putExtra(MediaService.IMAGE_PATH, tpd.getUri());
-			intent.putExtra(MediaService.VIDEO_URI, tvd.getUri());
-			intent.putExtra(MediaService.USERNAME, pa.getUsername());
-			intent.putExtra(MediaService.CURRENT_TIME, currentTime);
-			intent.putExtra(MediaService.RUNID, pa.getCurrentRunId());
-			startService(intent);
+		if (rad != null) {
+			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile( runId, "audio:"+currentTime,  pa.getUsername(), rad.getUri(), "audio/AMR");
+			task.taskToRunAfterExecute(new UploadFileSyncTask());
+			task.run(this);
+			
 		}
+		
+//		if (rad != null && tpd != null && tvd != null && (rad.getRecordingPath() == null || tpd.getUri() == null || tvd.getUri() == null)) {
+//			intent = new Intent(this, MediaService.class);
+//			intent.putExtra(MediaService.NEW_MEDIA, rad.getUri() != null || tpd.getUri() != null || tvd.getUri() != null);
+//			intent.putExtra(MediaService.RECORDING_PATH, rad.getUri());
+//			// intent.putExtra(MediaService.IMAGE_PATH, imagePath);
+//			intent.putExtra(MediaService.IMAGE_PATH, tpd.getUri());
+//			intent.putExtra(MediaService.VIDEO_URI, tvd.getUri());
+//			intent.putExtra(MediaService.USERNAME, pa.getUsername());
+//			intent.putExtra(MediaService.CURRENT_TIME, currentTime);
+//			intent.putExtra(MediaService.RUNID, pa.getCurrentRunId());
+//			startService(intent);
+//		}
 		setResult(1);
 		finish();
 	}
