@@ -22,7 +22,8 @@ public class RunListDeserializer extends BeanDeserializer{
 	
 	public void initBean(JSONObject object, Bean genericBean) throws JSONException {
 		super.initBean(object, genericBean);
-		RunList mctItem = (RunList) genericBean;
-		if (object.has("runs")) mctItem.setRuns(ListDeserializer.toBean(object.getJSONArray("runs"), Run.class));
+		RunList runList = (RunList) genericBean;
+		if (object.has("serverTime")) runList.setServerTime(object.getLong("serverTime"));
+		if (object.has("runs")) runList.setRuns(ListDeserializer.toBean(object.getJSONArray("runs"), Run.class));
 	}
 }

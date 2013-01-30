@@ -8,10 +8,11 @@ public class GamesListSerializer extends BeanSerializer{
 
 	@Override
 	public JSONObject toJSON(Object bean) {
-		GamesList tl = (GamesList) bean;
+		GamesList gamesList = (GamesList) bean;
 		JSONObject returnObject = super.toJSON(bean);
 		try {
-			if (tl.getGames() != null) returnObject.put("games", ListSerializer.toJSON(tl.getGames()));
+			if (gamesList.getServerTime() != null) returnObject.put("serverTime", gamesList.getServerTime());
+			if (gamesList.getGames() != null) returnObject.put("games", ListSerializer.toJSON(gamesList.getGames()));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

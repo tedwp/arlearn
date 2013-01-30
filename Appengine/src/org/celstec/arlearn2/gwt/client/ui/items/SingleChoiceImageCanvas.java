@@ -12,6 +12,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.util.StringUtil;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.IButton;
@@ -24,6 +25,10 @@ import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.HiddenItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.ItemHoverEvent;
+import com.smartgwt.client.widgets.form.fields.events.ItemHoverHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 public class SingleChoiceImageCanvas extends GeneralItemCanvas{
@@ -32,6 +37,8 @@ public class SingleChoiceImageCanvas extends GeneralItemCanvas{
 	private HTMLPane questionHtmlLabel;
 	private IButton questionEditButton = new IButton();
 
+	protected CheckboxItem isAudioQuestion;
+	protected TextItem audioUrl;
 	
 	private TextItem ti1 = new TextItem();
 	private TextItem audio1 = new TextItem();
@@ -62,6 +69,10 @@ public class SingleChoiceImageCanvas extends GeneralItemCanvas{
 
 	protected DynamicForm form1 = new DynamicForm();
 	protected DynamicForm form2 = new DynamicForm();
+	
+	private final String AUDIO_QUESTION = "audioQuestion";
+	private final String IS_AUDIO_QUESTION = "isAudioQuestion";
+
 
 	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
@@ -74,6 +85,8 @@ public class SingleChoiceImageCanvas extends GeneralItemCanvas{
 	protected void initComponents() {
 		super.initComponents();
 		createQuestionHtmlComponent();
+		createAudioFeedTextItem();
+		createisAudioQuestionComponent();
 		createAnswer(ti1, cb1, audio1, "answertext1", "answercb1", constants.answer() + " 1", null);
 		createAnswer(ti2, cb2, audio2, "answertext2", "answercb2", constants.answer() + " 2", "answertext1");
 		createAnswer(ti3, cb3, audio3, "answertext3", "answercb3", constants.answer() + " 3", "answertext2");
@@ -83,8 +96,8 @@ public class SingleChoiceImageCanvas extends GeneralItemCanvas{
 	
 	private void doLayout() {
 		this.addMember(form1);
-		form1.setFields(idItem, gameIdItem, nameItem, latItem, lngItem, sortItem,  roleGrid);
-		addField(form1, idItem, gameIdItem, nameItem, latItem, lngItem, sortItem,  roleGrid);
+		form1.setFields(idItem, gameIdItem, nameItem, latItem, lngItem, sortItem,  roleGrid, isAudioQuestion, audioUrl);
+		addField(form1, idItem, gameIdItem, nameItem, latItem, lngItem, sortItem,  roleGrid, isAudioQuestion, audioUrl);
 		this.addMember(questionLabel);
 		this.addMember(questionHtmlLabel);
 
@@ -146,6 +159,55 @@ public class SingleChoiceImageCanvas extends GeneralItemCanvas{
 
 	}
 	
+	protected void createAudioFeedTextItem() {
+		audioUrl = new TextItem(AUDIO_QUESTION);
+		audioUrl.setTitle("audio feed question");
+		audioUrl.setSelectOnFocus(true);
+		audioUrl.setWrapTitle(false);
+		audioUrl.setShowIfCondition(new FormItemIfFunction() {
+			
+			@Override
+			public boolean execute(FormItem item, Object value, DynamicForm form) {
+				if (form.getValue(IS_AUDIO_QUESTION) == null) return false;
+				return form.getValue(IS_AUDIO_QUESTION).equals(Boolean.TRUE);
+			}
+		});
+	}
+	
+	private void createisAudioQuestionComponent() {
+		isAudioQuestion = new CheckboxItem();
+		isAudioQuestion.setName(IS_AUDIO_QUESTION);
+		isAudioQuestion.setStartRow(true);
+		isAudioQuestion.setTitle("question as audio");
+		isAudioQuestion.setRedrawOnChange(true);
+		isAudioQuestion.addItemHoverHandler(new ItemHoverHandler() {
+			
+			@Override
+			public void onItemHover(ItemHoverEvent event) {
+			 
+				isAudioQuestion.setPrompt(constants.autoLaunchHover());
+			}
+		});
+		isAudioQuestion.addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				boolean visible = (Boolean) event.getValue();
+				if (visible) {
+					questionLabel.setVisibility(Visibility.HIDDEN);	
+					questionHtmlLabel.setVisibility(Visibility.HIDDEN);
+					questionEditButton.setVisibility(Visibility.HIDDEN);
+				} else {
+					questionLabel.setVisibility(Visibility.VISIBLE);
+					questionHtmlLabel.setVisibility(Visibility.VISIBLE);
+					questionEditButton.setVisibility(Visibility.VISIBLE);
+				}
+				
+				
+			}
+		});
+	}
+	
 	private void createAnswer(TextItem ansTextItem1, CheckboxItem ansItem1, TextItem audioItem, String textName, String cbName, String textTitle, final String showIf) {
 		ansTextItem1.setName(textName);
 		ansTextItem1.setRedrawOnChange(true);
@@ -191,9 +253,13 @@ public class SingleChoiceImageCanvas extends GeneralItemCanvas{
 	public JSONObject generateObject() {
 		JSONObject result = super.generateObject();
 		result.put("type", new JSONString("org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest"));
-		result.put("richText", new JSONString(questionHtmlLabel.getContents()));
-		result.put("description", new JSONString(StringUtil.unescapeHTML(questionHtmlLabel.getContents())));
+		if (getValue(IS_AUDIO_QUESTION) != null && (Boolean) getValue(IS_AUDIO_QUESTION)) {
+			result.put(AUDIO_QUESTION, new JSONString((String) getValue(AUDIO_QUESTION)));	
 
+		} else {
+			result.put("richText", new JSONString(questionHtmlLabel.getContents()));
+			result.put("description", new JSONString(StringUtil.unescapeHTML(questionHtmlLabel.getContents())));
+		}
 
 		JSONArray ansArray = new JSONArray();
 		result.put("answers", ansArray);
@@ -211,7 +277,6 @@ public class SingleChoiceImageCanvas extends GeneralItemCanvas{
 		if (form2.getValue(textId) != null) {
 			JSONObject answer = new JSONObject();
 			answer.put("imageUrl", new JSONString(form2.getValueAsString(textId)));
-			System.out.println("form2.getValueAsString(cbId) "+form2.getValueAsString(cbId));
 			if (form2.getValueAsString(cbId + "nfc") != null) answer.put("audioUrl", new JSONString(form2.getValueAsString(cbId + "nfc")));
 			answer.put("isCorrect", JSONBoolean.getInstance(form2.getValue(cbId) == null ? false : (Boolean) form2.getValue(cbId)));
 
@@ -229,6 +294,14 @@ public class SingleChoiceImageCanvas extends GeneralItemCanvas{
 		JSONObject o = jsonValue.isObject();
 		if (o == null)
 			return;
+		if (o.get("audioQuestion") != null) {
+			form1.setValue(IS_AUDIO_QUESTION, true);
+			form1.setValue(AUDIO_QUESTION, o.get("audioQuestion").isString().stringValue());
+			form1.redraw();
+			questionLabel.setVisibility(Visibility.HIDDEN);	
+			questionHtmlLabel.setVisibility(Visibility.HIDDEN);
+			questionEditButton.setVisibility(Visibility.HIDDEN);
+		}
 		if (o.get("answers") != null) {
 			JSONArray array = o.get("answers").isArray();
 			for (int i = 0; i < array.size(); i++) {

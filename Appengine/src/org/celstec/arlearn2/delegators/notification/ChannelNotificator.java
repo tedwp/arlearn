@@ -7,7 +7,7 @@ import com.google.appengine.api.channel.ChannelMessage;
 import com.google.appengine.api.channel.ChannelService;
 import com.google.appengine.api.channel.ChannelServiceFactory;
 
-public class ChannelNotificator {
+public class ChannelNotificator implements NotificationChannel{
 
 	private static ChannelNotificator instance;
 	private static final Logger log = Logger.getLogger(ChannelNotificator.class.getName());

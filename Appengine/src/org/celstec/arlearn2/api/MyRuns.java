@@ -14,6 +14,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.game.Config;
@@ -51,12 +52,21 @@ public class MyRuns extends Service {
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/participate")
-	public String getParticipateRuns(@HeaderParam("Authorization") String token, @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+	public String getParticipateRuns(
+			@HeaderParam("Authorization") String token, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept,
+			@QueryParam("from") Long from,
+			@QueryParam("until") Long until
+			) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 		RunDelegator rd = new RunDelegator(token);
-		return serialise(rd.getParticipateRuns(), accept);
+		if (from == null && until == null) {
+			return serialise(rd.getParticipateRuns(), accept);	
+		}
+		return serialise(rd.getParticipateRuns(from, until), accept);
 	}
+
 	
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

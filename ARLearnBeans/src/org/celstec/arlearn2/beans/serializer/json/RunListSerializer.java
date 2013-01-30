@@ -11,6 +11,7 @@ public class RunListSerializer extends BeanSerializer{
 		RunList rl = (RunList) bean;
 		JSONObject returnObject = super.toJSON(bean);
 		try {
+			if (rl.getServerTime() != null) returnObject.put("serverTime", rl.getServerTime());
 			if (rl.getRuns() != null) returnObject.put("runs", ListSerializer.toJSON(rl.getRuns()));
 		} catch (JSONException e) {
 			e.printStackTrace();

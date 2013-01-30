@@ -75,6 +75,11 @@ public class UserIterator extends GenericBean {
 			System.out.println("*** deleted with user "+userJDO.getEmail() +" "+userJDO.getRunId());
 			UserManager.deleteUser(pm, userJDO);
 			
+		} else {
+			List<RunJDO> list = RunManager.getRuns(pm, userJDO.getRunId(), null, null, null, null);
+			if (list.isEmpty()) {
+				UserManager.deleteUser(pm, userJDO);
+			}
 		}
 		
 	}

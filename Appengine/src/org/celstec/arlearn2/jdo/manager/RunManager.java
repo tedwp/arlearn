@@ -53,8 +53,10 @@ public class RunManager {
 			// query.setFilter("deleted == null");
 			return (List<RunJDO>) query.execute();
 		}
-		query.setFilter(ManagerUtil.generateFilter(args, params, paramsNames));
-		query.declareParameters(ManagerUtil.generateDeclareParameters(args, types, params, paramsNames));
+		String filter = ManagerUtil.generateFilter(args, params, paramsNames);
+		String paramDecl = ManagerUtil.generateDeclareParameters(args, types, params, paramsNames);
+		query.setFilter(filter);
+		query.declareParameters(paramDecl);
 		return (List<RunJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args));
 	}
 

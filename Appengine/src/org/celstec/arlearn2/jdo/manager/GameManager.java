@@ -29,6 +29,7 @@ public class GameManager {
 		gameJdo.setOwner(owner);
 		gameJdo.setFeedUrl(feedUrl);
 		gameJdo.setTitle(title);
+		gameJdo.setLastModificationDate(System.currentTimeMillis());
 		if (config != null)  {
 			gameJdo.setConfig(config.toString());
 		}
@@ -87,6 +88,9 @@ public class GameManager {
 		game.setFeedUrl(jdo.getFeedUrl());
 		game.setGameId(jdo.getGameId());
 		game.setOwner(jdo.getOwner());
+		if (jdo.getLastModificationDate() != null) {
+			game.setLastModificationDate(jdo.getLastModificationDate());
+		}
 		if (jdo.getConfig() != null && !"".equals(jdo.getConfig())) {
 			JsonBeanDeserializer jbd;
 			try {

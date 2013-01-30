@@ -2,8 +2,17 @@
 <cronentries>
   <cron>
     <url>/rest/cleanUp/iterateRuns</url>
-    <description>Clean-up orphan runs or runs that have been deleted more than a month ago </description>
+    <description>Clean-up orphan runs that have been deleted more than a month ago </description>
     <schedule>every saturday 14:45</schedule>
     <timezone>Europe/Brussels</timezone>
   </cron>
+  
+  <cron>
+    <url>/rest/cleanUp/iterateUsers</url>
+    <description>Clean-up orphan users that have been deleted more than a month ago </description>
+    <schedule>every saturday 13:45</schedule>
+    <timezone>Europe/Brussels</timezone>
+  </cron>
+  
+  
 </cronentries>

@@ -52,6 +52,7 @@ import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.SingleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
+import org.celstec.arlearn2.beans.notification.APNDeviceDescription;
 import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.beans.notification.GeneralItemModification;
 import org.celstec.arlearn2.beans.notification.Ping;
@@ -168,6 +169,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(RunPackage.class.getCanonicalName(), new RunPackage.RunPackageSerializer());
 		customSerializerMap.put(Ping.class.getCanonicalName(), new Ping.Serializer());
 		customSerializerMap.put(Pong.class.getCanonicalName(), new Pong.Serializer());
+		customSerializerMap.put(APNDeviceDescription.class.getCanonicalName(), new APNDeviceDescription.Serializer());
 	}
 	
 	public static JSONObject serialiseToJson(Object bean) {

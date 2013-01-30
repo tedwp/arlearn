@@ -11,11 +11,21 @@ public class GamesList extends Bean implements Serializable{
 	public static String gamesType = "org.celstec.arlearn2.beans.game.Game";
 	
 	private List<Game> games = new Vector();
+	
+	private Long serverTime;
 
 	public GamesList() {
 		
 	}
 	
+	public Long getServerTime() {
+		return serverTime;
+	}
+
+	public void setServerTime(Long serverTime) {
+		this.serverTime = serverTime;
+	}
+
 	public List<Game> getGames() {
 		return games;
 	}

@@ -58,6 +58,36 @@ public class UserManager {
 		return returnProgressDefinitions;
 	}
 	
+	public static List<User> getUserList(String email, Long from, Long until) {
+		ArrayList<User> returnProgressDefinitions = new ArrayList<User>();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query query = pm.newQuery(UserJDO.class);
+		String filter = null;
+		String params = null;
+		Object args[] = null;
+		if (from == null) {
+			filter = "email == emailParam & lastModificationDate <= untilParam";
+			params = "String emailParam, Long untilParam";
+			args = new Object[]{email, until};
+		} else if (until == null) {
+			filter = "email == emailParam & lastModificationDate >= fromParam";
+			params = "String emailParam, Long fromParam";
+			args = new Object[]{email, from};
+		} else {
+			filter = "email == emailParam & lastModificationDate >= fromParam & lastModificationDate <= untilParam";
+			params = "String emailParam, Long fromParam, Long untilParam";
+			args = new Object[]{email, from, until};
+		}
+		
+		query.setFilter(filter);
+		query.declareParameters(params);
+		Iterator<UserJDO> it = ((List<UserJDO>) query.executeWithArray(args)).iterator();
+		while (it.hasNext()) {
+			returnProgressDefinitions.add(toBean((UserJDO) it.next()));
+		}
+		return returnProgressDefinitions;
+	}
+	
 	public static List<UserJDO> getUsers(PersistenceManager pm, String name, String email, String teamId, Long runId) {
 		Query query = pm.newQuery(UserJDO.class);
 		Object args [] ={name, email, teamId, runId};

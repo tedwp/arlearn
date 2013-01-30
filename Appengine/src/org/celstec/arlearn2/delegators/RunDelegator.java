@@ -94,8 +94,6 @@ public class RunDelegator extends GoogleDelegator {
 			User user = (User) it.next();
 			Run r = getRun(user.getRunId());
 			if (r != null) {
-			logger.severe("run is null? "+r);
-
 			r.setDeleted(user.getDeleted());
 			rl.addRun(r);
 			} else {
@@ -103,6 +101,31 @@ public class RunDelegator extends GoogleDelegator {
 
 			}
 		}
+		rl.setServerTime(System.currentTimeMillis());
+
+		return rl;
+	}
+	
+	public RunList getParticipateRuns(Long from, Long until) {
+		UsersDelegator qu = new UsersDelegator(this);
+		String myAccount = qu.getCurrentUserAccount();
+		// TODO migrate this method to UserQuery
+		// TODO add this to cache
+		// TODO migrate RunsCache
+		Iterator<User> it = UserManager.getUserList(myAccount, from, until).iterator();
+		RunList rl = new RunList();
+		while (it.hasNext()) {
+			User user = (User) it.next();
+			Run r = getRun(user.getRunId());
+			if (r != null) {
+			r.setDeleted(user.getDeleted());
+			rl.addRun(r);
+			} else {
+				logger.severe("following run does not exist"+user.getRunId());
+
+			}
+		}
+		rl.setServerTime(System.currentTimeMillis());
 		return rl;
 	}
 

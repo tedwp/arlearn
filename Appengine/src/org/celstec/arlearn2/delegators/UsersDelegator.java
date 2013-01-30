@@ -12,6 +12,7 @@ import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.cache.UserLoggedInCache;
 import org.celstec.arlearn2.cache.UsersCache;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
+import org.celstec.arlearn2.delegators.notification.NotificationEngine;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.manager.RunManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
@@ -44,7 +45,8 @@ public class UsersDelegator extends GoogleDelegator {
 		RunModification rm = new RunModification();
 		rm.setModificationType(RunModification.CREATED);
 		rm.setRun((new RunDelegator(this)).getRun(u.getRunId()));
-		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
+		NotificationEngine.getInstance().notify(u.getEmail(), rm);
+//		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
 		
 		(new UpdateGeneralItemsVisibility(authToken, u.getRunId(), u.getEmail(), 1)).scheduleTask();
 		
@@ -203,7 +205,8 @@ public class UsersDelegator extends GoogleDelegator {
 		rm.setModificationType(RunModification.DELETED	);
 		rm.setRun(new Run());
 		rm.getRun().setRunId(runId);
-		ChannelNotificator.getInstance().notify(email, rm);
+		NotificationEngine.getInstance().notify(email, rm);
+//		ChannelNotificator.getInstance().notify(email, rm);
 	}
 	
 }

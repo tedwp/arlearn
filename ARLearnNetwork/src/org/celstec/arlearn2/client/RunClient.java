@@ -51,25 +51,10 @@ public class RunClient extends GenericClient{
 	
 	public RunList getRunsParticipate (String token) {
 		return (RunList)  executeGet(getUrlPrefix()+"/participate", token, RunList.class);
-
-//		HttpResponse response = conn.executeGET(getUrlPrefix()+"/participate", token, "application/json");
-//		String entry;
-//		try {
-//			entry = EntityUtils.toString(response.getEntity());
-//			Object jsonObject = jsonDeserialise(entry, RunList.class);
-//			if (jsonObject instanceof String) {
-//				System.err.println("token "+token);
-//				System.err.println("urlPrefix "+getUrlPrefix());
-//				System.err.println("jsonObject is string not runlist: "+jsonObject.toString());
-//			}
-//			return (RunList) jsonObject;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			RunList rl = new RunList();
-//			rl.setError("exception "+e.getMessage());
-//			return rl;
-//		}
-		
+	}
+	
+	public RunList getRunsParticipate (String token, Long from) {
+		return (RunList)  executeGet(getUrlPrefix()+"/participate?from="+from, token, RunList.class);
 	}
 	
 	public Config getConfig(String  token, Long runId) {

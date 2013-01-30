@@ -1,6 +1,7 @@
 package org.celstec.arlearn2.delegators;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -13,10 +14,14 @@ import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.notification.GameModification;
+import org.celstec.arlearn2.beans.run.Run;
+import org.celstec.arlearn2.beans.run.RunList;
+import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.cache.MyGamesCache;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.manager.GameManager;
+import org.celstec.arlearn2.jdo.manager.UserManager;
 import org.celstec.arlearn2.tasks.beans.DeleteGeneralItems;
 import org.celstec.arlearn2.tasks.beans.DeleteProgressDefinitions;
 import org.celstec.arlearn2.tasks.beans.DeleteRuns;
@@ -55,6 +60,59 @@ public class GameDelegator extends GoogleDelegator {
 		}
 		gl.setGames(list);
 		return gl;
+	}
+	
+	public GamesList getParticipateGames() {
+		GamesList gl = new GamesList();
+		UsersDelegator qu = new UsersDelegator(this);
+		RunDelegator rd = new RunDelegator(this);
+		String myAccount = qu.getCurrentUserAccount();
+		Iterator<User> it = UserManager.getUserList(null, myAccount, null, null).iterator();
+		RunList rl = new RunList();
+		HashSet<Long> addGames = new HashSet<Long>();
+		while (it.hasNext()) {
+			User user = (User) it.next();
+			Run r = rd.getRun(user.getRunId());
+			if (r != null) {
+				r.setDeleted(user.getDeleted());
+				if (!r.getDeleted()) {
+					if (r.getGame() != null && !addGames.contains(r.getGameId())) {
+						gl.addGame(r.getGame());
+						addGames.add(r.getGameId());
+					}
+				}
+			} else {
+				logger.severe("following run does not exist" + user.getRunId());
+
+			}
+		}
+		gl.setServerTime(System.currentTimeMillis());
+		return gl;
+	}
+	
+	public GamesList getParticipateGames(Long from, Long until) {
+		if (from !=null && until !=null &&from.longValue() >= until.longValue()) {
+			return new GamesList();
+		}
+		GamesList gl = getParticipateGames();
+		Iterator<Game> it = gl.getGames().iterator();
+		while (it.hasNext()) {
+			Game g = it.next();
+			if (from != null && g.getLastModificationDate() != null) {
+				if (from.longValue() > g.getLastModificationDate().longValue()) {
+					it.remove();
+				}
+			}
+			
+			if (until != null && g.getLastModificationDate() != null) {
+				if (until.longValue() < g.getLastModificationDate().longValue()) {
+					it.remove();
+				}
+			}
+		}
+		gl.setServerTime(System.currentTimeMillis());
+		return gl;
+		
 	}
 
 	public Game getGame(Long gameId) {
@@ -280,5 +338,17 @@ public class GameDelegator extends GoogleDelegator {
 		createGame(g, GameModification.ALTERED);
 		return g;
 
+	}
+	
+	public static void updateAllGames() {
+		int i = 0;
+		for (Game game: GameManager.getGames(null, null, null, null, null)) {
+			if (game.getLastModificationDate() == null) {
+				GameManager.addGame(game.getTitle(), game.getOwner(), game.getCreator(), game.getFeedUrl(), game.getGameId(), game.getConfig());
+				i++;
+				if (i> 10) return;
+			}
+		}
+		
 	}
 }

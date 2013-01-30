@@ -21,8 +21,9 @@ public class GamesListDeserializer  extends BeanDeserializer{
 	
 	public void initBean(JSONObject object, Bean genericBean) throws JSONException {
 		super.initBean(object, genericBean);
-		GamesList teamlist = (GamesList) genericBean;
-		if (object.has("games")) teamlist.setGames(ListDeserializer.toBean(object.getJSONArray("games"), Game.class));
+		GamesList gamesList = (GamesList) genericBean;
+		if (object.has("serverTime")) gamesList.setServerTime(object.getLong("serverTime"));
+		if (object.has("games")) gamesList.setGames(ListDeserializer.toBean(object.getJSONArray("games"), Game.class));
 	}
 
 }
