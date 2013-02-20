@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.cache.MediaCache;
+import org.celstec.arlearn2.android.delegators.GameDelegator;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.run.Run;
 
@@ -23,7 +24,7 @@ public class RunListRecord extends GenericListRecord {
 
 	public RunListRecord(Run run) {
 		this.setId(run.getRunId());
-		Game game = GameCache.getInstance().getGame(run.getGameId());
+		Game game = GameDelegator.getInstance().getGame(run.getGameId()); 
 		if (game != null)
 		if (game.getConfig().getMapAvailable()) {
 			setImageResourceId(R.drawable.map_icon);

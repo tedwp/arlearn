@@ -48,20 +48,20 @@ public class RunReceiver extends GenericReceiver {
 
 	}
 	
-	private void buildCache(final Context ctx) {
-		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
-		m.obj = new DBAdapter.DatabaseTask() {
-
-			@Override
-			public void execute(DBAdapter db) {
-				db.getRunAdapter().queryAll();
-				db.getGameAdapter().queryAll();
-				ActivityUpdater.updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName());
-			}
-		};
-		m.sendToTarget();
-
-	}
+//	private void buildCache(final Context ctx) {
+//		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
+//		m.obj = new DBAdapter.DatabaseTask() {
+//
+//			@Override
+//			public void execute(DBAdapter db) {
+//				
+//				db.getGameAdapter().queryAll();
+//				
+//			}
+//		};
+//		m.sendToTarget();
+//
+//	}
 
 	private void databaseOperations(Context ctx, RunModification rm) {
 		boolean updateGeneralItems = false;

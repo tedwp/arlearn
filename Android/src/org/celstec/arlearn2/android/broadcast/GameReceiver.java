@@ -1,7 +1,7 @@
 package org.celstec.arlearn2.android.broadcast;
 
 
-import org.celstec.arlearn2.android.broadcast.task.SynchronizeGamesTask;
+import org.celstec.arlearn2.android.delegators.game.SynchronizeGamesTask;
 import org.celstec.arlearn2.beans.notification.RunModification;
 
 import android.content.Context;

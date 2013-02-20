@@ -10,6 +10,8 @@ import org.celstec.arlearn2.android.broadcast.task.SynchronizeRunsTask;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.game.SynchronizeParticipatingGameTask;
+import org.celstec.arlearn2.android.delegators.run.QueryRunsTask;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.RunList;
 
@@ -30,6 +32,10 @@ public class RunDelegator {
 			instance = new RunDelegator();
 		}
 		return instance;
+	}
+	
+	public void initRunsFromDb(Context ctx) {
+		(new QueryRunsTask()).addTaskToQueue(ctx);
 	}
 	
 	public void synchronizeRunsWithServer(Context ctx) {
@@ -76,17 +82,14 @@ public class RunDelegator {
 							RunCache.getInstance().put(run);
 						}
 					} else {
-						System.out.println("hier");
 						boolean runDeleted = false;
 						if (run.getDeleted() != null) {
 							runDeleted = run.getDeleted();
 						}
-						System.out.println("hier");
 						db.getRunAdapter().insertBeta(run);
-						System.out.println("hier");
 						if (!runDeleted) {
 							UserDelegator.getInstance().synchronizeUserWithServer(db.getContext(), run.getRunId(), PropertiesAdapter.getInstance(db.getContext()).getUsername());
-							GameDelegator.getInstance().synchronizeGameWithServer(db.getContext(), run.getGameId());
+							GameDelegator.getInstance().fetchParticipatingGameFromServer(db.getContext(), run.getRunId());
 						}
 						RunCache.getInstance().put(run);
 					}

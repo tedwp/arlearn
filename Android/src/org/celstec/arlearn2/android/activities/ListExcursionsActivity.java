@@ -9,6 +9,7 @@ import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.ActionsDelegator;
+import org.celstec.arlearn2.android.delegators.GameDelegator;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
 
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
@@ -44,17 +45,12 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 			this.finish();
 		} else {
 			setContentView(R.layout.listexcursionscreen);
+			RunDelegator.getInstance().initRunsFromDb(this);
+			GameDelegator.getInstance().initGamesFromDb(this);
 			RunDelegator.getInstance().synchronizeRunsWithServer(this);
-//			syncRuns();
 		}
 	}
 	
-//	private void syncRuns() {
-////		Intent runIntent = new Intent();
-////		runIntent.setAction(RunReceiver.action);
-////		sendBroadcast(runIntent);
-//	}
-
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -84,10 +80,11 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 		ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
 		runs = RunDelegator.getInstance().getRuns();
 		if (runs != null) {
-
 			for (int i = 0; i < runs.length; i++) {
-				RunListRecord r = new RunListRecord(runs[i]);
-				runsList.add(r);
+				if (GameDelegator.getInstance().getGame(runs[i].getGameId()) != null) {
+					RunListRecord r = new RunListRecord(runs[i]);
+					runsList.add(r);	
+				}
 			}
 		}
 		ListView listView = (ListView) findViewById(R.id.listRuns);
