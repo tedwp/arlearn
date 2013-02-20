@@ -95,7 +95,10 @@
     <string name="cbGISabd">Simple action based dependency</string>
     <string name="cbGIAl">Automatically launch</string>
     <string name="cbGIOq">Open question</string>
-    <string name="tvGIUrl">URL</string>
+    <string name="tvGISabd">Simple action based dependency</string>
+    <string name="tvGIAl">Automatically launch</string>
+    <string name="tvGIOq">Open question</string>
+    <string name="tvGIUrl">URL</string>         
     
      <!--Todo-->
      <string name="makeAnnotation">Wil je hier een aantekening maken?</string>

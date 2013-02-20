@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0" >
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:src="@drawable/package_48x48" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:src="@drawable/mulchoice_48x48" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0" >
+
+        <TextView
+            android:id="@+id/tvNewMultipleChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/etNewMultipleChoice"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@android:drawable/editbox_background"
+            android:ems="10"
+            android:inputType="text"
+            android:textColor="#000000" >
+
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/etGIDesc"
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="@android:drawable/editbox_background"
+            android:ems="10"
+            android:gravity="top"
+            android:inputType="text"
+            android:lines="3"
+            android:hint="Formulate your question here"
+            android:textColor="#000000" >
+        </EditText>
+        
+        <TextView
+            android:id="@+id/tvGIDesc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#888888"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:text="Choices"
+            android:textAppearance="?android:attr/textAppearanceMedium" />        
+    </LinearLayout>
+
+    <TableLayout
+        android:id="@+id/tableLayoutB"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*" >
+
+        <TableRow
+            android:id="@+id/tableRowB1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textViewB1"
+                android:layout_column="0"
+                android:text="Is correct?" android:visibility="invisible">
+            </TextView>
+            
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/buttonAdd"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:maxLines="1"
+            android:text="Add choice" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0" >
+
+            <CheckBox
+                android:id="@+id/checkBoxA1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/etChoiceText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:ems="10" />
+
+        </LinearLayout>
+        
+        <Button
+            android:id="@+id/buttonCreateItem"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:maxLines="1"
+            android:text="Create multiple choice question" />        
+
+    </LinearLayout>
+
+</LinearLayout>

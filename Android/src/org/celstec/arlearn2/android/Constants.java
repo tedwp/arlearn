@@ -24,5 +24,13 @@ public class Constants {
 
 	public static long TIME_BETWEEN_GPS_UPDATES_UNSENSITIVE = 20000; //time in milliseconds
 	public static int DISTANCE_GPS_LISTENER_IN_METERES_UNSENSITIVE = 10;
+	
+	
+	public static final String GI_TYPE_NARRATOR_ITEM = "org.celstec.arlearn2.beans.generalItem.NarratorItem";
+	public static final String GI_TYPE_MULTIPLE_CHOICE = "org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest";
+	public static final String GI_TYPE_MULTIPLE_CHOICE_ANSWER = "org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem";
+	public static final String GI_TYPE_VIDEO_OBJECT = "org.celstec.arlearn2.beans.generalItem.VideoObject";
+	public static final String GI_TYPE_YOUTUBE_MOVIE = "org.celstec.arlearn2.beans.generalItem.YoutubeObject";
+	public static final String GI_TYPE_AUDIO_OBJECT = "org.celstec.arlearn2.beans.generalItem.AudioObject";	
 
 }

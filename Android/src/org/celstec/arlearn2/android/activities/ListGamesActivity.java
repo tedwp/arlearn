@@ -143,21 +143,20 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 			intent.putExtra("selectedGame", vGames[position]);
 			ListGamesActivity.this.startActivity(intent);			
 			break;
-//		case 2:
-//			// Show runs
-//			Log.d(CLASSNAME, "Clicked show runs "+position);
+		case 2:
+			// Show runs
+// Commented by btb			
 //			intent = new Intent(ListGamesActivity.this, ListRunsActivity.class);
 //			intent.putExtra("selectedGame", vGames[position]);
 //			ListGamesActivity.this.startActivity(intent);			
-//			break;
-//		case 3:
-//			// Show General Items
-//			Log.d(CLASSNAME, "Clicked show g items "+position);
-//			intent = new Intent(ListGamesActivity.this, ListGIActivity.class);
-//			intent.putExtra("selectedGame", vGames[position]);
-//			ListGamesActivity.this.startActivity(intent);			
-//			break;
-//
+			break;
+		case 3:
+			// Show General Items
+			intent = new Intent(ListGamesActivity.this, ListGIActivity.class);
+			intent.putExtra("selectedGame", vGames[position]);
+			ListGamesActivity.this.startActivity(intent);			
+			break;
+
 		default:
 			break;
 		}

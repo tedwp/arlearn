@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#ffffff"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/package_48x48" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/speechbubble_blue" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/etNewGeneralItem"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@android:drawable/editbox_background"
+            android:ems="10"
+            android:hint="Write item name here"
+            android:inputType="text"
+            android:textColor="#000000">
+            <requestFocus />
+        </EditText>
+        
+        <EditText
+            android:id="@+id/etGIDesc"
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:layout_weight="0"
+            android:background="@android:drawable/editbox_background"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="Description"
+            android:inputType="text"
+            android:lines="3"
+            android:textColor="#000000" >
+
+        </EditText>
+
+    </LinearLayout>
+
+ 
+    <Button
+        android:id="@+id/bNewGeneralItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:text="Create" />
+
+</LinearLayout>

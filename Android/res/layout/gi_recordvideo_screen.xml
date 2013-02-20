@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/package_48x48" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/video_48x48" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Use properties button in the menu to start/stop recording"
+            android:textColor="#000000" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/editTextVOName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Write item name here">    
+                    
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/editTextVODescription"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Description" />
+
+        <EditText
+            android:id="@+id/editTextVORichText"
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="@android:drawable/editbox_background"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="Rich text"
+            android:inputType="text"
+            android:lines="3"
+            android:textColor="#000000" />
+    </LinearLayout>
+    
+    <SurfaceView android:id="@+id/surface_camera"     
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true"
+        android:layout_weight="1"
+        >
+    </SurfaceView>
+
+</LinearLayout>
+
+
