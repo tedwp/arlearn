@@ -29,7 +29,8 @@ public class GeneralItemListRecord extends GenericListRecord {
 		setMessageDetail(" "+generalItem.getDescription());
 		setRightDetail("");
 		
-		// TODO set an icon depending on what the item is. This type is probably not used with these constants
+
+		
 		if ( generalItem.getType().equals(Constants.GI_TYPE_AUDIO_OBJECT)){
 			setImageResourceId(R.drawable.audio_icon);
 		} else if ( generalItem.getType().equals(Constants.GI_TYPE_MULTIPLE_CHOICE)){

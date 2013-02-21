@@ -107,6 +107,7 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 	}
 
 	
+
 	private void syncronizeGeneralItems(PropertiesAdapter pa) {
 		try {
 			final GeneralItemList gl = GeneralItemClient.getGeneralItemClient().getRunGeneralItemsAll(pa.getFusionAuthToken(), runId);
@@ -248,7 +249,7 @@ public class SynchronizeGeneralItemsTask implements NetworkTask {
 				}
 				
 				protected void generalItemToDb(DBAdapter db, GeneralItem item) {
-					boolean newInsert = db.getGeneralItemAdapter().insert(item);
+					boolean newInsert = db.getGeneralItemGameAdapter().insert(item);
 					
 				}
 			};

@@ -1,14 +1,22 @@
 package org.celstec.arlearn2.android.activities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.broadcast.task.SynchronizeGeneralItemsTask;
+import org.celstec.arlearn2.android.cache.GameCache;
+import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemGameAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.GameDelegator;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.android.genItemActivities.AudiorecorderActivity;
 import org.celstec.arlearn2.android.genItemActivities.VideorecorderActivity;
+import org.celstec.arlearn2.android.list.GameListAdapter;
+import org.celstec.arlearn2.android.list.GameListRecord;
 import org.celstec.arlearn2.android.list.GeneralItemListAdapter;
 import org.celstec.arlearn2.android.list.GeneralItemListRecord;
 import org.celstec.arlearn2.android.list.GenericListRecord;
@@ -36,7 +44,6 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 
 	private String CLASSNAME = this.getClass().getName();
 
-	private GeneralItem[] vGeneralItems = null;
 	private GeneralItemListAdapter adapter;
 	private Game selectedGame = null;
 
@@ -56,8 +63,18 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 	@Override
 	protected void onResume() {
 		super.onResume();
-		syncronizeLocalDatabaseFromServer(this);
-		doLocalDBQueryAndRender();
+		GeneralItemsDelegator.getInstance().fetchMyGeneralItemsFromServer(selectedGame.getGameId(), this);
+		
+		(new SynchronizeGeneralItemsTask(selectedGame.getGameId(), this)).addTaskToQueue(this);
+		// GameDelegator.getInstance().fetchMyGamesFromServer(this);
+		// Commented by btb
+		//syncronizeLocalDatabaseFromServer(this);
+		//doLocalDBQueryAndRender();
+		
+		
+		//GameDelegator.getInstance().fetchMyGamesFromServer(this);
+		renderGeneralItemsList();
+		
 	}
 
 // Commented by btb	
@@ -70,62 +87,9 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 //
 //	}
 
-	protected void syncronizeLocalDatabaseFromServer(Context ctx) {
 
-		DBAdapter db = new DBAdapter(ctx);
-		db.openForWrite();
+	
 
-		try {
-			// Take into account that this query is retrieving all GIs (also with deleted = true)
-			GeneralItemList gl = GeneralItemClient.getGeneralItemClient().getGameGeneralItems(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), selectedGame.getGameId());
-			// Commented by btb
-			//GeneralItemList gl = GeneralItemClient.getGeneralItemClient().getGeneralItemsByGameId(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), selectedGame.getGameId());
-			if (gl.getError() == null) {
-
-				db.getGeneralItemGameAdapter().emptyTable();
-				Iterator<GeneralItem> it = gl.getGeneralItems().iterator();
-				while (it.hasNext()) {
-					GeneralItem g = it.next();
-					if (!g.getDeleted()){
-						db.getGeneralItemGameAdapter().insert(g);
-						Log.d("Synchronizing db lite with DB.  general item:", g.getId() + ".");						
-					}
-				}
-
-			}
-		} catch (ARLearnException ae) {
-			if (ae.invalidCredentials()) {
-			}
-
-		} catch (Exception e) {
-			Log.e(CLASSNAME, "exception"+e.getMessage(), e);
-
-		} finally {
-			db.close();
-		}
-	}
-
-	private void doLocalDBQueryAndRender() {
-
-		if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
-			this.finish();
-		} else {
-			Long runId = getMenuHandler().getPropertiesAdapter().getCurrentRunId();
-			if (runId != null) {
-				DBAdapter db = new DBAdapter(this);
-				db.openForRead();
-
-				vGeneralItems = (GeneralItem[]) ((GeneralItemGameAdapter) db.table(DBAdapter.GENERALITEM_GAME_ADAPTER)).queryByGameId(selectedGame.getGameId());
-				// Log.d(CLASSNAME,
-				// "Elems en estructura despues de consultar bd: " +
-				// vGeneralItems.length);
-
-				db.close();
-				renderGeneralItemsList();
-			}
-		}
-
-	}
 
 	private void renderGeneralItemsList() {
 		ArrayList<GenericListRecord> alGenericListRecord = new ArrayList<GenericListRecord>();
@@ -134,14 +98,25 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 		adapter = new GeneralItemListAdapter(this, R.layout.listgeneralitemscreen, alGenericListRecord);
 		adapter.setOnListItemClickCallback(this);
 		listView.setAdapter(adapter);
+		
+		HashMap<Long, GeneralItem> hmGeneralItems = new HashMap<Long, GeneralItem>();
+		
+		hmGeneralItems = GeneralItemsCache.getInstance().getGeneralItemsWithGameId(selectedGame.getGameId());
+		
+		if(hmGeneralItems != null){
+			for (GeneralItem gi : hmGeneralItems.values()) {
 
-		for (int j = 0; (j < vGeneralItems.length) && (vGeneralItems[j] != null); j++) {
-			GeneralItemListRecord r = new GeneralItemListRecord(vGeneralItems[j]);
-			adapter.add(r);
+				GeneralItemListRecord r = new GeneralItemListRecord(gi);
+				adapter.add(r);
+								
+			}
+
 		}
+		
 
 	}
-
+	
+	
 	@Override
 	public void onListItemClick(View v, int position, GenericListRecord genericListRecord) {
 
