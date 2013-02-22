@@ -19,12 +19,11 @@ public class GeneralItemListRecord extends GenericListRecord {
 	
 	private boolean read = false;
 	private int action = -1;
-	private String generalItemType = "";
+	private GeneralItem gi;
 
 	public GeneralItemListRecord(GeneralItem generalItem) {
 		
-
-		generalItemType = generalItem.getType();
+		gi = generalItem;
 		setMessageHeader(generalItem.getName());
 		setMessageDetail(" "+generalItem.getDescription());
 		setRightDetail("");
@@ -80,9 +79,12 @@ public class GeneralItemListRecord extends GenericListRecord {
 	}
 
 	public String getGeneralItemType() {
-		return generalItemType;
+		return gi.getType();
 	}
 	
+	public GeneralItem getGeneralItem(){
+		return gi;
+	}
 
 	
 }

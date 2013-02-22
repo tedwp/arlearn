@@ -2,43 +2,25 @@ package org.celstec.arlearn2.android.activities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.broadcast.task.SynchronizeGeneralItemsTask;
-import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
-import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.GeneralItemGameAdapter;
-import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.android.delegators.GameDelegator;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
-import org.celstec.arlearn2.android.genItemActivities.AudiorecorderActivity;
-import org.celstec.arlearn2.android.genItemActivities.VideorecorderActivity;
-import org.celstec.arlearn2.android.list.GameListAdapter;
-import org.celstec.arlearn2.android.list.GameListRecord;
 import org.celstec.arlearn2.android.list.GeneralItemListAdapter;
 import org.celstec.arlearn2.android.list.GeneralItemListRecord;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
 import org.celstec.arlearn2.beans.game.Game;
-import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
-import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
-import org.celstec.arlearn2.beans.generalItem.NarratorItem;
-import org.celstec.arlearn2.beans.generalItem.VideoObject;
-import org.celstec.arlearn2.client.GeneralItemClient;
-import org.celstec.arlearn2.client.exception.ARLearnException;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ListGIActivity extends GeneralActivity implements ListitemClickInterface {
 
@@ -46,6 +28,7 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 
 	private GeneralItemListAdapter adapter;
 	private Game selectedGame = null;
+	private GeneralItem selectedGeneralItem = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,30 +48,9 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 		super.onResume();
 		GeneralItemsDelegator.getInstance().fetchMyGeneralItemsFromServer(selectedGame.getGameId(), this);
 		
-		(new SynchronizeGeneralItemsTask(selectedGame.getGameId(), this)).addTaskToQueue(this);
-		// GameDelegator.getInstance().fetchMyGamesFromServer(this);
-		// Commented by btb
-		//syncronizeLocalDatabaseFromServer(this);
-		//doLocalDBQueryAndRender();
-		
-		
-		//GameDelegator.getInstance().fetchMyGamesFromServer(this);
 		renderGeneralItemsList();
 		
 	}
-
-// Commented by btb	
-//	@Override
-//	public void onBroadcastMessage(Bundle bundle) {
-//		Log.e("BROADCAST", "list general items broadcast ");
-//
-//		super.onBroadcastMessage(bundle, false);
-//		doLocalDBQueryAndRender();
-//
-//	}
-
-
-	
 
 
 	private void renderGeneralItemsList() {
@@ -99,21 +61,17 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 		adapter.setOnListItemClickCallback(this);
 		listView.setAdapter(adapter);
 		
-		HashMap<Long, GeneralItem> hmGeneralItems = new HashMap<Long, GeneralItem>();
-		
+		HashMap<Long, GeneralItem> hmGeneralItems = new HashMap<Long, GeneralItem>();	
 		hmGeneralItems = GeneralItemsCache.getInstance().getGeneralItemsWithGameId(selectedGame.getGameId());
 		
 		if(hmGeneralItems != null){
+						
+			// TODO Order list by description
 			for (GeneralItem gi : hmGeneralItems.values()) {
-
 				GeneralItemListRecord r = new GeneralItemListRecord(gi);
-				adapter.add(r);
-								
+				adapter.add(r);								
 			}
-
 		}
-		
-
 	}
 	
 	
@@ -122,28 +80,43 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 
 		Intent intent = null;
 		GeneralItemListRecord glr = (GeneralItemListRecord) genericListRecord;
+		selectedGeneralItem = glr.getGeneralItem();
 		// intent = getIntent(glr.getAction(), glr.getGeneralItemType(),
 		// vGeneralItems[position]);
 
 		switch (glr.getAction()) {
 		case 0:
 			// Delete generalItem
-			Log.d(CLASSNAME, "Clicked delete generalItem " + position);
-// Commented by btb			
-//			intent = new Intent(ListGIActivity.this, DeleteGeneralItemActivity.class);
-//			intent.putExtra("generalItem", vGeneralItems[position]);
-//			intent.putExtra("action", glr.getAction());
-//			ListGIActivity.this.startActivity(intent);
+			Log.d(CLASSNAME, "Clicked delete generalItem " + position);			
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Are you sure you to delete "+selectedGeneralItem.getName()+"?")
+			       .setCancelable(false)
+			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			        	   GeneralItemsDelegator.getInstance().deleteGeneralItem(ListGIActivity.this, selectedGeneralItem.getId(), selectedGeneralItem.getGameId());
+			        	   ListGIActivity.this.onResume();
+			        	   Toast.makeText(getApplicationContext(), "lucas", Toast.LENGTH_SHORT).show();
+			        	   Log.e(CLASSNAME, "REFRESCAZOOOOOOOOO");
+			        	   
+			        	   // TODO refresh list
 
+			        	   
+			           }
+			       })
+			       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			                dialog.cancel();
+			           }
+			       });
+			AlertDialog alert = builder.create();
+			alert.show();
 			break;
 		case 1:
 			// Edit generalItem
-			Log.d(CLASSNAME, "Clicked edit generalItem " + position);
-			
-// Commented by btb			
-//			intent = new Intent(ListGIActivity.this, NarratorItemActivity.class);
-//			intent.putExtra("generalItem", vGeneralItems[position]);
-//			intent.putExtra("action", NarratorItemActivity.NI_ACTION_EDIT);
+			Log.d(CLASSNAME, "Clicked edit generalItem " + position);	
+			intent = new Intent(ListGIActivity.this, NarratorItemActivity.class);
+			intent.putExtra("generalItem", glr.getGeneralItem());
+			intent.putExtra("action", NarratorItemActivity.NI_ACTION_EDIT);
 			ListGIActivity.this.startActivity(intent);
 
 			break;

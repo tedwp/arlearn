@@ -45,5 +45,11 @@ public class GeneralItemClient extends GenericClient{
 		return (GeneralItem) executePost(getUrlPrefix(), token, generalItem, GeneralItem.class);
 	}
 	
+	public boolean delete(String token, long generalItemId, long gameId) {		
+		// TODO Modify class Appengine.GeneralItems.deleteItem. It should return error message in case it fails. Now always returns ""
+		String o = (String) executeDelete(getUrlPrefix()+"/gameId/"+gameId+"/generalItem/"+generalItemId, token, GeneralItem.class);
+		return true;		
+	}	
+	
 
 }

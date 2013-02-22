@@ -34,18 +34,19 @@
 		 -->
 
 
-		<!-- Mobile game authoring activities -->
-		<activity android:name=".activities.ListGamesActivity" android:label="@string/listGamesHeader"/>
-		<activity android:name=".activities.NewGameActivity" android:label="@string/newGameHeader"/>
+		<!-- Mobile game authoring activities -->	
 		<activity android:name=".activities.EditGameActivity" android:label="@string/editGameHeader" />
-		<activity android:name=".activities.ListGIActivity" android:label="@string/listGeneralItemHeader" android:screenOrientation="portrait" />
-		<activity android:name=".activities.ListRunsActivity" android:label="@string/listRunsHeader" android:screenOrientation="portrait" />
-		<activity android:name=".activities.ListTeamsActivity" android:label="@string/listTeamsHeader" android:screenOrientation="portrait" />		
-		<activity android:name=".activities.NewTeamActivity" android:label="@string/newTeamHeader" android:screenOrientation="portrait" />		
-		<activity android:name=".activities.EditTeamActivity" android:label="@string/editTeamHeader" android:screenOrientation="portrait" />
-		<activity android:name=".activities.EditGeneralItemActivity" android:label="@string/newGeneralItemHeader" android:screenOrientation="portrait" />
-		<activity android:name=".genItemActivities.AudiorecorderActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
-		<activity android:name=".genItemActivities.VideorecorderActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:screenOrientation="portrait"/>
+		<activity android:name=".activities.EditGeneralItemActivity" android:label="@string/newGeneralItemHeader"/>		
+		<activity android:name=".activities.EditTeamActivity" android:label="@string/editTeamHeader"/>				
+		<activity android:name=".activities.ListGamesActivity" android:label="@string/listGamesHeader"/>		
+		<activity android:name=".activities.ListGIActivity" android:label="@string/listGeneralItemHeader"/>
+		<activity android:name=".activities.ListRunsActivity" android:label="@string/listRunsHeader"/>
+		<activity android:name=".activities.ListTeamsActivity" android:label="@string/listTeamsHeader"/>
+		<activity android:name=".activities.NarratorItemActivity" android:label="@string/newGeneralItemHeader"/>
+		<activity android:name=".activities.NewGameActivity" android:label="@string/newGameHeader"/>				
+		<activity android:name=".activities.NewTeamActivity" android:label="@string/newTeamHeader"/>			
+		<activity android:name=".genItemActivities.AudiorecorderActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader"/>
+		<activity android:name=".genItemActivities.VideorecorderActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader"/>
 		
 
 		
