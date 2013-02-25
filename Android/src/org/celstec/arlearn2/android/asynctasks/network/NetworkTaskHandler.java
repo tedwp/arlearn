@@ -15,6 +15,8 @@ public class NetworkTaskHandler extends Handler {
     public static final int GAME_CREATE = 8;
     public static final int GAME_DELETE = 9;
     public static final int SYNC_PARTICIPATING_GAME = 10;
+    public static final int GENERALITEM_CREATE = 11;
+    public static final int GENERALITEM_DELETE = 12;
 
 
 	@Override

@@ -4,14 +4,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
+import org.celstec.arlearn2.android.genItemActivities.AudiorecorderActivity;
+import org.celstec.arlearn2.android.genItemActivities.VideorecorderActivity;
+import org.celstec.arlearn2.android.list.GameListAdapter;
+import org.celstec.arlearn2.android.list.GameListRecord;
 import org.celstec.arlearn2.android.list.GeneralItemListAdapter;
 import org.celstec.arlearn2.android.list.GeneralItemListRecord;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
+import org.celstec.arlearn2.beans.generalItem.NarratorItem;
+import org.celstec.arlearn2.beans.generalItem.VideoObject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -52,6 +62,14 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 		
 	}
 
+	@Override
+	public void onBroadcastMessage(Bundle bundle, boolean render) {
+		super.onBroadcastMessage(bundle, render);
+		if (render) {
+			renderGeneralItemsList();
+		}
+	}	
+
 
 	private void renderGeneralItemsList() {
 		ArrayList<GenericListRecord> alGenericListRecord = new ArrayList<GenericListRecord>();
@@ -59,7 +77,6 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 
 		adapter = new GeneralItemListAdapter(this, R.layout.listgeneralitemscreen, alGenericListRecord);
 		adapter.setOnListItemClickCallback(this);
-		listView.setAdapter(adapter);
 		
 		HashMap<Long, GeneralItem> hmGeneralItems = new HashMap<Long, GeneralItem>();	
 		hmGeneralItems = GeneralItemsCache.getInstance().getGeneralItemsWithGameId(selectedGame.getGameId());
@@ -72,7 +89,9 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 				adapter.add(r);								
 			}
 		}
+		listView.setAdapter(adapter);
 	}
+	
 	
 	
 	@Override
@@ -94,8 +113,8 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			           public void onClick(DialogInterface dialog, int id) {
 			        	   GeneralItemsDelegator.getInstance().deleteGeneralItem(ListGIActivity.this, selectedGeneralItem.getId(), selectedGeneralItem.getGameId());
-			        	   ListGIActivity.this.onResume();
-			        	   Toast.makeText(getApplicationContext(), "lucas", Toast.LENGTH_SHORT).show();
+			        	   //ListGIActivity.this.onResume();
+			        	   //Toast.makeText(getApplicationContext(), "lucas", Toast.LENGTH_SHORT).show();
 			        	   Log.e(CLASSNAME, "REFRESCAZOOOOOOOOO");
 			        	   
 			        	   // TODO refresh list
@@ -114,9 +133,9 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 		case 1:
 			// Edit generalItem
 			Log.d(CLASSNAME, "Clicked edit generalItem " + position);	
-			intent = new Intent(ListGIActivity.this, NarratorItemActivity.class);
+			intent = new Intent(ListGIActivity.this, NewNarratorItemActivity.class);
 			intent.putExtra("generalItem", glr.getGeneralItem());
-			intent.putExtra("action", NarratorItemActivity.NI_ACTION_EDIT);
+			intent.putExtra("action", NewNarratorItemActivity.NI_ACTION_EDIT);
 			ListGIActivity.this.startActivity(intent);
 
 			break;
@@ -145,32 +164,29 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 				Intent intent = null;
 				switch (iCheckBoxIndex) {
 				case 0:
-					// Narrator item
-// Commented by btb					
-//					intent = new Intent(ListGIActivity.this, NarratorItemActivity.class);
-//					NarratorItem n = new NarratorItem();
-//					n.setGameId(selectedGame.getGameId());
-//					intent.putExtra("generalItem", n);
-//					intent.putExtra("action", NarratorItemActivity.NI_ACTION_CREATE);
-//					ListGIActivity.this.startActivity(intent);
+					// Narrator item			
+					intent = new Intent(ListGIActivity.this, NewNarratorItemActivity.class);
+					NarratorItem n = new NarratorItem();
+					n.setGameId(selectedGame.getGameId());
+					intent.putExtra("generalItem", n);
+					intent.putExtra("action", NewNarratorItemActivity.NI_ACTION_CREATE);
+					ListGIActivity.this.startActivity(intent);
 					break;
 				case 1:
 					// MultipleChoiceTest item
-// Commented by btb					
-//					intent = new Intent(ListGIActivity.this, MultipleChoiceItemActivity.class);
-//					MultipleChoiceTest m = new MultipleChoiceTest();
-//					m.setGameId(selectedGame.getGameId());
-//					intent.putExtra("generalItem", m);
-//					ListGIActivity.this.startActivity(intent);
+					intent = new Intent(ListGIActivity.this, MultipleChoiceItemActivity.class);
+					MultipleChoiceTest m = new MultipleChoiceTest();
+					m.setGameId(selectedGame.getGameId());
+					intent.putExtra("generalItem", m);
+					ListGIActivity.this.startActivity(intent);
 					break;
 				case 2:
 					// VideoObject
-// Commented by btb					
-//					intent = new Intent(ListGIActivity.this, VideorecorderActivity.class);
-//					VideoObject v = new VideoObject();
-//					v.setGameId(selectedGame.getGameId());
-//					intent.putExtra("generalItem", v);
-//					ListGIActivity.this.startActivity(intent);
+					intent = new Intent(ListGIActivity.this, VideorecorderActivity.class);
+					VideoObject v = new VideoObject();
+					v.setGameId(selectedGame.getGameId());
+					intent.putExtra("generalItem", v);
+					ListGIActivity.this.startActivity(intent);
 					break;
 				case 3:
 					// Youtube - TO BE DELETED
@@ -183,12 +199,11 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 					break;
 				case 4:
 					// Audio
-// Commented by btb					
-//					intent = new Intent(ListGIActivity.this, AudiorecorderActivity.class);
-//					AudioObject a = new AudioObject();
-//					a.setGameId(selectedGame.getGameId());
-//					intent.putExtra("generalItem", a);
-//					ListGIActivity.this.startActivity(intent);
+					intent = new Intent(ListGIActivity.this, AudiorecorderActivity.class);
+					AudioObject a = new AudioObject();
+					a.setGameId(selectedGame.getGameId());
+					intent.putExtra("generalItem", a);
+					ListGIActivity.this.startActivity(intent);
 					break;
 				default:
 // Commented by btb					

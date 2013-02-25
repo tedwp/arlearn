@@ -2,12 +2,9 @@ package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
-import org.celstec.arlearn2.client.GameClient;
-import org.celstec.arlearn2.client.GeneralItemClient;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,7 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class NarratorItemActivity extends GeneralActivity {
+public class NewNarratorItemActivity extends GeneralActivity {
 
 	private String CLASSNAME = this.getClass().getName();
 
@@ -73,9 +70,6 @@ public class NarratorItemActivity extends GeneralActivity {
 			ni.setName(sItemName);
 			ni.setDescription(sDescription);
 			ni.setType(Constants.GI_TYPE_NARRATOR_ITEM);
-
-			// TOCHECK
-			// Following are default vaules and probably useless
 			ni.setScope("user");
 			ni.setAutoLaunch(false);
 			ni.setRichText("aaa");
@@ -85,13 +79,8 @@ public class NarratorItemActivity extends GeneralActivity {
 			oq.setWithVideo(false);
 			ni.setOpenQuestion(oq);
 
-			if (!insertGeneralItem(ni)) {
-				// TODO Could not insert GeneralItem into DB
-				Log.e(CLASSNAME, "Could not insert GeneralItem into DB");
-				// ProgressDialog.show(NewGeneralItemActivity.this,
-				// "ARLearn", "Could not create generalItem");
-			}
-			NarratorItemActivity.this.finish();
+			GeneralItemsDelegator.getInstance().createGeneralItem(this, ni);
+			NewNarratorItemActivity.this.finish();
 
 		} else {
 			// TODO give alert in order to fill in the fields.
@@ -108,23 +97,7 @@ public class NarratorItemActivity extends GeneralActivity {
 
 	}
 
-	private boolean insertGeneralItem(GeneralItem theGeneralItem) {
 
-		GeneralItem g = new GeneralItem();
-		PropertiesAdapter pa = new PropertiesAdapter(this);
-
-		// Commented by btb
-		//g = GeneralItemClient.getGeneralItemClient().createGeneralItem(pa.getFusionAuthToken(), theGeneralItem);
-
-		if (g.getErrorCode() != null) {
-
-			Log.e(CLASSNAME, "Exception deserializing narrator item " + theGeneralItem.getName() + ".");
-			return false;
-
-		}
-		return true;
-
-	}
 
 	public boolean isGenItemActivity() {
 		return false;

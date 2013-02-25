@@ -42,12 +42,12 @@
 		<activity android:name=".activities.ListGIActivity" android:label="@string/listGeneralItemHeader"/>
 		<activity android:name=".activities.ListRunsActivity" android:label="@string/listRunsHeader"/>
 		<activity android:name=".activities.ListTeamsActivity" android:label="@string/listTeamsHeader"/>
-		<activity android:name=".activities.NarratorItemActivity" android:label="@string/newGeneralItemHeader"/>
+		<activity android:name=".activities.NewNarratorItemActivity" android:label="@string/newGeneralItemHeader"/>
 		<activity android:name=".activities.NewGameActivity" android:label="@string/newGameHeader"/>				
-		<activity android:name=".activities.NewTeamActivity" android:label="@string/newTeamHeader"/>			
+		<activity android:name=".activities.NewTeamActivity" android:label="@string/newTeamHeader"/>
+		<activity android:name=".activities.MultipleChoiceItemActivity" android:label="@string/newGeneralItemHeader" />
 		<activity android:name=".genItemActivities.AudiorecorderActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader"/>
-		<activity android:name=".genItemActivities.VideorecorderActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader"/>
-		
+		<activity android:name=".genItemActivities.VideorecorderActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader"/>		
 
 		
 		<activity android:name=".activities.LoginActivity" android:label="@string/loginHeader" />
