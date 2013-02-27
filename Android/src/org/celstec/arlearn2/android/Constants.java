@@ -31,6 +31,7 @@ public class Constants {
 	public static final String GI_TYPE_MULTIPLE_CHOICE_ANSWER = "org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem";
 	public static final String GI_TYPE_VIDEO_OBJECT = "org.celstec.arlearn2.beans.generalItem.VideoObject";
 	public static final String GI_TYPE_YOUTUBE_MOVIE = "org.celstec.arlearn2.beans.generalItem.YoutubeObject";
-	public static final String GI_TYPE_AUDIO_OBJECT = "org.celstec.arlearn2.beans.generalItem.AudioObject";	
+	public static final String GI_TYPE_AUDIO_OBJECT = "org.celstec.arlearn2.beans.generalItem.AudioObject";
+	public static final String GI_TYPE_OER = "org.celstec.arlearn2.beans.generalItem.oer";
 
 }

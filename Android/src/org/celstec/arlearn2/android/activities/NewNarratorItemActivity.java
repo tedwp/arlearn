@@ -57,6 +57,10 @@ public class NewNarratorItemActivity extends GeneralActivity {
 
 	}
 
+	/**
+	 * User clicked create item
+	 * 
+	 */
 	private void userClickedButton() {
 
 		String sItemName = ((EditText) findViewById(R.id.etNewGeneralItem)).getText() + "";

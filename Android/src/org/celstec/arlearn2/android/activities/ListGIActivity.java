@@ -150,7 +150,7 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 
 	public void onButtonNewGeneralItemClick(View v) {
 
-		final CharSequence[] csArrayElems = { "Narrator item", "Multiple choice question", "Record video", "Youtube video", "Record audio" };
+		final CharSequence[] csArrayElems = { "Narrator item", "Multiple choice question", "Record video", "Record audio", "External OER" };
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Choose an item");
@@ -189,21 +189,19 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 					ListGIActivity.this.startActivity(intent);
 					break;
 				case 3:
-					// Youtube - TO BE DELETED
-					
-//					intent = new Intent(ListGIActivity.this, NarratorItemActivity.class);
-//					intent.putExtra("genItemType", csArrayElems[iCheckBoxIndex]);
-//					intent.putExtra("selectedGame", selectedGame);
-//					ListGIActivity.this.startActivity(intent);
-					
-					break;
-				case 4:
 					// Audio
 					intent = new Intent(ListGIActivity.this, AudiorecorderActivity.class);
 					AudioObject a = new AudioObject();
 					a.setGameId(selectedGame.getGameId());
 					intent.putExtra("generalItem", a);
 					ListGIActivity.this.startActivity(intent);
+					break;
+				case 4:					
+					// External OER					
+//					intent = new Intent(ListGIActivity.this, NarratorItemActivity.class);
+//					intent.putExtra("genItemType", csArrayElems[iCheckBoxIndex]);
+//					intent.putExtra("selectedGame", selectedGame);
+//					ListGIActivity.this.startActivity(intent);					
 					break;
 				default:
 // Commented by btb					

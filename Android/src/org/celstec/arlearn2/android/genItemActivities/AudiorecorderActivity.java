@@ -8,8 +8,10 @@ import java.util.Date;
 
 import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
-// Commented by btb
 //import org.celstec.arlearn2.android.activities.UploadGeneralItemActivity;
+import org.celstec.arlearn2.android.broadcast.MediaService;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 
 import android.app.Activity;
@@ -38,8 +40,11 @@ public class AudiorecorderActivity extends Activity {
 	private View startAudioButton;
 	private View stopAudioButton;
 	private View publishAudioButton;
-	// private EditText etItemName;
+
+	// Object to be uploaded 
 	private AudioObject audioObject = null;
+	private Uri newUri = null;
+	private long lCurrentTime = 0L;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,17 +67,19 @@ public class AudiorecorderActivity extends Activity {
 
 	}
 
+	/**
+	 * On click start audio recording
+	 * 
+	 * @param view
+	 * @throws IOException
+	 */
 	public void startRecordingAudio(View view) throws IOException {
 
 		startAudioButton.setVisibility(View.INVISIBLE);
 		stopAudioButton.setVisibility(View.VISIBLE);
 		publishAudioButton.setVisibility(View.INVISIBLE);
 
-		// File sampleDir = Environment.getExternalStorageDirectory();
 		try {
-			// audiofile = File.createTempFile(etItemName.getText().toString(),
-			// ".3gp", sampleDir);
-
 			String path = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
 			audiofile = new File(path, getFileName());
 			Log.d(CLASSNAME, "Created tmp file Name [" + audiofile.getName() + "] Absolute path:[" + audiofile.getAbsolutePath() + "]");
@@ -81,6 +88,7 @@ public class AudiorecorderActivity extends Activity {
 			Log.e(CLASSNAME, "sdcard access error");
 			return;
 		}
+		
 		recorder = new MediaRecorder();
 		recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 		recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -91,6 +99,11 @@ public class AudiorecorderActivity extends Activity {
 		recorder.start();
 	}
 
+	/**
+	 * On click stop audio recording button
+	 * 
+	 * @param view
+	 */
 	public void stopRecordingAudio(View view) {
 
 		startAudioButton.setVisibility(View.VISIBLE);
@@ -100,12 +113,68 @@ public class AudiorecorderActivity extends Activity {
 		recorder.stop();
 		recorder.release();
 		Toast.makeText(this, "Recording stoped.", Toast.LENGTH_LONG).show();
-		addRecordingToMediaLibrary();
+
+		
+		long current = System.currentTimeMillis();
+		ContentValues values = new ContentValues(4);
+		values.put(MediaStore.Audio.Media.TITLE, "audio" + audiofile.getName());
+		values.put(MediaStore.Audio.Media.DATE_ADDED, (int) (current / 1000));
+		values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/3gpp");
+		values.put(MediaStore.Audio.Media.DATA, audiofile.getAbsolutePath());
+		ContentResolver contentResolver = getContentResolver();
+
+		Uri base = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+		newUri = contentResolver.insert(base, values);
+
+		sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
+		Toast.makeText(this, "Added File " + newUri, Toast.LENGTH_LONG).show();
 		
 		// TODO check if addRecordingToMediaLibrary went well
-		dialogItem();
-	}
 
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(AudiorecorderActivity.this);
+        alertDialog.setTitle("Publish file...");
+        alertDialog.setMessage("Do you want to publish this file?");
+        alertDialog.setIcon(R.drawable.cloud_up_48);
+
+        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            // User pressed YES button. Write Logic Here
+    		uploadItem();
+    		Toast.makeText(getApplicationContext(), "Audio successfully recorded", Toast.LENGTH_SHORT).show();
+    		AudiorecorderActivity.this.finish();    		
+    		
+    		
+            }
+        });
+
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            // User pressed No button. Write Logic Here
+            Toast.makeText(getApplicationContext(), "You clicked on NO", Toast.LENGTH_SHORT).show();
+            // TODO delete file from HD??
+            }
+        });
+
+        // Setting Netural "Cancel" Button
+        alertDialog.setNeutralButton("Listen first", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            // User pressed Cancel button. Write Logic Here
+            Toast.makeText(getApplicationContext(), "You clicked on watch it first",
+                                Toast.LENGTH_SHORT).show();
+            
+            
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+        		
+	}	
+	
+	/**
+	 * On click publish button
+	 * @param view
+	 */
 	public void publishRecordingAudio(View view) {
 		
 
@@ -119,11 +188,19 @@ public class AudiorecorderActivity extends Activity {
 
 	}
 
+	
+	/**
+	 * Clicked "yes" on alert message prompting to upload the item
+	 * 
+	 */
 	private void uploadItem() {
+		
+		PropertiesAdapter pa = new PropertiesAdapter(this);
 		
 		audioObject.setType(Constants.GI_TYPE_AUDIO_OBJECT);
 		audioObject.setDeleted(false);
 		audioObject.setScope("user");
+		
 		EditText etName = (EditText) findViewById(R.id.editTextAOName);
 		if (etName.getText().length() > 0) {
 			audioObject.setName(etName.getText().toString());
@@ -148,7 +225,23 @@ public class AudiorecorderActivity extends Activity {
 
 		Toast.makeText(this, "Publishing recording " + audiofile.getName(), Toast.LENGTH_LONG).show();
 		
-		// Commented by btb
+		// Create item in GenealItemJDO
+		//GeneralItemsDelegator.getInstance().createGeneralItem(this, audioObject);
+		
+		// Create item in FileJDO
+		// TODO
+		Intent intent = new Intent(this, MediaService.class);
+		intent.putExtra(MediaService.NEW_MEDIA, true);
+		intent.putExtra(MediaService.RECORDING_PATH, newUri);
+// 		intent.putExtra(MediaService.IMAGE_PATH, imagePath);
+//		intent.putExtra(MediaService.IMAGE_PATH, "");
+//		intent.putExtra(MediaService.VIDEO_URI, "");
+		intent.putExtra(MediaService.USERNAME, pa.getUsername());
+		intent.putExtra(MediaService.CURRENT_TIME, lCurrentTime);
+		intent.putExtra(MediaService.RUNID, pa.getCurrentRunId());
+		startService(intent);		
+		
+//
 //		Intent intent = new Intent(AudiorecorderActivity.this, UploadGeneralItemActivity.class);
 //		intent.putExtra("generalItem", audioObject);
 //		intent.putExtra("filename", audiofile.getName());
@@ -157,81 +250,20 @@ public class AudiorecorderActivity extends Activity {
 
 	}
 
-	protected void addRecordingToMediaLibrary() {
-		ContentValues values = new ContentValues(4);
-		long current = System.currentTimeMillis();
-		values.put(MediaStore.Audio.Media.TITLE, "audio" + audiofile.getName());
-		values.put(MediaStore.Audio.Media.DATE_ADDED, (int) (current / 1000));
-		values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/3gpp");
-		values.put(MediaStore.Audio.Media.DATA, audiofile.getAbsolutePath());
-		ContentResolver contentResolver = getContentResolver();
 
-		Uri base = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-		Uri newUri = contentResolver.insert(base, values);
-
-		sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
-		Toast.makeText(this, "Added File " + newUri, Toast.LENGTH_LONG).show();
-	}
-
+	/**
+	 * Returns an string with an audio file name based on current time
+	 * 
+	 * @return
+	 */
 	private String getFileName() {
 
 		Format dateFormat = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
 		Date date = new Date();
+		lCurrentTime = date.getTime();
 		String newDateString = "/arlearn_audio" + dateFormat.format(date).replace(" ", "_").replace(":", "") + ".3gp";
 		return newDateString;
 	}
-
-	
-	protected void dialogItem() {
-		AlertDialog.Builder alertDialog = new AlertDialog.Builder(AudiorecorderActivity.this);
-		// Setting Dialog Title
-        alertDialog.setTitle("Publish file...");
-
-        // Setting Dialog Message
-        alertDialog.setMessage("Do you want to publish this file?");
-
-        // Setting Icon to Dialog
-        alertDialog.setIcon(R.drawable.cloud_up_48);
-
-        // Setting Positive "Yes" Button
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            // User pressed YES button. Write Logic Here
-            
-            
-    		uploadItem();
-    		
-    		// TODO if uploadItem goes ok
-    		Toast.makeText(getApplicationContext(), "Audio successfully recorded", Toast.LENGTH_SHORT).show();
-    		AudiorecorderActivity.this.finish();    		
-    		
-    		
-            }
-        });
-
-        // Setting Negative "NO" Button
-        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            // User pressed No button. Write Logic Here
-            Toast.makeText(getApplicationContext(), "You clicked on NO", Toast.LENGTH_SHORT).show();
-            // Todo delete file from HD??
-            }
-        });
-
-        // Setting Netural "Cancel" Button
-        alertDialog.setNeutralButton("Listen first", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            // User pressed Cancel button. Write Logic Here
-            Toast.makeText(getApplicationContext(), "You clicked on watch it first",
-                                Toast.LENGTH_SHORT).show();
-            
-            
-            }
-        });
-
-        // Showing Alert Message
-        alertDialog.show();
-	}	
 
 
 }
