@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.delegators;
 
 import java.util.ArrayList;
@@ -85,6 +103,14 @@ public class GeneralItemDelegator extends GoogleDelegator {
 			gil.setGeneralItems(GeneralItemManager.getGeneralitems(gameId, null, null));
 			GeneralitemsCache.getInstance().putGeneralItemList(gil, gameId, null, null);
 		}
+		gil.setServerTime(System.currentTimeMillis());
+		return gil;
+	}
+	
+	public GeneralItemList getGeneralItems(Long gameId, Long from, Long until) {
+		GeneralItemList gil = new GeneralItemList();
+		gil.setGeneralItems(GeneralItemManager.getGeneralitemsFromUntil(gameId, from, until));
+		gil.setServerTime(System.currentTimeMillis());
 		return gil;
 	}
 
@@ -203,11 +229,11 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		GeneralItemList visableGIs =  gid.getItems(runId, u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS);
 		GeneralItemList disappearedGIs =  gid.getItems(runId, u.getEmail(), GeneralItemVisibilityManager.DISAPPEARED_STATUS);
 		
-		VisibleItemDelegator vid = new VisibleItemDelegator(this);
+//		VisibleItemDelegator vid = new VisibleItemDelegator(this);
 		
-		VisibleItemsList vil = vid.getVisibleItems(runId, null, u.getEmail(), u.getTeamId());
-		vil.merge(vid.getVisibleItems(runId, null, null, u.getTeamId()));
-		vil.merge(vid.getVisibleItems(runId, null, u.getEmail(), null));
+//		VisibleItemsList vil = vid.getVisibleItems(runId, null, u.getEmail(), u.getTeamId());
+//		vil.merge(vid.getVisibleItems(runId, null, null, u.getTeamId()));
+//		vil.merge(vid.getVisibleItems(runId, null, u.getEmail(), null));
 
 		List<GeneralItem> nonVisibleItems = getNonVisibleItems(getAllGeneralItems(runId), visableGIs);
 		Iterator<GeneralItem> it = nonVisibleItems.iterator();
@@ -218,7 +244,9 @@ public class GeneralItemDelegator extends GoogleDelegator {
 				GeneralItemModification gim = new GeneralItemModification();
 				gim.setModificationType(GeneralItemModification.VISIBLE);
 				gim.setRunId(runId);
+				gim.setGameId(generalItem.getGameId());
 				gim.setGeneralItem(generalItem);
+				gim.setItemId(generalItem.getId());
 				generalItem.setVisibleAt(visAt);
 				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS, visAt);
 
@@ -235,6 +263,8 @@ public class GeneralItemDelegator extends GoogleDelegator {
 				GeneralItemModification gim = new GeneralItemModification();
 				gim.setModificationType(GeneralItemModification.DISAPPEARED);
 				gim.setRunId(runId);
+				gim.setGameId(generalItem.getGameId());
+				gim.setItemId(generalItem.getId());
 				gim.setGeneralItem(generalItem);
 				generalItem.setDisappearAt(disAt);
 				

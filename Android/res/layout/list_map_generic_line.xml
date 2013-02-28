@@ -14,6 +14,14 @@
         android:gravity="left"
         android:orientation="horizontal" >
 
+
+        <CheckBox
+            android:id="@+id/unRegisterCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="" />
+
         <ImageView
             android:id="@+id/list_icon"
             android:layout_width="wrap_content"

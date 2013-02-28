@@ -1,12 +1,25 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.beans;
 
 import org.celstec.arlearn2.beans.deserializer.json.BeanDeserializer;
-import org.celstec.arlearn2.beans.deserializer.json.NarratorItemDeserializer;
-import org.celstec.arlearn2.beans.generalItem.GeneralItemDeserializer;
-import org.celstec.arlearn2.beans.generalItem.GeneralItemSerializer;
-import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
 import org.celstec.arlearn2.beans.serializer.json.BeanSerializer;
-import org.celstec.arlearn2.beans.serializer.json.NarratorItemSerializer;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -30,7 +43,6 @@ public class Info extends Bean {
 	}
 
 	public static BeanDeserializer deserializer = new BeanDeserializer() {
-//		public static class YoutubeObjectDeserializer extends NarratorItemDeserializer{
 
 		@Override
 		public Info toBean(JSONObject object) {
@@ -46,7 +58,7 @@ public class Info extends Bean {
 		public void initBean(JSONObject object, Bean genericBean) throws JSONException {
 			super.initBean(object, genericBean);
 			Info bean = (Info) genericBean;
-			if (object.has("version")) bean.setVersion(object.getString("youtubeUrl"));
+			if (object.has("version")) bean.setVersion(object.getString("version"));
 		}
 		
 	};

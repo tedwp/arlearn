@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.beans.serializer.json;
 
 import java.lang.reflect.Field;
@@ -41,6 +59,7 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemSerializer;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenBadge;
@@ -64,6 +83,8 @@ import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.ActionList;
 import org.celstec.arlearn2.beans.run.ActionListSerializer;
 import org.celstec.arlearn2.beans.run.ActionSerializer;
+import org.celstec.arlearn2.beans.run.GeneralItemVisibility;
+import org.celstec.arlearn2.beans.run.GeneralItemVisibilityList;
 import org.celstec.arlearn2.beans.run.Location;
 import org.celstec.arlearn2.beans.run.LocationUpdate;
 import org.celstec.arlearn2.beans.run.LocationUpdateSerializer;
@@ -139,6 +160,9 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(Run.class.getCanonicalName(), new RunSerializer());
 		customSerializerMap.put(RunList.class.getCanonicalName(), new RunListSerializer());
 		customSerializerMap.put(RunBean.class.getCanonicalName(), new RunBeanSerialiser());
+		customSerializerMap.put(GeneralItemVisibility.class.getCanonicalName(), GeneralItemVisibility.serializer);
+		customSerializerMap.put(GeneralItemVisibilityList.class.getCanonicalName(), GeneralItemVisibilityList.serializer);
+		
 		customSerializerMap.put(Action.class.getCanonicalName(), new ActionSerializer());
 		customSerializerMap.put(ActionList.class.getCanonicalName(), new ActionListSerializer());
 		customSerializerMap.put(Response.class.getCanonicalName(), new ResponseSerializer());
@@ -146,9 +170,10 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(UserScore.class.getCanonicalName(), new UserScoreSerializer());
 		customSerializerMap.put(AudioObject.class.getCanonicalName(), new AudioObjectSerializer());
 		customSerializerMap.put(VideoObject.class.getCanonicalName(), new VideoObjectSerializer());
-		customSerializerMap.put(MultipleChoiceTest.class.getCanonicalName(), new MultipleChoiceTestSerializer());
+		customSerializerMap.put(MultipleChoiceTest.class.getCanonicalName(), MultipleChoiceTest.serializer);
 		customSerializerMap.put(SingleChoiceTest.class.getCanonicalName(), SingleChoiceTest.serializer);
 		customSerializerMap.put(SingleChoiceImageTest.class.getCanonicalName(), SingleChoiceImageTest.serializer);
+		customSerializerMap.put(MultipleChoiceImageTest.class.getCanonicalName(), MultipleChoiceImageTest.serializer);
 		customSerializerMap.put(MultipleChoiceAnswerItem.class.getCanonicalName(), new MultipleChoiceAnswerItemSerializer());
 		customSerializerMap.put(MultipleChoiceImageAnswerItem.class.getCanonicalName(), MultipleChoiceImageAnswerItem.serializer);
 		customSerializerMap.put(OpenUrl.class.getCanonicalName(), OpenUrl.serializer);

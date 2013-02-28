@@ -1,24 +1,33 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.delegators;
 
-import java.text.MessageFormat;
 import java.util.Iterator;
 
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGamesTask;
-import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGeneralItemsTask;
-import org.celstec.arlearn2.android.asynctasks.network.SynchronizeUserTask;
 import org.celstec.arlearn2.android.cache.GameCache;
-import org.celstec.arlearn2.android.cache.MediaCache;
 import org.celstec.arlearn2.android.cache.MediaGeneralItemCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.MediaCacheGeneralItems;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GamesList;
-import org.celstec.arlearn2.beans.generalItem.AudioObject;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.generalItem.VideoObject;
-import org.celstec.arlearn2.beans.run.RunList;
 
 import android.content.Context;
 import android.os.Message;
@@ -43,12 +52,7 @@ public class GameDelegator {
 	}
 	
 	public void synchronizeGamesWithServer(Context ctx) {
-		(new SynchronizeGamesTask(ctx)).addTaskToQueue(ctx);
-	}
-	
-	@Deprecated //don't do this one by one
-	public void synchronizeGameWithServer(Context ctx, Long gameId) {
-//		(new SynchronizeGamesTask(ctx, gameId)).addTaskToQueue(ctx);
+		(new SynchronizeGamesTask(ctx)).run(ctx);
 	}
 	
 	public void saveServerGamesToAndroidDb(final Context ctx, final GamesList gl) {
@@ -101,9 +105,9 @@ public class GameDelegator {
 		m.sendToTarget();
 	}
 
-	public void downloadGameContent(final Context ctx, Long gameId) {
-		if (gameId != null) (new SynchronizeGeneralItemsTask(gameId, ctx)).addTaskToQueue(ctx);
-	}
+//	public void downloadGameContent(final Context ctx, Long gameId) {
+//		if (gameId != null) (new SynchronizeGeneralItemsTaskOld(gameId, ctx)).addTaskToQueue(ctx);
+//	}
 	
 	public int getAmountOfUncachedItems(long gameId) {
 		return MediaGeneralItemCache.getInstance(gameId).getAmountOfItemsToDownload();

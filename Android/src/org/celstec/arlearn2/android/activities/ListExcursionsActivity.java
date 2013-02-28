@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.activities;
 
 import java.util.ArrayList;
@@ -7,12 +25,14 @@ import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.ActionsDelegator;
 import org.celstec.arlearn2.android.delegators.GameDelegator;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
 
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.RunListRecord;
+import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.LocationService;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
@@ -25,14 +45,16 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
 
 public class ListExcursionsActivity extends GeneralActivity implements ListitemClickInterface {
 	private Run[] runs = null;
 	private GenericMessageListAdapter adapter;
-
-
+	private boolean unregisterStatus = false;
+	private View footerView;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,27 +63,36 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 			this.finish();
 		} else {
 			setContentView(R.layout.listexcursionscreen);
-			RunDelegator.getInstance().synchronizeRunsWithServer(this);
-			GameDelegator.getInstance().synchronizeGamesWithServer(this);
-//			syncRuns();
+
+			// syncRuns();
 		}
 	}
-	
-//	private void syncRuns() {
-////		Intent runIntent = new Intent();
-////		runIntent.setAction(RunReceiver.action);
-////		sendBroadcast(runIntent);
-//	}
+
+	// private void syncRuns() {
+	// // Intent runIntent = new Intent();
+	// // runIntent.setAction(RunReceiver.action);
+	// // sendBroadcast(runIntent);
+	// }
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		RunDelegator.getInstance().synchronizeRunsWithServer(this);
+		GameDelegator.getInstance().synchronizeGamesWithServer(this);
 		renderExcursionList();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+	}
+
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+
+		menu.add(0, MenuHandler.UNREGISTER, 1, "unreg i18 "); // getString(R.string.scanTagMenu)
+
+		return true;
 	}
 
 	public void onBroadcastMessage(Bundle bundle, boolean render) {
@@ -85,15 +116,24 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 
 			for (int i = 0; i < runs.length; i++) {
 				RunListRecord r = new RunListRecord(runs[i]);
+				if (unregisterStatus)
+					r.setShowCheckBox(true);
 				runsList.add(r);
 			}
 		}
 		ListView listView = (ListView) findViewById(R.id.listRuns);
+		if (footerView !=null)	listView.removeFooterView(footerView);
+		if (unregisterStatus) {
+			footerView = ((LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(R.layout.list_footer, null, false);
+			listView.addFooterView(footerView);
+		}
+
 		if (adapter == null || !adapter.isEqual(runsList)) {
 			adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, runsList);
 			adapter.setOnListItemClickCallback(this);
 			listView.setAdapter(adapter);
 		}
+
 	}
 
 	@Override
@@ -102,7 +142,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 		builder.setMessage(getString(R.string.cacheGame)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				RunListRecord rlr = (RunListRecord) messageListRecord;
-				GameDelegator.getInstance().downloadGameContent(ListExcursionsActivity.this, rlr.getGameId());
+				GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(ListExcursionsActivity.this, rlr.getId(), rlr.getGameId());
 			}
 		}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
@@ -113,7 +153,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 		alert.show();
 		return true;
 	}
-	
+
 	public void onListItemClick(View v, int position, GenericListRecord messageListRecord) {
 		long id = position;
 		PropertiesAdapter pa = new PropertiesAdapter(this);
@@ -133,7 +173,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 					intent.putExtra("bean", g.getConfig());
 					startService(intent);
 				}
-			
+
 				if (mapView) {
 					int view = Config.MAP_TYPE_GOOGLE_MAPS;
 					if (g.getConfig() != null && g.getConfig().getMapType() != null) {
@@ -153,20 +193,10 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 					i = new Intent(this, ListMessagesActivity.class);
 				}
 
-				// i.putExtra("runId", id);
 				startActivity(i);
-				// ActionDispatcher.startRun(ListExcursionsActivity.this);
 				ActionsDelegator.getInstance().publishStartRunActon(this, runId, pa.getUsername());
 			}
-			// Intent gimIntent = new Intent();
-			// gimIntent.setAction(GeneralItemReceiver.action);
-			// sendBroadcast(gimIntent);
-
-			// CheckGameConfig task = new CheckGameConfig(this); //TODO remove
-			// this
-			// task.execute(new Object[] {});
 		}
-
 	}
 
 	public boolean isGenItemActivity() {
@@ -178,32 +208,16 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	}
 
 	protected void newNfcAction(final String action) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(ListExcursionsActivity.this);
-		builder.setMessage(getString(R.string.registerRun)).setCancelable(false);
-		
-		builder.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		});
-		builder.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				new Thread(new Runnable() {
-					public void run() {
-						try {
-							RunClient.getRunClient().selfRegister(getPropertiesAdapter().getFusionAuthToken(), action);
-						} catch (Exception ex) {
-							Log.e("exception", ex.getMessage(), ex);
-						}
-					}
-				}).start();
-				dialog.cancel();
-			}
-		});
-		AlertDialog alert = builder.create();
-		alert.show();
+		Intent i = new Intent(this, ListOpenRunsActivity.class);
+		i.putExtra(ListOpenRunsActivity.TAG_ID, action);
+		startActivity(i);
 
 	}
 
-	
+	public void showUnregister() {
+		unregisterStatus = true;
+		renderExcursionList();
+
+	}
+
 }

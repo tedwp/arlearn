@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.gwt.client.network.generalItem;
 
 
@@ -6,6 +24,8 @@ import java.util.HashMap;
 import org.celstec.arlearn2.gwt.client.network.DerivedFieldTask;
 import org.celstec.arlearn2.gwt.client.network.GenericClient;
 import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
+import org.celstec.arlearn2.gwt.client.ui.items.MultipleChoiceImageCanvas;
+import org.celstec.arlearn2.gwt.client.ui.items.SingleChoiceImageCanvas;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -43,6 +63,8 @@ public class GeneralItemGameDataSource extends GenericDataSource {
 				if (firstValue.contains("VideoObject")) return "Video Object";
 				if (firstValue.contains("MultipleChoiceTest")) return "Multiple Choice Test";
 				if (firstValue.contains("SingleChoiceTest")) return "Single Choice Test";
+				if (firstValue.contains(SingleChoiceImageCanvas.type)) return "Single Choice Image Test";
+				if (firstValue.contains(MultipleChoiceImageCanvas.type)) return "Multiple Choice Image Test";
 				if (firstValue.contains("NarratorItem")) return "Narrator Item";
 				if (firstValue.contains("OpenUrl")) return "Open URL";
 				if (firstValue.contains("YoutubeObject")) return "Youtube movie";

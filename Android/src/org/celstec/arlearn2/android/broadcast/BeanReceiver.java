@@ -1,8 +1,30 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.broadcast;
 
 import java.io.Serializable;
 
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
+import org.celstec.arlearn2.beans.notification.GeneralItemModification;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +47,12 @@ public class BeanReceiver extends BroadcastReceiver {
 //					reCast(RunReceiver.action, bean, context);
 					break;
 				case GeneralItemModification:
-					reCast("org.celstec.arlearn2.beans.notification.GeneralItemModification", bean, context);
+					long currentRunId = PropertiesAdapter.getInstance(context).getCurrentRunId();
+					GeneralItemModification gim = (GeneralItemModification) bean;
+					if (gim.getRunId() == currentRunId) {
+						GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(context, gim.getRunId(), gim.getGameId());	
+					}
+//					reCast("org.celstec.arlearn2.beans.notification.GeneralItemModification", bean, context);
 					break;
 				case Ping:
 					reCast("org.celstec.arlearn2.beans.notification.Ping", bean, context);

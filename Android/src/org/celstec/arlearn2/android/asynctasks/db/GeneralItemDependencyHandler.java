@@ -1,4 +1,22 @@
-package org.celstec.arlearn2.android.service;
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
+package org.celstec.arlearn2.android.asynctasks.db;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,14 +29,17 @@ import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
-import org.celstec.arlearn2.android.asynctasks.db.ForceUpdateTask;
+import org.celstec.arlearn2.android.asynctasks.DatabaseTask;
+import org.celstec.arlearn2.android.asynctasks.GenericTask;
 import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.DBAdapter.DatabaseHandler;
 import org.celstec.arlearn2.android.db.GeneralItemVisibility;
+import org.celstec.arlearn2.android.db.GeneralItemVisibility.VisibilityEvent;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.android.delegators.VisibleGeneralItemsDelegator;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
@@ -36,7 +57,7 @@ import android.media.SoundPool;
 import android.os.Message;
 import android.os.Vibrator;
 
-public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
+public class GeneralItemDependencyHandler extends GenericTask implements  DatabaseTask {
 
 //	private Context ctx;
 	private static SoundPool soundPool;
@@ -85,7 +106,7 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 		}
 	}
 
-	public synchronized void checkDependencies(DBAdapter db) {
+	public void checkDependencies(DBAdapter db) {
 		checkDependencies(db, (new PropertiesAdapter(db.getContext())).getCurrentRunId());
 	}
 
@@ -100,19 +121,21 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 	}
 
 	public void processItemsNotYetInitialised(DBAdapter db, final long runId) {
-		//DBAdapter.getAdapter(db.getContext()).getGeneralItemVisibility().getAllNotInitializedItems(runId);
-		TreeSet<GeneralItem> items = GeneralItemVisibilityCache.getInstance().getAllNotInitializedItems(runId);
-		if (items != null)
-			for (GeneralItem gi : items) {
-				if (itemMatchesPlayersRole(db, runId, gi)) {
-					Dependency dep = gi.getDependsOn();
-//					if (dep == null) {
-//						DBAdapter.getAdapter(db.getContext()).getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, 0, GeneralItemVisibility.VISIBLE);
-//					} else {
-						DBAdapter.getAdapter(db.getContext()).getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, 0, GeneralItemVisibility.NOT_YET_VISIBLE);
-//					}
-				}
+		VisibilityEvent[] events = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.NOT_INITIALISED);
+//		TreeSet<GeneralItem> items = GeneralItemVisibilityCache.getInstance().getAllNotInitializedItems(runId);
+		for (VisibilityEvent e: events) {
+			GeneralItem gi = GeneralItemsDelegator.getInstance().getGeneralItem(e.itemId);
+			if (itemMatchesPlayersRole(db, runId, gi)) {
+				db.getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, 0, GeneralItemVisibility.NOT_YET_VISIBLE);
 			}
+		}
+//		if (items != null)
+//			for (GeneralItem gi : items) {
+//				if (itemMatchesPlayersRole(db, runId, gi)) {
+//					Dependency dep = gi.getDependsOn();
+//					DBAdapter.getAdapter(db.getContext()).getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, 0, GeneralItemVisibility.NOT_YET_VISIBLE);
+//				}
+//			}
 	}
 
 	private static boolean containsRole(JSONArray userRoles, String role) {
@@ -129,89 +152,82 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 	}
 
 	public static boolean itemMatchesPlayersRole(DBAdapter db, long runId, GeneralItem gi) {
-		boolean playerHasRequiredRole = false;
-
 		if (gi.getRoles() != null && !gi.getRoles().isEmpty()) {
 			String userRoles = db.getRunAdapter().queryRoles(runId);
-
 			if (userRoles != null && !"".equals(userRoles)) {
 				try {
+					boolean playerHasRequiredRole = true;
 					JSONArray userRolesJson = new JSONArray(userRoles);
 					for (String giRole : gi.getRoles()) {
-						if (containsRole(userRolesJson, giRole))
-							playerHasRequiredRole = true;
+						playerHasRequiredRole &= containsRole(userRolesJson, giRole);
 					}
+					return playerHasRequiredRole;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 
 			}
-		} else {
-			playerHasRequiredRole = true;
-		}
-		return playerHasRequiredRole;
+		} 
+		return true;
 	}
 
 	public void processItemsNotYetVisible(final DBAdapter db, final long runId, final List<Action> actions) {
-		Long[] itemIds = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.NOT_YET_VISIBLE);
-		for (int i = 0; i < itemIds.length; i++) {
-			if (!DBAdapter.getDatabaseThread(db.getContext()).hasMessages((int) itemIds[i].longValue())) { //TODO make this safer
-				final GeneralItem generalItem = GeneralItemsCache.getInstance().getGeneralItems(itemIds[i]); 
-				if (generalItem == null)
-					return;
+		VisibilityEvent[] events = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.NOT_YET_VISIBLE);
+		for (VisibilityEvent e: events) {
+			GeneralItem generalItem = GeneralItemsDelegator.getInstance().getGeneralItem(e.itemId);
+			if (generalItem != null) {
 				Dependency dep = generalItem.getDependsOn();
-				long satisfiedAtTemp = -1;
+				long satisfiedAt = -1; //item not yet visible
 				if (dep != null) {
-					satisfiedAtTemp = dep.satisfiedAt(actions);
+					satisfiedAt = dep.satisfiedAt(actions); 
 				} else {
-					satisfiedAtTemp = 0;
+					satisfiedAt = 0; //item supposed to visible from time 0
 				}
-				final long satisfiedAt = satisfiedAtTemp;
-				final long itemId = generalItem.getId();
-				if (satisfiedAt != -1) {
-					generalItem.setVisibleAt(satisfiedAt);
-					VisibleGeneralItemsDelegator.getInstance().checkRoleAndMakeItemVisible(db, runId, generalItem);
-					
-//					long currentTime = System.currentTimeMillis();
-//					long satisfiedAtDelta = currentTime - satisfiedAt;
-//					db.getGeneralItemVisibility().setVisibilityStatus(itemIds[i], runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
-//					if (satisfiedAtDelta > 0 && satisfiedAtDelta < 30000) {
-//						broadcastTroughIntent(generalItem, db.getContext(), runId);
-//					} else {
-//						ForceUpdateTask.scheduleEvent(db.getContext(), runId, false, null);
-////						DBAdapter.DatabaseTask task = new DBAdapter.DatabaseTask() {
-////
-////							@Override
-////							public void execute(DBAdapter db) {
-////								db.getGeneralItemVisibility().setVisibilityStatus(generalItem.getId(), runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
-////								broadcastTroughIntent(generalItem, db.getContext(), runId);
-////
-////							}
-////
-////						};
-////						Message m = Message.obtain();
-////						m.obj = task;
-////						DBAdapter.getDatabaseThread(db.getContext()).sendMessageAtTime(m, satisfiedAt);
-//					}
+				if (satisfiedAt != -1) { //if update is necessary
+					db.getGeneralItemVisibility().setVisibilityStatus(generalItem.getId(), runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
 				}
 			}
+			
 		}
+//		Long[] itemIds = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.NOT_YET_VISIBLE);
+//		for (int i = 0; i < itemIds.length; i++) {
+//			if (!DBAdapter.getDatabaseThread(db.getContext()).hasMessages((int) itemIds[i].longValue())) { //TODO make this safer
+//				final GeneralItem generalItem = GeneralItemsCache.getInstance().getGeneralItems(itemIds[i]); 
+//				if (generalItem == null)
+//					return;
+//				Dependency dep = generalItem.getDependsOn();
+//				long satisfiedAtTemp = -1;
+//				if (dep != null) {
+//					satisfiedAtTemp = dep.satisfiedAt(actions);
+//				} else {
+//					satisfiedAtTemp = 0;
+//				}
+//				final long satisfiedAt = satisfiedAtTemp;
+//				final long itemId = generalItem.getId();
+//				if (satisfiedAt != -1) {
+//					generalItem.setVisibleAt(satisfiedAt);
+//					VisibleGeneralItemsDelegator.getInstance().checkRoleAndMakeItemVisible(db, runId, generalItem);
+//				}
+//			}
+//		}
 	}
 
 	public void processItemsNotYetDisappeared(final DBAdapter db, final long runId, final List<Action> actions) {
-		Long[] itemIds = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.VISIBLE);
-		Long[] nolongVis = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.NO_LONGER_VISIBLE);
-		ArrayList<Long> visible = new ArrayList<Long>();
-		for (Long visLong: itemIds) {
-			visible.add(visLong);
+		VisibilityEvent[] visibleEvents = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.VISIBLE);
+		VisibilityEvent[] noLongerVisibleEvents = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.NO_LONGER_VISIBLE);
+
+//		Long[] itemIds = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.VISIBLE);
+//		Long[] nolongVis = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.NO_LONGER_VISIBLE);
+		ArrayList<VisibilityEvent> visible = new ArrayList<VisibilityEvent>();
+		for (VisibilityEvent visEvent: visibleEvents) {
+			visible.add(visEvent);
 		}
-		for (Long novisLong: nolongVis) {
+		for (VisibilityEvent novisLong: noLongerVisibleEvents) {
 			visible.remove(novisLong);
 		}
-		for (Long itemId: visible) {
-//		for (int i = 0; i < itemIds.length; i++) {
-			if (!DBAdapter.getDatabaseThread(db.getContext()).hasMessages((int) itemId.longValue())) { //TODO make this safer
-				final GeneralItem generalItem = GeneralItemsCache.getInstance().getGeneralItems(itemId); 
+		for (VisibilityEvent e: visible) {
+//			if (!DBAdapter.getDatabaseThread(db.getContext()).hasMessages((int) itemId.longValue())) { //TODO make this safer
+				final GeneralItem generalItem = GeneralItemsCache.getInstance().getGeneralItems(e.itemId); 
 				if (generalItem == null)
 					return;
 				Dependency dep = generalItem.getDisappearOn();
@@ -220,11 +236,11 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 					satisfiedAtTemp = dep.satisfiedAt(actions);
 					final long satisfiedAt = satisfiedAtTemp;
 					if (satisfiedAt != -1) {
-						db.getGeneralItemVisibility().setVisibilityStatus(itemId, runId, satisfiedAt, GeneralItemVisibility.NO_LONGER_VISIBLE);
-						ForceUpdateTask.scheduleEvent(db.getContext(), runId, false, null);
+						db.getGeneralItemVisibility().setVisibilityStatus(e.itemId, runId, satisfiedAt, GeneralItemVisibility.NO_LONGER_VISIBLE);
+//						ForceUpdateTask.scheduleEvent(db.getContext(), runId, false, null);
 					}
 				}
-			}
+//			}
 		}
 	}
 	
@@ -289,6 +305,14 @@ public class GeneralItemDependencyHandler implements DBAdapter.DatabaseTask {
 			}
 		};
 		waitThread.run();
+	}
+
+	@Override
+	protected void run(Context ctx) {
+		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
+		m.obj = this;
+		m.sendToTarget();
+		
 	}
 
 	

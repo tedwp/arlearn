@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.jdo.manager;
 
 import java.util.ArrayList;
@@ -176,6 +194,40 @@ public class RunManager {
 		}
 		query.setRange(0, LIMIT);
 		return (List<RunJDO>) query.execute();
+	}
+	
+	private static String cursorString = null;
+	public static void updateAll() {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+		Query query = pm.newQuery(RunJDO.class);
+		if (cursorString != null) {
+
+			Cursor c = Cursor.fromWebSafeString(cursorString);
+			Map<String, Object> extendsionMap = new HashMap<String, Object>();
+			extendsionMap.put(JDOCursorHelper.CURSOR_EXTENSION, c);
+			query.setExtensions(extendsionMap);
+		}
+		query.setRange(0, 100);
+
+		
+//		query.setFilter("lastModificationDate == null");
+		List<RunJDO> results = (List<RunJDO>) query.execute();
+		Iterator<RunJDO> it = (results).iterator();
+		int i = 0;
+		while (it.hasNext()) {
+			i++;
+			RunJDO object = it.next();
+			if (object != null &&object.getLastModificationDate() == null) {
+				object.setLastModificationDate(System.currentTimeMillis());
+
+			}
+		}
+		Cursor c = JDOCursorHelper.getCursor(results);
+		cursorString = c.toWebSafeString();
+		} finally {
+			pm.close();
+		}
 	}
 
 	

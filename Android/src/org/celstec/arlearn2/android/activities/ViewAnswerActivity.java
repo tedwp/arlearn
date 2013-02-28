@@ -1,15 +1,34 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.activities;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.cache.MediaUploadCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.MyResponses;
 import org.celstec.arlearn2.android.db.beans.MediaCacheItem;
+import org.celstec.arlearn2.android.delegators.ResponseDelegator;
 import org.celstec.arlearn2.android.genItemActivities.AudioPlayerDelegate;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.beans.run.Response;
@@ -33,7 +52,7 @@ public class ViewAnswerActivity extends GeneralActivity {
 	private Response resp;
 	private ImageView image;
 	private VideoView video;
-
+	int IMAGE_MAX_SIZE = 600;
 	private AudioPlayerDelegate apd;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,23 +64,28 @@ public class ViewAnswerActivity extends GeneralActivity {
 		initGui();
 		try {
 			JSONObject json = new JSONObject(resp.getResponseValue());
-			String genId = "";
-			if (resp.getGeneralItemId() != null)
-				genId = ":" + resp.getGeneralItemId();
-			if (json.has("imageUrl")) {
-				MediaCacheItem mci = null; //TODO org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getImageId(resp.getRunId(), resp.getTimestamp()));
-				if (mci != null) {
+			if (json.has(ResponseDelegator.IMAGEURL)) {
+				Uri uri = ResponseDelegator.getInstance().getLocalMediaUri(resp, ResponseDelegator.IMAGEURL);
+				if (uri != null) {
 					image.setVisibility(View.VISIBLE);
-					image.setImageURI(mci.getUri());
+					BitmapFactory.Options options=new BitmapFactory.Options();
+					options.inSampleSize = 4;
+					options.inPurgeable = true;
+					try {
+						Bitmap preview_bitmap=BitmapFactory.decodeStream(this.getContentResolver().openInputStream(uri),null,options);
+						image.setImageBitmap(preview_bitmap);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
 				}
 			} else {
 				image.setVisibility(View.GONE);
 			}
-			if (json.has("videoUrl")) {
-				MediaCacheItem mci = null; //TODO org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getVideoId(resp.getRunId(), resp.getTimestamp()));
-				if (mci != null) {
+			if (json.has(ResponseDelegator.VIDEOURL)) {
+				Uri uri = ResponseDelegator.getInstance().getLocalMediaUri(resp, ResponseDelegator.VIDEOURL);
+				if (uri != null) {
 					video.setVisibility(View.VISIBLE);
-					video.setVideoURI(mci.getUri());
+					video.setVideoURI(uri);
 					MediaController mediaController = new MediaController(this);
 					video.setMediaController(mediaController);
 					video.requestFocus();
@@ -70,12 +94,12 @@ public class ViewAnswerActivity extends GeneralActivity {
 			} else {
 				video.setVisibility(View.GONE);
 			}
-			if (json.has("audioUrl")) {
+			if (json.has(ResponseDelegator.AUDIOURL)) {
+				Uri uri = ResponseDelegator.getInstance().getLocalMediaUri(resp, ResponseDelegator.AUDIOURL);
+
 				((LinearLayout) findViewById(R.id.playButtonsAnswer)).setVisibility(View.VISIBLE);
-				Uri localAudio = MediaUploadCache.getInstance(resp.getRunId()).getLocalUri(json.getString("audioUrl"));
-//				MediaCacheItem mci = null; //org.celstec.arlearn2.android.cache.MediaCache.getInstance().getMediaCacheItem(MediaCacheItem.getAudioId(resp.getRunId(), resp.getTimestamp()));
-				if (localAudio != null)
-					apd = new AudioPlayerDelegate(localAudio, this);
+				if (uri != null)
+					apd = new AudioPlayerDelegate(uri, this);
 
 			} else {
 				((LinearLayout) findViewById(R.id.playButtonsAnswer)).setVisibility(View.GONE);
@@ -97,7 +121,7 @@ public class ViewAnswerActivity extends GeneralActivity {
 			apd.setPlayButton((ImageView) findViewById(R.id.ao_playButton_answer));
 	}
 
-	int IMAGE_MAX_SIZE = 600;
+	
 
 	public static Bitmap decodeFile(File f, int IMAGE_MAX_SIZE) {
 		Bitmap b = null;

@@ -1,9 +1,28 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.beans.notification;
 
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.run.Run;
 
-public class GeneralItemModification extends Bean{
+public class GeneralItemModification extends NotificationBean{
 	
 	public final static int CREATED = 1;
 	public final static int DELETED = 2;
@@ -13,6 +32,8 @@ public class GeneralItemModification extends Bean{
 	
 	private Integer modificationType;
 	private Long runId;
+	private Long gameId;
+	private Long itemId;
 	private GeneralItem generalItem;
 	
 	public Integer getModificationType() {
@@ -23,12 +44,29 @@ public class GeneralItemModification extends Bean{
 		this.modificationType = modificationType;
 	}
 	
+	
 	public Long getRunId() {
 		return runId;
 	}
 
 	public void setRunId(Long runId) {
 		this.runId = runId;
+	}
+
+	public Long getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(Long gameId) {
+		this.gameId = gameId;
+	}
+
+	public Long getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(Long itemId) {
+		this.itemId = itemId;
 	}
 
 	public GeneralItem getGeneralItem() {
@@ -39,4 +77,12 @@ public class GeneralItemModification extends Bean{
 		this.generalItem = generalItem;
 	}
 	
+	public void retainOnlyIdentifier() {
+		if (getGeneralItem() != null) {
+			GeneralItem r = getGeneralItem();
+			if (r.getGameId()!= null) setGameId(r.getGameId());
+			if (r.getId()!= null) setItemId(r.getId());
+			setGeneralItem(null);
+		}
+	}
 }

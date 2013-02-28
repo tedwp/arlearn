@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.menu;
 
 import org.celstec.arlearn2.android.R;
@@ -50,6 +68,7 @@ public class MenuHandler {
 	public static final int REFRESH = 8;
 	public static final int SCAN = 9;
 	public static final int DOWNLOAD_MAP_TILES = 10;
+	public static final int UNREGISTER = 11;
 
 	private Activity context;
 	private PropertiesAdapter pa;
@@ -92,6 +111,10 @@ public class MenuHandler {
 			break;
 		case DELETE_ANSWER:
 			((ViewAnswerActivity) context).deleteAnswer();
+			break;
+		case UNREGISTER:
+			((ListExcursionsActivity) context).showUnregister();
+
 			break;
 //		case RESET:
 //			AlertDialog.Builder builder = new AlertDialog.Builder(context);

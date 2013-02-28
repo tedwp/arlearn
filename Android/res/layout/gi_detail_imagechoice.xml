@@ -13,7 +13,12 @@
         android:id="@+id/multipleChoiceImageTable"
         android:layout_height="fill_parent"
         android:layout_weight=".90"
-        android:stretchColumns="1"
+        android:stretchColumns="0"
             >
     </TableLayout>
+    <Button android:id="@+id/mct_submit" 
+		android:text="@string/mct_submit"
+		android:layout_width="match_parent" 
+		android:layout_height="wrap_content"
+		android:layout_weight="0" />
 </LinearLayout>

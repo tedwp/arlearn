@@ -1,6 +1,25 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.asynctasks.network;
 
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
+import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.ActionsDelegator;
@@ -30,18 +49,28 @@ public class PublishActionTask implements NetworkTask {
 
 	@Override
 	public void execute() {
-		ActionClient ac = ActionClient.getActionClient();
-		Action result = ac.publishAction(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), action);
-		result.setTime(action.getTime());
-		if (result.getError() == null) {
-			ActionsDelegator.getInstance().confirmReplicated(ctx, result);
-//			DBAdapter.getAdapter(ctx).getMyActions().confirmReplicated(result);
+		if (!NetworkSwitcher.isOnline(ctx)) {
+			ActionsDelegator.getInstance().replicationFailed(ctx, action);
 		} else {
-			if (result.getError() != null && "User not found".equals(result.getError()))
+			ActionClient ac = ActionClient.getActionClient();
+			Action result = ac.publishAction(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), action);
+			result.setTime(action.getTime());
+			if (result.getError() == null) {
 				ActionsDelegator.getInstance().confirmReplicated(ctx, result);
-//				DBAdapter.getAdapter(ctx).getMyActions().confirmReplicated(result);
-			// this is not elegant... but its mean that the user was deleted, so don't try to sync in future
-		}
+			} else {
+				if (result.getError() != null && "User not found".equals(result.getError())) {
+					// DBAdapter.getAdapter(ctx).getMyActions().confirmReplicated(result);
+					// this is not elegant... but its mean that the user was
+					// deleted, so don't try to sync in future
+					ActionsDelegator.getInstance().confirmReplicated(ctx, action);
+				} else if (result.getError() != null && "exception null".equals(result.getError())) {
+					// no network
+					ActionsDelegator.getInstance().replicationFailed(ctx, action);
 
+				}
+
+				
+			}
+		}
 	}
 }

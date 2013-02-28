@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.delegators.notification;
 
 import java.io.IOException;
@@ -40,20 +58,7 @@ public class APNNotificationChannel implements NotificationChannel{
 	public void sendNotification(String account, String deviceToken, NotificationBean bean) throws JSONException {
 		String text = "";
 		bean.retainOnlyIdentifier();
-//		if (bean instanceof RunModification) {
-//			RunModification rm = (RunModification) bean;
-//			Run r = rm.getRun();
-//			rm.setRun(new Run());
-//			rm.getRun().setRunId(r.getRunId());
-//			JSONObject json = new JSONObject(rm.toString());
-//			JSONObject aps = new JSONObject();
-//			aps.put("aps", json);
-//			json.put("alert", "new run");
-//			json.put("sound", "default");
-////			json.remove("run");	
-//			
-//		}
-		
+	
 		JSONObject json = new JSONObject(bean.toString());
 		JSONObject aps = new JSONObject();
 		aps.put("aps", json);

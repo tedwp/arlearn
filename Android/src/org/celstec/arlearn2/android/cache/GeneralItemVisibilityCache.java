@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.cache;
 
 import java.util.HashMap;
@@ -48,16 +66,16 @@ public class GeneralItemVisibilityCache {
 		}
 		return instance;
 	}
-	
-	public TreeSet<GeneralItem> getAllNotInitializedItems(long runId) {
-		TreeSet<GeneralItem> resultList = new TreeSet<GeneralItem>();
-		for (String key: notInitialisedItems) {
-			long id = keyToGeneralItemId(key);
-			GeneralItem gi = GeneralItemsCache.getInstance().getGeneralItems(id);
-			if (gi != null) resultList.add(gi);
-		}
-		return resultList;
-	}
+	//TODO remove corresponding data structure
+//	public TreeSet<GeneralItem> getAllNotInitializedItems(long runId) {
+//		TreeSet<GeneralItem> resultList = new TreeSet<GeneralItem>();
+//		for (String key: notInitialisedItems) {
+//			long id = keyToGeneralItemId(key);
+//			GeneralItem gi = GeneralItemsCache.getInstance().getGeneralItems(id);
+//			if (gi != null) resultList.add(gi);
+//		}
+//		return resultList;
+//	}
 	
 	public TreeSet<GeneralItem> getAllNotYetVisible(long runId) {
 		TreeSet<GeneralItem> resultList = new TreeSet<GeneralItem>();
@@ -174,7 +192,7 @@ public class GeneralItemVisibilityCache {
 		loadedRuns.add(runId);		
 	}
 
-	public void put(Long runId, long itemId, int status, long satisfiedAt) {
+	public void put(Long runId, long itemId, int status, Long satisfiedAt) {
 		switch (status) {
 		case GeneralItemVisibility.NOT_INITIALISED:
 			synchronized (notInitialisedItems) {
@@ -198,7 +216,15 @@ public class GeneralItemVisibilityCache {
 				notyetvisibleItems.remove(getKey(runId, itemId));
 			}
 			synchronized (visibleItems) {
+//				01-30 17:30:18.713: I/System.out(24406): before making visible 323001*309004 1359563406250
+				if ("323001*319001".equals(getKey(runId, itemId))) {
+					System.out.println("before making visible "+getKey(runId, itemId)+ " "+visibleItems.get(getKey(323001l, 318001l)));	
+				}
 				visibleItems.put(getKey(runId, itemId), satisfiedAt);
+				if ("323001*319001".equals(getKey(runId, itemId))) {
+					System.out.println("after making visible "+getKey(runId, itemId)+ " "+visibleItems.get(getKey(323001l, 318001l)));
+				}
+				
 			}
 			break;
 		case GeneralItemVisibility.NO_LONGER_VISIBLE:
@@ -227,6 +253,44 @@ public class GeneralItemVisibilityCache {
 		remove(notyetvisibleItems, runId);
 		
 	}
+	
+	//TODO test this method
+	public void removeWithGenItemId(Long itemId) {
+		removeWithGenItemId(visibleItems, itemId);
+		removeWithGenItemId(disappearedItems, itemId);
+		removeWithGenItemId(notInitialisedItems, itemId);
+		removeWithGenItemId(notyetvisibleItems, itemId);
+	}
+	
+	public void removeWithGenItemId(HashMap<String, Long> map, Long itemId) {
+		synchronized (map) {
+			Iterator<String> runItems = map.keySet().iterator();
+			Set<String> keysToRemove = new HashSet<String>();
+			while (runItems.hasNext()) {
+				String key = runItems.next();
+				if (keyContainsItemId(key, itemId)){
+					keysToRemove.add(key);
+				}
+			}
+			for (String key: keysToRemove){
+				map.remove(key);
+			}
+		}
+	}
+		
+	public void removeWithGenItemId(HashSet<String> set, Long itemId) {
+		synchronized (set) {
+			Iterator<String> runItems = set.iterator();
+			while (runItems.hasNext()) {
+				if (keyContainsItemId(runItems.next(), itemId)){
+					runItems.remove();
+				}
+			}
+		}
+	}
+	
+	
+
 	
 	private void remove(HashMap<String, Long> hm, long runId) {
 		synchronized (hm) {
@@ -264,4 +328,9 @@ public class GeneralItemVisibilityCache {
 	public String getKey(Long runId, long itemId) {
 		return runId+"*"+itemId;
 	}
+	
+	public boolean keyContainsItemId(String key, long itemId) {
+		return key.endsWith("*"+itemId);
+	}
+
 }

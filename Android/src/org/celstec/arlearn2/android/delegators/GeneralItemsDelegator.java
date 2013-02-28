@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.delegators;
 
 import java.util.ArrayList;
@@ -5,15 +23,23 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.asynctasks.db.CreateDownloadGeneralItems;
+import org.celstec.arlearn2.android.asynctasks.db.GeneralItemDependencyHandler;
+import org.celstec.arlearn2.android.asynctasks.db.InitGeneralItemVisibilityTask;
 import org.celstec.arlearn2.android.asynctasks.network.DownloadFileTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGeneralItemsTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeRunsTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGeneralItemVisiblityTask;
+import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.cache.MediaGeneralItemCache;
 import org.celstec.arlearn2.android.cache.ResponseCache;
+import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCacheGeneralItems;
 import org.celstec.arlearn2.android.db.MediaCacheGeneralItems.DownloadItem;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.run.Response;
@@ -37,6 +63,22 @@ public class GeneralItemsDelegator {
 		return instance;
 	}
 
+	public void synchronizeGeneralItemsWithServer(Context ctx, Long runId, Long gameId) {
+		SynchronizeGeneralItemsTask syncItemTask_1 = new SynchronizeGeneralItemsTask();
+		syncItemTask_1.setGameId(gameId);
+		SynchronizeGeneralItemVisiblityTask syncVisItemsTask_2 = new SynchronizeGeneralItemVisiblityTask();
+		syncVisItemsTask_2.setRunId(runId);
+		
+		
+		InitGeneralItemVisibilityTask visibilityTask_3 = new InitGeneralItemVisibilityTask(runId, gameId);
+		GeneralItemDependencyHandler dependencyTask_4 = new GeneralItemDependencyHandler();
+		
+		visibilityTask_3.taskToRunAfterExecute(dependencyTask_4);
+		syncVisItemsTask_2.taskToRunAfterExecute(visibilityTask_3);
+		syncItemTask_1.taskToRunAfterExecute(syncVisItemsTask_2);
+		syncItemTask_1.run(ctx);
+	}
+	
 	public TreeSet<Response> getResponses(Long runId, Long itemId) {
 		return ResponseCache.getInstance().getResponses(runId, itemId);
 	}
@@ -59,6 +101,9 @@ public class GeneralItemsDelegator {
 		if (gi instanceof SingleChoiceImageTest) {
 			return getDownloadItemsSingleChoiceImageTest((SingleChoiceImageTest) gi);
 		}
+		if (gi instanceof MultipleChoiceImageTest) {
+			return getDownloadItemsMultipleChoiceImageTest((MultipleChoiceImageTest) gi);
+		}
 		return null;
 	}
 
@@ -79,6 +124,33 @@ public class GeneralItemsDelegator {
 	}
 
 	private DownloadItem[] getDownloadItemsSingleChoiceImageTest(SingleChoiceImageTest gi) {
+		ArrayList<DownloadItem> list = new ArrayList<MediaCacheGeneralItems.DownloadItem>();
+		if (gi.getAudioQuestion() != null) {
+			DownloadItem audioQuestion = getBaseItem(gi);
+			audioQuestion.setLocalId(AUDIO_LOCAL_ID);
+			audioQuestion.setRemoteUrl(gi.getAudioQuestion());
+			list.add(audioQuestion);
+		}
+		gi.getAnswers();
+		for (MultipleChoiceAnswerItem imageAnswer : gi.getAnswers()) {
+			MultipleChoiceImageAnswerItem mciai = (MultipleChoiceImageAnswerItem) imageAnswer;
+			if (mciai.getImageUrl() != null) {
+				DownloadItem imageDi = getBaseItem(gi);
+				imageDi.setLocalId(mciai.getId() + ":i");
+				imageDi.setRemoteUrl(mciai.getImageUrl());
+				list.add(imageDi);
+			}
+			if (mciai.getAudioUrl() != null) {
+				DownloadItem audioDi = getBaseItem(gi);
+				audioDi.setLocalId(mciai.getId() + ":a");
+				audioDi.setRemoteUrl(mciai.getAudioUrl());
+				list.add(audioDi);
+			}
+		}
+		return list.toArray(new DownloadItem[] {});
+	}
+	
+	private DownloadItem[] getDownloadItemsMultipleChoiceImageTest(MultipleChoiceImageTest gi) {
 		ArrayList<DownloadItem> list = new ArrayList<MediaCacheGeneralItems.DownloadItem>();
 		if (gi.getAudioQuestion() != null) {
 			DownloadItem audioQuestion = getBaseItem(gi);
@@ -129,6 +201,15 @@ public class GeneralItemsDelegator {
 		// db.getMediaCacheGeneralItems().addToCache(item.getGameId());
 		// (new GeneralItemMediaSyncTask(ctx, gameId)).addTaskToQueue(ctx);
 
+	}
+
+	public void initializeGeneralItemsVisibility(DBAdapter db, Long runId, Long gameId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public GeneralItem getGeneralItem(long itemId) {
+		return GeneralItemsCache.getInstance().getGeneralItems(itemId);
 	}
 
 }

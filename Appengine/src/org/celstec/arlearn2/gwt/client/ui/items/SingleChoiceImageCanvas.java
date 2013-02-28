@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.gwt.client.ui.items;
 
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
@@ -32,6 +50,7 @@ import com.smartgwt.client.widgets.form.fields.events.ItemHoverHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 public class SingleChoiceImageCanvas extends GeneralItemCanvas{
+	public static final String type = "org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest";
 
 	private Label questionLabel;
 	private HTMLPane questionHtmlLabel;
@@ -110,13 +129,13 @@ public class SingleChoiceImageCanvas extends GeneralItemCanvas{
 
 		this.addMember(form2);
 		isDisapperOnDependency.setStartRow(true);
-		form2.setFields(isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope,   isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime,isAutolaunch,  
+		form2.setFields(isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope,   isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearSelectActionString, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime,isAutolaunch,  
 				ti1, cb1, audio1, id1, 
 				ti2, cb2, audio2, id2,
 				ti3, cb3, audio3, id3,
 				ti4, cb4, audio4, id4,
 				ti5, cb5, audio5, id5);
-		addField(form2,isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope,   isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime, isAutolaunch,  
+		addField(form2,isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope,   isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearSelectActionString, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime, isAutolaunch,  
 				ti1, cb1, audio1, id1, 
 				ti2, cb2, audio2, id2,
 				ti3, cb3, audio3, id3,
@@ -252,7 +271,7 @@ public class SingleChoiceImageCanvas extends GeneralItemCanvas{
 	}
 	public JSONObject generateObject() {
 		JSONObject result = super.generateObject();
-		result.put("type", new JSONString("org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest"));
+		result.put("type", new JSONString(type));
 		if (getValue(IS_AUDIO_QUESTION) != null && (Boolean) getValue(IS_AUDIO_QUESTION)) {
 			result.put(AUDIO_QUESTION, new JSONString((String) getValue(AUDIO_QUESTION)));	
 

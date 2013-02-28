@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.db;
 
 //import org.celstec.arlearn2.genericBeans.Run;
@@ -82,41 +100,6 @@ public class RunAdapter extends GenericDbTable {
 		db.getSQLiteDb().insert(getTableName(), null, initialValues);
 	}
 	
-//	@Deprecated
-//	public boolean insert(Object o, List<String> roles) {
-//		Run r = (Run) o;
-//		Run oldRun =  (Run) queryById(r.getRunId());
-//		if (oldRun != null) {
-//			if (!oldRun.equals(r)) {
-//				return update(r, roles);
-//			} else {
-//				return false;	
-//			}
-//		}
-//		
-//		delete(r.getRunId());
-//    	ContentValues initialValues = new ContentValues();
-//		initialValues.put(ID, r.getRunId());
-//        initialValues.put(TITLE, r.getTitle());
-//        initialValues.put(START_TIME, r.getStartTime());
-//        initialValues.put(SERVER_CREATE_TIME, r.getServerCreationTime());
-//        if (roles != null) {
-//        	JSONArray array = new JSONArray();
-//        	for (final String role: roles) {
-//        		array.put(role);
-//        	}
-//        	initialValues.put(ROLES, array.toString());
-//        }
-//        initialValues.put(BEAN, r.toString());
-//        
-//        if (r.getDeleted() == null) {
-//			initialValues.put(DELETED, false);
-//		} else {
-//			initialValues.put(DELETED, r.getDeleted());
-//		}
-//    	return db.getSQLiteDb().insert(getTableName(), null, initialValues) != -1;	
-//	}
-	
 	public void updateUserRole(User u) {
 		ContentValues initialValues = new ContentValues();
 		if (u.getRoles() != null)  {
@@ -129,7 +112,6 @@ public class RunAdapter extends GenericDbTable {
         }
 		
 	}
-	
 	
 	public boolean update(Run r, List<String> roles) {
 		ContentValues initialValues = new ContentValues();
@@ -163,17 +145,6 @@ public class RunAdapter extends GenericDbTable {
 		}
 	}
 	
-//	public int delete(Object o) {
-//		Long id = (Long) o;
-//		return delete(id);
-//	}
-	
-	
-	
-
-	
-	
-
 	private Run[] query(String selection, String[] selectionArgs) {
 		Run[] resultRuns = null;
 		try {
@@ -344,82 +315,6 @@ public class RunAdapter extends GenericDbTable {
 		
 	}
 	
-//	public void insert(Run run) {
-//		List<Run> runs = new ArrayList<Run>();
-//		runs.add(run);
-//		insert(runs);
-//	}
-	
-//	public void insert(List<Run> runs) {
-//		InsertRunTask task = new InsertRunTask();
-//		task.runs = runs;
-//		Message m = Message.obtain(DBAdapter.getDatabaseThread(db.getContext()));
-//		m.obj = task;
-//		m.sendToTarget();
-//		
-//	}
-	
-//	public class InsertRunTask implements DBAdapter.DatabaseTask{
-//		
-//		public List<Run> runs;
-//		
-//		@Override
-//		public void execute(DBAdapter db) {
-//			for (Iterator<Run> iterator = runs.iterator(); iterator.hasNext();) {
-//				Run run = iterator.next();
-//				if (run.getDeleted() != null && run.getDeleted()) {
-//					delete(run.getRunId());
-//				} else {
-//				Run cachedRun = RunCache.getInstance().getRun(run.getRunId());
-//				if (!run.equals(cachedRun)) {
-//					Run oldRun = (Run) queryById(run.getRunId());
-//					if (oldRun != null) {
-//						if (!oldRun.equals(run)) {
-//							update(run, null);
-//						} else {
-//							RunCache.getInstance().put(run);
-//						}
-//					} else {
-//						ContentValues initialValues = new ContentValues();
-//						initialValues.put(ID, run.getRunId());
-//						initialValues.put(TITLE, run.getTitle());
-//						initialValues.put(START_TIME, run.getStartTime());
-//						initialValues.put(SERVER_CREATE_TIME, run.getServerCreationTime());
-//						initialValues.put(BEAN, run.toString());
-//						boolean runDeleted = (run.getDeleted() != null) && run.getDeleted();
-//						initialValues.put(DELETED, runDeleted);
-//						db.getSQLiteDb().insert(getTableName(), null, initialValues);
-//						if (!runDeleted)
-//							updateGame(db, run);
-//						RunCache.getInstance().put(run);
-//					}
-//					}
-//				}
-//			}
-//			ActivityUpdater.updateActivities(db.getContext(), ListExcursionsActivity.class.getCanonicalName());
-//		}
-//		
-//		
-//		
-//	}
-	
-//	public void updateGame(DBAdapter db, Run r) {
-//		Game g = r.getGame();
-//		PropertiesAdapter pa  = PropertiesAdapter.getInstance(db.getContext());
-//		if (g == null) {
-//			r = RunClient.getRunClient().getRun(r.getRunId(), pa.getFusionAuthToken());
-//			g = r.getGame();
-//		}
-//		if (g != null) {
-//			db.getGameAdapter().insert(g);
-//			GameCache.getInstance().putGame(g.getGameId(), g);
-//		}
-////		User u = UserClient.getUserClient().getUser(pa.getFusionAuthToken(), r.getRunId(), pa.getUsername());
-////		db.getRunAdapter().insert(r, u.getRoles());
-//		
-//	}
-	
-	
 		protected void setStatusToLogout(Context context) {
 			PropertiesAdapter.getInstance(context).disAuthenticate();
 			Intent updateIntent = new Intent();
@@ -429,10 +324,5 @@ public class RunAdapter extends GenericDbTable {
 			context.sendBroadcast(updateIntent);
 		}
 
-		
-		
 	
-	
-	
-
 }
