@@ -117,6 +117,12 @@ public class GeneralItemsDelegator {
 		syncItemTask_1.run(ctx);
 	}
 	
+	public void synchronizeGeneralItemsWithServer(Context ctx, Long gameId) {
+		SynchronizeGeneralItemsTask syncItemTask_1 = new SynchronizeGeneralItemsTask();
+		syncItemTask_1.setGameId(gameId);
+		syncItemTask_1.run(ctx);
+	}
+	
 	public TreeSet<Response> getResponses(Long runId, Long itemId) {
 		return ResponseCache.getInstance().getResponses(runId, itemId);
 	}
