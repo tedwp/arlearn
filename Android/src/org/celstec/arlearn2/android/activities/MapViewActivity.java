@@ -1,9 +1,31 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.ActionsDelegator;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
+import org.celstec.arlearn2.android.delegators.ResponseDelegator;
+import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.android.maps.GenericItemsOverlay;
 import org.celstec.arlearn2.android.maps.ResponsesOverlay;
 import org.celstec.arlearn2.android.maps.UsersOverlay;
@@ -66,9 +88,9 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 
 		broadcastReceiver = new GenericBroadcastReceiver(this);
 		
-		Intent gimIntent = new Intent();
-		gimIntent.setAction(GeneralItemReceiver.action);
-		sendBroadcast(gimIntent);
+//		Intent gimIntent = new Intent();
+//		gimIntent.setAction(GeneralItemReceiver.action);
+//		sendBroadcast(gimIntent);
 		
 		mv = (MapView) findViewById(R.id.map);
 		mv.setBuiltInZoomControls(true);
@@ -119,7 +141,14 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 		mv.getOverlays().add(usersOverlay);
 		control = mv.getController();
 //		mHandler.postDelayed(checkForUpdates, 10000);
+		
 		initListMapButton();
+		
+		ActionsDelegator.getInstance().synchronizeActionsWithServer(this);
+		long runId = PropertiesAdapter.getInstance(this).getCurrentRunId();
+
+		RunDelegator.getInstance().loadRun(this, runId);
+		ResponseDelegator.getInstance().synchronizeResponsesWithServer(this, runId);
 
 	}
 
@@ -145,14 +174,18 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 
 	protected void onResume() {
 		super.onResume();
+		Long runId = PropertiesAdapter.getInstance(this).getCurrentRunId();
+		if (runId == null || RunCache.getInstance().getRun(runId) == null) {
+			this.finish();
+		}
+		long gameId = RunCache.getInstance().getGameId(runId);
+		GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, runId, gameId);
+		
 		menuHandler = new MenuHandler(this);
 		if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			this.finish();
 		}
-		Long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
-		if (runId == null || RunCache.getInstance().getRun(runId) == null) {
-			this.finish();
-		}
+		
 		myLocation.enableMyLocation();
 //		mHandler.removeCallbacks(checkForUpdates);
 //		mHandler.post(checkForUpdates);

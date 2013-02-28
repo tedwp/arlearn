@@ -1,14 +1,30 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.list;
 
 import java.text.MessageFormat;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.cache.ActionCache;
-import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.MediaCache;
-import org.celstec.arlearn2.beans.generalItem.AudioObject;
+import org.celstec.arlearn2.android.delegators.GameDelegator;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.generalItem.VideoObject;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -23,18 +39,9 @@ public class MessageListRecord extends GenericListRecord {
 		setMessageHeader(generalItem.getName());
 		setRead(ActionCache.getInstance().isRead(runId, generalItem.getId()));
 		String description = "";
-		if (generalItem.getType().equals(AudioObject.class.getName())){
-			AudioObject ao = (AudioObject) generalItem;
-			double percentage = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getPercentageUploaded(ao.getAudioFeed());
-			if (percentage != 1) description += MessageFormat.format("{0,number,#.##%}", percentage);
-		}
-		
-		if (generalItem.getType().equals(VideoObject.class.getName())){
-			VideoObject ao = (VideoObject) generalItem;
-			double percentage = org.celstec.arlearn2.android.cache.MediaCache.getInstance().getPercentageUploaded(ao.getVideoFeed());
-			if (percentage != 1) description += MessageFormat.format("{0,number,#.##%}", percentage);
-			
-		}
+		double percentage = GeneralItemsDelegator.getInstance().getDownloadPercentage(generalItem);
+		if (percentage < 1 && percentage != -1) description += MessageFormat.format("{0,number,#.##%}", percentage);
+
 		if ("".equals(description)) description = generalItem.getDescription().trim();
 
 		if (description.length() > 100) description = description.subSequence(0, 100) +" [..]";

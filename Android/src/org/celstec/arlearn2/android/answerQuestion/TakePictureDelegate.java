@@ -1,17 +1,40 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.answerQuestion;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnnotateActivity;
 import org.celstec.arlearn2.android.util.MediaFolders;
 
+import com.sun.imageio.plugins.common.InputStreamAdapter;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.opengl.Visibility;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -71,8 +94,20 @@ public class TakePictureDelegate {
 	}
 	
 	private void setPictureInFrame() {
+		BitmapFactory.Options options=new BitmapFactory.Options();
+		options.inSampleSize = 8;
+		options.inPurgeable = true;
+
+		try {
+			Bitmap preview_bitmap=BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(pictureUri),null,options);
+//			photoFrame.setImageURI(pictureUri);
+			photoFrame.setImageBitmap(preview_bitmap);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		photoFrame.setImageURI(pictureUri);
+		
 		addImageCaption.setVisibility(View.GONE);
 		photoFrame.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {

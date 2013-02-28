@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.gwt.client.ui.items;
 
 import java.util.HashMap;
@@ -56,6 +74,7 @@ public abstract class GeneralItemCanvas extends VStack{
 	protected SelectItem selectScope;
 	protected CheckboxItem isDisapperOnDependency;
 	protected SelectItem disAppearOnAction;
+	protected TextItem disAppearSelectActionString;
 	protected SelectItem disAppearOnGeneralItem;
 	protected SelectItem disAppearOnRole;
 	protected SelectItem disAppearOnScope;
@@ -86,13 +105,15 @@ public abstract class GeneralItemCanvas extends VStack{
 	
 	private final String DIS_SIMPLE_DEP = "disAppearDep";
 	private final String DIS_ACTION_DEP = "disAppearAction";
+	private final String DIS_ACTION_DEP_STRING = "disActionString";
 	private final String DIS_GENITEM_DEP = "disAppeargeneralItemId";
 	private final String DIS_SCOPE_DEP = "disAppearscope";
 	private final String DIS_ROLE_DEP = "disAppearrole";
 	private final String SHOW_COUNTDOWN = "showCountDown";
 	private final String DIS_TIME = "disTime";
 	
-	private boolean scantagString = false;
+	private boolean scantagStringAppear = false;
+	private boolean scantagStringDisappear = false;
 	
 	IsFloatValidator floatValidator = new IsFloatValidator();
 	IsIntegerValidator intValidator = new IsIntegerValidator();
@@ -242,7 +263,7 @@ public abstract class GeneralItemCanvas extends VStack{
 				if (form.getValue(SIMPLE_DEP) == null)
 					return false;
 
-				return form.getValue(SIMPLE_DEP).equals(Boolean.TRUE) && scantagString;
+				return form.getValue(SIMPLE_DEP).equals(Boolean.TRUE) && scantagStringAppear;
 			}
 
 		};
@@ -251,7 +272,7 @@ public abstract class GeneralItemCanvas extends VStack{
 				if (form.getValue(SIMPLE_DEP) == null)
 					return false;
 
-				return form.getValue(SIMPLE_DEP).equals(Boolean.TRUE) && !scantagString;
+				return form.getValue(SIMPLE_DEP).equals(Boolean.TRUE) && !scantagStringAppear;
 			}
 
 		};
@@ -286,7 +307,7 @@ public abstract class GeneralItemCanvas extends VStack{
 			@Override
 			public void onChanged(ChangedEvent event) {
 				String id = selectGeneralItem.getValueAsString();
-				getActions(Long.parseLong(id));
+				getActions(Long.parseLong(id), SIMPLE_DEP);
 			}
 		});
 
@@ -327,12 +348,39 @@ public abstract class GeneralItemCanvas extends VStack{
             }
 
         };
+        
+        FormItemIfFunction actionFreeString = new FormItemIfFunction() {
+			public boolean execute(FormItem item, Object value, DynamicForm form) {
+				if (form.getValue(DIS_SIMPLE_DEP) == null)
+					return false;
+
+				return form.getValue(DIS_SIMPLE_DEP).equals(Boolean.TRUE) && scantagStringDisappear;
+			}
+
+		};
+		FormItemIfFunction actionFixedString = new FormItemIfFunction() {
+			public boolean execute(FormItem item, Object value, DynamicForm form) {
+				if (form.getValue(DIS_SIMPLE_DEP) == null)
+					return false;
+
+				return form.getValue(DIS_SIMPLE_DEP).equals(Boolean.TRUE) && !scantagStringDisappear;
+			}
+
+		};
+        
 		disAppearOnAction = new SelectItem(DIS_ACTION_DEP);
 		disAppearOnAction.setTitle(constants.actionDep());
 		disAppearOnAction.setValueMap(createSimpleDependencyValues());
 		disAppearOnAction.setWrapTitle(false);
-		disAppearOnAction.setShowIfCondition(formIf);  
+		disAppearOnAction.setShowIfCondition(actionFixedString);  
 		disAppearOnAction.setStartRow(true);
+		
+		
+		disAppearSelectActionString = new TextItem(DIS_ACTION_DEP_STRING);
+		disAppearSelectActionString.setTitle(constants.actionDep());
+		disAppearSelectActionString.setWrapTitle(false);
+		disAppearSelectActionString.setShowIfCondition(actionFreeString);
+		disAppearSelectActionString.setStartRow(true);
 		
 		disAppearOnGeneralItem = new SelectItem(DIS_GENITEM_DEP);
 		disAppearOnGeneralItem.setTitle(constants.generalItemDep());
@@ -351,7 +399,7 @@ public abstract class GeneralItemCanvas extends VStack{
 			@Override
 			public void onChanged(ChangedEvent event) {
 				String id = disAppearOnGeneralItem.getValueAsString();
-				getActions(Long.parseLong(id));
+				getActions(Long.parseLong(id), DIS_SIMPLE_DEP);
 			}
 		});
 		
@@ -516,8 +564,14 @@ public abstract class GeneralItemCanvas extends VStack{
 		if ("org.celstec.arlearn2.beans.generalItem.AudioObject".equals(itemId)) {
 			return new AudioObjectCanvas(roles);	
 		}
-		if ("org.celstec.arlearn2.beans.generalItem.SingleChoiceTest".equals(itemId)) {
+		if (SingleChoiceCanvas.type.equals(itemId)) {
 			return new SingleChoiceCanvas(roles);	
+		}
+		if (Authoring.hidden &&  SingleChoiceImageCanvas.type.equals(itemId)) {
+			return new SingleChoiceImageCanvas(roles);	
+		}
+		if (Authoring.hidden &&  MultipleChoiceImageCanvas.type.equals(itemId)) {
+			return new MultipleChoiceImageCanvas(roles);	
 		}
 		if (Authoring.hidden && "org.celstec.arlearn2.beans.generalItem.OpenUrl".equals(itemId)) {
 			return new OpenUrlCanvas(roles);	
@@ -546,7 +600,7 @@ public abstract class GeneralItemCanvas extends VStack{
 			if (actionDep != null) object.put("dependsOn", actionDep);
 		}
 		if (getValue(DIS_SIMPLE_DEP) != null && (Boolean) getValue(DIS_SIMPLE_DEP)) {
-			JSONObject actionDep = generateDependency(DIS_ACTION_DEP, null, DIS_GENITEM_DEP, DIS_SCOPE_DEP, DIS_ROLE_DEP, DIS_TIME);
+			JSONObject actionDep = generateDependency(DIS_ACTION_DEP, DIS_ACTION_DEP_STRING, DIS_GENITEM_DEP, DIS_SCOPE_DEP, DIS_ROLE_DEP, DIS_TIME);
 			
 			if (getValue(SHOW_COUNTDOWN) != null) object.put(SHOW_COUNTDOWN, JSONBoolean.getInstance((Boolean) getValue(SHOW_COUNTDOWN)));
 			if (actionDep != null) object.put("disappearOn", actionDep);
@@ -565,17 +619,35 @@ public abstract class GeneralItemCanvas extends VStack{
 		JSONObject actionDep = new JSONObject();
 		actionDep.put("type", new JSONString("org.celstec.arlearn2.beans.dependencies.ActionDependency"));
 		boolean addDep = false;
-		if (scantagString) {
-			if ( getValue(actionString) != null) {
-				addDep = true;
-				actionDep.put("action", new JSONString((String) getValue(actionString)));	
+		if (actionString.equals(ACTION_DEP_STRING)) {
+			if (scantagStringAppear) { //TODO make generic
+				if ( getValue(actionString) != null) {
+					addDep = true;
+					actionDep.put("action", new JSONString((String) getValue(actionString)));	
+				}
+			} else {
+				if (getValue(actionDepString) != null ) {
+					addDep = true;
+					actionDep.put("action", new JSONString((String) getValue(actionDepString)));	
+				}	
 			}
 		} else {
-			if (getValue(actionDepString) != null ) {
-				addDep = true;
-				actionDep.put("action", new JSONString((String) getValue(actionDepString)));	
-			}	
+			if (scantagStringDisappear) { //TODO make generic
+				if ( getValue(actionString) != null) {
+					addDep = true;
+					actionDep.put("action", new JSONString((String) getValue(actionString)));	
+				}
+			} else {
+				if (getValue(actionDepString) != null ) {
+					addDep = true;
+					actionDep.put("action", new JSONString((String) getValue(actionDepString)));	
+				}	
+			}
 		}
+		
+		
+		
+		
 		if (getValue(genItemString) != null) {
 			addDep = true;
 			actionDep.put("generalItemId", new JSONNumber((Integer) getValue(genItemString)));	
@@ -637,12 +709,6 @@ public abstract class GeneralItemCanvas extends VStack{
 
 	public void setItemValues(JSONValue jsonValue) {
 		JSONObject o = jsonValue.isObject();
-//		 if (o.get("type").isString().stringValue().equals("org.celstec.arlearn2.beans.generalItem.ScanTag")) {
-//			 scantagString = true;
-//			 formMapping.get(ACTION_DEP_STRING);
-//		 } else {
-//			 scantagString = false;
-//		 }
 		if (o == null) return;
 		setValueDouble(ID_NAME, o);
 		setValueDouble(ORDER, o);
@@ -662,7 +728,7 @@ public abstract class GeneralItemCanvas extends VStack{
 				double itemId = setValueDouble(GENITEM_DEP, dep);
 				Record rec = GeneralItemGameDataSource.getInstance().getGeneralItem((long) itemId);
 				if ("Scan Tag".equals(rec.getAttribute("simpleName"))) {
-					scantagString = true;
+					scantagStringAppear = true; //TODO make generic
 					setValueString(ACTION_DEP_STRING, ACTION_DEP, dep);
 				} else {
 					setValueString(ACTION_DEP, dep);
@@ -687,8 +753,13 @@ public abstract class GeneralItemCanvas extends VStack{
 						dep = dep.get("offset").isObject();
 					}
 				}
-				
-				setValueString(DIS_ACTION_DEP, ACTION_DEP, dep);
+				Record rec = GeneralItemGameDataSource.getInstance().getGeneralItem((long) dep.get("generalItemId").isNumber().doubleValue());
+				if ("Scan Tag".equals(rec.getAttribute("simpleName"))) {
+					scantagStringDisappear = true; //TODO make generic
+					setValueString(DIS_ACTION_DEP_STRING, ACTION_DEP, dep);
+				} else {
+					setValueString(DIS_ACTION_DEP, ACTION_DEP, dep);
+				}
 				setValueString(DIS_ROLE_DEP, ROLE_DEP, dep);
 				setValueDouble(DIS_GENITEM_DEP, GENITEM_DEP, dep);
 				setValueDouble(DIS_SCOPE_DEP, SCOPE_DEP, dep);
@@ -754,7 +825,7 @@ public abstract class GeneralItemCanvas extends VStack{
 		formMapping.get(LNG).setValue(LNG, lng);
 	}
 	
-	public void getActions(long itemId) {
+	public void getActions(long itemId, final String depKind) {
 		 GeneralItemsClient.getInstance().getGeneralItem(getValueInteger(GAME_ID_NAME), itemId, new JsonCallback(){
 			 public void onJsonReceived(JSONValue jsonValue) {
 				 LinkedHashMap<String, String> map = createSimpleDependencyValues();
@@ -773,12 +844,24 @@ public abstract class GeneralItemCanvas extends VStack{
 					 }
 				 }
 				 if (jsonValue.isObject().get("type").isString().stringValue().equals("org.celstec.arlearn2.beans.generalItem.ScanTag")) {
-					 scantagString = true;
-					 
-					 formMapping.get(ACTION_DEP).redraw();
+					 if (depKind.equals(SIMPLE_DEP)) {
+						 scantagStringAppear = true;	
+						 formMapping.get(ACTION_DEP).redraw();
+
+					 } else {
+						 scantagStringDisappear = true;	 
+						 formMapping.get(DIS_ACTION_DEP).redraw();
+					 }
 				 } else {
-					 scantagString = false;
-					 formMapping.get(ACTION_DEP).redraw();
+					 if (depKind.equals(SIMPLE_DEP)) {
+						 scantagStringAppear = false;
+						 formMapping.get(ACTION_DEP).redraw();
+
+					 } else {
+						 scantagStringDisappear = false;	 
+						 formMapping.get(DIS_ACTION_DEP).redraw();
+					 }
+					 
 				 }
 
 				 selectAction.setValueMap(map);

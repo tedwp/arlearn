@@ -1,21 +1,43 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.android.Constants;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.OpenBadge;
 import org.celstec.arlearn2.beans.generalItem.ScanTag;
+import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.SingleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
 import org.celstec.arlearn2.android.genItemActivities.AudioObjectActivity;
 import org.celstec.arlearn2.android.genItemActivities.MultipleChoiceActivity;
+import org.celstec.arlearn2.android.genItemActivities.MultipleChoiceImageActivity;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.genItemActivities.OpenBadgeActivity;
 import org.celstec.arlearn2.android.genItemActivities.ScanTagActivity;
 import org.celstec.arlearn2.android.genItemActivities.SingleChoiceActivity;
+import org.celstec.arlearn2.android.genItemActivities.SingleChoiceImageActivity;
 import org.celstec.arlearn2.android.genItemActivities.VideoObjectActivity;
 import org.celstec.arlearn2.android.genItemActivities.YoutubeObjectActivity;
 
@@ -45,6 +67,12 @@ public class GIActivitySelector {
 		}
 		if (gi.getType().equals(SingleChoiceTest.class.getName())) {
 			 return SingleChoiceActivity.class;
+		}
+		if (gi.getType().equals(SingleChoiceImageTest.class.getName())) {
+			 return SingleChoiceImageActivity.class;
+		}
+		if (gi.getType().equals(MultipleChoiceImageTest.class.getName())) {
+			 return MultipleChoiceImageActivity.class;
 		}
 		if (gi.getType().equals(AudioObject.class.getName())) {
 			return  AudioObjectActivity.class;

@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.jdo.manager;
 
 import java.util.ArrayList;
@@ -52,6 +70,36 @@ public class UserManager {
 		ArrayList<User> returnProgressDefinitions = new ArrayList<User>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Iterator<UserJDO> it = getUsers(pm, name, email, teamId, runId).iterator();
+		while (it.hasNext()) {
+			returnProgressDefinitions.add(toBean((UserJDO) it.next()));
+		}
+		return returnProgressDefinitions;
+	}
+	
+	public static List<User> getUserList(String email, Long from, Long until) {
+		ArrayList<User> returnProgressDefinitions = new ArrayList<User>();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query query = pm.newQuery(UserJDO.class);
+		String filter = null;
+		String params = null;
+		Object args[] = null;
+		if (from == null) {
+			filter = "email == emailParam & lastModificationDate <= untilParam";
+			params = "String emailParam, Long untilParam";
+			args = new Object[]{email, until};
+		} else if (until == null) {
+			filter = "email == emailParam & lastModificationDate >= fromParam";
+			params = "String emailParam, Long fromParam";
+			args = new Object[]{email, from};
+		} else {
+			filter = "email == emailParam & lastModificationDate >= fromParam & lastModificationDate <= untilParam";
+			params = "String emailParam, Long fromParam, Long untilParam";
+			args = new Object[]{email, from, until};
+		}
+		
+		query.setFilter(filter);
+		query.declareParameters(params);
+		Iterator<UserJDO> it = ((List<UserJDO>) query.executeWithArray(args)).iterator();
 		while (it.hasNext()) {
 			returnProgressDefinitions.add(toBean((UserJDO) it.next()));
 		}

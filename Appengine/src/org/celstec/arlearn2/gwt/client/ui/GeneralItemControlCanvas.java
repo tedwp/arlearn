@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.gwt.client.ui;
 
 import java.util.LinkedHashMap;
@@ -7,6 +25,9 @@ import org.celstec.arlearn2.gwt.client.AuthoringConstants;
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
 import org.celstec.arlearn2.gwt.client.network.generalItem.GeneralItemsClient;
 import org.celstec.arlearn2.gwt.client.ui.items.GeneralItemCanvas;
+import org.celstec.arlearn2.gwt.client.ui.items.MultipleChoiceImageCanvas;
+import org.celstec.arlearn2.gwt.client.ui.items.SingleChoiceCanvas;
+import org.celstec.arlearn2.gwt.client.ui.items.SingleChoiceImageCanvas;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONNumber;
@@ -184,7 +205,9 @@ public class GeneralItemControlCanvas extends VStack {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.NarratorItem", "Narrator Item");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest", "Multiple Choice");
-		valueMap.put("org.celstec.arlearn2.beans.generalItem.SingleChoiceTest", "Single Choice");
+		valueMap.put(SingleChoiceCanvas.type, "Single Choice");
+		valueMap.put(SingleChoiceImageCanvas.type, "Single Choice Image Select");
+		valueMap.put(MultipleChoiceImageCanvas.type, "Multiple Choice Image Select");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.VideoObject", "Video Object");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.YoutubeObject", "Youtube movie");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.AudioObject", "Audio Object");

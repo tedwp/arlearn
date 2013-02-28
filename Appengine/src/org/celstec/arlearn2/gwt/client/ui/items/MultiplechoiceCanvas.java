@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.gwt.client.ui.items;
 
 import java.util.ArrayList;
@@ -126,13 +144,13 @@ public class MultiplechoiceCanvas extends GeneralItemCanvas {
 
 		this.addMember(form2);
 		isDisapperOnDependency.setStartRow(true);
-		form2.setFields(isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope,   isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime,isAutolaunch, nfcEnabledCBItem, 
+		form2.setFields(isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope,   isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearSelectActionString, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime,isAutolaunch, nfcEnabledCBItem, 
 				ti1, cb1, nfc1, id1, 
 				ti2, cb2, nfc2, id2,
 				ti3, cb3, nfc3, id3,
 				ti4, cb4, nfc4, id4,
 				ti5, cb5, nfc5, id5);
-		addField(form2,isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope,   isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime, isAutolaunch, nfcEnabledCBItem, 
+		addField(form2,isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope,   isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearSelectActionString, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime, isAutolaunch, nfcEnabledCBItem, 
 				ti1, cb1, nfc1, id1, 
 				ti2, cb2, nfc2, id2,
 				ti3, cb3, nfc3, id3,
@@ -309,7 +327,7 @@ public class MultiplechoiceCanvas extends GeneralItemCanvas {
 		return result;
 	}
 
-	private void generateAnswer(JSONArray ansArray, String textId, String cbId, int i) {
+	protected void generateAnswer(JSONArray ansArray, String textId, String cbId, int i) {
 		if (form2.getValue(textId) != null) {
 			JSONObject answer = new JSONObject();
 			answer.put("answer", new JSONString(form2.getValueAsString(textId)));

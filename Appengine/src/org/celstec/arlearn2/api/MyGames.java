@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.api;
 
 import java.util.ArrayList;
@@ -12,6 +30,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
@@ -39,6 +58,25 @@ public class MyGames extends Service {
 			return serialise(getInvalidCredentialsBean(), accept);
 		GameDelegator qg = new GameDelegator(token);
 		return serialise(qg.getGames(), accept);
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@CacheControlHeader("no-cache")
+	@Path("/participate")
+	public String getGamesParticipate(
+			@HeaderParam("Authorization") String token, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept,
+			@QueryParam("from") Long from,
+			@QueryParam("until") Long until
+			) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GameDelegator qg = new GameDelegator(token);
+		if (from == null && until == null) {
+			return serialise(qg.getParticipateGames(), accept);	
+		}
+		return serialise(qg.getParticipateGames( from, until), accept);
 	}
 
 	@GET

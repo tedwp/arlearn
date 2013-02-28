@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.jdo.manager;
 
 import java.util.ArrayList;
@@ -14,11 +32,6 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.GeneralItemJDO;
-import org.celstec.arlearn2.jdo.classes.TeamJDO;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Text;
 
@@ -48,7 +61,7 @@ public class GeneralItemManager {
 		gi.setType(bean.getType());
 		gi.setIconUrl(bean.getIconUrl());
 		gi.setDeleted(false);
-		gi.setLastModificationDate(bean.getLastModificationDate());
+		gi.setLastModificationDate(System.currentTimeMillis());
 		jbs = new JsonBeanSerialiser(bean);
 		gi.setPayload(new Text(jbs.serialiseToJson().toString()));
 		try {
@@ -69,6 +82,36 @@ public class GeneralItemManager {
 		return returnProgressDefinitions;
 		
 	}
+	
+	public static List<GeneralItem> getGeneralitemsFromUntil(Long gameId, Long from, Long until) {
+		ArrayList<GeneralItem> returnProgressDefinitions = new ArrayList<GeneralItem>();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query query = pm.newQuery(GeneralItemJDO.class);
+		String filter = null;
+		String params = null;
+		Object args[] = null;
+		if (from == null) {
+			filter = "gameId == gameParam & lastModificationDate <= untilParam";
+			params = "Long gameParam, Long untilParam";
+			args = new Object[]{gameId, until};
+		} else if (until == null) {
+			filter = "gameId == gameParam & lastModificationDate >= fromParam";
+			params = "Long gameParam, Long fromParam";
+			args = new Object[]{gameId, from};
+		} else {
+			filter = "gameId == gameParam & lastModificationDate >= fromParam & lastModificationDate <= untilParam";
+			params = "Long gameParam, Long fromParam, Long untilParam";
+			args = new Object[]{gameId, from, until};
+		}
+		
+		query.setFilter(filter);
+		query.declareParameters(params);
+		Iterator<GeneralItemJDO> it = ((List<GeneralItemJDO>) query.executeWithArray(args)).iterator();
+		while (it.hasNext()) {
+			returnProgressDefinitions.add(toBean((GeneralItemJDO) it.next()));
+		}
+		return returnProgressDefinitions;
+	}	
 	
 	private static List<GeneralItemJDO> getGeneralitems(PersistenceManager pm, Long gameId, String generalItemId, String type) {
 		Query query = pm.newQuery(GeneralItemJDO.class);
@@ -129,6 +172,7 @@ public class GeneralItemManager {
 			List<GeneralItemJDO> deleteList = getGeneralitems(pm, gameId, itemId, null);
 			for (GeneralItemJDO jdo: deleteList) {
 				jdo.setDeleted(true);
+				jdo.setLastModificationDate(System.currentTimeMillis());
 			}
 		} finally {
 			pm.close();

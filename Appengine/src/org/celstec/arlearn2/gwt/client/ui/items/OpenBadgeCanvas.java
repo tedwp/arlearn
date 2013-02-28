@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.gwt.client.ui.items;
 
 import com.google.gwt.json.client.JSONObject;
@@ -40,8 +58,8 @@ public class OpenBadgeCanvas  extends GeneralItemCanvas {
 	
 	protected void doLayoutForm1() {
 		this.addMember(form1);
-		form1.setFields(idItem, gameIdItem, nameItem, sortItem, descriptionItem, badgePngItem, badgeUrlItem, evidenceItem, isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime,  isAutolaunch, roleGrid);
-		addField(form1,idItem, gameIdItem, nameItem, sortItem, descriptionItem, badgePngItem, badgeUrlItem, evidenceItem, isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime,  isAutolaunch, roleGrid);
+		form1.setFields(idItem, gameIdItem, nameItem, sortItem, descriptionItem, badgePngItem, badgeUrlItem, evidenceItem, isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearSelectActionString, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime,  isAutolaunch, roleGrid);
+		addField(form1,idItem, gameIdItem, nameItem, sortItem, descriptionItem, badgePngItem, badgeUrlItem, evidenceItem, isSimpleDependency, selectGeneralItem, selectAction, selectActionString, selectRole, selectScope, isDisapperOnDependency,  disAppearOnGeneralItem, disAppearOnAction, disAppearSelectActionString, disAppearOnRole, disAppearOnScope, showCountDownCb, disTime,  isAutolaunch, roleGrid);
 	}
 	
 	protected void createBadgeUrl() {

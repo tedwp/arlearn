@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.delegators;
 
 import java.util.Iterator;
@@ -25,7 +43,6 @@ import org.celstec.arlearn2.tasks.beans.DeleteResponses;
 import org.celstec.arlearn2.tasks.beans.DeleteScoreRecords;
 import org.celstec.arlearn2.tasks.beans.DeleteTeams;
 import org.celstec.arlearn2.tasks.beans.DeleteUsers;
-import org.celstec.arlearn2.tasks.beans.DeleteVisibleItems;
 import org.celstec.arlearn2.tasks.beans.UpdateGeneralItemsVisibility;
 import org.celstec.arlearn2.util.RunsCache;
 
@@ -94,8 +111,6 @@ public class RunDelegator extends GoogleDelegator {
 			User user = (User) it.next();
 			Run r = getRun(user.getRunId());
 			if (r != null) {
-			logger.severe("run is null? "+r);
-
 			r.setDeleted(user.getDeleted());
 			rl.addRun(r);
 			} else {
@@ -103,6 +118,31 @@ public class RunDelegator extends GoogleDelegator {
 
 			}
 		}
+		rl.setServerTime(System.currentTimeMillis());
+
+		return rl;
+	}
+	
+	public RunList getParticipateRuns(Long from, Long until) {
+		UsersDelegator qu = new UsersDelegator(this);
+		String myAccount = qu.getCurrentUserAccount();
+		// TODO migrate this method to UserQuery
+		// TODO add this to cache
+		// TODO migrate RunsCache
+		Iterator<User> it = UserManager.getUserList(myAccount, from, until).iterator();
+		RunList rl = new RunList();
+		while (it.hasNext()) {
+			User user = (User) it.next();
+			Run r = getRun(user.getRunId());
+			if (r != null) {
+			r.setDeleted(user.getDeleted());
+			rl.addRun(r);
+			} else {
+				logger.severe("following run does not exist"+user.getRunId());
+
+			}
+		}
+		rl.setServerTime(System.currentTimeMillis());
 		return rl;
 	}
 
@@ -217,6 +257,13 @@ public class RunDelegator extends GoogleDelegator {
 			return run;
 		}
 	}
+	
+	public RunList getTaggedRuns(String tagId) {
+		RunList rl = new RunList();
+		rl.setRuns(RunManager.getRuns(null, null, null, null, tagId));
+		return rl;
+	}
+ 
 
 	private Run selfRegister(Run run, String myAccount) {
 		TeamsDelegator td = new TeamsDelegator(this);

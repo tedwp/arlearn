@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.service;
 
 import java.io.IOException;
@@ -10,10 +28,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.android.broadcast.BeanReceiver;
-import org.celstec.arlearn2.android.broadcast.GameReceiver;
 import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
-import org.celstec.arlearn2.android.broadcast.RunReceiver;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.GameDelegator;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.client.GenericClient;
@@ -275,13 +292,16 @@ public class ChannelAPINotificationService extends Service {
 //		sendBroadcast(runSyncIntent);
 		RunDelegator.getInstance().synchronizeRunsWithServer(this);
 		
-		Intent gameSyncIntent = new Intent();
-		gameSyncIntent.setAction(GameReceiver.action);
-		sendBroadcast(gameSyncIntent);
+//		Intent gameSyncIntent = new Intent();
+//		gameSyncIntent.setAction(GameReceiver.action);
+//		sendBroadcast(gameSyncIntent);
+		GameDelegator.getInstance().synchronizeGamesWithServer(this);
 		
-		Intent gimIntent = new Intent();
-		gimIntent.setAction(GeneralItemReceiver.action);
-		sendBroadcast(gimIntent);
+		
+//		GeneralItemDel
+//		Intent gimIntent = new Intent();
+//		gimIntent.setAction(GeneralItemReceiver.action);
+//		sendBroadcast(gimIntent);
 		
 	}
 

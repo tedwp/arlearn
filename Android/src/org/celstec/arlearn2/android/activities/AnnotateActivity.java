@@ -1,23 +1,35 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.activities;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.answerQuestion.RecordAudioDelegate;
 import org.celstec.arlearn2.android.answerQuestion.TakePictureDelegate;
 import org.celstec.arlearn2.android.answerQuestion.TakeTextNoteDelegate;
 import org.celstec.arlearn2.android.answerQuestion.TakeVideoDelegate;
-import org.celstec.arlearn2.android.broadcast.MediaService;
-import org.celstec.arlearn2.android.broadcast.ResponseService;
-import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.MediaCache;
+import org.celstec.arlearn2.android.asynctasks.db.RegisterUploadInDbTask;
+import org.celstec.arlearn2.android.asynctasks.network.UploadFileSyncTask;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.android.db.beans.MediaCacheItem;
+import org.celstec.arlearn2.android.delegators.ResponseDelegator;
 import org.celstec.arlearn2.android.menu.MenuHandler;
-import org.celstec.arlearn2.android.sync.MyResponseSyncronizer;
 import org.celstec.arlearn2.beans.run.Response;
 import org.celstec.arlearn2.client.GenericClient;
 import org.codehaus.jettison.json.JSONException;
@@ -25,14 +37,11 @@ import org.codehaus.jettison.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 public class AnnotateActivity extends Activity implements IGeneralActivity {
 
@@ -140,22 +149,46 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		final String recordingPath = rad.getRecordingPath();
 		final Response r = createResponse(currentTime, rad.getUri(), tpd.getUri(), tvd.getUri(), tntd.getText());
 	
-		Intent intent = new Intent(this, ResponseService.class);
-		intent.putExtra("bean", r);
-		startService(intent);
+		ResponseDelegator.getInstance().publishResponse(this, r);
+//		Intent intent = new Intent(this, ResponseService.class);
+//		intent.putExtra("bean", r);
+//		startService(intent);
 		
-		if (rad != null && tpd != null && tvd != null && (rad.getRecordingPath() == null || tpd.getUri() == null || tvd.getUri() == null)) {
-			intent = new Intent(this, MediaService.class);
-			intent.putExtra(MediaService.NEW_MEDIA, rad.getUri() != null || tpd.getUri() != null || tvd.getUri() != null);
-			intent.putExtra(MediaService.RECORDING_PATH, rad.getUri());
-			// intent.putExtra(MediaService.IMAGE_PATH, imagePath);
-			intent.putExtra(MediaService.IMAGE_PATH, tpd.getUri());
-			intent.putExtra(MediaService.VIDEO_URI, tvd.getUri());
-			intent.putExtra(MediaService.USERNAME, pa.getUsername());
-			intent.putExtra(MediaService.CURRENT_TIME, currentTime);
-			intent.putExtra(MediaService.RUNID, pa.getCurrentRunId());
-			startService(intent);
+		if (rad != null && (rad.getRecordingPath() != null)) {
+			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile( runId, "audio:"+currentTime,  pa.getUsername(), rad.getUri(), "audio/AMR");
+			task.taskToRunAfterExecute(new UploadFileSyncTask());
+			task.run(this);
+			
 		}
+		
+		if (tpd != null && tpd.getUri() != null ) {
+			
+			System.out.println("ok "+this.getContentResolver().getType(tpd.getUri()));
+			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile( runId, "picture:"+currentTime,  pa.getUsername(), tpd.getUri(), "application/jpg");
+			task.taskToRunAfterExecute(new UploadFileSyncTask());
+			task.run(this);
+		}
+		
+		if (tvd != null && tvd.getUri() != null ) {
+			
+			System.out.println("ok "+this.getContentResolver().getType(tvd.getUri()));
+			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile( runId, "video:"+currentTime,  pa.getUsername(), tvd.getUri(), "video/mp4");
+			task.taskToRunAfterExecute(new UploadFileSyncTask());
+			task.run(this);
+		}
+		
+//		if (rad != null && tpd != null && tvd != null && (rad.getRecordingPath() == null || tpd.getUri() == null || tvd.getUri() == null)) {
+//			intent = new Intent(this, MediaService.class);
+//			intent.putExtra(MediaService.NEW_MEDIA, rad.getUri() != null || tpd.getUri() != null || tvd.getUri() != null);
+//			intent.putExtra(MediaService.RECORDING_PATH, rad.getUri());
+//			// intent.putExtra(MediaService.IMAGE_PATH, imagePath);
+//			intent.putExtra(MediaService.IMAGE_PATH, tpd.getUri());
+//			intent.putExtra(MediaService.VIDEO_URI, tvd.getUri());
+//			intent.putExtra(MediaService.USERNAME, pa.getUsername());
+//			intent.putExtra(MediaService.CURRENT_TIME, currentTime);
+//			intent.putExtra(MediaService.RUNID, pa.getCurrentRunId());
+//			startService(intent);
+//		}
 		setResult(1);
 		finish();
 	}

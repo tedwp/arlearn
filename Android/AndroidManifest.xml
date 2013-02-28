@@ -36,6 +36,7 @@
 		<activity android:name=".activities.LoginActivity" android:label="@string/loginHeader" />
 		<activity android:name=".activities.NfcScanOnDemandActivity" android:label="@string/loginHeader" />
 		<activity android:name=".activities.ListExcursionsActivity" android:label="@string/listExcursionsHeader"/>
+		<activity android:name=".activities.ListOpenRunsActivity" android:label="@string/listExcursionsHeader"/>
 		<activity android:name=".activities.ListMessagesActivity" android:label="@string/listMessagesHeader" />
 		<activity android:name=".activities.MapViewActivity" android:label="@string/mapViewHeader" />
 		<activity android:name=".activities.OsmMapViewActivity" android:label="@string/mapViewHeader" />
@@ -47,6 +48,8 @@
 		
 		<activity android:name=".genItemActivities.MultipleChoiceActivity" android:finishOnTaskLaunch="true" android:label="@string/mct_header"  android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name=".genItemActivities.SingleChoiceActivity" android:finishOnTaskLaunch="true" android:label="@string/mct_header"  android:configChanges="orientation|keyboardHidden"/>
+		<activity android:name=".genItemActivities.SingleChoiceImageActivity" android:finishOnTaskLaunch="true" android:label="@string/mct_header"  android:configChanges="orientation|keyboardHidden"/>
+		<activity android:name=".genItemActivities.MultipleChoiceImageActivity" android:finishOnTaskLaunch="true" android:label="@string/mct_header"  android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name=".genItemActivities.OpenQuestionActivity" android:finishOnTaskLaunch="true" android:label="@string/mapViewHeader" android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name=".genItemActivities.DisplayMessageActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name=".genItemActivities.AudioObjectActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader" android:configChanges="orientation|keyboardHidden"/>
@@ -74,16 +77,6 @@
          <receiver android:name=".broadcast.GeneralItemReceiver" >
             <intent-filter>
                 <action android:name="org.celstec.arlearn2.beans.notification.GeneralItemModification" />
-            </intent-filter>
-        </receiver>
-         <receiver android:name=".broadcast.RunReceiver" >
-            <intent-filter>
-                <action android:name="org.celstec.arlearn2.beans.notification.RunModification" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name=".broadcast.GameReceiver" >
-            <intent-filter>
-                <action android:name="org.celstec.arlearn2.beans.notification.GameModification" />
             </intent-filter>
         </receiver>
         <receiver android:name=".broadcast.PingReceiver" >

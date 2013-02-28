@@ -8,7 +8,7 @@ import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.db.RunAdapter;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
-import org.celstec.arlearn2.android.service.AlarmService;
+//import org.celstec.arlearn2.android.service.AlarmService;
 import org.celstec.arlearn2.client.GeneralItemClient;
 
 import android.app.AlarmManager;

@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.util;
 
 import java.io.BufferedReader;
@@ -159,20 +177,20 @@ public class AppengineFileUploadHandler {
 			multipartContent.addPart("uploaded_file", new InputStreamBody(is, mimeType, fileName));
 			totalSize = is.available();
 			
-			DBAdapter db = new DBAdapter(ctx);
-			db.openForWrite();
-			MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
-			mc.registerTotalAmountofBytes(uri, (int)  totalSize);
-			db.close();
+//			DBAdapter db = new DBAdapter(ctx);
+//			db.openForWrite();
+//			MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
+//			mc.registerTotalAmountofBytes(uri, (int)  totalSize);
+//			db.close();
 			
 			httpPost.setEntity(multipartContent);
 
 			HttpResponse response = httpClient.execute(httpPost, httpContext);
 			httpPost.getEntity();
 			
-			db.openForWrite();
-			mc.registerBytesAvailable(uri, 0);
-			db.close();
+//			db.openForWrite();
+//			mc.registerBytesAvailable(uri, 0);
+//			db.close();
 			updateActivities(ctx, NarratorItemActivity.class.getCanonicalName());
 			
 		} catch (Exception e) {
@@ -241,9 +259,9 @@ public class AppengineFileUploadHandler {
 	            	System.out.println("transferred "+this.transferred);
 	            	DBAdapter db = new DBAdapter(ctx);
 					db.openForWrite();
-					MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
-					mc.registerBytesAvailable(uri, (int) (totalSize-transferred));
-					db.close();
+//					MediaCache mc = ((MediaCache) db.table(DBAdapter.MEDIA_CACHE));
+//					mc.registerBytesAvailable(uri, (int) (totalSize-transferred));
+//					db.close();
 					updateActivities(ctx, NarratorItemActivity.class.getCanonicalName());
 					lastUpdateActivities = System.currentTimeMillis();
 	            }
