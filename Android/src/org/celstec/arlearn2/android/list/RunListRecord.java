@@ -1,10 +1,26 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.list;
 
 import java.text.SimpleDateFormat;
 
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.cache.GameCache;
-import org.celstec.arlearn2.android.cache.MediaCache;
 import org.celstec.arlearn2.android.delegators.GameDelegator;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.run.Run;
@@ -18,13 +34,12 @@ public class RunListRecord extends GenericListRecord {
 
 	
 	private static SimpleDateFormat formatterDay = new SimpleDateFormat("d MMM \n HH:mm:ss");
-//	private static SimpleDateFormat formatterTime = new SimpleDateFormat("HH:mm:ss");
 
 	private Long gameId;
 
 	public RunListRecord(Run run) {
 		this.setId(run.getRunId());
-		Game game = GameDelegator.getInstance().getGame(run.getGameId()); 
+		Game game = GameDelegator.getInstance().getGame(run.getGameId());
 		if (game != null)
 		if (game.getConfig().getMapAvailable()) {
 			setImageResourceId(R.drawable.map_icon);
@@ -35,7 +50,7 @@ public class RunListRecord extends GenericListRecord {
 		
 		if (game != null) {
 			gameId = game.getGameId();
-			int amount = MediaCache.getInstance().getAmountOfItemsToDownload(game.getGameId());
+			int amount = GameDelegator.getInstance().getAmountOfUncachedItems(game.getGameId());
 			String message = null;
 			if (amount == 0) {
 				message = game.getTitle()+" ("+game.getCreator()+")";

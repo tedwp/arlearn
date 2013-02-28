@@ -1,27 +1,14 @@
 package org.celstec.arlearn2.android.broadcast;
 
-import java.util.Iterator;
-
 import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
-import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
-import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
-import org.celstec.arlearn2.android.asynctasks.network.NetworkTask;
-import org.celstec.arlearn2.android.broadcast.task.SynchronizeRunsTask;
-import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.beans.notification.RunModification;
-import org.celstec.arlearn2.beans.run.Run;
-import org.celstec.arlearn2.beans.run.RunList;
-import org.celstec.arlearn2.client.RunClient;
-import org.celstec.arlearn2.client.exception.ARLearnException;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 
 public class RunReceiver extends GenericReceiver {
 

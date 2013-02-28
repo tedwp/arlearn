@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.db;
 
 
@@ -22,7 +40,7 @@ public class DBAdapter {
 	public static final int MYLOCATIONS_ADAPTER = 2;
 	public static final int MYRESPONSES_ADAPTER = 3;
 	public static final int MYACTIONS_ADAPTER = 4;
-	public static final int MEDIA_CACHE = 5;
+	public static final int MEDIA_CACHE_UPLOAD = 5;
 	public static final int GAME_ADAPTER = 6;
 	public static final int GENERIC_JSON_ADAPTER = 7;
 	public static final int GENERALTITEM_VISIBILITY_ADAPTER = 8;
@@ -49,7 +67,7 @@ public class DBAdapter {
 		allTables[MYLOCATIONS_ADAPTER] = new MyLocations(this);
 		allTables[MYRESPONSES_ADAPTER] = new MyResponses(this);
 		allTables[MYACTIONS_ADAPTER] = new MyActions(this);
-		allTables[MEDIA_CACHE] = new MediaCache(this);
+		allTables[MEDIA_CACHE_UPLOAD] = new MediaCacheUpload(this);
 		allTables[GAME_ADAPTER] = new GameAdapter(this);
 		allTables[GENERIC_JSON_ADAPTER] = new GenericJsonAdapter(this);
 		allTables[GENERALTITEM_VISIBILITY_ADAPTER] = new GeneralItemVisibility(this);
@@ -88,13 +106,18 @@ public class DBAdapter {
 		return (MyResponses) allTables[MYRESPONSES_ADAPTER];
 	}
 	
-	public MediaCache getMediaCache() {
-		return (MediaCache) allTables[MEDIA_CACHE];
-	}
+//	public MediaCache getMediaCache() {
+//		return (MediaCache) allTables[MEDIA_CACHE];
+//	}
 	
 	public MediaCacheGeneralItems getMediaCacheGeneralItems() {
 		return (MediaCacheGeneralItems) allTables[MEDIACACHE_GENERAL_ITEMS_ADAPTER];
 	}
+	
+	public MediaCacheUpload getMediaCacheUpload() {
+		return (MediaCacheUpload) allTables[MEDIA_CACHE_UPLOAD];
+	}
+	
 	
 	public void deleteRun(long currentRunId) {
 		((RunAdapter) allTables[RUN_ADAPTER]).delete(currentRunId);
@@ -107,7 +130,7 @@ public class DBAdapter {
 	}
 	
 	public class DbOpenHelper extends SQLiteOpenHelper {
-	    private static final int DATABASE_VERSION = 118;
+	    private static final int DATABASE_VERSION = 137;
 	    private static final String DATABASE_NAME = "arlearn2";
 	   
 	    DbOpenHelper(Context context) {
@@ -128,6 +151,7 @@ public class DBAdapter {
 				if (allTables[i].dropStatement() != null) db.execSQL(allTables[i].dropStatement());
 			}  
             onCreate(db);
+            PropertiesAdapter.getInstance(DBAdapter.this.getContext()).databaseReset();
 		}
 
 	}

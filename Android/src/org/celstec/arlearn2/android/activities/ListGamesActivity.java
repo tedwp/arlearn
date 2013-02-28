@@ -37,8 +37,7 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 	@Override
 	protected void onResume() {
 		super.onResume();
-		GameDelegator.getInstance().fetchMyGamesFromServer(this);
-//		syncronizeLocalDatabaseFromServer(this);
+		GameDelegator.getInstance().synchronizeGamesWithServer(this);
 		renderGamesList();
 		
 	}

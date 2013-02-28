@@ -1,25 +1,31 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.db;
 
-import java.util.HashMap;
-
-import org.celstec.arlearn2.beans.run.Action;
-import org.celstec.arlearn2.beans.run.Run;
-//import org.celstec.arlearn2.android.db.beans.GeneralItem;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
-import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
-import org.celstec.arlearn2.android.sync.GeneralItemsSyncroniser;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.os.Message;
-import android.sax.StartElementListener;
 import android.util.Log;
 
 public class GeneralItemAdapter extends GenericDbTable {
@@ -177,80 +183,8 @@ public class GeneralItemAdapter extends GenericDbTable {
 		}
 	}
 
-//	@Deprecated
-//	public void unblockVisibleItem_old(Action actionObject) {
-//	}
 	
-//	public void setFirstRead(Long itemId, long date) {
-//			ContentValues newValue = new ContentValues();
-//			newValue.put(FIRST_READ, date);
-////			queryCache = null;
-//			db.getSQLiteDb().update(getTableName(), newValue, ID + "=? and "+FIRST_READ +" = 0", new String[] { ""+itemId });
-//
-//	}
-
-//	@Deprecated
-//	private void setDependsOnVisible_old(GeneralItem generalItem) {
-//		ContentValues newValue = new ContentValues();
-////		newValue.put(DEPENDENCY_VISIBLE, true);
-//		db.getSQLiteDb().update(getTableName(), newValue, ID + "=?", new String[] { "" + generalItem.getId() });
-//		
-//	}
-	
-//	@Deprecated
-//	public void setDependsOnVisible_old(Long id) {
-//		ContentValues newValue = new ContentValues();
-////		newValue.put(DEPENDENCY_VISIBLE, true);
-//		db.getSQLiteDb().update(getTableName(), newValue, ID + "=?", new String[] { "" + id });
-//	}
-	
-
-
-//	public void resetVisiblity(Long runId) {
-//		GeneralItem[] items = query(RUNID + "= ? ", new String[] { ""+runId, "1"});
-//		for (int i = 0; i < items.length; i++) {
-//			ContentValues newValue = new ContentValues();
-//			newValue.put(VISIBILITY_STATUS, NOT_INITIALISED);
-//			newValue.put(FIRST_READ, 0);
-//			db.getSQLiteDb().update(getTableName(), newValue, RUNID + "= ?  and "+ID + "=?", new String[] { ""+ runId, "" + items[i].getId() });
-//		}
-//	}
-
-//	@Deprecated
-//	public void setTimeVisible_old(Long id, int visible) {
-//		ContentValues newValue = new ContentValues();
-////		newValue.put(TIME_VISIBLE, visible);
-//		db.getSQLiteDb().update(getTableName(), newValue, ID + "=?", new String[] { ""+id });	
-//	}
-	
-//	public void setVisiblityStatus(Long runId, Long generalItemId, int visiblityStatus, long timeAt) {
-////		queryCache = null;
-//		ContentValues newValue = new ContentValues();
-//		newValue.put(VISIBILITY_STATUS, visiblityStatus);
-//		newValue.put(FIRST_READ, timeAt);
-//		db.getSQLiteDb().update(getTableName(), newValue, RUNID + "= ?  and "+ID + "=?", new String[] { ""+runId, ""+generalItemId });	
-//	}
-	
-//	public int getVisiblityStatus(Long runId, Long generalItemId) {
-//		try {
-//			Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), null, RUNID + "= ?  and "+ID + "=?", new String[] { ""+runId, ""+generalItemId }, null, null, FIRST_READ+" DESC", null);
-//			
-//			
-//			int i = 0;
-//			if (mCursor.moveToNext()) {
-//				int result = mCursor.getInt(11); 
-//				mCursor.close();
-//				return result; 
-//
-//			}
-//			mCursor.close();
-//		} catch (SQLException e) {
-//			Log.e("sqlex", "ex", e);
-//		}
-//		return -1;
-//	}
-	
-	public void queryAll(DBAdapter db) {
+	public void queryAll(DBAdapter db, long gameId) {
 		try {
 			Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), null, null, null, null, null, null, null);
 			int i = 0;

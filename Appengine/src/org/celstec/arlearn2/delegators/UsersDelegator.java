@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.delegators;
 
 import java.util.HashMap;
@@ -12,6 +30,7 @@ import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.cache.UserLoggedInCache;
 import org.celstec.arlearn2.cache.UsersCache;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
+import org.celstec.arlearn2.delegators.notification.NotificationEngine;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.manager.RunManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
@@ -44,7 +63,8 @@ public class UsersDelegator extends GoogleDelegator {
 		RunModification rm = new RunModification();
 		rm.setModificationType(RunModification.CREATED);
 		rm.setRun((new RunDelegator(this)).getRun(u.getRunId()));
-		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
+		NotificationEngine.getInstance().notify(u.getEmail(), rm);
+//		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
 		
 		(new UpdateGeneralItemsVisibility(authToken, u.getRunId(), u.getEmail(), 1)).scheduleTask();
 		
@@ -203,7 +223,8 @@ public class UsersDelegator extends GoogleDelegator {
 		rm.setModificationType(RunModification.DELETED	);
 		rm.setRun(new Run());
 		rm.getRun().setRunId(runId);
-		ChannelNotificator.getInstance().notify(email, rm);
+		NotificationEngine.getInstance().notify(email, rm);
+//		ChannelNotificator.getInstance().notify(email, rm);
 	}
 	
 }

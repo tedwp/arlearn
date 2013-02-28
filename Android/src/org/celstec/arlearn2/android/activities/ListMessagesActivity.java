@@ -1,30 +1,43 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.activities;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.broadcast.ActionReceiver;
-import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
-import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
-import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.cache.RunCache;
-import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.GeneralItemAdapter;
-import org.celstec.arlearn2.android.db.MediaCache;
-import org.celstec.arlearn2.android.db.MyActions;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.ActionsDelegator;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
+import org.celstec.arlearn2.android.delegators.ResponseDelegator;
+import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.MessageListRecord;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
-import android.content.Intent;
+
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -38,17 +51,19 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listexcursionscreen);
 		
-		Intent gimIntent = new Intent();
-		gimIntent.setAction(GeneralItemReceiver.action);
-		sendBroadcast(gimIntent);
-		
-		Intent actionIntent = new Intent();
-		actionIntent.setAction(ActionReceiver.action);
-		sendBroadcast(actionIntent);
+		ActionsDelegator.getInstance().synchronizeActionsWithServer(this);
+		long runId = PropertiesAdapter.getInstance(this).getCurrentRunId();
+
+		RunDelegator.getInstance().loadRun(this, runId);
+		ResponseDelegator.getInstance().synchronizeResponsesWithServer(this, runId);
 	}
 
 	@Override
 	protected void onResume() {
+		long runId = PropertiesAdapter.getInstance(this).getCurrentRunId();
+		long gameId = RunCache.getInstance().getGameId(runId);
+		GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, runId, gameId);
+		
 		super.onResume();
 		loadMessagesFromCache();
 	}
@@ -117,5 +132,5 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 	public boolean showStatusLed() {
 		return true;
 	}
-
+	
 }

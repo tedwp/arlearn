@@ -229,18 +229,18 @@ public class AudiorecorderActivity extends Activity {
 		//GeneralItemsDelegator.getInstance().createGeneralItem(this, audioObject);
 		
 		// Create item in FileJDO
-		// TODO
-		Intent intent = new Intent(this, MediaService.class);
-		intent.putExtra(MediaService.NEW_MEDIA, true);
-		intent.putExtra(MediaService.RECORDING_PATH, newUri);
-// 		intent.putExtra(MediaService.IMAGE_PATH, imagePath);
-//		intent.putExtra(MediaService.IMAGE_PATH, "");
-//		intent.putExtra(MediaService.VIDEO_URI, "");
-		intent.putExtra(MediaService.USERNAME, pa.getUsername());
-		intent.putExtra(MediaService.CURRENT_TIME, lCurrentTime);
-		intent.putExtra(MediaService.RUNID, pa.getCurrentRunId());
-		startService(intent);		
-		
+		// TODO check with stefaan
+//		Intent intent = new Intent(this, MediaService.class);
+//		intent.putExtra(MediaService.NEW_MEDIA, true);
+//		intent.putExtra(MediaService.RECORDING_PATH, newUri);
+//// 		intent.putExtra(MediaService.IMAGE_PATH, imagePath);
+////		intent.putExtra(MediaService.IMAGE_PATH, "");
+////		intent.putExtra(MediaService.VIDEO_URI, "");
+//		intent.putExtra(MediaService.USERNAME, pa.getUsername());
+//		intent.putExtra(MediaService.CURRENT_TIME, lCurrentTime);
+//		intent.putExtra(MediaService.RUNID, pa.getCurrentRunId());
+//		startService(intent);		
+//		
 //
 //		Intent intent = new Intent(AudiorecorderActivity.this, UploadGeneralItemActivity.class);
 //		intent.putExtra("generalItem", audioObject);

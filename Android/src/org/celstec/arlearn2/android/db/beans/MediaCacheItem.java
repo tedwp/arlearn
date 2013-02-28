@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.android.db.beans;
 
 import java.io.File;
@@ -8,7 +26,8 @@ import android.net.Uri;
 
 public class MediaCacheItem {
 	
-	private String itemId;
+	private Long itemId;
+	private String localId;
 	private long runId;
 	private String account;
 	private String localFile;
@@ -22,13 +41,19 @@ public class MediaCacheItem {
 	private int replicated;
 	
 	
-	public String getItemId() {
+	public Long getItemId() {
 		return itemId;
 	}
-	public void setItemId(String itemId) {
+	public void setItemId(Long itemId) {
 		this.itemId = itemId;
 	}
 	
+	public String getLocalId() {
+		return localId;
+	}
+	public void setLocalId(String localId) {
+		this.localId = localId;
+	}
 	public long getRunId() {
 		return runId;
 	}

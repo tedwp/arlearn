@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.beans.deserializer.json;
 
 import java.lang.reflect.Field;
@@ -34,21 +52,27 @@ import org.celstec.arlearn2.beans.generalItem.GameDeserializer;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemDeserializer;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenBadge;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.celstec.arlearn2.beans.generalItem.OpenUrl;
 import org.celstec.arlearn2.beans.generalItem.ScanTag;
+import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.SingleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
+import org.celstec.arlearn2.beans.notification.APNDeviceDescription;
 import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.beans.notification.Ping;
 import org.celstec.arlearn2.beans.notification.Pong;
 import org.celstec.arlearn2.beans.notification.authoring.RunCreationStatus;
 import org.celstec.arlearn2.beans.run.ActionDeserializer;
 import org.celstec.arlearn2.beans.run.ActionListDeserializer;
+import org.celstec.arlearn2.beans.run.GeneralItemVisibility;
+import org.celstec.arlearn2.beans.run.GeneralItemVisibilityList;
 import org.celstec.arlearn2.beans.run.Location;
 import org.celstec.arlearn2.beans.run.LocationUpdateDeserializer;
 import org.celstec.arlearn2.beans.run.ResponseDeserializer;
@@ -250,7 +274,6 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		NarratorItemDeserializer nid = new NarratorItemDeserializer();
 		AudioObjectDeserializer aod = new AudioObjectDeserializer();
 		VideoObjectDeserializer vod = new VideoObjectDeserializer();
-		MultipleChoiceTestDeserializer mct = new MultipleChoiceTestDeserializer();
 		GeneralItemDeserializer gid = new GeneralItemDeserializer();
 		OpenQuestionDeserializer oqd =new OpenQuestionDeserializer();
 		
@@ -278,8 +301,11 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMap.put(Run.class, rd);
 		
 		customDeserializerMap.put(MultipleChoiceAnswerItem.class, mcaid);
-		customDeserializerMap.put(MultipleChoiceTest.class, mct);
+		customDeserializerMap.put(MultipleChoiceImageAnswerItem.class, MultipleChoiceImageAnswerItem.deserializer);
+		customDeserializerMap.put(MultipleChoiceTest.class, MultipleChoiceTest.deserializer);
 		customDeserializerMap.put(SingleChoiceTest.class, SingleChoiceTest.deserializer);
+		customDeserializerMap.put(SingleChoiceImageTest.class, SingleChoiceImageTest.deserializer);
+		customDeserializerMap.put(MultipleChoiceImageTest.class, MultipleChoiceImageTest.deserializer);
 		customDeserializerMap.put(User.class, ud);
 
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.Bean", new org.celstec.arlearn2.beans.deserializer.json.BeanDeserializer());
@@ -289,7 +315,6 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.NarratorItem", nid);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.AudioObject", aod);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.VideoObject", vod);
-		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest", mct);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.GeneralItem", gid);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.GeneralItemList", new GeneralItemListDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.Bean.OpenQuestion", oqd);
@@ -313,10 +338,15 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Response", new ResponseDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.ResponseList", new ResponseListDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.UserScore", new UserScoreDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.GeneralItemVisibility", GeneralItemVisibility.deserializer);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.GeneralItemVisibilityList", GeneralItemVisibilityList.deserializer);
 		
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem", mcaid);
-		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest", mct);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem", MultipleChoiceImageAnswerItem.deserializer);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest", MultipleChoiceTest.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.SingleChoiceTest", SingleChoiceTest.deserializer);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest", SingleChoiceImageTest.deserializer);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageTest", MultipleChoiceImageTest.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.OpenUrl", OpenUrl.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.ScanTag", ScanTag.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.YoutubeObject", YoutubeObject.deserializer);
@@ -333,6 +363,7 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.GeneralItemModification", new GeneralItemModificationDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.Ping", new Ping.Deserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.Pong", new Pong.Deserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.APNDeviceDescription", new APNDeviceDescription.Deserializer());
 	}
 	
 	

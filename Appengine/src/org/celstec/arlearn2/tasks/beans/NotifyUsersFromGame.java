@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Stefaan Ternier
+ ******************************************************************************/
 package org.celstec.arlearn2.tasks.beans;
 
 import java.util.List;
@@ -14,6 +32,7 @@ import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
+import org.celstec.arlearn2.delegators.notification.NotificationEngine;
 import org.celstec.arlearn2.jdo.manager.GeneralItemVisibilityManager;
 import org.codehaus.jettison.json.JSONException;
 
@@ -68,8 +87,10 @@ public class NotifyUsersFromGame extends GenericBean {
 			GeneralItemModification gim = new GeneralItemModification();
 			gim.setModificationType(modificationType);
 			gim.setRunId(runId);
-			gim.setGeneralItem((GeneralItem) JsonBeanDeserializer.deserialize(gi));
 			
+			gim.setGeneralItem((GeneralItem) JsonBeanDeserializer.deserialize(gi));
+			gim.setGameId(gim.getGeneralItem().getGameId());
+			gim.setItemId(gim.getGeneralItem().getId());
 			for (User u : ul.getUsers()) {
 				if (u.getDeleted() == null || !u.getDeleted()) {
 //				RunModification rm = new RunModification();
@@ -89,7 +110,9 @@ public class NotifyUsersFromGame extends GenericBean {
 				if (modificationType == GeneralItemModification.DELETED) {
 					GeneralItemVisibilityManager.delete(getRunId(), gim.getGeneralItem().getId(), u.getEmail(), null);
 				}
-				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
+				NotificationEngine.getInstance().notify(u.getEmail(), gim);
+
+//				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
 				}
 			}
 		} catch (AuthenticationException e) {
