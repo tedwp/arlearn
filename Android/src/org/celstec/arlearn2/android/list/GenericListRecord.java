@@ -18,9 +18,12 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.list;
 
+import java.util.HashMap;
+
 import org.celstec.arlearn2.android.R;
 
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -35,7 +38,9 @@ public class GenericListRecord {
 	private String rightDetail;
 	private boolean showCheckBox = false;
 	private long id;
-	private boolean checked = false;
+//	private boolean checked = false;
+	
+	private static HashMap<Long, Boolean> checked = new HashMap<Long, Boolean>();
 	
 	public int getImageResourceId() {
 		return imageResourceId;
@@ -74,7 +79,9 @@ public class GenericListRecord {
 	}
 	
 	public boolean isChecked(){
-		return checked;
+		Boolean c = checked.get(id);
+		if (c == null) return false;
+		return c;
 	}
 	
 	public void setShowCheckBox(boolean showCheckBox) {
@@ -106,14 +113,26 @@ public class GenericListRecord {
 			iv.setImageResource(getImageResourceId());
 		}
 		if (isShowCheckBox()) {
-			CheckBox cb = (CheckBox) v.findViewById(R.id.unRegisterCheckBox);
+			if (messageDetail.equals("a (a)")) {
+				System.out.println("break");
+			}
+			final CheckBox cb = (CheckBox) v.findViewById(R.id.unRegisterCheckBox);
+			cb.setChecked(isChecked());
 			cb.setVisibility(View.VISIBLE);
-			cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			cb.setOnClickListener(new OnClickListener() {
+				
 				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					checked = isChecked;					
+				public void onClick(View v) {
+					checked.put(id, !isChecked());
+					cb.setChecked(isChecked());
 				}
 			});
+//			cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//				@Override
+//				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//										
+//				}
+//			});
 		}
 		return v;
 	}
@@ -140,9 +159,12 @@ public class GenericListRecord {
 			if (!rightDetail.equals(other.rightDetail))
 				return false;
 		} 
-			if (isShowCheckBox() != other.showCheckBox) {
+		if (isShowCheckBox() != other.showCheckBox) {
 				return false;
-			}
+		}
+		if (checked != other.checked) {
+			return false;
+		}
 		
 		return true;
 	}
