@@ -20,7 +20,7 @@ package org.celstec.arlearn2.android.delegators;
 
 import java.util.Iterator;
 
-import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 
 import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGamesTask;
@@ -97,11 +97,13 @@ public class GameDelegator {
 				boolean updateOccured = false;
 				while (it.hasNext()) {
 					Game game = it.next();
+					if (game.getError() == null) {
 					GameCache.getInstance().putGame(game);
 					updateOccured =  db.getGameAdapter().insertGame(game)||updateOccured;
+					}
 				}
 				if (updateOccured) {
-					ActivityUpdater.updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName());
+					ActivityUpdater.updateActivities(ctx, ListRunsParticipateActivity.class.getCanonicalName());
 				}
 
 			}
@@ -118,7 +120,7 @@ public class GameDelegator {
 				db.getMediaCacheGeneralItems().addToCache(game.getGameId());
 				GameCache.getInstance().putGame(game);
 				db.getGameAdapter().insertGame(game);
-				ActivityUpdater.updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName());
+				ActivityUpdater.updateActivities(ctx, ListRunsParticipateActivity.class.getCanonicalName());
 			}
 		};
 		m.sendToTarget();
@@ -137,7 +139,7 @@ public class GameDelegator {
 			@Override
 			public void execute(DBAdapter db) {
 				db.getMediaCacheGeneralItems().addToCache(gameId);
-				ActivityUpdater.updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName());
+				ActivityUpdater.updateActivities(ctx, ListRunsParticipateActivity.class.getCanonicalName());
 			}
 		};
 		m.sendToTarget();

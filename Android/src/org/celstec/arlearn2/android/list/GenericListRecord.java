@@ -22,6 +22,8 @@ import org.celstec.arlearn2.android.R;
 
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,6 +35,7 @@ public class GenericListRecord {
 	private String rightDetail;
 	private boolean showCheckBox = false;
 	private long id;
+	private boolean checked = false;
 	
 	public int getImageResourceId() {
 		return imageResourceId;
@@ -69,6 +72,11 @@ public class GenericListRecord {
 	public boolean isShowCheckBox() {
 		return showCheckBox;
 	}
+	
+	public boolean isChecked(){
+		return checked;
+	}
+	
 	public void setShowCheckBox(boolean showCheckBox) {
 		this.showCheckBox = showCheckBox;
 	}
@@ -100,6 +108,12 @@ public class GenericListRecord {
 		if (isShowCheckBox()) {
 			CheckBox cb = (CheckBox) v.findViewById(R.id.unRegisterCheckBox);
 			cb.setVisibility(View.VISIBLE);
+			cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					checked = isChecked;					
+				}
+			});
 		}
 		return v;
 	}

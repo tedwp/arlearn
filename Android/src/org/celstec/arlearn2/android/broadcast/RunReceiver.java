@@ -1,6 +1,6 @@
 package org.celstec.arlearn2.android.broadcast;
 
-import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
@@ -31,7 +31,7 @@ public class RunReceiver extends GenericReceiver {
 //			(new SynchronizeRunsTask(context)).addTaskToQueue(context);
 //			buildCache(context);
 		}
-		ActivityUpdater.updateActivities(context, ListExcursionsActivity.class.getCanonicalName());
+		ActivityUpdater.updateActivities(context, ListRunsParticipateActivity.class.getCanonicalName());
 
 	}
 	

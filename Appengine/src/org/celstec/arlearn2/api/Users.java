@@ -76,7 +76,10 @@ public class Users extends Service {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 		UsersDelegator cu = new UsersDelegator(verifyCredentials(token));
-		
+		if (email == null){
+			email = cu.getCurrentUserAccount();
+		}
+			
 		ActionDelegator ad = new ActionDelegator(cu);
 		ad.deleteActions(runId, email);
 		ResponseDelegator rd = new ResponseDelegator(cu);
@@ -86,7 +89,16 @@ public class Users extends Service {
 		//TODO delete progress
 		return serialise(cu.deleteUser(runId, email), accept);
 	}
-
+	
+	@DELETE
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/runId/{runId}")
+	public String deleteUser(@HeaderParam("Authorization") String token, @PathParam("runId") Long runId,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		return deleteUser(token, runId, null, accept);
+		
+	}
+	
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/runId/{runIdentifier}")

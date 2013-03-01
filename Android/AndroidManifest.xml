@@ -35,7 +35,7 @@
 		
 		<activity android:name=".activities.LoginActivity" android:label="@string/loginHeader" />
 		<activity android:name=".activities.NfcScanOnDemandActivity" android:label="@string/loginHeader" />
-		<activity android:name=".activities.ListExcursionsActivity" android:label="@string/listExcursionsHeader"/>
+		<activity android:name="org.celstec.arlearn2.android.activities.ListRunsParticipateActivity" android:label="@string/listExcursionsHeader"/>
 		<activity android:name=".activities.ListOpenRunsActivity" android:label="@string/listExcursionsHeader"/>
 		<activity android:name=".activities.ListMessagesActivity" android:label="@string/listMessagesHeader" />
 		<activity android:name=".activities.MapViewActivity" android:label="@string/mapViewHeader" />

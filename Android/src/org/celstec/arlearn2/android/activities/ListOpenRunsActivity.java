@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
+import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
@@ -41,12 +42,16 @@ public class ListOpenRunsActivity extends GeneralActivity implements ListitemCli
 	public static final String TAG_ID = "tagId";
 	private String tagId = null;
 	private RunList rl = null;
+	private ArrayList<GenericListRecord> runsRecordList;
+	private ArrayList<Run> runsList;
+	private boolean noRunMatches = true;
+
 	private GenericMessageListAdapter adapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		setTitle(R.string.addOpenRunTitle);
 		if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			this.finish();
 		} else {
@@ -64,24 +69,43 @@ public class ListOpenRunsActivity extends GeneralActivity implements ListitemCli
 
 	private void renderRunsList() {
 		System.out.println("list is " + rl.getRuns());
-		ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
+		runsRecordList = new ArrayList<GenericListRecord>();
+		runsList = new ArrayList<Run>();
 
 		for (Run r: rl.getRuns()) {
-			if (r.getDeleted() == null || !r.getDeleted())
-				runsList.add(new RunListRecord(r));
+			if (r.getDeleted() == null || !r.getDeleted()){
+				if (RunDelegator.getInstance().getRun(r.getRunId())== null) {
+					runsRecordList.add(new RunListRecord(r));
+					runsList.add(r);	
+				} else {
+					noRunMatches = false;
+				}
+				
+			}
+				
+			
 		}
 		ListView listView = (ListView) findViewById(R.id.listRuns);
-		if (adapter == null || !adapter.isEqual(runsList)) {
-			adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, runsList);
+		if (adapter == null || !adapter.isEqual(runsRecordList)) {
+			adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, runsRecordList);
 			adapter.setOnListItemClickCallback(this);
 			listView.setAdapter(adapter);
+		}
+		if (runsList.isEmpty()) {
+			if (noRunMatches) {
+				Toast.makeText(ListOpenRunsActivity.this, getString(R.string.noMatchingRuns), Toast.LENGTH_LONG).show();
+
+			} else {
+				Toast.makeText(ListOpenRunsActivity.this, getString(R.string.noMoreMatchingRuns), Toast.LENGTH_LONG).show();
+
+			}
+			this.finish();
 		}
 	}
 
 	@Override
 	public void onListItemClick(View v, int position, GenericListRecord messageListRecord) {
-		Run run = rl.getRuns().get(position);
-		System.out.println("clicked on "+run);
+		Run run = runsList.get(position);
 		new SelfRegisterRun().execute(run.getRunId());
 	}
 	
@@ -117,7 +141,7 @@ public class ListOpenRunsActivity extends GeneralActivity implements ListitemCli
 		@Override
 		protected void onProgressUpdate(RunList... runList) {
 			if (runList.length == 0) {
-				Toast.makeText(ListOpenRunsActivity.this, "unable to make network connection i18", Toast.LENGTH_LONG).show();
+				Toast.makeText(ListOpenRunsActivity.this, getString(R.string.networkUnavailable), Toast.LENGTH_LONG).show();
 			} else {
 				rl = runList[0];
 				renderRunsList();
@@ -150,7 +174,7 @@ public class ListOpenRunsActivity extends GeneralActivity implements ListitemCli
 		@Override
 		protected void onProgressUpdate(Void... voids) {
 			if (voids.length == 0) {
-				Toast.makeText(ListOpenRunsActivity.this, "unable to make network connection i18", Toast.LENGTH_LONG).show();
+				Toast.makeText(ListOpenRunsActivity.this, getString(R.string.networkUnavailable), Toast.LENGTH_LONG).show();
 			}
 		}
 
