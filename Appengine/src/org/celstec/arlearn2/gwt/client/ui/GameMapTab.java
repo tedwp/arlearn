@@ -19,16 +19,17 @@
 package org.celstec.arlearn2.gwt.client.ui;
 
 import org.celstec.arlearn2.gwt.client.network.JsonCallback;
+import org.celstec.arlearn2.gwt.client.network.game.GameClient;
+import org.celstec.arlearn2.gwt.client.network.generalItem.GeneralItemGameDataSource;
 import org.celstec.arlearn2.gwt.client.network.generalItem.GeneralItemsClient;
+import org.celstec.arlearn2.gwt.client.network.team.GameTeamDataSource;
 import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
 import org.celstec.arlearn2.gwt.client.ui.modal.SelectTypeWindow;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.maps.client.geom.LatLng;
-import com.google.gwt.user.client.Window;
 import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.layout.VStack;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
@@ -41,6 +42,9 @@ public class GameMapTab extends MapTab implements NotificationHandler {
 	public GameMapTab(String title, final long gameId) {
 		super(title);
 		this.gameId = gameId;
+		
+//		SelectTypeWindow stw = new SelectTypeWindow(gameId, controlItem, 50.0d, 10.0d);
+//		stw.show();
 		
 		controlItem.setGameId(gameId);
 		addTabSelectedHandler(new TabSelectedHandler() {
@@ -71,10 +75,6 @@ public class GameMapTab extends MapTab implements NotificationHandler {
 		return controlItem;
 	}
 	
-//	protected Canvas getMapPart() {
-//		return new VStack();
-//	}
-	
 	private void loadExistingItems() {
 		if (mapLoaded) GeneralItemsClient.getInstance().getGeneralItemsGame(gameId, new JsonCallback() {
 			
@@ -99,6 +99,19 @@ public class GameMapTab extends MapTab implements NotificationHandler {
 				}
 			}
 			
+		});
+		
+		GameTeamDataSource.getInstance().loadDataGame(gameId);
+		
+		GameClient.getInstance().getGameConfig(gameId, new JsonCallback() {
+
+			public void onJsonReceived(JSONValue jsonValue) {
+
+//				updateConfig(jsonValue.isObject());
+				GeneralItemGameDataSource.getInstance().loadDataGame(gameId);
+
+			}
+
 		});
 	}
 
@@ -131,7 +144,6 @@ public class GameMapTab extends MapTab implements NotificationHandler {
 
 	@Override
 	protected void doubleClick(LatLng latLng) {
-//		Window.alert("clicked at1 "+latLng.getLatitude()+ " " + latLng.getLongitude());
 		SelectTypeWindow stw = new SelectTypeWindow(gameId, controlItem, latLng.getLatitude(), latLng.getLongitude());
 		stw.show();
 	}

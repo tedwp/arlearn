@@ -102,9 +102,7 @@ public class GenericListRecord {
 				textDetail.setVisibility(View.GONE);
 			} else {
 				textDetail.setText(getMessageDetail());	
-//				textDetail.setHeight(60);
 			}
-			
 		}
 		if (textRightDetail != null) {
 			textRightDetail.setText(getRightDetail());
@@ -113,9 +111,6 @@ public class GenericListRecord {
 			iv.setImageResource(getImageResourceId());
 		}
 		if (isShowCheckBox()) {
-			if (messageDetail.equals("a (a)")) {
-				System.out.println("break");
-			}
 			final CheckBox cb = (CheckBox) v.findViewById(R.id.unRegisterCheckBox);
 			cb.setChecked(isChecked());
 			cb.setVisibility(View.VISIBLE);
@@ -127,12 +122,6 @@ public class GenericListRecord {
 					cb.setChecked(isChecked());
 				}
 			});
-//			cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//				@Override
-//				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//										
-//				}
-//			});
 		}
 		return v;
 	}

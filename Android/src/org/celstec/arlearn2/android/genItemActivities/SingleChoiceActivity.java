@@ -25,7 +25,7 @@ import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
 import org.celstec.arlearn2.android.delegators.ResponseDelegator;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
-import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
+import org.celstec.arlearn2.beans.generalItem.SingleChoiceTest;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -45,14 +45,14 @@ public class SingleChoiceActivity extends GeneralActivity {
 	protected WebView webview;
 	protected TextView textView;
 
-	private MultipleChoiceTest mct;
+	private SingleChoiceTest mct;
 	private MultipleChoiceAnswerItem selected = null;
 
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gi_detail_multiplechoice);
-		mct = (MultipleChoiceTest) getIntent().getExtras().getSerializable("generalItem");
+		mct = (SingleChoiceTest) getIntent().getExtras().getSerializable("generalItem");
 		cancelNotification((int) mct.getId().longValue());
 
 		initUi(mct);
@@ -80,7 +80,7 @@ public class SingleChoiceActivity extends GeneralActivity {
 	}
 
 
-	private void initUi(MultipleChoiceTest mct) {
+	private void initUi(SingleChoiceTest mct) {
 		textView = ((TextView) findViewById(R.id.mct_question)); // .setText(mct.getQuestion())
 		webview = (WebView) findViewById(R.id.mct_webview);
 

@@ -40,6 +40,7 @@ import org.celstec.arlearn2.cache.MyGamesCache;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.manager.GameManager;
+import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
 import org.celstec.arlearn2.jdo.manager.GeneralItemVisibilityManager;
 import org.celstec.arlearn2.jdo.manager.RunManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
@@ -371,6 +372,7 @@ public class GameDelegator extends GoogleDelegator {
 //			}
 //		}
 //		GeneralItemVisibilityManager.updateAll();
+		GeneralItemManager.updateAll();
 //		RunManager.updateAll();
 //		for (GeneralItemVisibility vis: GeneralItemVisibilityManager.getVisibleItems(null, null)) {
 //			
