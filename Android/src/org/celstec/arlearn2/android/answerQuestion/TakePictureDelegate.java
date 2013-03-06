@@ -27,7 +27,6 @@ import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnnotateActivity;
 import org.celstec.arlearn2.android.util.MediaFolders;
 
-import com.sun.imageio.plugins.common.InputStreamAdapter;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
