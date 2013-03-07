@@ -52,39 +52,13 @@ public class GameDelegator {
 		}
 		return instance;
 	}
-	
-//<<<<<<< HEAD
-//	public void initGamesFromDb(Context ctx) {
-//		(new QueryGamesTask()).addTaskToQueue(ctx);
-//	}
-//	
-//	public Game getGame(Long gameId) {
-//		Game game = GameCache.getInstance().getGame(gameId);
-//		if (game != null) {
-//			return game;
-//		}
-//		//TODO database update
-//		return null;
-//	}
-//	
-//	public void synchronizeGameWithServer(Context ctx, Long gameId) {
-//		(new SynchronizeGamesTask(ctx, gameId)).addTaskToQueue(ctx);
-//	}
-//	
-//	public void fetchMyGamesFromServer(Context ctx) {
-//		(new SynchronizeGamesTask(ctx)).addTaskToQueue(ctx);
-//	}
-//	
-//	public void fetchParticipatingGameFromServer(Context ctx, Long runId) {
-//		(new SynchronizeParticipatingGameTask(ctx, runId)).addTaskToQueue(ctx);
-//=======
+
 	public Game getGame(Long gameId) {
 		return GameCache.getInstance().getGame(gameId);
 	}
 	
 	public void synchronizeGamesWithServer(Context ctx) {
 		(new SynchronizeGamesTask(ctx)).run(ctx);
-//>>>>>>> refs/heads/elena
 	}
 	
 	public void saveServerGamesToAndroidDb(final Context ctx, final GamesList gl) {
@@ -126,12 +100,6 @@ public class GameDelegator {
 		m.sendToTarget();
 	}
 	
-//<<<<<<< HEAD
-//	public void createGame(Context ctx, String gameTitle, String gameAuthor, boolean withMap) {
-//		Game newGame = new Game();
-//		newGame.setCreator(gameAuthor);
-//		newGame.setTitle(gameTitle);
-//=======
 	public void loadGameToCache(final Context ctx, final Long gameId) {
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
 		m.obj = new DBAdapter.DatabaseTask() {
@@ -145,20 +113,9 @@ public class GameDelegator {
 		m.sendToTarget();
 	}
 
-//	public void downloadGameContent(final Context ctx, Long gameId) {
-//		if (gameId != null) (new SynchronizeGeneralItemsTaskOld(gameId, ctx)).addTaskToQueue(ctx);
-//	}
-	
 	public int getAmountOfUncachedItems(long gameId) {
 		return MediaGeneralItemCache.getInstance(gameId).getAmountOfItemsToDownload();
 	}
-//>>>>>>> refs/heads/elena
-
-//		Config newConfig = new Config();
-//		newConfig.setMapAvailable(withMap);
-//		newGame.setConfig(newConfig);
-//		createGame(ctx, newGame);
-//	}
 
 	public void createGame(Context ctx, Game game) {
 		CreateGameTask cgTask = new CreateGameTask(ctx, game);

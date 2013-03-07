@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.genItemActivities;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,9 +35,14 @@ import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.media.SoundPool;
+import android.media.SoundPool.OnLoadCompleteListener;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
@@ -49,6 +55,7 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 
 	private static SoundPool soundPool;
 	private static HashMap<String, Integer> soundPoolMap;
+	private static boolean soundPoolLoaded = false;
 	private HashMap<String, Uri> mediaObjects = null;
 	protected Button submitVoteButton;
 	private MultipleChoiceAnswerItem selected = null;
@@ -57,7 +64,7 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 	protected ImageView selectedView;
 	protected HashMap<MultipleChoiceAnswerItem, ImageView> answerViewMapping = new HashMap<MultipleChoiceAnswerItem, ImageView>();
 
-	private static final int COLUMNS = 2;
+	private static final int COLUMNS = 3;
 
 	protected GradientDrawable drawable;
 	@Override
@@ -99,12 +106,16 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 		submitVoteButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				if (selected != null) {
-					castResponse();
-
-				}
+				submitButtonClick();
 			}
 		});
+	}
+	
+	protected void submitButtonClick() {
+		if (selected != null) {
+			castResponse();
+
+		}
 	}
 	
 	private void initMediaMaps() {
@@ -199,7 +210,7 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 	protected void onResume() {
 		super.onResume();
 		if (soundPoolMap != null) {
-			playSound(GeneralItemsDelegator.AUDIO_LOCAL_ID);
+			new PlayAudioTask().execute(GeneralItemsDelegator.AUDIO_LOCAL_ID);
 		}
 
 	}
@@ -208,20 +219,19 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 		if (soundPool == null) {
 			soundPool = new SoundPool(mediaObjects.size(), AudioManager.STREAM_MUSIC, 100);
 			soundPoolMap = new HashMap<String, Integer>();
+			soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
+				
+				@Override
+				public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+					soundPoolLoaded = true;
+					Log.i("SOUND", "loaded "+soundPoolLoaded +" "+System.currentTimeMillis());
+				}
+			});
 
 		}
 	}
 
-	public void playSound(String soundKey) {
-		if (soundPoolMap.get(soundKey) != null) {
-			AudioManager mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-			float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-			float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-			final float volume = streamVolumeCurrent / streamVolumeMax;
-
-			soundPool.play(soundPoolMap.get(soundKey), volume, volume, 1, 0, 1f);
-		}
-	}
+	
 
 	private void castResponse() {
 
@@ -230,7 +240,22 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 		SingleChoiceImageActivity.this.finish();
 
 	}
+	
 
+	public void playSound(String soundKey) {
+		if (soundPoolMap.get(soundKey) != null) {
+			Log.i("SOUND", "found key");
+
+			AudioManager mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+			float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+			float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+			final float volume = streamVolumeCurrent / streamVolumeMax;
+
+			int returnValue = soundPool.play(soundPoolMap.get(soundKey), volume, volume, 1, 0, 1f);
+			Log.i("SOUND", "return value "+returnValue);
+		}
+	}
+	
 	protected void fireReadAction(GeneralItem item) {
 		PropertiesAdapter pa = getMenuHandler().getPropertiesAdapter();
 		Long generalItemId = null;
@@ -242,4 +267,40 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 		ActionsDelegator.getInstance().publishAction(this, "read", pa.getCurrentRunId(), pa.getUsername(), generalItemId, generalItemType);
 	}
 
+	public class PlayAudioTask extends AsyncTask<String, Void, Void> {
+
+		@Override
+		protected Void doInBackground(String... params) {
+			if (mediaObjects.get(params[0]) == null) return null;
+			Log.i("SOUND", "loaded "+soundPoolLoaded +" "+System.currentTimeMillis());
+			final MediaPlayer mPlayer = new MediaPlayer();
+			try {
+				mPlayer.setDataSource(SingleChoiceImageActivity.this, mediaObjects.get(params[0]));
+				mPlayer.prepare();
+				mPlayer.start();
+				mPlayer.setOnCompletionListener(new OnCompletionListener() {
+					
+					@Override
+					public void onCompletion(MediaPlayer mp) {
+						mPlayer.stop();
+						mPlayer.release();
+						
+					}
+				});
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return null;
+		}		
+		
+		
+	}
 }

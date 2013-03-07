@@ -68,6 +68,8 @@ public class SynchronizeGamesTask extends GenericTask implements NetworkTask {
 				} else {
 					gl = GameClient.getGameClient().getGamesParticipate(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), lastDate);
 				}
+				Log.i("GAMEPROBLEM", "lastDate "+lastDate);
+				Log.i("GAMEPROBLEM", "returned list "+gl);
 				if (gl.getError() == null) {
 					GameDelegator.getInstance().saveServerGamesToAndroidDb(ctx, gl);
 					PropertiesAdapter.getInstance(ctx).setGameLastSynchronizationDate(gl.getServerTime());

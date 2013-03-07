@@ -75,13 +75,9 @@ public class GeneralItemVisibility extends GenericDbTable {
 	}
 	
 	public void setVisibilityStatus(long itemId, Long runId, long satisfiedAt, int status) {
-		String whereArgs = GENERAL_ITEM_ID + " = " + itemId+ " and "+RUNID + " = "+runId + " and "+SATISFIED_AT +" > "+satisfiedAt +" and "+VISIBILITY_STATUS + " = "+status;
-		if (runId == null) {
-			whereArgs = GENERAL_ITEM_ID + " = " + itemId;
-		}
+		
 		long oldSatisfiedAt = query(itemId, runId, status);
 		if (oldSatisfiedAt == -1 || oldSatisfiedAt > satisfiedAt) {
-			db.getSQLiteDb().delete(getTableName(), whereArgs, null);
 			if (status == VISIBLE || status == NOT_YET_VISIBLE || status == NOT_YET_VISIBLE) {
 				db.getSQLiteDb().delete(getTableName(), GENERAL_ITEM_ID + " = " + itemId+ " and "+RUNID + " = "+runId + " and "+VISIBILITY_STATUS + " = "+NOT_INITIALISED, null);
 			}
@@ -96,6 +92,14 @@ public class GeneralItemVisibility extends GenericDbTable {
 			db.getSQLiteDb().insert(getTableName(), null, initialValues);
 			GeneralItemVisibilityCache.getInstance().put(runId, itemId, status, satisfiedAt);
 		}
+	}
+	
+	public void delete(long itemId, Long runId, long satisfiedAt, int status) {
+		String whereArgs = GENERAL_ITEM_ID + " = " + itemId+ " and "+RUNID + " = "+runId + " and "+SATISFIED_AT +" > "+satisfiedAt +" and "+VISIBILITY_STATUS + " = "+status;
+		if (runId == null) {
+			whereArgs = GENERAL_ITEM_ID + " = " + itemId;
+		}
+		db.getSQLiteDb().delete(getTableName(), whereArgs, null);
 	}
 	
 	public void resetAllRunsVisibility (long itemId) {

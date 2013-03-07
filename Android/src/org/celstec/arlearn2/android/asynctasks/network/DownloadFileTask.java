@@ -84,7 +84,7 @@ public class DownloadFileTask extends GenericTask implements NetworkTask {
 			downloadItem.setLocalPath(Uri.fromFile(new File(downloadFile(downloadItem.getRemoteUrl(), downloadItem))));
 			setReplicationStatus(MediaCacheGeneralItems.REP_STATUS_DONE);
 		} catch (FileNotFoundException fnf) {
-			setReplicationStatus(MediaCacheGeneralItems.REP_STATUS_TODO);
+			setReplicationStatus(MediaCacheGeneralItems.REP_STATUS_FILE_NOT_FOUND);
 			fnf.printStackTrace();
 		}
 

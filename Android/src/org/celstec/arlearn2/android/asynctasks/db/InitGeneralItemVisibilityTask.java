@@ -22,6 +22,7 @@ import org.celstec.arlearn2.android.asynctasks.DatabaseTask;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemVisibility;
+import org.celstec.arlearn2.android.delegators.GeneralItemVisibilityDelegator;
 
 import android.content.Context;
 import android.os.Message;
@@ -59,7 +60,7 @@ public class InitGeneralItemVisibilityTask extends GenericTask implements  Datab
 	@Override
 	public void execute(DBAdapter db) {
 		for (Long id: db.getGeneralItemVisibility().getItemsNotYetInitialised(runId, gameId)) {
-			db.getGeneralItemVisibility().setVisibilityStatus(id, getRunId(), 0, GeneralItemVisibility.NOT_INITIALISED);
+			GeneralItemVisibilityDelegator.getInstance().makeItemVisible(db, id, getRunId(), 0, GeneralItemVisibility.NOT_INITIALISED);
 		}
 		runAfterTasks(db.getContext());
 	}

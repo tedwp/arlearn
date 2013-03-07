@@ -725,12 +725,14 @@ public abstract class GeneralItemCanvas extends VStack{
 			if (dep.containsKey("type")) {
 				formMapping.get(SIMPLE_DEP).setValue(SIMPLE_DEP, "org.celstec.arlearn2.beans.dependencies.ActionDependency".equals(dep.get("type").isString().stringValue()));
 				double itemId = setValueDouble(GENITEM_DEP, dep);
+				if (itemId != 0) {
 				Record rec = GeneralItemGameDataSource.getInstance().getGeneralItem((long) itemId);
 				if ("Scan Tag".equals(rec.getAttribute("simpleName"))) {
 					scantagStringAppear = true; 
 					setValueString(ACTION_DEP_STRING, ACTION_DEP, dep);
 				} else {
 					setValueString(ACTION_DEP, dep);
+				}
 				}
 				setValueString(ROLE_DEP, dep);
 
@@ -752,12 +754,15 @@ public abstract class GeneralItemCanvas extends VStack{
 						dep = dep.get("offset").isObject();
 					}
 				}
-				Record rec = GeneralItemGameDataSource.getInstance().getGeneralItem((long) dep.get("generalItemId").isNumber().doubleValue());
+				if (dep.containsKey("generalItemId")) {
+				double itemId = dep.get("generalItemId").isNumber().doubleValue();
+				Record rec = GeneralItemGameDataSource.getInstance().getGeneralItem((long) itemId);
 				if ("Scan Tag".equals(rec.getAttribute("simpleName"))) {
 					scantagStringDisappear = true;
 					setValueString(DIS_ACTION_DEP_STRING, ACTION_DEP, dep);
 				} else {
 					setValueString(DIS_ACTION_DEP, ACTION_DEP, dep);
+				}
 				}
 				setValueString(DIS_ROLE_DEP, ROLE_DEP, dep);
 				setValueDouble(DIS_GENITEM_DEP, GENITEM_DEP, dep);

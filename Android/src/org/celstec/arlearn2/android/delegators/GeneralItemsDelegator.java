@@ -25,6 +25,7 @@ import java.util.TreeSet;
 import org.celstec.arlearn2.android.asynctasks.db.CreateDownloadGeneralItems;
 import org.celstec.arlearn2.android.asynctasks.db.GeneralItemDependencyHandler;
 import org.celstec.arlearn2.android.asynctasks.db.InitGeneralItemVisibilityTask;
+import org.celstec.arlearn2.android.asynctasks.db.LoadGeneralItemsFromDbTask;
 import org.celstec.arlearn2.android.asynctasks.network.DownloadFileTask;
 import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGeneralItemsTask;
 import org.celstec.arlearn2.android.asynctasks.network.SynchronizeRunsTask;
@@ -64,6 +65,9 @@ public class GeneralItemsDelegator {
 	}
 
 	public void synchronizeGeneralItemsWithServer(Context ctx, Long runId, Long gameId) {
+		LoadGeneralItemsFromDbTask loadFromDb = new LoadGeneralItemsFromDbTask(gameId, runId);
+		loadFromDb.run(ctx);
+		
 		SynchronizeGeneralItemsTask syncItemTask_1 = new SynchronizeGeneralItemsTask();
 		syncItemTask_1.setGameId(gameId);
 		SynchronizeGeneralItemVisiblityTask syncVisItemsTask_2 = new SynchronizeGeneralItemVisiblityTask();
@@ -216,6 +220,10 @@ public class GeneralItemsDelegator {
 
 	public GeneralItem getGeneralItem(long itemId) {
 		return GeneralItemsCache.getInstance().getGeneralItems(itemId);
+	}
+	
+	public GeneralItem getGeneralItem(DBAdapter db, long itemId) {
+		return db.getGeneralItemAdapter().queryById(itemId);
 	}
 
 }

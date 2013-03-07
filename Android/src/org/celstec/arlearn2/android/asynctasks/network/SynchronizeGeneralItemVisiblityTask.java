@@ -25,6 +25,7 @@ import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.GeneralItemVisibilityDelegator;
 
 import org.celstec.arlearn2.beans.run.GeneralItemVisibility;
 import org.celstec.arlearn2.beans.run.GeneralItemVisibilityList;
@@ -76,7 +77,8 @@ public class SynchronizeGeneralItemVisiblityTask extends GenericTask implements 
 						while (it.hasNext()) {
 							GeneralItemVisibility visItem = it.next();
 							if (visItem != null) {
-								db.getGeneralItemVisibility().setVisibilityStatus(visItem.getGeneralItemId(), getRunId(), visItem.getTimeStamp(), visItem.getStatus());
+								GeneralItemVisibilityDelegator.getInstance().makeItemVisible(db, visItem.getGeneralItemId(), getRunId(), visItem.getTimeStamp(), visItem.getStatus());
+
 								// generalItemToDb(db, item);
 							}
 						}

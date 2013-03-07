@@ -54,13 +54,14 @@ public class RunTabConfig  extends Canvas {
 
 	private DynamicForm form;
 	private CheckboxItem openRun;
+	private ButtonItem button; 
 	private TextItem nfcTag;
 	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
 	public RunTabConfig(RunTab rt) {
 		this.runTab = rt;
 		initForm();
-		initNotifications();
+//		initNotifications();
 		this.addChild(form);
 	}
 	
@@ -81,13 +82,13 @@ public class RunTabConfig  extends Canvas {
 		});		
 	}
 		
-	private void initNotifications() {
-		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.Pong", pongHandler);
-	}
+//	private void initNotifications() {
+//		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.Pong", pongHandler);
+//	}
 
 	private void initForm() {
 		form = new DynamicForm();
-		form.setNumCols(3);
+		form.setNumCols(1);
 		HeaderItem header = new HeaderItem();
 		header.setDefaultValue(constants.runOptions());
 		
@@ -98,7 +99,7 @@ public class RunTabConfig  extends Canvas {
 		openRun.setRedrawOnChange(true);
 		openRun.setEndRow(false);
 		openRun.setStartRow(false);
-		openRun.setColSpan(3);  
+//		openRun.setColSpan(3);  
 		openRun.addItemHoverHandler(new ItemHoverHandler() {
 			
 			@Override
@@ -116,45 +117,37 @@ public class RunTabConfig  extends Canvas {
 		};
 
 		
-		nfcTag = new TextItem("nfcTag");
-		nfcTag.setColSpan(1);
-		nfcTag.setShowTitle(false);
+		nfcTag = new TextItem("nfcTag", "QR/NFC tag");
+//		nfcTag.setColSpan(1);
+//		nfcTag.setShowTitle(false);
 		nfcTag.setSelectOnFocus(true);
 		nfcTag.setWrapTitle(false);
 		nfcTag.setShowIfCondition(openFormFunction);
-		nfcTag.addItemHoverHandler(new ItemHoverHandler() {
-			
-			@Override
-			public void onItemHover(ItemHoverEvent event) {
-			 String prompt = "<img src='http://qr.kaywa.com/img.php?s=8&d="+form.getValueAsString("nfcTag")+"'/>";
-		        nfcTag.setPrompt(prompt);
-			}
-		});
+//		nfcTag.addItemHoverHandler(new ItemHoverHandler() {
+//			
+//			@Override
+//			public void onItemHover(ItemHoverEvent event) {
+//			 String prompt = "<img src='http://qr.kaywa.com/img.php?s=8&d="+form.getValueAsString("nfcTag")+"'/>";
+//		        nfcTag.setPrompt(prompt);
+//			}
+//		});
 		// nfcItem.setDisabled(true);
 		
-		ButtonItem nfcScan = new ButtonItem("scan", constants.scan());
-		nfcScan.setStartRow(false);
-		nfcScan.setEndRow(false);
-		nfcScan.setColSpan(1);
-		nfcScan.setShowIfCondition(openFormFunction);
-		nfcScan.addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				sendNfcScanRequest();				
-			}
-		});
-
-
-//		ButtonItem qrbutton = new ButtonItem("scan", "qr-i18");
-//		qrbutton.setStartRow(false);
-//		qrbutton.setColSpan(1);
-//		qrbutton.setStartRow(false);
-//		qrbutton.setEndRow(false);
-//		qrbutton.setShowIfCondition(openFormFunction);
+//		ButtonItem nfcScan = new ButtonItem("scan", constants.scan());
+//		nfcScan.setStartRow(false);
+//		nfcScan.setEndRow(false);
+//		nfcScan.setColSpan(1);
+//		nfcScan.setShowIfCondition(openFormFunction);
+//		nfcScan.addClickHandler(new ClickHandler() {
+//			
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				sendNfcScanRequest();				
+//			}
+//		});
 
 		
-		ButtonItem button = new ButtonItem("submit", constants.submit());
+		 button = new ButtonItem("submit", constants.submit());
 		// button.setStartRow(true);
 		button.setWidth(80);
 		button.setStartRow(false);
@@ -163,21 +156,22 @@ public class RunTabConfig  extends Canvas {
 		button.setAlign(Alignment.CENTER);
 		button.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+				button.setDisabled(true);
 				update();
 			}
 		});
 		
-		form.setFields(header, openRun, nfcTag,nfcScan, button);
+		form.setFields(header, openRun, nfcTag, button);
 		
 	}
 	
-	private void sendNfcScanRequest() {
-		String account = Authentication.getInstance().getCurrentUser();
-		ChannelClient.getInstance().pingRequest(new JsonCallback() {
-			public void onReceived() {
-			};
-		}, account, account, 2, "none");
-	}
+//	private void sendNfcScanRequest() {
+//		String account = Authentication.getInstance().getCurrentUser();
+//		ChannelClient.getInstance().pingRequest(new JsonCallback() {
+//			public void onReceived() {
+//			};
+//		}, account, account, 2, "none");
+//	}
 	
 	public class NfcNotificationHandler implements NotificationHandler {
 		@Override
@@ -191,6 +185,8 @@ public class RunTabConfig  extends Canvas {
 			public void onJsonReceived(JSONValue jsonValue) {
 				updateConfig(jsonValue.isObject());
 				updateRun(jsonValue.isObject());
+				button.setDisabled(false);
+
 			}
 			
 		});		

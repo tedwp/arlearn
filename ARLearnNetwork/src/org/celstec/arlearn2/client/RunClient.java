@@ -18,6 +18,9 @@
  ******************************************************************************/
 package org.celstec.arlearn2.client;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.beans.game.Config;
@@ -76,6 +79,11 @@ public class RunClient extends GenericClient{
 	}
 	
 	public RunList getRunsByTag (String token, String tag) {
+		try {
+			tag = URLEncoder.encode(tag, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		return (RunList)  executeGet(getUrlPrefix()+"/tagId/"+tag, token, RunList.class);
 	}
 	
@@ -96,7 +104,13 @@ public class RunClient extends GenericClient{
 	}
 	
 	public Run selfRegister(String token, String tagId) {
-		return (Run)  executeGet(getUrlPrefix()+"/selfRegister/tagId/"+tagId, token, Run.class);
+		try {
+			tagId = URLEncoder.encode(tagId, "UTF-8");
+			return (Run)  executeGet(getUrlPrefix()+"/selfRegister/tagId/"+tagId, token, Run.class);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return null; //UTF8 should be supported so we don't get here
 
 	}
 	
