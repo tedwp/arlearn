@@ -19,7 +19,7 @@
 package org.celstec.arlearn2.android.broadcast;
 
 
-import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 
@@ -45,7 +45,7 @@ public abstract class GenericReceiver extends BroadcastReceiver{
 		PropertiesAdapter.getInstance(context).disAuthenticate();
 		Intent updateIntent = new Intent();
 		updateIntent.setAction("org.celstec.arlearn.updateActivities");
-		updateIntent.putExtra(ListExcursionsActivity.class.getCanonicalName(), true);
+		updateIntent.putExtra(ListRunsParticipateActivity.class.getCanonicalName(), true);
 		updateIntent.putExtra(ListMessagesActivity.class.getCanonicalName(), true);
 		context.sendBroadcast(updateIntent);
 	}

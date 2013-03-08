@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
@@ -302,7 +302,7 @@ public class RunAdapter extends GenericDbTable {
 //				org.celstec.arlearn2.android.cache.MediaCache.getInstance().remove(runId);
 				ResponseCache.getInstance().remove(runId);
 				
-				ActivityUpdater.updateActivities(db.getContext(), ListExcursionsActivity.class.getCanonicalName(), 
+				ActivityUpdater.updateActivities(db.getContext(), ListRunsParticipateActivity.class.getCanonicalName(), 
 						ListMessagesActivity.class.getCanonicalName(),
 						OsmMapViewActivity.class.getCanonicalName(),
 						MapViewActivity.class.getCanonicalName(), 
@@ -319,7 +319,7 @@ public class RunAdapter extends GenericDbTable {
 			PropertiesAdapter.getInstance(context).disAuthenticate();
 			Intent updateIntent = new Intent();
 			updateIntent.setAction("org.celstec.arlearn.updateActivities");
-			updateIntent.putExtra(ListExcursionsActivity.class.getCanonicalName(), true);
+			updateIntent.putExtra(ListRunsParticipateActivity.class.getCanonicalName(), true);
 			updateIntent.putExtra(ListMessagesActivity.class.getCanonicalName(), true);
 			context.sendBroadcast(updateIntent);
 		}

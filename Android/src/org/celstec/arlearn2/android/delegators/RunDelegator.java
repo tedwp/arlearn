@@ -22,16 +22,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.db.LoadMediaUploadToCache;
 import org.celstec.arlearn2.android.asynctasks.network.DownloadFileTask;
 import org.celstec.arlearn2.android.asynctasks.network.SynchronizeRunsTask;
+import org.celstec.arlearn2.android.asynctasks.network.UnregisterRunTask;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.game.SynchronizeParticipatingGameTask;
 import org.celstec.arlearn2.android.delegators.run.QueryRunsTask;
+import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.RunList;
 
@@ -108,12 +110,8 @@ public class RunDelegator {
 						db.getRunAdapter().insertBeta(run);
 						if (!runDeleted) {
 							UserDelegator.getInstance().synchronizeUserWithServer(db.getContext(), run.getRunId(), PropertiesAdapter.getInstance(db.getContext()).getUsername());
-//<<<<<<< HEAD
-//							GameDelegator.getInstance().fetchParticipatingGameFromServer(db.getContext(), run.getRunId());
-//=======
 							GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(db.getContext(), run.getRunId(), run.getGameId());
 							GeneralItemsDelegator.getInstance().initializeGeneralItemsVisibility(db, run.getRunId(), run.getGameId());
-//>>>>>>> refs/heads/elena
 						}
 						RunCache.getInstance().put(run);
 					}
@@ -121,12 +119,21 @@ public class RunDelegator {
 				}
 			}
 		}
-		ActivityUpdater.updateActivities(db.getContext(), ListExcursionsActivity.class.getCanonicalName());
+		ActivityUpdater.updateActivities(db.getContext(), ListRunsParticipateActivity.class.getCanonicalName());
+	}
+	
+	public void unregisterRun(Context ctx, long runId){
+		(new UnregisterRunTask(runId)).run(ctx);
+		
 	}
 	
 	public Run[] getRuns() {
 		Run[] runs = RunCache.getInstance().getRuns();
 		return runs;
+	}
+	
+	public Run getRun(long runId) {
+		return  RunCache.getInstance().getRun(runId);
 	}
 	
 	public void loadRun(Context ctx, Long runId) {

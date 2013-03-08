@@ -32,7 +32,8 @@ public class Constants {
 	public static final String INCOMMING = "incomming";
 	public static final String OUTGOING = "outgoing";
 	public static final String RUN = "run_";
-	public static final String GAME_LAST_SYNC_DATE = "gameLastSyncDate";
+	public static final String PARTICIPATE_GAME_LAST_SYNC_DATE = "participateGameLastSyncDate";
+	public static final String MY_GAME_LAST_SYNC_DATE = "myGameLastSyncDate";
 	public static final String RUN_LAST_SYNC_DATE = "runLastSyncDate";
 	public static final String GI_LAST_SYNC_DATE = "giLastSyncDate";
 	public static final String GIVIS_LAST_SYNC_DATE = "giVisLastSyncDate";

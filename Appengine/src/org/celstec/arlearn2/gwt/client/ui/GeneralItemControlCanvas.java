@@ -206,8 +206,8 @@ public class GeneralItemControlCanvas extends VStack {
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.NarratorItem", "Narrator Item");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest", "Multiple Choice");
 		valueMap.put(SingleChoiceCanvas.type, "Single Choice");
-		valueMap.put(SingleChoiceImageCanvas.type, "Single Choice Image Select");
-		valueMap.put(MultipleChoiceImageCanvas.type, "Multiple Choice Image Select");
+		if (Authoring.hidden) valueMap.put(SingleChoiceImageCanvas.type, "Single Choice Image Select");
+		if (Authoring.hidden) valueMap.put(MultipleChoiceImageCanvas.type, "Multiple Choice Image Select");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.VideoObject", "Video Object");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.YoutubeObject", "Youtube movie");
 		valueMap.put("org.celstec.arlearn2.beans.generalItem.AudioObject", "Audio Object");

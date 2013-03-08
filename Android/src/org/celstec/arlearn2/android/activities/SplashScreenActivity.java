@@ -67,6 +67,9 @@ public class SplashScreenActivity extends GeneralActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (blocked) {
+			new TimeCheck().execute();
+		}
 		clicked = false;
 	}
 
@@ -90,7 +93,7 @@ public class SplashScreenActivity extends GeneralActivity {
 //				runSyncIntent.setAction(RunReceiver.action);
 //				sendBroadcast(runSyncIntent);
 
-				startActivity(new Intent(SplashScreenActivity.this, ListExcursionsActivity.class));
+				startActivity(new Intent(SplashScreenActivity.this, ListRunsParticipateActivity.class));
 //				Intent intent = new Intent(this, BackgroundService.class);
 //				startService(intent);
 			} else {
@@ -155,12 +158,12 @@ public class SplashScreenActivity extends GeneralActivity {
 		@Override
 		protected void onProgressUpdate(Long... delta) {
 			if (delta.length == 0) {
-				Toast.makeText(SplashScreenActivity.this, "unable to make network connection i18", Toast.LENGTH_LONG).show();
+				Toast.makeText(SplashScreenActivity.this, getString(R.string.networkUnavailable2), Toast.LENGTH_LONG).show();
 			} else {
 				Long time = delta[0];
 				if (time != 0) {
 					blocked = true;
-					Toast.makeText(SplashScreenActivity.this, "System time differs to much from server time - i18", Toast.LENGTH_LONG).show();
+					Toast.makeText(SplashScreenActivity.this, getString(R.string.correctDateSettings), Toast.LENGTH_LONG).show();
 				}
 			}
 		}

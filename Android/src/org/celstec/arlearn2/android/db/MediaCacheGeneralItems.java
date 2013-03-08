@@ -62,6 +62,7 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 	public static final int REP_STATUS_TODO = 0;
 	public static final int REP_STATUS_SYNCING = 1;
 	public static final int REP_STATUS_DONE = 2;
+	public static final int REP_STATUS_FILE_NOT_FOUND = 3;
 	
 	public MediaCacheGeneralItems(DBAdapter db) {
 		super(db);

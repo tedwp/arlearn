@@ -20,10 +20,10 @@ package org.celstec.arlearn2.android.delegators;
 
 import java.util.Iterator;
 
-import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
-import org.celstec.arlearn2.android.activities.ListGamesActivity;
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
-import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGamesTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeMyGamesTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeParticipateGamesTask;
 import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.cache.MediaGeneralItemCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
@@ -35,6 +35,7 @@ import org.celstec.arlearn2.beans.game.GamesList;
 
 import android.content.Context;
 import android.os.Message;
+import android.util.Log;
 
 public class GameDelegator {
 	
@@ -50,15 +51,18 @@ public class GameDelegator {
 		}
 		return instance;
 	}
-	
+
 
 	public Game getGame(Long gameId) {
 		return GameCache.getInstance().getGame(gameId);
 	}
 	
-	public void synchronizeGamesWithServer(Context ctx) {
-		(new SynchronizeGamesTask(ctx)).run(ctx);
-//>>>>>>> refs/heads/elena
+	public void synchronizeParticipateGamesWithServer(Context ctx) {
+		(new SynchronizeParticipateGamesTask(ctx)).run(ctx);
+	}
+
+	public void synchronizeMyGamesWithServer(Context ctx) {
+		(new SynchronizeMyGamesTask(ctx)).run(ctx);
 	}
 	
 	public void saveServerGamesToAndroidDb(final Context ctx, final GamesList gl) {
@@ -66,16 +70,18 @@ public class GameDelegator {
 		m.obj = new DBAdapter.DatabaseTask() {
 			@Override
 			public void execute(DBAdapter db) {
-				System.out.println("about to update "+gl.getGames().size()+ " games");
 				Iterator<Game> it = gl.getGames().iterator();
 				boolean updateOccured = false;
 				while (it.hasNext()) {
 					Game game = it.next();
-					GameCache.getInstance().putGame(game);
-					updateOccured =  db.getGameAdapter().insertGame(game)||updateOccured;
+					Log.i("GAMEPROBLEM", "iterating over game "+game);
+					if (game.getError() == null) {
+						GameCache.getInstance().putGame(game);
+						updateOccured =  db.getGameAdapter().insertGame(game)||updateOccured;
+					} 
 				}
 				if (updateOccured) {
-					ActivityUpdater.updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName(), ListGamesActivity.class.getCanonicalName());
+					ActivityUpdater.updateActivities(ctx, ListRunsParticipateActivity.class.getCanonicalName());
 				}
 
 			}
@@ -92,13 +98,12 @@ public class GameDelegator {
 				db.getMediaCacheGeneralItems().addToCache(game.getGameId());
 				GameCache.getInstance().putGame(game);
 				db.getGameAdapter().insertGame(game);
-				ActivityUpdater.updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName());
+				ActivityUpdater.updateActivities(ctx, ListRunsParticipateActivity.class.getCanonicalName());
 			}
 		};
 		m.sendToTarget();
 	}
 	
-
 	public void loadGameToCache(final Context ctx, final Long gameId) {
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
 		m.obj = new DBAdapter.DatabaseTask() {
@@ -106,7 +111,7 @@ public class GameDelegator {
 			@Override
 			public void execute(DBAdapter db) {
 				db.getMediaCacheGeneralItems().addToCache(gameId);
-				ActivityUpdater.updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName());
+				ActivityUpdater.updateActivities(ctx, ListRunsParticipateActivity.class.getCanonicalName());
 			}
 		};
 		m.sendToTarget();
@@ -118,10 +123,6 @@ public class GameDelegator {
 		dgTask.addTaskToQueue(ctx);
 	}
 
-//	public void downloadGameContent(final Context ctx, Long gameId) {
-//		if (gameId != null) (new SynchronizeGeneralItemsTaskOld(gameId, ctx)).addTaskToQueue(ctx);
-//	}
-	
 	public int getAmountOfUncachedItems(long gameId) {
 		return MediaGeneralItemCache.getInstance(gameId).getAmountOfItemsToDownload();
 	}

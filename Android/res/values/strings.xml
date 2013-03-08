@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ARLearn2</string>
+    <string name="app_name">ARLearn</string>
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
+    
+    <string name="networkUnavailable">Kan geen internet verbinding vinden\n Probeer later opnieuw</string>
+    <string name="networkUnavailable2">Kan geen verbinding maken met de synchronisatie-server</string>
     
      <!--Menu Strings-->
     <string name="login">LOGIN</string>
@@ -21,17 +24,25 @@
     <string name="loginFailed">Aanmelden voor ***  is niet geslaagd</string>
     <string name="checkCredentials">Verificatie wachtwoord</string>
     <string name="sendInstructions">Send me instructions</string>
+    <string name="correctDateSettings">Tijdsinstelling van de telefoon zijn fout. \n Corrigeer tijd en datum om verder te gaan.</string>
     
      <!--NfcScanOnDemand Activity Strings-->
      <string name="scanTag">Scan een NFC tag of een barcode</string>
      <string name="scanTagMenu">Scan barcode</string>
      <string name="cancel">Annuleer</string>
      
-     <!--List Excursion Activity Strings-->
+     <!--List Runs Participate Activity Strings-->
     <string name="listExcursionsHeader">Selecteer een run</string>
     <string name="loadingExcursions">Excursies worden geladen\n Even geduld</string>
     <string name="registerRun">Wil je je voor deze run registreren?</string>
     <string name="cacheGame">Wil je dit spel downloaden voor offline gebruik?</string>
+    <string name="delete">Delete</string>
+    <string name="scanRun">Scan Run Tag</string>
+    
+     <!--List Open Runs Strings-->
+    <string name="noMatchingRuns">Er komen geen runs met deze tag overeen</string>
+    <string name="noMoreMatchingRuns">Je bent reeds voor alle overeenkomstige runs ingeschreven</string>
+    <string name="addOpenRunTitle">Selecteer run om toe te voegen</string>
     
     <!--Map View Activity Strings-->
     <string name="mapViewHeader">Excursie</string>
@@ -59,7 +70,7 @@
     
      <!-- View Answer Activity Strings-->
     <string name="viewAnswerHeader">uw antwoord</string>
-    <string name="deleteAnswer">delete answer</string>
+    <string name="deleteAnswer">delete antwoord</string>
     <string name="listMessagesHeader">Message List</string>
     
     <!-- OSM Downloader -->

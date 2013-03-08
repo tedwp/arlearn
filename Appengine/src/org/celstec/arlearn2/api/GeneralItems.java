@@ -86,7 +86,9 @@ public class GeneralItems extends Service {
 		GeneralItemDelegator gid = new GeneralItemDelegator(token);
 
 		for (GeneralItem item : gid.getGeneralItems(gameIdentifier).getGeneralItems()) {
-			if (item.getId().equals(itemId)) return serialise(item, accept);
+			if (item.getId().equals(itemId)) {
+				return serialise(item, accept);
+			}
 			
 		}
 		GeneralItem giError = new GeneralItem();

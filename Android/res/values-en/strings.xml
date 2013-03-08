@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ARLearn2</string>
+    <string name="app_name">ARLearn</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    
+    <string name="networkUnavailable">Cannot find an internet connection.\nPlease try again later</string>
+    <string name="networkUnavailable2">Cannot connect to the sync server</string>
     
      <!--Menu Strings-->
     <string name="login">LOGIN</string>
@@ -19,17 +22,25 @@
     <string name="loginFailed">Login for ***  did not succeed</string>
     <string name="checkCredentials">Verifying credentials</string>
     <string name="sendInstructions">Send me instructions</string>
+	<string name="correctDateSettings">Time and Date of your phone are incorrect. \nCorrect in order to proceed.</string>
         
     <!--NfcScanOnDemand Activity Strings-->
     <string name="scanTag">Scan an NFC tag or a barcode</string>
     <string name="scanTagMenu">Scan barcode</string>
     <string name="cancel">Cancel</string>
      
-     <!--List Excursion Activity Strings-->
+     <!--List Runs Participate Activity Strings-->
     <string name="listExcursionsHeader">Select an excursion</string>
     <string name="loadingExcursions">Loading excursions</string>
     <string name="registerRun">Do you want to register to this run?</string>
     <string name="cacheGame">Do you want to download this game for offline usuage?</string>
+    <string name="delete">Verwijder</string>
+ 	 <string name="scanRun">Scan Run Tag</string>  
+    
+ 	  <!--List Open Runs Strings-->
+    <string name="noMatchingRuns">No runs are matching this tag</string>
+    <string name="noMoreMatchingRuns">Already registered for all matching runs</string>
+    <string name="addOpenRunTitle">Select run to add</string>
     
     <!--Map View Activity Strings-->
     <string name="mapViewHeader">Excursion</string>

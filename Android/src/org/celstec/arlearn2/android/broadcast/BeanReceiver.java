@@ -21,6 +21,7 @@ package org.celstec.arlearn2.android.broadcast;
 import java.io.Serializable;
 
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.GameDelegator;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.beans.notification.GeneralItemModification;
@@ -43,8 +44,8 @@ public class BeanReceiver extends BroadcastReceiver {
 			try {
 				switch (NotificationBeans.valueOf(bean.getClass().getSimpleName())) {
 				case RunModification:
+					GameDelegator.getInstance().synchronizeParticipateGamesWithServer(context);
 					RunDelegator.getInstance().synchronizeRunsWithServer(context);
-//					reCast(RunReceiver.action, bean, context);
 					break;
 				case GeneralItemModification:
 					long currentRunId = PropertiesAdapter.getInstance(context).getCurrentRunId();

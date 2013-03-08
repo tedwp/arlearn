@@ -21,6 +21,7 @@ package org.celstec.arlearn2.android.activities;
 import java.util.ArrayList;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
 import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.ActionsDelegator;
@@ -44,13 +45,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class ListExcursionsActivity extends GeneralActivity implements ListitemClickInterface {
+public class ListRunsParticipateActivity extends GeneralActivity implements ListitemClickInterface {
 	private Run[] runs = null;
 	private GenericMessageListAdapter adapter;
 	private boolean unregisterStatus = false;
 	private View footerView;
+	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,7 +65,8 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 			this.finish();
 		} else {
 			setContentView(R.layout.listexcursionscreen);
-
+			
+			
 		}
 	}
 
@@ -67,7 +74,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	protected void onResume() {
 		super.onResume();
 		RunDelegator.getInstance().synchronizeRunsWithServer(this);
-		GameDelegator.getInstance().synchronizeGamesWithServer(this);
+		GameDelegator.getInstance().synchronizeParticipateGamesWithServer(this);
 		renderExcursionList();
 	}
 
@@ -77,9 +84,11 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
+//		super.onCreateOptionsMenu(menu);
+//		menu.removeItem(0);
+		menu.add(0, MenuHandler.SCAN_RUN, 0, getString(R.string.scanRun));
 
-		menu.add(0, MenuHandler.UNREGISTER, 1, "unreg i18 "); // getString(R.string.scanTagMenu)
+		menu.add(0, MenuHandler.UNREGISTER, 1, getString(R.string.delete)); // getString(R.string.scanTagMenu)
 
 		return true;
 	}
@@ -99,7 +108,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	}
 
 	private void renderExcursionList() {
-		ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
+		final ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
 		runs = RunDelegator.getInstance().getRuns();
 		if (runs != null) {
 			for (int i = 0; i < runs.length; i++) {
@@ -110,10 +119,37 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 			}
 		}
 		ListView listView = (ListView) findViewById(R.id.listRuns);
-		if (footerView !=null)	listView.removeFooterView(footerView);
+		if (footerView != null)
+			listView.removeFooterView(footerView);
+
 		if (unregisterStatus) {
 			footerView = ((LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(R.layout.list_footer, null, false);
+			
 			listView.addFooterView(footerView);
+			Button unregisterButton = (Button) findViewById(R.id.unregisterButton);
+			unregisterButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					for (GenericListRecord r: runsList) {
+						if (r.isChecked()) {
+							RunDelegator.getInstance().unregisterRun(ListRunsParticipateActivity.this, r.getId());
+						}
+					}
+					unregisterStatus = false;
+					renderExcursionList();
+				}
+			});
+			
+			Button unregisterCancelButton = (Button) findViewById(R.id.unregisterCancelButton);
+			unregisterCancelButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					unregisterStatus = false;
+					renderExcursionList();
+				}
+			});	
 		}
 
 		if (adapter == null || !adapter.isEqual(runsList)) {
@@ -126,11 +162,12 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 
 	@Override
 	public boolean setOnLongClickListener(View v, int position, final GenericListRecord messageListRecord) {
+		if (unregisterStatus) return false;
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(getString(R.string.cacheGame)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				RunListRecord rlr = (RunListRecord) messageListRecord;
-				GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(ListExcursionsActivity.this, rlr.getId(), rlr.getGameId());
+				GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(ListRunsParticipateActivity.this, rlr.getId(), rlr.getGameId());
 			}
 		}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
@@ -143,6 +180,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	}
 
 	public void onListItemClick(View v, int position, GenericListRecord messageListRecord) {
+		if (unregisterStatus) return;
 		long id = position;
 		PropertiesAdapter pa = new PropertiesAdapter(this);
 		Long runId = runs[(int) id].getRunId();
@@ -196,6 +234,7 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	}
 
 	protected void newNfcAction(final String action) {
+		
 		Intent i = new Intent(this, ListOpenRunsActivity.class);
 		i.putExtra(ListOpenRunsActivity.TAG_ID, action);
 		startActivity(i);
@@ -203,6 +242,10 @@ public class ListExcursionsActivity extends GeneralActivity implements ListitemC
 	}
 
 	public void showUnregister() {
+		if (!NetworkSwitcher.isOnline(ListRunsParticipateActivity.this)) {
+			Toast.makeText(ListRunsParticipateActivity.this, getString(R.string.networkUnavailable), Toast.LENGTH_LONG).show();
+			return;
+		}
 		unregisterStatus = true;
 		renderExcursionList();
 

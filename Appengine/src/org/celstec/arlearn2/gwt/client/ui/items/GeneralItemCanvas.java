@@ -292,7 +292,6 @@ public abstract class GeneralItemCanvas extends VStack{
 
 		selectGeneralItem = new SelectItem(GENITEM_DEP);
 		selectGeneralItem.setTitle(constants.generalItemDep());
-		selectGeneralItem.setValueMap(createSimpleDependencyValues());
 		selectGeneralItem.setWrapTitle(false);
 		selectGeneralItem.setDisplayField("name");
 		Criteria crit = new Criteria();
@@ -620,7 +619,7 @@ public abstract class GeneralItemCanvas extends VStack{
 		actionDep.put("type", new JSONString("org.celstec.arlearn2.beans.dependencies.ActionDependency"));
 		boolean addDep = false;
 		if (actionString.equals(ACTION_DEP_STRING)) {
-			if (scantagStringAppear) { //TODO make generic
+			if (scantagStringAppear) { 
 				if ( getValue(actionString) != null) {
 					addDep = true;
 					actionDep.put("action", new JSONString((String) getValue(actionString)));	
@@ -632,7 +631,7 @@ public abstract class GeneralItemCanvas extends VStack{
 				}	
 			}
 		} else {
-			if (scantagStringDisappear) { //TODO make generic
+			if (scantagStringDisappear) { 
 				if ( getValue(actionString) != null) {
 					addDep = true;
 					actionDep.put("action", new JSONString((String) getValue(actionString)));	
@@ -726,12 +725,14 @@ public abstract class GeneralItemCanvas extends VStack{
 			if (dep.containsKey("type")) {
 				formMapping.get(SIMPLE_DEP).setValue(SIMPLE_DEP, "org.celstec.arlearn2.beans.dependencies.ActionDependency".equals(dep.get("type").isString().stringValue()));
 				double itemId = setValueDouble(GENITEM_DEP, dep);
+				if (itemId != 0) {
 				Record rec = GeneralItemGameDataSource.getInstance().getGeneralItem((long) itemId);
 				if ("Scan Tag".equals(rec.getAttribute("simpleName"))) {
-					scantagStringAppear = true; //TODO make generic
+					scantagStringAppear = true; 
 					setValueString(ACTION_DEP_STRING, ACTION_DEP, dep);
 				} else {
 					setValueString(ACTION_DEP, dep);
+				}
 				}
 				setValueString(ROLE_DEP, dep);
 
@@ -753,12 +754,15 @@ public abstract class GeneralItemCanvas extends VStack{
 						dep = dep.get("offset").isObject();
 					}
 				}
-				Record rec = GeneralItemGameDataSource.getInstance().getGeneralItem((long) dep.get("generalItemId").isNumber().doubleValue());
+				if (dep.containsKey("generalItemId")) {
+				double itemId = dep.get("generalItemId").isNumber().doubleValue();
+				Record rec = GeneralItemGameDataSource.getInstance().getGeneralItem((long) itemId);
 				if ("Scan Tag".equals(rec.getAttribute("simpleName"))) {
-					scantagStringDisappear = true; //TODO make generic
+					scantagStringDisappear = true;
 					setValueString(DIS_ACTION_DEP_STRING, ACTION_DEP, dep);
 				} else {
 					setValueString(DIS_ACTION_DEP, ACTION_DEP, dep);
+				}
 				}
 				setValueString(DIS_ROLE_DEP, ROLE_DEP, dep);
 				setValueDouble(DIS_GENITEM_DEP, GENITEM_DEP, dep);

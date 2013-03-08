@@ -28,10 +28,8 @@ import javax.jdo.Query;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
-import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.GameJDO;
-import org.codehaus.jettison.json.JSONException;
 
 public class GameManager {
 
@@ -75,6 +73,7 @@ public class GameManager {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<GameJDO> getGames(PersistenceManager pm, Long gameId, String creatorEmail, String owner, String feedUrl, String title) {
 		Query query = pm.newQuery(GameJDO.class);
 		Object args[] = { gameId, creatorEmail, owner, feedUrl, title };
@@ -87,6 +86,38 @@ public class GameManager {
 		return ((List<GameJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args)));
 	}
 
+	public static List<Game> getGames(String email, Long from, Long until) {
+		ArrayList<Game> returnProgressDefinitions = new ArrayList<Game>();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query query = pm.newQuery(GameJDO.class);
+		String filter = null;
+		String params = null;
+		Object args[] = null;
+		if (from == null) {
+			filter = "owner == emailParam & lastModificationDate <= untilParam";
+			params = "String emailParam, Long untilParam";
+			args = new Object[]{email, until};
+		} else if (until == null) {
+			filter = "owner == emailParam & lastModificationDate >= fromParam";
+			params = "String emailParam, Long fromParam";
+			args = new Object[]{email, from};
+		} else {
+			filter = "owner == emailParam & lastModificationDate >= fromParam & lastModificationDate <= untilParam";
+			params = "String emailParam, Long fromParam, Long untilParam";
+			args = new Object[]{email, from, until};
+		}
+		
+		query.setFilter(filter);
+		query.declareParameters(params);
+		@SuppressWarnings("unchecked")
+		Iterator<GameJDO> it = ((List<GameJDO>) query.executeWithArray(args)).iterator();
+		while (it.hasNext()) {
+			returnProgressDefinitions.add(toBean((GameJDO) it.next()));
+		}
+		return returnProgressDefinitions;
+	}
+
+	
 	public static void deleteGame(Long gameIdentifier) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {

@@ -24,6 +24,7 @@ import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemVisibility;
+import org.celstec.arlearn2.android.delegators.GeneralItemVisibilityDelegator;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
@@ -55,7 +56,8 @@ public class MakeGeneralItemDisappearedTask implements  DBAdapter.DatabaseTask {
 			if (disAt == null || disAt == -1) {
 				disAt = System.currentTimeMillis();
 			}
-			db.getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, disAt, GeneralItemVisibility.NO_LONGER_VISIBLE);
+			GeneralItemVisibilityDelegator.getInstance().makeItemVisible(db, gi.getId(), runId, disAt, GeneralItemVisibility.NO_LONGER_VISIBLE);
+
 			ActivityUpdater.updateActivities(db.getContext(), 
 					ListMessagesActivity.class.getCanonicalName(), 
 					MapViewActivity.class.getCanonicalName(), 

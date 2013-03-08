@@ -19,9 +19,10 @@
 package org.celstec.arlearn2.jdo.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
+import java.util.Map;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -32,6 +33,9 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.GeneralItemJDO;
+import org.datanucleus.store.appengine.query.JDOCursorHelper;
+
+import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Text;
 
@@ -191,6 +195,40 @@ public class GeneralItemManager {
 		} finally {
 			pm.close();
 		}
+	}
+	private static String cursorString = null;
+
+	public static void updateAll() {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+		Query query = pm.newQuery(GeneralItemJDO.class);
+		if (cursorString != null) {
+
+			Cursor c = Cursor.fromWebSafeString(cursorString);
+			Map<String, Object> extendsionMap = new HashMap<String, Object>();
+			extendsionMap.put(JDOCursorHelper.CURSOR_EXTENSION, c);
+			query.setExtensions(extendsionMap);
+		}
+		query.setRange(0, 100);
+
+		
+//		query.setFilter("lastModificationDate == null");
+		List<GeneralItemJDO> results = (List<GeneralItemJDO>) query.execute();
+		Iterator<GeneralItemJDO> it = (results).iterator();
+		int i = 0;
+		while (it.hasNext()) {
+			i++;
+			GeneralItemJDO object = it.next();
+			if (object != null &&object.getLastModificationDate() == null) {
+				object.setLastModificationDate(System.currentTimeMillis());
+
+			}
+		}
+		Cursor c = JDOCursorHelper.getCursor(results);
+		cursorString = c.toWebSafeString();
+		} finally {
+			pm.close();
+		}		
 	}
 
 }

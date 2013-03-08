@@ -53,11 +53,17 @@ public class MyGames extends Service {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@CacheControlHeader("no-cache")
-	public String getGames(@HeaderParam("Authorization") String token, @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+	public String getGames(@HeaderParam("Authorization") String token, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept,
+			@QueryParam("from") Long from,
+			@QueryParam("until") Long until) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
+		if (from == null) {
+			from = 0l;
+		}
 		GameDelegator qg = new GameDelegator(token);
-		return serialise(qg.getGames(), accept);
+		return serialise(qg.getGames(from, until), accept);
 	}
 	
 	@GET

@@ -22,45 +22,43 @@ import org.celstec.arlearn2.android.asynctasks.DatabaseTask;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemVisibility;
+import org.celstec.arlearn2.android.delegators.GeneralItemVisibilityDelegator;
 
 import android.content.Context;
 import android.os.Message;
 
-public class InitGeneralItemVisibilityTask extends GenericTask implements  DatabaseTask {
+public class InitGeneralItemVisibilityTask extends GenericTask implements DatabaseTask {
 
-	private long gameId;
-	private long runId;
-	
-	public long getGameId() {
+	private Long gameId;
+	private Long runId;
+
+	public Long getGameId() {
 		return gameId;
 	}
 
-
-	public void setGameId(long gameId) {
+	public void setGameId(Long gameId) {
 		this.gameId = gameId;
 	}
-
 
 	public long getRunId() {
 		return runId;
 	}
 
-
 	public void setRunId(long runId) {
 		this.runId = runId;
 	}
-	
+
 	public InitGeneralItemVisibilityTask(Long runId, Long gameId) {
 		this.gameId = gameId;
 		this.runId = runId;
 	}
 
-
 	@Override
 	public void execute(DBAdapter db) {
-		for (Long id: db.getGeneralItemVisibility().getItemsNotYetInitialised(runId, gameId)) {
-			db.getGeneralItemVisibility().setVisibilityStatus(id, getRunId(), 0, GeneralItemVisibility.NOT_INITIALISED);
-		}
+		if (gameId != null && runId != null)
+			for (Long id : db.getGeneralItemVisibility().getItemsNotYetInitialised(runId, gameId)) {
+				GeneralItemVisibilityDelegator.getInstance().makeItemVisible(db, id, getRunId(), 0, GeneralItemVisibility.NOT_INITIALISED);
+			}
 		runAfterTasks(db.getContext());
 	}
 
@@ -69,7 +67,7 @@ public class InitGeneralItemVisibilityTask extends GenericTask implements  Datab
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
 		m.obj = this;
 		m.sendToTarget();
-		
+
 	}
 
 }

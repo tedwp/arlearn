@@ -21,6 +21,9 @@ package org.celstec.arlearn2.android.genItemActivities;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
+import org.celstec.arlearn2.android.delegators.ResponseDelegator;
+import org.celstec.arlearn2.android.genItemActivities.SingleChoiceImageActivity.PlayAudioTask;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageTest;
@@ -50,8 +53,10 @@ public class MultipleChoiceImageActivity extends SingleChoiceImageActivity{
 						selectedItem = mcai;
 					}
 				}
-				if (!selected.contains(selectedItem))
-					playSound(answerId + ":a");
+				if (!selected.contains(selectedItem)){
+					new PlayAudioTask().execute(answerId + ":a");
+
+				}
 
 				toggleSelectedAnswer(selectedItem, im);
 				submitVoteButton.setEnabled(!selected.isEmpty());
@@ -86,6 +91,20 @@ public class MultipleChoiceImageActivity extends SingleChoiceImageActivity{
 
 		}
 		
+	}
+	
+	protected void submitButtonClick() {
+		if (selected != null) {
+			castResponse();
+
+		}
+	}
+	
+	private void castResponse() {
+		for (MultipleChoiceAnswerItem sel : selected) {
+			ResponseDelegator.getInstance().publishMultipleChoiceResponse(MultipleChoiceImageActivity.this, mct, sel);
+		}
+		MultipleChoiceImageActivity.this.finish();
 	}
 	
 	

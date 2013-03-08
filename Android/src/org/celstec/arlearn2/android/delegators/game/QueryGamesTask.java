@@ -1,6 +1,6 @@
 package org.celstec.arlearn2.android.delegators.game;
 
-import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.DBAdapter.DatabaseHandler;
@@ -20,7 +20,7 @@ public class QueryGamesTask implements DBAdapter.DatabaseTask {
 	@Override
 	public void execute(DBAdapter db) {
 		db.getGameAdapter().queryAll();
-		ActivityUpdater.updateActivities(db.getContext(), ListExcursionsActivity.class.getCanonicalName());
+		ActivityUpdater.updateActivities(db.getContext(), ListRunsParticipateActivity.class.getCanonicalName());
 	}
 
 }

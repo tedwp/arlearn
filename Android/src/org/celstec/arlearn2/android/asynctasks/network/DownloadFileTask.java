@@ -28,7 +28,7 @@ import java.net.URL;
 import java.util.HashMap;
 
 import org.celstec.arlearn2.android.Constants;
-import org.celstec.arlearn2.android.activities.ListExcursionsActivity;
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
@@ -84,11 +84,11 @@ public class DownloadFileTask extends GenericTask implements NetworkTask {
 			downloadItem.setLocalPath(Uri.fromFile(new File(downloadFile(downloadItem.getRemoteUrl(), downloadItem))));
 			setReplicationStatus(MediaCacheGeneralItems.REP_STATUS_DONE);
 		} catch (FileNotFoundException fnf) {
-			setReplicationStatus(MediaCacheGeneralItems.REP_STATUS_TODO);
+			setReplicationStatus(MediaCacheGeneralItems.REP_STATUS_FILE_NOT_FOUND);
 			fnf.printStackTrace();
 		}
 
-		ActivityUpdater.updateActivities(ctx, ListExcursionsActivity.class.getCanonicalName(), ListMessagesActivity.class.getCanonicalName(), ListMapItemsActivity.class.getCanonicalName());
+		ActivityUpdater.updateActivities(ctx, ListRunsParticipateActivity.class.getCanonicalName(), ListMessagesActivity.class.getCanonicalName(), ListMapItemsActivity.class.getCanonicalName());
 		exitTask();
 		run(ctx); // run again
 	}

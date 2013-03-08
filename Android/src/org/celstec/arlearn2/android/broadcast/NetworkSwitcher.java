@@ -52,7 +52,7 @@ public class NetworkSwitcher extends BroadcastReceiver {
 //		SynchronizeRunsTask.resetCloudSyncTime();
 //		broadCast(context, RunReceiver.action);
 		RunDelegator.getInstance().synchronizeRunsWithServer(context);
-		GameDelegator.getInstance().synchronizeGamesWithServer(context);
+		GameDelegator.getInstance().synchronizeParticipateGamesWithServer(context);
 	}
 	
 //	private void broadCast(Context context, String action) {
