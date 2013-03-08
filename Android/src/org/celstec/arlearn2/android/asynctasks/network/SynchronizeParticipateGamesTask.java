@@ -32,11 +32,11 @@ import android.content.Context;
 import android.os.Message;
 import android.util.Log;
 
-public class SynchronizeGamesTask extends GenericTask implements NetworkTask {
+public class SynchronizeParticipateGamesTask extends GenericTask implements NetworkTask {
 
 	private Context ctx;
 
-	public SynchronizeGamesTask(Context ctx) {
+	public SynchronizeParticipateGamesTask(Context ctx) {
 		this.ctx = ctx;
 	}
 
@@ -62,7 +62,7 @@ public class SynchronizeGamesTask extends GenericTask implements NetworkTask {
 		} else {
 			try {
 				GamesList gl = null;
-				Long lastDate = PropertiesAdapter.getInstance(ctx).getGameLastSynchronizationDate() - 120000;
+				Long lastDate = PropertiesAdapter.getInstance(ctx).getParticipateGameLastSynchronizationDate() - 120000;
 				if (lastDate <= 0) {
 					gl = GameClient.getGameClient().getGamesParticipate(PropertiesAdapter.getInstance(ctx).getFusionAuthToken());
 				} else {
@@ -72,8 +72,9 @@ public class SynchronizeGamesTask extends GenericTask implements NetworkTask {
 				Log.i("GAMEPROBLEM", "returned list "+gl);
 				if (gl.getError() == null) {
 					GameDelegator.getInstance().saveServerGamesToAndroidDb(ctx, gl);
-					PropertiesAdapter.getInstance(ctx).setGameLastSynchronizationDate(gl.getServerTime());
+					PropertiesAdapter.getInstance(ctx).setParticipateGameLastSynchronizationDate(gl.getServerTime());
 				}
+				Log.i("GAMEPROBLEM", "new time "+PropertiesAdapter.getInstance(ctx).getParticipateGameLastSynchronizationDate());
 			} catch (ARLearnException ae) {
 				if (ae.invalidCredentials()) {
 					GenericReceiver.setStatusToLogout(ctx);

@@ -295,7 +295,7 @@ public class ChannelAPINotificationService extends Service {
 //		Intent gameSyncIntent = new Intent();
 //		gameSyncIntent.setAction(GameReceiver.action);
 //		sendBroadcast(gameSyncIntent);
-		GameDelegator.getInstance().synchronizeGamesWithServer(this);
+		GameDelegator.getInstance().synchronizeParticipateGamesWithServer(this);
 		
 		
 //		GeneralItemDel

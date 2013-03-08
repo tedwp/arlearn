@@ -44,6 +44,10 @@ public class GameClient extends GenericClient{
 		return (GamesList)  executeGet(getUrlPrefix(), token, GamesList.class);
 	}
 	
+	public GamesList getGames(String token,Long from) {
+		return (GamesList)  executeGet(getUrlPrefix()+"?from="+from, token, GamesList.class);
+	}
+	
 	public GamesList getGamesParticipate(String token) {
 		return (GamesList)  executeGet(getUrlPrefix()+"/participate", token, GamesList.class);
 	}

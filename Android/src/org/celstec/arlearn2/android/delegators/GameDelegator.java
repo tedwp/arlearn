@@ -23,7 +23,8 @@ import java.util.Iterator;
 import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 
-import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGamesTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeMyGamesTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeParticipateGamesTask;
 import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.cache.MediaGeneralItemCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
@@ -37,6 +38,7 @@ import org.celstec.arlearn2.beans.game.GamesList;
 
 import android.content.Context;
 import android.os.Message;
+import android.util.Log;
 
 public class GameDelegator {
 	
@@ -57,8 +59,12 @@ public class GameDelegator {
 		return GameCache.getInstance().getGame(gameId);
 	}
 	
-	public void synchronizeGamesWithServer(Context ctx) {
-		(new SynchronizeGamesTask(ctx)).run(ctx);
+	public void synchronizeParticipateGamesWithServer(Context ctx) {
+		(new SynchronizeParticipateGamesTask(ctx)).run(ctx);
+	}
+
+	public void synchronizeMyGamesWithServer(Context ctx) {
+		(new SynchronizeMyGamesTask(ctx)).run(ctx);
 	}
 	
 	public void saveServerGamesToAndroidDb(final Context ctx, final GamesList gl) {
@@ -66,15 +72,15 @@ public class GameDelegator {
 		m.obj = new DBAdapter.DatabaseTask() {
 			@Override
 			public void execute(DBAdapter db) {
-				System.out.println("about to update "+gl.getGames().size()+ " games");
 				Iterator<Game> it = gl.getGames().iterator();
 				boolean updateOccured = false;
 				while (it.hasNext()) {
 					Game game = it.next();
+					Log.i("GAMEPROBLEM", "iterating over game "+game);
 					if (game.getError() == null) {
-					GameCache.getInstance().putGame(game);
-					updateOccured =  db.getGameAdapter().insertGame(game)||updateOccured;
-					}
+						GameCache.getInstance().putGame(game);
+						updateOccured =  db.getGameAdapter().insertGame(game)||updateOccured;
+					} 
 				}
 				if (updateOccured) {
 					ActivityUpdater.updateActivities(ctx, ListRunsParticipateActivity.class.getCanonicalName());

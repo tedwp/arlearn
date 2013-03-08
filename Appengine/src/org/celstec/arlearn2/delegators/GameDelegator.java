@@ -68,19 +68,20 @@ public class GameDelegator extends GoogleDelegator {
 		super();
 	}
 
-	public GamesList getGames() {
+	public GamesList getGames(Long from, Long until) {
 		GamesList gl = new GamesList();
 		String myAccount = UserLoggedInManager.getUser(authToken);
 		if (myAccount == null) {
 			gl.setError("login to retrieve your list of games");
 			return gl;
 		}
-		List<Game> list = MyGamesCache.getInstance().getGameList(null, null, myAccount, null, null);
-		if (list == null) {
-			list = GameManager.getGames(null, null, myAccount, null, null);
-			MyGamesCache.getInstance().putGameList(list, null, null, myAccount, null, null);
-		}
-		gl.setGames(list);
+//		List<Game> list = MyGamesCache.getInstance().getGameList(null, null, myAccount, null, null);
+//		List<Game> list = GameManager.getGames(myAccount, from, until);
+//		if (list == null) {
+//			list = GameManager.getGames(null, null, myAccount, null, null);
+//			MyGamesCache.getInstance().putGameList(list, null, null, myAccount, null, null);
+//		}
+		gl.setGames(GameManager.getGames(myAccount, from, until));
 		return gl;
 	}
 	
@@ -90,7 +91,6 @@ public class GameDelegator extends GoogleDelegator {
 		RunDelegator rd = new RunDelegator(this);
 		String myAccount = qu.getCurrentUserAccount();
 		Iterator<User> it = UserManager.getUserList(null, myAccount, null, null).iterator();
-		RunList rl = new RunList();
 		HashSet<Long> addGames = new HashSet<Long>();
 		while (it.hasNext()) {
 			User user = (User) it.next();

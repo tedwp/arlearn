@@ -74,7 +74,7 @@ public class ListRunsParticipateActivity extends GeneralActivity implements List
 	protected void onResume() {
 		super.onResume();
 		RunDelegator.getInstance().synchronizeRunsWithServer(this);
-		GameDelegator.getInstance().synchronizeGamesWithServer(this);
+		GameDelegator.getInstance().synchronizeParticipateGamesWithServer(this);
 		renderExcursionList();
 	}
 

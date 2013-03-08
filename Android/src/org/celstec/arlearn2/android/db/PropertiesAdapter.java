@@ -153,15 +153,27 @@ public class PropertiesAdapter {
 		return getDefaultPrefs().getInt(Constants.STATUS, 0);
 	}
 	
-	public void setGameLastSynchronizationDate(long time) {
+	public void setParticipateGameLastSynchronizationDate(long time) {
 		SharedPreferences.Editor editor = getDefaultPrefs().edit();
-		editor.putLong(Constants.GAME_LAST_SYNC_DATE, time);
+		editor.putLong(Constants.PARTICIPATE_GAME_LAST_SYNC_DATE, time);
 		editor.commit();
 	}
 	
-	public long getGameLastSynchronizationDate() {
-		return getDefaultPrefs().getLong(Constants.GAME_LAST_SYNC_DATE, 0);
+	public long getParticipateGameLastSynchronizationDate() {
+		return getDefaultPrefs().getLong(Constants.PARTICIPATE_GAME_LAST_SYNC_DATE, 0);
 	}
+	
+	public void setMyGameLastSynchronizationDate(long time) {
+		SharedPreferences.Editor editor = getDefaultPrefs().edit();
+		editor.putLong(Constants.PARTICIPATE_GAME_LAST_SYNC_DATE, time);
+		editor.commit();
+	}
+	
+	public long getMyGameLastSynchronizationDate() {
+		return getDefaultPrefs().getLong(Constants.PARTICIPATE_GAME_LAST_SYNC_DATE, 0);
+	}
+	
+	
 	
 	public void setRunLastSynchronizationDate(long time) {
 		SharedPreferences.Editor editor = getDefaultPrefs().edit();
@@ -174,7 +186,8 @@ public class PropertiesAdapter {
 	}
 	
 	public void databaseReset() {
-		setGameLastSynchronizationDate(0);
+		setParticipateGameLastSynchronizationDate(0);
+		setMyGameLastSynchronizationDate(0);
 		setRunLastSynchronizationDate(0);
 	}
 
