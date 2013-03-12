@@ -43,7 +43,6 @@ public class MyGamesCache extends GenericCache{
 
 	}
 	
-	@Deprecated
 	public List<Game> getGameList(Long gameId, Object... args) {
 		return (List<Game>) getCache().get(generateCacheKey(MYGAMES_PREFIX, gameId, args));
 	}

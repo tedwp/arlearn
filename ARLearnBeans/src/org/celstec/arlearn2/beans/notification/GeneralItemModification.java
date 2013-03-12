@@ -18,33 +18,30 @@
  ******************************************************************************/
 package org.celstec.arlearn2.beans.notification;
 
-import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.run.Run;
 
-public class GeneralItemModification extends NotificationBean{
-	
-	public final static int CREATED = 1;
-	public final static int DELETED = 2;
-	public final static int ALTERED = 3;
-	public final static int VISIBLE = 4;
-	public final static int DISAPPEARED = 5;
-	
+public class GeneralItemModification extends NotificationBean {
+
+	public final static int CREATED = GI_CREATED;
+	public final static int DELETED = GI_DELETED;
+	public final static int ALTERED = GI_ALTERED;
+	public final static int VISIBLE = GI_VISIBLE;
+	public final static int DISAPPEARED = GI_DISAPPEARED;
+
 	private Integer modificationType;
 	private Long runId;
 	private Long gameId;
 	private Long itemId;
 	private GeneralItem generalItem;
-	
+
 	public Integer getModificationType() {
 		return modificationType;
 	}
-	
+
 	public void setModificationType(Integer modificationType) {
 		this.modificationType = modificationType;
 	}
-	
-	
+
 	public Long getRunId() {
 		return runId;
 	}
@@ -72,16 +69,18 @@ public class GeneralItemModification extends NotificationBean{
 	public GeneralItem getGeneralItem() {
 		return generalItem;
 	}
-	
+
 	public void setGeneralItem(GeneralItem generalItem) {
 		this.generalItem = generalItem;
 	}
-	
+
 	public void retainOnlyIdentifier() {
 		if (getGeneralItem() != null) {
 			GeneralItem r = getGeneralItem();
-			if (r.getGameId()!= null) setGameId(r.getGameId());
-			if (r.getId()!= null) setItemId(r.getId());
+			if (r.getGameId() != null)
+				setGameId(r.getGameId());
+			if (r.getId() != null)
+				setItemId(r.getId());
 			setGeneralItem(null);
 		}
 	}

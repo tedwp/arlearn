@@ -148,6 +148,7 @@ public class GenericListRecord {
 			if (!rightDetail.equals(other.rightDetail))
 				return false;
 		} 
+		if (imageResourceId != other.imageResourceId) return false;
 		if (isShowCheckBox() != other.showCheckBox) {
 				return false;
 		}

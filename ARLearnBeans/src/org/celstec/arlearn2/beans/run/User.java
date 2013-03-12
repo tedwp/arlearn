@@ -20,9 +20,6 @@ package org.celstec.arlearn2.beans.run;
 
 import java.util.List;
 
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-
-
 public class User extends RunBean{
 
 	private String teamId;
@@ -34,6 +31,9 @@ public class User extends RunBean{
 
 	private Double lng;
 	private Double lat;
+	
+	private Long gameId;
+	private Long lastModificationDateGame;
 	
 	public User() {
 		
@@ -113,6 +113,22 @@ public class User extends RunBean{
 			mail = mail.substring(0, posAt);
 		}
 		return mail.replace(".", "").toLowerCase();
+	}
+	
+	public Long getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(Long gameId) {
+		this.gameId = gameId;
+	}
+	
+	public Long getLastModificationDateGame() {
+		return lastModificationDateGame;
+	}
+
+	public void setLastModificationDateGame(Long lastModificationDateGame) {
+		this.lastModificationDateGame = lastModificationDateGame;
 	}
 	
 }

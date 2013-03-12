@@ -18,6 +18,8 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.asynctasks.network;
 
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
+import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.broadcast.GenericReceiver;
@@ -73,7 +75,12 @@ public class SynchronizeParticipateGamesTask extends GenericTask implements Netw
 				if (gl.getError() == null) {
 					GameDelegator.getInstance().saveServerGamesToAndroidDb(ctx, gl);
 					PropertiesAdapter.getInstance(ctx).setParticipateGameLastSynchronizationDate(gl.getServerTime());
+					if (!gl.getGames().isEmpty()) {
+						ActivityUpdater.updateActivities(ctx, ListRunsParticipateActivity.class.getCanonicalName());
+
+					}
 				}
+				
 				Log.i("GAMEPROBLEM", "new time "+PropertiesAdapter.getInstance(ctx).getParticipateGameLastSynchronizationDate());
 			} catch (ARLearnException ae) {
 				if (ae.invalidCredentials()) {

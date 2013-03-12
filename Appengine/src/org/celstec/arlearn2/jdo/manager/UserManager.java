@@ -28,10 +28,18 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
+import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.notification.GameModification;
+import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
+import org.celstec.arlearn2.delegators.GameDelegator;
+import org.celstec.arlearn2.delegators.GoogleDelegator;
+import org.celstec.arlearn2.delegators.RunDelegator;
+import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.jdo.PMF;
+import org.celstec.arlearn2.jdo.classes.GeneralItemJDO;
 import org.celstec.arlearn2.jdo.classes.UserJDO;
 import org.datanucleus.store.appengine.query.JDOCursorHelper;
 
@@ -42,9 +50,9 @@ import com.google.appengine.api.datastore.Text;
 
 public class UserManager {
 
-	private static final String params[] = new String[]{"name", "email", "teamId", "runId"};
-	private static final String paramsNames[] = new String[]{"nameParam", "emailParam", "teamIdParam", "runIdParam"};
-	private static final String types[] = new String[]{"String", "String", "String", "Long"};
+	private static final String params[] = new String[] { "name", "email", "teamId", "runId" };
+	private static final String paramsNames[] = new String[] { "nameParam", "emailParam", "teamIdParam", "runIdParam" };
+	private static final String types[] = new String[] { "String", "String", "String", "Long" };
 
 	public static void addUser(User bean) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -53,7 +61,10 @@ public class UserManager {
 		user.setName(bean.getName());
 		user.setRunId(bean.getRunId());
 		user.setEmail(bean.getEmail());
-		user.setLastModificationDate(System.currentTimeMillis());
+		user.setGameId(bean.getGameId());
+		Long currentTime = System.currentTimeMillis();
+		user.setLastModificationDate(currentTime);
+		user.setLastModificationDateGame(currentTime);
 
 		user.setId();
 		JsonBeanSerialiser jbs = new JsonBeanSerialiser(bean);
@@ -65,7 +76,26 @@ public class UserManager {
 		}
 
 	}
-	
+
+	public static void gameChanged(User u) {
+		Key key = KeyFactory.createKey(UserJDO.class.getSimpleName(), UserJDO.generateId(u.getEmail(), u.getRunId()));
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			UserJDO uJDO = pm.getObjectById(UserJDO.class, key);
+			Long currentTime = System.currentTimeMillis();
+			uJDO.setLastModificationDateGame(currentTime);
+		} finally {
+			pm.close();
+		}
+		
+		if (u.getGameId() != null) {
+			GameModification gm = new GameModification();
+			gm.setModificationType(GameModification.ALTERED);
+			ChannelNotificator.getInstance().notify(u.getEmail(), gm);
+		}
+
+	}
+
 	public static List<User> getUserList(String name, String email, String teamId, Long runId) {
 		ArrayList<User> returnProgressDefinitions = new ArrayList<User>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -75,7 +105,7 @@ public class UserManager {
 		}
 		return returnProgressDefinitions;
 	}
-	
+
 	public static List<User> getUserList(String email, Long from, Long until) {
 		ArrayList<User> returnProgressDefinitions = new ArrayList<User>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -86,17 +116,17 @@ public class UserManager {
 		if (from == null) {
 			filter = "email == emailParam & lastModificationDate <= untilParam";
 			params = "String emailParam, Long untilParam";
-			args = new Object[]{email, until};
+			args = new Object[] { email, until };
 		} else if (until == null) {
 			filter = "email == emailParam & lastModificationDate >= fromParam";
 			params = "String emailParam, Long fromParam";
-			args = new Object[]{email, from};
+			args = new Object[] { email, from };
 		} else {
 			filter = "email == emailParam & lastModificationDate >= fromParam & lastModificationDate <= untilParam";
 			params = "String emailParam, Long fromParam, Long untilParam";
-			args = new Object[]{email, from, until};
+			args = new Object[] { email, from, until };
 		}
-		
+
 		query.setFilter(filter);
 		query.declareParameters(params);
 		Iterator<UserJDO> it = ((List<UserJDO>) query.executeWithArray(args)).iterator();
@@ -105,41 +135,43 @@ public class UserManager {
 		}
 		return returnProgressDefinitions;
 	}
-	
+
+	public static List<User> getUserListGameParticipate(String email, Long from, Long until) {
+		ArrayList<User> returnProgressDefinitions = new ArrayList<User>();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query query = pm.newQuery(UserJDO.class);
+		String filter = null;
+		String params = null;
+		Object args[] = null;
+		if (from == null) {
+			filter = "email == emailParam & lastModificationDateGame <= untilParam";
+			params = "String emailParam, Long untilParam";
+			args = new Object[] { email, until };
+		} else if (until == null) {
+			filter = "email == emailParam & lastModificationDateGame >= fromParam";
+			params = "String emailParam, Long fromParam";
+			args = new Object[] { email, from };
+		} else {
+			filter = "email == emailParam & lastModificationDateGame >= fromParam & lastModificationDateGame <= untilParam";
+			params = "String emailParam, Long fromParam, Long untilParam";
+			args = new Object[] { email, from, until };
+		}
+
+		query.setFilter(filter);
+		query.declareParameters(params);
+		Iterator<UserJDO> it = ((List<UserJDO>) query.executeWithArray(args)).iterator();
+		while (it.hasNext()) {
+			returnProgressDefinitions.add(toBean((UserJDO) it.next()));
+		}
+		return returnProgressDefinitions;
+	}
+
 	public static List<UserJDO> getUsers(PersistenceManager pm, String name, String email, String teamId, Long runId) {
 		Query query = pm.newQuery(UserJDO.class);
-		Object args [] ={name, email, teamId, runId};
+		Object args[] = { name, email, teamId, runId };
 		query.setFilter(ManagerUtil.generateFilter(args, params, paramsNames));
 		query.declareParameters(ManagerUtil.generateDeclareParameters(args, types, params, paramsNames));
-		return  (List<UserJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args));
-	}
-	
-	@Deprecated
-	public static UserList getUsers(Long runId, String teamId) {
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		try {
-			
-			Query query = pm.newQuery(UserJDO.class);
-			Iterator<UserJDO> it = null;
-			if (teamId != null) {
-				query.setFilter("runId == runIdParam && teamId == teamIdParam");
-				query.declareParameters("Long runIdParam, String teamIdParam");
-				it = ((List<UserJDO>) query.executeWithArray(runId, teamId)).iterator();
-
-			} else {
-				query.setFilter("runId == runIdParam ");
-				query.declareParameters("Long runIdParam");
-				it = ((List<UserJDO>) query.executeWithArray(runId)).iterator();
-			}
-			UserList returnList = new UserList();
-			returnList.setRunId(runId);
-			while (it.hasNext()) {
-				returnList.addUser(toBean((UserJDO) it.next()));
-			}
-			return returnList;
-		} finally {
-			pm.close();
-		}
+		return (List<UserJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args));
 	}
 
 	public static User getUser(Long runId, String email) {
@@ -177,6 +209,8 @@ public class UserManager {
 		userBean.setTeamId(jdo.getTeamId());
 		userBean.setEmail(jdo.getEmail());
 		userBean.setDeleted(jdo.getDeleted());
+		userBean.setGameId(jdo.getGameId());
+		userBean.setLastModificationDateGame(jdo.getLastModificationDateGame());
 		return userBean;
 	}
 
@@ -191,16 +225,16 @@ public class UserManager {
 			pm.close();
 		}
 	}
-	
+
 	public static void deleteUser(PersistenceManager pm, UserJDO userJDO) {
 		pm.deletePersistent(userJDO);
 	}
-	
+
 	public static void setStatusDeleted(long runId, String email) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			List<UserJDO> deleteList = getUsers(pm, null, email, null, runId);
-			for (UserJDO jdo: deleteList) {
+			for (UserJDO jdo : deleteList) {
 				jdo.setDeleted(true);
 				jdo.setLastModificationDate(System.currentTimeMillis());
 			}
@@ -208,9 +242,9 @@ public class UserManager {
 			pm.close();
 		}
 	}
+
 	private final static int LIMIT = 20;
 
-	
 	public static List<UserJDO> listAllUsers(PersistenceManager pm, String cursorString) {
 		javax.jdo.Query query = pm.newQuery(UserJDO.class);
 		if (cursorString != null) {
@@ -223,17 +257,55 @@ public class UserManager {
 		return (List<UserJDO>) query.execute();
 	}
 
+	// private static User toBean(UserJDO jdo) {
+	// if (jdo == null) return null;
+	// User pd = new User();
+	// pd.setName(jdo.getName());
+	// pd.setEmail(jdo.getEmail());
+	// pd.setRunId(jdo.getRunId());
+	// pd.setTeamId(jdo.getTeamId());
+	//
+	// return pd;
+	// }
 	
+	private static String cursorString = null;
 
-	
-//	private static User toBean(UserJDO jdo) {
-//		if (jdo == null) return null;
-//		User pd = new User();
-//		pd.setName(jdo.getName());
-//		pd.setEmail(jdo.getEmail());
-//		pd.setRunId(jdo.getRunId());
-//		pd.setTeamId(jdo.getTeamId());
-//		
-//		return pd;
-//	}
+	public static void updateAll(GoogleDelegator gd) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+		Query query = pm.newQuery(UserJDO.class);
+		if (cursorString != null) {
+
+			Cursor c = Cursor.fromWebSafeString(cursorString);
+			Map<String, Object> extendsionMap = new HashMap<String, Object>();
+			extendsionMap.put(JDOCursorHelper.CURSOR_EXTENSION, c);
+			query.setExtensions(extendsionMap);
+		}
+		query.setRange(0, 20);
+
+		RunDelegator rd = new RunDelegator(gd);
+		GameDelegator gad = new GameDelegator(gd);
+		List<UserJDO> results = (List<UserJDO>) query.execute();
+		Iterator<UserJDO> it = (results).iterator();
+		int i = 0;
+		while (it.hasNext()) {
+			i++;
+			UserJDO object = it.next();
+			if (object != null && (object.getLastModificationDateGame() == null || object.getGameId() == null)) {
+				
+//				rd.get
+				long runId = object.getRunId();
+				Run r = rd.getRun(runId);
+				Game game = gad.getNotOwnedGame(r.getGameId());
+				object.setGameId(game.getGameId());
+				object.setLastModificationDateGame(System.currentTimeMillis());
+
+			}
+		}
+		Cursor c = JDOCursorHelper.getCursor(results);
+		cursorString = c.toWebSafeString();
+		} finally {
+			pm.close();
+		}		
+	}
 }

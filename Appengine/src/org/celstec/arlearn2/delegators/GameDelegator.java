@@ -32,7 +32,7 @@ import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.notification.GameModification;
-import org.celstec.arlearn2.beans.run.GeneralItemVisibility;
+import org.celstec.arlearn2.beans.notification.GeneralItemModification;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.RunList;
 import org.celstec.arlearn2.beans.run.User;
@@ -41,16 +41,16 @@ import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.manager.GameManager;
 import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
-import org.celstec.arlearn2.jdo.manager.GeneralItemVisibilityManager;
-import org.celstec.arlearn2.jdo.manager.RunManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
 import org.celstec.arlearn2.tasks.beans.DeleteGeneralItems;
 import org.celstec.arlearn2.tasks.beans.DeleteProgressDefinitions;
 import org.celstec.arlearn2.tasks.beans.DeleteRuns;
 import org.celstec.arlearn2.tasks.beans.DeleteScoreDefinitions;
+import org.celstec.arlearn2.tasks.beans.NotifyRunsFromGame;
 import org.codehaus.jettison.json.JSONException;
 
 import com.google.gdata.util.AuthenticationException;
+import com.sun.jersey.server.impl.monitoring.GlassFishMonitoringInitializer;
 
 public class GameDelegator extends GoogleDelegator {
 
@@ -116,23 +116,23 @@ public class GameDelegator extends GoogleDelegator {
 		if (from !=null && until !=null &&from.longValue() >= until.longValue()) {
 			return new GamesList();
 		}
-		GamesList gl = getParticipateGames();
-		Iterator<Game> it = gl.getGames().iterator();
+		UsersDelegator qu = new UsersDelegator(this);
+		String myAccount = qu.getCurrentUserAccount();
+		Iterator<User> it = UserManager.getUserListGameParticipate(myAccount, from, until).iterator();
+		GamesList gl = new GamesList();
 		while (it.hasNext()) {
-			Game g = it.next();
-			if (from != null && g.getLastModificationDate() != null) {
-				if (from.longValue() > g.getLastModificationDate().longValue()) {
-					it.remove();
-				}
-			}
-			
-			if (until != null && g.getLastModificationDate() != null) {
-				if (until.longValue() < g.getLastModificationDate().longValue()) {
-					it.remove();
+			User user = (User) it.next();
+			if (user.getGameId() != null ) {
+				Game g = getGameWithoutAccount(user.getGameId());
+				if (g!= null) {
+					gl.addGame(g);
+				} else {
+					logger.severe("following game does not exist"+user.getGameId());	
 				}
 			}
 		}
 		gl.setServerTime(System.currentTimeMillis());
+		
 		return gl;
 		
 	}
@@ -160,7 +160,11 @@ public class GameDelegator extends GoogleDelegator {
 	}
 	
 	public Game getGameWithoutAccount(Long gameId) {
-		List<Game> list = GameManager.getGames(gameId, null, null, null, null);
+		List<Game> list = MyGamesCache.getInstance().getGameList(gameId, null, null, null, null);
+		if (list == null) {
+			list = GameManager.getGames(gameId, null, null, null, null);
+			if (!list.isEmpty()) MyGamesCache.getInstance().putGameList(list, gameId, null, null, null, null);
+		}
 		if (list.isEmpty()) {
 			return null;
 		}
@@ -207,12 +211,15 @@ public class GameDelegator extends GoogleDelegator {
 		game.setGameId(GameManager.addGame(game.getTitle(), myAccount, game.getCreator(), game.getFeedUrl(), game.getGameId(), game.getConfig()));
 		MyGamesCache.getInstance().removeGameList(null, null, myAccount, null, null);
 		MyGamesCache.getInstance().removeGameList(game.getGameId(), null, myAccount, null, null);
+		MyGamesCache.getInstance().removeGameList(game.getGameId(), null, null, null, null);
 		
 		GameModification gm = new GameModification();
 		gm.setModificationType(modificationType);
 		gm.setGame(game);
 		if (notify) ChannelNotificator.getInstance().notify(myAccount, gm);
 		
+		(new NotifyRunsFromGame(authToken, game.getGameId(), null, modificationType)).scheduleTask();
+
 		return game;
 	}
 
@@ -362,7 +369,7 @@ public class GameDelegator extends GoogleDelegator {
 
 	}
 	
-	public static void updateAllGames() {
+	public  void updateAllGames() {
 		int i = 0;
 //		for (Game game: GameManager.getGames(null, null, null, null, null)) {
 //			if (game.getLastModificationDate() == null) {
@@ -372,7 +379,8 @@ public class GameDelegator extends GoogleDelegator {
 //			}
 //		}
 //		GeneralItemVisibilityManager.updateAll();
-		GeneralItemManager.updateAll();
+//		GeneralItemManager.updateAll();
+		UserManager.updateAll(this);
 //		RunManager.updateAll();
 //		for (GeneralItemVisibility vis: GeneralItemVisibilityManager.getVisibleItems(null, null)) {
 //			

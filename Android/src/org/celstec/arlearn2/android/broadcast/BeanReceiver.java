@@ -55,6 +55,9 @@ public class BeanReceiver extends BroadcastReceiver {
 					}
 //					reCast("org.celstec.arlearn2.beans.notification.GeneralItemModification", bean, context);
 					break;
+				case GameModification:
+					GameDelegator.getInstance().synchronizeParticipateGamesWithServer(context);
+					break;
 				case Ping:
 					reCast("org.celstec.arlearn2.beans.notification.Ping", bean, context);
 					break;
@@ -75,7 +78,7 @@ public class BeanReceiver extends BroadcastReceiver {
 	}
 
 	enum NotificationBeans {
-		RunModification, GeneralItemModification, Ping, Pong, LocationUpdate, Action, Response;
+		RunModification, GameModification, GeneralItemModification, Ping, Pong, LocationUpdate, Action, Response;
 	}
 
 }

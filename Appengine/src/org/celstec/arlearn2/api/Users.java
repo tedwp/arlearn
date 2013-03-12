@@ -46,6 +46,19 @@ import com.google.gdata.util.AuthenticationException;
 
 @Path("/users")
 public class Users extends Service {
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/update")
+	public String updateUsers(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @DefaultValue("application/json") @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		
+		UsersDelegator qu = verifyCredentials(token);
+		qu.updateAllUsers();
+		return null;
+	}
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
