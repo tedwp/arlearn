@@ -24,10 +24,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.celstec.arlearn2.beans.notification.APNDeviceDescription;
+import org.celstec.arlearn2.beans.notification.DeviceDescription;
 import org.celstec.arlearn2.beans.notification.NotificationBean;
 import org.celstec.arlearn2.beans.notification.RunModification;
 import org.celstec.arlearn2.beans.run.Run;
-import org.celstec.arlearn2.delegators.ApplePushNotificationDelegator;
+import org.celstec.arlearn2.delegators.NotificationDelegator;
 import org.celstec.arlearn2.jdo.manager.IOSDevicesRegistryManager;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -45,9 +47,9 @@ public class APNNotificationChannel implements NotificationChannel{
 	}
 	
 	public void notify(String account, Object bean) {
-		for (String token: IOSDevicesRegistryManager.getDeviceTokens(account)){
+		for (DeviceDescription desc: IOSDevicesRegistryManager.getDeviceTokens(account)){
 			try {
-				sendNotification(account, token, ((NotificationBean)bean));
+				sendNotification(account, ((APNDeviceDescription) desc).getDeviceToken(), ((NotificationBean)bean));
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

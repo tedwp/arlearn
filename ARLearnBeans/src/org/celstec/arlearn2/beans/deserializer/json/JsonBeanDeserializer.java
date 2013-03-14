@@ -65,6 +65,8 @@ import org.celstec.arlearn2.beans.generalItem.SingleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
 import org.celstec.arlearn2.beans.notification.APNDeviceDescription;
+import org.celstec.arlearn2.beans.notification.DeviceDescriptionList;
+import org.celstec.arlearn2.beans.notification.GCMDeviceDescription;
 import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.beans.notification.Ping;
 import org.celstec.arlearn2.beans.notification.Pong;
@@ -364,6 +366,8 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.Ping", new Ping.Deserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.Pong", new Pong.Deserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.APNDeviceDescription", new APNDeviceDescription.Deserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.GCMDeviceDescription", new GCMDeviceDescription.Deserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.DeviceDescriptionList", new DeviceDescriptionList.Deserializer());
 	}
 	
 	
