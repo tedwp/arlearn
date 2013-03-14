@@ -76,14 +76,15 @@ public class GameTab extends MasterDetailTab {
 		super(title);
 		this.gameId = gameId;
 		controlItem = new GeneralItemControlCanvas(gameId);
-		controlItem.setModificationHandler(new GeneralItemControlCanvas.ItemModification() {
+		controlItem
+				.setModificationHandler(new GeneralItemControlCanvas.ItemModification() {
 
-			@Override
-			public void modified() {
-				tabSelected(null);
+					@Override
+					public void modified() {
+						tabSelected(null);
 
-			}
-		});
+					}
+				});
 		configForm = new ConfigForm(this);
 
 		setMasterCanvas(controlItem);
@@ -91,6 +92,7 @@ public class GameTab extends MasterDetailTab {
 
 		setCanClose(true);
 	}
+
 	public long getGameId() {
 		return gameId;
 	}
@@ -99,20 +101,23 @@ public class GameTab extends MasterDetailTab {
 		VLayout rightCanvas = new VLayout();
 		rightCanvas.setHeight100();
 		rightCanvas.addMember(getListGeneralItemsCanvas());
-		 LayoutSpacer spacer = new LayoutSpacer();
-         spacer.setWidth100();
-         spacer.setHeight(5);
-         rightCanvas.addMember(spacer);
-         
+		LayoutSpacer spacer = new LayoutSpacer();
+		spacer.setWidth100();
+		spacer.setHeight(5);
+		rightCanvas.addMember(spacer);
+
 		HLayout smallConfigCanvas = new HLayout();
-		
-//		smallConfigCanvas.setPadding(3);
+
+//		 smallConfigCanvas.setPadding(3);
 		smallConfigCanvas.setHeight(100);
 		smallConfigCanvas.addMember(getRolesCanvas());
-		 LayoutSpacer vSpacer = new LayoutSpacer();
-		 vSpacer.setWidth(5);
-         smallConfigCanvas.addMember(vSpacer);
+		LayoutSpacer vSpacer = new LayoutSpacer();
+		vSpacer.setWidth(5);
+		smallConfigCanvas.addMember(vSpacer);
 		smallConfigCanvas.addMember(getConfigCanvas());
+		smallConfigCanvas.addMember(vSpacer);
+		smallConfigCanvas.addMember(getSharingConfig());
+
 		rightCanvas.addMember(smallConfigCanvas);
 		return rightCanvas;
 	}
@@ -122,19 +127,45 @@ public class GameTab extends MasterDetailTab {
 		Criteria crit = new Criteria();
 		crit.addCriteria("deleted", false);
 		listGrid.filterData(crit);
-		GameClient.getInstance().getGameConfig(gameId, new JsonCallback() {
-
+		GameClient.getInstance().getGame(gameId, new JsonCallback() {
+			
 			public void onJsonReceived(JSONValue jsonValue) {
 
-				updateConfig(jsonValue.isObject());
+				updateGameConfig(jsonValue.isObject());
 				GeneralItemGameDataSource.getInstance().loadDataGame(gameId);
 
 			}
 
 		});
+//			GameClient.getInstance().getGameConfig(gameId, new JsonCallback() {
+//
+//			public void onJsonReceived(JSONValue jsonValue) {
+//
+//				updateConfig(jsonValue.isObject());
+//				GeneralItemGameDataSource.getInstance().loadDataGame(gameId);
+//
+//			}
+//
+//		});
 	}
 
+	public void updateGameConfig(JSONObject jsonGame) {
+		if (jsonGame.containsKey("config")) {
+			JSONObject jsonValue = jsonGame.get("config").isObject();
+			updateConfig(jsonValue);
+		}
+		int sharing = 1;
+		if (jsonGame.containsKey("sharing")) {
+			sharing = (int) jsonGame.get("sharing").isNumber().doubleValue();
+		}
+		if (configForm != null) {
+			configForm.setSharing(sharing);
+		}
+	}
+	
 	public void updateConfig(JSONObject jsonValue) {
+		
+		
 		if (jsonValue.containsKey("roles")) {
 			JSONArray array = jsonValue.get("roles").isArray();
 			if (array != null) {
@@ -150,30 +181,33 @@ public class GameTab extends MasterDetailTab {
 		if (jsonValue.containsKey("manualItems")) {
 			JSONArray array = jsonValue.get("manualItems").isArray();
 			if (array != null) {
-				GeneralItemGameDataSource.getInstance().setManualItems( array);
+				GeneralItemGameDataSource.getInstance().setManualItems(array);
 			}
 		}
 		if (configForm != null) {
 			configForm.updateConfig(jsonValue);
 		}
+		
 	}
 
 	private void editItem(final String itemType, int id) {
 
-		GeneralItemsClient.getInstance().getGeneralItem(gameId, id, new JsonCallback() {
-			public void onJsonReceived(JSONValue jsonValue) {
-				controlItem.edit(jsonValue);
-			}
-		});
+		GeneralItemsClient.getInstance().getGeneralItem(gameId, id,
+				new JsonCallback() {
+					public void onJsonReceived(JSONValue jsonValue) {
+						controlItem.edit(jsonValue);
+					}
+				});
 
 	}
 
 	private void deleteItem(int id) {
-		GeneralItemsClient.getInstance().deleteGeneralItem(gameId, id, new JsonCallback() {
-			public void onJsonReceived(JSONValue jsonValue) {
-				tabSelected(null);
-			}
-		});
+		GeneralItemsClient.getInstance().deleteGeneralItem(gameId, id,
+				new JsonCallback() {
+					public void onJsonReceived(JSONValue jsonValue) {
+						tabSelected(null);
+					}
+				});
 	}
 
 	public Canvas getListGeneralItemsCanvas() {
@@ -184,7 +218,8 @@ public class GameTab extends MasterDetailTab {
 			}
 
 			protected void editItem(ListGridRecord rollOverRecord) {
-				GameTab.this.editItem(rollOverRecord.getAttribute("type"), rollOverRecord.getAttributeAsInt("id"));
+				GameTab.this.editItem(rollOverRecord.getAttribute("type"),
+						rollOverRecord.getAttributeAsInt("id"));
 			}
 		};
 		listGrid.setShowRollOverCanvas(true);
@@ -195,10 +230,13 @@ public class GameTab extends MasterDetailTab {
 
 		ListGridField idField = new ListGridField("id", "id");
 		idField.setHidden(true);
-		ListGridField titleGameField = new ListGridField("name", constants.title());
-		ListGridField typeField = new ListGridField("simpleName", constants.type());
+		ListGridField titleGameField = new ListGridField("name",
+				constants.title());
+		ListGridField typeField = new ListGridField("simpleName",
+				constants.type());
 		ListGridField rolesField = new ListGridField("roles", constants.roles());
-		ListGridField manualTriggerField = new ListGridField("manualTrigger", constants.manualTrigger());
+		ListGridField manualTriggerField = new ListGridField("manualTrigger",
+				constants.manualTrigger());
 		ListGridField deletedField = new ListGridField("deleted", "deleted");
 		ListGridField sortKeyField = new ListGridField("sortKey", "Order");
 		sortKeyField.setWidth(35);
@@ -206,7 +244,8 @@ public class GameTab extends MasterDetailTab {
 		manualTriggerField.setHoverCustomizer(new HoverCustomizer() {
 
 			@Override
-			public String hoverHTML(Object value, ListGridRecord record, int rowNum, int colNum) {
+			public String hoverHTML(Object value, ListGridRecord record,
+					int rowNum, int colNum) {
 				return constants.manualTriggerHover();
 			}
 		});
@@ -216,33 +255,49 @@ public class GameTab extends MasterDetailTab {
 			@Override
 			public void onCellClick(final CellClickEvent event) {
 				if (event.getColNum() == 3) {
-					if (event.getRecord().getAttributeAsBoolean("manualTrigger") == null || !event.getRecord().getAttributeAsBoolean("manualTrigger")) {
+					if (event.getRecord()
+							.getAttributeAsBoolean("manualTrigger") == null
+							|| !event.getRecord().getAttributeAsBoolean(
+									"manualTrigger")) {
 						JSONObject item = new JSONObject();
-						item.put("type", new JSONString(event.getRecord().getAttribute("type")));
-						item.put("id", new JSONNumber(event.getRecord().getAttributeAsDouble("id")));
-						item.put("name", new JSONString(event.getRecord().getAttribute("name")));
-						GameClient.getInstance().installManualTrigger(gameId, item.toString(), new JsonCallback() {
-							public void onJsonReceived(JSONValue jsonValue) {
-								GameTab.this.tabSelected(null);
-							}
+						item.put("type", new JSONString(event.getRecord()
+								.getAttribute("type")));
+						item.put("id", new JSONNumber(event.getRecord()
+								.getAttributeAsDouble("id")));
+						item.put("name", new JSONString(event.getRecord()
+								.getAttribute("name")));
+						GameClient.getInstance().installManualTrigger(gameId,
+								item.toString(), new JsonCallback() {
+									public void onJsonReceived(
+											JSONValue jsonValue) {
+										GameTab.this.tabSelected(null);
+									}
 
-						});
+								});
 					} else {
-						long itemId = event.getRecord().getAttributeAsLong("id");
-//						ListGridRecord rec = new ListGridRecord();
-//						rec.setAttribute("itemId", itemId);
+						long itemId = event.getRecord()
+								.getAttributeAsLong("id");
+						// ListGridRecord rec = new ListGridRecord();
+						// rec.setAttribute("itemId", itemId);
 						Criteria crit = new Criteria();
-						crit.addCriteria("itemId", ""+itemId);
-						
-//						TriggerDataSource.getInstance().removeData(rec);
-						TriggerDataSource.getInstance().deleteData(crit);
-						GameClient.getInstance().removeManualTrigger(gameId, itemId, new JsonCallback() {
-							public void onJsonReceived(JSONValue jsonValue) {
-								GeneralItemGameDataSource.getInstance().removeManualItem(event.getRecord().getAttributeAsLong("id"));
-								GameTab.this.tabSelected(null);
-							}
+						crit.addCriteria("itemId", "" + itemId);
 
-						});
+						// TriggerDataSource.getInstance().removeData(rec);
+						TriggerDataSource.getInstance().deleteData(crit);
+						GameClient.getInstance().removeManualTrigger(gameId,
+								itemId, new JsonCallback() {
+									public void onJsonReceived(
+											JSONValue jsonValue) {
+										GeneralItemGameDataSource
+												.getInstance()
+												.removeManualItem(
+														event.getRecord()
+																.getAttributeAsLong(
+																		"id"));
+										GameTab.this.tabSelected(null);
+									}
+
+								});
 					}
 				}
 
@@ -250,12 +305,14 @@ public class GameTab extends MasterDetailTab {
 		});
 		listGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
-				GameTab.this.editItem(event.getRecord().getAttribute("type"), event.getRecord().getAttributeAsInt("id"));
+				GameTab.this.editItem(event.getRecord().getAttribute("type"),
+						event.getRecord().getAttributeAsInt("id"));
 
 			}
 		});
 
-		listGrid.setFields(new ListGridField[] { idField, sortKeyField, titleGameField, typeField, manualTriggerField, rolesField });
+		listGrid.setFields(new ListGridField[] { idField, sortKeyField,
+				titleGameField, typeField, manualTriggerField, rolesField });
 		listGrid.setSortField("sortKey");
 		listGrid.setCanResizeFields(true);
 
@@ -274,7 +331,9 @@ public class GameTab extends MasterDetailTab {
 		VStack layout = new VStack();
 		layout.setBorder("1px solid gray");
 		layout.setHeight(150);
-		Label title = new Label("<span style=\"font-size:125%; font-weight: bold;\">"+constants.roles()+"</span>");
+		Label title = new Label(
+				"<span style=\"font-size:125%; font-weight: bold;\">"
+						+ constants.roles() + "</span>");
 		title.setHeight(15);
 		layout.setWidth(200);
 		layout.addMember(title);
@@ -308,17 +367,32 @@ public class GameTab extends MasterDetailTab {
 
 		return layout;
 	}
-	
+
 	private Canvas getConfigCanvas() {
 		VStack layout = new VStack();
 		layout.setBorder("1px solid gray");
 		layout.setHeight(150);
-		Label title = new Label("<span style=\"font-size:125%; font-weight: bold;\">"+constants.config()+"</span>");
+		Label title = new Label(
+				"<span style=\"font-size:125%; font-weight: bold;\">"
+						+ constants.config() + "</span>");
 		title.setHeight(15);
 		layout.addMember(title);
-		
-		
+
 		layout.addMember(configForm.getSimpleConfiguration());
+		return layout;
+	}
+	
+	private Canvas getSharingConfig() {
+		VStack layout = new VStack();
+		layout.setBorder("1px solid gray");
+		layout.setHeight(150);
+		Label title = new Label(
+				"<span style=\"font-size:125%; font-weight: bold;\">"
+						+ constants.share() + "</span>");
+		title.setHeight(15);
+		layout.addMember(title);
+
+		layout.addMember(configForm.getSharingConfiguration());
 		return layout;
 	}
 
@@ -329,7 +403,5 @@ public class GameTab extends MasterDetailTab {
 			setClientOnly(true);
 		}
 	}
-
-	
 
 }

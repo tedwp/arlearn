@@ -37,6 +37,7 @@ public class GameManager {
 	private static final String paramsNames[] = new String[] { "gameParam", "creatorEmailParam", "ownerEmailParam", "feedUrlParam", "titleParam" };
 	private static final String types[] = new String[] { "Long", "String", "String", "String", "String" };
 
+	@Deprecated
 	public static Long addGame(String title, String owner, String creatorEmail, String feedUrl, Long gameId, Config config) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		GameJDO gameJdo = new GameJDO();
@@ -48,6 +49,28 @@ public class GameManager {
 		gameJdo.setLastModificationDate(System.currentTimeMillis());
 		if (config != null)  {
 			gameJdo.setConfig(config.toString());
+		}
+		try {
+			GameJDO persistentGame = pm.makePersistent(gameJdo);
+			return persistentGame.getGameId();
+
+		} finally {
+			pm.close();
+		}
+	}
+	
+	public static Long addGame(Game game, String myAccount) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		GameJDO gameJdo = new GameJDO();
+		gameJdo.setGameId(game.getGameId());
+		gameJdo.setCreatorEmail(game.getCreator());
+		gameJdo.setOwner(myAccount);
+		gameJdo.setFeedUrl(game.getFeedUrl());
+		gameJdo.setTitle(game.getTitle());
+		gameJdo.setSharing(game.getSharing());
+		gameJdo.setLastModificationDate(System.currentTimeMillis());
+		if (game.getConfig() != null)  {
+			gameJdo.setConfig(game.getConfig().toString());
 		}
 		try {
 			GameJDO persistentGame = pm.makePersistent(gameJdo);
@@ -137,6 +160,7 @@ public class GameManager {
 		game.setFeedUrl(jdo.getFeedUrl());
 		game.setGameId(jdo.getGameId());
 		game.setOwner(jdo.getOwner());
+		game.setSharing(jdo.getSharing());
 		if (jdo.getLastModificationDate() != null) {
 			game.setLastModificationDate(jdo.getLastModificationDate());
 		}

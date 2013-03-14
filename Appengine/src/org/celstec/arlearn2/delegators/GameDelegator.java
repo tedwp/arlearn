@@ -208,7 +208,8 @@ public class GameDelegator extends GoogleDelegator {
 			game.setError("login to create a game");
 			return game;
 		}
-		game.setGameId(GameManager.addGame(game.getTitle(), myAccount, game.getCreator(), game.getFeedUrl(), game.getGameId(), game.getConfig()));
+//		game.setGameId(GameManager.addGame(game.getTitle(), myAccount, game.getCreator(), game.getFeedUrl(), game.getGameId(), game.getConfig()));
+		game.setGameId(GameManager.addGame(game, myAccount));
 		MyGamesCache.getInstance().removeGameList(null, null, myAccount, null, null);
 		MyGamesCache.getInstance().removeGameList(game.getGameId(), null, myAccount, null, null);
 		MyGamesCache.getInstance().removeGameList(game.getGameId(), null, null, null, null);
@@ -299,6 +300,17 @@ public class GameDelegator extends GoogleDelegator {
 
 	}
 	
+	public Game setSharing(Long gameIdentifier, Integer sharingType) {
+		Game g = getGame(gameIdentifier);
+		if (g.getError() != null)
+			return g;
+		if (!g.getSharing().equals(sharingType)) {
+			g.setSharing(sharingType);
+			createGame(g, GameModification.ALTERED);
+		}
+		return g;
+	}
+	
 	public Game setRegions(Long gameIdentifier, List<MapRegion> regions) {
 		Game g = getGame(gameIdentifier);
 		if (g.getError() != null)
@@ -387,4 +399,6 @@ public class GameDelegator extends GoogleDelegator {
 //		}
 		
 	}
+
+	
 }

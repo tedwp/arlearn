@@ -60,6 +60,11 @@ public class GameClient extends GenericClient {
 		invokeJsonGET(null, jcb);
 	}
 	
+	public void getGame(long id,final JsonCallback jcb) {
+		invokeJsonGET("/gameId/"+id, jcb);
+	}
+	
+	
 	public void getGameConfig(long id, final JsonCallback jcb) {
 		invokeJsonGET("/config/gameId/"+id, jcb);
 	}
@@ -90,6 +95,10 @@ public class GameClient extends GenericClient {
 	
 	public void setWithMap(long gameId, Boolean withMap, JsonCallback jsonCallback) {
 		invokeJsonPOST("/config/gameId/"+gameId+"/withMap", ""+withMap, jsonCallback);
+	}
+	
+	public void setSharing(long gameId, Integer sharingType, JsonCallback jsonCallback) {
+		invokeJsonPOST("/config/gameId/"+gameId+"/sharing/"+sharingType, "", jsonCallback);
 	}
 
 	public void addMapRegion(long gameId, JSONArray array, JsonCallback jsonCallback) {
