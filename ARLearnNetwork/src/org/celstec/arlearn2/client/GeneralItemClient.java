@@ -67,5 +67,8 @@ public class GeneralItemClient extends GenericClient{
 		return (GeneralItem) executePost(getUrlPrefix(), token, generalItem, GeneralItem.class);
 	}
 	
+	public GeneralItem search( String token, String query) {
+		return (GeneralItem) executePost(getUrlPrefix()+"/search", token, query, GeneralItemList.class);
+	}
 
 }
