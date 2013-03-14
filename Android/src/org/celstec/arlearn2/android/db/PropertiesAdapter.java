@@ -165,12 +165,12 @@ public class PropertiesAdapter {
 	
 	public void setMyGameLastSynchronizationDate(long time) {
 		SharedPreferences.Editor editor = getDefaultPrefs().edit();
-		editor.putLong(Constants.PARTICIPATE_GAME_LAST_SYNC_DATE, time);
+		editor.putLong(Constants.MY_GAME_LAST_SYNC_DATE, time);
 		editor.commit();
 	}
 	
 	public long getMyGameLastSynchronizationDate() {
-		return getDefaultPrefs().getLong(Constants.PARTICIPATE_GAME_LAST_SYNC_DATE, 0);
+		return getDefaultPrefs().getLong(Constants.MY_GAME_LAST_SYNC_DATE, 0);
 	}
 	
 	
