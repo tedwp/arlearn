@@ -167,10 +167,20 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 	}
 
 
+	public void onButtonSearchGeneralItemClick(View v) {
+		
+		Intent intent = null;
+		intent = new Intent(ListGIActivity.this, SearchGeneralItemActivity.class);
+		intent.putExtra("selectedGameId", selectedGame.getGameId());
+		ListGIActivity.this.startActivity(intent);					
+		
+		
+	}
 
+	
 	public void onButtonNewGeneralItemClick(View v) {
 
-		final CharSequence[] csArrayElems = { "Narrator item", "Multiple choice question", "Record video", "Record audio", "External OER" };
+		final CharSequence[] csArrayElems = { "Narrator item", "Multiple choice question", "Record video", "Record audio" };
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Choose an item");
@@ -215,13 +225,6 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 					a.setGameId(selectedGame.getGameId());
 					intent.putExtra("generalItem", a);
 					ListGIActivity.this.startActivity(intent);
-					break;
-				case 4:					
-					// External OER					
-//					intent = new Intent(ListGIActivity.this, NarratorItemActivity.class);
-//					intent.putExtra("genItemType", csArrayElems[iCheckBoxIndex]);
-//					intent.putExtra("selectedGame", selectedGame);
-//					ListGIActivity.this.startActivity(intent);					
 					break;
 				default:
 // Commented by btb					

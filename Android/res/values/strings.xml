@@ -82,6 +82,7 @@
     <!--Game authoring Activity Strings-->
     <string name="buttonNewGameText">New Game</string>
     <string name="buttonNewGeneralItemText">New Item</string>
+    <string name="buttonSearchGeneralItemText">Add item from another game &#8230;</string>
     <string name="buttonNewRunText">New Run</string>
     <string name="buttonNewTeamText">New Team</string>    
     <string name="listGamesHeader">Game List</string>

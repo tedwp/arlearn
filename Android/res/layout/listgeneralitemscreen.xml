@@ -17,6 +17,14 @@
             android:cacheColorHint="#00000000" />
 
         <Button
+            android:id="@+id/buttonSearchGeneralItem"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="fill_parent"
+            android:layout_height="38dp"
+            android:text="@string/buttonSearchGeneralItemText"
+            android:onClick="onButtonSearchGeneralItemClick" />
+                
+        <Button
             android:id="@+id/buttonNewGeneralItem"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="fill_parent"

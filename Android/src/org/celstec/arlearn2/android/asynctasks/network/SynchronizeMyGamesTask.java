@@ -1,11 +1,17 @@
 package org.celstec.arlearn2.android.asynctasks.network;
 
+import org.celstec.arlearn2.android.activities.ListGamesActivity;
+import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
+import org.celstec.arlearn2.android.activities.ListMessagesActivity;
+import org.celstec.arlearn2.android.activities.MapViewActivity;
+import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.broadcast.GenericReceiver;
 import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.GameDelegator;
+import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.client.GameClient;
 import org.celstec.arlearn2.client.exception.ARLearnException;
@@ -49,7 +55,14 @@ public class SynchronizeMyGamesTask extends GenericTask implements NetworkTask {
 				if (gl.getError() == null) {
 					GameDelegator.getInstance().saveServerGamesToAndroidDb(ctx, gl);
 					PropertiesAdapter.getInstance(ctx).setMyGameLastSynchronizationDate(gl.getServerTime());
+				} else {
+					if (!gl.getGames().isEmpty()) {
+						ActivityUpdater.updateActivities(ctx,
+								ListGamesActivity.class.getCanonicalName());
+					}
+							
 				}
+				
 			} catch (ARLearnException ae) {
 				if (ae.invalidCredentials()) {
 					GenericReceiver.setStatusToLogout(ctx);

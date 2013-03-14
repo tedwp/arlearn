@@ -56,6 +56,7 @@
 		<activity android:name=".activities.ListGamesActivity" android:label="@string/listGamesHeader"/>		
 		<activity android:name=".activities.ListGIActivity" android:label="@string/listGeneralItemHeader"/>
 		<activity android:name=".activities.NewNarratorItemActivity" android:label="@string/newGeneralItemHeader"/>
+		<activity android:name=".activities.SearchGeneralItemActivity" android:label="@string/newGeneralItemHeader"/>
 		<activity android:name=".activities.NewGameActivity" android:label="@string/newGameHeader"/>
 		<activity android:name=".activities.MultipleChoiceItemActivity" android:label="@string/newGeneralItemHeader" />
 		<activity android:name=".genItemActivities.AudiorecorderActivity" android:finishOnTaskLaunch="true" android:label="@string/messageHeader"/>
@@ -74,6 +75,7 @@
 		
 		<activity android:name=".activities.LoginActivity" android:label="@string/loginHeader" />
 		<activity android:name=".activities.NfcScanOnDemandActivity" android:label="@string/loginHeader" />
+		<activity android:name=".activities.ListRunsParticipateActivity" android:label="@string/listExcursionsHeader" />		
 		<activity android:name=".activities.ListExcursionsActivity" android:label="@string/listExcursionsHeader"/>
 		<activity android:name=".activities.ListOpenRunsActivity" android:label="@string/listExcursionsHeader"/>
 		<activity android:name=".activities.ListMessagesActivity" android:label="@string/listMessagesHeader" />
