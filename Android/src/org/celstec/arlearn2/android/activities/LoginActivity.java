@@ -29,6 +29,7 @@ import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.GenericCache;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.beans.notification.Ping;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.client.ChannelClient;
@@ -85,6 +86,7 @@ public class LoginActivity extends GeneralActivity {
 		String username = ((EditText) findViewById(R.id.email)).getText() + "";
 		String password = ((EditText) findViewById(R.id.password)).getText() + "";
 		Boolean sendInstructions = ((CheckBox) findViewById(R.id.sendInstructions)).isChecked();
+		PropertiesAdapter.getInstance(this).databaseReset();
 		storeUsername(username);
 		menuHandler.getPropertiesAdapter().setPassword(password);
 		new AuthenticationTask(LoginActivity.this).execute(new Object[] { username, password, Constants.FUSION_SERVICE, sendInstructions });
@@ -100,7 +102,6 @@ public class LoginActivity extends GeneralActivity {
 				public void execute(DBAdapter db) {
 					db.eraseAllData();		
 					GenericCache.emptyAllCaches();
-					
 				}
 			};
 			m.sendToTarget();

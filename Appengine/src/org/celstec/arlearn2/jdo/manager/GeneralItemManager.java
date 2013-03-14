@@ -196,39 +196,39 @@ public class GeneralItemManager {
 			pm.close();
 		}
 	}
-	private static String cursorString = null;
-
-	public static void updateAll() {
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		try {
-		Query query = pm.newQuery(GeneralItemJDO.class);
-		if (cursorString != null) {
-
-			Cursor c = Cursor.fromWebSafeString(cursorString);
-			Map<String, Object> extendsionMap = new HashMap<String, Object>();
-			extendsionMap.put(JDOCursorHelper.CURSOR_EXTENSION, c);
-			query.setExtensions(extendsionMap);
-		}
-		query.setRange(0, 100);
-
-		
-//		query.setFilter("lastModificationDate == null");
-		List<GeneralItemJDO> results = (List<GeneralItemJDO>) query.execute();
-		Iterator<GeneralItemJDO> it = (results).iterator();
-		int i = 0;
-		while (it.hasNext()) {
-			i++;
-			GeneralItemJDO object = it.next();
-			if (object != null &&object.getLastModificationDate() == null) {
-				object.setLastModificationDate(System.currentTimeMillis());
-
-			}
-		}
-		Cursor c = JDOCursorHelper.getCursor(results);
-		cursorString = c.toWebSafeString();
-		} finally {
-			pm.close();
-		}		
-	}
+//	private static String cursorString = null;
+//
+//	public static void updateAll() {
+//		PersistenceManager pm = PMF.get().getPersistenceManager();
+//		try {
+//		Query query = pm.newQuery(GeneralItemJDO.class);
+//		if (cursorString != null) {
+//
+//			Cursor c = Cursor.fromWebSafeString(cursorString);
+//			Map<String, Object> extendsionMap = new HashMap<String, Object>();
+//			extendsionMap.put(JDOCursorHelper.CURSOR_EXTENSION, c);
+//			query.setExtensions(extendsionMap);
+//		}
+//		query.setRange(0, 100);
+//
+//		
+////		query.setFilter("lastModificationDate == null");
+//		List<GeneralItemJDO> results = (List<GeneralItemJDO>) query.execute();
+//		Iterator<GeneralItemJDO> it = (results).iterator();
+//		int i = 0;
+//		while (it.hasNext()) {
+//			i++;
+//			GeneralItemJDO object = it.next();
+//			if (object != null &&object.getLastModificationDate() == null) {
+//				object.setLastModificationDate(System.currentTimeMillis());
+//
+//			}
+//		}
+//		Cursor c = JDOCursorHelper.getCursor(results);
+//		cursorString = c.toWebSafeString();
+//		} finally {
+//			pm.close();
+//		}		
+//	}
 
 }

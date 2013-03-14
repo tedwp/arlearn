@@ -22,6 +22,19 @@ import org.celstec.arlearn2.beans.Bean;
 
 public class NotificationBean extends Bean {
 	
+	public final static int GAME_CREATED = 1;
+	public final static int GAME_DELETED = 2;
+	public final static int GAME_ALTERED = 3;
+	public final static int RUN_CREATED = 4;
+	public final static int RUN_DELETED = 5;
+	public final static int RUN_ALTERED = 6;
+	
+	public final static int GI_CREATED = 7;
+	public final static int GI_DELETED = 8;
+	public final static int GI_ALTERED = 9;
+	public final static int GI_VISIBLE = 10;
+	public final static int GI_DISAPPEARED = 11;
+			
 	public void retainOnlyIdentifier() {
 		
 	}

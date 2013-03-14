@@ -39,7 +39,7 @@ public class NotifyRunsFromGame extends GenericBean {
 	public NotifyRunsFromGame(String token, Long gameId,  GeneralItem gi, Integer modificationType) {
 		super(token);
 		this.gameId = gameId;
-		this.gi = gi.toString();
+		if (gi != null) this.gi = gi.toString();
 		this.modificationType = modificationType;
 	}
 

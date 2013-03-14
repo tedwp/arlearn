@@ -38,7 +38,7 @@ public class CreateGeneralItemTask implements NetworkTask {
 	public void execute() {	
 		
 		try {
-			GeneralItemClient.getGeneralItemClient().create(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), generalItem);
+			GeneralItemClient.getGeneralItemClient().postGeneralItem(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), generalItem.toString());
 		} catch (Exception e) {
 			Log.e("exception", "in databasehandler", e);		
 		}

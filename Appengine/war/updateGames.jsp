@@ -2,7 +2,7 @@
 <html>
 
 <% 
-GameDelegator.updateAllGames();
+//GameDelegator.updateAllGames();
 %>
 </body>
 </html>

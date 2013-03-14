@@ -34,7 +34,8 @@ public class UserSerializer extends RunBeanSerialiser {
 			if (runBean.getEmail() != null) returnObject.put("email", runBean.getEmail());
 			if (runBean.getFullEmail() != null) returnObject.put("fullEmail", runBean.getFullEmail());
 			if (runBean.getRoles() != null) returnObject.put("roles", ListSerializer.toStringList(runBean.getRoles()));
-
+			if (runBean.getGameId() != null) returnObject.put("gameId", runBean.getGameId());
+			if (runBean.getLastModificationDateGame() != null) returnObject.put("lastModificationDateGame", runBean.getLastModificationDateGame());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

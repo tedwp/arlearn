@@ -24,9 +24,9 @@ import org.celstec.arlearn2.beans.run.Run;
 @SuppressWarnings("serial")
 public class RunModification extends NotificationBean{
 	
-	public final static int CREATED = 1;
-	public final static int DELETED = 2;
-	public final static int ALTERED = 3;
+	public final static int CREATED = RUN_CREATED;
+	public final static int DELETED = RUN_DELETED;
+	public final static int ALTERED = RUN_ALTERED;
 	
 	private Integer modificationType;
 	

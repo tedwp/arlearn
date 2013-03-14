@@ -43,6 +43,12 @@ public class UserJDO extends RunClass {
 	@Persistent
 	private Long lastModificationDate;
 	
+	@Persistent
+	private Long gameId;
+	
+	@Persistent
+	private Long lastModificationDateGame;
+	
 	public String getTeamId() {
 		return teamId;
 	}
@@ -92,4 +98,21 @@ public class UserJDO extends RunClass {
 	public void setLastModificationDate(Long lastModificationDate) {
 		this.lastModificationDate = lastModificationDate;
 	}
+
+	public Long getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(Long gameId) {
+		this.gameId = gameId;
+	}
+
+	public Long getLastModificationDateGame() {
+		return lastModificationDateGame;
+	}
+
+	public void setLastModificationDateGame(Long lastModificationDateGame) {
+		this.lastModificationDateGame = lastModificationDateGame;
+	}
+
 }

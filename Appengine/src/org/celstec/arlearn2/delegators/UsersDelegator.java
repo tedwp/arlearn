@@ -19,9 +19,15 @@
 package org.celstec.arlearn2.delegators;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 
 import org.celstec.arlearn2.beans.run.Run;
+import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.beans.notification.RunModification;
 import org.celstec.arlearn2.beans.run.Team;
 import org.celstec.arlearn2.beans.run.TeamList;
@@ -31,7 +37,9 @@ import org.celstec.arlearn2.cache.UserLoggedInCache;
 import org.celstec.arlearn2.cache.UsersCache;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.delegators.notification.NotificationEngine;
+import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
+import org.celstec.arlearn2.jdo.classes.GeneralItemJDO;
 import org.celstec.arlearn2.jdo.manager.RunManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
 import org.celstec.arlearn2.tasks.beans.DeleteActions;
@@ -39,7 +47,9 @@ import org.celstec.arlearn2.tasks.beans.DeleteBlobs;
 import org.celstec.arlearn2.tasks.beans.DeleteResponses;
 import org.celstec.arlearn2.tasks.beans.DeleteScoreRecords;
 import org.celstec.arlearn2.tasks.beans.UpdateGeneralItemsVisibility;
+import org.datanucleus.store.appengine.query.JDOCursorHelper;
 
+import com.google.appengine.api.datastore.Cursor;
 import com.google.gdata.util.AuthenticationException;
 
 public class UsersDelegator extends GoogleDelegator {
@@ -55,16 +65,22 @@ public class UsersDelegator extends GoogleDelegator {
 	public User createUser(User u) {
 		User check = checkUser(u);
 		if (check != null) return check;
+		Run run = (new RunDelegator(this)).getRun(u.getRunId());
+
 		u.setEmail(User.normalizeEmail(u.getEmail()));
+		u.setGameId(run.getGameId());
 		UserManager.addUser(u);
 		UsersCache.getInstance().removeUser(u.getRunId()); //removing because user might be cached in a team
 //		(new NotifyUpdateRun(authToken,u.getRunId(), true, false, u.getEmail())).scheduleTask();
-		
+
 		RunModification rm = new RunModification();
 		rm.setModificationType(RunModification.CREATED);
-		rm.setRun((new RunDelegator(this)).getRun(u.getRunId()));
+		rm.setRun(run);
 		NotificationEngine.getInstance().notify(u.getEmail(), rm);
-//		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
+
+		
+		
+		//		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
 		
 		(new UpdateGeneralItemsVisibility(authToken, u.getRunId(), u.getEmail(), 1)).scheduleTask();
 		
@@ -227,4 +243,7 @@ public class UsersDelegator extends GoogleDelegator {
 //		ChannelNotificator.getInstance().notify(email, rm);
 	}
 	
+	public  void updateAllUsers() {
+		UserManager.updateAll(this);
+	}
 }

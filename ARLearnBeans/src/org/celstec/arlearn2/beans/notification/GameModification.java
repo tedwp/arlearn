@@ -27,11 +27,12 @@ import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class GameModification extends Bean{
+public class GameModification extends NotificationBean{
 	
-	public final static int CREATED = 1;
-	public final static int DELETED = 2;
-	public final static int ALTERED = 3;
+	
+	public final static int CREATED = GAME_CREATED;
+	public final static int DELETED = GAME_DELETED;
+	public final static int ALTERED = GAME_ALTERED;
 	
 	private Integer modificationType;
 	
