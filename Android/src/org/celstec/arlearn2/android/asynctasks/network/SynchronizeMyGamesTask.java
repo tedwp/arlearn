@@ -55,12 +55,10 @@ public class SynchronizeMyGamesTask extends GenericTask implements NetworkTask {
 				if (gl.getError() == null) {
 					GameDelegator.getInstance().saveServerGamesToAndroidDb(ctx, gl);
 					PropertiesAdapter.getInstance(ctx).setMyGameLastSynchronizationDate(gl.getServerTime());
-				} else {
 					if (!gl.getGames().isEmpty()) {
 						ActivityUpdater.updateActivities(ctx,
 								ListGamesActivity.class.getCanonicalName());
 					}
-							
 				}
 				
 			} catch (ARLearnException ae) {

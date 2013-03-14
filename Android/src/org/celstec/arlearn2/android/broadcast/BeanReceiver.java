@@ -57,6 +57,7 @@ public class BeanReceiver extends BroadcastReceiver {
 					break;
 				case GameModification:
 					GameDelegator.getInstance().synchronizeParticipateGamesWithServer(context);
+					GameDelegator.getInstance().synchronizeMyGamesWithServer(context);
 					break;
 				case Ping:
 					reCast("org.celstec.arlearn2.beans.notification.Ping", bean, context);
