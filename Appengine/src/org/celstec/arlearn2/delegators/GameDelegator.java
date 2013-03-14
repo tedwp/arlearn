@@ -82,6 +82,7 @@ public class GameDelegator extends GoogleDelegator {
 //			MyGamesCache.getInstance().putGameList(list, null, null, myAccount, null, null);
 //		}
 		gl.setGames(GameManager.getGames(myAccount, from, until));
+		gl.setServerTime(System.currentTimeMillis());
 		return gl;
 	}
 	

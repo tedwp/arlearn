@@ -72,6 +72,32 @@ public class GeneralItems extends Service {
 		}
 	}
 	
+	@POST
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/search")
+	public String search(
+			@HeaderParam("Authorization") String token, 
+			String query, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GeneralItemDelegator gid = new GeneralItemDelegator(token);
+		GeneralItemList gl = new GeneralItemList();
+		GeneralItem gi1 = new GeneralItem();
+		gi1.setName("query result 1");
+		gi1.setDescription("this is a first description");
+		gi1.setId(1234567890123l);
+		gl.addGeneralItem(gi1);
+		GeneralItem gi = new GeneralItem();
+		gi.setName("query result 1");
+		gi.setDescription("this is a first description");
+		gi.setId(1234567890123l);
+		gl.addGeneralItem(gi);
+		return serialise(gl, accept);
+		
+	}
+	
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/gameId/{gameIdentifier}/generalItem/{itemId}")
@@ -300,6 +326,8 @@ public class GeneralItems extends Service {
 		return serialise(gid.createGeneralItem((GeneralItem) inItem), accept);
 
 	}
+	
+	
 	
 	
 
