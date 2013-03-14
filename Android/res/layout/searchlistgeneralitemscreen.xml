@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical" >
+        
+    	<!-- Editext for Search -->
+    	<EditText android:id="@+id/inputSearch"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:hint="Search item ..."
+        	android:inputType="textVisiblePassword"/>            
+
+        <ListView
+            android:id="@+id/listGeneralItems"
+            android:layout_width="fill_parent"
+            android:layout_height="274dp"
+            android:layout_weight="0.26"
+            android:background="@android:color/transparent"
+            android:cacheColorHint="#00000000" />
+        
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/scoreLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginBottom="20dip"
+        android:padding="12dip"
+        android:src="@drawable/list_icon_with_text" >
+
+        <ImageView
+            android:id="@+id/statusLed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dip"
+            android:src="@drawable/status_icon_red" />
+    </LinearLayout>
+
+</merge>
