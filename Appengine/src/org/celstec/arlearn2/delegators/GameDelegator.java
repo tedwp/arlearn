@@ -46,9 +46,17 @@ import org.celstec.arlearn2.tasks.beans.DeleteGeneralItems;
 import org.celstec.arlearn2.tasks.beans.DeleteProgressDefinitions;
 import org.celstec.arlearn2.tasks.beans.DeleteRuns;
 import org.celstec.arlearn2.tasks.beans.DeleteScoreDefinitions;
+import org.celstec.arlearn2.tasks.beans.GameSearchIndex;
 import org.celstec.arlearn2.tasks.beans.NotifyRunsFromGame;
 import org.codehaus.jettison.json.JSONException;
 
+import com.google.appengine.api.search.Index;
+import com.google.appengine.api.search.IndexSpec;
+import com.google.appengine.api.search.Results;
+import com.google.appengine.api.search.ScoredDocument;
+import com.google.appengine.api.search.SearchException;
+import com.google.appengine.api.search.SearchServiceFactory;
+import com.google.appengine.api.search.StatusCode;
 import com.google.gdata.util.AuthenticationException;
 import com.sun.jersey.server.impl.monitoring.GlassFishMonitoringInitializer;
 
@@ -308,6 +316,7 @@ public class GameDelegator extends GoogleDelegator {
 			g.setSharing(sharingType);
 			createGame(g, GameModification.ALTERED);
 		}
+		new GameSearchIndex(g.getTitle(), g.getCreator(), sharingType, g.getGameId()).scheduleTask();
 		return g;
 	}
 	
@@ -400,5 +409,29 @@ public class GameDelegator extends GoogleDelegator {
 		
 	}
 
-	
+	public GamesList search(String searchQuery) {
+		try {
+		    Results<ScoredDocument> results = getIndex().search(searchQuery);
+		    GamesList resultsList = new GamesList();
+		    for (ScoredDocument document : results) {
+		    	Game g =new Game();
+		    	g.setTitle(document.getFields("title").iterator().next().getText());
+		    	g.setCreator(document.getFields("author").iterator().next().getText());
+		    	g.setGameId(document.getFields("gameId").iterator().next().getNumber().longValue());
+		        // Use the document for display.
+		    	resultsList.addGame(g);
+		    }
+		    return resultsList;
+		} catch (SearchException e) {
+		    if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult().getCode())) {
+		        // retry
+		    }
+		}
+		return null;
+	}
+
+	public Index getIndex() {
+		IndexSpec indexSpec = IndexSpec.newBuilder().setName("game_index").build();
+		return SearchServiceFactory.getSearchService().getIndex(indexSpec);
+	}
 }
