@@ -42,7 +42,6 @@ import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.cache.GeneralitemsCache;
 import org.celstec.arlearn2.cache.VisibleGeneralItemsCache;
-import org.celstec.arlearn2.delegators.generalitems.VisibleItemsList;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
 import org.celstec.arlearn2.jdo.manager.GeneralItemVisibilityManager;
