@@ -22,6 +22,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GamesList;
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.network.ConnectionFactory;
 
 public class GameClient extends GenericClient{
@@ -76,6 +78,10 @@ public class GameClient extends GenericClient{
 	
 	public Game delete(String token, long gameId) {
 		return (Game) executeDelete(getUrlPrefix()+"/gameId/"+gameId, token, Game.class);
+	}
+	
+	public GamesList search( String token, String query) {
+		return (GamesList) executePost(getUrlPrefix()+"/search", token, query, GamesList.class);
 	}
 
 }
