@@ -84,5 +84,7 @@
      <string name="resetQuestion">Ben je zeker dat je al je vooruitgang wil verwijderen?</string>
      
      <string name="downloadBusy">Even geduld. Bestand is nog niet gedownloaded.</string>
+     <string name="warningDownloadBusy">WAARSCHUWING: sommige bestanden zijn nog niet gedownload.</string>
+     <string name="errorDownloadFailed">FOUT: sommige bestanden konden niet gedownload worden.</string>
      
 </resources>

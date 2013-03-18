@@ -71,32 +71,41 @@ public class NarratorItemActivity extends GeneralActivity {
 				this.finish();
 			}
 			reloadBeanFromDb();
-			getGuiComponents();
-			loadDataToGui();
-			renderAnswers();
-			if (narratorBean != null && !narratorBean.getId().equals(bundle.getLong(ActivityUpdater.ITEM_NO_TO_CLOSE, narratorBean.getId()))) {
-				this.finish();
+			if (narratorBean != null) {
+				getGuiComponents();
+				loadDataToGui();
+				renderAnswers();
+				if (narratorBean != null && !narratorBean.getId().equals(bundle.getLong(ActivityUpdater.ITEM_NO_TO_CLOSE, narratorBean.getId()))) {
+					this.finish();
+				}
+			} else {
+				Long gameId = RunCache.getInstance().getGameId(runId);
+				if (gameId != null)  {
+					GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, gameId, runId);
+				} else {
+					this.finish();
+				}
 			}
 		}
 	}
-	
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(getContentView());
-		
+
 		unpackDataFromIntent();
 		checkIfNotification();
 		getGuiComponents();
 		loadDataToGui();
 		fireAction();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
 		mHandler.removeCallbacks(counterTask);
 	}
-	
+
 	private Runnable counterTask = new Runnable() {
 		public void run() {
 			Long disappearTime = GeneralItemVisibilityCache.getInstance().disappearedAt(menuHandler.getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
@@ -109,17 +118,18 @@ public class NarratorItemActivity extends GeneralActivity {
 				NarratorItemActivity.this.finish();
 			}
 			String defaultCountingText = "";
-			int tens = ((int)millis / 100) %10;
-		       int seconds = (int) (millis / 1000);
-		       int minutes = seconds / 60;
-		       seconds     = seconds % 60;
-		       if (seconds < 10) {
-		    	   defaultCountingText = minutes+":0"+seconds+"."+tens;
-		       } else {
-		    	   defaultCountingText = minutes+":"+seconds+"."+tens;
-		       }
-		     if (countDownTextView != null) countDownTextView.setText(defaultCountingText);
-		     mHandler.postDelayed(counterTask, 100);		    	   
+			int tens = ((int) millis / 100) % 10;
+			int seconds = (int) (millis / 1000);
+			int minutes = seconds / 60;
+			seconds = seconds % 60;
+			if (seconds < 10) {
+				defaultCountingText = minutes + ":0" + seconds + "." + tens;
+			} else {
+				defaultCountingText = minutes + ":" + seconds + "." + tens;
+			}
+			if (countDownTextView != null)
+				countDownTextView.setText(defaultCountingText);
+			mHandler.postDelayed(counterTask, 100);
 
 		}
 	};
@@ -131,7 +141,7 @@ public class NarratorItemActivity extends GeneralActivity {
 		if (narratorBean != null) {
 			generalItemId = narratorBean.getId();
 			generalItemType = narratorBean.getClass().getName();
-		} 
+		}
 		ActionsDelegator.getInstance().publishAction(this, "read", pa.getCurrentRunId(), pa.getUsername(), generalItemId, generalItemType);
 
 	}
@@ -145,7 +155,7 @@ public class NarratorItemActivity extends GeneralActivity {
 	protected int getContentView() {
 		return R.layout.gi_detail_narratoritem;
 	}
-	
+
 	protected void getGuiComponents() {
 		webview = (WebView) findViewById(R.id.giNarratorWebView);
 		countDownTextView = (TextView) findViewById(R.id.timeLeftBeforeDisappear);
@@ -155,7 +165,7 @@ public class NarratorItemActivity extends GeneralActivity {
 			provideAnswerButton.setVisibility(View.VISIBLE);
 
 			provideAnswerButton.setOnClickListener(new View.OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					Intent intent = new Intent(NarratorItemActivity.this, AnswerQuestionActivity.class);
@@ -163,10 +173,10 @@ public class NarratorItemActivity extends GeneralActivity {
 					intent.putExtra("bean", ((NarratorItemActivity) NarratorItemActivity.this).getNarratorBean());
 					intent.putExtra("generalItemId", ((NarratorItemActivity) NarratorItemActivity.this).getItemId());
 					NarratorItemActivity.this.startActivity(intent);
-					
+
 				}
 			});
-			
+
 		} else {
 			provideAnswerButton.setVisibility(View.GONE);
 		}
@@ -174,36 +184,37 @@ public class NarratorItemActivity extends GeneralActivity {
 
 	protected void unpackDataFromIntent() {
 		GeneralItem bean = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
-		narratorBean = (NarratorItem)  bean;
+		narratorBean = (NarratorItem) bean;
 	}
-	
+
 	private void reloadBeanFromDb() {
-		narratorBean =  (NarratorItem) GeneralItemsCache.getInstance().getGeneralItems(narratorBean.getId());
+		narratorBean = (NarratorItem) GeneralItemsCache.getInstance().getGeneralItems(narratorBean.getId());
 	}
 
 	protected void loadDataToGui() {
 		if (narratorBean.getRichText() != null) {
 			String html = narratorBean.getRichText();
 			webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
-//			webview.loadData(html, "text/html", "utf-8");
+			// webview.loadData(html, "text/html", "utf-8");
 		} else {
 			webview.setVisibility(View.GONE);
 		}
 		if (countDownTextView != null && narratorBean.getShowCountDown() != null && narratorBean.getShowCountDown()) {
 			long disappearTime = GeneralItemVisibilityCache.getInstance().disappearedAt(menuHandler.getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
 			if (disappearTime == -1) {
-				countDownTextView.setVisibility(View.GONE);	
+				countDownTextView.setVisibility(View.GONE);
 			} else {
 				countDownTextView.setVisibility(View.VISIBLE);
-				
+
 			}
 		} else {
-			if (countDownTextView != null) countDownTextView.setVisibility(View.GONE);
+			if (countDownTextView != null)
+				countDownTextView.setVisibility(View.GONE);
 		}
 		if (narratorBean.getName() != null) {
 			setTitle(narratorBean.getName());
 		}
-		
+
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -220,13 +231,11 @@ public class NarratorItemActivity extends GeneralActivity {
 			return null;
 		return narratorBean.getId();
 	}
-	
+
 	public NarratorItem getNarratorBean() {
 		return narratorBean;
 	}
-	
-	
-	
+
 	private void renderAnswers() {
 		final TreeSet<Response> resp = GeneralItemsDelegator.getInstance().getResponses(getMenuHandler().getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
 		if (resp == null) {
@@ -234,49 +243,49 @@ public class NarratorItemActivity extends GeneralActivity {
 		}
 		ArrayList<GenericListRecord> users = new ArrayList<GenericListRecord>();
 
-			for (Response response: resp) {
-				GenericListRecord r = new ItemResponseListRecord(getMenuHandler().getPropertiesAdapter().getCurrentRunId(), response);
-				users.add(r);
-			}
-		
-		LinearLayout listView = (LinearLayout) findViewById(R.id.narratoranswerlist); 
-		adapter = new GenericMessageListAdapter(this,getContentView(), users);
+		for (Response response : resp) {
+			GenericListRecord r = new ItemResponseListRecord(getMenuHandler().getPropertiesAdapter().getCurrentRunId(), response);
+			users.add(r);
+		}
+
+		LinearLayout listView = (LinearLayout) findViewById(R.id.narratoranswerlist);
+		adapter = new GenericMessageListAdapter(this, getContentView(), users);
 		listView.removeAllViews();
-		for (int i = 0 ; i< adapter.getCount(); i++) {
+		for (int i = 0; i < adapter.getCount(); i++) {
 			View v = adapter.getView(i, null, listView);
 			listView.addView(v);
 			final int id = i;
 			v.setOnClickListener(new View.OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					Intent i = new Intent(NarratorItemActivity.this, ViewAnswerActivity.class);
-					i.putExtra("response", resp.toArray(new Response[]{})[(int)id]);
+					i.putExtra("response", resp.toArray(new Response[] {})[(int) id]);
 					startActivity(i);
-					
+
 				}
 			});
-			
+
 		}
 	}
-	
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		renderAnswers();
 		mHandler.postDelayed(counterTask, 1000);
-	}	
-	
+	}
+
 	public boolean isGenItemActivity() {
 		return true;
 	}
-	
+
 	public boolean isMessage() {
-		if (narratorBean == null) return false;
+		if (narratorBean == null)
+			return false;
 		return narratorBean.isMessage();
 	}
-	
+
 	public boolean showStatusLed() {
 		return true;
 	}

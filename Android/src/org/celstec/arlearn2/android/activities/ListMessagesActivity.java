@@ -110,7 +110,7 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 		adapter.setOnListItemClickCallback(this);
 		listView.setAdapter(adapter);
 		for (int j = 0; j < gis.length; j++) {
-			MessageListRecord r = new MessageListRecord(gis[j], runId);
+			MessageListRecord r = new MessageListRecord(gis[j], runId, this);
 			adapter.add(r);
 		}
 	}

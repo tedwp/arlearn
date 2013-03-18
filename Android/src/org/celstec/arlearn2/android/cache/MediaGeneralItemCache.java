@@ -32,7 +32,9 @@ public class MediaGeneralItemCache extends GenericCache {
 
 	private static HashMap<Long, MediaGeneralItemCache> instance = new HashMap<Long, MediaGeneralItemCache>();
 	private int amountOfItemsToDownload = 0;
-	private HashMap<String, Integer> replicationStatusMap = new HashMap<String, Integer>();
+	// private HashMap<String, Integer> replicationStatusMap = new
+	// HashMap<String, Integer>();
+	private HashMap<Long, HashMap<String, Integer>> replicationStatusMap = new HashMap<Long, HashMap<String, Integer>>();
 	private HashMap<String, Long> totalBytesMap = new HashMap<String, Long>();
 	private HashMap<String, Long> bytesDownloaded = new HashMap<String, Long>();
 	private HashMap<Long, HashMap<String, Uri>> uriMaps = new HashMap<Long, HashMap<String, Uri>>();
@@ -56,11 +58,18 @@ public class MediaGeneralItemCache extends GenericCache {
 
 	public void putReplicationstatus(int replicationStatus, DownloadItem di) {
 		synchronized (replicationStatusMap) {
-			replicationStatusMap.put(getkey(di), replicationStatus);
+			if (!replicationStatusMap.containsKey(di.getItemId())) {
+				replicationStatusMap.put(di.getItemId(), new HashMap<String, Integer>());
+			}
+			replicationStatusMap.get(di.getItemId()).put(getkey(di), replicationStatus);
 		}
 		if (replicationStatus == MediaCacheGeneralItems.REP_STATUS_DONE && di.getLocalPath() != null) {
 			addDoneDownload(di);
 		}
+	}
+
+	public HashMap<String, Integer> getReplicationStatus(long itemId) {
+		return replicationStatusMap.get(itemId);
 	}
 
 	public void addDoneDownload(DownloadItem downloadItem) {
@@ -74,7 +83,8 @@ public class MediaGeneralItemCache extends GenericCache {
 
 	public HashMap<String, Uri> getLocalMediaUriMap(GeneralItem gi) {
 		HashMap<String, Uri> result = getLocalMediaUriMap(gi.getId());
-		if (result == null) return new HashMap<String, Uri>();
+		if (result == null)
+			return new HashMap<String, Uri>();
 		return result;
 	}
 
@@ -110,7 +120,8 @@ public class MediaGeneralItemCache extends GenericCache {
 
 	public double getPercentageDownloaded(GeneralItem gi) {
 		DownloadItem[] allItems = GeneralItemsDelegator.getInstance().getDownloadItems(gi);
-		if (allItems == null) return 1;
+		if (allItems == null)
+			return 1;
 		double result = -1;
 		for (DownloadItem di : allItems) {
 			double percentage = getPercentageDownloaded(di);

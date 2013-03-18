@@ -143,104 +143,6 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 		}
 	}
 	
-//	public void cacheDownloadItems(long gameId) {
-//		
-//		//create list of allContent
-//		HashMap<Long, HashMap<String,DownloadItem>> list = new HashMap<Long, HashMap<String,DownloadItem>>();
-//		for (GeneralItem gi : GeneralItemsCache.getInstance().getGeneralItemsWithGameId(gameId).values()) {
-//			HashMap<String,DownloadItem> contentForGi = null;
-//			list.put(gi.getId(), contentForGi);
-//		}
-//		
-//		//iterate db and filter out items that are already done
-//		//update index with item that is done
-//		Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), new String[]{ITEM_ID, LOCAL_ID, GAME_ID, REPLICATED, URI}, null, null, null, null, null, null);
-//		while (mCursor.moveToNext()) {
-//			Long itemId = mCursor.getLong(0);
-//			String localId = mCursor.getString(1);
-//			list.get(itemId).remove(localId);
-//			if (mCursor.getInt(3) == REP_STATUS_TODO) {
-//				MediaGeneralItemCache.getInstance(gameId).addToDownload(list.get(itemId).get(localId));
-//			}
-//			if (mCursor.getInt(3) == REP_STATUS_DONE) {
-//				MediaGeneralItemCache.getInstance(gameId).addDoneDownload(list.get(itemId).get(localId));
-//
-//			}
-//		}
-//		//add items to db that 
-//		
-//		
-//
-//	}
-	
-//	public void listItemsToCache() {
-//		
-//		Cursor mCursor = null;
-//		try {
-//			HashMap<String, String> allMediaURLs =  new HashMap<String, String>();
-//			for (Long gameId : GeneralItemsCache.getInstance().getCachedGameIds() ) {
-//				for (GeneralItem gi : GeneralItemsCache.getInstance().getGeneralItemsWithGameId(gameId).values()) {
-//						if (gi instanceof AudioObject) {
-//							if (MediaCache.getInstance().getLocalUri(gi.getId(), "audio") == null) {
-//								allMediaURLs.put(gi.getId()+":audio", ((AudioObject) gi).getAudioFeed());
-//							}
-//						}
-//						if (gi instanceof VideoObject) {
-//							if (MediaCache.getInstance().getLocalUri(gi.getId(), "video") == null) {
-//								allMediaURLs.put(gi.getId()+":video", ((VideoObject) gi).getVideoFeed());
-//							}
-//						}
-//						if (gi instanceof SingleChoiceImageTest) {
-//							SingleChoiceImageTest test = (SingleChoiceImageTest) gi;
-//							if (test.getAudioQuestion() != null) {
-//								allMediaURLs.put(gi.getId()+":audioQuestion", test.getAudioQuestion());
-//							}
-//							for (MultipleChoiceAnswerItem imageAnswer: test.getAnswers()){
-//								if (MediaCache.getInstance().getLocalUri(gi.getId(), imageAnswer.getId()) == null) {
-//									MultipleChoiceImageAnswerItem answer = (MultipleChoiceImageAnswerItem) imageAnswer;
-//									allMediaURLs.put(gi.getId()+":"+answer.getId(), answer.getImageUrl());
-//									if (answer.getAudioUrl() != null) {
-//										allMediaURLs.put(gi.getId()+":"+answer.getId()+":a", answer.getAudioUrl());	
-//									}
-//								}
-//							}
-//						
-//					}
-//				}
-//			}
-//			
-//			
-//			mCursor = db.getSQLiteDb().query(true, getTableName(), new String[]{ITEM_ID, LOCAL_ID, GAME_ID, REPLICATED, URI}, null, null, null, null, null, null);
-//			while (mCursor.moveToNext()) {
-//				Long itemId = mCursor.getLong(0);
-//				String localId = mCursor.getString(1);
-//				Long gameId = mCursor.getLong(2);
-//				allMediaURLs.remove(itemId+":"+localId);
-//				if (mCursor.getInt(3) == REP_STATUS_TODO) MediaCache.getInstance().localToDownload(gameId, itemId, localId);
-//				if (mCursor.getInt(3) == REP_STATUS_DONE) MediaCache.getInstance().putLocalURI(itemId, localId, Uri.parse(mCursor.getString(4)));
-//
-//			}
-//			
-//			for (String key : allMediaURLs.keySet()) {
-//				Long id = Long.parseLong(key.substring(0, key.indexOf(":"))); //TODO check if this is done ok
-//				String localId = key.substring(key.indexOf(":")+1);
-//				ContentValues initialValues = new ContentValues();
-//				GeneralItem gi = GeneralItemsCache.getInstance().getGeneralItems(id);
-//				initialValues.put(ITEM_ID, id);
-//				initialValues.put(LOCAL_ID, localId);
-//				initialValues.put(GAME_ID, gi.getGameId());
-//				initialValues.put(REMOTE_FILE, allMediaURLs.get(id));
-//				initialValues.put(REPLICATED, REP_STATUS_TODO);
-//				db.getSQLiteDb().insert(getTableName(), null, initialValues);
-//			}
-//			
-//		} catch (SQLException e) {
-//			Log.e("sqlex", "ex", e);
-//		} finally {
-//			if (mCursor != null)  mCursor.close();
-//		}
-//	}
-	
 	public void create(DownloadItem item) {
 		db.getSQLiteDb().insert(getTableName(), null, getContentValues(item));
 	}
@@ -261,7 +163,7 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 	}
 	
 	public DownloadItem getNextUnsyncedItem(Long gameId) {
-		DownloadItem []  di = query(REPLICATED + " = ? ", new String[] { "" + REP_STATUS_TODO }, 0);
+		DownloadItem []  di = query(REPLICATED + " = ? and "+GAME_ID + " = ?", new String[] { "" + REP_STATUS_TODO, ""+gameId }, 0);
 		MediaGeneralItemCache.getInstance(gameId).setAmountOfItemsToDownload(di.length);
 		if (di.length == 0) return null;
 		return di[0];
@@ -271,6 +173,10 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 		DownloadItem []  di = query(ITEM_ID + " = ? and "+LOCAL_ID +" = ?", new String[] { "" + itemId, localId }, 0);
 		if (di.length == 0) return null;
 		return di[0];
+	}
+	
+	public DownloadItem[] getDownloadItemsForGame(Long gameId) {
+		return query(GAME_ID + " = ?", new String[] { ""+gameId }, 0);
 	}
 
 	public void setReplicationStatus(Long gameId, DownloadItem di, int status) {

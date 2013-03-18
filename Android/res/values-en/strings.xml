@@ -84,5 +84,7 @@
      <string name="resetQuestion">Are you sure that you want to delete all progress?</string>
      
         <string name="downloadBusy">Patience. File has not yet been downloaded</string>
+        <string name="warningDownloadBusy">WARNING: not all media has been downloaded.</string>
+     <string name="errorDownloadFailed">ERROR: not able to download at least one file.</string>
     
 </resources>

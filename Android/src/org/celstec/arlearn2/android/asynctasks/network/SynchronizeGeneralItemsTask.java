@@ -43,18 +43,6 @@ public class SynchronizeGeneralItemsTask extends GenericTask implements NetworkT
 	@Override
 	public void execute() {
 		if (NetworkSwitcher.isOnline(ctx)) {
-//			runAfterTasks(ctx);
-//			Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
-//			m.obj = new DBAdapter.DatabaseTask() {
-//
-//				@Override
-//				public void execute(DBAdapter db) {
-//					GeneralItemsCache.getInstance().put(db.getGeneralItemAdapter().queryByGameId(gameId));
-//				}
-//			};
-//			m.sendToTarget();
-//			return;
-//		} else {
 			PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
 			Long lastDate = PropertiesAdapter.getInstance(ctx).getGeneralItemLastSynchronizationDate(gameId) - 120000;
 
@@ -67,7 +55,7 @@ public class SynchronizeGeneralItemsTask extends GenericTask implements NetworkT
 					gl = GeneralItemClient.getGeneralItemClient().getGameGeneralItems(pa.getFusionAuthToken(), gameId, lastDate);
 				}
 				final GeneralItemList finalGl = gl;
-				if (gl.getErrorCode() != null) {
+				if (gl.getError() != null || gl.getErrorCode() != null) {
 					return;
 				}
 				PropertiesAdapter.getInstance(ctx).setGeneralItemsLastSynchronizationDate(gl.getServerTime(), gameId);
@@ -100,6 +88,8 @@ public class SynchronizeGeneralItemsTask extends GenericTask implements NetworkT
 			} catch (ARLearnException ae) {
 				ae.printStackTrace();
 			}
+		} else {
+			runAfterTasks(ctx);
 		}
 	}
 

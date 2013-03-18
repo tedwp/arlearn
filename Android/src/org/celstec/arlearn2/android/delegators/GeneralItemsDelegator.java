@@ -20,10 +20,12 @@ package org.celstec.arlearn2.android.delegators;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.asynctasks.db.CreateDownloadGeneralItems;
 import org.celstec.arlearn2.android.asynctasks.db.GeneralItemDependencyHandler;
+import org.celstec.arlearn2.android.asynctasks.db.InitDownloadStatusTask;
 import org.celstec.arlearn2.android.asynctasks.db.InitGeneralItemVisibilityTask;
 import org.celstec.arlearn2.android.asynctasks.db.LoadGeneralItemsFromDbTask;
 import org.celstec.arlearn2.android.asynctasks.network.DownloadFileTask;
@@ -47,6 +49,7 @@ import org.celstec.arlearn2.beans.run.Response;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.DropBoxManager.Entry;
 
 public class GeneralItemsDelegator {
 	private static GeneralItemsDelegator instance;
@@ -65,8 +68,8 @@ public class GeneralItemsDelegator {
 	}
 
 	public void synchronizeGeneralItemsWithServer(Context ctx, Long runId, Long gameId) {
-		LoadGeneralItemsFromDbTask loadFromDb = new LoadGeneralItemsFromDbTask(gameId, runId);
-		loadFromDb.run(ctx);
+		LoadGeneralItemsFromDbTask loadFromDb_0 = new LoadGeneralItemsFromDbTask(gameId, runId);
+		loadFromDb_0.run(ctx);
 		
 		SynchronizeGeneralItemsTask syncItemTask_1 = new SynchronizeGeneralItemsTask();
 		syncItemTask_1.setGameId(gameId);
@@ -75,12 +78,18 @@ public class GeneralItemsDelegator {
 		
 		
 		InitGeneralItemVisibilityTask visibilityTask_3 = new InitGeneralItemVisibilityTask(runId, gameId);
-		GeneralItemDependencyHandler dependencyTask_4 = new GeneralItemDependencyHandler();
+		InitDownloadStatusTask downloadstatus_4 = new InitDownloadStatusTask(gameId); 
 		
-		visibilityTask_3.taskToRunAfterExecute(dependencyTask_4);
+		GeneralItemDependencyHandler dependencyTask_5 = new GeneralItemDependencyHandler();
+		
+		downloadstatus_4.taskToRunAfterExecute(dependencyTask_5);
+		visibilityTask_3.taskToRunAfterExecute(downloadstatus_4);
 		syncVisItemsTask_2.taskToRunAfterExecute(visibilityTask_3);
 		syncItemTask_1.taskToRunAfterExecute(syncVisItemsTask_2);
-		syncItemTask_1.run(ctx);
+		loadFromDb_0.taskToRunAfterExecute(syncItemTask_1);
+		
+		
+		loadFromDb_0.run(ctx);
 	}
 	
 	public void synchronizeGeneralItemsWithServer(Context ctx, Long gameId) {
@@ -99,6 +108,20 @@ public class GeneralItemsDelegator {
 
 	public double getDownloadPercentage(GeneralItem generalItem) {
 		return MediaGeneralItemCache.getInstance(generalItem.getGameId()).getPercentageDownloaded(generalItem);
+	}
+	
+	public int getAverageDownloadStatus(GeneralItem generalItem) {
+		 HashMap<String, Integer> statusMap = MediaGeneralItemCache.getInstance(generalItem.getGameId()).getReplicationStatus(generalItem.getId());
+		 boolean todo = false;
+		 if (statusMap == null) return MediaCacheGeneralItems.REP_STATUS_DONE;
+		 for (Map.Entry<String, Integer> e : statusMap.entrySet()) {
+			 if (e.getValue() == MediaCacheGeneralItems.REP_STATUS_FILE_NOT_FOUND) return MediaCacheGeneralItems.REP_STATUS_FILE_NOT_FOUND; 
+			 if (e.getValue() == MediaCacheGeneralItems.REP_STATUS_TODO) todo = true; 
+			 if (e.getValue() == MediaCacheGeneralItems.REP_STATUS_SYNCING) todo = true; 
+
+		 }
+		 if (todo) return MediaCacheGeneralItems.REP_STATUS_TODO;
+		return MediaCacheGeneralItems.REP_STATUS_DONE;
 	}
 
 	public DownloadItem[] getDownloadItems(GeneralItem gi) {
@@ -225,5 +248,7 @@ public class GeneralItemsDelegator {
 	public GeneralItem getGeneralItem(DBAdapter db, long itemId) {
 		return db.getGeneralItemAdapter().queryById(itemId);
 	}
+
+	
 
 }

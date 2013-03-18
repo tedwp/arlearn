@@ -61,7 +61,9 @@ public class ScanTagActivity extends GeneralActivity {
 			if (runId == null || RunCache.getInstance().getRun(runId) == null) {
 				this.finish();
 			}
-		loadDataToGui();
+			if (scanTag != null) {
+				loadDataToGui();
+			}
 		}
 	}
 

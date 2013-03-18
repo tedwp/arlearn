@@ -24,23 +24,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.SocketException;
 import java.net.URL;
 import java.util.HashMap;
 
 import org.celstec.arlearn2.android.Constants;
-import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.DatabaseTask;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
-import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
-
+import org.celstec.arlearn2.android.asynctasks.download.DownloadQueue;
+import org.celstec.arlearn2.android.asynctasks.download.DownloadTaskHandler;
+import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
 import org.celstec.arlearn2.android.cache.MediaGeneralItemCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCacheGeneralItems;
 import org.celstec.arlearn2.android.db.MediaCacheGeneralItems.DownloadItem;
-
 
 import android.content.Context;
 import android.net.Uri;
@@ -59,26 +60,26 @@ public class DownloadFileTask extends GenericTask implements NetworkTask {
 
 	@Override
 	public void run(Context ctx) {
-		if (currentlyRunning) return;
-		currentlyRunning = true;
-		this.ctx = ctx;
-		NetworkTaskHandler nwHandler = NetworkQueue.getNetworkTaskHandler();
-		if (!nwHandler.hasMessages(NetworkTaskHandler.SYNC_UPLOAD_MEDIA)) {
-			Message m = Message.obtain(nwHandler);
-			m.obj = this;
-			m.what = NetworkTaskHandler.SYNC_UPLOAD_MEDIA;
-			m.sendToTarget();
+		if (NetworkSwitcher.isOnline(ctx)) {
+			if (currentlyRunning)
+				return;
+			currentlyRunning = true;
+			this.ctx = ctx;
+
+			LoadItemFromDatabase loadItem = new LoadItemFromDatabase();
+			loadItem.run(ctx);
+
 		}
 	}
 
 	@Override
 	public void execute() {
-		LoadItemFromDatabase loadItem = new LoadItemFromDatabase();
-
-		loadItem.run(ctx);
-	}
-
-	private void startUpload() {
+		// LoadItemFromDatabase loadItem = new LoadItemFromDatabase();
+		//
+		// loadItem.run(ctx);
+		// }
+		//
+		// private void startUpload() {
 		try {
 			setReplicationStatus(MediaCacheGeneralItems.REP_STATUS_SYNCING);
 			downloadItem.setLocalPath(Uri.fromFile(new File(downloadFile(downloadItem.getRemoteUrl(), downloadItem))));
@@ -86,9 +87,10 @@ public class DownloadFileTask extends GenericTask implements NetworkTask {
 		} catch (FileNotFoundException fnf) {
 			setReplicationStatus(MediaCacheGeneralItems.REP_STATUS_FILE_NOT_FOUND);
 			fnf.printStackTrace();
-		}
+		} catch (Exception e) {
+			setReplicationStatus(MediaCacheGeneralItems.REP_STATUS_TODO);
+		} 
 
-		ActivityUpdater.updateActivities(ctx, ListRunsParticipateActivity.class.getCanonicalName(), ListMessagesActivity.class.getCanonicalName(), ListMapItemsActivity.class.getCanonicalName());
 		exitTask();
 		run(ctx); // run again
 	}
@@ -96,49 +98,34 @@ public class DownloadFileTask extends GenericTask implements NetworkTask {
 	private void exitTask() {
 		currentlyRunning = false;
 	}
+
 	private void setReplicationStatus(final int status) {
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
 		m.obj = new DBAdapter.DatabaseTask() {
 			@Override
 			public void execute(DBAdapter db) {
 				db.getMediaCacheGeneralItems().setReplicationStatus(gameId, downloadItem, status);
+				ActivityUpdater.updateActivities(ctx, ListRunsParticipateActivity.class.getCanonicalName(), ListMessagesActivity.class.getCanonicalName(), ListMapItemsActivity.class.getCanonicalName());
+
 			}
 		};
 		m.sendToTarget();
 	}
 
-	// private HashMap<String, String> getRemoteFile(GeneralItem gi) {
-	// HashMap<String, String> hm = new HashMap<String, String>();
-	// if (gi instanceof AudioObject) {
-	// hm.put("audio", ((AudioObject) gi).getAudioFeed());
-	// }
-	// if (gi instanceof VideoObject) {
-	// hm.put("video", ((VideoObject) gi).getVideoFeed());
-	// }
-	// if (gi instanceof SingleChoiceImageTest) {
-	// SingleChoiceImageTest test = (SingleChoiceImageTest) gi;
-	// int i = 0;
-	// for (MultipleChoiceAnswerItem imageAnswer: test.getAnswers()){
-	// MultipleChoiceImageAnswerItem mciai = (MultipleChoiceImageAnswerItem)
-	// imageAnswer;
-	// hm.put(mciai.getId(), mciai.getImageUrl());
-	// if (mciai.getAudioUrl() != null) {
-	// hm.put(mciai.getId()+":a", mciai.getAudioUrl());
-	//
-	// }
-	// }
-	// }
-	// return hm;
-	// }
-
 	private class LoadItemFromDatabase extends GenericTask implements DatabaseTask {
 
-	
 		@Override
 		public void execute(DBAdapter db) {
 			downloadItem = db.getMediaCacheGeneralItems().getNextUnsyncedItem(gameId);
 			if (downloadItem != null) {
-				startUpload();
+				DownloadTaskHandler nwHandler = DownloadQueue.getNetworkTaskHandler();
+				if (!nwHandler.hasMessages(DownloadTaskHandler.SYNC_UPLOAD_MEDIA)) {
+					Message m = Message.obtain(nwHandler);
+					m.obj = DownloadFileTask.this;
+					m.what = DownloadTaskHandler.SYNC_UPLOAD_MEDIA;
+					m.sendToTarget();
+				}
+
 			} else {
 				exitTask();
 			}
@@ -188,8 +175,11 @@ public class DownloadFileTask extends GenericTask implements NetworkTask {
 				if ((startTime + 1500) < System.currentTimeMillis()) {
 					startTime = System.currentTimeMillis();
 					MediaGeneralItemCache.getInstance(gameId).setBytesDownloaded(di, byteCounter);
+					ActivityUpdater.updateActivities(ctx, ListMessagesActivity.class.getCanonicalName());
 				}
 			}
+			MediaGeneralItemCache.getInstance(gameId).setBytesDownloaded(di, byteCounter);
+			ActivityUpdater.updateActivities(ctx, ListMessagesActivity.class.getCanonicalName());
 			fos.flush();
 			fos.close();
 			is.close();
@@ -229,7 +219,7 @@ public class DownloadFileTask extends GenericTask implements NetworkTask {
 		String suffix = "";
 		int index = url.lastIndexOf("/");
 		if (index != -1) {
-			suffix = url.substring(index+1, url.length());
+			suffix = url.substring(index + 1, url.length());
 		} else {
 			return "";
 		}
