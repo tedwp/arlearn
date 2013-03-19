@@ -1,0 +1,45 @@
+package org.celstec.arlearn2.gwtcommonlib.client.datasource;
+
+import org.celstec.arlearn2.gwtcommonlib.client.auth.Authentication;
+import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
+
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.json.client.JSONObject;
+import com.smartgwt.mobile.client.util.SC;
+
+public class JsonObjectListCallback extends JsonCallback {
+	
+	private String beanType;
+	private DataSourceModel  dataSourceModel;
+	
+	public JsonObjectListCallback(String beanType, DataSourceModel dataSourceModel) {
+		this.beanType = beanType;
+		this.dataSourceModel = dataSourceModel;
+	}
+	
+	public void onJsonReceived(JSONValue jsonValue) {
+		JSONObject jsonObject = jsonValue.isObject();
+		if (jsonObject == null) {
+			return ;
+		}
+		if (jsonObject.get("error") != null){
+			Authentication.getInstance().disAuthenticate();
+		} else {
+			onJsonArrayReceived(jsonObject);
+		}
+	}
+
+	public void onJsonArrayReceived(JSONObject jsonObject) {
+		JSONArray array = jsonObject.get(beanType).isArray();
+		for (int i = 0; i< array.size(); i++) {
+			onJsonObjectReceived(array.get(i).isObject());
+		}
+	}
+	
+	public void onJsonObjectReceived(JSONObject jsonObject) {
+		dataSourceModel.addJsonObject(jsonObject);
+	}
+	
+	
+}
