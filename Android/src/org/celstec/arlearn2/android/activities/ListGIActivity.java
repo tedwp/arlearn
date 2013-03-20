@@ -134,9 +134,7 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 			           public void onClick(DialogInterface dialog, int id) {
 			        	   GeneralItemsDelegator.getInstance().deleteGeneralItem(ListGIActivity.this, selectedGeneralItem.getId(), selectedGeneralItem.getGameId());
 			        	   //ListGIActivity.this.onResume();
-			        	   //Toast.makeText(getApplicationContext(), "lucas", Toast.LENGTH_SHORT).show();
-			        	   Log.e(CLASSNAME, "REFRESCAZOOOOOOOOO");
-			        	   
+			        	   //Toast.makeText(getApplicationContext(), "lucas", Toast.LENGTH_SHORT).show();	        	   
 			        	   // TODO refresh list
 
 			        	   

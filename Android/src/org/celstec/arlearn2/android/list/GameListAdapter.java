@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * 
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors: Bernardo Tabuenca
+ ******************************************************************************/
 package org.celstec.arlearn2.android.list;
 
 import java.util.ArrayList;
@@ -38,20 +56,35 @@ public class GameListAdapter extends ArrayAdapter<GenericListRecord> {
 		}
 		
 		// Click on row		
+		v.setOnLongClickListener(new View.OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+
+				GameListRecord glr = (GameListRecord)games.get(position);
+				glr.setAction(GameListRecord.GAME_ACTION_EDIT);
+				callback.onListItemClick(v, position, glr);	
+				
+				return false;
+			}
+		});
+			
+
+		
 		v.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
-			public void onClick(View v) {
+			public void onClick(View vg) {
 				Log.d(CLASSNAME, "Clicked row position "+position);
 				GameListRecord glr = (GameListRecord)games.get(position);
-				glr.setAction(GameListRecord.GAME_ACTION_EDIT);
-				callback.onListItemClick(v, position, glr);
+				glr.setAction(GameListRecord.GAME_ACTION_GENERALITEMS);
+				callback.onListItemClick(vg, position, glr);
 				
 			}
 		});
 
 
-		// Click on edit runs image
+		// Click on delete image
 		ImageView ivDelete = (ImageView) v.findViewById(R.id.delete_icon);
 		ivDelete.setOnClickListener(new View.OnClickListener() {
 			
@@ -67,33 +100,19 @@ public class GameListAdapter extends ArrayAdapter<GenericListRecord> {
 		
 		
 		// Click on edit general item
-		ImageView ivGenItem = (ImageView) v.findViewById(R.id.edit_gitem_icon);
-		ivGenItem.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View ivGenItem) {
-				Log.d(CLASSNAME, "Clicked edit general item button position "+position);
-				GameListRecord glr = (GameListRecord)games.get(position);
-				glr.setAction(GameListRecord.GAME_ACTION_GENERALITEMS);
-				callback.onListItemClick(ivGenItem, position, glr);				
-				
-			}
-		});
+//		ImageView ivGenItem = (ImageView) v.findViewById(R.id.edit_gitem_icon);
+//		ivGenItem.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View ivGenItem) {
+//				Log.d(CLASSNAME, "Clicked edit general item button position "+position);
+//				GameListRecord glr = (GameListRecord)games.get(position);
+//				glr.setAction(GameListRecord.GAME_ACTION_GENERALITEMS);
+//				callback.onListItemClick(ivGenItem, position, glr);				
+//				
+//			}
+//		});
 
-		
-		// Click on edit runs image
-		ImageView ivTeams = (ImageView) v.findViewById(R.id.runs_icon);
-		ivTeams.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View ivTeams) {
-				Log.d(CLASSNAME, "Clicked edit users button position "+position);
-				GameListRecord glr = (GameListRecord)games.get(position);
-				glr.setAction(GameListRecord.GAME_ACTION_RUNS);
-				callback.onListItemClick(ivTeams, position, glr);				
-				
-			}
-		});
 		
 
 		

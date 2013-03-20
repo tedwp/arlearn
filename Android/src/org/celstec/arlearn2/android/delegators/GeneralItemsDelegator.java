@@ -74,8 +74,10 @@ import org.celstec.arlearn2.android.db.MediaCacheGeneralItems;
 import org.celstec.arlearn2.android.db.MediaCacheGeneralItems.DownloadItem;
 import org.celstec.arlearn2.android.delegators.generalitem.CreateGeneralItemTask;
 import org.celstec.arlearn2.android.delegators.generalitem.DeleteGeneralItemTask;
+import org.celstec.arlearn2.android.delegators.generalitem.QueryGeneralItemsTask;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageTest;
@@ -276,5 +278,13 @@ public class GeneralItemsDelegator {
 	public GeneralItem getGeneralItem(DBAdapter db, long itemId) {
 		return db.getGeneralItemAdapter().queryById(itemId);
 	}
+	
+	public GeneralItemList getGeneralItems(Context ctx, String owner) {
+		QueryGeneralItemsTask dgTask = new QueryGeneralItemsTask(ctx);
+		dgTask.setOwner(owner);
+		dgTask.addTaskToQueue(ctx);
+		return dgTask.getGeneralItems();		
+		
+	}	
 
 }

@@ -95,7 +95,6 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 		Intent intent = null;				
 		GameListRecord glr = (GameListRecord) genericListRecord;
 		final Game selectedGame = vGames[position];
-		long lSelectedGameId = selectedGame.getGameId();
 		
 		switch (glr.getAction()) {
 		case 0:
@@ -121,11 +120,11 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 			// Edit game
 			intent = new Intent(ListGamesActivity.this, EditGameActivity.class);
 			intent.putExtra("selectedGame", vGames[position]);
-			ListGamesActivity.this.startActivity(intent);			
-			break;
+			ListGamesActivity.this.startActivity(intent);
+			break;			
+
 		case 2:
 			// Show runs
-// Commented by btb			
 //			intent = new Intent(ListGamesActivity.this, ListRunsActivity.class);
 //			intent.putExtra("selectedGame", vGames[position]);
 //			ListGamesActivity.this.startActivity(intent);			

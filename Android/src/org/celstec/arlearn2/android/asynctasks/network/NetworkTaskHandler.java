@@ -36,6 +36,7 @@ public class NetworkTaskHandler extends Handler {
     public static final int SYNC_UPLOAD_MEDIA = 11;
     public static final int GENERALITEM_CREATE = 12;
     public static final int GENERALITEM_DELETE = 13;
+    public static final int GENERALITEM_QUERY = 14;
 
 
 

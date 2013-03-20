@@ -60,22 +60,6 @@ public class GeneralItemsCache extends GenericCache {
 		return result;
 	}
 
-	public HashMap<Long, GeneralItem> getGeneralItemsButGameId(Long gameId) {
-		if (gameId == null)
-			return itemsMap;
-		
-		HashMap<Long, GeneralItem> hmAllGeneralItemsButGameId = new HashMap<Long, GeneralItem>();
-		
-		for (Map.Entry<Long, GeneralItem> entry : itemsMap.entrySet()) {
-			
-			GeneralItem value = entry.getValue();
-			if(value.getGameId().longValue() != gameId.longValue()){
-				hmAllGeneralItemsButGameId.put(entry.getKey(), value);
-			}
-		}
-		
-		return hmAllGeneralItemsButGameId;
-	}	
 	
 	public GeneralItem getGeneralItems(long itemId) {
 		return itemsMap.get(itemId);

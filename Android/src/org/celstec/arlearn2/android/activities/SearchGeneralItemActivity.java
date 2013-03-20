@@ -23,10 +23,14 @@ import java.util.HashMap;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.android.list.GeneralItemListAdapter;
 import org.celstec.arlearn2.android.list.GeneralItemListRecord;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
+import org.celstec.arlearn2.client.GeneralItemClient;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -103,11 +107,15 @@ public class SearchGeneralItemActivity extends GeneralActivity {
 	private void renderGeneralItemsList() {
 
 		
-		HashMap<Long, GeneralItem> hmGeneralItems = new HashMap<Long, GeneralItem>();	
-		hmGeneralItems = GeneralItemsCache.getInstance().getGeneralItemsButGameId(lGameId);
-        String[] products = new String[hmGeneralItems.values().size()];
+	
+		GeneralItemList gil = GeneralItemsDelegator.getInstance().getGeneralItems(this.getBaseContext(), "arlearn5");
+		
+
+		
+		
+        String[] products = new String[gil.getGeneralItems().size()];
         int i = 0;
-		for (GeneralItem gi : hmGeneralItems.values()) {
+		for (GeneralItem gi : gil.getGeneralItems()) {
 			products[i] = gi.getName();
 			i++;
 		}
@@ -141,9 +149,7 @@ public class SearchGeneralItemActivity extends GeneralActivity {
             }
 
         });		
-        
-        
-        
+          
         
 	}
 		

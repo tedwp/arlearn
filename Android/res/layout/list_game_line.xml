@@ -45,27 +45,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/runs_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="2dip"
-        android:layout_marginTop="2dip"
-        android:gravity="right"
-        android:paddingRight="25dip"
-        android:src="@drawable/run_48x48"/>
-    
-    <ImageView
-        android:id="@+id/edit_gitem_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="2dip"
-        android:layout_marginTop="2dip"
-        android:gravity="right"
-        android:paddingRight="25dip"
-        android:src="@drawable/package_48x48"/>
+
     
     <ImageView
         android:id="@+id/delete_icon"
