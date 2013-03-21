@@ -160,6 +160,7 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		return null;
 	}
 
+	@Deprecated
 	public GeneralItemList getNonPickableItemsAll(Long runIdentifier) {
 		RunDelegator qr = new RunDelegator(this);
 		Run run = qr.getRun(runIdentifier);

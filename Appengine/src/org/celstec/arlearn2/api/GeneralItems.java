@@ -188,9 +188,11 @@ public class GeneralItems extends Service {
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		GeneralItemDelegator gid = new GeneralItemDelegator(token);
-		UsersDelegator ud = new UsersDelegator(gid);
-		return serialise(gid.getNonPickableItemsAll(runIdentifier), accept);
+//		GeneralItemDelegator gid = new GeneralItemDelegator(token);
+//		UsersDelegator ud = new UsersDelegator(gid);
+		GeneralItemList gil = new GeneralItemList();
+		
+		return serialise(gil, accept);
 	}
 
 	// TODO : switch the following code to new beans infrastructure/
