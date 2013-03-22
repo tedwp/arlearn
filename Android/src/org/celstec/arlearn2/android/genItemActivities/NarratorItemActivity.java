@@ -36,6 +36,7 @@ import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ItemResponseListRecord;
 import org.celstec.arlearn2.android.menu.MenuHandler;
+import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.run.Response;
@@ -57,6 +58,7 @@ public class NarratorItemActivity extends GeneralActivity {
 	protected WebView webview;
 	protected TextView countDownTextView;
 	protected NarratorItem narratorBean;
+	protected String richText;
 	protected Button provideAnswerButton;
 
 	protected GenericMessageListAdapter adapter;
@@ -70,8 +72,8 @@ public class NarratorItemActivity extends GeneralActivity {
 			if (runId == null || RunCache.getInstance().getRun(runId) == null) {
 				this.finish();
 			}
-			reloadBeanFromDb();
 			if (narratorBean != null) {
+				reloadBeanFromDb();
 				getGuiComponents();
 				loadDataToGui();
 				renderAnswers();
@@ -93,8 +95,7 @@ public class NarratorItemActivity extends GeneralActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(getContentView());
 
-		unpackDataFromIntent();
-		checkIfNotification();
+//		checkIfNotification();
 		getGuiComponents();
 		loadDataToGui();
 		fireAction();
@@ -104,6 +105,16 @@ public class NarratorItemActivity extends GeneralActivity {
 	protected void onPause() {
 		super.onPause();
 		mHandler.removeCallbacks(counterTask);
+	}
+	
+	@Override
+	public GeneralItem getGeneralItem() {
+		return narratorBean;
+	}
+
+	@Override
+	public void setGeneralItem(GeneralItem gi) {
+		narratorBean = (NarratorItem) gi;		
 	}
 
 	private Runnable counterTask = new Runnable() {
@@ -146,11 +157,11 @@ public class NarratorItemActivity extends GeneralActivity {
 
 	}
 
-	protected void checkIfNotification() {
-		String ns = Context.NOTIFICATION_SERVICE;
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-		mNotificationManager.cancel((int) narratorBean.getId().longValue());
-	}
+//	protected void checkIfNotification() {
+//		String ns = Context.NOTIFICATION_SERVICE;
+//		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+//		mNotificationManager.cancel((int) narratorBean.getId().longValue());
+//	}
 
 	protected int getContentView() {
 		return R.layout.gi_detail_narratoritem;
@@ -182,20 +193,25 @@ public class NarratorItemActivity extends GeneralActivity {
 		}
 	}
 
-	protected void unpackDataFromIntent() {
-		GeneralItem bean = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
-		narratorBean = (NarratorItem) bean;
-	}
+//	protected void unpackDataFromIntent() {
+//		GeneralItem bean = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
+//		narratorBean = (NarratorItem) bean;
+//	}
 
 	private void reloadBeanFromDb() {
-		narratorBean = (NarratorItem) GeneralItemsCache.getInstance().getGeneralItems(narratorBean.getId());
+		NarratorItem ni = (NarratorItem) GeneralItemsCache.getInstance().getGeneralItems(narratorBean.getId());
+		if (ni != null) {
+			narratorBean = ni;
+		}
 	}
 
 	protected void loadDataToGui() {
 		if (narratorBean.getRichText() != null) {
 			String html = narratorBean.getRichText();
-			webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
-			// webview.loadData(html, "text/html", "utf-8");
+			if (!html.equals(richText)) {
+				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+				richText = html;
+			}
 		} else {
 			webview.setVisibility(View.GONE);
 		}
@@ -216,7 +232,18 @@ public class NarratorItemActivity extends GeneralActivity {
 		}
 
 	}
+	
+	@Override
+	protected void onSaveInstanceState (Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("richtText", richText);
+	}
 
+	protected void unpackBundle(Bundle inState) {
+		super.unpackBundle(inState);
+		richText = inState.getString("richtText");
+	}
+	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (menuHandler.getPropertiesAdapter().isAuthenticated() && narratorBean.getOpenQuestion() != null) {
 			menu.add(0, MenuHandler.PROVIDE_ANSWER, 0, getString(R.string.ao_answer_menu));
@@ -289,4 +316,6 @@ public class NarratorItemActivity extends GeneralActivity {
 	public boolean showStatusLed() {
 		return true;
 	}
+
+	
 }

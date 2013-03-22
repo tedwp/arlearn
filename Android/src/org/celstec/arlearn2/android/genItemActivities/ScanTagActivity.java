@@ -36,6 +36,8 @@ import android.widget.ImageView;
 public class ScanTagActivity extends GeneralActivity {
 
 	ScanTag scanTag;
+	protected String richText;
+
 	protected WebView webview;
 	protected ImageView scanBarcodebutton;
 
@@ -68,8 +70,6 @@ public class ScanTagActivity extends GeneralActivity {
 	}
 
 	protected void unpackDataFromIntent() {
-		GeneralItem gi = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
-		scanTag = (ScanTag) gi;
 		if (scanTag.getName() != null) {
 			setTitle(scanTag.getName());
 		}
@@ -99,7 +99,10 @@ public class ScanTagActivity extends GeneralActivity {
 	protected void loadDataToGui() {
 		if (scanTag.getRichText() != null) {
 			String html = scanTag.getRichText();
-			webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+			if (!html.equals(richText)) {
+				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+				richText = html;
+			}
 		} else {
 			webview.setVisibility(View.GONE);
 		}
@@ -116,4 +119,15 @@ public class ScanTagActivity extends GeneralActivity {
 		ActionsDelegator.getInstance().publishAction(this, action, pa.getCurrentRunId(), pa.getUsername(), scanTag.getId(), scanTag.getClass().getName());
 		this.finish();
 	}
+
+	@Override
+	public GeneralItem getGeneralItem() {
+		return scanTag;
+	}
+
+	@Override
+	public void setGeneralItem(GeneralItem gi) {
+		scanTag = (ScanTag) gi;
+	}
+	
 }

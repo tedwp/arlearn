@@ -179,4 +179,16 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 		return true;
 	}
 
+	@Override
+	public GeneralItem getGeneralItem() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setGeneralItem(GeneralItem gi) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

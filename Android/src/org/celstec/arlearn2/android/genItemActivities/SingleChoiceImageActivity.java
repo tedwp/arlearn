@@ -61,6 +61,8 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 	private MultipleChoiceAnswerItem selected = null;
 
 	private SingleChoiceImageTest mct;
+	protected String richText;
+
 	protected ImageView selectedView;
 	protected HashMap<MultipleChoiceAnswerItem, ImageView> answerViewMapping = new HashMap<MultipleChoiceAnswerItem, ImageView>();
 
@@ -76,7 +78,7 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.gi_detail_imagechoice);
-		setGeneralItemBean();
+//		setGeneralItemBean();
 		mediaObjects = GeneralItemsDelegator.getInstance().getLocalMediaUriMap(getBean());
 		initSoundPool();
 		initMediaMaps();
@@ -90,11 +92,11 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 		return mct;
 	}
 	
-	protected void setGeneralItemBean() {
-		GeneralItem bean = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
-		mct = (SingleChoiceImageTest) bean; // TODO check casting
-
-	}
+//	protected void setGeneralItemBean() {
+//		GeneralItem bean = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
+//		mct = (SingleChoiceImageTest) bean; 
+//
+//	}
 	
 	private void initUi(){
 		drawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{ 0xDD000000, 0xAA000000 });
@@ -137,7 +139,9 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 		WebView webview = (WebView) findViewById(R.id.mct_webview);
 		if (getRichText() != null) {
 			String html = getRichText();
-			webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+			if (!html.equals(richText)) {
+				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);				richText = html;
+			}
 		} else {
 			webview.setVisibility(View.GONE);
 		}
@@ -288,19 +292,34 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 					}
 				});
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 			return null;
 		}		
-		
-		
+	}
+
+	@Override
+	public GeneralItem getGeneralItem() {
+		return mct;
+	}
+
+	@Override
+	public void setGeneralItem(GeneralItem gi) {
+		mct = (SingleChoiceImageTest) gi; 
+	}
+	
+	@Override
+	protected void onSaveInstanceState (Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("richtText", richText);
+	}
+
+	protected void unpackBundle(Bundle inState) {
+		super.unpackBundle(inState);
+		richText = inState.getString("richtText");
 	}
 }

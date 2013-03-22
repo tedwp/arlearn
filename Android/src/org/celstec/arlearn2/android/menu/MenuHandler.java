@@ -110,7 +110,12 @@ public class MenuHandler {
 			context.startActivity(intent);
 			break;
 		case MY_LOCATION:
-			((GenericMapViewActivity) context).animateToMyLocation();
+			if  (context instanceof MapViewActivity) {
+				((MapViewActivity) context).animateToMyLocation();
+			} else {
+				((GenericMapViewActivity) context).animateToMyLocation();	
+			}
+			
 			break;
 		case DELETE_ANSWER:
 			((ViewAnswerActivity) context).deleteAnswer();

@@ -40,7 +40,7 @@ public class OpenBadgeActivity extends GeneralActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(getContentView());
 
-		unpackDataFromIntent();
+	
 		getGuiComponents();
 		loadDataToGui();
 		fireReadAction(badgeBean);
@@ -48,11 +48,6 @@ public class OpenBadgeActivity extends GeneralActivity {
 
 	protected int getContentView() {
 		return R.layout.gi_detail_badge;
-	}
-
-	protected void unpackDataFromIntent() {
-		GeneralItem gi = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
-		badgeBean = (OpenBadge) gi;
 	}
 	
 	protected void getGuiComponents() {
@@ -76,5 +71,15 @@ public class OpenBadgeActivity extends GeneralActivity {
 	@Override
 	public boolean isGenItemActivity() {
 		return true;
+	}
+
+	@Override
+	public GeneralItem getGeneralItem() {
+		return badgeBean;
+	}
+
+	@Override
+	public void setGeneralItem(GeneralItem gi) {
+		badgeBean = (OpenBadge) gi;		
 	}
 }

@@ -61,11 +61,14 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 	@Override
 	protected void onResume() {
 		long runId = PropertiesAdapter.getInstance(this).getCurrentRunId();
-		long gameId = RunCache.getInstance().getGameId(runId);
-		GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, runId, gameId);
-		
+		Long gameId = RunCache.getInstance().getGameId(runId);
+		if (gameId != null) {
+			GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, runId, gameId);
+			loadMessagesFromCache();
+		} else {
+			finish();
+		}
 		super.onResume();
-		loadMessagesFromCache();
 	}
 
 	@Override

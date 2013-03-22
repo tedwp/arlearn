@@ -49,6 +49,8 @@ public class MultipleChoiceActivity extends GeneralActivity {
 	protected TextView textView;
 
 	private MultipleChoiceTest mct;
+	protected String richText;
+
 	private List<MultipleChoiceAnswerItem> selected = new ArrayList<MultipleChoiceAnswerItem>();
 
 	// private PublishActionTask actionTask = new PublishActionTask(this);
@@ -56,8 +58,7 @@ public class MultipleChoiceActivity extends GeneralActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gi_detail_multiplechoice);
-		mct = (MultipleChoiceTest) (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
-		cancelNotification((int) mct.getId().longValue());
+		// cancelNotification((int) mct.getId().longValue());
 
 		initUi(mct);
 		fireReadAction(mct);
@@ -100,7 +101,10 @@ public class MultipleChoiceActivity extends GeneralActivity {
 
 		if (mct.getRichText() != null) {
 			String html = mct.getRichText();
-			webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+			if (!html.equals(richText)) {
+				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+				richText = html;
+			}
 		} else {
 			webview.setVisibility(View.GONE);
 		}
@@ -155,6 +159,27 @@ public class MultipleChoiceActivity extends GeneralActivity {
 			selected.add(nfcMapping.get(action));
 			castResponse();
 		}
+	}
+
+	@Override
+	public GeneralItem getGeneralItem() {
+		return mct;
+	}
+
+	@Override
+	public void setGeneralItem(GeneralItem gi) {
+		mct = (MultipleChoiceTest) gi;
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("richtText", richText);
+	}
+
+	protected void unpackBundle(Bundle inState) {
+		super.unpackBundle(inState);
+		richText = inState.getString("richtText");
 	}
 
 }
