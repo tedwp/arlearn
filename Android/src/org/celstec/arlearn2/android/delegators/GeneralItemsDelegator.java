@@ -56,6 +56,7 @@ package org.celstec.arlearn2.android.delegators;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.asynctasks.db.CreateDownloadGeneralItems;
@@ -83,6 +84,7 @@ import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
+import org.celstec.arlearn2.beans.run.ActionList;
 import org.celstec.arlearn2.beans.run.Response;
 
 import android.content.Context;
@@ -90,6 +92,7 @@ import android.net.Uri;
 
 public class GeneralItemsDelegator {
 	private static GeneralItemsDelegator instance;
+	private GeneralItemList giSearchList;
 	public static String AUDIO_LOCAL_ID = "audio";
 	public static String VIDEO_LOCAL_ID = "video";
 
@@ -279,12 +282,20 @@ public class GeneralItemsDelegator {
 		return db.getGeneralItemAdapter().queryById(itemId);
 	}
 	
-	public GeneralItemList getGeneralItems(Context ctx, String owner) {
+	public void getGeneralItems(Context ctx, String owner) {
 		QueryGeneralItemsTask dgTask = new QueryGeneralItemsTask(ctx);
-		dgTask.setOwner(owner);
+		dgTask.setMatchingString(owner);
 		dgTask.addTaskToQueue(ctx);
-		return dgTask.getGeneralItems();		
 		
-	}	
+	}
+	
+	public void saveGeneralItemsSearchList(final GeneralItemList al){
+		giSearchList = al;
+		List<GeneralItem>l = giSearchList.getGeneralItems();
+	}
+	
+	public GeneralItemList getGISearchList(){
+		return giSearchList;
+	}
 
 }

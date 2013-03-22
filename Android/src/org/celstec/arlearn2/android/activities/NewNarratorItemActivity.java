@@ -55,11 +55,9 @@ public class NewNarratorItemActivity extends GeneralActivity {
 		EditText etDesc = (EditText) findViewById(R.id.etGIDesc);
 		Button ngButton = (Button) findViewById(R.id.bNewGeneralItem);
 		if (iAction == NI_ACTION_CREATE) {
-			this.setTitle("New " + ni.getType());
 			ngButton.setText("Create item");
 		} else {
 			// Edit
-			this.setTitle("Editing " + ni.getType());
 			etName.setText(ni.getName());
 			etDesc.setText(ni.getDescription());
 			ngButton.setText("Update item");

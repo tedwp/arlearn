@@ -1,9 +1,13 @@
 package org.celstec.arlearn2.android.delegators.generalitem;
 
+import java.util.List;
+
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.asynctasks.network.NetworkTask;
 import org.celstec.arlearn2.android.asynctasks.network.NetworkTaskHandler;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.client.GeneralItemClient;
 
@@ -15,9 +19,9 @@ public class QueryGeneralItemsTask implements NetworkTask {
 	
 	private Context ctx;
 
-	private String owner;
+	private String sMatchingString;
 	
-	private GeneralItemList gl;
+	private final GeneralItemList gl = null;
 
 	
 	public QueryGeneralItemsTask(Context ctx) {
@@ -37,8 +41,13 @@ public class QueryGeneralItemsTask implements NetworkTask {
 	public void execute() {
 
 		try {
-			// TODO fix this whenever it is ready in the server part
-			gl = GeneralItemClient.getGeneralItemClient().search(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), owner);
+			final GeneralItemList rgl = GeneralItemClient.getGeneralItemClient().search(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), sMatchingString);
+//			List<GeneralItem>l = rgl.getGeneralItems();
+//			for (int i = 0; i < l.size(); i++) {
+//				System.out.println("QueryGeneralItem.execute:"+l.get(i).getName());
+//				
+//			}
+			GeneralItemsDelegator.getInstance().saveGeneralItemsSearchList(rgl);
 		} catch (Exception e) {
 			Log.e("exception", "in databasehandler", e);		
 		}
@@ -46,13 +55,13 @@ public class QueryGeneralItemsTask implements NetworkTask {
 	}
 
 
-	public String getOwner() {
-		return owner;
+	public String getMatchingString() {
+		return sMatchingString;
 	}
 
 
-	public void setOwner(String owner) {
-		this.owner = owner;
+	public void setMatchingString(String s) {
+		this.sMatchingString = s;
 	}
 
 

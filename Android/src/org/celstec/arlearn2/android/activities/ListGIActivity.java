@@ -178,7 +178,7 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 	
 	public void onButtonNewGeneralItemClick(View v) {
 
-		final CharSequence[] csArrayElems = { "Narrator item", "Multiple choice question", "Record video", "Record audio" };
+		final CharSequence[] csArrayElems = { "Text item", "Photo item", "Record video", "Record audio", "Multiple choice question" };
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Choose an item");
@@ -201,12 +201,12 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 					ListGIActivity.this.startActivity(intent);
 					break;
 				case 1:
-					// MultipleChoiceTest item
-					intent = new Intent(ListGIActivity.this, MultipleChoiceItemActivity.class);
-					MultipleChoiceTest m = new MultipleChoiceTest();
-					m.setGameId(selectedGame.getGameId());
-					intent.putExtra("generalItem", m);
-					ListGIActivity.this.startActivity(intent);
+					// Photo item
+//					intent = new Intent(ListGIActivity.this, PhotoItemActivity.class);
+//					MultipleChoiceTest m = new MultipleChoiceTest();
+//					m.setGameId(selectedGame.getGameId());
+//					intent.putExtra("generalItem", m);
+//					ListGIActivity.this.startActivity(intent);
 					break;
 				case 2:
 					// VideoObject
@@ -224,6 +224,14 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 					intent.putExtra("generalItem", a);
 					ListGIActivity.this.startActivity(intent);
 					break;
+				case 4:
+					// MultipleChoiceTest item
+					intent = new Intent(ListGIActivity.this, MultipleChoiceItemActivity.class);
+					MultipleChoiceTest m = new MultipleChoiceTest();
+					m.setGameId(selectedGame.getGameId());
+					intent.putExtra("generalItem", m);
+					ListGIActivity.this.startActivity(intent);
+					break;					
 				default:
 // Commented by btb					
 //					intent = new Intent(ListGIActivity.this, NarratorItemActivity.class);
