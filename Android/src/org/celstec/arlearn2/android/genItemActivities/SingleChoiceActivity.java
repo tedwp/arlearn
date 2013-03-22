@@ -38,7 +38,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-public class SingleChoiceActivity extends GeneralActivity {
+public class SingleChoiceActivity extends GeneralItemActivity {
 
 	HashMap<RadioButton, MultipleChoiceAnswerItem> buttonList = new HashMap<RadioButton, MultipleChoiceAnswerItem>();
 	HashMap<String, MultipleChoiceAnswerItem> nfcMapping = new HashMap<String, MultipleChoiceAnswerItem>();
@@ -55,7 +55,6 @@ public class SingleChoiceActivity extends GeneralActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gi_detail_multiplechoice);
-//		cancelNotification((int) mct.getId().longValue());
 
 		initUi(mct);
 		fireReadAction(mct);
@@ -83,6 +82,8 @@ public class SingleChoiceActivity extends GeneralActivity {
 
 
 	private void initUi(SingleChoiceTest mct) {
+		super.getGuiComponents();
+		super.initCountdownView();
 		textView = ((TextView) findViewById(R.id.mct_question)); // .setText(mct.getQuestion())
 		webview = (WebView) findViewById(R.id.mct_webview);
 
@@ -95,7 +96,7 @@ public class SingleChoiceActivity extends GeneralActivity {
 		} else {
 			webview.setVisibility(View.GONE);
 		}
-
+		
 		if (mct.getText() != null) {
 			textView.setText(mct.getText());
 		} else {

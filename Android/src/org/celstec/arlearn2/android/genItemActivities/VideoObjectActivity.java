@@ -21,6 +21,7 @@ package org.celstec.arlearn2.android.genItemActivities;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 
 import android.content.Intent;
@@ -79,5 +80,15 @@ public class VideoObjectActivity extends NarratorItemActivity {
 	protected void unpackDataFromIntent() {
 		GeneralItem gi = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
 		narratorBean = (VideoObject) gi; //TODO check cast
+	}
+	
+	@Override
+	public GeneralItem getGeneralItem() {
+		return narratorBean;
+	}
+
+	@Override
+	public void setGeneralItem(GeneralItem gi) {
+		narratorBean = (VideoObject) gi;		
 	}
 }

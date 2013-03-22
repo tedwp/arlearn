@@ -40,7 +40,7 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
 
-public class MultipleChoiceActivity extends GeneralActivity {
+public class MultipleChoiceActivity extends GeneralItemActivity {
 
 	HashMap<CheckBox, MultipleChoiceAnswerItem> buttonList = new HashMap<CheckBox, MultipleChoiceAnswerItem>();
 	HashMap<String, MultipleChoiceAnswerItem> nfcMapping = new HashMap<String, MultipleChoiceAnswerItem>();
@@ -96,6 +96,8 @@ public class MultipleChoiceActivity extends GeneralActivity {
 	// }
 
 	private void initUi(MultipleChoiceTest mct) {
+		super.getGuiComponents();
+		super.initCountdownView();
 		textView = ((TextView) findViewById(R.id.mct_question)); // .setText(mct.getQuestion())
 		webview = (WebView) findViewById(R.id.mct_webview);
 

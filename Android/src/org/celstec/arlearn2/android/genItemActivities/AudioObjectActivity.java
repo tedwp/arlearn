@@ -26,7 +26,6 @@ import org.celstec.arlearn2.beans.run.Action;
 
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.widget.ImageView;
 
 public class AudioObjectActivity extends NarratorItemActivity {
@@ -39,10 +38,10 @@ public class AudioObjectActivity extends NarratorItemActivity {
 		completeAction.setAction("complete");
 		completeAction.setRunId(getMenuHandler().getPropertiesAdapter().getCurrentRunId());
 		completeAction.setUserEmail(getMenuHandler().getPropertiesAdapter().getUsername());
-		completeAction.setGeneralItemId(getAudioObject().getId());
-		completeAction.setGeneralItemType(getAudioObject().getType());
+		completeAction.setGeneralItemId(getGeneralItem().getId());
+		completeAction.setGeneralItemType(getGeneralItem().getType());
 		
-		Uri localAudioUri = GeneralItemsDelegator.getInstance().getLocalMediaUriMap(getAudioObject()).get("audio");
+		Uri localAudioUri = GeneralItemsDelegator.getInstance().getLocalMediaUriMap(getGeneralItem()).get("audio");
 		apd =  new AudioPlayerDelegate(localAudioUri, this, completeAction);
 		apd.setPlayButton((ImageView) findViewById(R.id.ao_playButton));
 		apd.setStopButton((ImageView) findViewById(R.id.ao_stopButton));
@@ -56,27 +55,15 @@ public class AudioObjectActivity extends NarratorItemActivity {
 		super.getGuiComponents();
 	}
 	
-	protected void unpackDataFromIntent() {
-		GeneralItem gi = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
-//		this.bean = new AudioObject(gi);
-		narratorBean = ( AudioObject) gi; //TODO check cast
-	}
 	
 	protected void loadDataToGui(){
 		super.loadDataToGui();
 	}
 	
 	
-	
-	
-	private AudioObject getAudioObject() {
-		return (AudioObject) narratorBean;
-	}
-	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-//		apd.unbind();
 	}
 	
 	@Override
@@ -86,9 +73,15 @@ public class AudioObjectActivity extends NarratorItemActivity {
 		
 	}
 
-	
+	@Override
+	public AudioObject getGeneralItem() {
+		return (AudioObject) narratorBean;
+	}
 
-	
+	@Override
+	public void setGeneralItem(GeneralItem gi) {
+		narratorBean = (AudioObject) gi;		
+	}
 	
 	
 	

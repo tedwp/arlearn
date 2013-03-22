@@ -33,7 +33,7 @@ import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.ImageView;
 
-public class ScanTagActivity extends GeneralActivity {
+public class ScanTagActivity extends GeneralItemActivity {
 
 	ScanTag scanTag;
 	protected String richText;
@@ -79,6 +79,7 @@ public class ScanTagActivity extends GeneralActivity {
 	}
 	
 	protected void getGuiComponents() {
+		super.getGuiComponents();
 		webview = (WebView) findViewById(R.id.giNarratorWebView);
 		scanBarcodebutton = (ImageView) findViewById(R.id.scanBarcode);
 		scanBarcodebutton.setOnClickListener(new OnClickListener() {
@@ -97,6 +98,7 @@ public class ScanTagActivity extends GeneralActivity {
 		
 	}
 	protected void loadDataToGui() {
+		super.initCountdownView();
 		if (scanTag.getRichText() != null) {
 			String html = scanTag.getRichText();
 			if (!html.equals(richText)) {

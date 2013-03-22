@@ -23,7 +23,6 @@ import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
-import org.celstec.arlearn2.android.activities.GeneralActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
@@ -36,16 +35,12 @@ import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ItemResponseListRecord;
 import org.celstec.arlearn2.android.menu.MenuHandler;
-import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.run.Response;
 
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.webkit.WebView;
@@ -53,17 +48,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class NarratorItemActivity extends GeneralActivity {
+public class NarratorItemActivity extends GeneralItemActivity {
 
 	protected WebView webview;
-	protected TextView countDownTextView;
 	protected NarratorItem narratorBean;
 	protected String richText;
 	protected Button provideAnswerButton;
 
 	protected GenericMessageListAdapter adapter;
 
-	private Handler mHandler = new Handler();
 
 	public void onBroadcastMessage(Bundle bundle, boolean render) {
 		super.onBroadcastMessage(bundle, render);
@@ -100,12 +93,6 @@ public class NarratorItemActivity extends GeneralActivity {
 		loadDataToGui();
 		fireAction();
 	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		mHandler.removeCallbacks(counterTask);
-	}
 	
 	@Override
 	public GeneralItem getGeneralItem() {
@@ -117,33 +104,7 @@ public class NarratorItemActivity extends GeneralActivity {
 		narratorBean = (NarratorItem) gi;		
 	}
 
-	private Runnable counterTask = new Runnable() {
-		public void run() {
-			Long disappearTime = GeneralItemVisibilityCache.getInstance().disappearedAt(menuHandler.getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
-			if (disappearTime == null || disappearTime == -1) {
-				mHandler.postDelayed(counterTask, 1000);
-				return;
-			}
-			long millis = (disappearTime - System.currentTimeMillis());
-			if (millis <= 0) {
-				NarratorItemActivity.this.finish();
-			}
-			String defaultCountingText = "";
-			int tens = ((int) millis / 100) % 10;
-			int seconds = (int) (millis / 1000);
-			int minutes = seconds / 60;
-			seconds = seconds % 60;
-			if (seconds < 10) {
-				defaultCountingText = minutes + ":0" + seconds + "." + tens;
-			} else {
-				defaultCountingText = minutes + ":" + seconds + "." + tens;
-			}
-			if (countDownTextView != null)
-				countDownTextView.setText(defaultCountingText);
-			mHandler.postDelayed(counterTask, 100);
-
-		}
-	};
+	
 
 	private void fireAction() {
 		PropertiesAdapter pa = getMenuHandler().getPropertiesAdapter();
@@ -168,8 +129,8 @@ public class NarratorItemActivity extends GeneralActivity {
 	}
 
 	protected void getGuiComponents() {
+		super.getGuiComponents();
 		webview = (WebView) findViewById(R.id.giNarratorWebView);
-		countDownTextView = (TextView) findViewById(R.id.timeLeftBeforeDisappear);
 		provideAnswerButton = (Button) findViewById(R.id.provideAnswerButton);
 		provideAnswerButton.setText(getString(R.string.ao_answer_menu));
 		if (narratorBean.getOpenQuestion() != null) {
@@ -215,18 +176,7 @@ public class NarratorItemActivity extends GeneralActivity {
 		} else {
 			webview.setVisibility(View.GONE);
 		}
-		if (countDownTextView != null && narratorBean.getShowCountDown() != null && narratorBean.getShowCountDown()) {
-			long disappearTime = GeneralItemVisibilityCache.getInstance().disappearedAt(menuHandler.getPropertiesAdapter().getCurrentRunId(), narratorBean.getId());
-			if (disappearTime == -1) {
-				countDownTextView.setVisibility(View.GONE);
-			} else {
-				countDownTextView.setVisibility(View.VISIBLE);
-
-			}
-		} else {
-			if (countDownTextView != null)
-				countDownTextView.setVisibility(View.GONE);
-		}
+		super.initCountdownView();
 		if (narratorBean.getName() != null) {
 			setTitle(narratorBean.getName());
 		}
@@ -300,7 +250,6 @@ public class NarratorItemActivity extends GeneralActivity {
 	protected void onResume() {
 		super.onResume();
 		renderAnswers();
-		mHandler.postDelayed(counterTask, 1000);
 	}
 
 	public boolean isGenItemActivity() {
