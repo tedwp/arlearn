@@ -7,9 +7,8 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.response.ResponseClient;
 
 public class ResponseDataSource extends GenericDataSource {
 
-public static ResponseDataSource instance;
+	public static ResponseDataSource instance;
 
-	
 	public static ResponseDataSource getInstance() {
 		if (instance == null)
 			instance = new ResponseDataSource();

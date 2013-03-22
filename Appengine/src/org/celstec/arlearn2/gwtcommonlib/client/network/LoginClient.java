@@ -15,8 +15,8 @@ import com.smartgwt.client.util.SC;
 
 public class LoginClient {
 
-	public static String urlPrefix = "";
-//	public static String urlPrefix = "http://streetlearn.appspot.com/";
+//	public static String urlPrefix = "";
+	public static String urlPrefix = "http://streetlearn.appspot.com/";
 
 	private String username;
 	private String password;

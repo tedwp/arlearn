@@ -1,0 +1,50 @@
+package org.celstec.arlearn2.resultDisplay.client;
+
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.ResponseDataSource;
+
+import com.smartgwt.client.widgets.tile.TileGrid;
+import com.smartgwt.client.widgets.viewer.DetailViewerField;
+
+public class Grid extends TileGrid {
+	
+	private static Grid instance;
+	
+	public static Grid getInstance(){
+		if (instance == null) {
+			instance = new Grid();
+		}
+		
+		return instance;
+	}
+
+	private Grid() {
+		super();
+		
+		setTileWidth(158);
+		setTileHeight(158);
+		setHeight100();
+		setID("boundList");
+		setBackgroundColor("#f1f1f1");
+		setCanReorderTiles(true);
+		setShowAllRecords(true);
+		setDataSource(ResponseDataSource.getInstance());
+		setAutoFetchData(true);
+		setAnimateTileChange(true);
+		setCanFocus(false);
+	
+		
+		/**
+		 * Fields tilegrid setup
+		 * */		
+		DetailViewerField pictureField = new DetailViewerField("picture");
+		pictureField.setType("image");
+		pictureField.setImageSize(100);
+		setFields(pictureField);
+	}
+
+	
+	
+	
+	
+	
+}

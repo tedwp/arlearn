@@ -9,14 +9,18 @@ public class RunModel extends DataSourceModel {
 	public final static int DELETED = 2;
 	public final static int ALTERED = 3;
 	
+	public static final String RUNID_FIELD = "runId";
+	public static final String GAMEID_FIELD = "gameId";
+
+	
 	public RunModel(DataSourceAdapter dataSourceAdapter) {
 		super(dataSourceAdapter);
 	}
 
 	@Override
 	protected void initFields() {
-		addField(INTEGER_DATA_TYPE, "runId", true, true);
-		addField(INTEGER_DATA_TYPE, "gameId", false, true);
+		addField(INTEGER_DATA_TYPE, RUNID_FIELD, true, true);
+		addField(INTEGER_DATA_TYPE, GAMEID_FIELD, false, true);
 		addField(STRING_DATA_TYPE, "title", false, true);
 		addField(STRING_DATA_TYPE, "owner", false, true);
 		addField(BOOLEAN_DATA_TYPE, "deleted", false, true);
