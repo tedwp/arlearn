@@ -41,6 +41,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -62,11 +63,14 @@ public class ConfigForm {
 	private CheckboxItem mapAvailable;
 	private SelectItem offlineZones;
 	private DynamicForm simpleForm = new DynamicForm();
+	private RadioGroupItem sharingOptions;
+	private DynamicForm sharingForm = new DynamicForm();
 
 	public ConfigForm(GameTab gt) {
 		setMapAvailableItem();
 		setMapTypeItem();
 		setOfflineZonesItem();
+		setSharingOptions();
 		this.gameTab = gt;
 
 	}
@@ -74,6 +78,45 @@ public class ConfigForm {
 	public DynamicForm getSimpleConfiguration() {
 		simpleForm.setFields(mapAvailable, mapType, offlineZones);
 		return simpleForm;
+	}
+
+	public DynamicForm getSharingConfiguration() {
+		sharingForm.setFields(sharingOptions);
+		return sharingForm;
+	}
+
+	private void setSharingOptions() {
+
+		sharingOptions = new RadioGroupItem();
+		sharingOptions.setName("sharing");
+		sharingOptions.setTitle(constants.shareVisibilityOptions());
+		// sharingOptions.setMultiple(false);
+		//
+		// sharingOptions.setMultipleAppearance(MultipleAppearance.GRID);
+		sharingOptions.setValueMap(new String[] { constants.privateSharing(), constants.linkSharing(), constants.publicSharing() });
+		// sharingOptions.setValues(constants.privateSharing(),
+		// constants.linkSharing(), constants.publicSharing());
+		sharingOptions.addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				System.out.println("change " + event.getValue());
+				int sharingType = 1;
+				if (event.getValue() != null) {
+					if (event.getValue().equals(constants.linkSharing())) {
+						sharingType = 2;
+					}
+					if (event.getValue().equals(constants.publicSharing())) {
+						sharingType = 3;
+					}
+				}
+				GameClient.getInstance().setSharing(gameTab.getGameId(), sharingType, new JsonCallback() {
+					public void onJsonReceived(JSONValue jsonValue) {
+//						gameTab.updateConfig(jsonValue.isObject().get("config").isObject());
+					};
+				});
+			}
+		});
 	}
 
 	private void setMapAvailableItem() {
@@ -113,11 +156,11 @@ public class ConfigForm {
 		mapType.setValueMap(getMapTypes());
 		mapType.setRedrawOnChange(true);
 
-		mapType.setShowIfCondition(new FormItemIfFunction() {  
-            public boolean execute(FormItem item, Object value, DynamicForm form) {  
-                return mapTypeVisible(form);  
-            }
-        });  
+		mapType.setShowIfCondition(new FormItemIfFunction() {
+			public boolean execute(FormItem item, Object value, DynamicForm form) {
+				return mapTypeVisible(form);
+			}
+		});
 		mapType.addChangedHandler(new ChangedHandler() {
 
 			@Override
@@ -130,13 +173,14 @@ public class ConfigForm {
 			}
 		});
 	}
-	
+
 	private boolean mapTypeVisible(DynamicForm form) {
-		return form.getValue("mapAvailable")!= null &&((Boolean) form.getValue("mapAvailable"));
+		return form.getValue("mapAvailable") != null && ((Boolean) form.getValue("mapAvailable"));
 	}
 
-	private static final String OPENSTREETMAPS ="Open Street Maps";
-	private static final String GOOGLEMAPS = "Google Maps" ;
+	private static final String OPENSTREETMAPS = "Open Street Maps";
+	private static final String GOOGLEMAPS = "Google Maps";
+
 	public LinkedHashMap<String, String> getMapTypes() {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
 		valueMap.put("0", GOOGLEMAPS);
@@ -153,69 +197,70 @@ public class ConfigForm {
 		offlineZones.setMultiple(true);
 		offlineZones.setHeight(50);
 		offlineZones.setMultipleAppearance(MultipleAppearance.GRID);
-		offlineZones.setShowIfCondition(new FormItemIfFunction() {  
-            public boolean execute(FormItem item, Object value, DynamicForm form) {  
-                return mapTypeVisible(form) && form.getValue("mapType")!= null &&(form.getValueAsString("mapType").equals("1"));  
-            }
-        });  
+		offlineZones.setShowIfCondition(new FormItemIfFunction() {
+			public boolean execute(FormItem item, Object value, DynamicForm form) {
+				return mapTypeVisible(form) && form.getValue("mapType") != null && (form.getValueAsString("mapType").equals("1"));
+			}
+		});
 		offlineZones.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				RegionWindow rw = new RegionWindow(ConfigForm.this);
 				rw.show();
-				
+
 			}
 		});
-//		offlineZones.addKeyPressHandler(new KeyPressHandler() {
-//			
-//			@Override
-//			public void onKeyPress(KeyPressEvent event) {
-//				System.out.println(""+event);
-//				System.out.println(""+event.getKeyName() );
-//				System.out.println(""+offlineZones.getSelectedRecords());
-//			}
-//		});
+		// offlineZones.addKeyPressHandler(new KeyPressHandler() {
+		//
+		// @Override
+		// public void onKeyPress(KeyPressEvent event) {
+		// System.out.println(""+event);
+		// System.out.println(""+event.getKeyName() );
+		// System.out.println(""+offlineZones.getSelectedRecords());
+		// }
+		// });
 	}
 
 	public void updateConfig(JSONObject jsonValue) {
 		boolean mapAvailableBoolean = true;
 		if (jsonValue.containsKey("mapAvailable")) {
-			mapAvailableBoolean  = jsonValue.get("mapAvailable").isBoolean().booleanValue();
+			mapAvailableBoolean = jsonValue.get("mapAvailable").isBoolean().booleanValue();
 		}
 		mapAvailable.setValue(mapAvailableBoolean);
 		String mapType = "0";
 		if (jsonValue.containsKey("mapType")) {
-			mapType  = ""+((int) jsonValue.get("mapType").isNumber().doubleValue());
+			mapType = "" + ((int) jsonValue.get("mapType").isNumber().doubleValue());
 		}
 		simpleForm.setValue("mapType", mapType);
-		
+
 		if (jsonValue.containsKey("mapRegions")) {
 			JSONArray regionsArray = jsonValue.get("mapRegions").isArray();
-			
-			for (int i = 0; i< regionsArray.size(); i++) {
+
+			for (int i = 0; i < regionsArray.size(); i++) {
 				JSONObject region = regionsArray.get(i).isObject();
 				Region r = new Region();
 				r.setLatUp(region.get("latUp").isNumber().doubleValue());
 				r.setLatDown(region.get("latDown").isNumber().doubleValue());
 				r.setLngLeft(region.get("lngLeft").isNumber().doubleValue());
 				r.setLngRight(region.get("lngRight").isNumber().doubleValue());
-				r.setMinZoom((int )region.get("minZoom").isNumber().doubleValue());
-				r.setMaxZoom((int )region.get("maxZoom").isNumber().doubleValue());
-				regions.put(r.toString(),r);
+				r.setMinZoom((int) region.get("minZoom").isNumber().doubleValue());
+				r.setMaxZoom((int) region.get("maxZoom").isNumber().doubleValue());
+				regions.put(r.toString(), r);
 				Set<String> keySet = regions.keySet();
 				offlineZones.setValueMap(keySet.toArray(new String[keySet.size()]));
 			}
 		}
 		simpleForm.redraw();
-		
+
 	}
+
 	public void addRegion(Region r) {
-		regions.put(r.toString(),r);
+		regions.put(r.toString(), r);
 		Set<String> keySet = regions.keySet();
 		offlineZones.setValueMap(keySet.toArray(new String[keySet.size()]));
 		JSONArray array = new JSONArray();
 		int index = 0;
-		for (String key: keySet) {
+		for (String key : keySet) {
 			array.set(index++, regions.get(key).toJson());
 		}
 		GameClient.getInstance().addMapRegion(gameTab.getGameId(), array, new JsonCallback() {
@@ -227,17 +272,17 @@ public class ConfigForm {
 	}
 
 	private HashMap<String, Region> regions = new HashMap<String, Region>();
-	
+
 	public class Region {
-		
+
 		private double latUp;
 		private double latDown;
 		private double lngLeft;
 		private double lngRight;
-		
+
 		private int minZoom;
 		private int maxZoom;
-		
+
 		public Region() {
 		}
 
@@ -288,11 +333,11 @@ public class ConfigForm {
 		public void setMaxZoom(int maxZoom) {
 			this.maxZoom = maxZoom;
 		}
-		
+
 		public String toString() {
-			return "("+latUp+","+lngLeft+")..("+latDown+","+lngRight+") ("+minZoom+"-"+maxZoom+")";
+			return "(" + latUp + "," + lngLeft + ")..(" + latDown + "," + lngRight + ") (" + minZoom + "-" + maxZoom + ")";
 		}
-		
+
 		public JSONObject toJson() {
 			JSONObject json = new JSONObject();
 			json.put("type", new JSONString("org.celstec.arlearn2.beans.game.MapRegion"));
@@ -300,12 +345,33 @@ public class ConfigForm {
 			json.put("latDown", new JSONNumber(getLatDown()));
 			json.put("lngLeft", new JSONNumber(getLngLeft()));
 			json.put("lngRight", new JSONNumber(getLngRight()));
-			
+
 			json.put("minZoom", new JSONNumber(getMinZoom()));
 			json.put("maxZoom", new JSONNumber(getMaxZoom()));
 			return json;
 		}
-		
-		
+
+	}
+
+	public void setSharing(int sharing) {
+		if (sharingOptions!= null) {
+		switch (sharing) {
+		case 1:
+			 sharingOptions.setValue(constants.privateSharing());
+			break;
+		case 2:
+			 sharingOptions.setValue(constants.linkSharing());
+
+			break;
+		case 3:
+			 sharingOptions.setValue(constants.publicSharing());
+
+			break;
+
+		default:
+			break;
+		}
+		sharingForm.redraw();
+		}
 	}
 }

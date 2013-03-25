@@ -37,6 +37,7 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.beans.run.Inventory;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
+import org.celstec.arlearn2.delegators.GameDelegator;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
@@ -329,6 +330,18 @@ public class GeneralItems extends Service {
 
 	}
 	
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Path("/search")
+	public String search(@HeaderParam("Authorization") String token, 
+			String searchQuery, 
+			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GeneralItemDelegator gid = new GeneralItemDelegator(token);
+			return serialise(gid.search(searchQuery), accept);
+	}
 	
 	
 	

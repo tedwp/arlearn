@@ -21,6 +21,8 @@ package org.celstec.arlearn2.jdo.classes;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.celstec.arlearn2.beans.game.Game;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Text;
@@ -42,6 +44,9 @@ public class GameJDO extends GameClass {
 	
 	@Persistent
 	private Text config;
+	
+	@Persistent
+	private Integer sharing;
 
 	public Long getGameId() {
 		return id.getId();
@@ -95,6 +100,15 @@ public class GameJDO extends GameClass {
 
 	public void setConfig(String config) {
 		this.config = new Text(config);
+	}
+
+	public Integer getSharing() {
+		if (sharing == null) return Game.PRIVATE;
+		return sharing;
+	}
+
+	public void setSharing(Integer sharing) {
+		this.sharing = sharing;
 	}
 	
 }

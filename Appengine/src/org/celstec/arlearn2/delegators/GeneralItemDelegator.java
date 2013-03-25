@@ -32,6 +32,7 @@ import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.dependencies.OrDependency;
 import org.celstec.arlearn2.beans.dependencies.TimeDependency;
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.beans.generalItem.PickupItem;
@@ -45,9 +46,17 @@ import org.celstec.arlearn2.cache.VisibleGeneralItemsCache;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
 import org.celstec.arlearn2.jdo.manager.GeneralItemVisibilityManager;
+import org.celstec.arlearn2.tasks.beans.GeneralItemSearchIndex;
 import org.celstec.arlearn2.tasks.beans.NotifyRunsFromGame;
 import org.htmlparser.util.Translate;
 
+import com.google.appengine.api.search.Index;
+import com.google.appengine.api.search.IndexSpec;
+import com.google.appengine.api.search.Results;
+import com.google.appengine.api.search.ScoredDocument;
+import com.google.appengine.api.search.SearchException;
+import com.google.appengine.api.search.SearchServiceFactory;
+import com.google.appengine.api.search.StatusCode;
 import com.google.gdata.util.AuthenticationException;
 
 public class GeneralItemDelegator extends GoogleDelegator {
@@ -67,6 +76,7 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		gi.setDeleted(false);
 		GeneralItemManager.addGeneralItem(gi);
 		(new NotifyRunsFromGame(authToken, gi.getGameId(), gi, GeneralItemModification.CREATED)).scheduleTask();
+		GeneralItemSearchIndex.scheduleGiTask(gi);
 		if (gi.getDependsOn() != null) {
 			GeneralItemVisibilityManager.delete(null, gi.getId(), null, null);	
 		} 		
@@ -494,6 +504,32 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		}
 		return returnItems;
 
+	}
+
+	public GeneralItemList search(String searchQuery) {
+		try {
+		    Results<ScoredDocument> results = getIndex().search(searchQuery);
+		    GeneralItemList resultsList = new GeneralItemList();
+		    for (ScoredDocument document : results) {
+		    	GeneralItem gi =new GeneralItem();
+		    	gi.setName(document.getFields("title").iterator().next().getText());
+		    	gi.setGameId(document.getFields("gameId").iterator().next().getNumber().longValue());
+		    	gi.setId(document.getFields("generalItemId").iterator().next().getNumber().longValue());
+
+		    	resultsList.addGeneralItem(gi);
+		    }
+		    return resultsList;
+		} catch (SearchException e) {
+		    if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult().getCode())) {
+		        // retry
+		    }
+		}
+		return null;
+	}
+
+	public Index getIndex() {
+		IndexSpec indexSpec = IndexSpec.newBuilder().setName("generalItem_index").build();
+		return SearchServiceFactory.getSearchService().getIndex(indexSpec);
 	}
 
 
