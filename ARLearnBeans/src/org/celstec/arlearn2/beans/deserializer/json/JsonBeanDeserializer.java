@@ -68,6 +68,7 @@ import org.celstec.arlearn2.beans.notification.APNDeviceDescription;
 import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.beans.notification.Ping;
 import org.celstec.arlearn2.beans.notification.Pong;
+import org.celstec.arlearn2.beans.notification.TeamModification;
 import org.celstec.arlearn2.beans.notification.authoring.RunCreationStatus;
 import org.celstec.arlearn2.beans.run.ActionDeserializer;
 import org.celstec.arlearn2.beans.run.ActionListDeserializer;
@@ -363,6 +364,7 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.GeneralItemModification", new GeneralItemModificationDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.Ping", new Ping.Deserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.Pong", new Pong.Deserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.TeamModification", TeamModification.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.APNDeviceDescription", new APNDeviceDescription.Deserializer());
 	}
 	

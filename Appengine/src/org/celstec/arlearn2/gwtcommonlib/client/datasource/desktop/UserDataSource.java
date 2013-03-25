@@ -5,6 +5,8 @@ import org.celstec.arlearn2.gwtcommonlib.client.datasource.UserModel;
 import org.celstec.arlearn2.gwtcommonlib.client.network.GenericClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.UserClient;
 
+import com.google.gwt.json.client.JSONObject;
+
 public class UserDataSource extends GenericDataSource {
 
 	public static UserDataSource instance;
@@ -34,12 +36,16 @@ public class UserDataSource extends GenericDataSource {
 		((UserClient) getHttpClient()).getUsers(runId, new JsonObjectListCallback(getBeanType(), this.getDataSourceModel()));
 	}
 
-	@Override
-	public void removeRecord(Object id) {
-		
-	}
-
 	protected String getBeanType() {
 		return "users";
 	}
+	
+	@Override
+	public void processNotification(JSONObject bean) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void setServerTime(long serverTime) {}
+	
 }

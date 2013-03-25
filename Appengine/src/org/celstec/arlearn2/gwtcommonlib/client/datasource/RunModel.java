@@ -1,5 +1,8 @@
 package org.celstec.arlearn2.gwtcommonlib.client.datasource;
 
+import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationHandler;
+import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationSubscriber;
+
 import com.google.gwt.json.client.JSONObject;
 //import org.celstec.arlearn2.mobileclient.client.common.datasource.mobile.GameDataSource;
 
@@ -29,26 +32,13 @@ public class RunModel extends DataSourceModel {
 
 	@Override
 	protected void registerForNotifications() {
-//		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.RunModification",new NotificationHandler() {
-//			
-//			@Override
-//			public void onNotification(JSONObject bean) {
-//				switch ((int) bean.get("modificationType").isNumber().doubleValue()) {
-//				case CREATED:
-//					addJsonObject(bean.get("run").isObject());
-//					break;
-//				case DELETED:
-//					removeObject((long) bean.get("run").isObject().get("runId").isNumber().doubleValue());
-//					break;
-//				case ALTERED:
-//					addJsonObject(bean.get("run").isObject());
-//					break;
-//				default:
-//					break;
-//				}
-//
-//			}
-//		});	
+		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.RunModification",new NotificationHandler() {
+			
+			@Override
+			public void onNotification(JSONObject bean) {
+				processNotification(bean);
+			}
+		});	
 	}
 	
 	@Override

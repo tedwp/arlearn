@@ -21,12 +21,15 @@ package org.celstec.arlearn2.delegators;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import org.celstec.arlearn2.beans.notification.TeamModification;
 import org.celstec.arlearn2.beans.run.Team;
 import org.celstec.arlearn2.beans.run.TeamList;
 import org.celstec.arlearn2.jdo.manager.TeamManager;
 import org.celstec.arlearn2.tasks.beans.DeleteUsers;
+import org.celstec.arlearn2.tasks.beans.NotifyUsersFromGame;
 import org.celstec.arlearn2.cache.TeamsCache;
 import org.celstec.arlearn2.cache.UsersCache;
+import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 
 import com.google.gdata.util.AuthenticationException;
 
@@ -58,6 +61,15 @@ public class TeamsDelegator extends GoogleDelegator {
 	public Team createTeam(long runId, String teamId, String name) {
 		if (teamId == null) teamId = UUID.randomUUID().toString();
 		TeamsCache.getInstance().removeTeams(runId);
+		new NotifyUsersFromGame(getAuthToken(), runId, null, TeamModification.ALTERED).scheduleTask();
+		
+		TeamModification tm = new TeamModification();
+		tm.setModificationType(TeamModification.ALTERED);
+		tm.setRunId(runId);
+		UsersDelegator ud = new UsersDelegator(this);
+		
+		ChannelNotificator.getInstance().notify(ud.getCurrentUserAccount(), tm);
+		
 		return TeamManager.addTeam(runId, teamId, name);
 	}
 
@@ -98,6 +110,15 @@ public class TeamsDelegator extends GoogleDelegator {
 		TeamsCache.getInstance().removeTeams(t.getRunId());
 		UsersCache.getInstance().removeUser(t.getRunId());
 		(new DeleteUsers(getAuthToken(), null, null, teamId)).scheduleTask();
+		new NotifyUsersFromGame(getAuthToken(), t.getRunId(), null, TeamModification.ALTERED).scheduleTask();
+
+		TeamModification tm = new TeamModification();
+		tm.setModificationType(TeamModification.ALTERED);
+		tm.setRunId(t.getRunId());
+		UsersDelegator ud = new UsersDelegator(this);
+		
+		ChannelNotificator.getInstance().notify(ud.getCurrentUserAccount(), tm);
+		
 		//TODO test if deleting users works...
 		return t;
 	}

@@ -31,6 +31,10 @@ public abstract class DataSourceModel {
 	protected abstract void initFields();
 
 	protected abstract void registerForNotifications();
+	
+	protected void processNotification(JSONObject bean) {
+		this.dataSourceAdapter.processNotification(bean);
+	}
 
 	protected void addField(int dataType, String attributeName, boolean primaryKey, boolean hidden) {
 		if (primaryKey)
@@ -76,11 +80,16 @@ public abstract class DataSourceModel {
 	public void addJsonObject(JSONObject object) {
 		AbstractRecord record = createRecord(object);
 		record.setCorrespondingJsonObject(object);
-		dataSourceAdapter.saveRecord(record);
+		if (object.containsKey("deleted") && object.get("deleted").isBoolean().booleanValue()) {
+			dataSourceAdapter.removeRecord(record);
+		} else {
+			dataSourceAdapter.saveRecord(record);	
+		}
+		
 	}
 	
-	public void removeObject(Object id) {
-		dataSourceAdapter.removeRecord(id);
+	public void removeObject(AbstractRecord record) {
+		dataSourceAdapter.removeRecord(record);
 	}
 	
 	protected AbstractRecord createRecord(JSONObject object) {
@@ -97,7 +106,6 @@ public abstract class DataSourceModel {
 			task.setJsonSource(object);
 			record.setAttribute(task.getTargetFieldName(), task.process());
 		}
-		System.out.println("record "+record);
 		return record;
 	}
 	
@@ -118,6 +126,23 @@ public abstract class DataSourceModel {
 		case DOUBLE_DATA_TYPE:
 			record.setAttribute(attribute, value.isNumber().doubleValue());
 		}
+	}
+
+	public void setServerTime(long serverTime) {
+		dataSourceAdapter.setServerTime(serverTime);
+	}
+
+	public Object getPrimaryKey(AbstractRecord record) {
+		if (record.getCorrespondingJsonObject().containsKey(pkAttribute)) {
+			JSONValue value = record.getCorrespondingJsonObject().get(pkAttribute);
+			if (value.isNumber() != null) {
+				return new Long((long) value.isNumber().doubleValue());
+			}
+			if (value.isString() != null) {
+				return value.isString().stringValue();
+			}
+		}
+		return null;
 	}
 
 }

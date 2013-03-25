@@ -48,8 +48,6 @@ public class Authentication implements LoginCallback {
 	public void disAuthenticate() {
 		Cookies.removeCookie(AUTH_COOKIE);		
 		Cookies.removeCookie(USERNAME_COOKIE);
-//		Authoring.disableTabs();
-//		Authoring.clearCaches();
 		NotificationSubscriber.getInstance().removeAllHandlers();
 	}
 	

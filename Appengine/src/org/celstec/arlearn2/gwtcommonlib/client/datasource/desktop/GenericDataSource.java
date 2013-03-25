@@ -1,5 +1,7 @@
 package org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop;
 
+import java.util.HashMap;
+
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.DataSourceAdapter;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.DataSourceModel;
@@ -7,6 +9,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.datasource.DataSourceModel;
 import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.DataSourceField;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceFloatField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
@@ -17,6 +20,9 @@ public abstract class GenericDataSource extends DataSource implements
 		DataSourceAdapter {
 
 	private DataSourceModel model;
+	private static long lastSyncDate = 0;
+	protected HashMap<Object, MyAbstractRecord> recordMap = new HashMap<Object, MyAbstractRecord>();
+
 
 	protected GenericDataSource() {
 		// initFields();
@@ -73,8 +79,18 @@ public abstract class GenericDataSource extends DataSource implements
 	@Override
 	public void saveRecord(AbstractRecord record) {
 		addData((MyAbstractRecord) record);
+		Object key = model.getPrimaryKey(record);
+		if (key != null) recordMap.put(key, (MyAbstractRecord) record);
 	}
 
+	public void setServerTime(long serverTime) {
+		lastSyncDate = serverTime;
+	}
+	
+	protected long getLastSyncDate() {
+		return lastSyncDate;
+	}
+	
 	private class MyAbstractRecord extends ListGridRecord implements
 			AbstractRecord {
 		private JSONObject json;
@@ -88,6 +104,16 @@ public abstract class GenericDataSource extends DataSource implements
 		public JSONObject getCorrespondingJsonObject() {
 			return json;
 		}
+	}
+	
+	@Override
+	public void removeRecord(AbstractRecord record) {
+		Record toRemove = getRecord(model.getPrimaryKey(record));
+		if (toRemove != null) removeData(toRemove);
+	}
+	
+	protected Record getRecord(Object id) {
+		return recordMap.get(id);
 	}
 
 }

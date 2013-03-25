@@ -25,6 +25,7 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.beans.notification.GeneralItemModification;
 import org.celstec.arlearn2.beans.notification.RunModification;
+import org.celstec.arlearn2.beans.notification.TeamModification;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
@@ -96,6 +97,12 @@ public class NotifyUsersFromGame extends GenericBean {
 			gim.setItemId(gim.getGeneralItem().getId());
 			}
 			for (User u : ul.getUsers()) {
+				if (modificationType == TeamModification.ALTERED) {
+					TeamModification tm = new TeamModification();
+					tm.setModificationType(TeamModification.ALTERED);
+					tm.setRunId(runId);
+					ChannelNotificator.getInstance().notify(u.getEmail(), tm);
+				}
 				if (u.getDeleted() == null || !u.getDeleted()) {
 				VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, u.getEmail());
 				if (modificationType == GeneralItemModification.CREATED) {
@@ -117,6 +124,7 @@ public class NotifyUsersFromGame extends GenericBean {
 				if (modificationType == GameModification.ALTERED ||modificationType == GameModification.DELETED) {
 					UserManager.gameChanged(u);
 				}
+				
 				
 
 //				ChannelNotificator.getInstance().notify(u.getEmail(), gim);

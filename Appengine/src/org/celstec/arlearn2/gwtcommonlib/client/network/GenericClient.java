@@ -21,8 +21,8 @@ public class GenericClient {
 
 	public String getUrl() {
 		if (urlPrefix != null) return urlPrefix;
-//		return "rest/";
-		return "http://streetlearn.appspot.com/rest/";
+		return "rest/";
+//		return "http://streetlearn.appspot.com/rest/";
 	}
 
 	public RequestBuilder getRequestBuilder(String urlPostfix) {

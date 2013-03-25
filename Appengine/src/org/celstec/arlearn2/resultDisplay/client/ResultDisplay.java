@@ -1,10 +1,13 @@
 package org.celstec.arlearn2.resultDisplay.client;
 
 import org.celstec.arlearn2.gwtcommonlib.client.auth.Authentication;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.TeamModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GameDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.ResponseDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.RunDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.TeamDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.UserDataSource;
+import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationSubscriber;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -20,20 +23,22 @@ public class ResultDisplay implements EntryPoint {
 	private Grid tileGrid = null;
 	private List listGrid = null;
 	private Mixed columnTreeGrid = null;
-	
-	private static final String password = "";
+
+	private static final String password = "arl3arn123";
 
 	private SlideShow slide;
-	
+
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		TeamDataSource.getInstance().loadDataFromWeb(1249039l);
-		UserDataSource.getInstance().loadDataFromWeb(1249039l);
-		showResultDisplay();
-		//showResponses();
-		//showRuns();
+		TeamDataSource.getInstance().loadDataFromWeb(2l);
+		UserDataSource.getInstance().loadDataFromWeb(2l);
+		 showResultDisplay();
+//		showGames();
+		// showResponses();
+//		 showRuns();
+//		 showTeams();
 	}
 
 	private void showResultDisplay() {
@@ -42,31 +47,29 @@ public class ResultDisplay implements EntryPoint {
 		} else {
 			System.out.println(Authentication.getInstance().getAuthenticationToken());
 		}
-		ResponseDataSource.getInstance().loadDataFromWeb(1249039l, "arlearn1");
-	
-		tileGrid = Grid.getInstance();		
-		listGrid = List.getInstance();		
+		ResponseDataSource.getInstance().loadDataFromWeb(2l, "arlearn1");
+
+		tileGrid = Grid.getInstance();
+		listGrid = List.getInstance();
 		columnTreeGrid = Mixed.getInstance();
-		
-		tileGrid.addDoubleClickHandler(new DoubleClickHandler() {			
+
+		tileGrid.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				showPreview(tileGrid);
 			}
 		});
-		
-		listGrid.addDoubleClickHandler(new DoubleClickHandler() {			
+
+		listGrid.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				showPreview(tileGrid);
 			}
 		});
-		
+
 		ResultDisplayLayout main = new ResultDisplayLayout(tileGrid, listGrid, columnTreeGrid);
 		main.draw();
 	}
-
-
 
 	private void showPreview(final TileGrid tileGrid) {
 		slide = SlideShow.getInstance(tileGrid);
@@ -74,9 +77,9 @@ public class ResultDisplay implements EntryPoint {
 	}
 
 	/**
-	 * Legacy code ----------- 
+	 * Legacy code -----------
 	 * */
-	
+
 	private VLayout vLayout;
 
 	public void showResponses() {
@@ -110,27 +113,26 @@ public class ResultDisplay implements EntryPoint {
 		ListGridField roleField = new ListGridField("role", "read ");
 		ListGridField readField = new ListGridField("read", "read ");
 
-		listGrid.setFields(new ListGridField[] { titleGameField, creatorGameField, imageUrlField , readField, roleField});
+		listGrid.setFields(new ListGridField[] { titleGameField, creatorGameField, imageUrlField, readField, roleField });
 		listGrid.setCanResizeFields(true);
 
 		listGrid.fetchData();
 		vLayout.addMember(listGrid);
 		rootPanel.add(vLayout);
 	}
-	
-	
+
 	public void showRuns() {
 		RootPanel rootPanel = RootPanel.get("container");
-//		vLayout = new VLayout();
-//		vLayout.setMembersMargin(15);
+		// vLayout = new VLayout();
+		// vLayout.setMembersMargin(15);
 		if (!Authentication.getInstance().isAuthenticated()) {
 			Authentication.getInstance().userCredentialsReceived("arlearn1", password);
 		} else {
 			System.out.println(Authentication.getInstance().getAuthenticationToken());
 		}
 
-//		vLayout.setWidth100();
-//		vLayout.setHeight100();
+		// vLayout.setWidth100();
+		// vLayout.setHeight100();
 
 		ListGrid listGrid = new ListGrid();
 
@@ -143,8 +145,57 @@ public class ResultDisplay implements EntryPoint {
 		listGrid.setCanResizeFields(true);
 
 		listGrid.fetchData();
-//		vLayout.addMember(listGrid);
+		// vLayout.addMember(listGrid);
 		rootPanel.add(listGrid);
+	}
+
+	public void showGames() {
+		RootPanel rootPanel = RootPanel.get("container");
+		if (!Authentication.getInstance().isAuthenticated()) {
+			Authentication.getInstance().userCredentialsReceived("arlearn1", password);
+		} else {
+			System.out.println(Authentication.getInstance().getAuthenticationToken());
+			NotificationSubscriber.getInstance();
+
+			ListGrid listGrid = new ListGrid();
+
+			listGrid.setDataSource(GameDataSource.getInstance());
+			GameDataSource.getInstance().loadDataFromWeb();
+			ListGridField titleGameField = new ListGridField("title", "title");
+
+			listGrid.setFields(new ListGridField[] { titleGameField });
+			listGrid.setCanResizeFields(true);
+			listGrid.setWidth100();
+			listGrid.setHeight100();
+			listGrid.fetchData();
+			rootPanel.add(listGrid);
+		}
+
+	}
+	
+	public void showTeams() {
+		RootPanel rootPanel = RootPanel.get("container");
+		if (!Authentication.getInstance().isAuthenticated()) {
+			Authentication.getInstance().userCredentialsReceived("arlearn1", password);
+		} else {
+			System.out.println(Authentication.getInstance().getAuthenticationToken());
+			NotificationSubscriber.getInstance();
+
+			ListGrid listGrid = new ListGrid();
+
+			listGrid.setDataSource(TeamDataSource.getInstance());
+			TeamDataSource.getInstance().loadDataFromWeb(2l);
+			ListGridField titleGameField = new ListGridField(TeamModel.NAME_FIELD, TeamModel.NAME_FIELD);
+			ListGridField titlIdField = new ListGridField(TeamModel.TEAMID_FIELD, TeamModel.TEAMID_FIELD);
+
+			listGrid.setFields(new ListGridField[] { titleGameField, titlIdField });
+			listGrid.setCanResizeFields(true);
+			listGrid.setWidth100();
+			listGrid.setHeight100();
+			listGrid.fetchData();
+			rootPanel.add(listGrid);
+		}
+
 	}
 
 }

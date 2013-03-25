@@ -42,6 +42,10 @@ public class GameClient extends GenericClient {
 		invokeJsonGET(null, jcb);
 	}
 	
+	public void getGames(long from, final JsonCallback jcb) {
+		invokeJsonGET("?from="+from, jcb);
+	}
+	
 	public void getGameConfig(long id, final JsonCallback jcb) {
 		invokeJsonGET("/config/gameId/"+id, jcb);
 	}

@@ -10,8 +10,7 @@ import com.google.gwt.json.client.JSONString;
 public class RunClient extends GenericClient {
 
 	private static RunClient instance;
-	private static long lastSyncDate = 0;
-	
+
 	
 	private RunClient() {
 	}
@@ -36,15 +35,11 @@ public class RunClient extends GenericClient {
 	}
 	
 	public void runsParticipate(final JsonCallback jcb) {
-		if (lastSyncDate == 0 ) {
 			invokeJsonGET("/participate", jcb);	
-		} else {
-			runsParticipate(lastSyncDate, jcb);
-		}
 	}
 	
-	private void runsParticipate(long from, final JsonCallback jcb) {
-		invokeJsonGET("/participate?from=", jcb);
+	public void runsParticipate(long from, final JsonCallback jcb) {
+		invokeJsonGET("/participate?from="+from, jcb);
 	}
 	
 	public String getUrl() {

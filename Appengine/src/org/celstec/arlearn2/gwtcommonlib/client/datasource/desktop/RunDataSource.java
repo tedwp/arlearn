@@ -5,11 +5,12 @@ import org.celstec.arlearn2.gwtcommonlib.client.datasource.RunModel;
 import org.celstec.arlearn2.gwtcommonlib.client.network.GenericClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.run.RunClient;
 
+import com.google.gwt.json.client.JSONObject;
+
 public class RunDataSource extends GenericDataSource {
 
 	public static RunDataSource instance;
 
-	
 	public static RunDataSource getInstance() {
 		if (instance == null)
 			instance = new RunDataSource();
@@ -26,17 +27,16 @@ public class RunDataSource extends GenericDataSource {
 	}
 	
 	public void loadDataFromWeb() {
-		((RunClient) getHttpClient()).runsParticipate(new JsonObjectListCallback(getBeanType(), this.getDataSourceModel()));
-	}
-
-	@Override
-	public void removeRecord(Object id) {
-		// TODO Auto-generated method stub
-		
+		((RunClient) getHttpClient()).runsParticipate(getLastSyncDate(), new JsonObjectListCallback(getBeanType(), this.getDataSourceModel()));
 	}
 
 	protected String getBeanType() {
 		return "runs";
+	}
+	
+	@Override
+	public void processNotification(JSONObject bean) {
+		loadDataFromWeb();
 	}
 	
 }

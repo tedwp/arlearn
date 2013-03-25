@@ -9,17 +9,13 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.ui.modal.SessionTimeout;
 
 import com.google.gwt.appengine.channel.client.Channel;
+import com.google.gwt.appengine.channel.client.ChannelFactory;
+import com.google.gwt.appengine.channel.client.ChannelFactory.ChannelCreatedCallback;
 import com.google.gwt.appengine.channel.client.SocketError;
 import com.google.gwt.appengine.channel.client.SocketListener;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-//import com.google.gwt.appengine.channel.client.ChannelError;
-//import com.google.gwt.appengine.channel.client.ChannelError;
-//import com.google.gwt.appengine.channel.client.ChannelFactoryImpl;
-//import com.google.gwt.appengine.channel.client.SocketError;
-//import com.google.gwt.appengine.channel.client.SocketListener;
-//import com.google.gwt.appengine.channel.client.ChannelFactory.ChannelCreatedCallback;
 
 public class NotificationSubscriber {
 
@@ -28,38 +24,37 @@ public class NotificationSubscriber {
 
 	private HashMap<String, List<NotificationHandler>> notificationMap = new HashMap<String, List<NotificationHandler>>();
 
-//	private ChannelCreatedCallback channelCreatedCallback = new ChannelCreatedCallback() {
-//		@Override
-//		public void onChannelCreated(Channel channel) {
-//			channel.open(socketListener);
-//		}
-//	};
-	
-	SocketListener socketListener = new SocketListener() {
+	private ChannelCreatedCallback channelCreatedCallback = new ChannelCreatedCallback() {
 		@Override
-		public void onOpen() {
-			// Window.alert("Channel opened!");
-		}
+		public void onChannelCreated(Channel channel) {
+			channel.open(new SocketListener() {
+				@Override
+				public void onOpen() {
+					// Window.alert("Channel opened!");
+				}
 
-		@Override
-		public void onMessage(String message) {
-			dispatchMessage(message);
-		}
+				@Override
+				public void onMessage(String message) {
+					System.out.println("message: "+message);
+					dispatchMessage(message);
+				}
 
-		@Override
-		public void onClose() {
-			instance = null;
-			if (!error)
-				requestToken();
-			// Window.alert("Channel closed!");
-		}
+				@Override
+				public void onError(SocketError sError) {
+					instance = null;
+					error = true;
+					SessionTimeout st = new SessionTimeout();
+					st.show();
+				}
 
-		@Override
-		public void onError(SocketError e) {
-			instance = null;
-			error = true;
-			SessionTimeout st = new SessionTimeout();
-			st.show();			
+				@Override
+				public void onClose() {
+					instance = null;
+					if (!error)
+						requestToken();
+					// Window.alert("Channel closed!");
+				}
+			});
 		}
 	};
 
@@ -74,17 +69,8 @@ public class NotificationSubscriber {
 	}
 
 	public void openChannel(String token) {
-//		ChannelFactory.createChannel(token, channelCreatedCallback);
-//		Channel channel = (new ChannelFactory()).createChannel(token);
-		Channel channel = createChannel(token);
-		channel.open(socketListener);
-		
+		ChannelFactory.createChannel(token, channelCreatedCallback);
 	}
-	
-	 
-	  public final native Channel createChannel(String token) /*-{                                                                                        
-	    return new $wnd.goog.appengine.Channel(token);                                                                                                    
-	  }-*/;
 
 	public void requestToken() {
 		ChannelClient.getInstance().getToken(new JsonCallback() {
@@ -132,3 +118,4 @@ public class NotificationSubscriber {
 
 	}
 }
+

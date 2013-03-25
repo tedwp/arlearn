@@ -6,7 +6,6 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.json.client.JSONObject;
-import com.smartgwt.mobile.client.util.SC;
 
 public class JsonObjectListCallback extends JsonCallback {
 	
@@ -23,6 +22,8 @@ public class JsonObjectListCallback extends JsonCallback {
 		if (jsonObject == null) {
 			return ;
 		}
+		if (jsonObject.containsKey("serverTime"))
+			dataSourceModel.setServerTime((long)jsonObject.get("serverTime").isNumber().doubleValue());
 		if (jsonObject.get("error") != null){
 			Authentication.getInstance().disAuthenticate();
 		} else {

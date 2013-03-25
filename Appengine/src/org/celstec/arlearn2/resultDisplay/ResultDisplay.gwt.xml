@@ -5,7 +5,6 @@
 
 	<inherits name="com.google.gwt.user.theme.standard.Standard" />
 	<inherits name='com.google.gwt.appengine.channel.Channel' />
-	<inherits name="com.smartgwt.mobile.SmartGwtMobile" />
 	<inherits name="org.celstec.arlearn2.gwtcommonlib.Library" />
 	<inherits name="com.smartgwt.SmartGwt" />
 

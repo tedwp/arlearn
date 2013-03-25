@@ -2,6 +2,8 @@ package org.celstec.arlearn2.gwtcommonlib.client.datasource;
 
 import org.celstec.arlearn2.gwtcommonlib.client.network.GenericClient;
 
+import com.google.gwt.json.client.JSONObject;
+
 public interface DataSourceAdapter {
 
 	public void setDataSourceModel(DataSourceModel model);
@@ -24,7 +26,11 @@ public interface DataSourceAdapter {
 
 	public void saveRecord(AbstractRecord record);
 	
-	public void removeRecord(Object id);
+	public void removeRecord(AbstractRecord record);
+	
+	public void processNotification(JSONObject bean);
+	
+	public void setServerTime(long doubleValue);
 
 
 }
