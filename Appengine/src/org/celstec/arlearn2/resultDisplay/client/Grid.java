@@ -1,6 +1,6 @@
 package org.celstec.arlearn2.resultDisplay.client;
 
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.ResponseDataSource;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OwnerResponseDataSource;
 
 import com.smartgwt.client.widgets.tile.TileGrid;
 import com.smartgwt.client.widgets.viewer.DetailViewerField;
@@ -27,7 +27,7 @@ public class Grid extends TileGrid {
 		setBackgroundColor("#f1f1f1");
 		setCanReorderTiles(true);
 		setShowAllRecords(true);
-		setDataSource(ResponseDataSource.getInstance());
+		setDataSource(OwnerResponseDataSource.getInstance());
 		setAutoFetchData(true);
 		setAnimateTileChange(true);
 		setCanFocus(false);

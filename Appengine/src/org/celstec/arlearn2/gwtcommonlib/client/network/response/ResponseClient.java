@@ -30,8 +30,17 @@ public class ResponseClient extends GenericClient {
 		object.put("responseValue", new JSONString(responseValue));
 		invokeJsonPOST(null, object, jcb);
 	}
+	
 	public void getResponses(long runId, String account, final JsonCallback jcb) {
 		invokeJsonGET("/runId/"+runId+"/account/"+account, jcb);
+	}
+	
+	public void getResponses(long runId, long from, String resumptionToken, final JsonCallback jcb) {
+		if (resumptionToken == null) {
+			invokeJsonGET("/runId/"+runId+"?from="+from, jcb);
+		} else {
+			invokeJsonGET("/runId/"+runId+"?from="+from +"&resumptionToken="+resumptionToken, jcb);
+		}
 	}
 	
 	public void getResponses(long runId, long itemId, final JsonCallback jcb) {

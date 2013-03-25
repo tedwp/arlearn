@@ -1,6 +1,6 @@
 package org.celstec.arlearn2.resultDisplay.client;
 
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.ResponseDataSource;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OwnerResponseDataSource;
 
 import com.smartgwt.client.widgets.grid.ColumnTree;
 
@@ -14,7 +14,7 @@ public class Mixed extends ColumnTree {
 		setWidth100();  
 	    setHeight(205); 
 	    setID("boundColumnTreeGrid");	
-	    setDataSource(ResponseDataSource.getInstance());  
+	    setDataSource(OwnerResponseDataSource.getInstance());  
 	    setAutoFetchData(true);  
 	    setNodeIcon("audio.png"); 
 	    

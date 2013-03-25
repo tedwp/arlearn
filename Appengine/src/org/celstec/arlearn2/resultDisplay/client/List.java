@@ -1,6 +1,6 @@
 package org.celstec.arlearn2.resultDisplay.client;
 
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.ResponseDataSource;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OwnerResponseDataSource;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -19,7 +19,7 @@ public class List extends ListGrid {
         setHeight100();  
         setShowAllRecords(true); 
         setAutoFetchData(true);
-        setDataSource(ResponseDataSource.getInstance());
+        setDataSource(OwnerResponseDataSource.getInstance());
         
         ListGridField previewImageField = new ListGridField("picture", "Preview", 100);  
         previewImageField.setAlign(Alignment.CENTER);  

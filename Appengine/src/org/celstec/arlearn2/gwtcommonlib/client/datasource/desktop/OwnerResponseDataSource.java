@@ -1,23 +1,24 @@
 package org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop;
 
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.JsonObjectListCallback;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.JsonResumptionListCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.ResponseModel;
 import org.celstec.arlearn2.gwtcommonlib.client.network.GenericClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.response.ResponseClient;
 
 import com.google.gwt.json.client.JSONObject;
 
-public class ResponseDataSource extends GenericDataSource {
+public class OwnerResponseDataSource extends GenericDataSource {
 
-	public static ResponseDataSource instance;
+	public static OwnerResponseDataSource instance;
 
-	public static ResponseDataSource getInstance() {
+	public static OwnerResponseDataSource getInstance() {
 		if (instance == null)
-			instance = new ResponseDataSource();
+			instance = new OwnerResponseDataSource();
 		return instance;
 	}
 	
-	private ResponseDataSource() {
+	private OwnerResponseDataSource() {
 		super();
 		setDataSourceModel(new ResponseModel(this));
 	}
@@ -28,12 +29,19 @@ public class ResponseDataSource extends GenericDataSource {
 	
 	@Override
 	public void loadDataFromWeb() {
-		// TODO Auto-generated method stub
-		
 	}
 	
-	public void loadDataFromWeb(long runId, String account) {
-		((ResponseClient) getHttpClient()).getResponses(runId, account, new JsonObjectListCallback(getBeanType(), this.getDataSourceModel()));
+	public void loadDataFromWeb(final long runId) {
+		JsonResumptionListCallback callback = new JsonResumptionListCallback(getBeanType(), this.getDataSourceModel(), 0l){
+
+			@Override
+			public void nextCall() {
+				((ResponseClient) getHttpClient()).getResponses(runId, 0, resumptionToken, this);
+				
+			}
+			
+		};
+		((ResponseClient) getHttpClient()).getResponses(runId, 0, null, callback);
 	}
 
 	protected String getBeanType() {
@@ -42,8 +50,6 @@ public class ResponseDataSource extends GenericDataSource {
 
 	@Override
 	public void processNotification(JSONObject bean) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	public void setServerTime(long serverTime) {}

@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.ResponseDataSource;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OwnerResponseDataSource;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -75,7 +75,7 @@ public class TestGwtTile implements EntryPoint {
 		tileGridExtend.setTileHeight(205);
 		tileGridExtend.setHeight("100%");
 		tileGridExtend.setID("boundListExtend");
-		tileGridExtend.setDataSource(ResponseDataSource.getInstance());
+		tileGridExtend.setDataSource(OwnerResponseDataSource.getInstance());
 		tileGridExtend.setCanReorderTiles(true);
 		tileGridExtend.setAnimateTileChange(true);
 		
@@ -241,7 +241,7 @@ public class TestGwtTile implements EntryPoint {
         columnTree.setWidth100();  
         columnTree.setHeight(205); 
         columnTree.setID("boundColumnTreeGrid");
-        columnTree.setDataSource(ResponseDataSource.getInstance());  
+        columnTree.setDataSource(OwnerResponseDataSource.getInstance());  
         columnTree.setAutoFetchData(true);  
         columnTree.setNodeIcon("audio.png");  
         //columnTree.setFolderIcon("icons/16/person.png");  
@@ -265,7 +265,7 @@ public class TestGwtTile implements EntryPoint {
         listGrid.setHeight100();  
         listGrid.setShowAllRecords(true); 
         listGrid.setAutoFetchData(true);
-        listGrid.setDataSource(ResponseDataSource.getInstance());
+        listGrid.setDataSource(OwnerResponseDataSource.getInstance());
         
         ListGridField previewImageField = new ListGridField("picture", "Preview", 100);  
         previewImageField.setAlign(Alignment.CENTER);  
@@ -293,7 +293,7 @@ public class TestGwtTile implements EntryPoint {
 		tileGrid.setBackgroundColor("#f1f1f1");
 		tileGrid.setCanReorderTiles(true);
 		tileGrid.setShowAllRecords(true);
-		tileGrid.setDataSource(ResponseDataSource.getInstance());
+		tileGrid.setDataSource(OwnerResponseDataSource.getInstance());
 		tileGrid.setAutoFetchData(true);
 		tileGrid.setAnimateTileChange(true);
 		tileGrid.setCanFocus(false);
@@ -427,7 +427,7 @@ public class TestGwtTile implements EntryPoint {
 		filterForm.setGroupTitle("Search");
 		//filterForm.setBorder("2px solid black");
 		//filterForm.setHeight100();
-		filterForm.setDataSource(ResponseDataSource.getInstance());
+		filterForm.setDataSource(OwnerResponseDataSource.getInstance());
 		filterForm.setAutoFocus(false);
 		filterForm.setNumCols(8);
 		

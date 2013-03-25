@@ -41,6 +41,9 @@ public class ResponseListDeserializer extends RunBeanDeserializer{
 		super.initBean(object, genericBean);
 		ResponseList actionList = (ResponseList) genericBean;
 		if (object.has("responses")) actionList.setResponses(ListDeserializer.toBean(object.getJSONArray("responses"), Response.class));
+		if (object.has("serverTime")) actionList.setServerTime(object.getLong("serverTime"));
+		if (object.has("resumptionToken")) actionList.setResumptionToken(object.getString("resumptionToken"));
+
 	}
 
 

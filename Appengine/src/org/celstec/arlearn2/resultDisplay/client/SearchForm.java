@@ -2,7 +2,7 @@ package org.celstec.arlearn2.resultDisplay.client;
 
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.TeamModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.UserModel;
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.ResponseDataSource;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OwnerResponseDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.TeamDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.UserDataSource;
 
@@ -16,7 +16,7 @@ public class SearchForm extends DynamicForm {
 		
 		setPadding(10);		
 		setGroupTitle("Search");
-		setDataSource(ResponseDataSource.getInstance());
+		setDataSource(OwnerResponseDataSource.getInstance());
 		setAutoFocus(false);
 		setNumCols(8);
         

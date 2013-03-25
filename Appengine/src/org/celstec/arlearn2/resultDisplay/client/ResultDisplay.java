@@ -3,7 +3,7 @@ package org.celstec.arlearn2.resultDisplay.client;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.Authentication;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.TeamModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GameDataSource;
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.ResponseDataSource;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OwnerResponseDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.RunDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.TeamDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.UserDataSource;
@@ -47,7 +47,7 @@ public class ResultDisplay implements EntryPoint {
 		} else {
 			System.out.println(Authentication.getInstance().getAuthenticationToken());
 		}
-		ResponseDataSource.getInstance().loadDataFromWeb(2l, "arlearn1");
+		OwnerResponseDataSource.getInstance().loadDataFromWeb(2l);
 
 		tileGrid = Grid.getInstance();
 		listGrid = List.getInstance();
@@ -91,7 +91,7 @@ public class ResultDisplay implements EntryPoint {
 		} else {
 			System.out.println(Authentication.getInstance().getAuthenticationToken());
 		}
-		ResponseDataSource.getInstance().loadDataFromWeb(118l, "arlearn1");
+		OwnerResponseDataSource.getInstance().loadDataFromWeb(118l);
 
 		// if (!Authentication.getInstance().isAuthenticated()) {
 		// vLayout.addMember(new Label("not auth"));
@@ -105,8 +105,8 @@ public class ResultDisplay implements EntryPoint {
 
 		ListGrid listGrid = new ListGrid();
 
-		listGrid.setDataSource(ResponseDataSource.getInstance());
-		ResponseDataSource.getInstance().loadDataFromWeb(118l, "arlearn1");
+		listGrid.setDataSource(OwnerResponseDataSource.getInstance());
+		OwnerResponseDataSource.getInstance().loadDataFromWeb(118l);
 		ListGridField titleGameField = new ListGridField("responseValue", "responseValue");
 		ListGridField creatorGameField = new ListGridField("userEmail", "email");
 		ListGridField imageUrlField = new ListGridField("imageUrl", "imgae ");

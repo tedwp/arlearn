@@ -64,6 +64,10 @@ public class ResponseDelegator extends GoogleDelegator {
 		return rl;
 	}
 	
+	public ResponseList getResponsesFromUntil(Long runId, Long from, Long until, String cursor) {
+		return ResponseManager.getResponse(runId, from, until, cursor);
+	}
+	
 	
 	public Response revokeResponse(Response r) {
 		return ResponseManager.revokeResponse(r.getRunId(), r.getGeneralItemId(), r.getUserEmail(), r.getTimestamp());
