@@ -22,7 +22,7 @@ public class JsonObjectListCallback extends JsonCallback {
 		if (jsonObject == null) {
 			return;
 		}
-		if (jsonObject.containsKey("serverTime"))
+		if (jsonObject.containsKey("serverTime") && dataSourceModel != null)
 			dataSourceModel.setServerTime((long) jsonObject.get("serverTime").isNumber().doubleValue());
 		if (jsonObject.get("error") != null) {
 			Authentication.getInstance().disAuthenticate();
@@ -39,7 +39,7 @@ public class JsonObjectListCallback extends JsonCallback {
 	}
 
 	public void onJsonObjectReceived(JSONObject jsonObject) {
-		dataSourceModel.addJsonObject(jsonObject);
+		if (dataSourceModel != null) dataSourceModel.addJsonObject(jsonObject);
 	}
 
 }

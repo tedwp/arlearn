@@ -7,6 +7,13 @@ import com.google.gwt.json.client.JSONObject;
 
 public class GeneralItemModel extends DataSourceModel {
 	
+	
+	public static final String ID_FIELD = "id";
+	public static final String SORTKEY_FIELD = "sortKey";
+	public static final String LAT_FIELD = "lat";
+	public static final String LNG_FIELD = "lng";
+	public static final String NAME_FIELD = "name";
+
 	public final static int CREATED = 1;
 	public final static int DELETED = 2;
 	public final static int ALTERED = 3;
@@ -19,12 +26,12 @@ public class GeneralItemModel extends DataSourceModel {
 	
 	@Override
 	protected void initFields() {
-		addField(INTEGER_DATA_TYPE, "id", true, true);
-		addField(INTEGER_DATA_TYPE, "sortKey", false, true);
-		addField(INTEGER_DATA_TYPE, "runId", false, true);
-		addField(DOUBLE_DATA_TYPE, "lat", false, true);
-		addField(DOUBLE_DATA_TYPE, "lng", false, true);
-		addField(STRING_DATA_TYPE, "name", false, false);
+		addField(INTEGER_DATA_TYPE, ID_FIELD, true, true);
+		addField(INTEGER_DATA_TYPE, SORTKEY_FIELD, false, true);
+		addField(INTEGER_DATA_TYPE, RunModel.RUNID_FIELD, false, true);
+		addField(DOUBLE_DATA_TYPE, LAT_FIELD, false, true);
+		addField(DOUBLE_DATA_TYPE, LNG_FIELD, false, true);
+		addField(STRING_DATA_TYPE, NAME_FIELD, false, false);
 		addField(STRING_DATA_TYPE, "description", false, false);
 		addField(STRING_DATA_TYPE, "richText", false, false);
 		addField(STRING_DATA_TYPE, "type", false, false);
@@ -70,33 +77,37 @@ public class GeneralItemModel extends DataSourceModel {
 		}, false, false);
 	}
 	
-	@Override
-	protected void registerForNotifications() {
-//		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.GeneralItemModification",new NotificationHandler() {
+	protected String getNotificationType() {
+		return "org.celstec.arlearn2.beans.notification.GeneralItemModification";
+	}
+//	@Override
+//	protected void registerForNotifications() {
+//		NotificationSubscriber.getInstance().addNotificationHandler(,new NotificationHandler() {
 //			
 //			@Override
 //			public void onNotification(JSONObject bean) {
-//				
-//				switch ((int) bean.get("modificationType").isNumber().doubleValue()) {
-//				case DISAPPEARED:
-////					removeObject((long) bean.get("generalItem").isObject().get("id").isNumber().doubleValue());
-//					break;
+//								processNotification(bean);
 //
-//				case CREATED:
-//					addJsonObject(bean.get("generalItem").isObject());
-//					break;
-//					
-//				case VISIBLE:
-//					addJsonObject(bean.get("generalItem").isObject());
-//					break;
-//				case DELETED:
-//					removeObject((long) bean.get("generalItem").isObject().get("id").isNumber().doubleValue());
-//					break;
-//				default:
-//					break;
-//				}
-////				addJsonObject(bean.get("generalItem").isObject());
+////				switch ((int) bean.get("modificationType").isNumber().doubleValue()) {
+////				case DISAPPEARED:
+//////					removeObject((long) bean.get("generalItem").isObject().get("id").isNumber().doubleValue());
+////					break;
+////
+////				case CREATED:
+////					addJsonObject(bean.get("generalItem").isObject());
+////					break;
+////					
+////				case VISIBLE:
+////					addJsonObject(bean.get("generalItem").isObject());
+////					break;
+////				case DELETED:
+////					removeObject((long) bean.get("generalItem").isObject().get("id").isNumber().doubleValue());
+////					break;
+////				default:
+////					break;
+////				}
+//////				addJsonObject(bean.get("generalItem").isObject());
 //			}
 //		});	
-	}
+//	}
 }

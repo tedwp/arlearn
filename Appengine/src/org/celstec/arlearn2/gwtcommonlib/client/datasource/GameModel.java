@@ -24,15 +24,19 @@ public class GameModel extends DataSourceModel {
 		addField(BOOLEAN_DATA_TYPE, DELETED_FIELD, false, true);
 	}
 
-	@Override
-	protected void registerForNotifications() {
-		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.GameModification", new NotificationHandler() {
-
-			@Override
-			public void onNotification(JSONObject bean) {
-				processNotification(bean);
-			}
-		});
+//	@Override
+//	protected void registerForNotifications() {
+//		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.GameModification", new NotificationHandler() {
+//
+//			@Override
+//			public void onNotification(JSONObject bean) {
+//				processNotification(bean);
+//			}
+//		});
+//	}
+	
+	protected String getNotificationType() {
+		return "org.celstec.arlearn2.beans.notification.GameModification";
 	}
 
 	@Override

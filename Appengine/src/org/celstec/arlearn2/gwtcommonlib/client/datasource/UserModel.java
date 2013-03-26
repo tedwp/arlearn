@@ -24,4 +24,13 @@ public class UserModel extends DataSourceModel {
 	protected void registerForNotifications() {
 	}
 
+	public Object getPrimaryKey(AbstractRecord record) {
+		long runId = (long) record.getCorrespondingJsonObject().get(RunModel.RUNID_FIELD).isNumber().doubleValue();
+		String userEmail = record.getCorrespondingJsonObject().get(FULL_EMAIL_FIELD).isString().stringValue();
+		return createKey(runId, userEmail);
+	}
+	
+	public static String createKey(long runId, String userEmail) {
+		return runId+":"+userEmail;
+	}
 }

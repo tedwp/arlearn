@@ -50,6 +50,8 @@ public class BlobStoreServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.setHeader("Cache-Control", "max-age=2592000");
+
 		String path = req.getPathInfo();
 		System.out.println(path);
 		String runIdString = getFirstPath(path);

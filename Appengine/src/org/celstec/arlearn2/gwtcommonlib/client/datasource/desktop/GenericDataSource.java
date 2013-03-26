@@ -20,8 +20,8 @@ public abstract class GenericDataSource extends DataSource implements
 		DataSourceAdapter {
 
 	private DataSourceModel model;
-	private static long lastSyncDate = 0;
-	protected HashMap<Object, MyAbstractRecord> recordMap = new HashMap<Object, MyAbstractRecord>();
+	protected static long lastSyncDate = 0;
+	protected HashMap<Object, AbstractRecord> recordMap = new HashMap<Object, AbstractRecord>();
 
 
 	protected GenericDataSource() {
@@ -113,7 +113,7 @@ public abstract class GenericDataSource extends DataSource implements
 	}
 	
 	protected Record getRecord(Object id) {
-		return recordMap.get(id);
+		return (Record) recordMap.get(id);
 	}
 
 }

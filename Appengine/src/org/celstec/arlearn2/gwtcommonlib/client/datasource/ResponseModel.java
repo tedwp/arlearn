@@ -1,9 +1,15 @@
 package org.celstec.arlearn2.gwtcommonlib.client.datasource;
 
+import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationHandler;
+import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationSubscriber;
+
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 public class ResponseModel extends DataSourceModel {
+
+	public static final String TIMESTAMP_FIELD = "timestamp";
+	public static final String USEREMAIL_FIELD = "userEmail";
 
 	
 	public ResponseModel(DataSourceAdapter dataSourceAdapter) {
@@ -18,12 +24,13 @@ public class ResponseModel extends DataSourceModel {
 		//correct
 		//role
 		
-		addField(INTEGER_DATA_TYPE, "timestamp", false, true);
-		addField(INTEGER_DATA_TYPE, "runId", true, true);
+		addField(INTEGER_DATA_TYPE, TIMESTAMP_FIELD, false, true);
+		addField(INTEGER_DATA_TYPE, RunModel.RUNID_FIELD, true, true);
 		addField(BOOLEAN_DATA_TYPE, "deleted", false, true);
 		addField(INTEGER_DATA_TYPE, "generalItemId", true, true);
-		addField(STRING_DATA_TYPE, "userEmail", false, true);
+		addField(STRING_DATA_TYPE, USEREMAIL_FIELD, false, true);
 		addField(STRING_DATA_TYPE, "responseValue", false, true);
+		addField(STRING_DATA_TYPE, TeamModel.TEAMID_FIELD, false, true);
 		addDerivedField(new DerivedFieldTask() {
 			JSONObject jsonObject;
 			
@@ -154,30 +161,6 @@ public class ResponseModel extends DataSourceModel {
 			
 			@Override
 			public Object process() {
-				return "Blue";
-			}
-
-			@Override
-			public int getType() {
-				return STRING_DATA_TYPE;
-			}
-
-			@Override
-			public String getTargetFieldName() {
-				return "team";
-			}
-		}, false, false);
-		
-		addDerivedField(new DerivedFieldTask() {
-			JSONObject jsonObject;
-			
-			@Override
-			public void setJsonSource(JSONObject jsonObject) {
-				this.jsonObject = jsonObject;	
-			}
-			
-			@Override
-			public Object process() {
 				return "student role";
 			}
 
@@ -242,8 +225,19 @@ public class ResponseModel extends DataSourceModel {
 		
 	}
 
-	@Override
-	protected void registerForNotifications() {
+//	@Override
+//	protected void registerForNotifications() {
+//		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.run.Response", new NotificationHandler() {
+//
+//			@Override
+//			public void onNotification(JSONObject bean) {
+//				processNotification(bean);
+//			}
+//		});
+//	}
+	
+	protected String getNotificationType() {
+		return "org.celstec.arlearn2.beans.run.Response";
 	}
 	
 }

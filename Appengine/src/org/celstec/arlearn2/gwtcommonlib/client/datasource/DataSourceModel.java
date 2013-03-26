@@ -2,6 +2,10 @@ package org.celstec.arlearn2.gwtcommonlib.client.datasource;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationHandler;
+import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationSubscriber;
+
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 
@@ -21,17 +25,30 @@ public abstract class DataSourceModel {
 	private List<String> attributeList = new ArrayList<String>();
 	private ArrayList<DerivedFieldTask> derivedTaskList = new ArrayList<DerivedFieldTask>();
 
-
 	public DataSourceModel(DataSourceAdapter dataSourceAdapter) {
 		this.dataSourceAdapter = dataSourceAdapter;
 		initFields();
 		registerForNotifications();
 	}
-	
+
 	protected abstract void initFields();
 
-	protected abstract void registerForNotifications();
-	
+	protected void registerForNotifications() {
+		if (getNotificationType() != null) {
+			NotificationSubscriber.getInstance().addNotificationHandler(getNotificationType(), new NotificationHandler() {
+
+				@Override
+				public void onNotification(JSONObject bean) {
+					processNotification(bean);
+				}
+			});
+		}
+	}
+
+	protected String getNotificationType() {
+		return null;
+	}
+
 	protected void processNotification(JSONObject bean) {
 		this.dataSourceAdapter.processNotification(bean);
 	}
@@ -69,7 +86,7 @@ public abstract class DataSourceModel {
 		}
 		attributeList.add(attributeName);
 	}
-	
+
 	public void addDerivedField(DerivedFieldTask task, boolean primaryKey, boolean hidden) {
 		derivedTaskList.add(task);
 		String attribute = task.getTargetFieldName();
@@ -83,33 +100,35 @@ public abstract class DataSourceModel {
 		if (object.containsKey("deleted") && object.get("deleted").isBoolean().booleanValue()) {
 			dataSourceAdapter.removeRecord(record);
 		} else {
-			dataSourceAdapter.saveRecord(record);	
+			dataSourceAdapter.saveRecord(record);
 		}
-		
+
 	}
-	
+
 	public void removeObject(AbstractRecord record) {
 		dataSourceAdapter.removeRecord(record);
 	}
-	
+
 	protected AbstractRecord createRecord(JSONObject object) {
 		AbstractRecord record = dataSourceAdapter.createRecord();
 		record.setCorrespondingJsonObject(object);
-		for (int i = 0; i <attributeList.size(); i++) {
+		for (int i = 0; i < attributeList.size(); i++) {
 			String attribute = attributeList.get(i);
 			if (object.containsKey(attribute)) {
 				processAttributeValue(record, attribute, object.get(attribute), typeList.get(i));
 			}
 		}
-		for (int i = 0; i <derivedTaskList.size(); i++) {
+		for (int i = 0; i < derivedTaskList.size(); i++) {
 			DerivedFieldTask task = derivedTaskList.get(i);
 			task.setJsonSource(object);
 			record.setAttribute(task.getTargetFieldName(), task.process());
 		}
 		return record;
 	}
-	
+
 	private void processAttributeValue(AbstractRecord record, String attribute, JSONValue value, int type) {
+		if (value == null)
+			return;
 		switch (type) {
 		case STRING_DATA_TYPE:
 			record.setAttribute(attribute, value.isString().stringValue());

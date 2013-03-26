@@ -80,7 +80,10 @@ public class GameClient extends GenericClient {
 
 	public void addMapRegion(long gameId, JSONArray array, JsonCallback jsonCallback) {
 		invokeJsonPOST("/config/gameId/"+gameId+"/mapRegion", ""+array.toString(), jsonCallback);
-		
+	}
+	
+	public void search(String query, JsonCallback jsonCallback) {
+		invokeJsonPOST("/search", query, jsonCallback);
 	}
 
 }

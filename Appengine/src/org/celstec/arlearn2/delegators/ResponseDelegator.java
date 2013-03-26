@@ -45,13 +45,7 @@ public class ResponseDelegator extends GoogleDelegator {
 		}
 		UsersDelegator qu = new UsersDelegator(this);
 		r.setUserEmail(qu.getCurrentUserAccount());
-//		Long genItemId = r.getGeneralItemId();
-//		String respValue = r.getResponseValue();
-//		Long runId =run.getRunId();
-//		String userEmail =r.getUserEmail();
-//		Long timeStamp =r.getTimestamp();
-//		System.out.println(ResponseManager.params[1]);
-//		ResponseManager.addResponse(genItemId,respValue, runId, userEmail, timeStamp);
+
 		ResponseManager.addResponse(r.getGeneralItemId(), r.getResponseValue(), run.getRunId(), r.getUserEmail(), r.getTimestamp());
 		ChannelNotificator.getInstance().notify(run.getOwner(), r);
 

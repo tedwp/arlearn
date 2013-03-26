@@ -41,6 +41,10 @@ public class RunModel extends DataSourceModel {
 		});	
 	}
 	
+	protected String getNotificationType() {
+		return "org.celstec.arlearn2.beans.notification.RunModification";
+	}
+	
 	@Override
 	protected AbstractRecord createRecord(JSONObject object) {
 		AbstractRecord record = super.createRecord(object);

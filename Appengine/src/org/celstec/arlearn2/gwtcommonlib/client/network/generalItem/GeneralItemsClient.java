@@ -27,6 +27,10 @@ public class GeneralItemsClient extends GenericClient {
 		invokeJsonGET("/gameId/"+gameId, jcb);
 	}
 	
+	public void getGeneralItemsGame(long gameId, long from, final JsonCallback jcb) {
+		invokeJsonGET("/gameId/"+gameId+ "?from="+from, jcb);
+	}
+	
 	public void getGeneralItem(long gameId, long itemId, final JsonCallback jcb) {
 		invokeJsonGET("/gameId/"+gameId+"/generalItem/"+itemId+"/", jcb);
 	}
