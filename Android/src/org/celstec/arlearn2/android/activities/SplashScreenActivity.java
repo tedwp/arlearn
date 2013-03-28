@@ -22,11 +22,13 @@ import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.asynctasks.db.CleanUpFilesThatAreNotInDatabase;
 import org.celstec.arlearn2.android.asynctasks.db.LoadRunsAndGamesToCache;
 import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
+import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 import org.celstec.arlearn2.beans.Info;
 import org.celstec.arlearn2.client.InfoClient;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -55,8 +57,7 @@ public class SplashScreenActivity extends GeneralActivity {
 		SplashCounter task = new SplashCounter();
 		task.execute(new Object[] {});
 		
-		LoadRunsAndGamesToCache gameAndRunsTask = new LoadRunsAndGamesToCache();
-		gameAndRunsTask.run(this);
+		RunDelegator.getInstance().initRunsAndGamesFromDb(this);
 		
 		CleanUpFilesThatAreNotInDatabase cleanUpTask = new CleanUpFilesThatAreNotInDatabase();
 		cleanUpTask.run(this);

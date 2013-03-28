@@ -58,6 +58,20 @@ public class ListRunsParticipateActivity extends GeneralActivity implements List
 	
 
 	@Override
+	protected void onSaveInstanceState (Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putSerializable("runs", runs);
+		outState.putBoolean("unregisterStatus", unregisterStatus);
+	}
+
+	protected void unpackBundle(Bundle inState) {
+		super.unpackBundle(inState);
+		unregisterStatus = inState.getBoolean("unregisterStatus");
+		runs = (Run[]) inState.getSerializable("runs");
+	}
+	
+	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -84,12 +98,8 @@ public class ListRunsParticipateActivity extends GeneralActivity implements List
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
-//		super.onCreateOptionsMenu(menu);
-//		menu.removeItem(0);
 		menu.add(0, MenuHandler.SCAN_RUN, 0, getString(R.string.scanRun));
-
 		menu.add(0, MenuHandler.UNREGISTER, 1, getString(R.string.delete)); // getString(R.string.scanTagMenu)
-
 		return true;
 	}
 

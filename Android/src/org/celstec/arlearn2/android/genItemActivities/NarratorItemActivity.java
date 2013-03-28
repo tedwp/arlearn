@@ -25,7 +25,6 @@ import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
-import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
@@ -46,7 +45,6 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class NarratorItemActivity extends GeneralItemActivity {
 
@@ -153,11 +151,6 @@ public class NarratorItemActivity extends GeneralItemActivity {
 			provideAnswerButton.setVisibility(View.GONE);
 		}
 	}
-
-//	protected void unpackDataFromIntent() {
-//		GeneralItem bean = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
-//		narratorBean = (NarratorItem) bean;
-//	}
 
 	private void reloadBeanFromDb() {
 		NarratorItem ni = (NarratorItem) GeneralItemsCache.getInstance().getGeneralItems(narratorBean.getId());

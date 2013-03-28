@@ -25,19 +25,16 @@ import java.util.List;
 import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.db.LoadMediaUploadToCache;
+import org.celstec.arlearn2.android.asynctasks.db.LoadRunsAndGamesToCache;
 import org.celstec.arlearn2.android.asynctasks.network.DownloadFileTask;
 import org.celstec.arlearn2.android.asynctasks.network.SynchronizeRunsTask;
 import org.celstec.arlearn2.android.asynctasks.network.UnregisterRunTask;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.android.delegators.game.SynchronizeParticipatingGameTask;
-import org.celstec.arlearn2.android.delegators.run.QueryRunsTask;
-import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.RunList;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.os.Message;
 
@@ -56,8 +53,15 @@ public class RunDelegator {
 		return instance;
 	}
 	
-	public void initRunsFromDb(Context ctx) {
-		(new QueryRunsTask()).addTaskToQueue(ctx);
+	//TODO this method is never called
+	public void initRunsAndGamesFromDb(Context ctx) {
+		LoadRunsAndGamesToCache gameAndRunsTask = new LoadRunsAndGamesToCache();
+		gameAndRunsTask.run(ctx);
+	}
+	
+	public void initRunsAndGamesFromDb(Context ctx, String activityToUpdate) {
+		LoadRunsAndGamesToCache gameAndRunsTask = new LoadRunsAndGamesToCache(new String[]{activityToUpdate});
+		gameAndRunsTask.run(ctx);
 	}
 	
 	public void synchronizeRunsWithServer(Context ctx) {
