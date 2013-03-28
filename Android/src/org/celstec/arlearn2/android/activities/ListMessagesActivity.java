@@ -30,12 +30,11 @@ import org.celstec.arlearn2.android.delegators.ActionsDelegator;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.android.delegators.ResponseDelegator;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
+import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
-import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.MessageListRecord;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-
 
 import android.os.Bundle;
 import android.view.View;
@@ -45,6 +44,8 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 
 	private GeneralItem[] gis = null;
 	private GenericMessageListAdapter adapter;
+	private long runId = -1;
+	private Long gameId = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,23 +53,36 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 		setContentView(R.layout.listexcursionscreen);
 		
 		ActionsDelegator.getInstance().synchronizeActionsWithServer(this);
-		long runId = PropertiesAdapter.getInstance(this).getCurrentRunId();
+		runId = PropertiesAdapter.getInstance(this).getCurrentRunId();
 
 		RunDelegator.getInstance().loadRun(this, runId);
 		ResponseDelegator.getInstance().synchronizeResponsesWithServer(this, runId);
 	}
+	
+	@Override
+	protected void onSaveInstanceState (Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putLong("runId", runId);
+		outState.putLong("gameId", gameId);
+	}
+
+	protected void unpackBundle(Bundle inState) {
+		super.unpackBundle(inState);
+		runId = inState.getLong("runId");
+		gameId = inState.getLong("gameId");		
+	}
+	
 
 	@Override
 	protected void onResume() {
-		long runId = PropertiesAdapter.getInstance(this).getCurrentRunId();
-		Long gameId = RunCache.getInstance().getGameId(runId);
+		gameId = RunCache.getInstance().getGameId(runId);
 		if (gameId != null) {
 			GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, runId, gameId);
 			loadMessagesFromCache();
+			super.onResume();
 		} else {
 			finish();
 		}
-		super.onResume();
 	}
 
 	@Override
@@ -87,8 +101,7 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 		if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			this.finish();
 		} else {
-			Long runId = getMenuHandler().getPropertiesAdapter().getCurrentRunId();
-			if (runId == null || RunCache.getInstance().getRun(runId) == null) {
+			if (RunCache.getInstance().getRun(runId) == null) {
 				this.finish();
 			} else 	{
 				TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleMessages(runId);

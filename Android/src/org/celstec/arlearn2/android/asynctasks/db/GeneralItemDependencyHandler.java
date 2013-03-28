@@ -139,10 +139,10 @@ public class GeneralItemDependencyHandler extends GenericTask implements  Databa
 			String userRoles = db.getRunAdapter().queryRoles(runId);
 			if (userRoles != null && !"".equals(userRoles)) {
 				try {
-					boolean playerHasRequiredRole = true;
+					boolean playerHasRequiredRole = false;
 					JSONArray userRolesJson = new JSONArray(userRoles);
 					for (String giRole : gi.getRoles()) {
-						playerHasRequiredRole &= containsRole(userRolesJson, giRole);
+						playerHasRequiredRole |= containsRole(userRolesJson, giRole);
 					}
 					return playerHasRequiredRole;
 				} catch (Exception e) {

@@ -77,6 +77,8 @@ public class SynchronizeRunsTask extends GenericTask implements NetworkTask {
 				ne.printStackTrace();
 				System.out.println("null check rl "+rl);
 				System.out.println("null check RunDelegator.getInstance() "+RunDelegator.getInstance());
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

@@ -131,8 +131,9 @@ public class RunDelegator {
 		
 	}
 	
-	public Run[] getRuns() {
+	public Run[] getRuns(Run[] defaultValue) {
 		Run[] runs = RunCache.getInstance().getRuns();
+		if (runs.length == 0 && defaultValue != null) return defaultValue;
 		return runs;
 	}
 	

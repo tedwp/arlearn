@@ -66,15 +66,20 @@ public class ListRunsParticipateActivity extends GeneralActivity implements List
 
 	protected void unpackBundle(Bundle inState) {
 		super.unpackBundle(inState);
-		unregisterStatus = inState.getBoolean("unregisterStatus");
-		runs = (Run[]) inState.getSerializable("runs");
+		unregisterStatus = inState.getBoolean("unregisterStatus", false);
+		Object [] objects = (Object []) inState.getSerializable("runs");
+		if (objects != null && objects.length >0){
+			runs = new Run[objects.length];
+			for (int i = 0; i < objects.length; i ++) {
+				runs[i] = (Run)objects[i];
+			}
+		}
 	}
 	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			this.finish();
 		} else {
@@ -119,7 +124,7 @@ public class ListRunsParticipateActivity extends GeneralActivity implements List
 
 	private void renderExcursionList() {
 		final ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
-		runs = RunDelegator.getInstance().getRuns();
+		runs = RunDelegator.getInstance().getRuns(runs);
 		if (runs != null) {
 			for (int i = 0; i < runs.length; i++) {
 				RunListRecord r = new RunListRecord(runs[i]);

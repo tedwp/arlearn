@@ -65,7 +65,9 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 		if (savedInstanceState != null) {
 			unpackBundle(savedInstanceState);
 		} else {
-			unpackBundle(getIntent().getExtras());
+			if (getIntent().getExtras() != null) {
+				unpackBundle(getIntent().getExtras());
+			}
 		}
 		menuHandler = new MenuHandler(this);
 		pa = new PropertiesAdapter(this);
