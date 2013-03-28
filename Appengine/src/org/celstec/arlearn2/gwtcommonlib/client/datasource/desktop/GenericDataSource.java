@@ -11,6 +11,7 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.DataSourceField;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
+import com.smartgwt.client.data.fields.DataSourceEnumField;
 import com.smartgwt.client.data.fields.DataSourceFloatField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -63,6 +64,12 @@ public abstract class GenericDataSource extends DataSource implements
 			boolean primaryKey) {
 		addField(new DataSourceBooleanField(attributeName), hidden, primaryKey);
 	}
+	
+	@Override
+	public void addDataSourceEnumField(String attributeName, boolean hidden,
+			boolean primaryKey) {
+		addField(new DataSourceEnumField(attributeName), hidden, primaryKey);
+	}
 
 	private void addField(DataSourceField field, boolean hidden,
 			boolean primaryKey) {
@@ -104,6 +111,8 @@ public abstract class GenericDataSource extends DataSource implements
 		public JSONObject getCorrespondingJsonObject() {
 			return json;
 		}
+
+		
 	}
 	
 	@Override

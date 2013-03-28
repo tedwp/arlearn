@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.widgets.ImgButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -36,6 +37,8 @@ public class SlideShow extends PopupPanel {
 	
 	private static int currentPosition;
 	private static Widget currentElement;
+	
+	private static String __width_max_poppanel = "90%";
 		
 	public static SlideShow getInstance(TileGrid resultSelected) {
 				
@@ -61,7 +64,7 @@ public class SlideShow extends PopupPanel {
 		getElement().getStyle().setPadding(0, Unit.PX);
 		getElement().getStyle().setProperty("marginLeft", "auto");
 		getElement().getStyle().setProperty("marginRight", "auto");
-		getElement().getStyle().setProperty("width", "90%");
+		getElement().getStyle().setProperty("width", __width_max_poppanel);
 		
 		getElement().getStyle().setProperty("right", "0");
 		getElement().setId("popup-main");
@@ -101,6 +104,7 @@ public class SlideShow extends PopupPanel {
 			statusBar.getElement().setId("statusBar");
 
 			/**
+			 * DEPRECATED
 			 * TODO 
 			 * Is using MyMouseEventHandler to manage over and out mouse event.
 			 * 
@@ -112,11 +116,17 @@ public class SlideShow extends PopupPanel {
 			ImgButton next = new ImgButton();
 			
 			next.setSrc("btn-next.gif");
+			next.getElement().setId("slide_right");
 			next.getElement().getStyle().setFloat(Float.RIGHT);
+			next.getElement().getStyle().setProperty("position", "relative");
+			next.getElement().getStyle().setProperty("bottom", "100px");
 			
 			
 			ImgButton previous = new ImgButton();  
+			previous.getElement().setId("slide_left");
 			previous.getElement().getStyle().setFloat(Float.LEFT);
+			previous.getElement().getStyle().setProperty("position", "relative");
+			previous.getElement().getStyle().setProperty("bottom", "100px");
 			
 			previous.setSrc("btn-previous.gif");
 			statusBar.add(previous);
@@ -147,7 +157,7 @@ public class SlideShow extends PopupPanel {
 	
 	private void updateCurrentView(int position){
 		
-		sms("Len "+widgetsSelected.getLength()+" Pos"+currentPosition);
+		sms("Elements in Record[] to show:"+widgetsSelected.getLength()+" CurrentPosition:"+currentPosition);
 		
 		if (currentPosition >= widgetsSelected.getLength()) {
 			currentPosition = 0;
@@ -157,7 +167,6 @@ public class SlideShow extends PopupPanel {
 		
 		setStatusBar(currentPosition, widgetsSelected.getLength());
 
-		sms("Num: "+mainPanel.getWidgetCount());
 		
 		if (mainPanel.getWidgetCount() > 1) {
 			mainPanel.remove(0);
@@ -195,7 +204,7 @@ public class SlideShow extends PopupPanel {
 		final Element aux = element.getElement();
 		
 		/**
-		 * TODO 
+		 * DEPRECATED
 		 * Is using MyMouseEventHandler to manage over and out mouse event.
 		 * 
 		 * Not using it at this moment
@@ -222,18 +231,105 @@ public class SlideShow extends PopupPanel {
 	}
 	
 	private Widget getNextElement() {
-		Image image = null;
-		Video video = null;
-		Audio audio = null;
+		Record wid = widgetsSelected.get(currentPosition);
 		
-		
-		String auxPic = widgetsSelected.get(currentPosition).getAttribute("picture");
-		String auxAud = widgetsSelected.get(currentPosition).getAttribute("audio");
-		String auxVid = widgetsSelected.get(currentPosition).getAttribute("video");
-		String auxDoc = widgetsSelected.get(currentPosition).getAttribute("document");
+		String auxPic = wid.getAttribute("picture");
+		String auxAud = wid.getAttribute("audio");
+		String auxVid = wid.getAttribute("video");
+		String auxText = wid.getAttribute("text");
 
-		System.out.println("pic:"+auxPic+" aud:"+auxAud+" vid:"+auxVid+" doc:"+auxDoc);
+		if (!auxAud.equals("")) {
+			if (!auxPic.equals("")) {
+				// Audio & Image
+				
+				System.out.println("Audio:"+auxAud);
+				System.out.println("Image:"+auxPic);
+				
+				VerticalPanel vPanel = new VerticalPanel();
+				
+				vPanel.add(createImage(auxPic, Long.parseLong(wid.getAttribute("width")), Long.parseLong(wid.getAttribute("height"))));
+				vPanel.add(createAudio(auxAud));
+				
+				currentElement = vPanel;
+				
+			}else if (!auxVid.equals("")) {
+				// Audio & Video
+				System.out.println("Audio:"+auxAud);
+				System.out.println("Video:"+auxVid);
+
+				VerticalPanel vPanel = new VerticalPanel();
+				
+				vPanel.add(createVideo(auxVid, Long.parseLong(wid.getAttribute("width")), Long.parseLong(wid.getAttribute("height"))));
+				vPanel.add(createAudio(auxAud));
+				
+				
+				currentElement = vPanel;
+				
+			}else {
+				// Audio
+				System.out.println("Audio:"+auxAud);
+				
+				currentElement = createAudio(auxAud);
+				
+			}
+		}else if (!auxText.equals("")) {
+			if (!auxPic.equals("")) {
+				// Text & Image
+				System.out.println("Text:"+auxText);
+				System.out.println("Image:"+auxPic);
+				
+				VerticalPanel vPanel = new VerticalPanel();
+				
+				vPanel.add(createText(auxText));
+				vPanel.add(createImage(auxPic, Long.parseLong(wid.getAttribute("width")), Long.parseLong(wid.getAttribute("height"))));				
+				
+				currentElement = vPanel;
+			
+			}else if (!auxVid.equals("")) {
+				// Text & Video
+				System.out.println("Text:"+auxText);
+				System.out.println("Video:"+auxVid);
+			
+				VerticalPanel vPanel = new VerticalPanel();
+				
+				vPanel.add(createText(auxText));
+				vPanel.add(createVideo(auxVid, Long.parseLong(wid.getAttribute("width")), Long.parseLong(wid.getAttribute("height"))));
+				
+				currentElement = vPanel;
+				
+			}else {
+				// Text
+				System.out.println("Text:"+auxText);
+			
+				currentElement = createText(auxText);
+				currentElement = addFocusElement(currentElement);
+			}
+		}else if (!auxPic.equals("")) {
+			// Image
+			System.out.println("Image:"+auxPic);
+			
+			currentElement = createImage(auxPic, Long.parseLong(wid.getAttribute("width")), Long.parseLong(wid.getAttribute("height")));
+			currentElement = addFocusElement(currentElement);
 		
+		}else if (!auxVid.equals("")) {
+			// Video
+			System.out.println("Video:"+auxVid);
+			
+			currentElement = new Image("images/loading.jpg");
+
+			currentElement = createVideo(auxVid, Long.parseLong(wid.getAttribute("width")), Long.parseLong(wid.getAttribute("height")));
+			
+		}else {
+			// None
+			System.out.println("None");
+			
+			currentElement = noneElement();
+			currentElement = addFocusElement(currentElement);
+		}
+		
+		return currentElement;
+		
+		/*
 		if (!auxPic.equals("") && auxVid.equals("") && auxAud.equals("") && auxDoc.equals("")) {
 
 			//image = new Image("images/animals/" + auxPic);
@@ -317,15 +413,132 @@ public class SlideShow extends PopupPanel {
 
 		}
 		
-		sms(""+currentElement);
+		sms("Element to show: "+currentElement);
+		*/
 		
-		return addFocusElement(currentElement);
+		
+	}
+
+	private Widget createVideo(String auxVid, long w, long h) {
+		
+		Video video = Video.createIfSupported();
+		if (video == null) {
+			return null;
+		}
+		
+		video.load();
+		
+		video.addSource(auxVid);
+		
+		if (w >= h) {
+			// TODO with this we use all width of the screen
+			getElement().getStyle().setProperty("width", __width_max_poppanel);
+			
+			// TODO with this we set image, video, etc to width of its father (popupanel)
+			video.getElement().getStyle().setProperty("width", "100%");
+		}else if(w < h){
+			
+			double scaleFactor = getScaleFactor(w, h);
+			
+			final int width = (int) (w * scaleFactor);
+			final int height = (int) (h * scaleFactor*0.90);
+			video.setPixelSize(width, height);
+			
+			getElement().getStyle().setWidth(width, Unit.PX);
+			
+			video.getElement().getStyle().setProperty("width", "100%");
+		}
+		
+		video.setControls(true);		
+		video.setAutoplay(true);
+
+		return video;
+	}
+
+	private Widget createAudio(String auxAud) {
+		Audio audio = Audio.createIfSupported();
+		if (audio == null) {
+			return null;
+		}
+
+		audio.load();
+
+		audio.addSource(auxAud);			
+		audio.setControls(true);
+		return audio;
+	}
+
+	private HTML noneElement() {
+		HTML noneElement = new HTML();
+		
+		noneElement.setHTML("<b>There is no element to show</b>");
+		noneElement.getElement().getStyle().setProperty("height", "400px");
+		
+		getElement().getStyle().setProperty("width", __width_max_poppanel);
+		noneElement.getElement().getStyle().setProperty("width", "100%");
+		
+		return noneElement;
+	}
+
+	/*
+	private HTML createDoc(String auxDoc) {
+		
+		HTML visorDocuments = new HTML();
+		
+		double scaleFactor = getScaleFactor(600,
+				700);
+
+		final int width = ((int) (600* scaleFactor))-20;
+		final int height = ((int) (700 * scaleFactor))-20;
+		visorDocuments.setPixelSize(width, height);
+		
+		visorDocuments.setHTML("<iframe src='http://docs.google.com/viewer?url="+auxDoc+"&embedded=true' width='"+width+"' height='"+height+"' style='border: none;'></iframe>");
+		
+		return visorDocuments;
+	}
+	*/
+	
+	private HTML createText(String auxDoc) {
+		
+		HTML richText = new HTML();
+		
+		richText.setHTML(auxDoc);
+		
+		//richText.getElement().getStyle().setProperty("height", "400px");
+		
+		getElement().getStyle().setProperty("width", __width_max_poppanel);
+		richText.getElement().getStyle().setProperty("width", "100%");
+		
+		return richText;
+	}
+
+	private Image createImage(String auxPic, long w, long h) {
+		Image image;
+		image = new Image(auxPic);
+
+		if (w >= h) {
+			
+			getElement().getStyle().setProperty("width", __width_max_poppanel);
+			
+			image.getElement().getStyle().setProperty("width", "100%");
+			
+		}else if(image.getWidth() < image.getHeight()){
+			
+			double scaleFactor = getScaleFactor(w, h);
+			
+			final int width = (int) (w * scaleFactor);
+			final int height = (int) (h * scaleFactor*0.90);
+			image.setPixelSize(width, height);
+			getElement().getStyle().setWidth(width, Unit.PX);
+			
+			image.getElement().getStyle().setProperty("width", "100%");
+		}
+		
+		return image;
 	}
 
 	
-	private double getScaleFactor(int width, int height) {
-		
-		sms(width+" "+height);
+	private double getScaleFactor(long width, long height) {
 		
 		return Math.min(Window.getClientWidth() / (double) width,
 				Window.getClientHeight() / (double) height);

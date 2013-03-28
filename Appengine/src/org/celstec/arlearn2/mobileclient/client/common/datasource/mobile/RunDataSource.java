@@ -67,23 +67,12 @@ public class RunDataSource  extends GenericDataSource {
 		return "runs";
 	}
 
-
-	@Override
-	public void removeRecord(AbstractRecord record) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public void processNotification(JSONObject bean) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void setServerTime(long doubleValue) {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 }

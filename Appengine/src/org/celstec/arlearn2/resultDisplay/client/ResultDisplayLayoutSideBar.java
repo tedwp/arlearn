@@ -15,21 +15,22 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 
+
 /**
- * First approach of Result Display. This approach uses all width of the screen to show data. Filter and 
- * other functionality is in the upper part of the screen.
+ * Second approach of Result Display. This structure has a bar side in left part and on the other side has 
+ * the toolbar and the results area.
  * 
  * @version
- * Using width of screen.
+ * Left side bar
  * 
  * @author
  * Angel
  * 
  * @see
- * ResultDisplayLayoutSideBar
+ * ResultDisplayLayout
  * 
  * */
-public class ResultDisplayLayout extends VLayout {
+public class ResultDisplayLayoutSideBar extends HLayout {
 	
 	private Grid grid = null;
 	private List list = null;
@@ -37,8 +38,10 @@ public class ResultDisplayLayout extends VLayout {
 	private final HTML breadcrumb = new HTML();
 	private SearchForm filter = null; 
 	
+	private VLayout rigthSide = null;
+	
 
-	public ResultDisplayLayout(Grid tileGrid, List listGrid, Mixed mixedGrid) {
+	public ResultDisplayLayoutSideBar(Grid tileGrid, List listGrid, Mixed mixedGrid) {
 		super();
 		setWidth100();  
         setHeight100();
@@ -47,7 +50,6 @@ public class ResultDisplayLayout extends VLayout {
         this.list = listGrid;
         this.mixed = mixedGrid;
         this.filter = new SearchForm();
-        filter.setNumCols(8);
         
         HLayout toolbar = new HLayout(10); 	// Layout for visualization options, clear button and breadcrumb.
         toolbar.setHeight(22);
@@ -74,9 +76,13 @@ public class ResultDisplayLayout extends VLayout {
         toolbar.addMember(clearButton);
         toolbar.addMember(breadcrumb);
         
+        rigthSide = new VLayout(); 	// Layout toolbar and results
+
+        rigthSide.addMember(toolbar);
+        rigthSide.addMember(tileGrid);
+        
         addMember(filter);
-		addMember(toolbar);
-		addMember(tileGrid);
+		addMember(rigthSide);
 		
 		filter.addItemChangedHandler(new ItemChangedHandler() {
 			public void onItemChanged(ItemChangedEvent event) {
@@ -109,20 +115,19 @@ public class ResultDisplayLayout extends VLayout {
         gridButton.setSize(24);  
         gridButton.setShowRollOver(false);  
         gridButton.setSrc("grid.png");  
-        //gridButton.setActionType(SelectionType.CHECKBOX);
         
         gridButton.addClickHandler(new ClickHandler() {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				if (hasMember(list)) {
-					removeMember(list);	
+				if (rigthSide.hasMember(list)) {
+					rigthSide.removeMember(list);	
 				}
 				
-				if (hasMember(mixed)) {
-					removeMember(mixed);					
+				if (rigthSide.hasMember(mixed)) {
+					rigthSide.removeMember(mixed);					
 				}
-        		addMember(grid);
+				rigthSide.addMember(grid);
 			}
 		});
         
@@ -134,20 +139,19 @@ public class ResultDisplayLayout extends VLayout {
         listButton.setSize(24);  
         listButton.setShowRollOver(false);  
         listButton.setSrc("list.png");  
-        //listButton.setActionType(SelectionType.CHECKBOX);  
         toolStrip.addMember(listButton); 
         listButton.addClickHandler(new ClickHandler() {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				if (hasMember(grid)) {
-					removeMember(grid);					
+				if (rigthSide.hasMember(grid)) {
+					rigthSide.removeMember(grid);					
 				}
 				
-				if (hasMember(mixed)) {
-					removeMember(mixed);					
+				if (rigthSide.hasMember(mixed)) {
+					rigthSide.removeMember(mixed);					
 				}
-        		addMember(list);
+				rigthSide.addMember(list);
 			}
 		});
           
@@ -155,19 +159,18 @@ public class ResultDisplayLayout extends VLayout {
         mixedButton.setSize(24);  
         mixedButton.setShowRollOver(false);  
         mixedButton.setSrc("mixed.png");  
-        //mixedButton.setActionType(SelectionType.CHECKBOX);  
         toolStrip.addMember(mixedButton);
         mixedButton.addClickHandler(new ClickHandler() {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				if (hasMember(grid)) {
-					removeMember(grid);					
+				if (rigthSide.hasMember(grid)) {
+					rigthSide.removeMember(grid);					
 				}
-				if (hasMember(list)) {
-					removeMember(list);		
+				if (rigthSide.hasMember(list)) {
+					rigthSide.removeMember(list);		
 				}
-				addMember(mixed);
+				rigthSide.addMember(mixed);
 			}
 		});
 		return toolStrip;

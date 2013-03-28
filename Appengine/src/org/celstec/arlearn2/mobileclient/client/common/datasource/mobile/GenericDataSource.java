@@ -1,11 +1,11 @@
 package org.celstec.arlearn2.mobileclient.client.common.datasource.mobile;
 
+import java.util.HashMap;
 import java.util.ListIterator;
 
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.DataSourceAdapter;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.DataSourceModel;
-
 
 import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.mobile.client.data.DataSource;
@@ -17,11 +17,15 @@ public abstract class GenericDataSource extends RecordList implements DataSource
 
 	private DataSourceModel model; 
 	private AddDataCallback dataCallback;
+	
+	protected static long lastSyncDate = 0;
+	protected HashMap<Object, AbstractRecord> recordMap = new HashMap<Object, AbstractRecord>();
+	
 	protected GenericDataSource() {
 //		initFields();
 //		setFields(fieldList.toArray(new DataSourceField[0]));
 	}
-
+	
 	@Override
 	public void setDataSourceModel(DataSourceModel model) {
 		this.model = model;
@@ -49,6 +53,13 @@ public abstract class GenericDataSource extends RecordList implements DataSource
 
 	@Override
 	public void addDataSourceBooleanField(String attributeName, boolean hidden, boolean primaryKey) {
+		addField(new DataSourceField(attributeName), hidden, primaryKey);
+	}
+	
+	
+
+	@Override
+	public void addDataSourceEnumField(String attributeName, boolean hidden, boolean primaryKey) {
 		addField(new DataSourceField(attributeName), hidden, primaryKey);
 	}
 	
@@ -81,12 +92,23 @@ public abstract class GenericDataSource extends RecordList implements DataSource
 		trimToSize();
 		if (dataCallback !=null) dataCallback.recordAdded((MyAbstractRecord) record);
 		add((MyAbstractRecord) record);
+		
+		Object key = model.getPrimaryKey(record);
+		if (key != null) recordMap.put(key, (MyAbstractRecord) record);
 	}
 	
 
 	
 	public void setAddDataCallback(AddDataCallback callback) {
 		this.dataCallback = callback;
+	}
+	
+	public void setServerTime(long serverTime) {
+		lastSyncDate = serverTime;
+	}
+	
+	protected long getLastSyncDate() {
+		return lastSyncDate;
 	}
 	
 	public class MyAbstractRecord extends Record implements AbstractRecord {
@@ -102,6 +124,11 @@ public abstract class GenericDataSource extends RecordList implements DataSource
 		public JSONObject getCorrespondingJsonObject() {
 			return json;
 		}
+
+		@Override
+		public void setAttribute(String property, String[] value) {
+			super.setAttribute(property, value);
+		}
 		
 	}
 	
@@ -109,5 +136,14 @@ public abstract class GenericDataSource extends RecordList implements DataSource
 		public void recordAdded(MyAbstractRecord record);
 	}
 	
+	@Override
+	public void removeRecord(AbstractRecord record) {
+		Record toRemove = getRecord(model.getPrimaryKey(record));
+		if (toRemove != null) remove(toRemove);
+	}
+	
+	protected Record getRecord(Object id) {
+		return (Record) recordMap.get(id);
+	}
 	
 }

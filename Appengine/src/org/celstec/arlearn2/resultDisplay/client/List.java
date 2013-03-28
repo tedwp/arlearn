@@ -1,5 +1,7 @@
 package org.celstec.arlearn2.resultDisplay.client;
 
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.TeamModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.UserModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OwnerResponseDataSource;
 
 import com.smartgwt.client.types.Alignment;
@@ -29,10 +31,12 @@ public class List extends ListGrid {
   
         ListGridField timestampField = new ListGridField("timestamp", "Date");  
         ListGridField informationField = new ListGridField("information", "Information");  
-        ListGridField userField = new ListGridField("userEmail", "User");  
-        ListGridField rolField = new ListGridField("rol", "Rol");  
+        ListGridField userField = new ListGridField(UserModel.EMAIL_FIELD, "User");  
+        ListGridField rolField = new ListGridField("rol", "Rol"); 
+        ListGridField teamField = new ListGridField(TeamModel.TEAMID_FIELD, "Team");
+        teamField.setHidden(true);
   
-        setFields(previewImageField, timestampField, informationField, userField, rolField);  
+        setFields(previewImageField, timestampField, informationField, userField, rolField, teamField);  
         setCanResizeFields(true);
 	}
 

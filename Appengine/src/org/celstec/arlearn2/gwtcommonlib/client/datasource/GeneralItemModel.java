@@ -9,6 +9,7 @@ public class GeneralItemModel extends DataSourceModel {
 	
 	
 	public static final String ID_FIELD = "id";
+	public static final String GENERALITEMID_FIELD = "generalItemId";
 	public static final String SORTKEY_FIELD = "sortKey";
 	public static final String LAT_FIELD = "lat";
 	public static final String LNG_FIELD = "lng";
@@ -51,7 +52,6 @@ public class GeneralItemModel extends DataSourceModel {
 			
 			@Override
 			public Object process() {
-				System.out.println(jsonObject);
 				String firstValue = jsonObject.get("type").isString().stringValue();
 				if (firstValue.contains("AudioObject")) return "Audio Object";
 				if (firstValue.contains("VideoObject")) return "Video Object";
@@ -75,7 +75,33 @@ public class GeneralItemModel extends DataSourceModel {
 				return "simpleName";
 			}
 		}, false, false);
+		
+		addDerivedField(new DerivedFieldTask() {
+			JSONObject jsonObject;
+			
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {
+				this.jsonObject = jsonObject;	
+			}
+			
+			@Override
+			public Object process() {
+				return (long) jsonObject.get("id").isNumber().doubleValue();
+			}
+
+			@Override
+			public int getType() {
+				return LONG_DATA_TYPE;
+			}
+
+			@Override
+			public String getTargetFieldName() {
+				return GENERALITEMID_FIELD;
+			}
+		}, false, false);
 	}
+	
+	
 	
 	protected String getNotificationType() {
 		return "org.celstec.arlearn2.beans.notification.GeneralItemModification";

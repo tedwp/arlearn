@@ -22,6 +22,8 @@ public interface DataSourceAdapter {
 
 	public void addDataSourceBooleanField(String attributeName, boolean hidden, boolean primaryKey);
 	
+	public void addDataSourceEnumField(String attributeName, boolean hidden, boolean primaryKey);
+	
 	public AbstractRecord createRecord();
 
 	public void saveRecord(AbstractRecord record);

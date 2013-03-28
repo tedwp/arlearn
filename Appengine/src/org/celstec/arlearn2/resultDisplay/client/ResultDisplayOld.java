@@ -2,15 +2,28 @@ package org.celstec.arlearn2.resultDisplay.client;
 
 import org.celstec.arlearn2.gwtcommonlib.client.auth.Authentication;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.RunModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.RunRoleModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.TeamModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.UserModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GameDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GeneralItemDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OwnerResponseDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.QueryGameDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.RunDataSource;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.RunRolesDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.TeamDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.UserDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.run.RunClient;
+import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationSubscriber;
+
+import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.ClickEvent;  
+import com.smartgwt.client.widgets.form.fields.events.ClickHandler; 
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.json.client.JSONValue;
@@ -19,104 +32,66 @@ import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tile.TileGrid;
 
-public class ResultDisplay implements EntryPoint {
+public class ResultDisplayOld implements EntryPoint {
 
 	private Grid tileGrid = null;
 	private List listGrid = null;
 	private Mixed columnTreeGrid = null;
-	
-	private long runId;
-	
-	private static int NUMBER_VERSION = 1;  // Set this parameter to 1 to use first Layout 
-											// Set this parameter to 2 to use second Layout
-	
+
 	private static final String password = "arl3arn123";
-	
+	private static final long runId = 3l;
+
 	private SlideShow slide;
-	
+
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		
-		
-		
-		runId = Long.parseLong(com.google.gwt.user.client.Window.Location.getParameter("runId"));
 		TeamDataSource.getInstance().loadDataFromWeb(runId);
 		UserDataSource.getInstance().loadDataFromWeb(runId);
-		//
-		RunClient.getInstance().getItemsForRun(runId, new JsonCallback(){
-			public void onJsonReceived(JSONValue jsonValue) {
-				GeneralItemDataSource.getInstance().loadDataFromWeb((long) jsonValue.isObject().get("gameId").isNumber().doubleValue());
-			}
-		});
-		
-		showResultDisplay();
-		//showResponses();
-		//showRuns();
-		//search();
+//		 showResultDisplay();
+//		showGames();
+		 showResponses();
+//		 showRuns();
+//		 showTeams();
+//		 showGeneralItems();
+//		search();
 	}
 
-	private void showResultDisplay() {
+	private void showResultDisplayOld() {
 		if (!Authentication.getInstance().isAuthenticated()) {
 			Authentication.getInstance().userCredentialsReceived("arlearn1", password);
 		} else {
 			System.out.println(Authentication.getInstance().getAuthenticationToken());
 		}
 		OwnerResponseDataSource.getInstance().loadDataFromWeb(runId);
-	
-		tileGrid = Grid.getInstance();		
-		listGrid = List.getInstance();		
+
+		tileGrid = Grid.getInstance();
+		listGrid = List.getInstance();
 		columnTreeGrid = Mixed.getInstance();
-		
-		tileGrid.addDoubleClickHandler(new DoubleClickHandler() {			
+
+		tileGrid.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				// TODO we also should take into account when grid has 
-				// records list but user clicks outside the elements
-				if (!tileGrid.getRecordList().isEmpty()) {
-					showPreview(tileGrid);
-				}				
+				showPreview(tileGrid);
 			}
 		});
-		
-		listGrid.addDoubleClickHandler(new DoubleClickHandler() {			
+
+		listGrid.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				// TODO we also should take into account when grid has 
-				// records list but user clicks outside the elements
-				if (!tileGrid.getRecordList().isEmpty()) {
-					showPreview(tileGrid);
-				}
+				showPreview(tileGrid);
 			}
 		});
-		
-		switch (NUMBER_VERSION) {
-		case 1:
-			ResultDisplayLayout main_v1 = new ResultDisplayLayout(tileGrid, listGrid, columnTreeGrid);
-			main_v1.draw();
-			break;
-		case 2:
-			ResultDisplayLayoutSideBar main_v2 = new ResultDisplayLayoutSideBar(tileGrid, listGrid, columnTreeGrid);
-			main_v2.draw();
-			break;
 
-		default:
-			break;
-		}
-
+		ResultDisplayLayout main = new ResultDisplayLayout(tileGrid, listGrid, columnTreeGrid);
+		main.draw();
 	}
-
-
 
 	private void showPreview(final TileGrid tileGrid) {
 		slide = SlideShow.getInstance(tileGrid);
@@ -124,9 +99,9 @@ public class ResultDisplay implements EntryPoint {
 	}
 
 	/**
-	 * Legacy code ----------- 
+	 * Legacy code -----------
 	 * */
-	
+
 	private VLayout vLayout;
 
 	public void showResponses() {
@@ -138,6 +113,7 @@ public class ResultDisplay implements EntryPoint {
 		} else {
 			System.out.println(Authentication.getInstance().getAuthenticationToken());
 		}
+//		UserDataSource.getInstance().loadDataFromWeb(runId);
 		OwnerResponseDataSource.getInstance().loadDataFromWeb(runId);
 
 		// if (!Authentication.getInstance().isAuthenticated()) {
@@ -150,37 +126,66 @@ public class ResultDisplay implements EntryPoint {
 		vLayout.setHeight100();
 		// vLayout.setSize("1000", "600");
 
-		ListGrid listGrid = new ListGrid();
+		ListGrid responsesGrid = new ListGrid();
 
-		listGrid.setDataSource(OwnerResponseDataSource.getInstance());
-		OwnerResponseDataSource.getInstance().loadDataFromWeb(runId);
+		responsesGrid.setDataSource(OwnerResponseDataSource.getInstance());
+		
 		ListGridField titleGameField = new ListGridField("responseValue", "responseValue");
 		ListGridField creatorGameField = new ListGridField("userEmail", "email");
 		ListGridField imageUrlField = new ListGridField("imageUrl", "imgae ");
-		ListGridField roleField = new ListGridField("role", "read ");
-		ListGridField readField = new ListGridField("read", "read ");
+		ListGridField roleField = new ListGridField("role", "read");
+		ListGridField readField = new ListGridField("read", "read");
+		ListGridField teamIdField = new ListGridField("teamId", "teamId");
 
-		listGrid.setFields(new ListGridField[] { titleGameField, creatorGameField, imageUrlField , readField, roleField});
+		responsesGrid.setFields(new ListGridField[] { titleGameField, creatorGameField, imageUrlField, readField, roleField, teamIdField });
+		responsesGrid.setCanResizeFields(true);
+
+		responsesGrid.fetchData();
+		vLayout.addMember(responsesGrid);
+		
+		ListGrid UserlistGrid = new ListGrid();
+
+		UserlistGrid.setDataSource(UserDataSource.getInstance());
+		UserDataSource.getInstance().loadDataFromWeb(118l);
+		ListGridField userEmailField = new ListGridField(UserModel.EMAIL_FIELD, "email");
+		ListGridField userTeamField = new ListGridField(TeamModel.TEAMID_FIELD, "teamId");
+		ListGridField rolesField = new ListGridField(UserModel.ROLES_FIELD, "roles");
+		
+
+		UserlistGrid.setFields(new ListGridField[] { userEmailField, userTeamField, rolesField });
+		UserlistGrid.setCanResizeFields(true);
+
+		UserlistGrid.fetchData();
+		vLayout.addMember(UserlistGrid);
+		
+		ListGrid listGrid = new ListGrid();
+
+		listGrid.setDataSource(RunRolesDataSource.getInstance());
+		ListGridField rolerRunIdField = new ListGridField(RunModel.RUNID_FIELD, "run id");
+		ListGridField RoleNameField = new ListGridField(RunRoleModel.ROLE_FIELD, "role");
+		
+
+		listGrid.setFields(new ListGridField[] { rolerRunIdField, RoleNameField });
 		listGrid.setCanResizeFields(true);
 
 		listGrid.fetchData();
 		vLayout.addMember(listGrid);
+		
 		rootPanel.add(vLayout);
 	}
-	
-	
+
 	public void showRuns() {
 		RootPanel rootPanel = RootPanel.get("container");
-//		vLayout = new VLayout();
-//		vLayout.setMembersMargin(15);
+		// vLayout = new VLayout();
+		// vLayout.setMembersMargin(15);
 		if (!Authentication.getInstance().isAuthenticated()) {
 			Authentication.getInstance().userCredentialsReceived("arlearn1", password);
 		} else {
 			System.out.println(Authentication.getInstance().getAuthenticationToken());
 		}
 
-//		vLayout.setWidth100();
-//		vLayout.setHeight100();
+		// vLayout.setWidth100();
+		// vLayout.setHeight100();
 
 		ListGrid listGrid = new ListGrid();
 
@@ -193,8 +198,86 @@ public class ResultDisplay implements EntryPoint {
 		listGrid.setCanResizeFields(true);
 
 		listGrid.fetchData();
-//		vLayout.addMember(listGrid);
+		// vLayout.addMember(listGrid);
 		rootPanel.add(listGrid);
+	}
+
+	public void showGames() {
+		RootPanel rootPanel = RootPanel.get("container");
+		if (!Authentication.getInstance().isAuthenticated()) {
+			Authentication.getInstance().userCredentialsReceived("arlearn1", password);
+		} else {
+			System.out.println(Authentication.getInstance().getAuthenticationToken());
+			NotificationSubscriber.getInstance();
+
+			ListGrid listGrid = new ListGrid();
+
+			listGrid.setDataSource(GameDataSource.getInstance());
+			GameDataSource.getInstance().loadDataFromWeb();
+			ListGridField titleGameField = new ListGridField("title", "title");
+
+			listGrid.setFields(new ListGridField[] { titleGameField });
+			listGrid.setCanResizeFields(true);
+			listGrid.setWidth100();
+			listGrid.setHeight100();
+			listGrid.fetchData();
+			rootPanel.add(listGrid);
+		}
+
+	}
+	
+	public void showTeams() {
+		RootPanel rootPanel = RootPanel.get("container");
+		if (!Authentication.getInstance().isAuthenticated()) {
+			Authentication.getInstance().userCredentialsReceived("arlearn1", password);
+		} else {
+			System.out.println(Authentication.getInstance().getAuthenticationToken());
+			NotificationSubscriber.getInstance();
+
+			ListGrid listGrid = new ListGrid();
+
+			listGrid.setDataSource(TeamDataSource.getInstance());
+			TeamDataSource.getInstance().loadDataFromWeb(runId);
+			ListGridField titleGameField = new ListGridField(TeamModel.NAME_FIELD, TeamModel.NAME_FIELD);
+			ListGridField titlIdField = new ListGridField(TeamModel.TEAMID_FIELD, TeamModel.TEAMID_FIELD);
+
+			listGrid.setFields(new ListGridField[] { titleGameField, titlIdField });
+			listGrid.setCanResizeFields(true);
+			listGrid.setWidth100();
+			listGrid.setHeight100();
+			listGrid.fetchData();
+			rootPanel.add(listGrid);
+		}
+
+	}
+	
+	public void showGeneralItems() {
+		RootPanel rootPanel = RootPanel.get("container");
+		if (!Authentication.getInstance().isAuthenticated()) {
+			Authentication.getInstance().userCredentialsReceived("arlearn1", password);
+		} else {
+			NotificationSubscriber.getInstance();
+
+			ListGrid listGrid = new ListGrid();
+
+			RunClient.getInstance().getItemsForRun(runId, new JsonCallback(){
+				public void onJsonReceived(JSONValue jsonValue) {
+					GeneralItemDataSource.getInstance().loadDataFromWeb((long) jsonValue.isObject().get("gameId").isNumber().doubleValue());
+			}
+				
+			});
+			listGrid.setDataSource(GeneralItemDataSource.getInstance());
+			GeneralItemDataSource.getInstance().loadDataFromWeb(1l);
+			ListGridField idField = new ListGridField(GeneralItemModel.ID_FIELD, "identifier");
+			ListGridField nameField = new ListGridField(GeneralItemModel.NAME_FIELD, TeamModel.TEAMID_FIELD);
+
+			listGrid.setFields(new ListGridField[] { idField, nameField });
+			listGrid.setCanResizeFields(true);
+			listGrid.setWidth100();
+			listGrid.setHeight100();
+			listGrid.fetchData();
+			rootPanel.add(listGrid);
+		}
 	}
 	
 //	public void search() {
@@ -202,7 +285,7 @@ public class ResultDisplay implements EntryPoint {
 //		if (!Authentication.getInstance().isAuthenticated()) {
 //			Authentication.getInstance().userCredentialsReceived("arlearn1", password);
 //		} else {
-//			//NotificationSubscriber.getInstance();
+//			NotificationSubscriber.getInstance();
 //
 //			ListGrid listGrid = new ListGrid();
 //			final QueryGameDataSource qgds = new QueryGameDataSource();
@@ -232,7 +315,6 @@ public class ResultDisplay implements EntryPoint {
 //				@Override
 //				public void onChanged(ChangedEvent event) {
 //	    			qgds.search(query.getValueAsString());
-//	    			//getGrid().setData(getGridData(listRecords));
 //					
 //				}
 //			});
@@ -258,5 +340,4 @@ public class ResultDisplay implements EntryPoint {
 //			rootPanel.add(vLayout);
 //		}
 //	}
-
 }

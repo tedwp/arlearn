@@ -30,16 +30,19 @@ public class Grid extends TileGrid {
 		setDataSource(OwnerResponseDataSource.getInstance());
 		setAutoFetchData(true);
 		setAnimateTileChange(true);
-		setCanFocus(false);
-	
+		setCanFocus(false);	
 		
 		/**
 		 * Fields tilegrid setup
 		 * */		
+		// TODO to solve thumbnail problem take a look to the ResponseDataSource
 		DetailViewerField pictureField = new DetailViewerField("picture");
 		pictureField.setType("image");
 		pictureField.setImageSize(100);
+		
+		
 		setFields(pictureField);
+		
 	}
 
 	

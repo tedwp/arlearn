@@ -5,6 +5,7 @@ public class UserModel extends DataSourceModel {
 	public static final String EMAIL_FIELD = "email";
 	public static final String FULL_EMAIL_FIELD = "fullEmail";
 	public static final String NAME_FIELD = "name";
+	public static final String ROLES_FIELD = "roles";
 	
 	public UserModel(DataSourceAdapter dataSourceAdapter) {
 		super(dataSourceAdapter);
@@ -17,6 +18,7 @@ public class UserModel extends DataSourceModel {
 		addField(STRING_DATA_TYPE, FULL_EMAIL_FIELD, false, true);
 		addField(STRING_DATA_TYPE, NAME_FIELD, false, true);
 		addField(INTEGER_DATA_TYPE, RunModel.RUNID_FIELD, true, true);
+		addField(ENUM_DATA_TYPE, ROLES_FIELD, true, true);
 
 	}
 

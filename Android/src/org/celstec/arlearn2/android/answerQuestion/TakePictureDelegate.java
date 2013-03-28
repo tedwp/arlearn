@@ -49,7 +49,30 @@ public class TakePictureDelegate {
 
 	private File bitmapFile;
 	private Uri pictureUri;
+	
+	private int width;
+	private int height;
 
+
+
+	public int getWidth() {
+		return width;
+	}
+
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+
+	public int getHeight() {
+		return height;
+	}
+
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
 
 
 	public TakePictureDelegate(AnnotateActivity answerQuestionActivity) {
@@ -100,7 +123,10 @@ public class TakePictureDelegate {
 
 		try {
 			Bitmap preview_bitmap=BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(pictureUri),null,options);
-//			photoFrame.setImageURI(pictureUri);
+			width = preview_bitmap.getWidth()*8;
+			height = preview_bitmap.getHeight()*8;
+			
+
 			photoFrame.setImageBitmap(preview_bitmap);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

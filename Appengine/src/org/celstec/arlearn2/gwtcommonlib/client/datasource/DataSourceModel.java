@@ -1,11 +1,14 @@
 package org.celstec.arlearn2.gwtcommonlib.client.datasource;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationHandler;
 import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationSubscriber;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 
@@ -17,6 +20,7 @@ public abstract class DataSourceModel {
 	protected final int BOOLEAN_DATA_TYPE = 4;
 	protected final int LONG_DATA_TYPE = 5;
 	protected final int DOUBLE_DATA_TYPE = 6;
+	protected final int ENUM_DATA_TYPE = 7;
 
 	protected String pkAttribute;
 	protected DataSourceAdapter dataSourceAdapter;
@@ -81,6 +85,10 @@ public abstract class DataSourceModel {
 			dataSourceAdapter.addDataSourceBooleanField(attributeName, hidden, primaryKey);
 			typeList.add(BOOLEAN_DATA_TYPE);
 			break;
+		case ENUM_DATA_TYPE:
+			dataSourceAdapter.addDataSourceEnumField(attributeName, hidden, primaryKey);
+			typeList.add(ENUM_DATA_TYPE);
+			break;
 		default:
 			break;
 		}
@@ -121,7 +129,13 @@ public abstract class DataSourceModel {
 		for (int i = 0; i < derivedTaskList.size(); i++) {
 			DerivedFieldTask task = derivedTaskList.get(i);
 			task.setJsonSource(object);
-			record.setAttribute(task.getTargetFieldName(), task.process());
+			Object o = task.process();
+			if (o instanceof String[]) {
+				record.setAttribute(task.getTargetFieldName(), (String[]) o);	
+			} else {
+				record.setAttribute(task.getTargetFieldName(), task.process());	
+			}
+			
 		}
 		return record;
 	}
@@ -144,6 +158,15 @@ public abstract class DataSourceModel {
 			break;
 		case DOUBLE_DATA_TYPE:
 			record.setAttribute(attribute, value.isNumber().doubleValue());
+			break;
+		case ENUM_DATA_TYPE:
+			JSONArray array = value.isArray();
+			String[] arrayString = new String [array.size()];
+			for (int i = 0; i < array.size(); i++) {
+				arrayString[i] = array.get(i).isString().stringValue();
+			}
+			record.setAttribute(attribute, arrayString);
+			break;
 		}
 	}
 

@@ -8,6 +8,7 @@ public class Mixed extends ColumnTree {
 
 	private static Mixed instance;
 
+	// TODO Need to be finished. Still in test phase
 	private Mixed() {
 		super();
 		// TODO Auto-generated constructor stub
