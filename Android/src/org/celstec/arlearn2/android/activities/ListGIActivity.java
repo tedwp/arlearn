@@ -75,8 +75,7 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 	protected void onResume() {
 		super.onResume();
 //		GeneralItemsDelegator.getInstance().fetchMyGeneralItemsFromServer(selectedGame.getGameId(), this);
-		long runId = 0; //TODO create this method in master branch
-		GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, runId, selectedGame.getGameId());
+		GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, selectedGame.getGameId());
 
 		renderGeneralItemsList();
 		

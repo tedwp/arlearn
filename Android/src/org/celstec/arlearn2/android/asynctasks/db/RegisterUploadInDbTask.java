@@ -104,6 +104,17 @@ public class RegisterUploadInDbTask  extends GenericTask implements  DatabaseTas
 		return task;
 	}
 	
+	public static RegisterUploadInDbTask uploadFile(Long gameId, Long itemId, String localId, String username, Uri localFile, String mimetype) {
+		RegisterUploadInDbTask task = new RegisterUploadInDbTask();
+		task.setUsername(username);
+		task.setLocalFile(localFile);
+		task.setMimetype(mimetype);
+		task.setLocalId(localId);
+		task.setGameId(gameId);
+		task.setItemId(itemId);
+		return task;
+	}
+	
 	public void run(Context ctx) {
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
 		m.obj = this;

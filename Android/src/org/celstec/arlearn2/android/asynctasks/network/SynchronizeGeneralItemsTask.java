@@ -20,6 +20,8 @@ package org.celstec.arlearn2.android.asynctasks.network;
 
 import java.util.Iterator;
 
+import org.celstec.arlearn2.android.activities.ListGIActivity;
+import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
@@ -85,6 +87,8 @@ public class SynchronizeGeneralItemsTask extends GenericTask implements NetworkT
 							}
 						}
 						GeneralItemsCache.getInstance().put(db.getGeneralItemAdapter().queryByGameId(gameId));
+						ActivityUpdater.updateActivities(ctx, ListGIActivity.class.getCanonicalName());
+
 						runAfterTasks(ctx);
 					}
 

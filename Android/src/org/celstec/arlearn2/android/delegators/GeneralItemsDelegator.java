@@ -59,14 +59,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.asynctasks.db.CreateDownloadGeneralItems;
 import org.celstec.arlearn2.android.asynctasks.db.GeneralItemDependencyHandler;
 import org.celstec.arlearn2.android.asynctasks.db.InitGeneralItemVisibilityTask;
 import org.celstec.arlearn2.android.asynctasks.db.LoadGeneralItemsFromDbTask;
+import org.celstec.arlearn2.android.asynctasks.db.RegisterUploadInDbTask;
 import org.celstec.arlearn2.android.asynctasks.network.DownloadFileTask;
 import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGeneralItemsTask;
 import org.celstec.arlearn2.android.asynctasks.network.SynchronizeRunsTask;
 import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGeneralItemVisiblityTask;
+import org.celstec.arlearn2.android.asynctasks.network.UploadFileSyncTask;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.cache.MediaGeneralItemCache;
 import org.celstec.arlearn2.android.cache.ResponseCache;
@@ -282,10 +285,40 @@ public class GeneralItemsDelegator {
 		return db.getGeneralItemAdapter().queryById(itemId);
 	}
 	
-	public void getGeneralItems(Context ctx, String owner) {
+	public void getGeneralItems(Context ctx, String str) {
 		QueryGeneralItemsTask dgTask = new QueryGeneralItemsTask(ctx);
-		dgTask.setMatchingString(owner);
+		dgTask.setMatchingString(str);
 		dgTask.addTaskToQueue(ctx);
+		
+	}
+	
+	public void uploadGeneralItem(Context ctx, GeneralItem gi, String username, Uri uri){
+		
+		String sMime = "";
+		if(gi.getType().equals(Constants.GI_TYPE_AUDIO_OBJECT)){
+			sMime = "audio/AMR";
+
+			
+			
+		}else if (gi.getType().equals(Constants.GI_TYPE_VIDEO_OBJECT)){
+		
+			sMime = "video/mp4";
+			
+			
+//		// Pending photo object
+//		}else if (gi.getType().equals(Constants.GI_TYPE_)){			
+//		"application/jpg"
+			
+			
+			
+		}
+		
+		long currentTime = 0l;
+		RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(gi.getGameId(), "audio:"+currentTime,  username, uri, sMime);
+		task.taskToRunAfterExecute(new UploadFileSyncTask());
+		task.run(ctx);
+
+		
 		
 	}
 	

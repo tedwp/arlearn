@@ -26,6 +26,8 @@ import java.util.Date;
 
 import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 // Commented by btb
 //import org.celstec.arlearn2.android.activities.UploadGeneralItemActivity;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
@@ -37,6 +39,7 @@ import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -224,6 +227,8 @@ public class VideorecorderActivity extends Activity implements Callback {
 //	}
 
 	private void uploadItem() {
+		PropertiesAdapter pa = new PropertiesAdapter(this);
+		
 		videoObject.setType(Constants.GI_TYPE_VIDEO_OBJECT);
 		videoObject.setDeleted(false);
 		videoObject.setScope("user");
@@ -250,7 +255,14 @@ public class VideorecorderActivity extends Activity implements Callback {
 		videoObject.setVideoFeed("http://www.celstec.org" + videoFile.getAbsolutePath());
 		
 		
-		Toast.makeText(this, "Publishing recording " + videoFile.getName(), Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "Publishing recording " + videoFile.getName() + " - "+videoFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
+		
+		// Upload file into Blob store
+		GeneralItemsDelegator.getInstance().uploadGeneralItem(this, videoObject, pa.getUsername(), Uri.parse(videoFile.getAbsolutePath()));
+		
+		// Create item in GenealItemJDO
+		GeneralItemsDelegator.getInstance().createGeneralItem(this, videoObject);
+		
 		
 // Commented by btb		
 //		Intent intent = new Intent(VideorecorderActivity.this, UploadGeneralItemActivity.class);

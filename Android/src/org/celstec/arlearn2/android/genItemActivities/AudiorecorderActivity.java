@@ -62,7 +62,7 @@ public class AudiorecorderActivity extends Activity {
 	// Object to be uploaded 
 	private AudioObject audioObject = null;
 	private Uri newUri = null;
-	private long lCurrentTime = 0L;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -241,10 +241,15 @@ public class AudiorecorderActivity extends Activity {
 		// TODO pending to update this with uploaded url of blob
 		audioObject.setAudioFeed("http://www.celstec.org" + audiofile.getAbsolutePath());		
 
-		Toast.makeText(this, "Publishing recording " + audiofile.getName(), Toast.LENGTH_LONG).show();
+		System.out.println("Publishing audio recording ..." + audiofile.getName());
+		
+		Toast.makeText(this, "Publishing audio recording ..." + audiofile.getName() , Toast.LENGTH_LONG).show();
+		
+		// Upload file into Blob store
+		GeneralItemsDelegator.getInstance().uploadGeneralItem(this, audioObject, pa.getUsername(), newUri);
 		
 		// Create item in GenealItemJDO
-		//GeneralItemsDelegator.getInstance().createGeneralItem(this, audioObject);
+		GeneralItemsDelegator.getInstance().createGeneralItem(this, audioObject);
 		
 		// Create item in FileJDO
 		// TODO check with stefaan
@@ -278,7 +283,7 @@ public class AudiorecorderActivity extends Activity {
 
 		Format dateFormat = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
 		Date date = new Date();
-		lCurrentTime = date.getTime();
+		//long lCurrentTime = date.getTime();
 		String newDateString = "/arlearn_audio" + dateFormat.format(date).replace(" ", "_").replace(":", "") + ".3gp";
 		return newDateString;
 	}

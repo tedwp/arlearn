@@ -83,6 +83,9 @@ public class NewNarratorItemActivity extends GeneralActivity {
 		String sDescription = ((EditText) findViewById(R.id.etGIDesc)).getText() + "";
 
 		Log.d(CLASSNAME, " generalItemname:" + sItemName + " description:" + sDescription + ".");
+		
+		
+		// TDOO TRAERSE EL GENERAL ITEM AQUIIIIIIIII ANES DE QUE CONFIRME
 
 		if ((sItemName.length() > 0) && (sDescription.length() > 0)) {
 

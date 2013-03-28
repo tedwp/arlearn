@@ -1,9 +1,13 @@
 package org.celstec.arlearn2.android.delegators.generalitem;
 
+import org.celstec.arlearn2.android.activities.ListGIActivity;
+import org.celstec.arlearn2.android.activities.ListGamesActivity;
+import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.asynctasks.network.NetworkTask;
 import org.celstec.arlearn2.android.asynctasks.network.NetworkTaskHandler;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.client.GeneralItemClient;
 
@@ -39,6 +43,8 @@ public class CreateGeneralItemTask implements NetworkTask {
 		
 		try {
 			GeneralItemClient.getGeneralItemClient().postGeneralItem(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), generalItem.toString());
+			GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(ctx, generalItem.getGameId());
+
 		} catch (Exception e) {
 			Log.e("exception", "in databasehandler", e);		
 		}
