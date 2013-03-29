@@ -287,10 +287,11 @@ public class GeneralItemDelegator extends GoogleDelegator {
 	public static boolean itemMatchesUserRoles(GeneralItem generalItem, List<String> list) {
 		if (generalItem.getRoles() == null) return true;
 		if (generalItem.getRoles().isEmpty()) return true;
+		if (list == null) return false;
 		for (String itemRole: generalItem.getRoles()) {
-			if (!userRoleListContainsRole(list, itemRole)) return false;
+			if (userRoleListContainsRole(list, itemRole)) return true;
 		}
-		return true;
+		return false;
 	}
 	
 	private static  boolean userRoleListContainsRole(List<String> list, String itemRole) {

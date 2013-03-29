@@ -1,0 +1,16 @@
+.my-mouse-out  img, .my-mouse-over  img  {
+	height: 40px;
+}
+
+#slide_right > div, #slide_left > div {
+	height: 40px !important;
+}
+
+.popupContent{
+	padding:15px;
+	position:relative;
+}
+
+.gwt-PopupPanel{
+	top: 20px !important;
+}
