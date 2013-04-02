@@ -18,11 +18,10 @@
  ******************************************************************************/
 package org.celstec.arlearn2.api;
 
-import java.util.List;
-
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -41,18 +40,29 @@ public class GeneralItemsVisibility extends Service {
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/runId/{runIdentifier}")
-	public String getVisibilityStatements(@HeaderParam("Authorization") String token, 
-			@PathParam("runIdentifier") Long runIdentifier, 
-			@DefaultValue("application/json") @HeaderParam("Accept") String accept,
-			@QueryParam("from") Long from,
-			@QueryParam("until") Long until)
+	public String getVisibilityStatements(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @DefaultValue("application/json") @HeaderParam("Accept") String accept, @QueryParam("from") Long from, @QueryParam("until") Long until)
 			throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 		GeneralItemVisibilityDelegator vidDel = new GeneralItemVisibilityDelegator(token);
 		UsersDelegator ud = new UsersDelegator(vidDel);
 		String email = ud.getCurrentUserAccount();
-		return  serialise(vidDel.getVisibleItems(runIdentifier, email, from, until), accept);
+		return serialise(vidDel.getVisibleItems(runIdentifier, email, from, until), accept);
 	}
-	
+
+	@POST
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/runId/{runIdentifier}/account/{account}")
+	public String setVisibilityStatus(@HeaderParam("Authorization") String token, @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType, @PathParam("runIdentifier") Long runIdentifier, @PathParam("account") String account, String visiblityStatement,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GeneralItemVisibilityDelegator vidDel = new GeneralItemVisibilityDelegator(token);
+		Object statement = deserialise(visiblityStatement, GeneralItemVisibility.class, contentType);
+		if (statement instanceof java.lang.String)
+			return serialise(getBeanDoesNotParseException((String) statement), accept);
+		return serialise(vidDel.makeItemVisible(runIdentifier, account, (GeneralItemVisibility) statement), accept);
+
+	}
+
 }

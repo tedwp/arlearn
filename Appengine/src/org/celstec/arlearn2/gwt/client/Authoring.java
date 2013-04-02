@@ -32,6 +32,7 @@ import org.celstec.arlearn2.gwt.client.ui.GameTab.RoleDataSource;
 import org.celstec.arlearn2.gwt.client.ui.ChannelDisplay;
 import org.celstec.arlearn2.gwt.client.ui.GamesMapTab;
 import org.celstec.arlearn2.gwt.client.ui.GamesTab;
+import org.celstec.arlearn2.gwt.client.ui.GeneralItemVisiblityTab;
 import org.celstec.arlearn2.gwt.client.ui.LoginWindow;
 import org.celstec.arlearn2.gwt.client.ui.RunsTab;
 import org.celstec.arlearn2.gwt.client.ui.WebServicesTab;
@@ -91,19 +92,6 @@ public class Authoring implements EntryPoint {
 		
 	}
 	
-	
-	
-//	public void onModuleLoad1() {
-//		RootPanel rootPanel = RootPanel.get();
-//
-//		HLayout navLayout = new HLayout();
-//		navLayout.setMembersMargin(10);
-//		
-//		navLayout.addChild(new IButton());
-//		rootPanel.add(navLayout);
-//		
-//	}
-	
 	public void onModuleLoad() {
 		GeoPositioner.getInstance();
 		RootPanel rootPanel = RootPanel.get("container");
@@ -136,6 +124,7 @@ public class Authoring implements EntryPoint {
 			topTabSet.addTab(new DatabaseTab());
 			topTabSet.addTab(new WebServicesTab());
 			topTabSet.addTab(new ChannelDisplay());
+			topTabSet.addTab(new GeneralItemVisiblityTab());
 		}
         
         b = new IButton(constants.login());
