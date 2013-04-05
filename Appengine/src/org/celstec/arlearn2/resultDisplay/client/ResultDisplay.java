@@ -1,11 +1,12 @@
 package org.celstec.arlearn2.resultDisplay.client;
 
 import org.celstec.arlearn2.gwtcommonlib.client.auth.Authentication;
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.TeamModel;
+import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthClient;
+import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthFbClient;
+import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthGoogleClient;
+import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthLinkedIn;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GeneralItemDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OwnerResponseDataSource;
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.QueryGameDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.RunDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.TeamDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.UserDataSource;
@@ -14,15 +15,14 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.run.RunClient;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
-import com.smartgwt.client.widgets.form.fields.ButtonItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -39,14 +39,61 @@ public class ResultDisplay implements EntryPoint {
 	private static int NUMBER_VERSION = 1;  // Set this parameter to 1 to use first Layout 
 											// Set this parameter to 2 to use second Layout
 	
-	private static final String password = "arl3arn123";
+	private static final String password = "";
 	
 	private SlideShow slide;
 	
+	public Anchor anchorFacebook = new Anchor("Access with Facebook");
+	public Anchor anchorGoogle = new Anchor("Access with Google");
+	public Anchor anchorLinkedIn = new Anchor("Access with LinkedIn");
+	
+	public void onModuleLoad() {
+		final OauthClient client = OauthClient.checkAuthentication();
+		if (client != null) {
+			RootPanel.get("sendButtonContainerFacebook").add(new Anchor("you are authenticated"));
+			RootPanel.get("sendButtonContainerGoogle").add(new Anchor("you are authenticated"));
+			RootPanel.get("sendButtonContainerLinkedIn").add(new Anchor("you are authenticated"));
+			Button b = new Button("disauthenticate");
+			b.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+				
+				@Override
+				public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+					client.disAuthenticate();
+					Window.Location.reload();					
+				}
+			});
+			vLayout = new VLayout();
+			vLayout.setMembersMargin(15);
+			Label accestoken = new Label(client.getAccessToken());
+			vLayout.addMember(b);
+			vLayout.addMember(accestoken);
+			 RootPanel.get("container").add(vLayout);
+		} else {
+			RootPanel.get("sendButtonContainerFacebook").add(anchorFacebook);
+			RootPanel.get("sendButtonContainerGoogle").add(anchorGoogle);
+			RootPanel.get("sendButtonContainerLinkedIn").add(anchorLinkedIn);
+			anchorFacebook.setHref((new OauthFbClient()).getLoginRedirectURL());
+			anchorGoogle.setHref((new OauthGoogleClient()).getLoginRedirectURL());
+			anchorLinkedIn.setHref((new OauthLinkedIn()).getLoginRedirectURL());
+			
+		}
+
+	    	  
+	    	  System.out.println("AccessToken Cookie "+Cookies.getCookie("arlearn.AccessToken"));
+	   
+	   
+
+	}
+	
+	
+	
+	
+	
+	    
 	/**
 	 * This is the entry point method.
 	 */
-	public void onModuleLoad() {
+	public void onModuleLoad3() {
 		
 		
 		

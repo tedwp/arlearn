@@ -28,11 +28,24 @@ public class GenericClient {
 	public RequestBuilder getRequestBuilder(String urlPostfix) {
 		return getRequestBuilder(urlPostfix, RequestBuilder.GET);
 	}
+	
+	public RequestBuilder getRequestBuilderEvenIfNotAuthenticated(String urlPostfix) {
+		return getRequestBuilderEvenIfNotAuthenticated(urlPostfix, RequestBuilder.GET);
+	}
 
 	public RequestBuilder getRequestBuilder(String urlPostfix, RequestBuilder.Method m) {
 		String url = urlPostfix == null ? getUrl() : getUrl() + urlPostfix;
 		RequestBuilder builder = new RequestBuilder(m, url);
 		if (Authentication.getInstance().getAuthenticationToken() == null) return null;
+		String authorization = "GoogleLogin auth=" + Authentication.getInstance().getAuthenticationToken();
+		builder.setHeader("Authorization", authorization);
+		builder.setHeader("Accept", "application/json");
+		return builder;
+	}
+	
+	public RequestBuilder getRequestBuilderEvenIfNotAuthenticated(String urlPostfix, RequestBuilder.Method m) {
+		String url = urlPostfix == null ? getUrl() : getUrl() + urlPostfix;
+		RequestBuilder builder = new RequestBuilder(m, url);
 		String authorization = "GoogleLogin auth=" + Authentication.getInstance().getAuthenticationToken();
 		builder.setHeader("Authorization", authorization);
 		builder.setHeader("Accept", "application/json");
@@ -147,6 +160,35 @@ public class GenericClient {
 		}
 	}
 
+	protected void invokeJsonGETEvenIfNotAuthenticated(String urlPostfix, final JsonCallback jcb) {
+		RequestBuilder builder = getRequestBuilderEvenIfNotAuthenticated(urlPostfix);
+		if (builder == null) return;
+		try {
+			Request request = builder.sendRequest(null, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					if (200 == response.getStatusCode()) {
+						try {
+							JSONValue jsonValue = JSONParser.parseLenient(response.getText());
+								jcb.onJsonReceived(jsonValue);
+
+						} catch (JSONException e) {
+							jcb.onError();
+						}
+					}
+
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					exception.printStackTrace();
+				}
+			});
+		} catch (RequestException e) {
+			jcb.onError();
+		}
+	}
+	
 	protected void invokeJsonGET(String urlPostfix, final JsonCallback jcb) {
 		RequestBuilder builder = getRequestBuilder(urlPostfix);
 		if (builder == null) return;
