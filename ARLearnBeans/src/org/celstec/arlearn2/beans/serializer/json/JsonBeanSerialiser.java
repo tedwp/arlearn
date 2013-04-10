@@ -42,6 +42,7 @@ import org.celstec.arlearn2.beans.dependencies.AndDependency;
 import org.celstec.arlearn2.beans.dependencies.BooleanDependency;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.dependencies.OrDependency;
+import org.celstec.arlearn2.beans.dependencies.ProximityDependency;
 import org.celstec.arlearn2.beans.dependencies.TimeDependency;
 import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
 import org.celstec.arlearn2.beans.deserializer.json.OpenQuestionDeserializer;
@@ -149,6 +150,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(BooleanDependency.class.getCanonicalName(), new DependencySerializer());
 		customSerializerMap.put(AndDependency.class.getCanonicalName(), new DependencySerializer());
 		customSerializerMap.put(OrDependency.class.getCanonicalName(), new DependencySerializer());
+		customSerializerMap.put(ProximityDependency.class.getCanonicalName(), new ProximityDependency.Serializer());
 		customSerializerMap.put(GamePackage.class.getCanonicalName(), new GamePackageSerializer());
 		customSerializerMap.put(Game.class.getCanonicalName(), new GameSerializer());
 		customSerializerMap.put(GamesList.class.getCanonicalName(), new GamesListSerializer());
