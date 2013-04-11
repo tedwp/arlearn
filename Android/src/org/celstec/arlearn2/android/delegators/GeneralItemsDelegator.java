@@ -57,18 +57,20 @@ package org.celstec.arlearn2.android.delegators;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.asynctasks.db.CreateDownloadGeneralItems;
+import org.celstec.arlearn2.android.asynctasks.db.CreateProximityEvents;
 import org.celstec.arlearn2.android.asynctasks.db.GeneralItemDependencyHandler;
+import org.celstec.arlearn2.android.asynctasks.db.InitDownloadStatusTask;
 import org.celstec.arlearn2.android.asynctasks.db.InitGeneralItemVisibilityTask;
 import org.celstec.arlearn2.android.asynctasks.db.LoadGeneralItemsFromDbTask;
 import org.celstec.arlearn2.android.asynctasks.db.RegisterUploadInDbTask;
 import org.celstec.arlearn2.android.asynctasks.network.DownloadFileTask;
-import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGeneralItemsTask;
-import org.celstec.arlearn2.android.asynctasks.network.SynchronizeRunsTask;
 import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGeneralItemVisiblityTask;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGeneralItemsTask;
 import org.celstec.arlearn2.android.asynctasks.network.UploadFileSyncTask;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.cache.MediaGeneralItemCache;
@@ -76,6 +78,7 @@ import org.celstec.arlearn2.android.cache.ResponseCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCacheGeneralItems;
 import org.celstec.arlearn2.android.db.MediaCacheGeneralItems.DownloadItem;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.generalitem.CreateGeneralItemTask;
 import org.celstec.arlearn2.android.delegators.generalitem.DeleteGeneralItemTask;
 import org.celstec.arlearn2.android.delegators.generalitem.QueryGeneralItemsTask;
@@ -87,8 +90,8 @@ import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
-import org.celstec.arlearn2.beans.run.ActionList;
 import org.celstec.arlearn2.beans.run.Response;
+import org.celstec.arlearn2.client.GeneralItemClient;
 
 import android.content.Context;
 import android.net.Uri;
@@ -111,8 +114,8 @@ public class GeneralItemsDelegator {
 	}
 
 	public void synchronizeGeneralItemsWithServer(Context ctx, Long runId, Long gameId) {
-		LoadGeneralItemsFromDbTask loadFromDb = new LoadGeneralItemsFromDbTask(gameId, runId);
-		loadFromDb.run(ctx);
+		LoadGeneralItemsFromDbTask loadFromDb_0 = new LoadGeneralItemsFromDbTask(gameId, runId);
+		loadFromDb_0.run(ctx);
 		
 		SynchronizeGeneralItemsTask syncItemTask_1 = new SynchronizeGeneralItemsTask();
 		syncItemTask_1.setGameId(gameId);
@@ -121,12 +124,21 @@ public class GeneralItemsDelegator {
 		
 		
 		InitGeneralItemVisibilityTask visibilityTask_3 = new InitGeneralItemVisibilityTask(runId, gameId);
-		GeneralItemDependencyHandler dependencyTask_4 = new GeneralItemDependencyHandler();
+		InitDownloadStatusTask downloadstatus_4 = new InitDownloadStatusTask(gameId); 
 		
-		visibilityTask_3.taskToRunAfterExecute(dependencyTask_4);
+		GeneralItemDependencyHandler dependencyTask_5 = new GeneralItemDependencyHandler();
+		CreateProximityEvents events = new CreateProximityEvents(ctx,runId, gameId);
+		
+		
+		downloadstatus_4.taskToRunAfterExecute(events);
+		downloadstatus_4.taskToRunAfterExecute(dependencyTask_5);
+		visibilityTask_3.taskToRunAfterExecute(downloadstatus_4);
 		syncVisItemsTask_2.taskToRunAfterExecute(visibilityTask_3);
 		syncItemTask_1.taskToRunAfterExecute(syncVisItemsTask_2);
-		syncItemTask_1.run(ctx);
+		loadFromDb_0.taskToRunAfterExecute(syncItemTask_1);
+		
+		
+		loadFromDb_0.run(ctx);
 	}
 	
 	public void synchronizeGeneralItemsWithServer(Context ctx, Long gameId) {
@@ -134,6 +146,18 @@ public class GeneralItemsDelegator {
 		syncItemTask_1.setGameId(gameId);
 		syncItemTask_1.run(ctx);
 	}
+	
+	public GeneralItem getGeneralItemFromNetwork(Context ctx, Long gameId, Long generalItemId) {
+		return GeneralItemClient.getGeneralItemClient().getGeneralItem(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), gameId, generalItemId);
+		
+	}
+	
+//	public void synchronizeGeneralItemWithServer(Context ctx, Long gameId, Long generalItemId) {
+//		SynchronizeGeneralItemTask syncTask = new SynchronizeGeneralItemTask();
+//		syncTask.setGameId(gameId);
+//		syncTask.setGeneralItemId(generalItemId);
+//		syncTask.run(ctx);
+//	}
 	
 	public TreeSet<Response> getResponses(Long runId, Long itemId) {
 		return ResponseCache.getInstance().getResponses(runId, itemId);
@@ -145,6 +169,20 @@ public class GeneralItemsDelegator {
 
 	public double getDownloadPercentage(GeneralItem generalItem) {
 		return MediaGeneralItemCache.getInstance(generalItem.getGameId()).getPercentageDownloaded(generalItem);
+	}
+	
+	public int getAverageDownloadStatus(GeneralItem generalItem) {
+		 HashMap<String, Integer> statusMap = MediaGeneralItemCache.getInstance(generalItem.getGameId()).getReplicationStatus(generalItem.getId());
+		 boolean todo = false;
+		 if (statusMap == null) return MediaCacheGeneralItems.REP_STATUS_DONE;
+		 for (Map.Entry<String, Integer> e : statusMap.entrySet()) {
+			 if (e.getValue() == MediaCacheGeneralItems.REP_STATUS_FILE_NOT_FOUND) return MediaCacheGeneralItems.REP_STATUS_FILE_NOT_FOUND; 
+			 if (e.getValue() == MediaCacheGeneralItems.REP_STATUS_TODO) todo = true; 
+			 if (e.getValue() == MediaCacheGeneralItems.REP_STATUS_SYNCING) todo = true; 
+
+		 }
+		 if (todo) return MediaCacheGeneralItems.REP_STATUS_TODO;
+		return MediaCacheGeneralItems.REP_STATUS_DONE;
 	}
 
 	public DownloadItem[] getDownloadItems(GeneralItem gi) {
@@ -330,5 +368,7 @@ public class GeneralItemsDelegator {
 	public GeneralItemList getGISearchList(){
 		return giSearchList;
 	}
+
+	
 
 }

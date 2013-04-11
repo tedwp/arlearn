@@ -32,16 +32,36 @@
 		android:layout_gravity="bottom" android:layout_weight="2"
 		android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android">
 	</LinearLayout>
+	
+</LinearLayout>
+ 
+ </ScrollView> 
+	 
 	<Button android:id="@+id/mct_submit" 
 		android:text="@string/mct_submit"
 		android:layout_width="match_parent" 
 		android:layout_height="wrap_content"
 		android:layout_weight="0" />
-</LinearLayout>
- 
- </ScrollView> 
-	 
-	
+	<LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/timeLeftBeforeDisappear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dip"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="@string/annotateCounterReset"
+            android:background="@color/red"
+            android:visibility="gone"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:typeface="monospace" />
+    </LinearLayout>
 	 
 	
 </LinearLayout>

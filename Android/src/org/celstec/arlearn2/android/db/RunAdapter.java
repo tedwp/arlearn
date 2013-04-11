@@ -97,6 +97,8 @@ public class RunAdapter extends GenericDbTable {
 		initialValues.put(BEAN, run.toString());
 		initialValues.put(GAMEID, run.getGameId());
 		initialValues.put(DELETED, runDeleted);
+		PropertiesAdapter.getInstance(db.getContext()).setGeneralItemsVisibilityLastSynchronizationDate(0, run.getRunId());
+
 		db.getSQLiteDb().insert(getTableName(), null, initialValues);
 	}
 	
@@ -290,7 +292,6 @@ public class RunAdapter extends GenericDbTable {
 				db.getGeneralItemVisibility().deleteRun(runId);
 //				((GeneralItemAdapter) db.table(DBAdapter.GENERALITEM_ADAPTER)).deleteRun(id);
 				((MyActions) db.table(DBAdapter.MYACTIONS_ADAPTER)).deleteRun(runId);
-//				((MediaCache) db.table(DBAdapter.MEDIA_CACHE)).deleteRun(runId);
 				((MediaCacheUpload) db.table(DBAdapter.MEDIA_CACHE_UPLOAD)).deleteRun(runId);
 				((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).deleteRun(runId);
 				db.getSQLiteDb().delete(getTableName(), ID+" = "+runId, null);
@@ -299,7 +300,6 @@ public class RunAdapter extends GenericDbTable {
 				ActionCache.getInstance().delete(runId);
 				GeneralItemVisibilityCache.getInstance().remove(runId);
 				MediaUploadCache.getInstance(runId).remove();
-//				org.celstec.arlearn2.android.cache.MediaCache.getInstance().remove(runId);
 				ResponseCache.getInstance().remove(runId);
 				
 				ActivityUpdater.updateActivities(db.getContext(), ListRunsParticipateActivity.class.getCanonicalName(), 

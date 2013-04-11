@@ -45,7 +45,8 @@ public class DBAdapter {
 	public static final int GENERIC_JSON_ADAPTER = 7;
 	public static final int GENERALTITEM_VISIBILITY_ADAPTER = 8;
 	public static final int MEDIACACHE_GENERAL_ITEMS_ADAPTER = 9;
-	public static final int GENERALITEM_GAME_ADAPTER = 10;
+//	public static final int GENERALITEM_GAME_ADAPTER = 10;
+	public static final int PROXIMITY_EVENTS_ADAPTER = 10;
 	
 	private GenericDbTable[] allTables;
 
@@ -72,7 +73,8 @@ public class DBAdapter {
 		allTables[GENERIC_JSON_ADAPTER] = new GenericJsonAdapter(this);
 		allTables[GENERALTITEM_VISIBILITY_ADAPTER] = new GeneralItemVisibility(this);
 		allTables[MEDIACACHE_GENERAL_ITEMS_ADAPTER] = new MediaCacheGeneralItems(this);
-		allTables[GENERALITEM_GAME_ADAPTER] = new GeneralItemGameAdapter(this);
+//		allTables[GENERALITEM_GAME_ADAPTER] = new GeneralItemGameAdapter(this);
+		allTables[PROXIMITY_EVENTS_ADAPTER] = new ProximityEventRegistry(this);
 	}
 	
 	public RunAdapter getRunAdapter() {
@@ -83,9 +85,9 @@ public class DBAdapter {
 		return (GameAdapter) allTables[GAME_ADAPTER];
 	}
 	
-	public GeneralItemGameAdapter getGeneralItemGameAdapter() {
-		return (GeneralItemGameAdapter) allTables[GENERALITEM_GAME_ADAPTER];
-	}	
+//	public GeneralItemGameAdapter getGeneralItemGameAdapter() {
+//		return (GeneralItemGameAdapter) allTables[GENERALITEM_GAME_ADAPTER];
+//	}	
 	
 	public GenericJsonAdapter getGenericJsonAdapter() {
 		return (GenericJsonAdapter) allTables[GENERIC_JSON_ADAPTER];
@@ -104,6 +106,11 @@ public class DBAdapter {
 	
 	public MyResponses getMyResponses() {
 		return (MyResponses) allTables[MYRESPONSES_ADAPTER];
+	}
+	
+	public ProximityEventRegistry getProximityEventRegistry() {
+		return (ProximityEventRegistry) allTables[PROXIMITY_EVENTS_ADAPTER];
+
 	}
 	
 //	public MediaCache getMediaCache() {
@@ -125,12 +132,13 @@ public class DBAdapter {
 		
 		((MyResponses) allTables[MYRESPONSES_ADAPTER]).deleteRun(currentRunId);
 		((MyActions) allTables[MYACTIONS_ADAPTER]).deleteRun(currentRunId);
+		((ProximityEventRegistry) allTables[PROXIMITY_EVENTS_ADAPTER]).deleteRun(currentRunId);
 		// TODO locations?
 		
 	}
 	
 	public class DbOpenHelper extends SQLiteOpenHelper {
-	    private static final int DATABASE_VERSION = 137;
+	    private static final int DATABASE_VERSION = 142;
 	    private static final String DATABASE_NAME = "arlearn2";
 	   
 	    DbOpenHelper(Context context) {

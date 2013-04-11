@@ -27,6 +27,7 @@ import org.celstec.arlearn2.android.genItemActivities.SingleChoiceImageActivity.
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageTest;
+import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
 
 import android.os.Bundle;
 import android.view.View;
@@ -107,5 +108,14 @@ public class MultipleChoiceImageActivity extends SingleChoiceImageActivity{
 		MultipleChoiceImageActivity.this.finish();
 	}
 	
+	@Override
+	public GeneralItem getGeneralItem() {
+		return mct;
+	}
+
+	@Override
+	public void setGeneralItem(GeneralItem gi) {
+		mct = (MultipleChoiceImageTest) gi; 
+	}
 	
 }
