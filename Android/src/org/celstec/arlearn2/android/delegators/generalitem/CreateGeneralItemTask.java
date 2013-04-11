@@ -1,8 +1,5 @@
 package org.celstec.arlearn2.android.delegators.generalitem;
 
-import org.celstec.arlearn2.android.activities.ListGIActivity;
-import org.celstec.arlearn2.android.activities.ListGamesActivity;
-import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.asynctasks.network.NetworkTask;
 import org.celstec.arlearn2.android.asynctasks.network.NetworkTaskHandler;

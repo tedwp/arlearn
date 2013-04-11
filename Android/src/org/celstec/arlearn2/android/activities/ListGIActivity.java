@@ -27,6 +27,7 @@ import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.android.genItemActivities.AudiorecorderActivity;
+import org.celstec.arlearn2.android.genItemActivities.PictureItemActivity;
 import org.celstec.arlearn2.android.genItemActivities.VideorecorderActivity;
 import org.celstec.arlearn2.android.list.GameListAdapter;
 import org.celstec.arlearn2.android.list.GameListRecord;
@@ -201,11 +202,11 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 					break;
 				case 1:
 					// Photo item
-//					intent = new Intent(ListGIActivity.this, PhotoItemActivity.class);
-//					MultipleChoiceTest m = new MultipleChoiceTest();
-//					m.setGameId(selectedGame.getGameId());
-//					intent.putExtra("generalItem", m);
-//					ListGIActivity.this.startActivity(intent);
+					intent = new Intent(ListGIActivity.this, PictureItemActivity.class);
+					NarratorItem pi = new NarratorItem();
+					pi.setGameId(selectedGame.getGameId());
+					intent.putExtra("generalItem", pi);
+					ListGIActivity.this.startActivity(intent);
 					break;
 				case 2:
 					// VideoObject

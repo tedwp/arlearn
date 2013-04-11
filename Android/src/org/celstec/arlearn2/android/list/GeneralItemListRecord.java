@@ -37,7 +37,7 @@ public class GeneralItemListRecord extends GenericListRecord {
 			setImageResourceId(R.drawable.speechbubble_blue);
 		} else if ( generalItem.getType().equals(Constants.GI_TYPE_VIDEO_OBJECT)){
 			setImageResourceId(R.drawable.video_48x48);
-		} else if ( generalItem.getType().equals(Constants.GI_TYPE_OER)){
+		} else if ( generalItem.getType().equals(Constants.GI_TYPE_PICTURE)){
 			setImageResourceId(R.drawable.oericon_48x);			
 		} else if ( generalItem.getType().equals(Constants.GI_TYPE_YOUTUBE_MOVIE)){
 			setImageResourceId(R.drawable.youtube_48x48);

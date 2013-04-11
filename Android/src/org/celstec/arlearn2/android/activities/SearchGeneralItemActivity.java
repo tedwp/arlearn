@@ -23,6 +23,8 @@ import java.util.HashMap;
 
 import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.activities.ListOpenRunsActivity.QueryRuns;
+import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.GameDelegator;
@@ -36,11 +38,13 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.celstec.arlearn2.client.GeneralItemClient;
+import org.celstec.arlearn2.client.RunClient;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,6 +56,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //public class SearchGeneralItemActivity extends GeneralActivity implements ListitemClickInterface {
 public class SearchGeneralItemActivity extends GeneralActivity {
@@ -59,11 +64,11 @@ public class SearchGeneralItemActivity extends GeneralActivity {
 	private String CLASSNAME = this.getClass().getName();
 
 	private GeneralItemList gil;
-	private GeneralItemListAdapter adapter;
+//	private GeneralItem newGeneralItem;
 	private GeneralItem selectedGeneralItem;
 	private long lGameId = 0L;
 	private Context ctx;
-	private Intent intent = null;
+
 	
     private ListView lv;
     private ArrayAdapter<String> arrayAdapter;
@@ -82,34 +87,45 @@ public class SearchGeneralItemActivity extends GeneralActivity {
         	@Override
         	public void onItemClick(AdapterView parent, View view,int position, long _id){
         		
-        		NarratorItem ni = new NarratorItem();
-
-        		lGameId = 86030;
         		
-        		ni.setName("Test name "+position);
-        		ni.setDescription("Test description "+position);
-        		ni.setType(Constants.GI_TYPE_NARRATOR_ITEM);
-        		ni.setGameId(lGameId);
-        		ni.setScope("user");
-        		ni.setAutoLaunch(false);
-        		ni.setRichText("aaa");
-    			OpenQuestion oq = new OpenQuestion();
-    			oq.setWithAudio(false);
-    			oq.setWithPicture(true);
-    			oq.setWithVideo(false);
-    			ni.setOpenQuestion(oq);
-    			
-    			selectedGeneralItem = (GeneralItem)ni;
+        		GeneralItem g = gil.getGeneralItems().get(position);
+        		
+        		new QueryGeneralItem().execute(g.getId());
+        		
+        		
+        		
+        		//GeneralItem gi = GeneralItemsDelegator.getInstance().getGeneralItem(g.getId());
+        		
+        		
+//        		NarratorItem ni = new NarratorItem();
+//        		
+//        		ni.setName(g.getName());
+//        		ni.setDescription("Test description "+g.getName());
+//        		ni.setType(Constants.GI_TYPE_NARRATOR_ITEM);
+//        		ni.setGameId(lGameId);
+//        		ni.setScope("user");
+//        		ni.setAutoLaunch(false);
+//        		ni.setRichText("");
+//    			OpenQuestion oq = new OpenQuestion();
+//    			oq.setWithAudio(false);
+//    			oq.setWithPicture(true);
+//    			oq.setWithVideo(false);
+//    			ni.setOpenQuestion(oq);
+//    			
+//    			newGeneralItem = (GeneralItem) ni;
   			
     			Log.d(CLASSNAME, "Clicked delete generalItem " + position);			
     			AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-    			builder.setMessage("Are you sure you to add "+selectedGeneralItem.getName()+"?")
+    			builder.setMessage("Are you sure you to add "+g.getName()+"?")
     			       .setCancelable(false)
     			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-    			           public void onClick(DialogInterface dialog, int id) {     						
+    			           public void onClick(DialogInterface dialog, int id) {   
+    			        	   
+    			        	   selectedGeneralItem.setGameId(lGameId);
+    			        	   selectedGeneralItem.setId(0l); // TODO check with Stefaan whether general items are created in server when id is 0
     						
-    		    			GeneralItemsDelegator.getInstance().createGeneralItem(ctx, selectedGeneralItem);
-    		    			SearchGeneralItemActivity.this.finish();
+    			        	   GeneralItemsDelegator.getInstance().createGeneralItem(ctx, selectedGeneralItem);
+    			        	   SearchGeneralItemActivity.this.finish();
 
     			        	   
     			           }
@@ -156,6 +172,42 @@ public class SearchGeneralItemActivity extends GeneralActivity {
         });		
 
 	}
+	
+	
+	public class QueryGeneralItem extends AsyncTask<Object, GeneralItem, Void> {
+
+		@Override
+		protected Void doInBackground(Object... arg0) {
+			try {
+				if (NetworkSwitcher.isOnline(SearchGeneralItemActivity.this)) {
+					// TODO pending to create this method from Stefaan
+					GeneralItem g = GeneralItemClient.getGeneralItemClient().getGeneralItem(getMenuHandler().getPropertiesAdapter().getFusionAuthToken(), (Long)arg0[0]);
+					publishProgress(g);
+				} else {
+					publishProgress();
+				}
+			} catch (Exception e) {
+				publishProgress();
+
+			}
+			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(GeneralItem...theGeneralItem) {
+			if (theGeneralItem.length == 0) {
+				Toast.makeText(SearchGeneralItemActivity.this, getString(R.string.networkUnavailable), Toast.LENGTH_LONG).show();
+			} else {
+				selectedGeneralItem = theGeneralItem[0];
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+		}
+	}	
+	
 
 	@Override
 	protected void onResume() {
