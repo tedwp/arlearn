@@ -24,7 +24,9 @@ import org.celstec.arlearn2.android.delegators.ActionsDelegator;
 import org.celstec.arlearn2.android.menu.ActionDispatcher;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
+import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.run.Run;
 
 import android.app.Activity;
 import android.app.NotificationManager;
@@ -54,9 +56,19 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 	private GenericBroadcastReceiver broadcastReceiver;
 	private NfcReceiver nfcReceiver;
 	
+	private long runId;
+	private long gameId;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			unpackBundle(savedInstanceState);
+		} else {
+			if (getIntent().getExtras() != null) {
+				unpackBundle(getIntent().getExtras());
+			}
+		}
 		menuHandler = new MenuHandler(this);
 		pa = new PropertiesAdapter(this);
 
@@ -92,6 +104,29 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 			nfcReceiver.onPause();
 	}
 	
+	@Override
+	protected void onSaveInstanceState (Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (isGenItemActivity()) {
+			outState.putSerializable(GeneralItem.class.getCanonicalName(), getGeneralItem());
+			outState.putLong(Run.class.getCanonicalName(), getRunId());
+			outState.putLong(Game.class.getCanonicalName(), getGameId());
+		}
+		
+	}
+	
+	protected void unpackBundle(Bundle inState) {
+		if (isGenItemActivity()) {
+			setGeneralItem((GeneralItem) inState.getSerializable(GeneralItem.class.getCanonicalName()));
+			setRunId(inState.getLong(Run.class.getCanonicalName()));
+			setGameId(inState.getLong(Game.class.getCanonicalName()));
+		}
+	}
+	
+	public GeneralItem getGeneralItem() {return null;};
+	
+	public void setGeneralItem(GeneralItem gi){};
+	
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (scanMenu())
@@ -126,6 +161,22 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 		return menuHandler.onOptionsItemSelected(item);
 	}
 
+	public long getRunId() {
+		return runId;
+	}
+
+	public void setRunId(long runId) {
+		this.runId = runId;
+	}
+
+	public long getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(long gameId) {
+		this.gameId = gameId;
+	}
+
 	public void notifyTaskFinished() {
 		// do nothing unless subclass overrides this...
 	}
@@ -138,11 +189,11 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 		return menuHandler;
 	}
 
-	protected void cancelNotification(int id) {
-		String ns = Context.NOTIFICATION_SERVICE;
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-		mNotificationManager.cancel(id);
-	}
+//	protected void cancelNotification(int id) {
+//		String ns = Context.NOTIFICATION_SERVICE;
+//		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+//		mNotificationManager.cancel(id);
+//	}
 
 	protected void fireReadAction(GeneralItem item) {
 		PropertiesAdapter pa = getMenuHandler().getPropertiesAdapter();

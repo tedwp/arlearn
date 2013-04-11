@@ -65,12 +65,12 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 	protected TakeVideoDelegate tvd;
 	protected RecordAudioDelegate rad;
 	protected TakeTextNoteDelegate tntd;
-	
+
 	protected MenuHandler menuHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		//TODO read recordingMedia + save this in onStop
+		// TODO read recordingMedia + save this in onStop
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
 			recordingMedia = savedInstanceState.getBoolean(RECORDING, false);
@@ -78,11 +78,11 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		setContentView(R.layout.answer_question);
 		menuHandler = new MenuHandler(this);
 		pa = new PropertiesAdapter(this);
-		
+
 		lat = getIntent().getDoubleExtra("lat", LAT_LNG_NOT_AVAILABLE);
 		lng = getIntent().getDoubleExtra("lng", LAT_LNG_NOT_AVAILABLE);
 		runId = getIntent().getLongExtra("runId", 0);
-		
+
 		publishButton = (ImageView) findViewById(R.id.publishAnnotation);
 		publishButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -101,23 +101,25 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		}
 
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		if (!recordingMedia) {
-			//todo reset...
-		
-		displayPublishButton();
+			// todo reset...
+
+			displayPublishButton();
 		}
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == -1 && requestCode == CAMERA_PIC_REQUEST) {
-			if (tpd != null) tpd.onActivityResult(data);
+			if (tpd != null)
+				tpd.onActivityResult(data);
 		}
 		if (resultCode == -1 && requestCode == ACTION_TAKE_VIDEO) {
-			if (tvd != null) tvd.onActivityResult(data);
+			if (tvd != null)
+				tvd.onActivityResult(data);
 		}
 	}
 
@@ -126,14 +128,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 	}
 
 	public void displayPublishButton() {
-		if (
-				rad != null && 
-				tpd != null && tvd != null && 
-				rad.getRecordingPath() == null && 
-				tpd.getUri() == null && 
-				tvd.getUri() == null &&
-				tntd != null &&
-				tntd.getText() == null) {
+		if (rad != null && tpd != null && tvd != null && rad.getRecordingPath() == null && tpd.getUri() == null && tvd.getUri() == null && tntd != null && tntd.getText() == null) {
 			publishButton.setVisibility(View.GONE);
 		} else {
 			publishButton.setVisibility(View.VISIBLE);
@@ -147,59 +142,70 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 
 		final long currentTime = System.currentTimeMillis();
 		final String recordingPath = rad.getRecordingPath();
-		final Response r = createResponse(currentTime, rad.getUri(), tpd.getUri(), tvd.getUri(), tntd.getText());
-	
-		ResponseDelegator.getInstance().publishResponse(this, r);
-//		Intent intent = new Intent(this, ResponseService.class);
-//		intent.putExtra("bean", r);
-//		startService(intent);
-		
+		Response r = createResponse(currentTime, rad.getUri(), tpd.getUri(), tvd.getUri(), tntd.getText());
+
+		// Intent intent = new Intent(this, ResponseService.class);
+		// intent.putExtra("bean", r);
+		// startService(intent);
+
 		if (rad != null && (rad.getRecordingPath() != null)) {
-			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile( runId, "audio:"+currentTime,  pa.getUsername(), rad.getUri(), "audio/AMR");
+			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, "audio:" + currentTime, pa.getUsername(), rad.getUri(), "audio/AMR");
 			task.taskToRunAfterExecute(new UploadFileSyncTask());
 			task.run(this);
-			
+
 		}
-		
-		if (tpd != null && tpd.getUri() != null ) {
-			
-			System.out.println("ok "+this.getContentResolver().getType(tpd.getUri()));
-			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile( runId, "picture:"+currentTime,  pa.getUsername(), tpd.getUri(), "application/jpg");
+
+		if (tpd != null && tpd.getUri() != null) {
+
+			System.out.println("ok " + this.getContentResolver().getType(tpd.getUri()));
+			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, "picture:" + currentTime, pa.getUsername(), tpd.getUri(), "application/jpg");
 			task.taskToRunAfterExecute(new UploadFileSyncTask());
 			task.run(this);
+			r = createResponse(currentTime, rad.getUri(), tpd.getUri(), tvd.getUri(), tntd.getText(), tpd.getWidth(), tpd.getHeight());
+
 		}
-		
-		if (tvd != null && tvd.getUri() != null ) {
-			
-			System.out.println("ok "+this.getContentResolver().getType(tvd.getUri()));
-			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile( runId, "video:"+currentTime,  pa.getUsername(), tvd.getUri(), "video/mp4");
+
+		if (tvd != null && tvd.getUri() != null) {
+
+			System.out.println("ok " + this.getContentResolver().getType(tvd.getUri()));
+			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, "video:" + currentTime, pa.getUsername(), tvd.getUri(), "video/mp4");
 			task.taskToRunAfterExecute(new UploadFileSyncTask());
 			task.run(this);
+			r = createResponse(currentTime, rad.getUri(), tpd.getUri(), tvd.getUri(), tntd.getText(), tvd.getWidth(), tvd.getHeight());
+
 		}
-		
-//		if (rad != null && tpd != null && tvd != null && (rad.getRecordingPath() == null || tpd.getUri() == null || tvd.getUri() == null)) {
-//			intent = new Intent(this, MediaService.class);
-//			intent.putExtra(MediaService.NEW_MEDIA, rad.getUri() != null || tpd.getUri() != null || tvd.getUri() != null);
-//			intent.putExtra(MediaService.RECORDING_PATH, rad.getUri());
-//			// intent.putExtra(MediaService.IMAGE_PATH, imagePath);
-//			intent.putExtra(MediaService.IMAGE_PATH, tpd.getUri());
-//			intent.putExtra(MediaService.VIDEO_URI, tvd.getUri());
-//			intent.putExtra(MediaService.USERNAME, pa.getUsername());
-//			intent.putExtra(MediaService.CURRENT_TIME, currentTime);
-//			intent.putExtra(MediaService.RUNID, pa.getCurrentRunId());
-//			startService(intent);
-//		}
+
+		// if (rad != null && tpd != null && tvd != null &&
+		// (rad.getRecordingPath() == null || tpd.getUri() == null ||
+		// tvd.getUri() == null)) {
+		// intent = new Intent(this, MediaService.class);
+		// intent.putExtra(MediaService.NEW_MEDIA, rad.getUri() != null ||
+		// tpd.getUri() != null || tvd.getUri() != null);
+		// intent.putExtra(MediaService.RECORDING_PATH, rad.getUri());
+		// // intent.putExtra(MediaService.IMAGE_PATH, imagePath);
+		// intent.putExtra(MediaService.IMAGE_PATH, tpd.getUri());
+		// intent.putExtra(MediaService.VIDEO_URI, tvd.getUri());
+		// intent.putExtra(MediaService.USERNAME, pa.getUsername());
+		// intent.putExtra(MediaService.CURRENT_TIME, currentTime);
+		// intent.putExtra(MediaService.RUNID, pa.getCurrentRunId());
+		// startService(intent);
+		// }
+		ResponseDelegator.getInstance().publishResponse(this, r);
+
 		setResult(1);
 		finish();
 	}
 
-//	public String buildRemotePath(String localFileString, long runId, String account) {
-//		File localFile = new File(localFileString);
-//		return GenericClient.urlPrefix + "/uploadService/" + runId + "/" + account + "/" + localFile.getName();
-//	}
+	// public String buildRemotePath(String localFileString, long runId, String
+	// account) {
+	// File localFile = new File(localFileString);
+	// return GenericClient.urlPrefix + "/uploadService/" + runId + "/" +
+	// account + "/" + localFile.getName();
+	// }
 	public String buildRemotePath(Uri uri, long runId, String account) {
 		return GenericClient.urlPrefix + "/uploadService/" + runId + "/" + account + "/" + uri.getLastPathSegment();
 	}
+
 	public Response createResponse(long currentTime, Uri recordingUri, Uri imageUri, Uri videoUri, String text) {
 		Response r = createResponse(currentTime);
 		JSONObject jsonResponse = new JSONObject();
@@ -228,6 +234,42 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		return r;
 	}
 
+	public Response createResponse(long currentTime, Uri recordingUri, Uri imageUri, Uri videoUri, String text, int width, int height) {
+		Response r = createResponse(currentTime);
+		try {
+			JSONObject jsonResponse = createJsonResponse(recordingUri, imageUri, videoUri, text);
+			jsonResponse.put("width", width);
+			jsonResponse.put("height", height);
+			r.setResponseValue(jsonResponse.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return r;
+	}
+
+	private JSONObject createJsonResponse(Uri recordingUri, Uri imageUri, Uri videoUri, String text) throws JSONException {
+		JSONObject jsonResponse = new JSONObject();
+
+		if (recordingUri != null) {
+			jsonResponse.put("audioUrl", buildRemotePath(recordingUri, runId, pa.getUsername()));
+		}
+		if (imageUri != null) {
+			jsonResponse.put("imageUrl", buildRemotePath(imageUri, runId, pa.getUsername()));
+		}
+		if (videoUri != null) {
+			jsonResponse.put("videoUrl", buildRemotePath(videoUri, runId, pa.getUsername()));
+		}
+		if (text != null) {
+			jsonResponse.put("text", text);
+		}
+		if (lat != LAT_LNG_NOT_AVAILABLE)
+			jsonResponse.put("lat", lat);
+		if (lng != LAT_LNG_NOT_AVAILABLE)
+			jsonResponse.put("lng", lng);
+
+		return jsonResponse;
+	}
+
 	public Response createResponse(long currentTime) {
 		Response r = new Response();
 		r.setUserEmail(pa.getUsername());
@@ -235,7 +277,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		r.setTimestamp(currentTime);
 		return r;
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -246,7 +288,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 			recordingMedia = false;
 		}
 	}
-	
+
 	public void setRecordingMedia() {
 		recordingMedia = true;
 	}
@@ -262,16 +304,16 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 	public boolean isGenItemActivity() {
 		return false;
 	}
-	
+
 	@Override
-	protected void onSaveInstanceState (Bundle outState){
+	protected void onSaveInstanceState(Bundle outState) {
 		outState.putBoolean(RECORDING, recordingMedia);
 		outState.putParcelable(PICTUREURI, tpd.getUri());
 		outState.putParcelable(VIDEOURI, tvd.getUri());
 		outState.putInt(AUDIOSTATUS, rad.getStatus());
 		outState.putString(AUDIOFILE, rad.getRecordingPath());
 	}
-	
+
 	public RecordAudioDelegate getRecordAudioDelegate() {
 		return rad;
 	}

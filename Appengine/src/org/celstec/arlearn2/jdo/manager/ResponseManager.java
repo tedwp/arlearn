@@ -19,15 +19,23 @@
 package org.celstec.arlearn2.jdo.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import org.celstec.arlearn2.beans.run.Response;
+import org.celstec.arlearn2.beans.run.ResponseList;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.ResponseJDO;
+import org.celstec.arlearn2.jdo.classes.RunJDO;
+import org.celstec.arlearn2.jdo.classes.UserJDO;
+import org.datanucleus.store.appengine.query.JDOCursorHelper;
+
+import com.google.appengine.api.datastore.Cursor;
 
 public class ResponseManager {
 
@@ -44,6 +52,7 @@ public class ResponseManager {
 		responseRecord.setRunId(runId);
 		responseRecord.setUserEmail(userEmail);
 		responseRecord.setTimeStamp(timeStamp);
+		responseRecord.setLastModificationDate(System.currentTimeMillis());
 		responseRecord.setRevoked(false);
 		try {
 			pm.makePersistent(responseRecord);
@@ -66,6 +75,7 @@ public class ResponseManager {
 			if (it.hasNext()) {
 				rjdo = ((ResponseJDO) it.next());
 			}
+			rjdo.setLastModificationDate(System.currentTimeMillis());
 			rjdo.setRevoked(true);
 			return toBean(rjdo);
 		} finally {
@@ -86,6 +96,63 @@ public class ResponseManager {
 		} finally {
 			pm.close();
 		}
+	}
+	
+	public static ResponseList getResponse(Long runId, Long from, Long until, String cursorString) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		ResponseList returnList = new ResponseList();
+		try {
+			Query query = pm.newQuery(ResponseJDO.class);
+			if (cursorString != null) {
+
+				Cursor c = Cursor.fromWebSafeString(cursorString);
+				Map<String, Object> extendsionMap = new HashMap<String, Object>();
+				extendsionMap.put(JDOCursorHelper.CURSOR_EXTENSION, c);
+				query.setExtensions(extendsionMap);
+			}
+			query.setRange(0, 3);
+			String filter = null;
+			String params = null;
+			Object args[] = null;
+			if (from == null) {
+				filter = "runId == runIdParam & lastModificationDate <= untilParam";
+				params = "Long runIdParam, Long untilParam";
+				args = new Object[] { runId, until };
+			} else if (until == null) {
+				filter = "runId == runIdParam & lastModificationDate >= fromParam";
+				params = "Long runIdParam, Long fromParam";
+				args = new Object[] { runId, from };
+			} else {
+				filter = "runId == runIdParam & lastModificationDate >= fromParam & lastModificationDate <= untilParam";
+				params = "Long runIdParam, Long fromParam, Long untilParam";
+				args = new Object[] { runId, from, until };
+			}
+
+			query.setFilter(filter);
+			query.declareParameters(params);
+//			Iterator<UserJDO> it = ((List<UserJDO>) query.executeWithArray(args)).iterator();
+			List<ResponseJDO> results = (List<ResponseJDO>) query.executeWithArray(args);
+			Iterator<ResponseJDO> it = (results).iterator();
+			int i = 0;
+			while (it.hasNext()) {
+				i++;
+				ResponseJDO object = it.next();
+				returnList.addResponse(toBean(object));
+				
+			}
+			Cursor c = JDOCursorHelper.getCursor(results);
+			cursorString = c.toWebSafeString();
+			if (returnList.getResponses().size() == 3) {
+				returnList.setResumptionToken(cursorString);
+			}
+			returnList.setServerTime(System.currentTimeMillis());
+
+
+		}finally {
+			pm.close();
+		}
+		return returnList;
+		
 	}
 	
 	private static List<ResponseJDO> getResponse(PersistenceManager pm, Long runId, Long generalItemId, String userEmail, Long timestamp, Boolean revoked) {

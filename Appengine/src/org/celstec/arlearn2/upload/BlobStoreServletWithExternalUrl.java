@@ -36,13 +36,13 @@ public class BlobStoreServletWithExternalUrl extends HttpServlet {
 	private static final Logger log = Logger.getLogger(BlobStoreServletWithExternalUrl.class.getName());
 
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-	
-	
+
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		        BlobKey blobKey = new BlobKey(req.getParameter("blob-key"));
-		        blobstoreService.serve(blobKey, res);
-		    }
-	
+		res.setHeader("Cache-Control", "max-age=2592000");
+		BlobKey blobKey = new BlobKey(req.getParameter("blob-key"));
+		blobstoreService.serve(blobKey, res);
+	}
+
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		try {
 			Long runId = null;
@@ -52,20 +52,19 @@ public class BlobStoreServletWithExternalUrl extends HttpServlet {
 			account = req.getParameter("account");
 			fileName = req.getParameter("fileName");
 			if (req.getParameter("withBlob") == null) {
-				String uploadUrl = blobstoreService.createUploadUrl("/uploadServiceWithUrl?withBlob=true&runId="+runId+"&account="+account+"&fileName="+fileName);
+				String uploadUrl = blobstoreService.createUploadUrl("/uploadServiceWithUrl?withBlob=true&runId=" + runId + "&account=" + account + "&fileName=" + fileName);
 				res.getWriter().write(uploadUrl);
 			} else {
 
-				java.util.Map<java.lang.String,java.util.List<BlobKey>> blobs = blobstoreService.getUploads(req);
-				for (String key: blobs.keySet()) {
+				java.util.Map<java.lang.String, java.util.List<BlobKey>> blobs = blobstoreService.getUploads(req);
+				for (String key : blobs.keySet()) {
 					FilePathManager.addFile(runId, account, fileName, blobs.get(key).get(0));
 				}
 			}
-		
+
 		} catch (Exception ex) {
 			throw new ServletException(ex);
 		}
 	}
-	
 
 }

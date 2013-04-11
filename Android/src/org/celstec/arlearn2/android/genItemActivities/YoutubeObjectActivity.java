@@ -22,6 +22,7 @@ import java.util.StringTokenizer;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
 
 import android.content.Intent;
@@ -89,8 +90,19 @@ public class YoutubeObjectActivity extends NarratorItemActivity {
 		return (YoutubeObject) narratorBean;
 	}
 	
-	protected void unpackDataFromIntent() {
-		GeneralItem gi = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
-		narratorBean = (YoutubeObject) gi; //TODO check cast
+//	protected void unpackDataFromIntent() {
+//		GeneralItem gi = (GeneralItem) getIntent().getExtras().getSerializable("generalItem");
+//		narratorBean = (YoutubeObject) gi; //TODO check cast
+//	}
+	
+	@Override
+	public YoutubeObject getGeneralItem() {
+		return (YoutubeObject) narratorBean;
 	}
+
+	@Override
+	public void setGeneralItem(GeneralItem gi) {
+		narratorBean = (YoutubeObject) gi;		
+	}
+	
 }

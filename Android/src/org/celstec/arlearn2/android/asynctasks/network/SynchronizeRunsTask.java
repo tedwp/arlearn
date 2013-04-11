@@ -56,21 +56,29 @@ public class SynchronizeRunsTask extends GenericTask implements NetworkTask {
 			runAfterTasks(ctx);
 			return;
 		} else {
+			RunList rl = null;
 			try {
-				RunList rl = null;
 				Long lastDate = PropertiesAdapter.getInstance(ctx).getRunLastSynchronizationDate() - 120000;
 				if (lastDate <= 0) {
 					rl = RunClient.getRunClient().getRunsParticipate(PropertiesAdapter.getInstance(ctx).getFusionAuthToken());
 				} else {
 					rl = RunClient.getRunClient().getRunsParticipate(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), lastDate);
 				}
-				PropertiesAdapter.getInstance(ctx).setRunLastSynchronizationDate(rl.getServerTime());
-				RunDelegator.getInstance().saveServerRunsToAndroidDb(ctx, rl);
+				if (rl.getError() == null && rl.getErrorCode() == null) {
+					PropertiesAdapter.getInstance(ctx).setRunLastSynchronizationDate(rl.getServerTime());
+					RunDelegator.getInstance().saveServerRunsToAndroidDb(ctx, rl);
+				}
 			} catch (ARLearnException ae) {
 				if (ae.invalidCredentials()) {
 					GenericReceiver.setStatusToLogout(ctx);
 				}
 
+			} catch (NullPointerException ne ) {
+				ne.printStackTrace();
+				System.out.println("null check rl "+rl);
+				System.out.println("null check RunDelegator.getInstance() "+RunDelegator.getInstance());
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

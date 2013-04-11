@@ -39,6 +39,8 @@ import org.apache.http.protocol.HttpContext;
 import org.celstec.arlearn2.android.asynctasks.DatabaseTask;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
+import org.celstec.arlearn2.android.asynctasks.download.DownloadQueue;
+import org.celstec.arlearn2.android.asynctasks.download.DownloadTaskHandler;
 
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCacheUpload;
@@ -58,8 +60,8 @@ public class UploadFileSyncTask extends GenericTask implements NetworkTask {
 	@Override
 	public void run(Context ctx) {
 		this.ctx =ctx;
-		Message m = Message.obtain(NetworkQueue.getNetworkTaskHandler());
-		m.what = NetworkTaskHandler.SYNC_USER_MEDIA;
+		Message m = Message.obtain(DownloadQueue.getNetworkTaskHandler());
+		m.what = DownloadTaskHandler.SYNC_USER_MEDIA;
 		m.obj = this;
 		m.sendToTarget();
 		

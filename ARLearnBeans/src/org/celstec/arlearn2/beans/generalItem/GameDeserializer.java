@@ -46,6 +46,7 @@ public class GameDeserializer extends GameBeanDeserializer {
 		if (object.has("creator")) g.setCreator(object.getString("creator"));
 		if (object.has("owner")) g.setOwner(object.getString("owner"));
 		if (object.has("feedUrl")) g.setFeedUrl(object.getString("feedUrl"));
+		if (object.has("sharing")) g.setSharing(object.getInt("sharing"));
 		if (object.has("config")) g.setConfig((Config) JsonBeanDeserializer.deserialize(Config.class, object.getJSONObject("config")));
 
 	}

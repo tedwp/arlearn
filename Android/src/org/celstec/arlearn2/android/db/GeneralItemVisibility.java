@@ -223,14 +223,19 @@ public class GeneralItemVisibility extends GenericDbTable {
 	public Long[] getItemsNotYetInitialised(long runId, long gameId) {
 		Long[] result = new Long[]{};
 		String query = "select "+GeneralItemAdapter.ID+" from "+GeneralItemAdapter.GENERALITEM_TABLE+" where "+GeneralItemAdapter.GAMEID+"= ? and deleted = 0 and "+GeneralItemAdapter.ID+" not in (select "+GENERAL_ITEM_ID+" from "+getTableName()+" where "+RUNID+" = ?)";
+//		String query = "select "+GeneralItemAdapter.ID+" from "+GeneralItemAdapter.GENERALITEM_TABLE+" where "+GeneralItemAdapter.GAMEID+"= ? ";
+//		String query = "select "+GENERAL_ITEM_ID+", "+VISIBILITY_STATUS+" from "+getTableName()+" where "+RUNID+" = ?";
 		Cursor mCursor = null;
 		try {
 			mCursor = db.getSQLiteDb().rawQuery(query, new String[]{ ""+gameId, ""+runId});
+//			mCursor = db.getSQLiteDb().rawQuery(query, new String[]{ ""+runId});
 			result = new Long[mCursor.getCount()];
 			int i = 0;
 			while (mCursor.moveToNext()) {
 				result[i++] = mCursor.getLong(0);
+//				System.out.println("result "+mCursor.getLong(0)+" "+mCursor.getInt(1));
 			}
+			
 
 		} catch (SQLException ex) {
 			Log.e("sqlex", "ex", ex);
@@ -239,6 +244,7 @@ public class GeneralItemVisibility extends GenericDbTable {
 				mCursor.close();
 		}
 		return result;
+//		return new Long[]{};
 	}
 
 	

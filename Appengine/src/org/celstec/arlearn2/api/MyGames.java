@@ -31,12 +31,14 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
+import org.celstec.arlearn2.beans.Bean;
+import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.deserializer.json.ListDeserializer;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.delegators.GameDelegator;
+import org.celstec.arlearn2.tasks.beans.GameSearchIndex;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
@@ -205,6 +207,29 @@ public class MyGames extends Service {
 		return serialise(qg.setWithMap(gameIdentifier, Boolean.parseBoolean(booleanString)), accept);
 	}
 	
+	
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Path("/config/gameId/{gameIdentifier}/sharing/{sharingType}")
+	public String setSharing(@HeaderParam("Authorization") String token,
+			@PathParam("gameIdentifier") Long gameIdentifier,
+			@PathParam("sharingType") Integer sharingType,
+			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		if (sharingType == null || sharingType <=0 || sharingType >= 4) {
+			Bean error = new Bean();
+			error.setError("invalid sharing type: "+sharingType);
+			error.setErrorCode(0);
+			return error.toString();
+		}
+		GameDelegator qg = new GameDelegator(token);
+		Game g = qg.setSharing(gameIdentifier, sharingType);
+		
+		return serialise(g, accept);
+	}
+	
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Path("/config/gameId/{gameIdentifier}/mapRegion")
@@ -225,5 +250,17 @@ public class MyGames extends Service {
 		return null;
 	}
 	
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Path("/search")
+	public String search(@HeaderParam("Authorization") String token, 
+			String searchQuery, 
+			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GameDelegator qg = new GameDelegator(token);
+			return serialise(qg.search(searchQuery), accept);
+	}
 	
 }
