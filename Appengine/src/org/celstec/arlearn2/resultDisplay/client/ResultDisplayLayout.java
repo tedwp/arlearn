@@ -35,7 +35,7 @@ public class ResultDisplayLayout extends VLayout {
 	private List list = null;
 	private Mixed mixed = null;
 	private final HTML breadcrumb = new HTML();
-	private SearchForm filter = null; 
+	private FilterForm filter = null; 
 	
 
 	public ResultDisplayLayout(Grid tileGrid, List listGrid, Mixed mixedGrid) {
@@ -46,14 +46,16 @@ public class ResultDisplayLayout extends VLayout {
         this.grid = tileGrid;
         this.list = listGrid;
         this.mixed = mixedGrid;
-        this.filter = new SearchForm();
+        this.filter = new FilterForm();
         filter.setNumCols(8);
         
         HLayout toolbar = new HLayout(10); 	// Layout for visualization options, clear button and breadcrumb.
         toolbar.setHeight(22);
-        toolbar.setPadding(10);
+        toolbar.setPadding(20);
+        toolbar.setBackgroundColor("#5DA5D7");
         
         breadcrumb.setHTML("<b>Filters</b>");
+        breadcrumb.setStyleName("breadcrumb-style");
 		breadcrumb.setWidth("80%");
 		breadcrumb.setHeight("30px");
 		refreshBreadcrumbs(filter);
@@ -101,15 +103,17 @@ public class ResultDisplayLayout extends VLayout {
 		/**
 		 * Toolstrip menu for visualization
 		 * */		
-		ToolStrip toolStrip = new ToolStrip();  
+		ToolStrip toolStrip = new ToolStrip(); 
         toolStrip.setWidth(72);  
-        toolStrip.setHeight(24);  
+        toolStrip.setHeight(22);
+        toolStrip.setTop(17);
+        toolStrip.setPadding(2);
+        
   
         ImgButton gridButton = new ImgButton();  
         gridButton.setSize(24);  
         gridButton.setShowRollOver(false);  
-        gridButton.setSrc("grid.png");  
-        //gridButton.setActionType(SelectionType.CHECKBOX);
+        gridButton.setSrc("grid.png");
         
         gridButton.addClickHandler(new ClickHandler() {
 			
@@ -133,8 +137,7 @@ public class ResultDisplayLayout extends VLayout {
         ImgButton listButton = new ImgButton();  
         listButton.setSize(24);  
         listButton.setShowRollOver(false);  
-        listButton.setSrc("list.png");  
-        //listButton.setActionType(SelectionType.CHECKBOX);  
+        listButton.setSrc("list.png"); 
         toolStrip.addMember(listButton); 
         listButton.addClickHandler(new ClickHandler() {
 			
@@ -155,7 +158,6 @@ public class ResultDisplayLayout extends VLayout {
         mixedButton.setSize(24);  
         mixedButton.setShowRollOver(false);  
         mixedButton.setSrc("mixed.png");  
-        //mixedButton.setActionType(SelectionType.CHECKBOX);  
         toolStrip.addMember(mixedButton);
         mixedButton.addClickHandler(new ClickHandler() {
 			

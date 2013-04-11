@@ -17,6 +17,10 @@ public class ResponseModel extends DataSourceModel {
 	public static final String WIDTH_FIELD = "width";
 	public static final String HEIGHT_FIELD = "height";
 
+	public static final String AUDIO_DEFAULT = "/images/music.png";
+	public static final String VIDEO_DEFAULT = "/images/movie.png";
+	public static final String TEXT_DEFAULT = "/images/Document.png";
+	public static final String OTHER_DEFAULT = "/images/help.png";
 	
 	public ResponseModel(DataSourceAdapter dataSourceAdapter) {
 		super(dataSourceAdapter);
@@ -30,7 +34,7 @@ public class ResponseModel extends DataSourceModel {
 		//correct
 		//role
 		
-		addField(INTEGER_DATA_TYPE, TIMESTAMP_FIELD, false, true);
+		addField(INTEGER_DATA_TYPE, TIMESTAMP_FIELD, true, true);
 		addField(INTEGER_DATA_TYPE, RunModel.RUNID_FIELD, true, true);
 		addField(BOOLEAN_DATA_TYPE, DELETED_FIELD, false, true);
 		addField(INTEGER_DATA_TYPE, GENERALITEMID_FIELD, true, true);
@@ -53,8 +57,15 @@ public class ResponseModel extends DataSourceModel {
 				JSONObject answer = JSONParser.parseStrict(firstValue).isObject();
 				if (answer.containsKey("imageUrl")) {
 					return  answer.get("imageUrl").isString().stringValue();
+				}else if (answer.containsKey("audioUrl")) {
+					return  AUDIO_DEFAULT;
+				}else if (answer.containsKey("videoUrl")) {
+					return  VIDEO_DEFAULT;
 				}
-				return "";
+				else if (answer.containsKey("text")) {
+					return  TEXT_DEFAULT;
+				}
+				return OTHER_DEFAULT;
 			}
 
 			@Override

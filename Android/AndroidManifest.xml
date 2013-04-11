@@ -190,6 +190,12 @@
                 <action android:name="org.celstec.arlearn.visibility" />
             </intent-filter>
         </receiver>
+        
+         <receiver android:name=".broadcast.ProximityIntentReceiver" >
+            <intent-filter>
+                <action android:name="org.celstec.arlearn.proximityAction" />
+            </intent-filter>
+        </receiver>
     </application>
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -204,6 +210,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.camera"

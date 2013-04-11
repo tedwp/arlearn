@@ -1,14 +1,21 @@
 package org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop;
 
+import java.util.HashMap;
+
+import org.celstec.arlearn2.gwtcommonlib.client.auth.Authentication;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.DataSourceModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.JsonObjectListCallback;
+import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.generalItem.GeneralItemsClient;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 
 public class GeneralItemDataSource extends GenericDataSource {
 	
 	public static GeneralItemDataSource instance;
+	public static HashMap<Long, Long> lastSyncDate = new HashMap<Long, Long>();
 
 	public static GeneralItemDataSource getInstance() {
 		if (instance == null)
@@ -31,7 +38,9 @@ public class GeneralItemDataSource extends GenericDataSource {
 
 	
 	public void loadDataFromWeb(long gameId) {
-		getHttpClient().getGeneralItemsGame(gameId, getLastSyncDate(), new JsonObjectListCallback(getBeanType(),  this.getDataSourceModel()));
+		getHttpClient().getGeneralItemsGame(gameId, getLastSyncDate(gameId), 
+				new JsonObjectListCallback(getBeanType(),  
+				this.getDataSourceModel(), gameId));
 	}
 
 	protected String getBeanType() {
@@ -41,6 +50,49 @@ public class GeneralItemDataSource extends GenericDataSource {
 	@Override
 	public void processNotification(JSONObject bean) {
 		loadDataFromWeb((long) bean.get("gameId").isNumber().doubleValue());
+	}
+	
+	protected long getLastSyncDate(long gameId) {
+		if (lastSyncDate.containsKey(gameId)) return lastSyncDate.get(gameId);
+		return 0l;
+	}
+	public class JsonObjectListCallback extends JsonCallback {
+
+		private String beanType;
+		private DataSourceModel dataSourceModel;
+		private  long gameId;
+
+		public JsonObjectListCallback(String beanType, DataSourceModel dataSourceModel, long gameId) {
+			this.beanType = beanType;
+			this.dataSourceModel = dataSourceModel;
+			this.gameId = gameId;
+		}
+
+		public void onJsonReceived(JSONValue jsonValue) {
+			JSONObject jsonObject = jsonValue.isObject();
+			if (jsonObject == null) {
+				return;
+			}
+			if (jsonObject.containsKey("serverTime") )
+				lastSyncDate.put(gameId, (long) jsonObject.get("serverTime").isNumber().doubleValue());
+			if (jsonObject.get("error") != null) {
+				Authentication.getInstance().disAuthenticate();
+			} else {
+				onJsonArrayReceived(jsonObject);
+			}
+		}
+
+		public void onJsonArrayReceived(JSONObject jsonObject) {
+			JSONArray array = jsonObject.get(beanType).isArray();
+			for (int i = 0; i < array.size(); i++) {
+				onJsonObjectReceived(array.get(i).isObject());
+			}
+		}
+
+		public void onJsonObjectReceived(JSONObject jsonObject) {
+			if (dataSourceModel != null) dataSourceModel.addJsonObject(jsonObject);
+		}
+
 	}
 
 }

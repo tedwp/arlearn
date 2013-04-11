@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.beans.dependencies;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.celstec.arlearn2.beans.Bean;
@@ -45,7 +46,18 @@ public class ProximityDependency extends Dependency {
 
 	@Override
 	public long satisfiedAt(List<Action> actionList) {
-		return 0;
+		long minSatisfiedAt = Long.MAX_VALUE;
+		String latString = ""+((double)(long)(lat*1000000)/1000000);
+		String lngString = ""+((double)(long)(lng*1000000)/1000000);
+		String compString ="geo:"+latString+":"+lngString+":"+radius;
+		for (Iterator iterator = actionList.iterator(); iterator.hasNext();) {
+			Action action = (Action) iterator.next();
+			if ((compString).equals(action.getAction())){
+				minSatisfiedAt = Math.min(minSatisfiedAt, (action.getTime()==null)?0:action.getTime());
+			}
+		}
+		if (minSatisfiedAt == Long.MAX_VALUE) minSatisfiedAt = -1;
+		return minSatisfiedAt;
 	}
 
 	@Override

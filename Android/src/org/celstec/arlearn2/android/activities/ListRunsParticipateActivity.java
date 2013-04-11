@@ -199,6 +199,7 @@ public class ListRunsParticipateActivity extends GeneralActivity implements List
 		long id = position;
 		PropertiesAdapter pa = new PropertiesAdapter(this);
 		Long runId = runs[(int) id].getRunId();
+		RunDelegator.getInstance().restartRun(runId, this);
 		pa.setCurrentRunId(runId);
 
 		if (pa.getRunStart(id) == 0)

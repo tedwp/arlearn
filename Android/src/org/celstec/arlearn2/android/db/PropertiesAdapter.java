@@ -186,6 +186,7 @@ public class PropertiesAdapter {
 	}
 	
 	public void databaseReset() {
+		SharedPreferences.Editor editor = getDefaultPrefs().edit();
 		setParticipateGameLastSynchronizationDate(0);
 		setMyGameLastSynchronizationDate(0);
 		setRunLastSynchronizationDate(0);

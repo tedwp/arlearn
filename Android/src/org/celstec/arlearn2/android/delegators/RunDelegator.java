@@ -53,16 +53,15 @@ public class RunDelegator {
 		return instance;
 	}
 	
-	//TODO this method is never called
 	public void initRunsAndGamesFromDb(Context ctx) {
 		LoadRunsAndGamesToCache gameAndRunsTask = new LoadRunsAndGamesToCache();
 		gameAndRunsTask.run(ctx);
 	}
 	
-	public void initRunsAndGamesFromDb(Context ctx, String activityToUpdate) {
-		LoadRunsAndGamesToCache gameAndRunsTask = new LoadRunsAndGamesToCache(new String[]{activityToUpdate});
-		gameAndRunsTask.run(ctx);
-	}
+//	public void initRunsAndGamesFromDb(Context ctx, String activityToUpdate) {
+//		LoadRunsAndGamesToCache gameAndRunsTask = new LoadRunsAndGamesToCache(new String[]{activityToUpdate});
+//		gameAndRunsTask.run(ctx);
+//	}
 	
 	public void synchronizeRunsWithServer(Context ctx) {
 		(new SynchronizeRunsTask(ctx)).run(ctx);
@@ -150,6 +149,10 @@ public class RunDelegator {
 			syncTask.gameId = r.getGameId();
 			syncTask.run(ctx);
 		}
+	}
+
+	public void restartRun(Long runId, Context ctx) {
+		
 	}
 	
 }

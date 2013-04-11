@@ -1,8 +1,6 @@
 package org.celstec.arlearn2.resultDisplay.client;
 
 import org.celstec.arlearn2.gwtcommonlib.client.auth.Authentication;
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.TeamModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GeneralItemDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OwnerResponseDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.QueryGameDataSource;
@@ -13,20 +11,21 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.run.RunClient;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.smartgwt.client.widgets.events.DoubleClickEvent;
-import com.smartgwt.client.widgets.events.DoubleClickHandler;
-import com.smartgwt.client.widgets.form.fields.ButtonItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
+import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tile.TileGrid;
+import com.smartgwt.client.widgets.tile.events.RecordDoubleClickEvent;
+import com.smartgwt.client.widgets.tile.events.RecordDoubleClickHandler;
 
 public class ResultDisplay implements EntryPoint {
 
@@ -48,9 +47,9 @@ public class ResultDisplay implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		
-		
-		
 		runId = Long.parseLong(com.google.gwt.user.client.Window.Location.getParameter("runId"));
+		GWT.log("runId :"+runId );
+//		System.out.println(runId);
 		TeamDataSource.getInstance().loadDataFromWeb(runId);
 		UserDataSource.getInstance().loadDataFromWeb(runId);
 		//
@@ -61,9 +60,9 @@ public class ResultDisplay implements EntryPoint {
 		});
 		
 		showResultDisplay();
-		//showResponses();
-		//showRuns();
-		//search();
+//		showResponses();
+//		showRuns();
+//		mainMenu();
 	}
 
 	private void showResultDisplay() {
@@ -78,27 +77,27 @@ public class ResultDisplay implements EntryPoint {
 		listGrid = List.getInstance();		
 		columnTreeGrid = Mixed.getInstance();
 		
-		tileGrid.addDoubleClickHandler(new DoubleClickHandler() {			
+		tileGrid.addRecordDoubleClickHandler(new RecordDoubleClickHandler() {
+			
 			@Override
-			public void onDoubleClick(DoubleClickEvent event) {
-				// TODO we also should take into account when grid has 
-				// records list but user clicks outside the elements
+			public void onRecordDoubleClick(RecordDoubleClickEvent event) {
 				if (!tileGrid.getRecordList().isEmpty()) {
-					showPreview(tileGrid);
+					showPreview(tileGrid, event.getRecord());
 				}				
 			}
 		});
 		
-		listGrid.addDoubleClickHandler(new DoubleClickHandler() {			
+		listGrid.addRecordDoubleClickHandler(new com.smartgwt.client.widgets.grid.events.RecordDoubleClickHandler() {
+			
 			@Override
-			public void onDoubleClick(DoubleClickEvent event) {
-				// TODO we also should take into account when grid has 
-				// records list but user clicks outside the elements
+			public void onRecordDoubleClick(
+					com.smartgwt.client.widgets.grid.events.RecordDoubleClickEvent event) {
 				if (!tileGrid.getRecordList().isEmpty()) {
-					showPreview(tileGrid);
+					showPreview(tileGrid, event.getRecord());
 				}
 			}
 		});
+
 		
 		switch (NUMBER_VERSION) {
 		case 1:
@@ -118,8 +117,8 @@ public class ResultDisplay implements EntryPoint {
 
 
 
-	private void showPreview(final TileGrid tileGrid) {
-		slide = SlideShow.getInstance(tileGrid);
+	private void showPreview(final TileGrid tileGrid, Record record) {
+		slide = SlideShow.getInstance(tileGrid, record);
 		slide.show();
 	}
 
@@ -168,7 +167,7 @@ public class ResultDisplay implements EntryPoint {
 		rootPanel.add(vLayout);
 	}
 	
-	
+
 	public void showRuns() {
 		RootPanel rootPanel = RootPanel.get("container");
 //		vLayout = new VLayout();
@@ -196,67 +195,67 @@ public class ResultDisplay implements EntryPoint {
 //		vLayout.addMember(listGrid);
 		rootPanel.add(listGrid);
 	}
+
+	public void mainMenu() {
+		RootPanel rootPanel = RootPanel.get("container");
+		if (!Authentication.getInstance().isAuthenticated()) {
+			Authentication.getInstance().userCredentialsReceived("arlearn1", password);
+		} else {
+			
+	        vLayout = new VLayout();
+	        vLayout.setHeight100();
+	        vLayout.setWidth100();
+//	        vLayout.setBackgroundColor("#5DA5D7");
+	        vLayout.setBackgroundColor("#03652F");
+//	        vLayout.setBackgroundColor("#68A333");
+	        
+	        HLayout icon_login = new HLayout();
+	        icon_login.setStyleName("icon_login");
+	        
+	        Image icon = new Image("images/icon_arlearn.png");
+	        icon.setWidth("200px");
+	        icon_login.addMember(icon);
+	        
+	        
+	        VLayout buttons = new VLayout();
+	        
+	        /*
+	        
+	        IButton facebook = new IButton();
+	        facebook.setSrc("images/facebook_signin.png");
+	        
+	        IButton twitter = new IButton();
+	        twitter.setIcon("/images/twitter_signin.png");
+	        
+	        IButton linkedin = new IButton();
+	        linkedin.setSrc("images/linkedin_signin.png");
+	        */
+	        
+	        HTML facebook = new HTML();
+	        HTML twitter = new HTML();
+	        HTML linkedin = new HTML();
+	        facebook.setHTML("<a href=''><img src='images/facebook_signin.png' title='Sign in with Facebook' alt='Sign in with Facebook' /></a>");
+	        twitter.setHTML("<a href=''><img src='images/twitter_signin.png' title='Sign in with Twitter' alt='Sign in with Twitter' /></a>");
+	        linkedin.setHTML("<a href=''><img src='images/linkedin_signin.png' title='Sign in with Linkedin' alt='Sign in with Linkedin' /></a>");
+	        buttons.addMember(facebook);
+	        buttons.addMember(twitter);
+	        buttons.addMember(linkedin);
+	        
+	        icon_login.addMember(buttons);
+	        
+	        HTML footer = new HTML();
+	        footer.setHeight("10%");
+	        footer.setStyleName("footer-main-interface");
+	        footer.setHTML("<p> ARLearn Project | 2013 </p>");
+	        
+	        vLayout.addMember(icon_login);
+	        vLayout.addMember(footer);
+	        
+			rootPanel.add(vLayout);
+
+		}
+	}
 	
-//	public void search() {
-//		RootPanel rootPanel = RootPanel.get("container");
-//		if (!Authentication.getInstance().isAuthenticated()) {
-//			Authentication.getInstance().userCredentialsReceived("arlearn1", password);
-//		} else {
-//			//NotificationSubscriber.getInstance();
-//
-//			ListGrid listGrid = new ListGrid();
-//			final QueryGameDataSource qgds = new QueryGameDataSource();
-//			
-//			listGrid.setDataSource(qgds);
-////			qgds.search("test");
-//			ListGridField idField = new ListGridField(GameModel.GAMEID_FIELD, "identifier");
-//			ListGridField nameField = new ListGridField(GameModel.GAME_TITLE_FIELD, TeamModel.TEAMID_FIELD);
-//
-//			listGrid.setFields(new ListGridField[] { idField, nameField });
-//			listGrid.setCanResizeFields(true);
-//			listGrid.setWidth100();
-//			listGrid.setHeight100();
-//			listGrid.fetchData();
-////			rootPanel.add(listGrid);
-//			
-//			final SearchForm form = new SearchForm();  
-//	        form.setTop(50);  
-//	        form.setNumCols(3);  
-//	        final TextItem query = new TextItem();  
-//	        query.setName("query");  
-//	        query.setTitle("Query");  
-//	        query.setDefaultValue("snowboarding");  
-//	  
-//	        query.addChangedHandler(new ChangedHandler() {
-//				
-//				@Override
-//				public void onChanged(ChangedEvent event) {
-//	    			qgds.search(query.getValueAsString());
-//	    			//getGrid().setData(getGridData(listRecords));
-//					
-//				}
-//			});
-//	        
-//	        ButtonItem button = new ButtonItem();  
-//	        button.setTitle("Search");  
-//	        button.setStartRow(false);  
-//	        button.addClickHandler(new ClickHandler() {  
-//	            public void onClick(ClickEvent event) {  
-//	    			qgds.search(query.getValueAsString());
-//
-//	            }  
-//	        });  
-//	  
-//	        form.setItems(query, button);  
-//	        vLayout = new VLayout();
-//			vLayout.setMembersMargin(15);
-//			vLayout.setWidth100();
-//			vLayout.setHeight100();
-//			vLayout.addMember(form);
-//			vLayout.addMember(listGrid);
-//			
-//			rootPanel.add(vLayout);
-//		}
-//	}
+	
 
 }

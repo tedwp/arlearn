@@ -1,4 +1,4 @@
-package org.celstec.arlearn2.resultDisplay.client;
+package org.celstec.arlearn2.search.client;
 
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OwnerResponseDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.QueryGameDataSource;

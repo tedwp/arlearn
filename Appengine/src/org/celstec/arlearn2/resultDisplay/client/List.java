@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.resultDisplay.client;
 
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.ResponseModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.TeamModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.UserModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OwnerResponseDataSource;
@@ -29,14 +30,18 @@ public class List extends ListGrid {
         //previewImageField.setImageURLPrefix("flags/16/");  
         //previewImageField.setImageURLSuffix(".png");  
   
+        ListGridField previewImageField2 = new ListGridField("picture", "Preview");  
+        previewImageField.setAlign(Alignment.CENTER); 
+       
+        
         ListGridField timestampField = new ListGridField("timestamp", "Date");  
         ListGridField informationField = new ListGridField("information", "Information");  
-        ListGridField userField = new ListGridField(UserModel.EMAIL_FIELD, "User");  
-        ListGridField rolField = new ListGridField("rol", "Rol"); 
+        ListGridField userField = new ListGridField(ResponseModel.USEREMAIL_FIELD, "User");  
+        ListGridField rolField = new ListGridField(ResponseModel.ROLE_VALUE_FIELD, "Rol"); 
         ListGridField teamField = new ListGridField(TeamModel.TEAMID_FIELD, "Team");
         teamField.setHidden(true);
   
-        setFields(previewImageField, timestampField, informationField, userField, rolField, teamField);  
+        setFields(previewImageField/*,previewImageField2*/, timestampField, informationField, userField, rolField, teamField);  
         setCanResizeFields(true);
 	}
 

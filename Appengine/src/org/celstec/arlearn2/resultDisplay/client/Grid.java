@@ -24,7 +24,7 @@ public class Grid extends TileGrid {
 		setTileHeight(158);
 		setHeight100();
 		setID("boundList");
-		setBackgroundColor("#f1f1f1");
+		//setBackgroundColor("#f1f1f1");
 		setCanReorderTiles(true);
 		setShowAllRecords(true);
 		setDataSource(OwnerResponseDataSource.getInstance());

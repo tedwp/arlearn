@@ -33,6 +33,7 @@ public class GeneralItemModel extends DataSourceModel {
 		addField(DOUBLE_DATA_TYPE, LAT_FIELD, false, true);
 		addField(DOUBLE_DATA_TYPE, LNG_FIELD, false, true);
 		addField(STRING_DATA_TYPE, NAME_FIELD, false, false);
+		addField(INTEGER_DATA_TYPE, GameModel.GAMEID_FIELD, false, true); 
 		addField(STRING_DATA_TYPE, "description", false, false);
 		addField(STRING_DATA_TYPE, "richText", false, false);
 		addField(STRING_DATA_TYPE, "type", false, false);

@@ -97,6 +97,8 @@ public class RunAdapter extends GenericDbTable {
 		initialValues.put(BEAN, run.toString());
 		initialValues.put(GAMEID, run.getGameId());
 		initialValues.put(DELETED, runDeleted);
+		PropertiesAdapter.getInstance(db.getContext()).setGeneralItemsVisibilityLastSynchronizationDate(0, run.getRunId());
+
 		db.getSQLiteDb().insert(getTableName(), null, initialValues);
 	}
 	
