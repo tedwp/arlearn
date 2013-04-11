@@ -64,7 +64,7 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 	private double lng = -1;
 	// private long runId;
 
-//	private Handler mHandler = new Handler();
+	// private Handler mHandler = new Handler();
 	private ScoreHandler scoreHandler = new ScoreHandler(this);
 	protected MenuHandler menuHandler;
 
@@ -72,7 +72,7 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 
 	@Override
 	public void onBroadcastMessage(Bundle bundle, boolean render) {
-		if (render) 
+		if (render)
 			makeGeneralItemVisible();
 	}
 
@@ -87,11 +87,11 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 		setContentView(R.layout.map_view);
 
 		broadcastReceiver = new GenericBroadcastReceiver(this);
-		
-//		Intent gimIntent = new Intent();
-//		gimIntent.setAction(GeneralItemReceiver.action);
-//		sendBroadcast(gimIntent);
-		
+
+		// Intent gimIntent = new Intent();
+		// gimIntent.setAction(GeneralItemReceiver.action);
+		// sendBroadcast(gimIntent);
+
 		mv = (MapView) findViewById(R.id.map);
 		mv.setBuiltInZoomControls(true);
 		myLocation = new MyLocationOverlay(this, mv) {
@@ -140,10 +140,10 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 		mv.getOverlays().add(responsesOverlay);
 		mv.getOverlays().add(usersOverlay);
 		control = mv.getController();
-//		mHandler.postDelayed(checkForUpdates, 10000);
-		
+		// mHandler.postDelayed(checkForUpdates, 10000);
+
 		initListMapButton();
-		
+
 		ActionsDelegator.getInstance().synchronizeActionsWithServer(this);
 		long runId = PropertiesAdapter.getInstance(this).getCurrentRunId();
 
@@ -178,26 +178,27 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 		if (runId == null || RunCache.getInstance().getRun(runId) == null) {
 			this.finish();
 		}
-		long gameId = RunCache.getInstance().getGameId(runId);
-		GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, runId, gameId);
-		
-		menuHandler = new MenuHandler(this);
-		if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
-			this.finish();
-		}
-		
-		myLocation.enableMyLocation();
-//		mHandler.removeCallbacks(checkForUpdates);
-//		mHandler.post(checkForUpdates);
+		Long gameId = RunCache.getInstance().getGameId(runId);
+		if (gameId == null) {
+			finish();
+		} else {
+			GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, runId, gameId);
 
-		if (broadcastReceiver != null)
-			broadcastReceiver.onResume();
+			menuHandler = new MenuHandler(this);
+			if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
+				this.finish();
+			}
 
-		if (menuHandler.getPropertiesAdapter().isScoringEnabled() && menuHandler.getPropertiesAdapter().getTotalScore() != null && menuHandler.getPropertiesAdapter().getTotalScore() != Long.MIN_VALUE) {
-			scoreHandler.setScore((int) menuHandler.getPropertiesAdapter().getTotalScore().longValue());
+			myLocation.enableMyLocation();
+
+			if (broadcastReceiver != null)
+				broadcastReceiver.onResume();
+
+			if (menuHandler.getPropertiesAdapter().isScoringEnabled() && menuHandler.getPropertiesAdapter().getTotalScore() != null && menuHandler.getPropertiesAdapter().getTotalScore() != Long.MIN_VALUE) {
+				scoreHandler.setScore((int) menuHandler.getPropertiesAdapter().getTotalScore().longValue());
+			}
+			makeGeneralItemVisible();
 		}
-		makeGeneralItemVisible();
-		// updateStatus();
 
 	}
 
@@ -205,19 +206,19 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 	protected void onPause() {
 		super.onPause();
 		myLocation.disableMyLocation();
-//		mHandler.removeCallbacks(checkForUpdates);
+		// mHandler.removeCallbacks(checkForUpdates);
 		if (broadcastReceiver != null)
 			broadcastReceiver.onPause();
 	}
 
-//	private Runnable checkForUpdates = new Runnable() {
-//
-//		public void run() {
-//			itemsOverlay.syncItems(MapViewActivity.this);
-//			responsesOverlay.syncItems(MapViewActivity.this);
-//			mHandler.postDelayed(checkForUpdates, 120000);
-//		}
-//	};
+	// private Runnable checkForUpdates = new Runnable() {
+	//
+	// public void run() {
+	// itemsOverlay.syncItems(MapViewActivity.this);
+	// responsesOverlay.syncItems(MapViewActivity.this);
+	// mHandler.postDelayed(checkForUpdates, 120000);
+	// }
+	// };
 
 	private void makeGeneralItemVisible() {
 		long runId = getRunId();

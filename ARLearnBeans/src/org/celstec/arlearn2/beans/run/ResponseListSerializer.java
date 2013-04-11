@@ -31,6 +31,9 @@ public class ResponseListSerializer  extends RunBeanSerialiser{
 		JSONObject returnObject = super.toJSON(bean);
 		try {
 			if (al.getResponses() != null) returnObject.put("responses", ListSerializer.toJSON(al.getResponses()));
+			if (al.getServerTime() != null) returnObject.put("serverTime", al.getServerTime());
+			if (al.getResumptionToken() != null) returnObject.put("resumptionToken", al.getResumptionToken());
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

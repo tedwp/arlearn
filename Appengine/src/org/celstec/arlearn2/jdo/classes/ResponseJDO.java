@@ -39,6 +39,9 @@ public class ResponseJDO extends RunClass{
     private Long timeStamp;
 	
 	@Persistent
+	private Long lastModificationDate;
+	
+	@Persistent
     private boolean revoked;
 
 	public Long getGeneralItemId() {
@@ -71,6 +74,16 @@ public class ResponseJDO extends RunClass{
 
 	public void setTimeStamp(Long timeStamp) {
 		this.timeStamp = timeStamp;
+	}
+	
+	
+
+	public Long getLastModificationDate() {
+		return lastModificationDate;
+	}
+
+	public void setLastModificationDate(Long lastModificationDate) {
+		this.lastModificationDate = lastModificationDate;
 	}
 
 	public boolean isRevoked() {

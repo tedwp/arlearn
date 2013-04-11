@@ -36,6 +36,7 @@ public class GenericListRecord {
 	private String messageHeader;
 	private String messageDetail;
 	private String rightDetail;
+	private String error;
 	private boolean showCheckBox = false;
 	private long id;
 //	private boolean checked = false;
@@ -74,6 +75,13 @@ public class GenericListRecord {
 	}
 	
 	
+	
+	public String getError() {
+		return error;
+	}
+	public void setError(String error) {
+		this.error = error;
+	}
 	public boolean isShowCheckBox() {
 		return showCheckBox;
 	}
@@ -91,6 +99,7 @@ public class GenericListRecord {
 		TextView textHeader = (TextView) v.findViewById(R.id.textHeader);
 		TextView textDetail = (TextView) v.findViewById(R.id.textDetail);
 		TextView textRightDetail = (TextView) v.findViewById(R.id.textRightDetail);
+		TextView textError = (TextView) v.findViewById(R.id.textError);
 	      ImageView iv = (ImageView) v.findViewById(R.id.list_icon);
 
 
@@ -106,6 +115,12 @@ public class GenericListRecord {
 		}
 		if (textRightDetail != null) {
 			textRightDetail.setText(getRightDetail());
+		}
+		if (getError() != null) {
+			textError.setText(getError());
+			textError.setVisibility(View.VISIBLE);
+		} else {
+			textError.setVisibility(View.GONE);
 		}
 		if (iv != null && getImageResourceId()!=0) {
 			iv.setImageResource(getImageResourceId());

@@ -25,11 +25,14 @@ import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnnotateActivity;
 import org.celstec.arlearn2.android.util.MediaFolders;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -50,6 +53,31 @@ public class TakeVideoDelegate {
 	private TextView addCaptionVideo;
 	private Uri videoUri;
 
+	private int width;
+	private int height;
+
+
+
+	public int getWidth() {
+		return width;
+	}
+
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+
+	public int getHeight() {
+		return height;
+	}
+
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	
 	public TakeVideoDelegate(AnnotateActivity answerQuestionActivity) {
 		this.ctx = answerQuestionActivity;
 		videoFrame = (ImageView) ctx.findViewById(R.id.videoFrame);
@@ -80,9 +108,32 @@ public class TakeVideoDelegate {
 		setVideoInFrame();
 	}
 
+	@SuppressLint("NewApi")
 	private void setVideoInFrame() {
 		videoView.setVideoURI(videoUri);
 		showRecordedVideo();
+		width = videoView.getWidth();
+		height = videoView.getHeight();
+		
+		if (Integer.parseInt(Build.VERSION.SDK) >= Build.VERSION_CODES.GINGERBREAD_MR1) {
+			MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+			Bitmap bmp = null;
+
+			try {
+				retriever.setDataSource(ctx, videoUri);
+				bmp = retriever.getFrameAtTime();
+				height = bmp.getHeight();
+				width = bmp.getWidth();
+			} catch (RuntimeException ex) {
+				// Assume this is a corrupt video file.
+			} finally {
+				try {
+					retriever.release();
+				} catch (RuntimeException ex) {
+					// Ignore failures while cleaning up.
+				}
+			}
+		}
 		
 		MediaController mc = new MediaController(ctx);
 		videoView.setMediaController(mc);

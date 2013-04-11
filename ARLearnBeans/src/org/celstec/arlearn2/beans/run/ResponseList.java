@@ -25,6 +25,9 @@ public class ResponseList  extends RunBean{
 	
 	private List<Response> responses = new ArrayList<Response>();
 
+	private Long serverTime;
+	private String resumptionToken;
+
 	public ResponseList() {
 
 	}
@@ -38,4 +41,18 @@ public class ResponseList  extends RunBean{
 	public void addResponse(Response r) {
 		this.responses.add(r);
 	}
+	public Long getServerTime() {
+		return serverTime;
+	}
+	public void setServerTime(Long serverTime) {
+		this.serverTime = serverTime;
+	}
+	public String getResumptionToken() {
+		return resumptionToken;
+	}
+	public void setResumptionToken(String resumptionToken) {
+		this.resumptionToken = resumptionToken;
+	}
+	
+	
 }

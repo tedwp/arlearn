@@ -471,20 +471,24 @@ public class ChannelAPI {
         }
 
         public TalkMessage getMessage() throws ChannelException {
-            String submission = readSubmission();
-            if (submission == null) {
-                return null;
-            }
+        	try {
+        		String submission = readSubmission();
+        		if (submission == null) {
+                    return null;
+                }
 
-            TalkMessage msg = new TalkMessage();
+                TalkMessage msg = new TalkMessage();
 
-            try {
-                msg.parse(new BufferedReader(new StringReader(submission)));
-            } catch (InvalidMessageException e) {
-                throw new ChannelException(e);
-            }
+                try {
+                    msg.parse(new BufferedReader(new StringReader(submission)));
+                } catch (InvalidMessageException e) {
+                    throw new ChannelException(e);
+                }
 
-            return msg;
+                return msg;
+        	} catch (IndexOutOfBoundsException ex) {
+        		return null;
+        	}
         }
 
         public void close() {

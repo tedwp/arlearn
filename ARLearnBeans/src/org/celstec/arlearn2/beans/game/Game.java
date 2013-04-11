@@ -23,17 +23,21 @@ import java.io.Serializable;
 
 public class Game extends GameBean implements Serializable, Comparable<Game>{
 	
+	public static final int PRIVATE = 1;
+	public static final int WITH_LINK = 2;
+	public static final int PUBLIC = 3;
+	
 	private String title;
 	private String creator;
 	private String owner;
 	private String feedUrl;
 	private Config config;
+	private Integer sharing;
 	
 	public Game() {
 		
 	}
-		
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -75,6 +79,15 @@ public class Game extends GameBean implements Serializable, Comparable<Game>{
 		this.config = config;
 	}
 	
+	
+	public Integer getSharing() {
+		return sharing;
+	}
+
+	public void setSharing(Integer sharing) {
+		this.sharing = sharing;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		Game other = (Game ) obj;
@@ -83,7 +96,8 @@ public class Game extends GameBean implements Serializable, Comparable<Game>{
 			nullSafeEquals(getCreator(), other.getCreator()) && 
 			nullSafeEquals(getOwner(), other.getOwner()) && 
 			nullSafeEquals(getFeedUrl(), other.getFeedUrl()) && 
-			nullSafeEquals(getConfig(), other.getConfig()); 
+			nullSafeEquals(getConfig(), other.getConfig()) && 
+			nullSafeEquals(getSharing(), other.getSharing()); 
 
 	}
 	

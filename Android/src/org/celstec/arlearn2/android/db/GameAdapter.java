@@ -76,6 +76,7 @@ public class GameAdapter extends GenericDbTable {
 				return false;	
 			}
 		}    	
+		PropertiesAdapter.getInstance(db.getContext()).setGeneralItemsLastSynchronizationDate(0, g.getGameId());
     	return db.getSQLiteDb().insert(getTableName(), null, getContentValues(g)) != -1;	
 	}
 	

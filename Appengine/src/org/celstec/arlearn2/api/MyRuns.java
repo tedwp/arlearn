@@ -19,7 +19,6 @@
 package org.celstec.arlearn2.api;
 
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
@@ -36,7 +35,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.game.Config;
-import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.beans.generalItem.OpenBadge;
@@ -45,9 +43,7 @@ import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.RunList;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.cache.GeneralitemsCache;
-import org.celstec.arlearn2.cache.MyGamesCache;
 import org.celstec.arlearn2.delegators.RunDelegator;
-import org.celstec.arlearn2.jdo.manager.GameManager;
 import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
 import org.celstec.arlearn2.jdo.manager.RunManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;

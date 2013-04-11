@@ -29,7 +29,6 @@ public class NetworkTaskHandler extends Handler {
     public static final int SYNC_GAMES = 4;
     public static final int SYNC_RUNS = 5;
     public static final int SYNC_GI_MEDIA = 6;
-    public static final int SYNC_USER_MEDIA = 7;
     public static final int GAME_CREATE = 8;
     public static final int GAME_DELETE = 9;
     public static final int SYNC_PARTICIPATING_GAME = 10;
@@ -37,7 +36,6 @@ public class NetworkTaskHandler extends Handler {
     public static final int GENERALITEM_CREATE = 12;
     public static final int GENERALITEM_DELETE = 13;
     public static final int GENERALITEM_QUERY = 14;
-
 
 
 	@Override

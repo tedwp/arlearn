@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.celstec.arlearn2.android"
-    android:versionCode="22"
+    android:versionCode="23"
     android:versionName="1.2 (code 22)" >
 
     <uses-sdk
@@ -142,6 +142,12 @@
                 <action android:name="org.celstec.arlearn.visibility" />
             </intent-filter>
         </receiver>
+        
+         <receiver android:name=".broadcast.ProximityIntentReceiver" >
+            <intent-filter>
+                <action android:name="org.celstec.arlearn.proximityAction" />
+            </intent-filter>
+        </receiver>
     </application>
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -156,6 +162,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.camera"

@@ -18,6 +18,8 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.asynctasks.db;
 
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
+import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.DatabaseTask;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
 import org.celstec.arlearn2.android.db.DBAdapter;
@@ -27,6 +29,17 @@ import android.os.Message;
 
 public class LoadRunsAndGamesToCache  extends GenericTask implements  DatabaseTask {
 
+	private String[] activities;
+	
+	
+	public LoadRunsAndGamesToCache() {
+		
+	}
+	
+	public LoadRunsAndGamesToCache(String... activities) {
+		this.activities = activities;
+	}
+	
 	@Override
 	public void execute(DBAdapter db) {
 		db.getRunAdapter().queryAll();
@@ -38,6 +51,9 @@ public class LoadRunsAndGamesToCache  extends GenericTask implements  DatabaseTa
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
 		m.obj = this;
 		m.sendToTarget();
+		if (activities != null) {
+			ActivityUpdater.updateActivities(ctx, activities);
+		}
 		
 	}
 

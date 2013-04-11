@@ -100,7 +100,7 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 			if (!( gis[j].getLng() == null && gis[j].getLat() == null)) {
 				distance =distanceToString(GPSUtil.distance(gis[j].getLat(), gis[j].getLng(), lat, lng, GPSUtil.METERS));
 			}
-			MessageListRecord r = new MessageListRecord(gis[j], runId);
+			MessageListRecord r = new MessageListRecord(gis[j], runId, this);
 			r.setDistance(distance);
 			adapter.add(r);
 		}
@@ -177,6 +177,18 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 	}
 	public boolean showStatusLed() {
 		return true;
+	}
+
+	@Override
+	public GeneralItem getGeneralItem() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setGeneralItem(GeneralItem gi) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

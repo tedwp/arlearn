@@ -51,8 +51,12 @@ public class GenericBroadcastReceiver {
 	};
 
 	public void onPause() {
-		if (broadcastReceiver != null)
-			activity.unregisterReceiver(broadcastReceiver);
+		try {
+			if (broadcastReceiver != null)
+				activity.unregisterReceiver(broadcastReceiver);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void onResume() {

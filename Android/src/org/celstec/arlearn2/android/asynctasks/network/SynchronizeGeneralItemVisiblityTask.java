@@ -44,17 +44,6 @@ public class SynchronizeGeneralItemVisiblityTask extends GenericTask implements 
 	@Override
 	public void execute() {
 		if (!NetworkSwitcher.isOnline(ctx)) {
-			
-//			Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
-//			m.obj = new DBAdapter.DatabaseTask() {
-//
-//				@Override
-//				public void execute(DBAdapter db) {
-//					db.getGeneralItemVisibility().query(runId, org.celstec.arlearn2.android.db.GeneralItemVisibility.VISIBLE);
-//					db.getGeneralItemVisibility().query(runId, org.celstec.arlearn2.android.db.GeneralItemVisibility.NO_LONGER_VISIBLE);
-//				}
-//			};
-//			m.sendToTarget();
 			runAfterTasks(ctx);
 			return;
 		} else {

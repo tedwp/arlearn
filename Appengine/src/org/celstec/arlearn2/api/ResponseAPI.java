@@ -29,6 +29,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.run.Response;
@@ -40,35 +41,23 @@ import com.google.gdata.util.AuthenticationException;
 @Path("/response")
 public class ResponseAPI extends Service {
 
-	// @POST
-	// @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	// @Path("/runId/{runIdentifier}/generalItemId/{generalItemId}")
-	// public Response put(@HeaderParam("Authorization") String token, String
-	// json,
-	// @PathParam("runIdentifier") Long runIdentifier,
-	// @PathParam("generalItemId") String generalItemIdentifier) {
-	// try {
-	// Response r = new Response();
-	// r.setGeneralItemId(generalItemIdentifier);
-	// r.setResponseValue(json);
-	// CreateResponse cr = new CreateResponse(token);
-	// return cr.createResponse(runIdentifier, r);
-	// } catch (AuthenticationException e) {
-	// Response response = new Response();
-	// response.setError("authentication did not succeed");
-	// return response;
-	// }
-	//
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/runId/{runIdentifier}")
-	public String getAnswers(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @HeaderParam("Accept") String accept)
+	public String getAnswers(@HeaderParam("Authorization") String token, 
+			@QueryParam("from") Long from,
+			@QueryParam("until") Long until,
+			@QueryParam("resumptionToken") String cursor,
+			@PathParam("runIdentifier") Long runIdentifier, 
+			@HeaderParam("Accept") String accept)
 			throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 		ResponseDelegator rd = new ResponseDelegator(token);
-		return serialise(rd.getResponses(runIdentifier, null, null), accept);
+		if (from == null && until == null) {
+			return serialise(rd.getResponses(runIdentifier, null, null), accept);
+		}
+		return serialise(rd.getResponsesFromUntil(runIdentifier, from, until, cursor), accept);
 	}
 
 	// TODO work out and return responses

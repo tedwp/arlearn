@@ -22,10 +22,14 @@ import java.text.MessageFormat;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.cache.ActionCache;
+import org.celstec.arlearn2.android.db.MediaCacheGeneralItems;
 import org.celstec.arlearn2.android.delegators.GameDelegator;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
+
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
@@ -35,12 +39,23 @@ public class MessageListRecord extends GenericListRecord {
 	
 	private boolean read = false;
 
-	public MessageListRecord(GeneralItem generalItem, long runId) {
+	public MessageListRecord(GeneralItem generalItem, long runId, Context ctx) {
 		setMessageHeader(generalItem.getName());
 		setRead(ActionCache.getInstance().isRead(runId, generalItem.getId()));
 		String description = "";
 		double percentage = GeneralItemsDelegator.getInstance().getDownloadPercentage(generalItem);
-		if (percentage < 1 && percentage != -1) description += MessageFormat.format("{0,number,#.##%}", percentage);
+		double averageStatus = GeneralItemsDelegator.getInstance().getAverageDownloadStatus(generalItem);
+		if (percentage < 1 && percentage != -1) {
+			description += MessageFormat.format("{0,number,#.##%}", percentage);
+		} 
+			if (averageStatus == MediaCacheGeneralItems.REP_STATUS_TODO) {
+				
+				setError(ctx.getString(R.string.warningDownloadBusy));
+			}
+		
+		if (averageStatus == MediaCacheGeneralItems.REP_STATUS_FILE_NOT_FOUND) {
+			setError(ctx.getString(R.string.errorDownloadFailed));
+		}
 
 		if ("".equals(description)) description = generalItem.getDescription().trim();
 

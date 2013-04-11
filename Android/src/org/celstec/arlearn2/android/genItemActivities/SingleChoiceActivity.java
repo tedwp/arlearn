@@ -24,6 +24,7 @@ import java.util.Iterator;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
 import org.celstec.arlearn2.android.delegators.ResponseDelegator;
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.SingleChoiceTest;
 
@@ -37,7 +38,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-public class SingleChoiceActivity extends GeneralActivity {
+public class SingleChoiceActivity extends GeneralItemActivity {
 
 	HashMap<RadioButton, MultipleChoiceAnswerItem> buttonList = new HashMap<RadioButton, MultipleChoiceAnswerItem>();
 	HashMap<String, MultipleChoiceAnswerItem> nfcMapping = new HashMap<String, MultipleChoiceAnswerItem>();
@@ -46,14 +47,14 @@ public class SingleChoiceActivity extends GeneralActivity {
 	protected TextView textView;
 
 	private SingleChoiceTest mct;
+	protected String richText;
+
 	private MultipleChoiceAnswerItem selected = null;
 
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gi_detail_multiplechoice);
-		mct = (SingleChoiceTest) getIntent().getExtras().getSerializable("generalItem");
-		cancelNotification((int) mct.getId().longValue());
 
 		initUi(mct);
 		fireReadAction(mct);
@@ -81,16 +82,21 @@ public class SingleChoiceActivity extends GeneralActivity {
 
 
 	private void initUi(SingleChoiceTest mct) {
+		super.getGuiComponents();
+		super.initCountdownView();
 		textView = ((TextView) findViewById(R.id.mct_question)); // .setText(mct.getQuestion())
 		webview = (WebView) findViewById(R.id.mct_webview);
 
 		if (mct.getRichText() != null) {
 			String html = mct.getRichText();
-			webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+			if (!html.equals(richText)) {
+				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+				richText = html;
+			}
 		} else {
 			webview.setVisibility(View.GONE);
 		}
-
+		
 		if (mct.getText() != null) {
 			textView.setText(mct.getText());
 		} else {
@@ -146,4 +152,24 @@ public class SingleChoiceActivity extends GeneralActivity {
 		}
 	}
 
+	@Override
+	public GeneralItem getGeneralItem() {
+		return mct;
+	}
+
+	@Override
+	public void setGeneralItem(GeneralItem gi) {
+		mct = (SingleChoiceTest) gi;
+	}
+
+	@Override
+	protected void onSaveInstanceState (Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("richtText", richText);
+	}
+
+	protected void unpackBundle(Bundle inState) {
+		super.unpackBundle(inState);
+		richText = inState.getString("richtText");
+	}
 }

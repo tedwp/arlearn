@@ -34,6 +34,9 @@ public class NotificationBean extends Bean {
 	public final static int GI_ALTERED = 9;
 	public final static int GI_VISIBLE = 10;
 	public final static int GI_DISAPPEARED = 11;
+
+	public final static int TEAM_ALTERED = 20;
+
 			
 	public void retainOnlyIdentifier() {
 		

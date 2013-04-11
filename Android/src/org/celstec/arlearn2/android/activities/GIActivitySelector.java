@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.activities;
 
+import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
@@ -30,6 +31,9 @@ import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.SingleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
+import org.celstec.arlearn2.beans.run.Run;
+import org.celstec.arlearn2.android.cache.RunCache;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.genItemActivities.AudioObjectActivity;
 import org.celstec.arlearn2.android.genItemActivities.MultipleChoiceActivity;
 import org.celstec.arlearn2.android.genItemActivities.MultipleChoiceImageActivity;
@@ -52,13 +56,17 @@ public class GIActivitySelector {
 	}
 	
 	public static void startActivity(Context ctx, GeneralItem gi, boolean newTask) {
-		Intent i = null;
+		Long runId = PropertiesAdapter.getInstance(ctx).getCurrentRunId();
+		Long gameId = RunCache.getInstance().getGameId(runId);
+		if (runId != null && gameId != null) {
+			Intent i = null;
 			i = new Intent(new Intent(ctx, getCorrespondingActivity(gi)));
-			i.putExtra(Constants.ITEM_ID, gi.getId()); 
 			if (newTask) i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			i.putExtra("generalItem", gi);
+			i.putExtra(GeneralItem.class.getCanonicalName(), gi);
+			i.putExtra(Run.class.getCanonicalName(), runId);
+			i.putExtra(Game.class.getCanonicalName(), gameId);
 			ctx.startActivity(i);
-//		}
+		}
 	}
 	
 	public static Class getCorrespondingActivity(GeneralItem gi) {

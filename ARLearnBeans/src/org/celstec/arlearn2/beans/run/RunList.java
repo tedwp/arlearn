@@ -27,13 +27,12 @@ public class RunList extends Bean{
 	public static String runsType = "org.celstec.arlearn2.beans.run.Run";
 
 	private List<Run> runs = new Vector<Run>();
+	private Long serverTime;
 	
 	public RunList() {
 
 	}
 	
-	private Long serverTime;
-
 	public Long getServerTime() {
 		return serverTime;
 	}
