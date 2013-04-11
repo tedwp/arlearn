@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.asynctasks.db.CreateDownloadGeneralItems;
+import org.celstec.arlearn2.android.asynctasks.db.CreateProximityEvents;
 import org.celstec.arlearn2.android.asynctasks.db.GeneralItemDependencyHandler;
 import org.celstec.arlearn2.android.asynctasks.db.InitDownloadStatusTask;
 import org.celstec.arlearn2.android.asynctasks.db.InitGeneralItemVisibilityTask;
@@ -38,6 +39,7 @@ import org.celstec.arlearn2.android.cache.ResponseCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCacheGeneralItems;
 import org.celstec.arlearn2.android.db.MediaCacheGeneralItems.DownloadItem;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
@@ -46,6 +48,7 @@ import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 import org.celstec.arlearn2.beans.run.Response;
+import org.celstec.arlearn2.client.GeneralItemClient;
 
 import android.content.Context;
 import android.net.Uri;
@@ -81,7 +84,10 @@ public class GeneralItemsDelegator {
 		InitDownloadStatusTask downloadstatus_4 = new InitDownloadStatusTask(gameId); 
 		
 		GeneralItemDependencyHandler dependencyTask_5 = new GeneralItemDependencyHandler();
+		CreateProximityEvents events = new CreateProximityEvents(ctx,runId, gameId);
 		
+		
+		downloadstatus_4.taskToRunAfterExecute(events);
 		downloadstatus_4.taskToRunAfterExecute(dependencyTask_5);
 		visibilityTask_3.taskToRunAfterExecute(downloadstatus_4);
 		syncVisItemsTask_2.taskToRunAfterExecute(visibilityTask_3);
@@ -97,6 +103,18 @@ public class GeneralItemsDelegator {
 		syncItemTask_1.setGameId(gameId);
 		syncItemTask_1.run(ctx);
 	}
+	
+	public GeneralItem getGeneralItemFromNetwork(Context ctx, Long gameId, Long generalItemId) {
+		return GeneralItemClient.getGeneralItemClient().getGeneralItem(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), gameId, generalItemId);
+		
+	}
+	
+//	public void synchronizeGeneralItemWithServer(Context ctx, Long gameId, Long generalItemId) {
+//		SynchronizeGeneralItemTask syncTask = new SynchronizeGeneralItemTask();
+//		syncTask.setGameId(gameId);
+//		syncTask.setGeneralItemId(generalItemId);
+//		syncTask.run(ctx);
+//	}
 	
 	public TreeSet<Response> getResponses(Long runId, Long itemId) {
 		return ResponseCache.getInstance().getResponses(runId, itemId);
