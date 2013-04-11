@@ -27,8 +27,6 @@ import org.celstec.arlearn2.android.delegators.GameDelegator;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
