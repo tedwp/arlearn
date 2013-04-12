@@ -53,6 +53,16 @@
 		<servlet-class>org.celstec.arlearn2.download.UserContentServlet</servlet-class>
 	</servlet>
 	
+	<servlet>
+		<servlet-name>OauthServlet</servlet-name>
+		<servlet-class>org.celstec.arlearn2.oauth.OauthServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>OauthServlet</servlet-name>
+		<url-pattern>/oauth/*</url-pattern>
+	</servlet-mapping>
+	
 	<servlet-mapping>
 		<servlet-name>Jersey REST Service</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
