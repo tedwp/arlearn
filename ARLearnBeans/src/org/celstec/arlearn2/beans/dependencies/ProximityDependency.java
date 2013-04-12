@@ -2,6 +2,7 @@ package org.celstec.arlearn2.beans.dependencies;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.deserializer.json.BeanDeserializer;
@@ -45,7 +46,7 @@ public class ProximityDependency extends Dependency {
 	}
 
 	@Override
-	public long satisfiedAt(List<Action> actionList) {
+	public long satisfiedAt(List<Action> actionList, Map<String, String[]> accountRoleMap) {
 		long minSatisfiedAt = Long.MAX_VALUE;
 		String latString = ""+((double)(long)(lat*1000000)/1000000);
 		String lngString = ""+((double)(long)(lng*1000000)/1000000);

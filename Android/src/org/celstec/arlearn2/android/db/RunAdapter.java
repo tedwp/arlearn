@@ -296,6 +296,8 @@ public class RunAdapter extends GenericDbTable {
 				((MyResponses) db.table(DBAdapter.MYRESPONSES_ADAPTER)).deleteRun(runId);
 				db.getSQLiteDb().delete(getTableName(), ID+" = "+runId, null);
 				
+				db.getProximityEventRegistry().deleteRun(runId);
+				
 				RunCache.getInstance().delete(runId);
 				ActionCache.getInstance().delete(runId);
 				GeneralItemVisibilityCache.getInstance().remove(runId);

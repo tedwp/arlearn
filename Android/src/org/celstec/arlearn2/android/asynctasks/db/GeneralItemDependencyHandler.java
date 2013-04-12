@@ -96,6 +96,7 @@ public class GeneralItemDependencyHandler extends GenericTask implements  Databa
 //		beep = (new PropertiesAdapter(db.getContext())).getCurrentRunId() == runId;
 		List<Action> actions = ActionCache.getInstance().getActions(runId);
 		if (actions != null) {
+			retrieveUserRoles(db, runId);
 			processItemsNotYetInitialised(db, runId);
 			processItemsNotYetVisible(db, runId, actions);
 			processItemsNotYetDisappeared(db, runId, actions);
@@ -134,6 +135,28 @@ public class GeneralItemDependencyHandler extends GenericTask implements  Databa
 		return false;
 	}
 
+	private HashMap<String, String[]> accountRolesMap = new HashMap<String, String[]>();
+	
+	private void retrieveUserRoles(DBAdapter db, long runId) {
+		String userRoles = db.getRunAdapter().queryRoles(runId);
+		if (userRoles != null && !"".equals(userRoles)) {
+			try {
+				boolean playerHasRequiredRole = false;
+				JSONArray userRolesJson = new JSONArray(userRoles);
+				String[] currentUserRoles = new String[userRolesJson.length()];
+				for (int i =0; i< currentUserRoles.length; i++) {
+					currentUserRoles[i] = userRolesJson.getString(i);
+				}
+				;
+				accountRolesMap.put(PropertiesAdapter.getInstance(db.getContext()).getUsername(), currentUserRoles);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+		
+	}
+	
 	public static boolean itemMatchesPlayersRole(DBAdapter db, long runId, GeneralItem gi) {
 		if (gi.getRoles() != null && !gi.getRoles().isEmpty()) {
 			String userRoles = db.getRunAdapter().queryRoles(runId);
@@ -162,7 +185,7 @@ public class GeneralItemDependencyHandler extends GenericTask implements  Databa
 				Dependency dep = generalItem.getDependsOn();
 				long satisfiedAt = -1; //item not yet visible
 				if (dep != null) {
-					satisfiedAt = dep.satisfiedAt(actions); 
+					satisfiedAt = dep.satisfiedAt(actions, accountRolesMap); 
 				} else {
 					satisfiedAt = 0; //item supposed to visible from time 0
 				}
@@ -216,7 +239,7 @@ public class GeneralItemDependencyHandler extends GenericTask implements  Databa
 				Dependency dep = generalItem.getDisappearOn();
 				long satisfiedAtTemp = -1;
 				if (dep != null) {
-					satisfiedAtTemp = dep.satisfiedAt(actions);
+					satisfiedAtTemp = dep.satisfiedAt(actions, accountRolesMap);
 					final long satisfiedAt = satisfiedAtTemp;
 					if (satisfiedAt != -1) {
 						GeneralItemVisibilityDelegator.getInstance().makeItemVisible(db, e.itemId, runId, satisfiedAt, GeneralItemVisibility.NO_LONGER_VISIBLE);

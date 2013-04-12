@@ -94,8 +94,8 @@ public class ResultDisplayOld implements EntryPoint {
 	}
 
 	private void showPreview(final TileGrid tileGrid) {
-		slide = SlideShow.getInstance(tileGrid);
-		slide.show();
+//		slide = SlideShow.getInstance(tileGrid);
+//		slide.show();
 	}
 
 	/**
