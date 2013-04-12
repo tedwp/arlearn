@@ -40,6 +40,7 @@ import android.content.Intent;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -70,7 +71,6 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO read recordingMedia + save this in onStop
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
 			recordingMedia = savedInstanceState.getBoolean(RECORDING, false);
@@ -107,7 +107,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		super.onResume();
 		if (!recordingMedia) {
 			// todo reset...
-
+			rad.setStatus(RecordAudioDelegate.STOPPED_NO_AUDIO);
 			displayPublishButton();
 		}
 	}
@@ -282,6 +282,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 	public void onPause() {
 		super.onPause();
 		if (!recordingMedia) {
+			Log.e("RECORDING", "in onPause");
 			tpd.reset();
 			rad.stop();
 			tvd.reset();

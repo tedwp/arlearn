@@ -39,7 +39,7 @@ import android.widget.TextView;
 public class RecordAudioDelegate {
 	
 	private int status = STOPPED_NO_AUDIO;
-	private static final int STOPPED_NO_AUDIO = 1;
+	public static final int STOPPED_NO_AUDIO = 1;
 	private static final int STOPPED_WITH_AUDIO = 2;
 	private static final int RECORDING_STATUS = 3;
 	private static final int PLAYBACK_AUDIO = 4;
@@ -247,6 +247,7 @@ public class RecordAudioDelegate {
 	}
 	
 	public void stopRecording() {
+		Log.e("RECORDING", "in stop recording");
 		startRecordButton.setImageResource(R.drawable.verwijderopname1en);
 		audioButtons.setVisibility(audioButtons.VISIBLE);
 
