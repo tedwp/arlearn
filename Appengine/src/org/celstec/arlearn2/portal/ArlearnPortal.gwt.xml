@@ -6,5 +6,5 @@
 	<inherits name="com.smartgwt.SmartGwt" />
 	
 	<source path="client" />
-	<entry-point class="org.celstec.arlearn2.portal.client.PortalPage" />
+	<entry-point class="org.celstec.arlearn2.portal.client.Entry" />
 </module>

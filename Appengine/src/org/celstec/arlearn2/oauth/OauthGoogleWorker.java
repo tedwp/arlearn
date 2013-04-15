@@ -54,7 +54,19 @@ public class OauthGoogleWorker extends OauthWorker {
 	public void saveAccount(String accessToken) {
 		try {
 			JSONObject profileJson = new JSONObject(readURL(new URL("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken)));
-			AccountJDO account = AccountManager.addAccount(profileJson.getString("id"), AccountJDO.GOOGLECLIENT, profileJson.getString("email"), profileJson.getString("given_name"), profileJson.getString("family_name"), profileJson.getString("name"), profileJson.getString("picture"));
+			String id = "";
+			String picture = "";
+			String email = "";
+			String given_name = "";
+			String family_name = "";
+			String name = "";
+			if (profileJson.has("picture")) profileJson.getString("picture");
+			if (profileJson.has("id")) profileJson.getString("id");
+			if (profileJson.has("email")) profileJson.getString("email");
+			if (profileJson.has("given_name")) profileJson.getString("given_name");
+			if (profileJson.has("family_name")) profileJson.getString("family_name");
+			if (profileJson.has("name")) profileJson.getString("name");
+			AccountJDO account = AccountManager.addAccount(id, AccountJDO.GOOGLECLIENT, email, given_name, family_name,name, picture);
 			 saveAccessToken(account.getUniqueId(), accessToken);
 		} catch (Throwable ex) {
 			throw new RuntimeException("failed login", ex);

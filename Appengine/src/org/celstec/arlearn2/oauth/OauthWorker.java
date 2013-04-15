@@ -55,7 +55,7 @@ public abstract class OauthWorker {
 
 	protected void sendRedirect(String accessToken, String expires, int type) {
 		try {
-			resp.sendRedirect(baseUrl+"/index.html?gwt.codesvr=127.0.0.1:9997&accessToken=" + accessToken + "&type=" + type + "&exp=" + expires);
+			resp.sendRedirect(baseUrl+"/portal.html?accessToken=" + accessToken + "&type=" + type + "&exp=" + expires);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

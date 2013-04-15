@@ -43,7 +43,7 @@ public class ResultDisplayOld implements EntryPoint {
 	private List listGrid = null;
 	private Mixed columnTreeGrid = null;
 
-	private static final String password = "arl3arn123";
+	private static final String password = "";
 	private static final long runId = 3l;
 
 	private SlideShow slide;

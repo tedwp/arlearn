@@ -56,7 +56,7 @@ public class ResultDisplay implements EntryPoint {
 	public Anchor anchorGoogle = new Anchor("Access with Google");
 	public Anchor anchorLinkedIn = new Anchor("Access with LinkedIn");
 	
-	public void onModuleLoad() {
+	public void onModuleLoadOld() {
 		final OauthClient client = OauthClient.checkAuthentication();
 		if (client != null) {
 			RootPanel.get("sendButtonContainerFacebook").add(new Anchor("you are authenticated"));
@@ -102,7 +102,7 @@ public class ResultDisplay implements EntryPoint {
 	/**
 	 * This is the entry point method.
 	 */
-	public void onModuleLoad3() {
+	public void onModuleLoad() {
 		
 		runId = Long.parseLong(com.google.gwt.user.client.Window.Location.getParameter("runId"));
 		GWT.log("runId :"+runId );
