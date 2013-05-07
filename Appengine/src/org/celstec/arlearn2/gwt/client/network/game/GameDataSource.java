@@ -21,18 +21,11 @@ package org.celstec.arlearn2.gwt.client.network.game;
 import org.celstec.arlearn2.gwt.client.network.DerivedFieldTask;
 import org.celstec.arlearn2.gwt.client.network.GenericClient;
 import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
-import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
 import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
 import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
 
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.data.Criteria;
-import com.smartgwt.client.data.DSCallback;
-import com.smartgwt.client.data.DSRequest;
-import com.smartgwt.client.data.DSResponse;
-import com.smartgwt.client.data.Record;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class GameDataSource extends GenericDataSource {
 	

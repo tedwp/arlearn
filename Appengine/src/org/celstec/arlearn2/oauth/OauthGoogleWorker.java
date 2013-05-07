@@ -60,12 +60,12 @@ public class OauthGoogleWorker extends OauthWorker {
 			String given_name = "";
 			String family_name = "";
 			String name = "";
-			if (profileJson.has("picture")) profileJson.getString("picture");
-			if (profileJson.has("id")) profileJson.getString("id");
-			if (profileJson.has("email")) profileJson.getString("email");
-			if (profileJson.has("given_name")) profileJson.getString("given_name");
-			if (profileJson.has("family_name")) profileJson.getString("family_name");
-			if (profileJson.has("name")) profileJson.getString("name");
+			if (profileJson.has("picture")) picture = profileJson.getString("picture");
+			if (profileJson.has("id")) id = profileJson.getString("id");
+			if (profileJson.has("email")) email =  profileJson.getString("email");
+			if (profileJson.has("given_name")) given_name = profileJson.getString("given_name");
+			if (profileJson.has("family_name")) family_name = profileJson.getString("family_name");
+			if (profileJson.has("name")) name = profileJson.getString("name");
 			AccountJDO account = AccountManager.addAccount(id, AccountJDO.GOOGLECLIENT, email, given_name, family_name,name, picture);
 			 saveAccessToken(account.getUniqueId(), accessToken);
 		} catch (Throwable ex) {

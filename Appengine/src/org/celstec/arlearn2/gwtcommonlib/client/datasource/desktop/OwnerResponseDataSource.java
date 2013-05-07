@@ -57,7 +57,6 @@ public class OwnerResponseDataSource extends GenericDataSource {
 
 	@Override
 	public void processNotification(JSONObject bean) {
-		System.out.println("notification resp " + bean);
 		loadDataFromWeb((long) bean.get("runId").isNumber().doubleValue());
 	}
 

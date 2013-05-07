@@ -46,6 +46,9 @@ public class GameJDO extends GameClass {
 	private Text config;
 	
 	@Persistent
+	private Text description;
+	
+	@Persistent
 	private Integer sharing;
 
 	public Long getGameId() {
@@ -100,6 +103,15 @@ public class GameJDO extends GameClass {
 
 	public void setConfig(String config) {
 		this.config = new Text(config);
+	}
+	
+	public String getDescription() {
+		if (description == null) return null;
+		return description.getValue();
+	}
+
+	public void setDescription(String description) {
+		if (description != null) this.description = new Text(description);
 	}
 
 	public Integer getSharing() {

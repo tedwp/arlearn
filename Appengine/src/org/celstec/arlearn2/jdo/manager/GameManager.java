@@ -68,6 +68,7 @@ public class GameManager {
 		gameJdo.setFeedUrl(game.getFeedUrl());
 		gameJdo.setTitle(game.getTitle());
 		gameJdo.setSharing(game.getSharing());
+		gameJdo.setDescription(game.getDescription());
 		gameJdo.setLastModificationDate(System.currentTimeMillis());
 		if (game.getConfig() != null)  {
 			gameJdo.setConfig(game.getConfig().toString());
@@ -81,6 +82,28 @@ public class GameManager {
 		}
 	}
 
+	
+	public static Long addGame(Game game) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		GameJDO gameJdo = new GameJDO();
+		gameJdo.setGameId(game.getGameId());
+		gameJdo.setTitle(game.getTitle());
+		gameJdo.setSharing(game.getSharing());
+		gameJdo.setDescription(game.getDescription());
+
+		gameJdo.setLastModificationDate(System.currentTimeMillis());
+		if (game.getConfig() != null)  {
+			gameJdo.setConfig(game.getConfig().toString());
+		}
+		try {
+			GameJDO persistentGame = pm.makePersistent(gameJdo);
+			return persistentGame.getGameId();
+
+		} finally {
+			pm.close();
+		}
+	}
+	
 	public static List<Game> getGames(Long gameId, String creatorEmail, String owner, String feedUrl, String title) {
 		ArrayList<Game> returnGames = new ArrayList<Game>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -160,6 +183,7 @@ public class GameManager {
 		game.setFeedUrl(jdo.getFeedUrl());
 		game.setGameId(jdo.getGameId());
 		game.setOwner(jdo.getOwner());
+		game.setDescription(jdo.getDescription());
 		game.setSharing(jdo.getSharing());
 		if (jdo.getLastModificationDate() != null) {
 			game.setLastModificationDate(jdo.getLastModificationDate());

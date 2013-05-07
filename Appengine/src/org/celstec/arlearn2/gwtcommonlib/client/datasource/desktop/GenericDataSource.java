@@ -121,7 +121,7 @@ public abstract class GenericDataSource extends DataSource implements
 		if (toRemove != null) removeData(toRemove);
 	}
 	
-	protected Record getRecord(Object id) {
+	public Record getRecord(Object id) {
 		return (Record) recordMap.get(id);
 	}
 

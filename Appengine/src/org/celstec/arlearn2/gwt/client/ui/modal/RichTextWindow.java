@@ -19,7 +19,6 @@
 package org.celstec.arlearn2.gwt.client.ui.modal;
 
 import org.celstec.arlearn2.gwt.client.AuthoringConstants;
-import org.celstec.arlearn2.gwt.client.network.response.ResponseDataSource;
 
 import com.google.gwt.core.client.GWT;
 import com.smartgwt.client.types.Alignment;
@@ -29,8 +28,8 @@ import com.smartgwt.client.widgets.RichTextEditor;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -123,12 +122,13 @@ public class RichTextWindow extends Window {
 		addCloseClickHandler(new CloseClickHandler() {
 
 			@Override
-			public void onCloseClick(CloseClientEvent event) {
+			public void onCloseClick(CloseClickEvent event) {
 				richTextEditor.destroy();
 				form.destroy();
 				RichTextWindow.this.destroy();
 
 			}
+
 		});
 	}
 

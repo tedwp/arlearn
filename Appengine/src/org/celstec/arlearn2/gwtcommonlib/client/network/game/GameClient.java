@@ -2,6 +2,7 @@ package org.celstec.arlearn2.gwtcommonlib.client.network.game;
 
 import org.celstec.arlearn2.gwtcommonlib.client.network.GenericClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
@@ -38,12 +39,36 @@ public class GameClient extends GenericClient {
 		invokeJsonPOST(null, object, jcb);
 	}
 	
+	public void createGame(Game newGame, JsonCallback jsonCallback) {
+		invokeJsonPOST(null, newGame.getJSON(), jsonCallback);
+	}
+	
 	public void getGames(final JsonCallback jcb) {
 		invokeJsonGET(null, jcb);
 	}
 	
 	public void getGames(long from, final JsonCallback jcb) {
 		invokeJsonGET("?from="+from, jcb);
+	}
+	
+	public void getGamesAccess(long from, final JsonCallback jcb) {
+		invokeJsonGET("/gameAccess?from="+from, jcb);
+	}
+	
+	public void getGamesAccessAccount(long gameId, final JsonCallback jcb) {
+		invokeJsonGET("/access/gameId/"+gameId, jcb);
+	}
+	
+	public void addAccess(long gameId, String account, int accessRight, final JsonCallback jcb) {
+		invokeJsonGET("/access/gameId/"+gameId+"/account/"+account+"/accessRight/"+accessRight, jcb);
+	}
+	
+	public void removeAccess(long gameId, String account, final JsonCallback jcb) {
+		invokeJsonGET("/removeAccess/gameId/"+gameId+"/account/"+account, jcb);
+	}
+	
+	public void getGame(long gameId, final JsonCallback jcb) {
+		invokeJsonGET("/gameId/"+gameId, jcb);
 	}
 	
 	public void getGameConfig(long id, final JsonCallback jcb) {
@@ -85,5 +110,7 @@ public class GameClient extends GenericClient {
 	public void search(String query, JsonCallback jsonCallback) {
 		invokeJsonPOST("/search", query, jsonCallback);
 	}
+
+	
 
 }

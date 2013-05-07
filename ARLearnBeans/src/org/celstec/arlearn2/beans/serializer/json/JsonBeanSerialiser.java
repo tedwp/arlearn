@@ -37,6 +37,8 @@ import org.celstec.arlearn2.beans.Info;
 import org.celstec.arlearn2.beans.RunPackage;
 import org.celstec.arlearn2.beans.Version;
 import org.celstec.arlearn2.beans.VersionSerializer;
+import org.celstec.arlearn2.beans.account.Account;
+import org.celstec.arlearn2.beans.account.AccountList;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.dependencies.AndDependency;
 import org.celstec.arlearn2.beans.dependencies.BooleanDependency;
@@ -49,6 +51,8 @@ import org.celstec.arlearn2.beans.deserializer.json.OpenQuestionDeserializer;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.ConfigSerializer;
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.game.GameAccess;
+import org.celstec.arlearn2.beans.game.GameAccessList;
 import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.beans.game.LocationUpdateConfig;
 import org.celstec.arlearn2.beans.game.LocationUpdateConfigDeserializer;
@@ -153,6 +157,8 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(ProximityDependency.class.getCanonicalName(), new ProximityDependency.Serializer());
 		customSerializerMap.put(GamePackage.class.getCanonicalName(), new GamePackageSerializer());
 		customSerializerMap.put(Game.class.getCanonicalName(), new GameSerializer());
+		customSerializerMap.put(GameAccess.class.getCanonicalName(), GameAccess.serializer);
+		customSerializerMap.put(GameAccessList.class.getCanonicalName(), GameAccessList.serializer);
 		customSerializerMap.put(GamesList.class.getCanonicalName(), new GamesListSerializer());
 		customSerializerMap.put(GameCreationStatus.class.getCanonicalName(), new GameCreationStatusSerializer());
 		customSerializerMap.put(RunCreationStatus.class.getCanonicalName(), new RunCreationStatus.GameCreationStatusSerializer());
@@ -199,6 +205,9 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(Ping.class.getCanonicalName(), new Ping.Serializer());
 		customSerializerMap.put(Pong.class.getCanonicalName(), new Pong.Serializer());
 		customSerializerMap.put(APNDeviceDescription.class.getCanonicalName(), new APNDeviceDescription.Serializer());
+		customSerializerMap.put(Account.class.getCanonicalName(), Account.serializer);
+		customSerializerMap.put(AccountList.class.getCanonicalName(), AccountList.serializer);
+
 	}
 	
 	public static JSONObject serialiseToJson(Object bean) {

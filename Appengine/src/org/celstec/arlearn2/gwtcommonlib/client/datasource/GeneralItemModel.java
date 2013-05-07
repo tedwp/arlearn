@@ -14,6 +14,7 @@ public class GeneralItemModel extends DataSourceModel {
 	public static final String LAT_FIELD = "lat";
 	public static final String LNG_FIELD = "lng";
 	public static final String NAME_FIELD = "name";
+	public static final String RICH_TEXT_FIELD = "richText";
 
 	public final static int CREATED = 1;
 	public final static int DELETED = 2;

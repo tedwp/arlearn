@@ -34,6 +34,8 @@ import org.celstec.arlearn2.beans.GamePackageDeserializer;
 import org.celstec.arlearn2.beans.Info;
 import org.celstec.arlearn2.beans.RunPackage;
 import org.celstec.arlearn2.beans.VersionDeserializer;
+import org.celstec.arlearn2.beans.account.Account;
+import org.celstec.arlearn2.beans.account.AccountList;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.dependencies.AndDependency;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
@@ -45,6 +47,8 @@ import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.ConfigDeserializer;
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.game.GameAccess;
+import org.celstec.arlearn2.beans.game.GameAccessList;
 import org.celstec.arlearn2.beans.game.LocationUpdateConfig;
 import org.celstec.arlearn2.beans.game.LocationUpdateConfigDeserializer;
 import org.celstec.arlearn2.beans.game.MapRegion;
@@ -328,6 +332,8 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.dependencies.ProximityDependency", new ProximityDependency.Deserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.GamePackage", new GamePackageDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.Game", gd);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.GameAccess", GameAccess.deserializer);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.GameAccessList", GameAccessList.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.Config", cd);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.game.MapRegion", new MapRegion.MapRegionDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Location", new Location.Deserializer());
@@ -368,6 +374,9 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.Pong", new Pong.Deserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.TeamModification", TeamModification.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.APNDeviceDescription", new APNDeviceDescription.Deserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.account.Account", Account.deserializer);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.account.AccountList", AccountList.deserializer);
+
 	}
 	
 	

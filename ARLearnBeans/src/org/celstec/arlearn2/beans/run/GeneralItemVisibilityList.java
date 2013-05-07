@@ -24,7 +24,6 @@ import java.util.List;
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.deserializer.json.BeanDeserializer;
 import org.celstec.arlearn2.beans.deserializer.json.ListDeserializer;
-import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.beans.serializer.json.BeanSerializer;
 import org.celstec.arlearn2.beans.serializer.json.ListSerializer;
 import org.codehaus.jettison.json.JSONException;

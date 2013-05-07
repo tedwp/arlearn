@@ -21,6 +21,7 @@ package org.celstec.arlearn2.beans;
 import java.io.Serializable;
 
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 @SuppressWarnings("serial")
@@ -80,6 +81,11 @@ public class Bean  implements Serializable {
 		if (json == null) {
 			System.err.println("json is null for this bean "+getClass());
 			return null;
+		}
+		try {
+			return json.toString(2);
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 		return json.toString();
 	}

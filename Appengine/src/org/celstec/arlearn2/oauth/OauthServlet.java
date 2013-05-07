@@ -41,6 +41,13 @@ public class OauthServlet  extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		String baseurl =  "http://" +req.getServerName();
+		if (req.getServerPort() != 80) baseurl+=":"+req.getServerPort();
+		if (req.getParameter("error") != null) {
+			resp.sendRedirect(baseurl+"/oauth.html");
+			return;
+
+		}
 		OauthWorker worker = null;
 		if (req.getPathInfo().contains(FACEBOOK)) {
 			worker = new OauthFbWorker();
@@ -50,8 +57,6 @@ public class OauthServlet  extends HttpServlet {
 			worker = new OauthLinkedInWorker();
 		}
 		if (worker != null) {
-			String baseurl =  "http://" +req.getServerName();
-			if (req.getServerPort() != 80) baseurl+=":"+req.getServerPort();
 			worker.setBaseUrl(baseurl);
 			worker.setCode(req.getParameter("code"));
 			worker.setResponse(resp);

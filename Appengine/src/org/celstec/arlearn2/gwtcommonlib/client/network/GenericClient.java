@@ -2,6 +2,7 @@ package org.celstec.arlearn2.gwtcommonlib.client.network;
 
 
 import org.celstec.arlearn2.gwtcommonlib.client.auth.Authentication;
+import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthClient;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -36,8 +37,8 @@ public class GenericClient {
 	public RequestBuilder getRequestBuilder(String urlPostfix, RequestBuilder.Method m) {
 		String url = urlPostfix == null ? getUrl() : getUrl() + urlPostfix;
 		RequestBuilder builder = new RequestBuilder(m, url);
-		if (Authentication.getInstance().getAuthenticationToken() == null) return null;
-		String authorization = "GoogleLogin auth=" + Authentication.getInstance().getAuthenticationToken();
+		if (OauthClient.checkAuthentication() == null) return null;
+		String authorization = "GoogleLogin auth=" + OauthClient.checkAuthentication().getAccessToken();
 		builder.setHeader("Authorization", authorization);
 		builder.setHeader("Accept", "application/json");
 		return builder;

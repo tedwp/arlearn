@@ -32,10 +32,9 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.HTMLFlow;
-import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -43,7 +42,6 @@ import com.smartgwt.client.widgets.grid.events.CellClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellClickHandler;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
-import com.smartgwt.client.widgets.layout.VLayout;
 
 public class OpenQuestionAnswerWindow extends Window {
 
@@ -84,7 +82,7 @@ public class OpenQuestionAnswerWindow extends Window {
 		addCloseClickHandler(new CloseClickHandler() {
 			
 			@Override
-			public void onCloseClick(CloseClientEvent event) {
+			public void onCloseClick(CloseClickEvent event) {
 				htmlFlow.setContents("");
 				htmlFlow.destroy();
 				answerGrid.destroy();
@@ -92,6 +90,7 @@ public class OpenQuestionAnswerWindow extends Window {
 				OpenQuestionAnswerWindow.this.destroy();
 				
 			}
+
 		});
 
 	}

@@ -37,6 +37,7 @@ import org.celstec.arlearn2.beans.deserializer.json.ListDeserializer;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.beans.notification.GameModification;
+import org.celstec.arlearn2.delegators.GameAccessDelegator;
 import org.celstec.arlearn2.delegators.GameDelegator;
 import org.celstec.arlearn2.tasks.beans.GameSearchIndex;
 import org.codehaus.jettison.json.JSONArray;
@@ -61,6 +62,23 @@ public class MyGames extends Service {
 		}
 		GameDelegator qg = new GameDelegator(token);
 		return serialise(qg.getGames(from, until), accept);
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@CacheControlHeader("no-cache")
+	@Path("/gameAccess")
+	public String getGameAccess(@HeaderParam("Authorization") String token, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept,
+			@QueryParam("from") Long from,
+			@QueryParam("until") Long until) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		if (from == null) {
+			from = 0l;
+		}
+		GameAccessDelegator qg = new GameAccessDelegator(token);
+		return serialise(qg.getGamesAccess(from, until), accept);
 	}
 	
 	@GET
@@ -92,7 +110,56 @@ public class MyGames extends Service {
 		GameDelegator qg = new GameDelegator(token);
 		return serialise(qg.getGame(gameIdentifier), accept);
 	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/access/gameId/{gameIdentifier}/account/{account}/accessRight/{accessRight}")
+	public String access(@HeaderParam("Authorization") String token, 
+			@PathParam("gameIdentifier") Long gameIdentifier, 
+			@PathParam("account") String account, 
+			@PathParam("accessRight") Integer accessRight, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GameAccessDelegator gad = new GameAccessDelegator(token);
+		gad.provideAccessWithCheck(gameIdentifier, account, accessRight);
+		return "{}";
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/access/gameId/{gameIdentifier}")
+	public String accessList(@HeaderParam("Authorization") String token, 
+			@PathParam("gameIdentifier") Long gameIdentifier, 
+			@PathParam("account") String account, 
+			@PathParam("accessRight") Integer accessRight, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		GameAccessDelegator gad = new GameAccessDelegator(token);
 
+		return serialise(gad.getAccessList(gameIdentifier), accept);
+	}
+
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/removeAccess/gameId/{gameIdentifier}/account/{account}")
+	public String removeAccess(@HeaderParam("Authorization") String token, 
+			@PathParam("gameIdentifier") Long gameIdentifier, 
+			@PathParam("account") String account, 
+			@PathParam("accessRight") Integer accessRight, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		//TODO check if owner
+		GameAccessDelegator gad = new GameAccessDelegator(token);
+		gad.removeAccessWithCheck(gameIdentifier, account);
+		return "{}";
+	}
+	
 	@POST
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public String put(@HeaderParam("Authorization") String token, String gameString, 

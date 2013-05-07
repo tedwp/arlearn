@@ -5,6 +5,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationSubscri
 
 import com.google.gwt.json.client.JSONObject;
 //import org.celstec.arlearn2.mobileclient.client.common.datasource.mobile.GameDataSource;
+import com.google.gwt.json.client.JSONParser;
 
 public class RunModel extends DataSourceModel {
 
@@ -13,6 +14,10 @@ public class RunModel extends DataSourceModel {
 	public final static int ALTERED = 3;
 	
 	public static final String RUNID_FIELD = "runId";
+	public static final String RUNTITLE_FIELD = "title";
+	public static final String GAME_TITLE_FIELD = "gameTitle";
+	public static final String RUN_DELETED_FIELD = "deleted";
+	public static final String RUN_OWNER_FIELD = "owner";
 	public static final String GAMEID_FIELD = "gameId";
 
 	
@@ -24,10 +29,10 @@ public class RunModel extends DataSourceModel {
 	protected void initFields() {
 		addField(INTEGER_DATA_TYPE, RUNID_FIELD, true, true);
 		addField(INTEGER_DATA_TYPE, GAMEID_FIELD, false, true);
-		addField(STRING_DATA_TYPE, "title", false, true);
-		addField(STRING_DATA_TYPE, "owner", false, true);
-		addField(BOOLEAN_DATA_TYPE, "deleted", false, true);
-		
+		addField(STRING_DATA_TYPE, GAME_TITLE_FIELD, false, true);
+		addField(STRING_DATA_TYPE, RUNTITLE_FIELD, false, true);
+		addField(STRING_DATA_TYPE, RUN_OWNER_FIELD, false, true);
+		addField(BOOLEAN_DATA_TYPE, RUN_DELETED_FIELD, false, true);
 	}
 
 	@Override

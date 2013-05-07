@@ -29,6 +29,7 @@ public class Game extends GameBean implements Serializable, Comparable<Game>{
 	
 	private String title;
 	private String creator;
+	private String description;
 	private String owner;
 	private String feedUrl;
 	private Config config;
@@ -51,6 +52,15 @@ public class Game extends GameBean implements Serializable, Comparable<Game>{
 	}
 	public void setCreator(String creator) {
 		this.creator = creator;
+	}
+
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getFeedUrl() {
@@ -97,6 +107,7 @@ public class Game extends GameBean implements Serializable, Comparable<Game>{
 			nullSafeEquals(getOwner(), other.getOwner()) && 
 			nullSafeEquals(getFeedUrl(), other.getFeedUrl()) && 
 			nullSafeEquals(getConfig(), other.getConfig()) && 
+			nullSafeEquals(getDescription(), other.getDescription()) && 
 			nullSafeEquals(getSharing(), other.getSharing()); 
 
 	}

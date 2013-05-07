@@ -44,6 +44,29 @@ public class MailDelegator extends GoogleDelegator {
 		super(gd);
 	}
 
+	public void sendMail(String from, String fromName, String toMail, String subject, String msgBody) {
+		Properties props = new Properties();
+		Session session = Session.getDefaultInstance(props, null);
+		try {
+			Message msg = new MimeMessage(session);
+			msg.setFrom(new InternetAddress(from, fromName));
+			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(toMail));
+//			msg.addRecipient(Message.RecipientType.BCC, new InternetAddress(from));
+			msg.setSubject(subject);
+			
+	        final MimeBodyPart htmlPart = new MimeBodyPart();
+	        htmlPart.setContent(msgBody, "text/html");
+	        final Multipart mp = new MimeMultipart();
+	        mp.addBodyPart(htmlPart);
+	        
+			msg.setContent(mp);
+			Transport.send(msg);
+
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		} 
+	}
+
 	public void sendInstructionMail(String from, String fromName, String toMail) {
 		if (!toMail.contains("@")) toMail +="@gmail.com";
 		Properties props = new Properties();

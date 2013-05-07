@@ -54,8 +54,9 @@ public abstract class OauthWorker {
 	protected abstract String getAuthUrl(String authCode);
 
 	protected void sendRedirect(String accessToken, String expires, int type) {
+		long expiresLong = 3600*24*7l; 
 		try {
-			resp.sendRedirect(baseUrl+"/portal.html?accessToken=" + accessToken + "&type=" + type + "&exp=" + expires);
+			resp.sendRedirect(baseUrl+"/portal.html?accessToken=" + accessToken + "&type=" + type + "&exp=" + expiresLong);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

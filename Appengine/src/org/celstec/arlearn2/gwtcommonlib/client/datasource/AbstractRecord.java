@@ -1,7 +1,5 @@
 package org.celstec.arlearn2.gwtcommonlib.client.datasource;
 
-import java.util.Map;
-
 import com.google.gwt.json.client.JSONObject;
 
 public interface AbstractRecord {

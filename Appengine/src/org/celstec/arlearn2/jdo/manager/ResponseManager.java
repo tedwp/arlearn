@@ -43,6 +43,7 @@ public class ResponseManager {
 	private static final String paramsNames[] = new String[]{"runIdParam", "generalItemIdParam", "userEmailParam", "timeStampParam", "revokedParam"};
 	private static final String types[] = new String[]{"Long", "Long", "String", "String", "Long", "Boolean"};
 
+	private static final int RESPONSES_IN_LIST = 20;
 	
 	public static void addResponse(Long generalItemId, String responseValue, Long runId, String userEmail, Long timeStamp) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -110,7 +111,7 @@ public class ResponseManager {
 				extendsionMap.put(JDOCursorHelper.CURSOR_EXTENSION, c);
 				query.setExtensions(extendsionMap);
 			}
-			query.setRange(0, 3);
+			query.setRange(0, RESPONSES_IN_LIST);
 			String filter = null;
 			String params = null;
 			Object args[] = null;
@@ -142,7 +143,7 @@ public class ResponseManager {
 			}
 			Cursor c = JDOCursorHelper.getCursor(results);
 			cursorString = c.toWebSafeString();
-			if (returnList.getResponses().size() == 3) {
+			if (returnList.getResponses().size() == RESPONSES_IN_LIST) {
 				returnList.setResumptionToken(cursorString);
 			}
 			returnList.setServerTime(System.currentTimeMillis());

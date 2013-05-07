@@ -24,12 +24,12 @@ import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthGoogleClient;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthLinkedIn;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.OauthNetworkClient;
+import org.celstec.arlearn2.portal.client.author.AuthorPage;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -45,10 +45,6 @@ public class Entry implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
-		// if (RootPanel.get("button-create") != null) {
-		// secondMenu();
-		// } else {
-
 		OauthNetworkClient.getInstance().getOauthClientPackage(new JsonCallback() {
 			public void onJsonReceived(JSONValue jsonValue) {
 				for (int i = 0; i < jsonValue.isArray().size(); i++) {
@@ -69,31 +65,40 @@ public class Entry implements EntryPoint {
 						break;
 					}
 				}
-				System.out.println("received package");
-				// mainMenu();
-				// setOauthConfig();
 				loadPage();
 			}
-
 		});
-		// }
-
 	}
 
 	public void loadPage() {
 		final OauthClient client = OauthClient.checkAuthentication();
 		if (client != null) {
 			// authenticated
-			if (RootPanel.get("button-facebook") != null)
-				(new OauthPage()).loadPage();
-			if (RootPanel.get("button-create") != null)
-				(new PortalPage()).loadPage();
+			System.out.println("we are authenticated");
+			String href = Cookies.getCookie("redirectAfterOauth");
+			if (href != null) {
+				Cookies.removeCookie("redirectAfterOauth");
+				Window.open(href, "_self", "");
+
+			} else {
+				if (RootPanel.get("button-facebook") != null)
+					(new OauthPage()).loadPage();
+				if (RootPanel.get("button-create") != null)
+					(new PortalPage()).loadPage();
+				if (RootPanel.get("author") != null)
+					(new AuthorPage()).loadPage();
+				if (RootPanel.get("contact") != null)
+					(new AddContactPage()).loadPage();
+			}
 		} else {
-			// not authenticated
-			if (RootPanel.get("button-facebook") == null)
-				Window.open("/search.html", "_self", "");
-			else {
+			System.out.println("we are not authenticated");
+
+			String href = Window.Location.getHref();
+			if (href.contains("oauth.html")) {
 				(new OauthPage()).loadPage();
+			} else {
+				Cookies.setCookie("redirectAfterOauth", href);
+				Window.open("/oauth.html", "_self", "");
 			}
 		}
 	}
@@ -108,28 +113,32 @@ public class Entry implements EntryPoint {
 		}
 	}
 
-//	public void authenticated(final OauthClient client) {
-//		RootPanel.get("sendButtonContainerFacebook").add(new Anchor("you are authenticated"));
-//		RootPanel.get("sendButtonContainerGoogle").add(new Anchor("you are authenticated"));
-//		RootPanel.get("sendButtonContainerLinkedIn").add(new Anchor("you are authenticated"));
-//		Button b = new Button("disauthenticate");
-//		b.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-//
-//			@Override
-//			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-//				client.disAuthenticate();
-//				Window.Location.reload();
-//			}
-//		});
-//		vLayout = new VLayout();
-//		vLayout.setMembersMargin(15);
-//		Label accestoken = new Label(client.getAccessToken());
-//		vLayout.addMember(b);
-//		vLayout.addMember(accestoken);
-//		RootPanel.get("container").add(vLayout);
-//		System.out.println(Window.Location.getParameter("type"));
-//		
-//	}
+	// public void authenticated(final OauthClient client) {
+	// RootPanel.get("sendButtonContainerFacebook").add(new
+	// Anchor("you are authenticated"));
+	// RootPanel.get("sendButtonContainerGoogle").add(new
+	// Anchor("you are authenticated"));
+	// RootPanel.get("sendButtonContainerLinkedIn").add(new
+	// Anchor("you are authenticated"));
+	// Button b = new Button("disauthenticate");
+	// b.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+	//
+	// @Override
+	// public void onClick(com.smartgwt.client.widgets.events.ClickEvent event)
+	// {
+	// client.disAuthenticate();
+	// Window.Location.reload();
+	// }
+	// });
+	// vLayout = new VLayout();
+	// vLayout.setMembersMargin(15);
+	// Label accestoken = new Label(client.getAccessToken());
+	// vLayout.addMember(b);
+	// vLayout.addMember(accestoken);
+	// RootPanel.get("container").add(vLayout);
+	// System.out.println(Window.Location.getParameter("type"));
+	//
+	// }
 
 	public void notauthenticated() {
 		RootPanel.get("sendButtonContainerFacebook").add(anchorFacebook);

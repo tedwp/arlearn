@@ -78,7 +78,11 @@ public class Authentication implements LoginCallback {
 	}
 	
 	public String getAuthenticationToken() {
-		if (Cookies.getCookie(OAUTH_ACCESTOKEN_COOKIE) != null) return  Cookies.getCookie(OAUTH_ACCESTOKEN_COOKIE);
+		if (Cookies.getCookie(OAUTH_ACCESTOKEN_COOKIE) != null) {
+			Cookies.removeCookie(AUTH_COOKIE);		
+
+			return  Cookies.getCookie(OAUTH_ACCESTOKEN_COOKIE);
+		}
 		return Cookies.getCookie(AUTH_COOKIE);
 	}
 	
