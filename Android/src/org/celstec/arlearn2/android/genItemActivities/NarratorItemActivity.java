@@ -116,12 +116,6 @@ public class NarratorItemActivity extends GeneralItemActivity {
 
 	}
 
-//	protected void checkIfNotification() {
-//		String ns = Context.NOTIFICATION_SERVICE;
-//		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-//		mNotificationManager.cancel((int) narratorBean.getId().longValue());
-//	}
-
 	protected int getContentView() {
 		return R.layout.gi_detail_narratoritem;
 	}

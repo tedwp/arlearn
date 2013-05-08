@@ -2,6 +2,7 @@ package org.celstec.arlearn2.portal.client.author.ui.gi;
 
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
+import org.celstec.arlearn2.portal.client.author.ui.gi.dependency.AdvancedDependenciesEditor;
 import org.celstec.arlearn2.portal.client.author.ui.generic.canvas.RichTextCanvas;
 import org.celstec.arlearn2.portal.client.author.ui.generic.canvas.RichTextCanvas.HtmlSaver;
 
@@ -9,6 +10,8 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.SectionStack;
+import com.smartgwt.client.widgets.layout.SectionStackSection;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class GeneralItemDetailEdit extends HLayout {
@@ -42,6 +45,17 @@ public class GeneralItemDetailEdit extends HLayout {
 		infoLayout.addMember(rtCanvas);
 		rtCanvas.setHeight("*");
 		rtCanvas.setBorder("1px dashed blue");  
+		
+		
+		SectionStack stack = new SectionStack();
+	
+		stack.addSection(new SectionStackSection("Video Object"));
+		
+		SectionStackSection appearStack = new SectionStackSection("Appear");
+		appearStack.setItems(new AdvancedDependenciesEditor());
+		stack.addSection(appearStack);
+		
+		addMember(stack);
 	}
 	
 	public void loadGeneralItem(GeneralItem gi) {

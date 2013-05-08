@@ -105,4 +105,13 @@ public class GameAccessManager {
 			pm.close();
 		}
 	}
+	
+	public static GameAccessJDO getAccessById(String accessId) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			return pm.getObjectById(GameAccessJDO.class,accessId);
+		} finally {
+			pm.close();
+		}
+	}
 }

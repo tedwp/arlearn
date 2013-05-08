@@ -163,7 +163,7 @@ public class SplashScreenActivity extends GeneralActivity {
 				Long time = delta[0];
 				if (time != 0) {
 					blocked = true;
-					Toast.makeText(SplashScreenActivity.this, getString(R.string.correctDateSettings), Toast.LENGTH_LONG).show();
+					Toast.makeText(SplashScreenActivity.this, getString(R.string.correctDateSettings)+" "+time, Toast.LENGTH_LONG).show();
 				}
 			}
 		}

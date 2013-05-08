@@ -133,6 +133,21 @@ public class GeneralItemVisibility extends GenericDbTable {
 		return result;
 	}
 	
+	public VisibilityEvent[] query(long runId, int status, long visibleAfter) {
+		Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), new String[]{GENERAL_ITEM_ID, VISIBILITY_STATUS, SATISFIED_AT}, VISIBILITY_STATUS + " = ? and "+RUNID + " = ? and "+SATISFIED_AT +" > ? ", new String[]{""+status, ""+runId, ""+visibleAfter}, null, null, null, null);
+		VisibilityEvent[] result  = new VisibilityEvent[mCursor.getCount()];
+		int i = 0;
+		while (mCursor.moveToNext()) {
+//			Long itemId = mCursor.getLong(0);
+//			Long satisfiedAt = mCursor.getLong(1);
+			VisibilityEvent e = cursorToEvent(mCursor); 
+			result[i++] = e;
+			GeneralItemVisibilityCache.getInstance().put(runId, e.itemId, status, e.satisfiedAt);
+		}
+		mCursor.close();
+		return result;
+	}
+	
 	
 	public Long query(long itemId, long runId, int status) {
 		Cursor mCursor = db.getSQLiteDb().query(true, getTableName(), new String[] {SATISFIED_AT}, VISIBILITY_STATUS + " = ? and "+RUNID + " = ? and "+GENERAL_ITEM_ID + " = ?", new String[]{""+status, ""+runId, ""+itemId}, null, null, null, null);

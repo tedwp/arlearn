@@ -8,6 +8,7 @@ import org.celstec.arlearn2.beans.game.GameAccess;
 import org.celstec.arlearn2.beans.game.GameAccessList;
 import org.celstec.arlearn2.beans.run.RunList;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
+import org.celstec.arlearn2.jdo.classes.GameAccessJDO;
 import org.celstec.arlearn2.jdo.manager.GameAccessManager;
 
 import com.google.gdata.util.AuthenticationException;
@@ -39,7 +40,7 @@ public class GameAccessDelegator extends GoogleDelegator {
 		provideAccess(gameIdentifier, account, accessRight);
 
 	}
-	
+
 	public void removeAccessWithCheck(Long gameIdentifier, String account) {
 		StringTokenizer st = new StringTokenizer(account, ":");
 		int accountType = 0;
@@ -91,8 +92,12 @@ public class GameAccessDelegator extends GoogleDelegator {
 	}
 
 	public boolean isOwner(String myAccount, Long gameId) {
-//		GameAccessManager.
-		return false;
+		try {
+			return GameAccessManager.getAccessById(myAccount + ":" + gameId).getAccessRights() == GameAccessJDO.OWNER;
+		} catch (Exception e) {
+			return false;
+		}
+
 	}
 
 }

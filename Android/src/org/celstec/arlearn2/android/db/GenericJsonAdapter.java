@@ -39,7 +39,7 @@ public class GenericJsonAdapter extends GenericDbTable {
 		Cursor mCursor = null;
 		try {
 			String queryString = "select * from "+tableName;
-			if (tableName.equals("myActions")) queryString += " where replicated = 0";
+			if (tableName.equals("myActions")) queryString += " where runId = 1762017";
 			if (tableName.equals("run")) queryString += " where deleted = 0"; //420013
 //			if (tableName.equals("generalItems")) queryString += " where gameId = 401015"; //420013
 			mCursor = db.getSQLiteDb().rawQuery(queryString, null);

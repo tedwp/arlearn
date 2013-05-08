@@ -108,7 +108,7 @@ public class GeneralItemDependencyHandler extends GenericTask implements  Databa
 //		TreeSet<GeneralItem> items = GeneralItemVisibilityCache.getInstance().getAllNotInitializedItems(runId);
 		for (VisibilityEvent e: events) {
 			GeneralItem gi = GeneralItemsDelegator.getInstance().getGeneralItem(e.itemId);
-			if (itemMatchesPlayersRole(db, runId, gi)) {
+			if (!gi.isDeleted() && itemMatchesPlayersRole(db, runId, gi)) {
 				GeneralItemVisibilityDelegator.getInstance().makeItemVisible(db, gi.getId(), runId, 0, GeneralItemVisibility.NOT_YET_VISIBLE);
 
 			}
@@ -181,7 +181,7 @@ public class GeneralItemDependencyHandler extends GenericTask implements  Databa
 		VisibilityEvent[] events = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.NOT_YET_VISIBLE);
 		for (VisibilityEvent e: events) {
 			GeneralItem generalItem = GeneralItemsDelegator.getInstance().getGeneralItem(e.itemId);
-			if (generalItem != null) {
+			if (generalItem != null && !generalItem.isDeleted()) {
 				Dependency dep = generalItem.getDependsOn();
 				long satisfiedAt = -1; //item not yet visible
 				if (dep != null) {
@@ -193,29 +193,19 @@ public class GeneralItemDependencyHandler extends GenericTask implements  Databa
 					GeneralItemVisibilityDelegator.getInstance().makeItemVisible(db, generalItem.getId(), runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
 				}
 			}
-			
 		}
-//		Long[] itemIds = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.NOT_YET_VISIBLE);
-//		for (int i = 0; i < itemIds.length; i++) {
-//			if (!DBAdapter.getDatabaseThread(db.getContext()).hasMessages((int) itemIds[i].longValue())) { //TODO make this safer
-//				final GeneralItem generalItem = GeneralItemsCache.getInstance().getGeneralItems(itemIds[i]); 
-//				if (generalItem == null)
-//					return;
-//				Dependency dep = generalItem.getDependsOn();
-//				long satisfiedAtTemp = -1;
-//				if (dep != null) {
-//					satisfiedAtTemp = dep.satisfiedAt(actions);
-//				} else {
-//					satisfiedAtTemp = 0;
-//				}
-//				final long satisfiedAt = satisfiedAtTemp;
-//				final long itemId = generalItem.getId();
-//				if (satisfiedAt != -1) {
-//					generalItem.setVisibleAt(satisfiedAt);
-//					VisibleGeneralItemsDelegator.getInstance().checkRoleAndMakeItemVisible(db, runId, generalItem);
-//				}
-//			}
-//		}
+		events = db.getGeneralItemVisibility().query(runId, GeneralItemVisibility.VISIBLE, System.currentTimeMillis()); 
+		for (VisibilityEvent e: events) {
+			GeneralItem generalItem = GeneralItemsDelegator.getInstance().getGeneralItem(e.itemId);
+			if (generalItem != null && !generalItem.isDeleted()) {
+				Dependency dep = generalItem.getDependsOn();
+				long satisfiedAt = dep.satisfiedAt(actions, accountRolesMap); 
+				
+				if (satisfiedAt < e.satisfiedAt) { 
+					GeneralItemVisibilityDelegator.getInstance().makeItemVisible(db, generalItem.getId(), runId, satisfiedAt, GeneralItemVisibility.VISIBLE);
+				}
+			}
+		}
 	}
 
 	public void processItemsNotYetDisappeared(final DBAdapter db, final long runId, final List<Action> actions) {
@@ -234,7 +224,7 @@ public class GeneralItemDependencyHandler extends GenericTask implements  Databa
 		for (VisibilityEvent e: visible) {
 //			if (!DBAdapter.getDatabaseThread(db.getContext()).hasMessages((int) itemId.longValue())) { //TODO make this safer
 				final GeneralItem generalItem = GeneralItemsCache.getInstance().getGeneralItems(e.itemId); 
-				if (generalItem == null)
+				if (generalItem == null || generalItem.isDeleted())
 					return;
 				Dependency dep = generalItem.getDisappearOn();
 				long satisfiedAtTemp = -1;

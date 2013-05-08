@@ -52,7 +52,7 @@ public class MakeGiAutomaticallyAppearAndPlaySoundTask extends GenericTask imple
 			initSoundPool(db.getContext());
 		}
 		gi = GeneralItemsDelegator.getInstance().getGeneralItem(db, itemId);
-		if (gi != null) {
+		if (gi != null && !gi.isDeleted()) {
 			if (appearCondition() || disappearCondition()) {
 				if (appearCondition()) {
 					checkAutoLaunch(db.getContext());
@@ -62,8 +62,6 @@ public class MakeGiAutomaticallyAppearAndPlaySoundTask extends GenericTask imple
 				if (disappearCondition()) {
 					vibrateShort(db.getContext());
 				}
-				
-				
 				ActivityUpdater.updateActivities(db.getContext(), ListMessagesActivity.class.getCanonicalName(), MapViewActivity.class.getCanonicalName(), ListMapItemsActivity.class.getCanonicalName(), NarratorItemActivity.class.getCanonicalName());
 			}
 		}

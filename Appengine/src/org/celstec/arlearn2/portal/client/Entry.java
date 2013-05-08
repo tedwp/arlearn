@@ -87,6 +87,8 @@ public class Entry implements EntryPoint {
 					(new PortalPage()).loadPage();
 				if (RootPanel.get("author") != null)
 					(new AuthorPage()).loadPage();
+				if (RootPanel.get("test") != null)
+					(new TestPage()).loadPage();
 				if (RootPanel.get("contact") != null)
 					(new AddContactPage()).loadPage();
 			}

@@ -108,7 +108,6 @@ public class AnswerQuestionActivity extends AnnotateActivity {
 //					countDownTextView.setVisibility(View.INVISIBLE);
 					((LinearLayout) findViewById(R.id.counterLayout)).setVisibility(View.INVISIBLE);
 				} else {
-//					countDownTextView.setVisibility(View.VISIBLE);
 					((LinearLayout) findViewById(R.id.counterLayout)).setVisibility(View.VISIBLE);
 					long millis = (disappearTime - System.currentTimeMillis());
 					if (millis <= 0) {
@@ -143,8 +142,7 @@ public class AnswerQuestionActivity extends AnnotateActivity {
 
 	public void publish() {
 		PropertiesAdapter pa = new PropertiesAdapter(this);
-		ActionsDelegator.getInstance().publishAction(this, "answer_given", runId, pa.getUsername(), generalItemId, null);
-//		ActionDispatcher.publishAction(this, "answer_given", runId, pa.getUsername(), generalItemId, null);
+		ActionsDelegator.getInstance().publishAction(this, "answer_given", runId, pa.getUsername(), generalItemId, narratorItemBean.getType());
 		super.publish();
 	}
 
