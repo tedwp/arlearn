@@ -75,6 +75,8 @@ import org.celstec.arlearn2.beans.notification.Ping;
 import org.celstec.arlearn2.beans.notification.Pong;
 import org.celstec.arlearn2.beans.notification.TeamModification;
 import org.celstec.arlearn2.beans.notification.authoring.RunCreationStatus;
+import org.celstec.arlearn2.beans.oauth.OauthInfo;
+import org.celstec.arlearn2.beans.oauth.OauthInfoList;
 import org.celstec.arlearn2.beans.run.ActionDeserializer;
 import org.celstec.arlearn2.beans.run.ActionListDeserializer;
 import org.celstec.arlearn2.beans.run.GeneralItemVisibility;
@@ -84,6 +86,8 @@ import org.celstec.arlearn2.beans.run.LocationUpdateDeserializer;
 import org.celstec.arlearn2.beans.run.ResponseDeserializer;
 import org.celstec.arlearn2.beans.run.ResponseListDeserializer;
 import org.celstec.arlearn2.beans.run.Run;
+import org.celstec.arlearn2.beans.run.RunAccess;
+import org.celstec.arlearn2.beans.run.RunAccessList;
 import org.celstec.arlearn2.beans.run.RunBean;
 import org.celstec.arlearn2.beans.run.RunDeserializer;
 import org.celstec.arlearn2.beans.run.RunList;
@@ -342,6 +346,8 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.RunBean", rbd);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Run", rd);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.RunList", new RunListDeserializer());
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.RunAccess", RunAccess.deserializer);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.RunAccessList", RunAccessList.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Action", new ActionDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.ActionList", new ActionListDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Response", new ResponseDeserializer());
@@ -376,6 +382,8 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.notification.APNDeviceDescription", new APNDeviceDescription.Deserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.account.Account", Account.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.account.AccountList", AccountList.deserializer);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.oauth.OauthInfo", OauthInfo.deserializer);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.oauth.OauthInfoList", OauthInfoList.deserializer);
 
 	}
 	

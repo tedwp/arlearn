@@ -140,7 +140,7 @@ public class UploadFileSyncTask extends GenericTask implements NetworkTask {
 	
 	
 	private String getToken() {
-		return PropertiesAdapter.getInstance(ctx).getFusionAuthToken();
+		return PropertiesAdapter.getInstance(ctx).getAuthToken();
 	}
 	
 	private String addToParameters(String parameters, String key, String value) {

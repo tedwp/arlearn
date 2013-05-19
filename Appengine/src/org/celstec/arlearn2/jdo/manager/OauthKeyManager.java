@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.jdo.PersistenceManager;
 
+import org.celstec.arlearn2.beans.oauth.OauthInfo;
+import org.celstec.arlearn2.beans.oauth.OauthInfoList;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.OauthConfigurationJDO;
 import org.codehaus.jettison.json.JSONArray;
@@ -60,27 +62,23 @@ public class OauthKeyManager {
 		}
 	}
 
-	public static String getClientInformation() {
+	public static OauthInfoList getClientInformation() {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			javax.jdo.Query query = pm.newQuery(OauthConfigurationJDO.class);
 
 			List<OauthConfigurationJDO> list = (List<OauthConfigurationJDO>) query.execute();
-			JSONArray result = new JSONArray();
+			OauthInfoList resultList = new OauthInfoList();
 			for (OauthConfigurationJDO conf : list) {
-				JSONObject entry = new JSONObject();
-
-				entry.put("client_id", conf.getClient_id());
-				entry.put("provider_id", conf.getOauthProviderId());
-				entry.put("redirect_uri", conf.getRedirect_uri());
-				result.put(entry);
+				OauthInfo info = new OauthInfo();
+				info.setClientId(conf.getClient_id());
+				info.setProviderId(conf.getOauthProviderId());
+				info.setRedirectUri(conf.getRedirect_uri());
+				resultList.addOauthInfo(info);
 			}
-			return result.toString();
-		} catch (JSONException e) {
-			e.printStackTrace();
+			return resultList;
 		} finally {
 			pm.close();
 		}
-		return "[]";
 	}
 }

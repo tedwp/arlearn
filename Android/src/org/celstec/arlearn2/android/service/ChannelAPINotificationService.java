@@ -225,7 +225,7 @@ public class ChannelAPINotificationService extends Service {
 	private void startChannelListener() {
 		pa.setStatus(ChannelAPINotificationService.OFFLINE_STATUS);
 		broadcast();
-		String token = pa.getFusionAuthToken();
+		String token = pa.getAuthToken();
 		HttpClient httpClient = new DefaultHttpClient();
 		try {
 			String url = GenericClient.urlPrefix;

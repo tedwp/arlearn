@@ -43,6 +43,8 @@ import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.RunList;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.cache.GeneralitemsCache;
+import org.celstec.arlearn2.delegators.GameAccessDelegator;
+import org.celstec.arlearn2.delegators.RunAccessDelegator;
 import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
 import org.celstec.arlearn2.jdo.manager.RunManager;
@@ -61,6 +63,23 @@ public class MyRuns extends Service {
 			return serialise(getInvalidCredentialsBean(), accept);
 		RunDelegator rd = new RunDelegator(token);
 		return serialise(rd.getRuns(), accept);
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@CacheControlHeader("no-cache")
+	@Path("/runAccess")
+	public String getGameAccess(@HeaderParam("Authorization") String token, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept,
+			@QueryParam("from") Long from,
+			@QueryParam("until") Long until) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		if (from == null) {
+			from = 0l;
+		}
+		RunAccessDelegator qg = new RunAccessDelegator(token);
+		return serialise(qg.getRunsAccess(from, until), accept);
 	}
 
 	@GET
@@ -99,6 +118,22 @@ public class MyRuns extends Service {
 	
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/access/runId/{runIdentifier}/account/{account}/accessRight/{accessRight}")
+	public String access(@HeaderParam("Authorization") String token, 
+			@PathParam("runIdentifier") Long runIdentifier, 
+			@PathParam("account") String account, 
+			@PathParam("accessRight") Integer accessRight, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		RunAccessDelegator rd = new RunAccessDelegator(token);
+		rd.provideAccessWithCheck(runIdentifier, account, accessRight);
+		return "{}";
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/runId/{runIdentifier}")
 	public String getRun(@HeaderParam("Authorization") String token, 
 			@PathParam("runIdentifier") Long runIdentifier,
@@ -108,6 +143,8 @@ public class MyRuns extends Service {
 		RunDelegator rd = new RunDelegator(token);
 		return serialise(rd.getRun(runIdentifier), accept);
 	}
+	
+	
 	
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

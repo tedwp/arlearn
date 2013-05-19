@@ -28,6 +28,8 @@ import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
 import org.celstec.arlearn2.android.activities.LoginActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
+import org.celstec.arlearn2.android.activities.OauthActivity;
+import org.celstec.arlearn2.android.activities.OauthProvidersList;
 import org.celstec.arlearn2.android.activities.SplashScreenActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
 import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
@@ -53,6 +55,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -72,6 +75,7 @@ public class MenuHandler {
 	public static final int DOWNLOAD_MAP_TILES = 10;
 	public static final int UNREGISTER = 11;
 	public static final int SCAN_RUN = 15;
+	public static final int OAUTH_LOGIN = 20;
 	
 	private Activity context;
 	private PropertiesAdapter pa;
@@ -123,6 +127,12 @@ public class MenuHandler {
 		case UNREGISTER:
 			((ListRunsParticipateActivity) context).showUnregister();
 
+			break;
+		case OAUTH_LOGIN:
+			context.startActivity(new Intent(context, OauthProvidersList.class));
+//			Intent intent2 = new Intent(context, OauthActivity.class);
+//	        intent2.setData(Uri.parse("https://accounts.google.com/o/oauth2/auth?redirect_uri=http://ar-learn.appspot.com/oauth/google&response_type=code&client_id=594104153413-7ec2cn8jkuh7b4j27dn6ohjqst929s8h.apps.googleusercontent.com&approval_prompt=force&scope=profile+email"));
+//	        context.startActivityForResult(intent2, 0);
 			break;
 //		case RESET:
 //			AlertDialog.Builder builder = new AlertDialog.Builder(context);

@@ -21,7 +21,7 @@
 	<inherits name="com.google.gwt.user.theme.standard.Standard"/>
 	<inherits name="com.smartgwt.SmartGwt"/>
 	<inherits name='com.google.gwt.appengine.channel.Channel'/>
-	<inherits name='com.google.gwt.maps.GoogleMaps' />
+	<!-- <inherits name='com.google.gwt.maps.GoogleMaps' /> -->
 	<inherits name="com.google.gwt.visualization.Visualization"/>
 	<inherits name="org.celstec.arlearn2.gwtcommonlib.Library" />
 	

@@ -20,6 +20,7 @@ package org.celstec.arlearn2.delegators;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,6 +34,9 @@ import org.celstec.arlearn2.beans.run.Team;
 import org.celstec.arlearn2.beans.run.TeamList;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
+import org.celstec.arlearn2.jdo.classes.RunAccessJDO;
+import org.celstec.arlearn2.jdo.manager.GameAccessManager;
+import org.celstec.arlearn2.jdo.manager.RunAccessManager;
 import org.celstec.arlearn2.jdo.manager.RunManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
 import org.celstec.arlearn2.tasks.beans.DeleteActions;
@@ -164,12 +168,26 @@ public class RunDelegator extends GoogleDelegator {
 			run.setError("Game with id '" + run.getGameId() + "' does not exist");
 			return run;
 		}
+
+		if (myAccount.contains(":")) {
+			return createRun(run, myAccount);
+		} else {
 //		JsonBeanSerialiser jbs = new JsonBeanSerialiser(run.getGameOverDependsOn());
 //		run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), jbs.serialiseToJson().toString()));
-		run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), run));
-		return run;
+			run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), run));		
+			return run;
+		}
 	}
 	
+	private Run createRun(Run run, String myAccount) {
+		run.setRunId(RunManager.addRun(run));
+		
+		RunAccessDelegator rd = new RunAccessDelegator(this);
+		rd.provideAccess(run.getRunId(), myAccount, RunAccessJDO.OWNER);
+		
+		return run;
+	}
+
 	public Run updateRun(Run run, long runId) {
 		UsersDelegator qu = new UsersDelegator(this);
 		String myAccount = qu.getCurrentUserAccount();
@@ -201,13 +219,21 @@ public class RunDelegator extends GoogleDelegator {
 	}
 
 	private Run deleteRun(Run r, String myAccount) {
-		if (!r.getOwner().equals(myAccount)) {
+		if (myAccount.contains(":")) {
+			RunAccessDelegator gad = new RunAccessDelegator(this);
+			if (!gad.isOwner(myAccount, r.getRunId())) {
+				Run run = new Run();
+				run.setError("You are not the owner of this run");
+				return run;
+			}
+		} else if (!r.getOwner().equals(myAccount)) {
 			Run run = new Run();
 			run.setError("You are not the owner of this run");
 			return run;
 		}
 //		RunManager.deleteRun(r.getRunId());
 		RunManager.setStatusDeleted(r.getRunId());
+		RunAccessManager.resetGameAccessLastModificationDate(r.getRunId());
 		RunsCache.getInstance().removeRun(r.getRunId());
 		(new UpdateGeneralItemsVisibility(authToken, r.getRunId(), null, 2)).scheduleTask();
 
@@ -304,4 +330,6 @@ public class RunDelegator extends GoogleDelegator {
 			return run;
 		}
 	}
+
+	
 }

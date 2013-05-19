@@ -1,30 +1,29 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi;
 
 
-import org.celstec.arlearn2.gwt.client.network.game.GameDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.QueryGeneralItemDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.generalItem.GeneralItemsClient;
-import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 import org.celstec.arlearn2.portal.client.author.ui.gi.modal.GeneralItemWindow;
-import org.celstec.arlearn2.portal.client.author.ui.gi.modal.NarratorItemWindow;
 
 import com.google.gwt.json.client.JSONValue;
-import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.events.SubmitValuesEvent;
+import com.smartgwt.client.widgets.form.events.SubmitValuesHandler;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.sun.jersey.api.client.filter.OnStartConnectionListener;
 
 public class CreateReuseGeneralItem extends VLayout {
 	
@@ -49,6 +48,8 @@ public class CreateReuseGeneralItem extends VLayout {
 		ListGrid lg = new ListGrid();
 		lg.setDataSource(searchDs);
 		lg.setAutoFetchData(true);
+		lg.setCanDragRecordsOut(true);
+
 
 		lg.setHeight("*");
 
@@ -61,8 +62,9 @@ public class CreateReuseGeneralItem extends VLayout {
 				GeneralItemsClient.getInstance().getGeneralItem(gameId, itemId, new JsonCallback(){
 					public void onJsonReceived(JSONValue jsonValue) {
 						System.out.println("gi json "+jsonValue);
-						GeneralItem gi = new GeneralItem(jsonValue.isObject());
-						giDetail.loadGeneralItem(gi);
+						GeneralItem gi = GeneralItem.createObject
+								(jsonValue.isObject());
+						giDetail.viewGeneralItem(gi, false);
 					}
 
 				});
@@ -122,6 +124,17 @@ public class CreateReuseGeneralItem extends VLayout {
 			searchText.setEndRow(false);
 			searchText.setStartRow(true);
 			searchText.setWidth(220);
+			searchText.addKeyPressHandler(new KeyPressHandler() {
+				
+				@Override
+				public void onKeyPress(KeyPressEvent event) {
+					if ( event.getKeyName().equals("Enter")) {
+						searchDs.search(searchText.getValueAsString());
+
+					}
+					
+				}
+			});
 
 
 			findItem = new ButtonItem("Find");
@@ -139,6 +152,7 @@ public class CreateReuseGeneralItem extends VLayout {
 			});
 
 			setItems(searchText, findItem);
+
 		}
 
 	}

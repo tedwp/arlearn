@@ -71,7 +71,7 @@ public class AccountManager {
 		return account;
 	}
 
-	public static Object getAccount(String accountId) {
+	public static Account getAccount(String accountId) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			return toBean(pm.getObjectById(AccountJDO.class, KeyFactory.createKey(AccountJDO.class.getSimpleName(), accountId)));

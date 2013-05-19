@@ -34,6 +34,7 @@ public class Game extends GameBean implements Serializable, Comparable<Game>{
 	private String feedUrl;
 	private Config config;
 	private Integer sharing;
+	private String licenseCode;
 	
 	public Game() {
 		
@@ -98,6 +99,14 @@ public class Game extends GameBean implements Serializable, Comparable<Game>{
 		this.sharing = sharing;
 	}
 
+	public String getLicenseCode() {
+		return licenseCode;
+	}
+
+	public void setLicenseCode(String licenseCode) {
+		this.licenseCode = licenseCode;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		Game other = (Game ) obj;
@@ -108,6 +117,7 @@ public class Game extends GameBean implements Serializable, Comparable<Game>{
 			nullSafeEquals(getFeedUrl(), other.getFeedUrl()) && 
 			nullSafeEquals(getConfig(), other.getConfig()) && 
 			nullSafeEquals(getDescription(), other.getDescription()) && 
+			nullSafeEquals(getLicenseCode(), other.getLicenseCode()) && 
 			nullSafeEquals(getSharing(), other.getSharing()); 
 
 	}

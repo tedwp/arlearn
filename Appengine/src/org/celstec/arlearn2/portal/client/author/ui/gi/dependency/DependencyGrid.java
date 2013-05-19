@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi.dependency;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.grid.events.RemoveRecordClickEvent;
@@ -16,11 +17,14 @@ public class DependencyGrid extends TreeGrid {
 
 	private Tree tree;
 	ActionForm actionForm;
+	ProximityDependencyEditor proxEditor;
 
-	public DependencyGrid(ActionForm actionForm) {
+	public DependencyGrid(ActionForm actionForm, ProximityDependencyEditor proxEditor) {
 		this.actionForm = actionForm;
+		this.proxEditor = proxEditor;
 		setWidth(200);
-		setHeight(200);
+//		setHeight("*");
+		setHeight100();
 		setShowEdges(true);
 		setBorder("0px");
 		setBodyStyleName("normal");
@@ -55,6 +59,9 @@ public class DependencyGrid extends TreeGrid {
 				if (event.getNode().getAttributeAsInt("typeInt") == ActionDependencyNode.TYPE) {
 					DependencyGrid.this.actionForm.showActionForm();
 					DependencyGrid.this.actionForm.setTreeNode(event.getNode(), tree);
+				} else 	if (event.getNode().getAttributeAsInt("typeInt") == ProximityDependencyNode.TYPE) {
+					DependencyGrid.this.proxEditor.showProximityDependencyNode();
+					DependencyGrid.this.proxEditor.setTreeNode(event.getNode(), tree);
 				}
 
 			}
@@ -94,6 +101,12 @@ public class DependencyGrid extends TreeGrid {
 				break;
 			case ActionDependencyNode.TYPE:
 				if (childNodes.length != 4) {
+					tree.remove(node);
+					redraw();
+				}
+				break;
+			case ProximityDependencyNode.TYPE:
+				if (childNodes.length != 3) {
 					tree.remove(node);
 					redraw();
 				}
@@ -139,6 +152,55 @@ public class DependencyGrid extends TreeGrid {
 		}
 
 		return new JSONObject();
+	}
+
+	public void loadJson(JSONObject object) {
+		loadJson(tree.getRoot(), object);
+	}
+	
+	public void loadJson(TreeNode context, JSONObject object) {
+		if (object.get("type").isString().stringValue().equals(OrDependencyTreeNode.DEP_TYPE)) {
+			System.out.println("jsonobject to analyse "+object);
+			
+			OrDependencyTreeNode node = new OrDependencyTreeNode();
+			tree.add(node, context);
+			JSONArray array = object.get("dependencies").isArray();
+			for (int i = 0;i<array.size();i++) {
+				loadJson(node, array.get(i).isObject());
+			}
+					
+			
+		} else if (object.get("type").isString().stringValue().equals(ActionDependencyNode.DEP_TYPE)) {
+			ActionDependencyNode node = new ActionDependencyNode();
+			tree.add(node, context);
+			for (TreeNode tn : tree.getChildren(node)) {
+				if (tn.getAttribute("type").equals(ActionDependencyNode.ACTION)) {
+					if (object.containsKey("action")){
+						tn.setAttribute("Name", "Action = " + object.get("action").isString().stringValue());
+						tn.setAttribute("Value", object.get("action").isString().stringValue());
+					}
+				}
+				if (tn.getAttribute("type").equals(ActionDependencyNode.GENERALITEM)) {
+					if (object.containsKey("generalItemId")){
+						tn.setAttribute("Name", "ItemId = " + (long) object.get("generalItemId").isNumber().doubleValue());
+						tn.setAttribute("Value", (long) object.get("generalItemId").isNumber().doubleValue());
+					}
+				}
+				if (tn.getAttribute("type").equals(ActionDependencyNode.SCOPE)) {
+					if (object.containsKey("scope")){
+					tn.setAttribute("Name", "Scope = " + (int) object.get("scope").isNumber().doubleValue());
+					tn.setAttribute("Value", (int) object.get("scope").isNumber().doubleValue());
+					}
+				}
+				if (tn.getAttribute("type").equals(ActionDependencyNode.ROLE)) {
+					if (object.containsKey("role")){
+						tn.setAttribute("Name", "Role = " + object.get("role").isString().stringValue());
+						tn.setAttribute("Value", object.get("role").isString().stringValue());
+					}
+				}
+			}
+		}
+		
 	}
 
 }

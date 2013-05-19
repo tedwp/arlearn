@@ -43,13 +43,13 @@ public class PropertiesAdapter {
 		return context.getSharedPreferences(Constants.SHARED_PREFERENCES, 0);
 	}
 	
-	public String getFusionAuthToken() {
-		return getDefaultPrefs().getString(Constants.FUSION_SERVICE+Constants.TOKEN, null);
+	public String getAuthToken() {
+		return getDefaultPrefs().getString(Constants.AUTH_TOKEN, null);
 	}
 	
-	public void setFusionAuthToken(String authToken) {
+	public void setAuthToken(String authToken) {
 		SharedPreferences.Editor editor = getDefaultPrefs().edit();
-		editor.putString(Constants.FUSION_SERVICE+Constants.TOKEN, authToken);
+		editor.putString(Constants.AUTH_TOKEN, authToken);
 		editor.commit();
 	}
 	
@@ -64,6 +64,8 @@ public class PropertiesAdapter {
 	
 	public void disAuthenticate() {
 		setAuthenticated(false);
+		setFullName(null);
+		setPicture(null);
 	}
 	
 	public void setAuthenticated(boolean auth) {
@@ -210,5 +212,25 @@ public class PropertiesAdapter {
 	
 	public long getGeneralItemsVisibilityLastSynchronizationDate(Long runId) {
 		return getDefaultPrefs().getLong(Constants.GIVIS_LAST_SYNC_DATE+runId, 0);
+	}
+
+	public void setFullName(String givenName) {
+		SharedPreferences.Editor editor = getDefaultPrefs().edit();
+		editor.putString(Constants.GIVEN_NAME, givenName);
+		editor.commit();
+	}
+	
+	public String getFullName() {
+		return getDefaultPrefs().getString(Constants.GIVEN_NAME, null);
+	}
+
+	public void setPicture(String picture) {
+		SharedPreferences.Editor editor = getDefaultPrefs().edit();
+		editor.putString(Constants.PICTUREL_URL, picture);
+		editor.commit();		
+	}
+	
+	public String getPicture() {
+		return getDefaultPrefs().getString(Constants.PICTUREL_URL, null);
 	}
 }

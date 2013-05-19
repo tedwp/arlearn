@@ -12,8 +12,10 @@ import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 import org.celstec.arlearn2.portal.client.author.ui.SectionConfiguration;
 import org.celstec.arlearn2.portal.client.author.ui.VerticalMasterDetailTab;
 
+import com.google.gwt.json.client.JSONValue;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Side;
+import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -27,6 +29,8 @@ import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
 import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
+import com.smartgwt.client.widgets.grid.events.RecordDropEvent;
+import com.smartgwt.client.widgets.grid.events.RecordDropHandler;
 import com.smartgwt.client.widgets.grid.events.RemoveRecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RemoveRecordClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -39,6 +43,7 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 
 	private Game game;
 	private ListGrid masterList;
+	private boolean recordSelection = true;
 
 	private GeneralItemDetail giDetail;
 
@@ -46,6 +51,7 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 		super(g.getString(GameModel.GAME_TITLE_FIELD));
 		this.game = g;
 		GeneralItemDataSource.getInstance().loadDataFromWeb(game.getGameId());
+		setCanClose(true);
 
 	}
 
@@ -81,10 +87,11 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 	public Canvas getMasterList() {
 		masterList = new ListGrid();
 		masterList.setShowRecordComponentsByCell(true);
-		masterList.setCanRemoveRecords(true);
+		// masterList.setCanRemoveRecords(true);
 
 		masterList.setShowAllRecords(true);
 		masterList.setShowRecordComponents(true);
+		masterList.setCanAcceptDroppedRecords(true);
 
 		masterList.setHeight(350);
 		masterList.setWidth100();
@@ -93,9 +100,37 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 		masterList.setCanEdit(true);
 		initGrid();
 
+		masterList.addRecordDropHandler(new RecordDropHandler() {
+
+			@Override
+			public void onRecordDrop(RecordDropEvent event) {
+				System.out.println("record dropped " + event.getDropRecords()[0].toMap());
+				for (final Record r : event.getDropRecords()) {
+					GeneralItemsClient.getInstance().getGeneralItem(r.getAttributeAsInt(GameModel.GAMEID_FIELD), r.getAttributeAsInt(GeneralItemModel.ID_FIELD), new JsonCallback() {
+						public void onJsonReceived(JSONValue jsonValue) {
+							GeneralItemDataSource.getInstance().removeData(r);
+							GeneralItem item = GeneralItem.createObject(jsonValue.isObject());
+							item.removeAttribute(GeneralItemModel.ID_FIELD);
+							item.setLong(GameModel.GAMEID_FIELD, game.getGameId());
+							item.removeAttribute("dependsOn");
+							item.removeAttribute("disappearOn");
+							GeneralItemsClient.getInstance().createGeneralItem(item, new JsonCallback() {
+								public void onJsonReceived(JSONValue jsonValue) {
+									GeneralItemDataSource.getInstance().loadDataFromWeb(game.getGameId());
+								}
+							});
+						}
+					});
+
+				}
+
+			}
+		});
+
 		masterList.addRecordClickHandler(new RecordClickHandler() {
 			public void onRecordClick(RecordClickEvent event) {
-				masterRecordClick(event);
+				if (recordSelection)
+					masterRecordClick(event);
 			}
 		});
 		masterList.addEditCompleteHandler(new EditCompleteHandler() {
@@ -106,14 +141,11 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 			}
 		});
 		masterList.addRemoveRecordClickHandler(new RemoveRecordClickHandler() {
-			
+
 			@Override
 			public void onRemoveRecordClick(RemoveRecordClickEvent event) {
-				GeneralItemsClient.getInstance().deleteGeneralItem(
-						masterList.getRecord(event.getRowNum()).getAttributeAsLong(GameModel.GAMEID_FIELD), 
-						masterList.getRecord(event.getRowNum()).getAttributeAsLong(GeneralItemModel.ID_FIELD), 
-						new JsonCallback(){
-					
+				GeneralItemsClient.getInstance().deleteGeneralItem(masterList.getRecord(event.getRowNum()).getAttributeAsLong(GameModel.GAMEID_FIELD), masterList.getRecord(event.getRowNum()).getAttributeAsLong(GeneralItemModel.ID_FIELD), new JsonCallback() {
+
 				});
 			}
 		});
@@ -123,7 +155,20 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 	@Override
 	public Canvas getDetail() {
 		if (giDetail == null)
-			giDetail = new GeneralItemDetail();
+			giDetail = new GeneralItemDetail() {
+//				public void setEditMode() {
+//					super.setEditMode();
+//					masterList.setCanEdit(false);
+//					recordSelection = false;
+//
+//				}
+//
+//				public void setViewMode() {
+//					super.setViewMode();
+//					masterList.setCanEdit(true);
+//					recordSelection = true;
+//				}
+			};
 
 		return giDetail;
 	}
@@ -140,12 +185,13 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 	}
 
 	protected void masterRecordClick(RecordClickEvent event) {
-
-		giDetail.loadGeneralItem(recordToGeneralItem(event.getRecord()));
+		giDetail.viewGeneralItem(recordToGeneralItem(event.getRecord()), true);
+//		giDetail.loadGeneralItem(recordToGeneralItem(event.getRecord()));
+		
 	}
 
 	private GeneralItem recordToGeneralItem(Record record) {
-		return new GeneralItem(((AbstractRecord) GeneralItemDataSource.getInstance().getRecord(record.getAttributeAsLong(GeneralItemModel.ID_FIELD))).getCorrespondingJsonObject());
+		return GeneralItem.createObject(((AbstractRecord) GeneralItemDataSource.getInstance().getRecord(record.getAttributeAsLong(GeneralItemModel.ID_FIELD))).getCorrespondingJsonObject());
 	}
 
 	protected void masterRecordEditComplete(EditCompleteEvent event) {
@@ -158,4 +204,14 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 		return game;
 	}
 
+	public void hideDetail() {
+////		giDetail.setVisibility(Visibility.HIDDEN);
+		giDetail.eraseView();
+	}
+	
+//	public void showDetail() {
+//		giDetail.eraseView();
+//		giDetail.initView();
+//		giDetail.setVisibility(Visibility.VISIBLE);
+//	}
 }

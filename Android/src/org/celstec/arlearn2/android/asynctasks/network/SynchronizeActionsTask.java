@@ -68,7 +68,7 @@ public class SynchronizeActionsTask extends GenericTask implements NetworkTask {
 		try {
 			if (runId == null)
 				return;
-			final ActionList al = ActionClient.getActionClient().getRunActions(pa.getFusionAuthToken(), runId);
+			final ActionList al = ActionClient.getActionClient().getRunActions(pa.getAuthToken(), runId);
 			ActionsDelegator.getInstance().saveServerActionsToAndroidDb(ctx, al, pa.getUsername());
 		} catch (ARLearnException ae) {
 			ae.printStackTrace();

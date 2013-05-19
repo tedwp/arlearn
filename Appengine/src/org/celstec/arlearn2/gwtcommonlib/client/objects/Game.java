@@ -1,14 +1,13 @@
 package org.celstec.arlearn2.gwtcommonlib.client.objects;
 
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GameDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.game.GameClient;
 
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;;
+import com.google.gwt.json.client.JSONString;
 
 public class Game extends Bean{
 
@@ -19,6 +18,10 @@ public class Game extends Bean{
 	
 	public Game() {
 		super();
+		JSONObject config = new JSONObject();
+		config.put("type", new JSONString("org.celstec.arlearn2.beans.game.Config"));
+		config.put("mapAvailable", JSONBoolean.getInstance(false));
+		this.jsonRep.put("config", config);
 	}
 	
 	public String getType() {
@@ -103,6 +106,8 @@ public class Game extends Bean{
 	public void writeToCloud(JsonCallback jsonCallback) {
 		GameClient.getInstance().createGame(this, jsonCallback);
 	}
+
+	
 
 }
 

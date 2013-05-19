@@ -14,6 +14,8 @@ public class GameModel extends DataSourceModel {
 	public static final String GAME_TITLE_FIELD = "title";
 	public static final String TIME_FIELD = "time";
 	public static final String DELETED_FIELD = "deleted";
+	public static final String SHARING_FIELD = "sharing";
+	public static final String LICENSE_CODE = "licenseCode";
 
 	public GameModel(DataSourceAdapter dataSourceAdapter) {
 		super(dataSourceAdapter);
@@ -24,8 +26,36 @@ public class GameModel extends DataSourceModel {
 		addField(INTEGER_DATA_TYPE, GAMEID_FIELD, true, true);
 		addField(INTEGER_DATA_TYPE, GAME_ACCESS, false, true);
 		addField(STRING_DATA_TYPE, GAME_TITLE_FIELD, false, true);
+		addField(STRING_DATA_TYPE, LICENSE_CODE, false, true);
 		addField(INTEGER_DATA_TYPE, TIME_FIELD, false, true);
-		addField(BOOLEAN_DATA_TYPE, DELETED_FIELD, false, true);
+//		addField(BOOLEAN_DATA_TYPE, DELETED_FIELD, false, true);
+		
+		addDerivedField(new DerivedFieldTask() {
+			JSONObject jsonObject;
+			
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {
+				this.jsonObject = jsonObject;	
+			}
+			
+			@Override
+			public Object process() {
+				if (jsonObject.containsKey(DELETED_FIELD)) {
+					return jsonObject.get(DELETED_FIELD).isBoolean().booleanValue();
+				}
+				return false;
+			}
+
+			@Override
+			public int getType() {
+				return BOOLEAN_DATA_TYPE;
+			}
+
+			@Override
+			public String getTargetFieldName() {
+				return DELETED_FIELD;
+			}
+		}, false, false);
 		
 		addDerivedField(new DerivedFieldTask() {
 			JSONObject jsonObject;
@@ -39,20 +69,15 @@ public class GameModel extends DataSourceModel {
 			public Object process() {
 				switch ((int)jsonObject.get(GAME_ACCESS).isNumber().doubleValue()) {
 				case 1:
-					return "i18 Owner";
+					return "Owner";
 				case 2:
-					return "i18 Can write";
+					return "Can write";
 				case 3:
-					return "i18 Can read";
+					return "Can read";
 
 				default:
 					break;
 				}
-//				String firstValue = jsonObject.get("responseValue").isString().stringValue();
-//				JSONObject answer = JSONParser.parseStrict(firstValue).isObject();
-//				if (answer.containsKey("audioUrl")) {
-//					return  answer.get("audioUrl").isString().stringValue();
-//				}
 				return "";
 			}
 

@@ -7,16 +7,9 @@ import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
-import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
-import org.celstec.arlearn2.beans.game.Config;
-import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GameAccess;
 import org.celstec.arlearn2.jdo.PMF;
-import org.celstec.arlearn2.jdo.classes.ContactJDO;
 import org.celstec.arlearn2.jdo.classes.GameAccessJDO;
-import org.celstec.arlearn2.jdo.classes.GameJDO;
-
-import com.google.appengine.api.datastore.KeyFactory;
 
 public class GameAccessManager {
 
@@ -32,6 +25,21 @@ public class GameAccessManager {
 		try {
 			pm.makePersistent(gameAccess);
 			return gameAccess;
+		} finally {
+			pm.close();
+		}
+	}
+	
+	public static void resetGameAccessLastModificationDate(long gameId) {
+		long lastModifiation = System.currentTimeMillis();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try{
+			Query query = pm.newQuery(GameAccessJDO.class);
+			query.setFilter("gameId == "+gameId);
+			Iterator<GameAccessJDO> it = ((List<GameAccessJDO>) query.execute()).iterator();
+			while (it.hasNext()) {
+				it.next().setLastModificationDateGame(lastModifiation);
+			}
 		} finally {
 			pm.close();
 		}

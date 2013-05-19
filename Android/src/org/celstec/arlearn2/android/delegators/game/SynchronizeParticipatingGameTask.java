@@ -40,7 +40,7 @@ public class SynchronizeParticipatingGameTask implements NetworkTask {
 	@Override
 	public void execute() {
 		try {
-			Run run = RunClient.getRunClient().getRun(runId, PropertiesAdapter.getInstance(ctx).getFusionAuthToken());
+			Run run = RunClient.getRunClient().getRun(runId, PropertiesAdapter.getInstance(ctx).getAuthToken());
 			if (run != null && run.getError() == null && run.getGame() != null) {
 				GameDelegator.getInstance().saveServerGameToAndroidDb(ctx, run.getGame());
 			}

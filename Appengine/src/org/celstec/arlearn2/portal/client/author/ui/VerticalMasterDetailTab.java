@@ -3,6 +3,8 @@ package org.celstec.arlearn2.portal.client.author.ui;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
+import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
+import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 public abstract class VerticalMasterDetailTab extends Tab {
 	private VLayout layout;
@@ -29,6 +31,16 @@ public abstract class VerticalMasterDetailTab extends Tab {
 		layout.addMember(lowerLayout);
 		this.setPane(layout);
 
+		addTabSelectedHandler(new TabSelectedHandler() {
+
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+				tabSelect();
+
+			}
+
+			
+		});
 	}
 	
 	protected void addMasterMember(Canvas c) {
@@ -39,6 +51,7 @@ public abstract class VerticalMasterDetailTab extends Tab {
 	public abstract Canvas getDetail() ;
 	
 	
-	
+	protected void tabSelect() {		
+	}
 
 }

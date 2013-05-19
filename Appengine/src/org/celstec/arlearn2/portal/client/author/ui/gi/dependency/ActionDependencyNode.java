@@ -9,6 +9,7 @@ import com.smartgwt.client.widgets.tree.TreeNode;
 public class ActionDependencyNode extends DependencyTreeGrid{
 	
 	public static final int TYPE = 2;
+	public static final String DEP_TYPE = "org.celstec.arlearn2.beans.dependencies.ActionDependency";
 	public static final String ACTION = "action";
 	public static final String GENERALITEM = "generalItem";
 	public static final String ROLE = "role";
@@ -46,19 +47,19 @@ public class ActionDependencyNode extends DependencyTreeGrid{
 
 	public static JSONObject getJson(TreeNode[] childNodes) {
 		JSONObject dep = new JSONObject();
-		dep.put("type", new JSONString("org.celstec.arlearn2.beans.dependencies.ActionDependency"));
+		dep.put("type", new JSONString(DEP_TYPE));
 		for (TreeNode tn: childNodes) {
 			if (tn.getAttribute("type").equals(ACTION)) {
-				dep.put("action", new JSONString(tn.getAttribute("Value")));
+				if (tn.getAttribute("Value")!=null) dep.put("action", new JSONString(tn.getAttribute("Value")));
 			}
 			if (tn.getAttribute("type").equals(GENERALITEM)) {
-				dep.put("generalItemId", new JSONNumber(Long.parseLong(tn.getAttribute("Value"))));
+				if (tn.getAttribute("Value")!=null) dep.put("generalItemId", new JSONNumber(Long.parseLong(tn.getAttribute("Value"))));
 			}
 			if (tn.getAttribute("type").equals(SCOPE)) {
-				dep.put("scope", new JSONNumber(Long.parseLong(tn.getAttribute("Value"))));
+				if (tn.getAttribute("Value")!=null) dep.put("scope", new JSONNumber(Long.parseLong(tn.getAttribute("Value"))));
 			}
 			if (tn.getAttribute("type").equals(ROLE)) {
-				if (tn.getAttribute("Value") != null) dep.put("role", new JSONString(tn.getAttribute("Value")));
+				if (tn.getAttribute("Value")!=null) if (tn.getAttribute("Value") != null) dep.put("role", new JSONString(tn.getAttribute("Value")));
 			}
 		}
 		return dep;

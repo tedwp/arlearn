@@ -55,7 +55,7 @@ public class OauthClient {
 		return oauthInstance;
 	}
 	
-	public void disAuthenticate() {
+	public static void disAuthenticate() {
 		oauthInstance = null;
 		Cookies.removeCookie(COOKIE_TOKEN_NAME);
 		Cookies.removeCookie(COOKIE_OAUTH_TYPE);

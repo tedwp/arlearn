@@ -50,6 +50,12 @@
         -->
 
         <activity
+            android:name=".activities.OauthActivity"
+            android:label="@string/loginHeader" />
+        <activity
+            android:name=".activities.OauthProvidersList"
+            android:label="@string/loginHeader" />
+         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/loginHeader" />
         <activity

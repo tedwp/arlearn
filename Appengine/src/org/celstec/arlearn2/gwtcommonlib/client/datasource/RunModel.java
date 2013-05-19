@@ -14,6 +14,8 @@ public class RunModel extends DataSourceModel {
 	public final static int ALTERED = 3;
 	
 	public static final String RUNID_FIELD = "runId";
+	public static final String RUN_ACCESS = "accessRights";
+	public static final String RUN_ACCESS_STRING = "accessRightsString";
 	public static final String RUNTITLE_FIELD = "title";
 	public static final String GAME_TITLE_FIELD = "gameTitle";
 	public static final String RUN_DELETED_FIELD = "deleted";
@@ -28,11 +30,47 @@ public class RunModel extends DataSourceModel {
 	@Override
 	protected void initFields() {
 		addField(INTEGER_DATA_TYPE, RUNID_FIELD, true, true);
+		addField(INTEGER_DATA_TYPE, RUN_ACCESS, false, true);
 		addField(INTEGER_DATA_TYPE, GAMEID_FIELD, false, true);
 		addField(STRING_DATA_TYPE, GAME_TITLE_FIELD, false, true);
 		addField(STRING_DATA_TYPE, RUNTITLE_FIELD, false, true);
 		addField(STRING_DATA_TYPE, RUN_OWNER_FIELD, false, true);
 		addField(BOOLEAN_DATA_TYPE, RUN_DELETED_FIELD, false, true);
+		
+		addDerivedField(new DerivedFieldTask() {
+			JSONObject jsonObject;
+			
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {
+				this.jsonObject = jsonObject;	
+			}
+			
+			@Override
+			public Object process() {
+				switch ((int)jsonObject.get(RUN_ACCESS).isNumber().doubleValue()) {
+				case 1:
+					return "Owner";
+				case 2:
+					return "Can write";
+				case 3:
+					return "Can read";
+
+				default:
+					break;
+				}
+				return "";
+			}
+
+			@Override
+			public int getType() {
+				return STRING_DATA_TYPE;
+			}
+
+			@Override
+			public String getTargetFieldName() {
+				return RUN_ACCESS_STRING;
+			}
+		}, false, false);
 	}
 
 	@Override

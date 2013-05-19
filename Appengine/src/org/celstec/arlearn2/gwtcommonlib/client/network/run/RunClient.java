@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.gwtcommonlib.client.network.run;
 
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.JsonObjectListCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.GenericClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.Run;
@@ -53,6 +54,16 @@ public class RunClient extends GenericClient {
 	
 	public String getUrl() {
 		return super.getUrl() + "myRuns";
+	}
+
+	public void getRunAccess(long from, JsonObjectListCallback jcb) {
+		invokeJsonGET("/runAccess?from="+from, jcb);
+		
+	}
+
+	public void getRun(long runId, JsonCallback jcb) {
+		invokeJsonGET("/runId/"+runId, jcb);
+		
 	}
 
 }

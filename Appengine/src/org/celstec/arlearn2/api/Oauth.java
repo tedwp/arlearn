@@ -25,7 +25,9 @@ import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -34,7 +36,7 @@ import org.celstec.arlearn2.jdo.manager.OauthKeyManager;
 
 
 @Path("/oauth")
-public class Oauth {
+public class Oauth extends Service {
 
 	
 	@GET
@@ -52,8 +54,8 @@ public class Oauth {
 
 	@GET
 	@Path("/getOauthInfo")
-	public String getOauthClient() {
-		return OauthKeyManager.getClientInformation();
+	public String getOauthClient(@DefaultValue("application/json") @HeaderParam("Accept") String accept) {
+		return serialise(OauthKeyManager.getClientInformation(), accept);
 	}
 	
 	@GET

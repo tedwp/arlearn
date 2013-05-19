@@ -274,8 +274,8 @@ public class RunsTab extends GenericTab implements NotificationHandler {
 
 	protected void map(ListGridRecord record) {
 		long runId = Long.parseLong(record.getAttribute("runId"));
-		RunMapTab tab = new RunMapTab("Run: " + record.getAttribute("title"), runId, Long.parseLong(record.getAttribute("gameId")));
-		Authoring.addTab(tab, "runmap:" + runId);
+//		RunMapTab tab = new RunMapTab("Run: " + record.getAttribute("title"), runId, Long.parseLong(record.getAttribute("gameId")));
+//		Authoring.addTab(tab, "runmap:" + runId);
 	}
 
 	private void deleteRun(final int runId, String name) {

@@ -22,6 +22,7 @@ import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.asynctasks.db.CleanUpFilesThatAreNotInDatabase;
 import org.celstec.arlearn2.android.asynctasks.db.LoadRunsAndGamesToCache;
 import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
@@ -30,12 +31,16 @@ import org.celstec.arlearn2.client.InfoClient;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class SplashScreenActivity extends GeneralActivity {
@@ -47,8 +52,8 @@ public class SplashScreenActivity extends GeneralActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splashscreen);
 		getPropertiesAdapter().setStatus(ChannelAPINotificationService.OFFLINE_STATUS);
-		
-		ImageView view = (ImageView) findViewById(R.id.logo);
+
+		LinearLayout view = (LinearLayout) findViewById(R.id.splashscreen);
 		view.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				userClickedLogo();
@@ -56,12 +61,12 @@ public class SplashScreenActivity extends GeneralActivity {
 		});
 		SplashCounter task = new SplashCounter();
 		task.execute(new Object[] {});
-		
+
 		RunDelegator.getInstance().initRunsAndGamesFromDb(this);
-		
+
 		CleanUpFilesThatAreNotInDatabase cleanUpTask = new CleanUpFilesThatAreNotInDatabase();
 		cleanUpTask.run(this);
-		
+
 		new TimeCheck().execute();
 	}
 
@@ -72,32 +77,50 @@ public class SplashScreenActivity extends GeneralActivity {
 			new TimeCheck().execute();
 		}
 		clicked = false;
+		String fullName = PropertiesAdapter.getInstance(this).getFullName();
+		String pictureUrl = PropertiesAdapter.getInstance(this).getPicture();
+		LinearLayout accountLayout = (LinearLayout) findViewById(R.id.accountLayout);
+		if (fullName == null) {
+			
+			accountLayout.setVisibility(View.GONE);
+		} else {
+			accountLayout.setVisibility(View.VISIBLE);
+			if (fullName != null) {
+				TextView tv = (TextView) findViewById(R.id.fullName);
+				tv.setText(fullName);
+
+			}
+			if (pictureUrl != null) {
+				ImageView iv = (ImageView) findViewById(R.id.accountPicture);
+				Bitmap myBitmap = BitmapFactory.decodeFile(pictureUrl);
+				iv.setImageBitmap(myBitmap);
+			}
+		}
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			menu.add(0, MenuHandler.LOGOUT, 0, getString(R.string.logout));
 		} else {
-			menu.add(0, MenuHandler.LOGIN, 0, getString(R.string.login));
+			menu.add(0, MenuHandler.OAUTH_LOGIN, 0, "LOGIN");
+			menu.add(0, MenuHandler.LOGIN, 0, getString(R.string.login) + " old");
+
 		}
 		menu.add(0, MenuHandler.EXIT, 0, getString(R.string.exit));
 		return true;
 	}
 
 	private void userClickedLogo() {
-		if (blocked) return;
+		if (blocked)
+			return;
 		if (!clicked) {
 			clicked = true;
 			if (menuHandler.getPropertiesAdapter().isAuthenticated()) {
-//				Intent runSyncIntent = new Intent();
-//				runSyncIntent.setAction(RunReceiver.action);
-//				sendBroadcast(runSyncIntent);
-
 				startActivity(new Intent(SplashScreenActivity.this, ListRunsParticipateActivity.class));
-//				Intent intent = new Intent(this, BackgroundService.class);
-//				startService(intent);
 			} else {
-				startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
+				// startActivity(new Intent(SplashScreenActivity.this,
+				// LoginActivity.class));
+				startActivity(new Intent(SplashScreenActivity.this, OauthProvidersList.class));
 
 			}
 		}
@@ -132,7 +155,7 @@ public class SplashScreenActivity extends GeneralActivity {
 		// do nothing when tag is scanned in splashscreen
 
 	}
-	
+
 	public class TimeCheck extends AsyncTask<Object, Long, Void> {
 
 		@Override
@@ -142,8 +165,10 @@ public class SplashScreenActivity extends GeneralActivity {
 					Info info = InfoClient.getVersionClient().getInfo();
 					Long phoneTime = System.currentTimeMillis();
 					Long delta = phoneTime - info.getTimestamp();
-					if (delta < 0) delta *= -1l;
-					if (delta < 60000) delta = 0l;
+					if (delta < 0)
+						delta *= -1l;
+					if (delta < 60000)
+						delta = 0l;
 					publishProgress(delta);
 				} else {
 					publishProgress();
@@ -163,7 +188,7 @@ public class SplashScreenActivity extends GeneralActivity {
 				Long time = delta[0];
 				if (time != 0) {
 					blocked = true;
-					Toast.makeText(SplashScreenActivity.this, getString(R.string.correctDateSettings)+" "+time, Toast.LENGTH_LONG).show();
+					Toast.makeText(SplashScreenActivity.this, getString(R.string.correctDateSettings) + " " + time, Toast.LENGTH_LONG).show();
 				}
 			}
 		}

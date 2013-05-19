@@ -151,7 +151,9 @@ public class ContactManager {
 				i++;
 				ContactJDO object = it.next();
 				AccountManager.getAccount(myAccount);
-				returnList.addAccount(AccountManager.getAccount(pm,object.getToAccountType(), object.getToLocalId()));
+				if (object.getToLocalId() != null) {
+					returnList.addAccount(AccountManager.getAccount(pm,object.getToAccountType(), object.getToLocalId()));
+				}
 				
 			}
 			Cursor c = JDOCursorHelper.getCursor(results);

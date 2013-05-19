@@ -66,9 +66,9 @@ public class SynchronizeParticipateGamesTask extends GenericTask implements Netw
 				GamesList gl = null;
 				Long lastDate = PropertiesAdapter.getInstance(ctx).getParticipateGameLastSynchronizationDate() - 120000;
 				if (lastDate <= 0) {
-					gl = GameClient.getGameClient().getGamesParticipate(PropertiesAdapter.getInstance(ctx).getFusionAuthToken());
+					gl = GameClient.getGameClient().getGamesParticipate(PropertiesAdapter.getInstance(ctx).getAuthToken());
 				} else {
-					gl = GameClient.getGameClient().getGamesParticipate(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), lastDate);
+					gl = GameClient.getGameClient().getGamesParticipate(PropertiesAdapter.getInstance(ctx).getAuthToken(), lastDate);
 				}
 				Log.i("GAMEPROBLEM", "lastDate "+lastDate);
 				Log.i("GAMEPROBLEM", "returned list "+gl);

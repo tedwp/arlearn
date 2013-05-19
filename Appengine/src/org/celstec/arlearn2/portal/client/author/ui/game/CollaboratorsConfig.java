@@ -237,4 +237,9 @@ public class CollaboratorsConfig extends SectionConfig {
 
 		currentGame = game;
 	}
+
+	public void hideDetail() {
+		// TODO Auto-generated method stub
+		
+	}
 }

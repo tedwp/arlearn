@@ -53,7 +53,7 @@ public class CollaborationDelegator  extends GoogleDelegator {
 			System.out.println("to  "+toEmail);
 			System.out.println("body  "+msgBody);
 			md = new MailDelegator(getAuthToken());
-			md.sendMail(fullAccount.getEmail(), fullAccount.getName(), toEmail, "Pending contact request", msgBody);
+			md.sendMail("no-reply@ar-learn.appspotmail.com", fullAccount.getName(), toEmail, "Pending contact request", msgBody);
 
 		} catch (AuthenticationException e) {
 			e.printStackTrace();

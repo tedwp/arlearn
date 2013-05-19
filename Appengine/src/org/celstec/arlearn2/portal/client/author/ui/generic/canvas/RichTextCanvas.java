@@ -80,7 +80,7 @@ public class RichTextCanvas extends VLayout{
 			public void onClick(ClickEvent event) {
 				if (htmlEditingmode) {
 					htmlEditingmode = false;
-					richTextEditor.setVisibility(Visibility.VISIBLE);
+					richTextEditor.setVisibility(Visibility.INHERIT);
 					richTextEditor.setValue(textAreaItem.getValueAsString());
 					form.setVisibility(Visibility.HIDDEN);
 					toggleHtmlButton.setTitle(constants.htmlFormatting());
@@ -89,7 +89,7 @@ public class RichTextCanvas extends VLayout{
 					richTextEditor.setVisibility(Visibility.HIDDEN);
 					textAreaItem.setValue(richTextEditor.getValue());
 					toggleHtmlButton.setTitle(constants.richFormatting());
-					form.setVisibility(Visibility.VISIBLE);
+					form.setVisibility(Visibility.INHERIT);
 				}
 			}
 		});

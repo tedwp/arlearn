@@ -89,7 +89,7 @@ public class LoginActivity extends GeneralActivity {
 		PropertiesAdapter.getInstance(this).databaseReset();
 		storeUsername(username);
 		menuHandler.getPropertiesAdapter().setPassword(password);
-		new AuthenticationTask(LoginActivity.this).execute(new Object[] { username, password, Constants.FUSION_SERVICE, sendInstructions });
+		new AuthenticationTask(LoginActivity.this).execute(new Object[] { username, password, Constants.AUTH_TOKEN, sendInstructions });
 	}
 
 	private void storeUsername(String username) {

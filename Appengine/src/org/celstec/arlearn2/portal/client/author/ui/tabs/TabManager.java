@@ -3,6 +3,7 @@ package org.celstec.arlearn2.portal.client.author.ui.tabs;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.RunDataSource;
 import org.celstec.arlearn2.portal.client.author.ui.game.GamesTab;
 import org.celstec.arlearn2.portal.client.author.ui.gi.GeneralItemsTab;
 import org.celstec.arlearn2.portal.client.author.ui.run.RunsTab;
@@ -18,8 +19,18 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.CloseClickHandler;
 import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
+import com.smartgwt.client.widgets.tab.events.TabDeselectedEvent;
+import com.smartgwt.client.widgets.tab.events.TabDeselectedHandler;
 
 public class TabManager {
+	
+	public static TabManager instance;
+
+	public static TabManager getInstance() {
+		if (instance == null)
+			instance = new TabManager();
+		return instance;
+	}
 	
 	private TabSet topTabSet;
 	private HashMap<String, String> tabHashMap = new HashMap<String, String>();
@@ -28,10 +39,11 @@ public class TabManager {
 	 */
 	private Tab gamesTab;
 	private Tab runsTab;
+	private HashMap<Long, GeneralItemsTab> giTabs = new HashMap<Long, GeneralItemsTab>();
 	
 	private VLayout drawableWidget;
 	
-	public TabManager() {
+	private TabManager() {
 		topTabSet = new TabSet();
 		topTabSet.setSize("100%", "100%");
 		topTabSet.setTabBarPosition(Side.TOP);
@@ -45,24 +57,25 @@ public class TabManager {
 					if (entry.getValue().equals(event.getTab().getID())) toDelete =entry.getKey();
 				}
 				tabHashMap.remove(toDelete);
+				if (event.getTab() instanceof GeneralItemsTab) {
+					giTabs.remove(((GeneralItemsTab) event.getTab()).getGame().getGameId());
+				}
 			}
 		});
-		
+		topTabSet.addTabDeselectedHandler(new TabDeselectedHandler() {
+			
+			@Override
+			public void onTabDeselected(TabDeselectedEvent event) {
+				if (event.getTab() instanceof GeneralItemsTab) {
+					((GeneralItemsTab) event.getTab()).hideDetail();
+				}
+				
+			}
+		});
 		
 	}
 	
 	public void setAccountInformation(String name, String picture) {
-//		Label account =new Label(name);
-//		final Img myImage = new Img(picture, 48, 48);  
-//
-//		 HTMLFlow htmlFlow = new HTMLFlow();  
-//	        htmlFlow.setWidth(230);  
-//	        htmlFlow.setStyleName("exampleTextBlock");  
-//	        String contents = "<div><b>stefaan<b><img height=\"50\" src=\""+picture+"\" /></div>";  
-//	        htmlFlow.setContents(contents);  
-//        
-//        topTabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER, htmlFlow);  
-
 	}
 	
 	public Widget getDrawableWidget() {
@@ -89,7 +102,15 @@ public class TabManager {
 	}
 
 	public void addTab(GeneralItemsTab giTab) {
-		topTabSet.addTab(giTab);
-		topTabSet.selectTab(giTab);
+		
+		if (giTabs.containsKey(giTab.getGame().getGameId())) {
+//			giTabs.get(giTab.getGame().getGameId()).
+			topTabSet.selectTab(giTabs.get(giTab.getGame().getGameId()));
+		} else {
+			topTabSet.addTab(giTab);
+			topTabSet.selectTab(giTab);
+			giTabs.put(giTab.getGame().getGameId(), giTab);	
+		}
+		
 	}
 }

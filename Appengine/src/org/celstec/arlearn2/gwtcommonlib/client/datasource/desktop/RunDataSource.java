@@ -31,24 +31,43 @@ public class RunDataSource extends GenericDataSource {
 	}
 	
 	public void loadDataFromWeb() {
-		((RunClient) getHttpClient()).myRuns(new JsonObjectListCallback(getBeanType(), this.getDataSourceModel()){
+		((RunClient) getHttpClient()).getRunAccess(getLastSyncDate(), new JsonObjectListCallback(getBeanType(), this.getDataSourceModel()){
 			public void onJsonObjectReceived(final JSONObject jsonObject) {
-				GameClient.getInstance().getGame((long)jsonObject.get(RunModel.GAMEID_FIELD).isNumber().doubleValue(), new JsonCallback(){
-					public void onJsonReceived(JSONValue jsonValue) {
-						jsonObject.put(RunModel.GAME_TITLE_FIELD, jsonValue.isObject().get(GameModel.GAME_TITLE_FIELD));
-						callSuper(jsonObject);
+				((RunClient) getHttpClient()).getRun((long)jsonObject.get("runId").isNumber().doubleValue(), new JsonCallback(){
+					public void onJsonReceived(final JSONValue jsonValue1) {	
+						GameClient.getInstance().getGame((long)jsonValue1.isObject().get(RunModel.GAMEID_FIELD).isNumber().doubleValue(), new JsonCallback(){
+							public void onJsonReceived(JSONValue jsonValue) {
+								jsonValue1.isObject().put(RunModel.RUN_ACCESS, jsonObject.get(RunModel.RUN_ACCESS));
+								jsonValue1.isObject().put(RunModel.GAME_TITLE_FIELD, jsonValue.isObject().get(GameModel.GAME_TITLE_FIELD));
+								callSuper(jsonValue1.isObject());
+							}
+						});		
 					}
 				});		
 			}
 			private void callSuper(JSONObject jsonObject) {
+				System.out.println("json received "+jsonObject);
 				super.onJsonObjectReceived(jsonObject);
 			}
-		});
+		});		
+//		((RunClient) getHttpClient()).myRuns(new JsonObjectListCallback(getBeanType(), this.getDataSourceModel()){
+//			public void onJsonObjectReceived(final JSONObject jsonObject) {
+//				GameClient.getInstance().getGame((long)jsonObject.get(RunModel.GAMEID_FIELD).isNumber().doubleValue(), new JsonCallback(){
+//					public void onJsonReceived(JSONValue jsonValue) {
+//						jsonObject.put(RunModel.GAME_TITLE_FIELD, jsonValue.isObject().get(GameModel.GAME_TITLE_FIELD));
+//						callSuper(jsonObject);
+//					}
+//				});		
+//			}
+//			private void callSuper(JSONObject jsonObject) {
+//				super.onJsonObjectReceived(jsonObject);
+//			}
+//		});
 //		((RunClient) getHttpClient()).runsParticipate(getLastSyncDate(), new JsonObjectListCallback(getBeanType(), this.getDataSourceModel()));
 	}
 
 	protected String getBeanType() {
-		return "runs";
+		return "runAccess";
 	}
 	
 	@Override

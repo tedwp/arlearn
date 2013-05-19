@@ -196,7 +196,7 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 				form.setCanSubmit(true);
 				form.submit();
 				hBar2.setPercentDone(0);
-				hBar2.setVisibility(Visibility.VISIBLE);
+				hBar2.setVisibility(Visibility.INHERIT);
 				
 //				pollForUpdate();
 			}
@@ -262,9 +262,9 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 		String statusMap = record.getAttribute("status_map");
 		if (statusMap == null || statusMap.equals("icon_maps")) {
 		long gameId = Long.parseLong(record.getAttribute("gameId"));
-		GameMapTab tab = new GameMapTab("Game map: " + record.getAttribute("title"), 
-				Long.parseLong(record.getAttribute("gameId")));
-		Authoring.addTab(tab, "gamemap:" + gameId);
+//		GameMapTab tab = new GameMapTab("Game map: " + record.getAttribute("title"), 
+//				Long.parseLong(record.getAttribute("gameId")));
+//		Authoring.addTab(tab, "gamemap:" + gameId);
 		}
 	}
 	
@@ -291,5 +291,6 @@ public class GamesTab extends GenericTab implements NotificationHandler {
 
 	}
 
+	
 	
 }

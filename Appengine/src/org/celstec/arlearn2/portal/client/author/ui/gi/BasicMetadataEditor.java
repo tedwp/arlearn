@@ -1,6 +1,7 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi;
 
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.NarratorItem;
 
 import com.google.gwt.json.client.JSONString;
@@ -61,7 +62,7 @@ public class BasicMetadataEditor extends VLayout {
 	public void toggleHtml() {
 		showRichtText = !showRichtText;
 		if (showRichtText) {
-			richTextEditor.setVisibility(Visibility.VISIBLE);
+			richTextEditor.setVisibility(Visibility.INHERIT);
 		} else {
 			richTextEditor.setVisibility(Visibility.HIDDEN);
 		}
@@ -75,7 +76,7 @@ public class BasicMetadataEditor extends VLayout {
 
 	};
 	
-	public void saveToBean(NarratorItem ni) {
+	public void saveToBean(GeneralItem ni) {
 		ni.getJsonRep().put(GeneralItemModel.NAME_FIELD, new JSONString(form.getValueAsString(GeneralItemModel.NAME_FIELD)));
 		if (showRichtText) {
 			ni.getJsonRep().put(GeneralItemModel.RICH_TEXT_FIELD, new JSONString(richTextEditor.getValue()));
@@ -83,6 +84,13 @@ public class BasicMetadataEditor extends VLayout {
 		} else {
 			ni.getJsonRep().put(GeneralItemModel.RICH_TEXT_FIELD, new JSONString(form.getValueAsString(GeneralItemModel.RICH_TEXT_FIELD)));
 		}
+	}
+
+	public void loadGeneralItem(GeneralItem gi) {
+		form.setValue(GeneralItemModel.NAME_FIELD, gi.getString(GeneralItemModel.NAME_FIELD));
+		form.setValue(GeneralItemModel.RICH_TEXT_FIELD, gi.getString(GeneralItemModel.RICH_TEXT_FIELD));
+		richTextEditor.setValue(gi.getString(GeneralItemModel.RICH_TEXT_FIELD));
+		
 	}
 
 }

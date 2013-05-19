@@ -40,6 +40,7 @@ import org.celstec.arlearn2.cache.MyGamesCache;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.classes.GameAccessJDO;
+import org.celstec.arlearn2.jdo.manager.GameAccessManager;
 import org.celstec.arlearn2.jdo.manager.GameManager;
 import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
@@ -290,12 +291,22 @@ public class GameDelegator extends GoogleDelegator {
 		Game g = getGame(gameIdentifier);
 		if (g.getError() != null)
 			return g;
-		if (!g.getOwner().equals(myAccount)) {
+		if (myAccount.contains(":")) {
+			GameAccessDelegator gad = new GameAccessDelegator(this);
+			if (!gad.isOwner(myAccount, g.getGameId())) {
+				Game game = new Game();
+				game.setError("You are not the owner of this game");
+				return game;
+			}
+		} else if (!g.getOwner().equals(myAccount)) {
 			Game game = new Game();
 			game.setError("You are not the owner of this game");
 			return game;
 		}
-		GameManager.deleteGame(gameIdentifier);
+		g.setDeleted(true);
+//		GameManager.deleteGame(gameIdentifier);
+		GameManager.addGame(g);
+		GameAccessManager.resetGameAccessLastModificationDate(g.getGameId());
 		MyGamesCache.getInstance().removeGameList(null, null, myAccount, null, null);
 		MyGamesCache.getInstance().removeGameList(gameIdentifier, null, myAccount, null, null);
 		(new DeleteRuns(authToken, gameIdentifier, myAccount)).scheduleTask();

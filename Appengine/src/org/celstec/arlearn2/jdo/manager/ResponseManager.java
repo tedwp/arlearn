@@ -31,11 +31,10 @@ import org.celstec.arlearn2.beans.run.Response;
 import org.celstec.arlearn2.beans.run.ResponseList;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.ResponseJDO;
-import org.celstec.arlearn2.jdo.classes.RunJDO;
-import org.celstec.arlearn2.jdo.classes.UserJDO;
 import org.datanucleus.store.appengine.query.JDOCursorHelper;
 
 import com.google.appengine.api.datastore.Cursor;
+//import org.celstec.arlearn2.jdo.classes.UserJDO;
 
 public class ResponseManager {
 
@@ -183,5 +182,29 @@ public class ResponseManager {
 		} finally {
 			pm.close();
 		}
+	}
+	
+	public static void updateAccount(String accountFrom, String toAccount, Long runId) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			Query query = pm.newQuery(ResponseJDO.class);
+			String filter = null;
+			String params = null;
+			Object args[] = null;
+			filter = "runId == runIdParam & userEmail == emailParam";
+			params = "Long runIdParam, String emailParam";
+			args = new Object[] { runId, accountFrom };
+
+			query.setFilter(filter);
+			query.declareParameters(params);
+			Iterator<ResponseJDO> it = ((List<ResponseJDO>) query
+					.executeWithArray(args)).iterator();
+			while (it.hasNext()) {
+				it.next().setUserEmail(toAccount);
+			}
+		} finally {
+			pm.close();
+		}
+		
 	}
 }

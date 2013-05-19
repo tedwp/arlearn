@@ -46,6 +46,7 @@ public class GameManager {
 		gameJdo.setOwner(owner);
 		gameJdo.setFeedUrl(feedUrl);
 		gameJdo.setTitle(title);
+		
 		gameJdo.setLastModificationDate(System.currentTimeMillis());
 		if (config != null)  {
 			gameJdo.setConfig(config.toString());
@@ -69,6 +70,7 @@ public class GameManager {
 		gameJdo.setTitle(game.getTitle());
 		gameJdo.setSharing(game.getSharing());
 		gameJdo.setDescription(game.getDescription());
+		if (game.getLicenseCode() !=null) gameJdo.setLicenseCode(game.getLicenseCode());
 		gameJdo.setLastModificationDate(System.currentTimeMillis());
 		if (game.getConfig() != null)  {
 			gameJdo.setConfig(game.getConfig().toString());
@@ -90,6 +92,8 @@ public class GameManager {
 		gameJdo.setTitle(game.getTitle());
 		gameJdo.setSharing(game.getSharing());
 		gameJdo.setDescription(game.getDescription());
+		if (game.getDeleted() != null) gameJdo.setDeleted(game.getDeleted());
+		if (game.getLicenseCode() !=null) gameJdo.setLicenseCode(game.getLicenseCode());
 
 		gameJdo.setLastModificationDate(System.currentTimeMillis());
 		if (game.getConfig() != null)  {
@@ -185,6 +189,7 @@ public class GameManager {
 		game.setOwner(jdo.getOwner());
 		game.setDescription(jdo.getDescription());
 		game.setSharing(jdo.getSharing());
+		if (jdo.getLicenseCode() !=null) game.setLicenseCode(jdo.getLicenseCode());
 		if (jdo.getLastModificationDate() != null) {
 			game.setLastModificationDate(jdo.getLastModificationDate());
 		}
@@ -197,6 +202,11 @@ public class GameManager {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		if (jdo.getDeleted() == null) {
+			game.setDeleted(false);
+		} else {
+			game.setDeleted(jdo.getDeleted());
 		}
 		return game;
 	}

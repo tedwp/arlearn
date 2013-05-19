@@ -32,14 +32,12 @@ import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.User;
-import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.celstec.arlearn2.delegators.GameDelegator;
 import org.celstec.arlearn2.delegators.GoogleDelegator;
 import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.jdo.PMF;
-import org.celstec.arlearn2.jdo.classes.GeneralItemJDO;
 import org.celstec.arlearn2.jdo.classes.UserJDO;
 import org.datanucleus.store.appengine.query.JDOCursorHelper;
 
@@ -307,5 +305,46 @@ public class UserManager {
 		} finally {
 			pm.close();
 		}		
+	}
+
+	public static void updateAccount(String accountFrom, String toAccount, Long runId) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			Query query = pm.newQuery(UserJDO.class);
+			String filter = null;
+			String params = null;
+			Object args[] = null;
+			filter = "runId == runIdParam & email == emailParam";
+			params = "Long runIdParam, String emailParam";
+			args = new Object[] { runId, accountFrom };
+
+			query.setFilter(filter);
+			query.declareParameters(params);
+			Iterator<UserJDO> it = ((List<UserJDO>) query
+					.executeWithArray(args)).iterator();
+			while (it.hasNext()) {
+				UserJDO oldUser = it.next();
+				User bean = toBean(oldUser);
+				UserJDO user = new UserJDO();
+				user.setTeamId(bean.getTeamId());
+				user.setName(bean.getName());
+				user.setRunId(bean.getRunId());
+				user.setEmail(toAccount);
+				user.setGameId(bean.getGameId());
+				Long currentTime = System.currentTimeMillis();
+				user.setLastModificationDate(currentTime);
+				user.setLastModificationDateGame(currentTime);
+
+				user.setId();
+				JsonBeanSerialiser jbs = new JsonBeanSerialiser(bean);
+				user.setPayload(new Text(jbs.serialiseToJson().toString()));
+					pm.makePersistent(user);
+					pm.deletePersistent(oldUser);
+
+			}
+		} finally {
+			pm.close();
+		}
+		
 	}
 }

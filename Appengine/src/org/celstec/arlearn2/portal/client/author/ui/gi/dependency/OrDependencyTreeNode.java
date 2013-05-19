@@ -6,7 +6,8 @@ import com.google.gwt.json.client.JSONString;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
 public class OrDependencyTreeNode extends DependencyTreeGrid{
-	
+	public static final String DEP_TYPE = "org.celstec.arlearn2.beans.dependencies.OrDependency";
+
 	public static final int TYPE = 3;
 
 	

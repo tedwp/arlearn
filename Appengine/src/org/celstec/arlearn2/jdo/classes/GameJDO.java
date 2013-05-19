@@ -50,6 +50,9 @@ public class GameJDO extends GameClass {
 	
 	@Persistent
 	private Integer sharing;
+	
+	@Persistent
+	private String licenseCode;
 
 	public Long getGameId() {
 		return id.getId();
@@ -122,5 +125,14 @@ public class GameJDO extends GameClass {
 	public void setSharing(Integer sharing) {
 		this.sharing = sharing;
 	}
+
+	public String getLicenseCode() {
+		return licenseCode;
+	}
+
+	public void setLicenseCode(String licenseCode) {
+		this.licenseCode = licenseCode;
+	}
+
 	
 }

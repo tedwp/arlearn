@@ -22,6 +22,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthClient;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthFbClient;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthGoogleClient;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthLinkedIn;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.JsonObjectListCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.OauthNetworkClient;
 import org.celstec.arlearn2.portal.client.author.AuthorPage;
@@ -45,29 +46,54 @@ public class Entry implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
-		OauthNetworkClient.getInstance().getOauthClientPackage(new JsonCallback() {
-			public void onJsonReceived(JSONValue jsonValue) {
-				for (int i = 0; i < jsonValue.isArray().size(); i++) {
-					JSONObject object = jsonValue.isArray().get(i).isObject();
-					System.out.println(object);
-					switch ((int) object.get("provider_id").isNumber().doubleValue()) {
+		OauthNetworkClient.getInstance().getOauthClientPackage(new JsonObjectListCallback("oauthInfoList", null) {
+			public void onJsonArrayReceived(JSONObject jsonObject) {
+				super.onJsonArrayReceived(jsonObject);
+				loadPage();
+			}
+			 public void onJsonObjectReceived(JSONObject object) {
+				 
+					switch ((int) object.get("providerId").isNumber().doubleValue()) {
 					case OauthClient.FBCLIENT:
-						OauthFbClient.init(object.get("client_id").isString().stringValue(), object.get("redirect_uri").isString().stringValue());
+						OauthFbClient.init(object.get("clientId").isString().stringValue(), object.get("redirectUri").isString().stringValue());
 						break;
 					case OauthClient.GOOGLECLIENT:
-						OauthGoogleClient.init(object.get("client_id").isString().stringValue(), object.get("redirect_uri").isString().stringValue());
+						OauthGoogleClient.init(object.get("clientId").isString().stringValue(), object.get("redirectUri").isString().stringValue());
 						break;
 					case OauthClient.LINKEDINCLIENT:
-						OauthLinkedIn.init(object.get("client_id").isString().stringValue(), object.get("redirect_uri").isString().stringValue());
+						OauthLinkedIn.init(object.get("clientId").isString().stringValue(), object.get("redirectUri").isString().stringValue());
 						break;
 
 					default:
 						break;
-					}
 				}
-				loadPage();
-			}
-		});
+			 }
+		 });
+				
+		 
+//		OauthNetworkClient.getInstance().getOauthClientPackage(new JsonCallback() {
+//			public void onJsonReceived(JSONValue jsonValue) {
+//				for (int i = 0; i < jsonValue.isArray().size(); i++) {
+//					JSONObject object = jsonValue.isArray().get(i).isObject();
+//					System.out.println(object);
+//					switch ((int) object.get("provider_id").isNumber().doubleValue()) {
+//					case OauthClient.FBCLIENT:
+//						OauthFbClient.init(object.get("client_id").isString().stringValue(), object.get("redirect_uri").isString().stringValue());
+//						break;
+//					case OauthClient.GOOGLECLIENT:
+//						OauthGoogleClient.init(object.get("client_id").isString().stringValue(), object.get("redirect_uri").isString().stringValue());
+//						break;
+//					case OauthClient.LINKEDINCLIENT:
+//						OauthLinkedIn.init(object.get("client_id").isString().stringValue(), object.get("redirect_uri").isString().stringValue());
+//						break;
+//
+//					default:
+//						break;
+//					}
+//				}
+//				loadPage();
+//			}
+//		});
 	}
 
 	public void loadPage() {

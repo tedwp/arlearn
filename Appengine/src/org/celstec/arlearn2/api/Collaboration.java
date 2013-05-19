@@ -21,6 +21,7 @@ package org.celstec.arlearn2.api;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -109,5 +110,7 @@ public class Collaboration extends Service {
 		CollaborationDelegator cd = new CollaborationDelegator(token);
 		return serialise(cd.confirmAddContact(addContactToken), accept);
 	}
+	
+	
 
 }

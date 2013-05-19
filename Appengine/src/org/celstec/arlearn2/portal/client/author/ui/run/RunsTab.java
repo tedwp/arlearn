@@ -2,7 +2,9 @@ package org.celstec.arlearn2.portal.client.author.ui.run;
 
 import java.util.Map;
 
+import org.celstec.arlearn2.gwt.client.Authoring;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.RunModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.RunDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
@@ -11,10 +13,15 @@ import org.celstec.arlearn2.gwtcommonlib.client.objects.Run;
 import org.celstec.arlearn2.portal.client.author.ui.ListMasterSectionSectionStackDetailTab;
 
 import com.google.gwt.json.client.JSONValue;
+import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.Record;
+import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
+import com.smartgwt.client.widgets.grid.events.RemoveRecordClickEvent;
 
 public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 
@@ -26,10 +33,15 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 		instance = this;
 	}
 	
+	protected void tabSelect() {
+		hideDetail();
+		RunDataSource.getInstance().loadDataFromWeb();
+
+	}
+	
 	@Override
 	protected void initGrid(){
 		getMasterListGrid().setDataSource(RunDataSource.getInstance());
-		RunDataSource.getInstance().loadDataFromWeb();
 
 		ListGridField idField = new ListGridField(RunModel.RUNID_FIELD, "id ");
 		idField.setWidth(30);
@@ -44,8 +56,11 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 		ListGridField titleGameField = new ListGridField(RunModel.GAME_TITLE_FIELD, "Game Title ");
 		titleGameField.setCanEdit(false);
 		
+		ListGridField accessRunField = new ListGridField(RunModel.RUN_ACCESS_STRING, "Run access ");
+		accessRunField.setCanEdit(false);
+		accessRunField.setWidth(100);
 		
-		getMasterListGrid().setFields(new ListGridField[] { idField, gameIdField, titleRunField,  titleGameField });
+		getMasterListGrid().setFields(new ListGridField[] { idField, gameIdField, titleRunField,  titleGameField, accessRunField });
 	}
 	
 	@Override
@@ -56,8 +71,10 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 
 	@Override
 	protected void masterRecordClick(RecordClickEvent event) {
+		if (event.getRecord() == null || event.getRecord().getAttributeAsLong(RunModel.RUNID_FIELD) == null) return;
 		Run run = new Run(((AbstractRecord) RunDataSource.getInstance().getRecord(event.getRecord().getAttributeAsLong(RunModel.RUNID_FIELD))).getCorrespondingJsonObject());
 		teamPlayerConfigurationSection.loadRun(run);
+		showDetail();
 		
 	}
 
@@ -67,13 +84,30 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 		if (values.containsKey(RunModel.RUNID_FIELD)) {
 			updateRun((Integer)values.get(RunModel.RUNID_FIELD), (String) values.get(RunModel.RUNTITLE_FIELD));
 		} else {
+			String gameIdString = ""+values.get(RunModel.GAMEID_FIELD);
 			createRun(
 					(String) values.get(RunModel.RUNTITLE_FIELD),
-					(long) (Integer) values.get(RunModel.GAMEID_FIELD),
+					Long.parseLong(gameIdString),
 					getMasterListGrid().getRecord(event.getRowNum()));
 		}	
 		
 	}
+	
+//	private void masterRecordDeleted(RemoveRecordClickEvent event) {
+//		long runId = getMasterListGrid().getRecord(event.getRowNum()).getAttributeAsLong(RunModel.RUNID_FIELD);
+//		RunClient.getInstance().
+////		SC.ask(constants.confirmDeleteUser().replace("***", name), new BooleanCallback() {
+//		SC.ask("delete this user", new BooleanCallback() {
+//			public void execute(Boolean value) {
+//				if (value != null && value) {
+////					Authoring.removeTab("run:" + runId);
+//					RunDataSource.getInstance().delete(runId);
+//				}
+//			}
+//		});	
+//	}
+	
+	
 	
 	private void updateRun(long runId, String title) {
 		Run existingRun = new Run(((AbstractRecord)RunDataSource.getInstance().getRecord(runId)).getCorrespondingJsonObject());
@@ -94,6 +128,26 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 			}
 		});
 		
+	}
+
+	@Override
+	protected void deleteItem(final ListGridRecord rollOverRecord) {
+		SC.ask("delete this run", new BooleanCallback() {
+			public void execute(Boolean value) {
+				if (value != null && value) {
+					RunClient.getInstance().deleteItemsForRun(rollOverRecord.getAttributeAsInt("runId"), new JsonCallback() {
+						
+						@Override
+						public void onJsonReceived(JSONValue jsonValue) {
+							
+							RunDataSource.getInstance().loadDataFromWeb();
+		
+						}
+					});	
+					
+				}
+			}
+		});	
 	}
 
 	

@@ -36,6 +36,10 @@ public class Account extends Bean {
 	private String familyName;
 	private String picture;
 	
+	public String getFullId() {
+		return accountType+":"+localId;
+	}
+	
 	public String getLocalId() {
 		return localId;
 	}

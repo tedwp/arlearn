@@ -60,9 +60,9 @@ public class SynchronizeRunsTask extends GenericTask implements NetworkTask {
 			try {
 				Long lastDate = PropertiesAdapter.getInstance(ctx).getRunLastSynchronizationDate() - 120000;
 				if (lastDate <= 0) {
-					rl = RunClient.getRunClient().getRunsParticipate(PropertiesAdapter.getInstance(ctx).getFusionAuthToken());
+					rl = RunClient.getRunClient().getRunsParticipate(PropertiesAdapter.getInstance(ctx).getAuthToken());
 				} else {
-					rl = RunClient.getRunClient().getRunsParticipate(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), lastDate);
+					rl = RunClient.getRunClient().getRunsParticipate(PropertiesAdapter.getInstance(ctx).getAuthToken(), lastDate);
 				}
 				if (rl.getError() == null && rl.getErrorCode() == null) {
 					PropertiesAdapter.getInstance(ctx).setRunLastSynchronizationDate(rl.getServerTime());

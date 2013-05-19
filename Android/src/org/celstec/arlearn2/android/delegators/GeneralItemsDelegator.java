@@ -105,7 +105,7 @@ public class GeneralItemsDelegator {
 	}
 	
 	public GeneralItem getGeneralItemFromNetwork(Context ctx, Long gameId, Long generalItemId) {
-		return GeneralItemClient.getGeneralItemClient().getGeneralItem(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), gameId, generalItemId);
+		return GeneralItemClient.getGeneralItemClient().getGeneralItem(PropertiesAdapter.getInstance(ctx).getAuthToken(), gameId, generalItemId);
 		
 	}
 	

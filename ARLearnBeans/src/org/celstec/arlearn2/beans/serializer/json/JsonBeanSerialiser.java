@@ -85,6 +85,8 @@ import org.celstec.arlearn2.beans.notification.RunModification;
 import org.celstec.arlearn2.beans.notification.TeamModification;
 import org.celstec.arlearn2.beans.notification.authoring.GameCreationStatus;
 import org.celstec.arlearn2.beans.notification.authoring.RunCreationStatus;
+import org.celstec.arlearn2.beans.oauth.OauthInfo;
+import org.celstec.arlearn2.beans.oauth.OauthInfoList;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.ActionList;
 import org.celstec.arlearn2.beans.run.ActionListSerializer;
@@ -99,6 +101,8 @@ import org.celstec.arlearn2.beans.run.ResponseList;
 import org.celstec.arlearn2.beans.run.ResponseListSerializer;
 import org.celstec.arlearn2.beans.run.ResponseSerializer;
 import org.celstec.arlearn2.beans.run.Run;
+import org.celstec.arlearn2.beans.run.RunAccess;
+import org.celstec.arlearn2.beans.run.RunAccessList;
 import org.celstec.arlearn2.beans.run.RunBean;
 import org.celstec.arlearn2.beans.run.RunList;
 import org.celstec.arlearn2.beans.run.RunSerializer;
@@ -168,6 +172,8 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(LocationUpdateConfig.class.getCanonicalName(), new LocationUpdateConfigSerializer());
 		customSerializerMap.put(Run.class.getCanonicalName(), new RunSerializer());
 		customSerializerMap.put(RunList.class.getCanonicalName(), new RunListSerializer());
+		customSerializerMap.put(RunAccess.class.getCanonicalName(), RunAccess.serializer);
+		customSerializerMap.put(RunAccessList.class.getCanonicalName(), RunAccessList.serializer);
 		customSerializerMap.put(RunBean.class.getCanonicalName(), new RunBeanSerialiser());
 		customSerializerMap.put(GeneralItemVisibility.class.getCanonicalName(), GeneralItemVisibility.serializer);
 		customSerializerMap.put(GeneralItemVisibilityList.class.getCanonicalName(), GeneralItemVisibilityList.serializer);
@@ -207,6 +213,8 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(APNDeviceDescription.class.getCanonicalName(), new APNDeviceDescription.Serializer());
 		customSerializerMap.put(Account.class.getCanonicalName(), Account.serializer);
 		customSerializerMap.put(AccountList.class.getCanonicalName(), AccountList.serializer);
+		customSerializerMap.put(OauthInfo.class.getCanonicalName(), OauthInfo.serializer);
+		customSerializerMap.put(OauthInfoList.class.getCanonicalName(), OauthInfoList.serializer);
 
 	}
 	
