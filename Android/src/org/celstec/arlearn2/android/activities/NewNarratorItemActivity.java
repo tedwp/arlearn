@@ -27,11 +27,13 @@ import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Scroller;
 
 public class NewNarratorItemActivity extends GeneralActivity {
 
@@ -53,6 +55,9 @@ public class NewNarratorItemActivity extends GeneralActivity {
 		setContentView(R.layout.gi_narrator_screen);
 		EditText etName = (EditText) findViewById(R.id.etNewGeneralItem);
 		EditText etDesc = (EditText) findViewById(R.id.etGIDesc);
+		
+		
+		
 		Button ngButton = (Button) findViewById(R.id.bNewGeneralItem);
 		if (iAction == NI_ACTION_CREATE) {
 			ngButton.setText("Create item");

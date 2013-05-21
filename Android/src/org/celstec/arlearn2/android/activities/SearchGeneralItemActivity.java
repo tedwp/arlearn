@@ -116,7 +116,7 @@ public class SearchGeneralItemActivity extends GeneralActivity {
   			
     			Log.d(CLASSNAME, "Clicked delete generalItem " + position);			
     			AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-    			builder.setMessage("Are you sure you to add "+g.getName()+"?")
+    			builder.setMessage("Are you sure to reuse mOER '"+g.getName()+"' to Liege'?")
     			       .setCancelable(false)
     			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
     			           public void onClick(DialogInterface dialog, int id) {   
