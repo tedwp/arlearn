@@ -5,11 +5,12 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
-public class AndDependencyTreeGrid extends DependencyTreeGrid{
-	
+public class AndDependencyTreeNode extends DependencyTreeGrid{
+	public static final String DEP_TYPE = "org.celstec.arlearn2.beans.dependencies.AndDependency";
+
 	public static final int TYPE = 1;
 	
-	public AndDependencyTreeGrid() {
+	public AndDependencyTreeNode() {
 		 setAttribute("Name", "And Dependency");
 		 setAttribute("type", "AndDependency");
 		 setAttribute("typeInt", TYPE);
@@ -20,7 +21,7 @@ public class AndDependencyTreeGrid extends DependencyTreeGrid{
 	
 	public static JSONObject getJson(JSONObject[] childObjects) {
 		JSONObject dep = new JSONObject();
-		dep.put("type", new JSONString("org.celstec.arlearn2.beans.dependencies.AndDependency"));
+		dep.put("type", new JSONString(DEP_TYPE));
 		JSONArray array = new JSONArray();
 		for (int i =0; i<childObjects.length; i++) {
 			array.set(i, childObjects[i]);	

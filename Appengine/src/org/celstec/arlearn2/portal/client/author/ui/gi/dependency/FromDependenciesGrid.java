@@ -41,8 +41,8 @@ public class FromDependenciesGrid extends TreeGrid {
 		Tree grid1Tree = new Tree();
 		grid1Tree.setModelType(TreeModelType.CHILDREN);
 		grid1Tree.setNameProperty("Name");
-		grid1Tree.setRoot(new TreeNode("Root", new ActionDependencyNode(), new ProximityDependencyNode(),
-				new OrDependencyTreeNode(), new AndDependencyTreeGrid()));
+//		grid1Tree.setRoot(new TreeNode("Root", new ActionDependencyNode(), new ProximityDependencyNode(), new OrDependencyTreeNode(), new AndDependencyTreeNode()));
+		grid1Tree.setRoot(new TreeNode("Root", new OrDependencyTreeNode(), new AndDependencyTreeNode(), new ActionDependencyNode()));
 
 		setData(grid1Tree);
 		getData().openAll();

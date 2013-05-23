@@ -41,13 +41,13 @@ public class MapWidget extends Composite {
 	private GoogleMap map;
 	private MarkerOptions newMarkerOpts;
 
-	private static MapWidget instance;
+//	private static MapWidget instance;
 
 	public static MapWidget getInstance() {
-		if (instance == null) {
-			instance = new MapWidget();
-		}
-		return instance;
+//		if (instance == null) {
+//			instance = new MapWidget();
+//		}
+		return new MapWidget();
 	}
 
 	private MapWidget() {

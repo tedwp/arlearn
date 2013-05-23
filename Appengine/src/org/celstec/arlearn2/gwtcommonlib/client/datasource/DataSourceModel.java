@@ -106,6 +106,8 @@ public abstract class DataSourceModel {
 		AbstractRecord record = createRecord(object);
 		record.setCorrespondingJsonObject(object);
 		dataSourceAdapter.removeRecord(record);
+		
+		
 
 		if (object.containsKey("deleted") && object.get("deleted").isBoolean().booleanValue()) {
 //			dataSourceAdapter.removeRecord(record);

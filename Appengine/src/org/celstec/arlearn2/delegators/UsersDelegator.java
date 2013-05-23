@@ -85,6 +85,7 @@ public class UsersDelegator extends GoogleDelegator {
 			u.setError("No run identifier specified");
 			return u;
 		}
+		if (u.getTeamId() != null) {
 		TeamList tl = (new TeamsDelegator(this)).getTeams(u.getRunId());
 		if (!tl.getTeams().isEmpty()) {
 			Team dbTeam = null;
@@ -96,6 +97,7 @@ public class UsersDelegator extends GoogleDelegator {
 				u.setError("teamId does not exist in db");
 				return u;
 			}
+		}
 		}
 		return null;
 	}

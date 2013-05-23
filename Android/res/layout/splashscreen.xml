@@ -42,6 +42,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="right"
-        android:src="@drawable/arlearn_logo_oba" />
+        android:src="@drawable/arlearn_logo" />
 
 </LinearLayout>

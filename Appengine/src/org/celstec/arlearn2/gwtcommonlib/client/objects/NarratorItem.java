@@ -31,5 +31,10 @@ public class NarratorItem extends GeneralItem {
 	public Canvas getMetadataExtensionEditor() {
 		return null;
 	}
+
+	@Override
+	public boolean enableDataCollection() {
+		return true;
+	}
 	
 }

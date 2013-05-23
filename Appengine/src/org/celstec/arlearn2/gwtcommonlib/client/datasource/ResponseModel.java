@@ -21,6 +21,7 @@ public class ResponseModel extends DataSourceModel {
 	public static final String VIDEO_DEFAULT = "/images/movie.png";
 	public static final String TEXT_DEFAULT = "/images/Document.png";
 	public static final String OTHER_DEFAULT = "/images/help.png";
+	public static final String TEXT_FIELD = "text";
 	
 	public ResponseModel(DataSourceAdapter dataSourceAdapter) {
 		super(dataSourceAdapter);
@@ -35,10 +36,11 @@ public class ResponseModel extends DataSourceModel {
 		//role
 		
 		addField(INTEGER_DATA_TYPE, TIMESTAMP_FIELD, true, true);
-		addField(INTEGER_DATA_TYPE, RunModel.RUNID_FIELD, true, true);
+		addField(INTEGER_DATA_TYPE, RunModel.RUNID_FIELD, false, true);
 		addField(BOOLEAN_DATA_TYPE, DELETED_FIELD, false, true);
-		addField(INTEGER_DATA_TYPE, GENERALITEMID_FIELD, true, true);
+		addField(INTEGER_DATA_TYPE, GENERALITEMID_FIELD, false, true);
 		addField(STRING_DATA_TYPE, USEREMAIL_FIELD, false, true);
+		addField(STRING_DATA_TYPE, UserModel.NAME_FIELD, false, true);
 		addField(STRING_DATA_TYPE, RESPONSE_VALUE_FIELD, false, true);
 		addField(STRING_DATA_TYPE, TeamModel.TEAMID_FIELD, false, true);
 		addField(ENUM_DATA_TYPE, ROLE_VALUE_FIELD, false, true);
@@ -155,6 +157,9 @@ public class ResponseModel extends DataSourceModel {
 				if (answer.containsKey("text")) {
 					return  answer.get("text").isString().stringValue();
 				}
+				if (answer.containsKey("answer")) {
+					return  answer.get("answer").isString().stringValue();
+				}
 				return "";
 			}
 
@@ -165,7 +170,7 @@ public class ResponseModel extends DataSourceModel {
 
 			@Override
 			public String getTargetFieldName() {
-				return "text";
+				return TEXT_FIELD;
 			}
 		}, false, false);
 		
@@ -301,7 +306,32 @@ public class ResponseModel extends DataSourceModel {
 				return "correct";
 			}
 		}, false, false);
-		
+		addDerivedField(new DerivedFieldTask() {
+			JSONObject jsonObject;
+			
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {
+				this.jsonObject = jsonObject;	
+			}
+			
+			@Override
+			public Object process() {
+				long accountType = (long) jsonObject.get(ContactModel.ACCOUNT_TYPE_FIELD).isNumber().doubleValue();
+				String account = jsonObject.get(ContactModel.LOCAL_ID_FIELD).isString().stringValue();
+				
+				return accountType+":"+account;
+			}
+
+			@Override
+			public int getType() {
+				return STRING_DATA_TYPE;
+			}
+
+			@Override
+			public String getTargetFieldName() {
+				return UserModel.FULL_ACCOUNT_FIELD;
+			}
+		}, false, false);
 	}
 
 //	@Override

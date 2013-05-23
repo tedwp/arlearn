@@ -34,4 +34,9 @@ public class YoutubeObjectEditor extends VLayout implements ExtensionEditor{
 		gi.setString(YoutubeObject.YOUTUBE_URL, form.getValueAsString(YoutubeObject.YOUTUBE_URL));
 		
 	}
+	
+	@Override
+	public boolean validate() {
+		return true;
+	}
 }

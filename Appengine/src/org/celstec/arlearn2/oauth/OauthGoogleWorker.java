@@ -26,6 +26,7 @@ import org.celstec.arlearn2.jdo.manager.AccountManager;
 import org.celstec.arlearn2.jdo.manager.OauthKeyManager;
 import org.celstec.arlearn2.tasks.beans.migrate.MigrateGamesTask;
 import org.celstec.arlearn2.tasks.beans.migrate.MigrateRunsTask;
+import org.celstec.arlearn2.tasks.beans.migrate.MigrateUserTask;
 import org.codehaus.jettison.json.JSONObject;
 
 public class OauthGoogleWorker extends OauthWorker {
@@ -73,6 +74,8 @@ public class OauthGoogleWorker extends OauthWorker {
 			 
 			 (new MigrateGamesTask(profileJson.getString("email"), AccountJDO.GOOGLECLIENT, profileJson.getString("id"),accessToken)).scheduleTask();
 			 (new MigrateRunsTask(profileJson.getString("email"), AccountJDO.GOOGLECLIENT, profileJson.getString("id"),accessToken)).scheduleTask();
+			 
+			 (new MigrateUserTask(profileJson.getString("email"), AccountJDO.GOOGLECLIENT, profileJson.getString("id"),accessToken)).scheduleTask();
 		} catch (Throwable ex) {
 			throw new RuntimeException("failed login", ex);
 		}

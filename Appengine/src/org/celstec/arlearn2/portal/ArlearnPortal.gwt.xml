@@ -9,5 +9,5 @@
 	<source path="client" />
 	<entry-point class="org.celstec.arlearn2.portal.client.Entry" />
 	
-	<set-property name="user.agent" value="safari"/>
+	<!-- <set-property name="user.agent" value="safari"/> -->  
 </module>

@@ -9,19 +9,16 @@ public class MigrateUserTask extends GenericBean {
 	private String accountFrom;
 	private String accountTo;
 	private Integer accountType;
-	private Long runId;
-	
 	
 	public MigrateUserTask() {
 		
 	}
 	
-	public MigrateUserTask(String accountFrom, Integer accountType, String accountTo, Long runId, String token) {
+	public MigrateUserTask(String accountFrom, Integer accountType, String accountTo, String token) {
 		super(token);
 		this.accountFrom = 	User.normalizeEmail(accountFrom);
 		this.accountTo = accountTo;
 		this.accountType = accountType;
-		this.runId = runId;
 	}
 	
 	public String getAccountFrom() {
@@ -48,17 +45,14 @@ public class MigrateUserTask extends GenericBean {
 		this.accountType = accountType;
 	}
 
-	public Long getRunId() {
-		return runId;
-	}
-
-	public void setRunId(Long runId) {
-		this.runId = runId;
-	}
-
 	@Override
 	public void run() {
-		UserManager.updateAccount(accountFrom, accountType+":"+accountTo, runId);
+		for (User u: UserManager.getUserList(null,accountFrom, null , null)){
+			UserManager.updateAccount(accountFrom, accountType+":"+accountTo, u.getRunId());	
+			 (new MigrateGeneralItemVisiblityTask(accountFrom, accountType, accountTo, u.getRunId(), getToken())).scheduleTask();
+			 (new MigrateResponseTask(accountFrom, accountType, accountTo, u.getRunId(), getToken())).scheduleTask();
+		}
+		
 	}
 
 }

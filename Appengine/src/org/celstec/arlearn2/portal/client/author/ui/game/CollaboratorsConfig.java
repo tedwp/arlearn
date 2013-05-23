@@ -1,90 +1,62 @@
 package org.celstec.arlearn2.portal.client.author.ui.game;
 
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.CollaboratorModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.ContactModel;
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.JsonObjectListCallback;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.UserModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.ContactsDataSource;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GameCollaboratorDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.network.CollaborationClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.game.GameClient;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
 import org.celstec.arlearn2.gwtcommonlib.client.ui.grid.GenericListGrid;
-import org.celstec.arlearn2.portal.client.AuthoringConstants;
 import org.celstec.arlearn2.portal.client.author.ui.SectionConfig;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
+import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
+import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HStack;
 import com.smartgwt.client.widgets.layout.LayoutSpacer;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 public class CollaboratorsConfig extends SectionConfig {
-	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
-	// SelectItem roleGrid;
-	private GenericListGrid listGrid;
+	private GenericListGrid collabGrid;
+	// private GenericListGrid teamGrid;
+//	private Run run;
+	private DynamicForm addCollaboratorForm;
 	private Game currentGame;
+
 
 	public CollaboratorsConfig() {
 		super("Add Collaborators");
+		VLayout collabLayout = new VLayout();
+//		collabLayout.setWidth(200);
+		
 		HStack layout = new HStack();
-		//
-		// listGrid = new GenericListGrid(false, true, false, false, false){
-		// // protected void deleteItem(ListGridRecord rollOverRecord) {
-		// //
-		// //
-		// RoleConfigSection.this.deleteRole(rollOverRecord.getAttributeAsString(GameRoleModel.ROLE_FIELD));
-		// // }
-		// };
-		// listGrid.setWidth(300);
-		// listGrid.setCanDragRecordsOut(true);
-		// listGrid.setCanAcceptDroppedRecords(true);
-		// listGrid.setDragDataAction(DragDataAction.COPY);
-		// listGrid.setAutoFetchData(true);
-		//
-		// listGrid.setDataSource(GameRolesDataSource.getInstance());
-		// ListGridField roleField = new ListGridField(GameRoleModel.ROLE_FIELD,
-		// "Role");
-		// listGrid.setFields(new ListGridField[] { roleField });
-
-		layout.addMember(getInviteForm());
 		LayoutSpacer vSpacer = new LayoutSpacer();
 		vSpacer.setWidth(10);
+
+		layout.addMember(getCollaboratorsGrid());
 		layout.addMember(vSpacer);
-
-		// GenericListGrid listGrid2 = new GenericListGrid(false, true, false,
-		// false, false) {
-		// // protected void deleteItem(ListGridRecord rollOverRecord) {
-		// //
-		// //
-		// RoleConfigSection.this.deleteRole(rollOverRecord.getAttributeAsString(GameRoleModel.ROLE_FIELD));
-		// // }
-		// };
-		// listGrid2.setDataSource(ContactsDataSource.getInstance());
-		// listGrid2.setWidth(300);
-		// listGrid2.setCanDragRecordsOut(true);
-		// listGrid2.setCanAcceptDroppedRecords(true);
-		// listGrid2.setDragDataAction(DragDataAction.COPY);
-		// listGrid2.setAutoFetchData(true);
-		//
-		// ListGridField roleField2 = new ListGridField(ContactModel.NAME_FIELD,
-		// "Role");
-		// listGrid2.setFields(new ListGridField[] { roleField2 });
-		// layout.addMember(listGrid2);
-
-		layout.addMember(canWriteForm());
-		layout.addMember(vSpacer);
-		layout.addMember(canReadForm());
-
-		ContactsDataSource.getInstance().loadDataFromWeb();
-
+		layout.addMember(collabLayout);
+		
+		collabLayout.addMember(getAddPlayerForm());
+		collabLayout.addMember(getInviteForm());
+		
+		layout.setAlign(Alignment.CENTER);
+		layout.setPadding(5);
 		setItems(layout);
+		ContactsDataSource.getInstance().loadDataFromWeb();
 	}
 
 	private Canvas getInviteForm() {
@@ -113,133 +85,91 @@ public class CollaboratorsConfig extends SectionConfig {
 				form.setValue("Contact", "");
 			}
 		});
-
+		form.setWidth(300);
 		return form;
 	}
-
-	private DynamicForm writeForm;
-	private MultiComboBoxItem canWrite;
-	private MultiComboBoxItem canRead;
-	private DynamicForm readForm;
-
-	private Canvas canWriteForm() {
-		writeForm = new DynamicForm();
-		canWrite = new MultiComboBoxItem("canwrite");
-		canWrite.setDisplayField(ContactModel.NAME_FIELD);
-		canWrite.setValueField(ContactModel.ACCOUNT_FIELD);
-		canWrite.setAutoFetchData(true);
-		canWrite.setOptionDataSource(ContactsDataSource.getInstance());
-		canWrite.setShowTitle(false);
-		canWrite.addChangeHandler(new ChangeHandler() {
-
-			@Override
-			public void onChange(ChangeEvent event) {
-				String oldValue = "" + event.getOldValue();
-				String newValue = "" + event.getValue();
-
-				if (oldValue.equals("")) {
-					canRead.setValues(removeValue(canWrite.getValues(), newValue));
-					GameClient.getInstance().addAccess(currentGame.getGameId(), newValue, 2, new JsonCallback() {
-						public void onJsonReceived(JSONValue jsonValue) {
-						};
-					});
-				}
-				if (newValue.equals("")) {
-					GameClient.getInstance().removeAccess(currentGame.getGameId(), oldValue, new JsonCallback() {
-						public void onJsonReceived(JSONValue jsonValue) {
-						};
-					});
-				}
+	private Canvas getCollaboratorsGrid() {
+		collabGrid = new GenericListGrid(false, true, false, false, false) {
+			protected void deleteItem(ListGridRecord rollOverRecord) {
+				
+				GameClient.getInstance().removeAccess(currentGame.getGameId(), rollOverRecord.getAttribute(CollaboratorModel.ACCOUNT_FIELD), new JsonCallback() {
+					public void onJsonReceived(JSONValue jsonValue) {
+						
+					};
+				});
+				GameCollaboratorDataSource.getInstance().removeData(rollOverRecord);
 			}
-		});
+		};
+		collabGrid.setWidth("30%");
+		collabGrid.setShowRollOverCanvas(true);
 
-		writeForm.setFields(canWrite);
-		writeForm.setWidth(240);
-		writeForm.setGroupTitle("Can write");
-		writeForm.setIsGroup(true);
-		return writeForm;
-	}
+		collabGrid.setAutoFetchData(true);
 
-	private Canvas canReadForm() {
-		readForm = new DynamicForm();
-		canRead = new MultiComboBoxItem(ContactModel.LOCAL_ID_FIELD);
-		canRead.setDisplayField(ContactModel.NAME_FIELD);
-		canRead.setValueField(ContactModel.ACCOUNT_FIELD);
-		canRead.setAutoFetchData(true);
-		canRead.setOptionDataSource(ContactsDataSource.getInstance());
-		canRead.setShowTitle(false);
+		collabGrid.setDataSource(GameCollaboratorDataSource.getInstance());
+		ListGridField pictureField = new ListGridField(CollaboratorModel.PICTURE_FIELD, "Pic", 40);
+		pictureField.setAlign(Alignment.CENTER);
+		pictureField.setType(ListGridFieldType.IMAGE);
 
-		canRead.addChangeHandler(new ChangeHandler() {
-
-			@Override
-			public void onChange(ChangeEvent event) {
-				String oldValue = "" + event.getOldValue();
-				String newValue = "" + event.getValue();
-
-				if (oldValue.equals("")) {
-					canWrite.setValues(removeValue(canWrite.getValues(), newValue));
-					GameClient.getInstance().addAccess(currentGame.getGameId(), newValue, 3, new JsonCallback() {
-						public void onJsonReceived(JSONValue jsonValue) {
-						};
-					});
-				}
-				if (newValue.equals("")) {
-					GameClient.getInstance().removeAccess(currentGame.getGameId(), oldValue, new JsonCallback() {
-						public void onJsonReceived(JSONValue jsonValue) {
-						};
-					});
-				}
-			}
-		});
-
-		readForm.setFields(canRead);
-		readForm.setWidth(240);
-		readForm.setGroupTitle("Can read");
-		readForm.setIsGroup(true);
-		return readForm;
-	}
-
-	private String[] removeValue(String[] string, String value) {
-		if (string.length == 0)
-			return string;
-		String[] returnString = new String[string.length - 1];
-		int i = 0;
-		for (String itValue : returnString) {
-			if (!itValue.equals(value)) {
-				returnString[i++] = itValue;
-			}
-		}
-		return returnString;
-	}
-
-	public void loadDataFromRecord(Game game) {
-		canWrite.setValues();
-		canRead.setValues();
-		GameClient.getInstance().getGamesAccessAccount(game.getGameId(), new JsonObjectListCallback("gamesAccess", null) {
-			public void onJsonObjectReceived(JSONObject jsonObject) {
-				System.out.println("gameAccess " + jsonObject);
-				// System.out.println("gameAccess "+jsonObject);
-				// canWrite.setValues("101754523769925754305");
-				int accessRight = (int) jsonObject.get("accessRights").isNumber().doubleValue();
-				String account = jsonObject.get("account").isString().stringValue();
-				switch (accessRight) {
-				case 2:
-					canWrite.setValues(account, canWrite.getValues());
-					break;
-				case 3:
-					canRead.setValues(account, canRead.getValues());
-					break;
-				default:
-					break;
-				}
-			}
-		});
-
-		currentGame = game;
-	}
-
-	public void hideDetail() {
-		// TODO Auto-generated method stub
+		ListGridField nameField = new ListGridField(ContactModel.NAME_FIELD,"name");
+		ListGridField accessField = new ListGridField(CollaboratorModel.ACCESS_PICTURE, "Game Access");
+		accessField.setType(ListGridFieldType.IMAGE);
 		
+		collabGrid.setFields(new ListGridField[] { pictureField, nameField, accessField });
+		
+		return collabGrid;
+	}
+
+	private Canvas getAddPlayerForm() {
+		final CheckboxItem canEdit = new CheckboxItem("canEdit", "Can edit");
+
+		addCollaboratorForm = new DynamicForm();
+		addCollaboratorForm.setWidth("30%");
+		addCollaboratorForm.setGroupTitle("Add Collaborator");
+		addCollaboratorForm.setIsGroup(true);
+
+		final MultiComboBoxItem playersComboBox = new MultiComboBoxItem(
+				ContactModel.LOCAL_ID_FIELD, "Select accounts");
+		playersComboBox.setDisplayField(ContactModel.NAME_FIELD);
+		playersComboBox.setValueField(ContactModel.ACCOUNT_FIELD);
+		playersComboBox.setAutoFetchData(true);
+		playersComboBox.setOptionDataSource(ContactsDataSource.getInstance());
+		// playersComboBox.setShowTitle(false);
+
+		ButtonItem submitButton = new ButtonItem("Submit");
+		submitButton.setTitle("Submit Players");
+		submitButton.setColSpan(2);
+		submitButton.setAlign(Alignment.CENTER);
+
+		submitButton
+				.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+					@Override
+					public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+						int editRights = 3;
+						if(canEdit.getValue()!= null && ((Boolean) canEdit.getValue())) {
+							editRights = 2;
+						}
+						for (String account : playersComboBox.getValues()) {
+							GameClient.getInstance().addAccess(currentGame.getGameId(), account, editRights, new JsonCallback() {
+								public void onJsonReceived(JSONValue jsonValue) {
+									GameCollaboratorDataSource.getInstance().loadDataFromWeb(currentGame.getGameId());
+								};
+							});
+						}
+						playersComboBox.setValues();
+					}
+				});
+		addCollaboratorForm.setFields(canEdit, playersComboBox, submitButton);
+		addCollaboratorForm.setWidth(300);
+		return addCollaboratorForm;
+	}
+	public void loadDataFromRecord(Game game) {
+		
+		GameCollaboratorDataSource.getInstance().loadDataFromWeb(game.getGameId());
+		Criteria criteria = new Criteria();
+		criteria.addCriteria(GameModel.GAMEID_FIELD, game.getGameId());
+		collabGrid.filterData(criteria);
+		currentGame = game;
+//		loadGameAccess();
 	}
 }

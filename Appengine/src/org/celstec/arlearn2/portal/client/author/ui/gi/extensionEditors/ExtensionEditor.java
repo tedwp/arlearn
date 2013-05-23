@@ -6,4 +6,6 @@ public interface ExtensionEditor {
 
 	
 	public void saveToBean(GeneralItem gi);
+	public boolean validate();
+
 }

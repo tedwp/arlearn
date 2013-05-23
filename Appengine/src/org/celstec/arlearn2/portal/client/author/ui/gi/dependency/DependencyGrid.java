@@ -93,7 +93,7 @@ public class DependencyGrid extends TreeGrid {
 		TreeNode[] childNodes = tree.getChildren(node);
 		if (node.getAttributeAsInt("typeInt") != null) {
 			switch (node.getAttributeAsInt("typeInt")) {
-			case AndDependencyTreeGrid.TYPE:
+			case AndDependencyTreeNode.TYPE:
 				cleanTree(childNodes);
 				break;
 			case OrDependencyTreeNode.TYPE:
@@ -140,8 +140,8 @@ public class DependencyGrid extends TreeGrid {
 		}
 		if (node.getAttributeAsInt("typeInt") != null) {
 			switch (node.getAttributeAsInt("typeInt")) {
-			case AndDependencyTreeGrid.TYPE:
-				return AndDependencyTreeGrid.getJson(childJsons);
+			case AndDependencyTreeNode.TYPE:
+				return AndDependencyTreeNode.getJson(childJsons);
 			case OrDependencyTreeNode.TYPE:
 				return OrDependencyTreeNode.getJson(childJsons);
 			case ActionDependencyNode.TYPE:
@@ -159,7 +159,14 @@ public class DependencyGrid extends TreeGrid {
 	}
 	
 	public void loadJson(TreeNode context, JSONObject object) {
-		if (object.get("type").isString().stringValue().equals(OrDependencyTreeNode.DEP_TYPE)) {
+		if (object.get("type").isString().stringValue().equals(AndDependencyTreeNode.DEP_TYPE)) {
+			AndDependencyTreeNode node = new AndDependencyTreeNode();
+			tree.add(node, context);
+			JSONArray array = object.get("dependencies").isArray();
+			for (int i = 0;i<array.size();i++) {
+				loadJson(node, array.get(i).isObject());
+			}
+		} else if (object.get("type").isString().stringValue().equals(OrDependencyTreeNode.DEP_TYPE)) {
 			System.out.println("jsonobject to analyse "+object);
 			
 			OrDependencyTreeNode node = new OrDependencyTreeNode();
@@ -168,8 +175,6 @@ public class DependencyGrid extends TreeGrid {
 			for (int i = 0;i<array.size();i++) {
 				loadJson(node, array.get(i).isObject());
 			}
-					
-			
 		} else if (object.get("type").isString().stringValue().equals(ActionDependencyNode.DEP_TYPE)) {
 			ActionDependencyNode node = new ActionDependencyNode();
 			tree.add(node, context);

@@ -6,6 +6,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.generalItem.GeneralItemsClient;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 import org.celstec.arlearn2.portal.client.author.ui.gi.dependency.DependencyEditor;
+import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.DataCollectionEditor;
 import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.ExtensionEditor;
 
 import com.google.gwt.json.client.JSONObject;
@@ -28,23 +29,25 @@ public class GeneralItemDetailEdit extends VLayout {
 	protected IButton saveButton;
 	protected ExtensionEditor extensionEditor;
 
-	protected BasicMetadataEditor editor;
+	protected BasicMetadataEditorPlus editor;
 	protected DependencyEditor appearEdit;
 	protected DependencyEditor disappearEdit;
+	protected DataCollectionEditor dataCollectionEditor;
 
 	public GeneralItemDetailEdit() {
 		createEditButton();
-
 		createButtonLayout(saveButton);
-
 		createBasicMetadataEditor();
-//		createSectionStack();
+
 
 		HLayout layout = new HLayout();
-		layout.addMember(editor);
 		layout.addMember(stack);
+		layout.addMember(editor);
+		
 		setAlign(Alignment.LEFT);
 		// setBorder("1px dashed blue");
+		
+		
 		addMember(layout);
 		addMember(buttonLayout);
 	}
@@ -58,9 +61,14 @@ public class GeneralItemDetailEdit extends VLayout {
 		});
 	}
 
-	protected void saveClick() {
+	protected boolean saveClick() {
 		editor.saveToBean(gi);
-		if (extensionEditor != null) extensionEditor.saveToBean(gi);
+		if (extensionEditor != null) {
+			if  (!extensionEditor.validate()) return false;
+			 
+			extensionEditor.saveToBean(gi);
+		}
+		if (dataCollectionEditor != null) dataCollectionEditor.saveToBean(gi);
 		if (appearEdit != null) {
 			JSONObject appearDep = appearEdit.getJson();
 			if (appearDep != null) gi.getJsonRep().put("dependsOn", appearDep);
@@ -75,6 +83,7 @@ public class GeneralItemDetailEdit extends VLayout {
 			}
 
 		});
+		return true;
 	}
 
 	private void createButtonLayout(IButton... buttons) {
@@ -100,7 +109,7 @@ public class GeneralItemDetailEdit extends VLayout {
 //	}
 
 	public void createBasicMetadataEditor() {
-		editor = new BasicMetadataEditor(true, true);
+		editor = new BasicMetadataEditorPlus(true, true);
 		editor.setHeight100();
 	}
 
@@ -112,6 +121,10 @@ public class GeneralItemDetailEdit extends VLayout {
 		this.gi = gi;
 		editor.loadGeneralItem(gi);
 		extensionEditor = (ExtensionEditor) gi.getMetadataExtensionEditor();
+		if (gi.enableDataCollection()) {
+			dataCollectionEditor = new DataCollectionEditor(gi);
+			stack.setDataCollection(dataCollectionEditor);
+		}
 		disappearEdit = new DependencyEditor();
 		if (gi.getJsonRep().containsKey("disappearOn")){
 			disappearEdit.loadGeneralItem(gi.getJsonRep().get("disappearOn").isObject());

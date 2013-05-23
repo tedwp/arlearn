@@ -11,8 +11,10 @@ import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 import org.celstec.arlearn2.portal.client.author.ui.SectionConfiguration;
 import org.celstec.arlearn2.portal.client.author.ui.VerticalMasterDetailTab;
+import org.celstec.arlearn2.portal.client.author.ui.generic.maps.MapWidget;
 
 import com.google.gwt.json.client.JSONValue;
+import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.Visibility;
@@ -38,19 +40,26 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
+import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
+import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 public class GeneralItemsTab extends VerticalMasterDetailTab {
 
 	private Game game;
 	private ListGrid masterList;
 	private boolean recordSelection = true;
+	GeneralItemMapView mapLayout;// = new GeneralItemMapView();
 
 	private GeneralItemDetail giDetail;
 
 	public GeneralItemsTab(Game g) {
 		super(g.getString(GameModel.GAME_TITLE_FIELD));
 		this.game = g;
+		mapLayout.setGame(game);
 		GeneralItemDataSource.getInstance().loadDataFromWeb(game.getGameId());
+		Criteria criteria = new Criteria();
+		criteria.addCriteria(GameModel.GAMEID_FIELD, g.getGameId());
+		masterList.filterData(criteria);
 		setCanClose(true);
 
 	}
@@ -76,7 +85,16 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 
 		Tab lTab2 = new Tab();
 		lTab2.setIcon("/images/icon_maps.png", 16);
-		// lTab2.setPane(getMasterList());
+		mapLayout = new GeneralItemMapView();
+		 lTab2.setPane(mapLayout);
+		 lTab2.addTabSelectedHandler(new TabSelectedHandler() {
+			
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+				mapLayout.tabSelected();
+				
+			}
+		});
 
 		giListTabSet.addTab(lTab1);
 		giListTabSet.addTab(lTab2);
@@ -178,9 +196,15 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 		ListGridField idField = new ListGridField(GeneralItemModel.ID_FIELD, "id ");
 		idField.setWidth(30);
 		idField.setCanEdit(false);
+		idField.setHidden(true);
+		
+
+		ListGridField orderField = new ListGridField(GeneralItemModel.SORTKEY_FIELD, "Order ");
+		orderField.setWidth(30);
 
 		ListGridField giTitleField = new ListGridField(GeneralItemModel.NAME_FIELD, "Title ");
-		masterList.setFields(new ListGridField[] { idField, giTitleField });
+		ListGridField simpleNameField = new ListGridField(GeneralItemModel.SIMPLE_NAME_FIELD, "Simple Name ");
+		masterList.setFields(new ListGridField[] { idField,orderField, giTitleField, simpleNameField});
 
 	}
 

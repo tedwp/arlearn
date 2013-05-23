@@ -2,10 +2,13 @@ package org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop;
 
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.ContactModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.JsonResumptionListCallback;
+import org.celstec.arlearn2.gwtcommonlib.client.network.AccountClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.CollaborationClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.GenericClient;
+import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 
 public class ContactsDataSource extends GenericDataSource {
 
@@ -37,6 +40,11 @@ public class ContactsDataSource extends GenericDataSource {
 
 			};
 		((CollaborationClient) getHttpClient()).getContacts(ContactsDataSource.this.lastSyncDate, null, callback);
+		AccountClient.getInstance().accountDetails(new JsonCallback(){
+			public void onJsonReceived(JSONValue jsonValue) {
+				getDataSourceModel().addJsonObject(jsonValue.isObject());
+			}
+		});
 	}
 
 	protected String getBeanType() {

@@ -26,6 +26,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.datasource.JsonObjectListCallbac
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.OauthNetworkClient;
 import org.celstec.arlearn2.portal.client.author.AuthorPage;
+import org.celstec.arlearn2.portal.client.resultDisplay.ResultDisplayPage;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.json.client.JSONObject;
@@ -99,8 +100,6 @@ public class Entry implements EntryPoint {
 	public void loadPage() {
 		final OauthClient client = OauthClient.checkAuthentication();
 		if (client != null) {
-			// authenticated
-			System.out.println("we are authenticated");
 			String href = Cookies.getCookie("redirectAfterOauth");
 			if (href != null) {
 				Cookies.removeCookie("redirectAfterOauth");
@@ -109,18 +108,22 @@ public class Entry implements EntryPoint {
 			} else {
 				if (RootPanel.get("button-facebook") != null)
 					(new OauthPage()).loadPage();
-				if (RootPanel.get("button-create") != null)
-					(new PortalPage()).loadPage();
+//				if (RootPanel.get("button-create") != null)
+//					(new PortalPage()).loadPage();
 				if (RootPanel.get("author") != null)
 					(new AuthorPage()).loadPage();
 				if (RootPanel.get("test") != null)
 					(new TestPage()).loadPage();
 				if (RootPanel.get("contact") != null)
 					(new AddContactPage()).loadPage();
+				if (RootPanel.get("result") != null)
+					(new ResultDisplayPage()).loadPage();
+				if (RootPanel.get("portal") != null) (new org.celstec.arlearn2.portal.client.portal.PortalPage()).loadPage();
+				if (RootPanel.get("oauth_new") != null) (new OauthPage()).loadPage();
+				if (RootPanel.get("resultDisplayRuns") != null) 
+					(new ResultDisplayRuns()).loadPage();
 			}
 		} else {
-			System.out.println("we are not authenticated");
-
 			String href = Window.Location.getHref();
 			if (href.contains("oauth.html")) {
 				(new OauthPage()).loadPage();

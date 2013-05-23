@@ -6,6 +6,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.objects.VideoObject;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class VideoObjectEditor extends VLayout implements ExtensionEditor{
@@ -16,6 +17,7 @@ public class VideoObjectEditor extends VLayout implements ExtensionEditor{
 	public VideoObjectEditor() {
 		form = new DynamicForm();
 		final TextItem videoText = new TextItem(VideoObject.VIDEO_FEED, "Video URL");
+		videoText.setValidators(urlValidator);
 		form.setFields(videoText);
 		form.setWidth100();
 		addMember(form);
@@ -25,14 +27,27 @@ public class VideoObjectEditor extends VLayout implements ExtensionEditor{
 		this();
 		form.setValue(VideoObject.VIDEO_FEED, gi.getValueAsString(VideoObject.VIDEO_FEED));
 	}
-
-//	public void writeMetadataToObject(GeneralItem gi) {
-//		gi.setString(VideoObject.VIDEO_FEED, form.getValueAsString(VideoObject.VIDEO_FEED));
-//	}
 	
 	@Override
 	public void saveToBean(GeneralItem gi) {
 		gi.setString(VideoObject.VIDEO_FEED, form.getValueAsString(VideoObject.VIDEO_FEED));
 
 	}
+	
+	public boolean validate() {
+		return form.validate();
+	}
+	
+	
+	protected CustomValidator urlValidator = new CustomValidator() {
+		
+		@Override
+		protected boolean condition(Object value) {
+			if (value == null) return false;
+			String stringValue = (""+value);
+			if ((""+value).trim().equals("")) return false;
+			if (!stringValue.startsWith("http://")) return false;
+			return true;
+		}
+	};
 }

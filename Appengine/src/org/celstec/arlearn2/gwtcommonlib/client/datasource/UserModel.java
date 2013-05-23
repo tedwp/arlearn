@@ -4,11 +4,14 @@ import com.google.gwt.json.client.JSONObject;
 
 public class UserModel extends DataSourceModel {
 
+	public static final String PK_FIELD = "pkField";
 	public static final String EMAIL_FIELD = "email";
 	public static final String FULL_EMAIL_FIELD = "fullEmail";
 	public static final String NAME_FIELD = "name";
 	public static final String ROLES_FIELD = "roles";
 	public static final String PICTURE_FIELD = "picture";
+	public static final String FULL_ACCOUNT_FIELD = "fullAccount";
+	
 	
 	public UserModel(DataSourceAdapter dataSourceAdapter) {
 		super(dataSourceAdapter);
@@ -22,6 +25,8 @@ public class UserModel extends DataSourceModel {
 		addField(STRING_DATA_TYPE, NAME_FIELD, false, true);
 		addField(STRING_DATA_TYPE, PICTURE_FIELD, false, true);
 		addField(INTEGER_DATA_TYPE, RunModel.RUNID_FIELD, false, true);
+		addField(INTEGER_DATA_TYPE, ContactModel.ACCOUNT_TYPE_FIELD, false, true);
+		addField(STRING_DATA_TYPE, ContactModel.LOCAL_ID_FIELD, false, true);
 		addField(ENUM_DATA_TYPE, ROLES_FIELD, false, true);
 		
 		addDerivedField(new DerivedFieldTask() {
@@ -49,9 +54,36 @@ public class UserModel extends DataSourceModel {
 
 			@Override
 			public String getTargetFieldName() {
-				return "pkField";
+				return PK_FIELD;
 			}
 		}, true, false);
+		
+		addDerivedField(new DerivedFieldTask() {
+			JSONObject jsonObject;
+			
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {
+				this.jsonObject = jsonObject;	
+			}
+			
+			@Override
+			public Object process() {
+				long accountType = (long) jsonObject.get(ContactModel.ACCOUNT_TYPE_FIELD).isNumber().doubleValue();
+				String account = jsonObject.get(ContactModel.LOCAL_ID_FIELD).isString().stringValue();
+				
+				return accountType+":"+account;
+			}
+
+			@Override
+			public int getType() {
+				return STRING_DATA_TYPE;
+			}
+
+			@Override
+			public String getTargetFieldName() {
+				return FULL_ACCOUNT_FIELD;
+			}
+		}, false, false);
 
 	}
 

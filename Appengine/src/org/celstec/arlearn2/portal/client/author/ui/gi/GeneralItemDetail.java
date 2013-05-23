@@ -36,9 +36,10 @@ public class GeneralItemDetail extends HLayout {
 		eraseView();
 
 		edit = new GeneralItemDetailEdit(){
-			protected void saveClick() {
-				super.saveClick();
-				viewGeneralItem(gi, true);
+			protected boolean saveClick() {
+				boolean res = super.saveClick();
+				if (res) viewGeneralItem(gi, true);
+				return res;
 			}
 		};
 		edit.loadGeneralItem(gi);

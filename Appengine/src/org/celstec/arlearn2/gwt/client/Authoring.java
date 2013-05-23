@@ -41,6 +41,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.TabBarControls;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -70,7 +71,18 @@ public class Authoring implements EntryPoint {
 		
 	}
 	
+	
 	public void onModuleLoad() {
+		SC.say("Deprecated", "Dear ARLearn author,<br><br> " +
+				"This part of the authoring environment is no longer supported. " +
+				"Although you can still apply modifications here to your games we urge " +
+				"you to login at http://streetlearn.appspot.com/<br> <br>" +
+				"After you login here, you will find here the beta version of the new authoring tool. " +
+				"Some of the new features you will find here are:" +
+				"<ol><li>	Collaborative authoring of games. Share your games with contacts." +
+				"<li>	License public games with a creative commons license." +
+				"<li>	Login with facebook, linkedin or google.</ol>" +
+				"<br> After a google login with the new account system, this tool will no longer show your games and runs as they will be automatically migrated .");
 		GeoPositioner.getInstance();
 		RootPanel rootPanel = RootPanel.get("container");
 		hidden = "true".equals(com.google.gwt.user.client.Window.Location.getParameter("hidden"));

@@ -2,6 +2,9 @@ package org.celstec.arlearn2.gwtcommonlib.client.objects;
 
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
+import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
+import org.celstec.arlearn2.gwtcommonlib.client.network.game.GameClient;
+import org.celstec.arlearn2.gwtcommonlib.client.network.generalItem.GeneralItemsClient;
 
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -45,6 +48,14 @@ public abstract class GeneralItem extends Bean {
 			return new NarratorItem(object);
 		} else if (type.equals(YoutubeObject.TYPE)) {
 			return new YoutubeObject(object);
+		} else if (type.equals(AudioObject.TYPE)) {
+			return new AudioObject(object);
+		} else if (type.equals(MultipleChoiceTest.TYPE)) {
+			return new MultipleChoiceTest(object);
+		} else if (type.equals(SingleChoiceTest.TYPE)) {
+			return new SingleChoiceTest(object);
+		} else if (type.equals(ScanTagObject.TYPE)){
+			return new ScanTagObject(object);
 		}
 		return null;
 	}
@@ -52,5 +63,10 @@ public abstract class GeneralItem extends Bean {
 	public abstract Canvas getViewerComponent();
 
 	public abstract Canvas getMetadataExtensionEditor();
+	public abstract boolean enableDataCollection();
+	
+	public void writeToCloud(JsonCallback jsonCallback) {
+		GeneralItemsClient.getInstance().createGeneralItem(this, jsonCallback);
+	}
 	
 }

@@ -40,7 +40,7 @@ public class UserLoggedInManager {
 	}
 	
 	public static void submitOauthUser(String id, String authToken) {
-		PersistenceManager pm = PMF.get().getPersistenceManager();
+		PersistenceManager	 pm = PMF.get().getPersistenceManager();
 		UsersLoggedIn uli = new UsersLoggedIn();
 		uli.setKey(authToken.hashCode());
 		uli.setUsername(id);

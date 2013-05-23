@@ -1,3 +1,6 @@
+body{
+	margin:0;
+}
 .my-mouse-out  img, .my-mouse-over  img  {
 	height: 40px;
 }

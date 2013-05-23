@@ -140,7 +140,6 @@ public class OauthProvidersList extends GeneralActivity implements ListitemClick
 			finish();
 			break;
 		default:
-			intent2.setData(Uri.parse("https://accounts.google.com/o/oauth2/auth?redirect_uri=http://ar-learn.appspot.com/oauth/google&response_type=code&client_id=594104153413-7ec2cn8jkuh7b4j27dn6ohjqst929s8h.apps.googleusercontent.com&approval_prompt=force&scope=profile+email"));
 			break;
 		}
         

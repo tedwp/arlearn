@@ -3,7 +3,9 @@ package org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop;
 import java.util.HashMap;
 
 import org.celstec.arlearn2.gwtcommonlib.client.auth.Authentication;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.DataSourceModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.generalItem.GeneralItemsClient;
@@ -11,11 +13,13 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.generalItem.GeneralItems
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
+import com.smartgwt.client.data.Record;
 
 public class GeneralItemDataSource extends GenericDataSource {
 	
 	public static GeneralItemDataSource instance;
 	public static HashMap<Long, Long> lastSyncDate = new HashMap<Long, Long>();
+	public static HashMap<Long, HashMap<Long, Record>> gameToGi = new HashMap<Long, HashMap<Long, Record>>();
 
 	public static GeneralItemDataSource getInstance() {
 		if (instance == null)
@@ -93,6 +97,21 @@ public class GeneralItemDataSource extends GenericDataSource {
 			if (dataSourceModel != null) dataSourceModel.addJsonObject(jsonObject);
 		}
 
+	}
+	
+	@Override
+	public void saveRecord(AbstractRecord record) {
+		super.saveRecord(record);
+		Record rec = (Record) record;
+		Long gameId = rec.getAttributeAsLong(GameModel.GAMEID_FIELD);
+		if (!gameToGi.containsKey(gameId)) {
+			gameToGi.put(gameId, new HashMap<Long, Record>());
+		}
+		gameToGi.get(gameId).put(rec.getAttributeAsLong(GeneralItemModel.GENERALITEMID_FIELD), rec);
+	}
+	
+	public HashMap<Long, Record> getRecords(long gameId){
+		return gameToGi.get(gameId);
 	}
 
 }

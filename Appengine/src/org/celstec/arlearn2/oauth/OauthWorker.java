@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -56,7 +57,7 @@ public abstract class OauthWorker {
 	protected void sendRedirect(String accessToken, String expires, int type) {
 		long expiresLong = 3600*24*7l; 
 		try {
-			resp.sendRedirect(baseUrl+"/portal.html?accessToken=" + accessToken + "&type=" + type + "&exp=" + expiresLong);
+			resp.sendRedirect(baseUrl+"/oauth.html?accessToken=" + accessToken + "&type=" + type + "&exp=" + expiresLong);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -120,7 +121,7 @@ public abstract class OauthWorker {
 				e.printStackTrace();
 			} 
 		}
-		
+
 		public void postUrl(String url, String data) {
 			try {
 				URLConnection conn = new URL(url).openConnection();

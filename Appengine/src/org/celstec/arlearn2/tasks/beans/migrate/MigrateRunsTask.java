@@ -75,9 +75,8 @@ public class MigrateRunsTask extends GenericBean {
 			RunAccessManager.addRunAccess(accountTo, accountType, r.getRunId(), GameAccessJDO.OWNER);
 			r.setOwner("");
 			RunManager.addRun(r);
-			 (new MigrateGeneralItemVisiblityTask(accountFrom, accountType, accountTo, r.getRunId(), getToken())).scheduleTask();
-			 (new MigrateUserTask(accountFrom, accountType, accountTo, r.getRunId(), getToken())).scheduleTask();
-			 (new MigrateResponseTask(accountFrom, accountType, accountTo, r.getRunId(), getToken())).scheduleTask();
+//			 (new MigrateUserTask(accountFrom, accountType, accountTo, r.getRunId(), getToken())).scheduleTask();
+			 
 
 			//update ResponseJDO
 		}

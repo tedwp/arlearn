@@ -7,6 +7,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.portal.client.author.ui.game.GamesTab;
 import org.celstec.arlearn2.portal.client.author.ui.run.RunsTab;
 import org.celstec.arlearn2.portal.client.author.ui.tabs.TabManager;
+import org.celstec.arlearn2.portal.client.toolbar.ToolBar;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
@@ -18,19 +19,16 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.LayoutSpacer;
 import com.smartgwt.client.widgets.layout.VLayout;
-import com.smartgwt.client.widgets.menu.Menu;
-import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
-import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
 
 public class AuthorPage {
 
-	ToolStrip toolStrip;
+	ToolBar toolStrip;
 	
 	public void loadPage() {
-		createToolstrip();
-		
+//		createToolstrip();
+		toolStrip = new ToolBar();
 //		toolStrip.draw();
 
 		TabManager tabManager = TabManager.getInstance();
@@ -57,54 +55,54 @@ public class AuthorPage {
 
 	}
 	
-	private void createToolstrip() {
-		toolStrip = new ToolStrip();
-		toolStrip.setWidth100();
-
-//		Menu menu = new Menu();
-//		menu.setShowShadow(true);
-//		menu.setShadowDepth(3);
-
-//		MenuItem newItem = new MenuItem("New", "icons/16/document_plain_new.png", "Ctrl+N");
-//		ToolStripMenuButton menuButton = new ToolStripMenuButton("File", menu);
-//		menuButton.setWidth(100);
-		
-		final ToolStripButton profileButton = new ToolStripButton();  
-		AccountClient.getInstance().accountDetails(new JsonCallback(){
-			public void onJsonReceived(JSONValue jsonValue) {
-				JSONObject object = jsonValue.isObject();
-				profileButton.setIcon(object.get("picture").isString().stringValue());  
-		        profileButton.setTitle(object.get("name").isString().stringValue());  
-			}			
-		});
-		profileButton.addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				SC.ask("Logout?", new BooleanCallback() {
-					
-					@Override
-					public void execute(Boolean value) {
-						if (value) {
-							OauthClient.disAuthenticate();
-							Window.open("/oauth.html", "_self", "");
-						}
-						
-					}
-				});
-				
-			}
-		});
-		
-//		final MenuItem activateMenu = new MenuItem("Activate");  
-//        activateMenu.setTitle("Logout");
-//        menu.setItems(activateMenu);
-        
-          
-
-//		toolStrip.addMenuButton(menuButton);
-		toolStrip.addFill();
-		toolStrip.addButton(profileButton);
-	}
+//	private void createToolstrip() {
+//		toolStrip = new ToolStrip();
+//		toolStrip.setWidth100();
+//
+////		Menu menu = new Menu();
+////		menu.setShowShadow(true);
+////		menu.setShadowDepth(3);
+//
+////		MenuItem newItem = new MenuItem("New", "icons/16/document_plain_new.png", "Ctrl+N");
+////		ToolStripMenuButton menuButton = new ToolStripMenuButton("File", menu);
+////		menuButton.setWidth(100);
+//		
+//		final ToolStripButton profileButton = new ToolStripButton();  
+//		AccountClient.getInstance().accountDetails(new JsonCallback(){
+//			public void onJsonReceived(JSONValue jsonValue) {
+//				JSONObject object = jsonValue.isObject();
+//				profileButton.setIcon(object.get("picture").isString().stringValue());  
+//		        profileButton.setTitle(object.get("name").isString().stringValue());  
+//			}			
+//		});
+//		profileButton.addClickHandler(new ClickHandler() {
+//			
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				SC.ask("Logout?", new BooleanCallback() {
+//					
+//					@Override
+//					public void execute(Boolean value) {
+//						if (value) {
+//							OauthClient.disAuthenticate();
+//							Window.open("/oauth.html", "_self", "");
+//						}
+//						
+//					}
+//				});
+//				
+//			}
+//		});
+//		
+////		final MenuItem activateMenu = new MenuItem("Activate");  
+////        activateMenu.setTitle("Logout");
+////        menu.setItems(activateMenu);
+//        
+//          
+//
+////		toolStrip.addMenuButton(menuButton);
+//		toolStrip.addFill();
+//		toolStrip.addButton(profileButton);
+//	}
 
 }

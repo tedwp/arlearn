@@ -53,6 +53,8 @@ public class UserDataSource extends GenericDataSource {
 						jsonObject.put(UserModel.NAME_FIELD, jsonValue.isObject().get(ContactModel.NAME_FIELD));
 						jsonObject.put(UserModel.EMAIL_FIELD, jsonValue.isObject().get(ContactModel.EMAIL_FIELD));
 						jsonObject.put(UserModel.PICTURE_FIELD, jsonValue.isObject().get(ContactModel.PICTURE_FIELD));
+						jsonObject.put(ContactModel.ACCOUNT_TYPE_FIELD, jsonValue.isObject().get(ContactModel.ACCOUNT_TYPE_FIELD));
+						jsonObject.put(ContactModel.LOCAL_ID_FIELD, jsonValue.isObject().get(ContactModel.LOCAL_ID_FIELD));
 						callSuper(jsonObject);
 					}
 				});		

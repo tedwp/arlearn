@@ -41,6 +41,7 @@ public class TeamPlayerConfigurationSection extends SectionConfig {
 	private GenericListGrid playersGrid;
 //	private GenericListGrid teamGrid;
 	private Run run;
+	private DynamicForm playerForm;
 
 	public TeamPlayerConfigurationSection() {
 		super("Teams and Users");
@@ -48,8 +49,6 @@ public class TeamPlayerConfigurationSection extends SectionConfig {
 		LayoutSpacer vSpacer = new LayoutSpacer();
 		vSpacer.setWidth(10);
 
-//		layout.addMember(getTeamsGrid());
-//		layout.addMember(vSpacer);
 		layout.addMember(getPlayersGrid());
 		layout.addMember(vSpacer);
 		layout.addMember(getAddPlayerForm());
@@ -58,28 +57,16 @@ public class TeamPlayerConfigurationSection extends SectionConfig {
 		setItems(layout);
 	}
 
-//	private Canvas getTeamsGrid() {
-//		teamGrid = new GenericListGrid(false, true, false, false, false) {
-//			protected void deleteItem(ListGridRecord rollOverRecord) {
-//			}
-//		};
-//		teamGrid.setWidth("30%");
-//		teamGrid.setShowRollOverCanvas(true);
-//
-//		teamGrid.setAutoFetchData(true);
-//		
-//		teamGrid.setDataSource(TeamDataSource.getInstance());
-//		ListGridField teamNameField = new ListGridField(TeamModel.NAME_FIELD, "Team name");
-//		ListGridField teamIdField = new ListGridField(TeamModel.TEAMID_FIELD, "Team id");
-//		teamIdField.setHidden(true);
-//		teamGrid.setFields(new ListGridField[] { teamNameField, teamIdField });
-//
-//		return teamGrid;
-//	}
-
 	private Canvas getPlayersGrid() {
 		playersGrid = new GenericListGrid(false, true, false, false, false) {
-			protected void deleteItem(ListGridRecord rollOverRecord) {
+			protected void deleteItem(final ListGridRecord rollOverRecord) {
+				String accountId = rollOverRecord.getAttribute(ContactModel.ACCOUNT_TYPE_FIELD)+":"+rollOverRecord.getAttribute(ContactModel.LOCAL_ID_FIELD);
+				UserClient.getInstance().deleteUser(run.getRunId(), accountId, new JsonCallback(){
+					public void onJsonReceived(JSONValue jsonValue) {
+						UserDataSource.getInstance().removeData(rollOverRecord);
+					}
+
+				});
 			}
 		};
 		playersGrid.setWidth("30%");
@@ -98,7 +85,6 @@ public class TeamPlayerConfigurationSection extends SectionConfig {
 		playersGrid.setFields(new ListGridField[] {pictureField, nameField, emailField });
 		return playersGrid;
 	}
-	private DynamicForm playerForm;
 	private Canvas getAddPlayerForm() {
 		playerForm = new DynamicForm();
 		playerForm.setWidth("30%");

@@ -75,6 +75,7 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 
 		ListGridField idField = new ListGridField(GameModel.GAMEID_FIELD, "id ");
 		idField.setWidth(30);
+		idField.setHidden(true);
 		idField.setCanEdit(false);
 
 		ListGridField titleGameField = new ListGridField(GameModel.GAME_TITLE_FIELD, "Title ");

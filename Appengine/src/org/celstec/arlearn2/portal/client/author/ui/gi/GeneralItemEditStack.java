@@ -3,6 +3,7 @@ package org.celstec.arlearn2.portal.client.author.ui.gi;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 import org.celstec.arlearn2.portal.client.author.ui.gi.dependency.AdvancedDependenciesEditor;
 import org.celstec.arlearn2.portal.client.author.ui.gi.dependency.DependencyEditor;
+import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.DataCollectionEditor;
 import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.ExtensionEditor;
 
 import com.smartgwt.client.widgets.Canvas;
@@ -14,6 +15,7 @@ public class GeneralItemEditStack extends SectionStack {
 	private SectionStackSection extensionStackSection;
 	private SectionStackSection appearStackSection;
 	private SectionStackSection disappearStackSection;
+	private SectionStackSection dataCollectionStackSection;
 	
 	public GeneralItemEditStack(){
 		
@@ -26,6 +28,17 @@ public class GeneralItemEditStack extends SectionStack {
 		extensionStackSection = new SectionStackSection(gi.getHumanReadableName());
 		extensionStackSection.setItems((Canvas)extensionEditor);
 		addSection(extensionStackSection, 0);
+	}
+	
+	public void setDataCollection(DataCollectionEditor dataCollectionEditor) {
+		if (dataCollectionStackSection != null) {
+			removeSection(dataCollectionStackSection.getID());
+		}
+		dataCollectionStackSection = new SectionStackSection("Data Collection");
+
+		dataCollectionStackSection.setItems(dataCollectionEditor);
+		addSection(dataCollectionStackSection);
+
 	}
 	
 	public void setAppearStack(DependencyEditor dependencyEditor) {

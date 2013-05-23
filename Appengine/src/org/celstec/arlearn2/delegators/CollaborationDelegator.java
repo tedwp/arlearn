@@ -7,6 +7,7 @@ import org.celstec.arlearn2.jdo.classes.ContactJDO;
 import org.celstec.arlearn2.jdo.manager.AccountManager;
 import org.celstec.arlearn2.jdo.manager.ContactManager;
 
+import com.google.appengine.api.utils.SystemProperty;
 import com.google.gdata.util.AuthenticationException;
 
 public class CollaborationDelegator  extends GoogleDelegator {
@@ -29,7 +30,9 @@ public class CollaborationDelegator  extends GoogleDelegator {
 	}
 	
 	public void addContactViaEmail(String toEmail) {
-		
+		com.google.apphosting.api.ApiProxy.getCurrentEnvironment();
+//		String version = SystemProperty.version.get();
+//		String applicationVersion = 
 		Account fullAccount = getMyAccount();
 		if (fullAccount == null) return;
 		ContactJDO jdo = ContactManager.addContactInvitation(fullAccount.getLocalId(), fullAccount.getAccountType(), toEmail);
@@ -40,7 +43,7 @@ public class CollaborationDelegator  extends GoogleDelegator {
 		msgBody += fullAccount.getName()+" has invited you to become his ARLearn contact";
 		msgBody += "</p>";
 		msgBody += "<p>";
-		msgBody += "Click  <a href=\"http://streetlearn.appspot.com/contact.html?id="+jdo.getUniqueId()+"\">here</a> to accept this invitation.";
+		msgBody += "Click  <a href=\"http://"+SystemProperty.applicationId.get()+".appspot.com/contact.html?id="+jdo.getUniqueId()+"\">here</a> to accept this invitation.";
 		msgBody += "</p>";
 		msgBody += "</body></html>";
 		
@@ -53,7 +56,7 @@ public class CollaborationDelegator  extends GoogleDelegator {
 			System.out.println("to  "+toEmail);
 			System.out.println("body  "+msgBody);
 			md = new MailDelegator(getAuthToken());
-			md.sendMail("no-reply@ar-learn.appspotmail.com", fullAccount.getName(), toEmail, "Pending contact request", msgBody);
+			md.sendMail("no-reply@"+SystemProperty.applicationId.get()+".appspotmail.com", fullAccount.getName(), toEmail, "Pending contact request", msgBody);
 
 		} catch (AuthenticationException e) {
 			e.printStackTrace();

@@ -29,4 +29,8 @@ public class VideoObjectWindow extends GeneralItemWindow {
 		editor = new VideoObjectEditor();
 		return editor;
 	}
+	
+	public boolean validate() {
+		return super.validate() && editor.validate();
+	}
 }

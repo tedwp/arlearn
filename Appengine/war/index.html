@@ -4,30 +4,31 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
-<link type="text/css" rel="stylesheet" href="Authoring.css">
+<link type="text/css" rel="stylesheet" href="MainMenu.css">
 
-<title>ARLearn authoring tool</title>
+<title>ARLearn portal</title>
 
-</script>
 <script>
-	var isomorphicDir = "org.celstec.arlearn2.gwt.Authoring/sc/";
-</script>
-<script>
-	var isomorphicDir = "org.celstec.arlearn2.gwt.Authoring/sc/";
+	var isomorphicDir = "org.celstec.arlearn2.portal.ArlearnPortal/sc/";
 </script>
 <script language="javascript"
-	src="org.celstec.arlearn2.gwt.Authoring/org.celstec.arlearn2.gwt.Authoring.nocache.js"></script>
-
+	src="org.celstec.arlearn2.portal.ArlearnPortal/org.celstec.arlearn2.portal.ArlearnPortal.nocache.js"></script>
+ <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyNa-4zOAleXRkWRSTJLLkzyLLULS9Vxk&sensor=true">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(50, 6),
+          zoom: 8,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map_canvas"),
+            mapOptions);
+      }
+    </script>
 </head>
 
-<body>
-
-	<!-- OPTIONAL: include this if you want history support -->
-	<iframe id="__gwt_historyFrame" style="width: 0; height: 0; border: 0"></iframe>
-		<div id="container" align="center">
-		
-		</div>
-		<iframe height="0" width="0" id="hidden_frame" name="hidden_frame"
-			src="" frameborder='0'> </iframe>
-</body>
+<body><div  width='100%' height='100%' id="portal"/><iframe id="__gwt_historyFrame" style="width: 0; height: 0; border: 0"></iframe><iframe height="0" width="0" id="hidden_frame" name="hidden_frame"
+		src="" frameborder='0'></iframe></body>
 </html>

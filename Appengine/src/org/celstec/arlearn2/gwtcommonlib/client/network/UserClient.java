@@ -39,5 +39,9 @@ public class UserClient extends GenericClient {
 		invokeJsonGET("/runId/"+runId, jcb);
 	}
 	
+	public void deleteUser(Long runId, String email, JsonCallback jcb) {
+		invokeJsonDELETE("/runId/"+runId+"/email/"+email, jcb);
+	}
+	
 	
 }

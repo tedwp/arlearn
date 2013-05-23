@@ -42,7 +42,7 @@ public class ChannelNotificator implements NotificationChannel{
 	}
 	
 	public void notify(String account, Object bean) {
-		notify(account, bean.toString());
+		if (account != null) notify(account, bean.toString());
 	}
 	
 	public void notify(String account, String message) {
