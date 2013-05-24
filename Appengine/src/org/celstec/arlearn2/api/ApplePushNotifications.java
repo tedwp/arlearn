@@ -27,7 +27,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.notification.APNDeviceDescription;
-import org.celstec.arlearn2.delegators.ApplePushNotificationDelegator;
+import org.celstec.arlearn2.delegators.NotificationDelegator;
 
 import com.google.gdata.util.AuthenticationException;
 
@@ -45,7 +45,7 @@ public class ApplePushNotifications extends Service {
 		if (inApnDesc instanceof java.lang.String)
 			return serialise(getBeanDoesNotParseException((String) inApnDesc), accept);
 		APNDeviceDescription description = (APNDeviceDescription) inApnDesc;
-		(new ApplePushNotificationDelegator(token)).registerDescription(description);
+		(new NotificationDelegator(token)).registerDescription(description);
 		return serialise(description, accept);
 	}
 	
@@ -57,7 +57,7 @@ public class ApplePushNotifications extends Service {
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		(new ApplePushNotificationDelegator(token)).sendNotification(account, text);
+		(new NotificationDelegator(token)).sendNotification(account, text);
 
 		return "sent";
 	}
@@ -70,7 +70,7 @@ public class ApplePushNotifications extends Service {
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		(new ApplePushNotificationDelegator(token)).sendNotificationAsJson(account, text);
+		(new NotificationDelegator(token)).sendiOSNotificationAsJson(account, text);
 
 		return "sent";
 	}

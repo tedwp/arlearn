@@ -18,12 +18,14 @@
  ******************************************************************************/
 package org.celstec.arlearn2.jdo.manager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import org.celstec.arlearn2.beans.notification.APNDeviceDescription;
+import org.celstec.arlearn2.beans.notification.DeviceDescription;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.IOSDevicesRegistryJDO;
 
@@ -44,23 +46,32 @@ public class IOSDevicesRegistryManager {
 		}
 	}
 	
-	public static String[] getDeviceTokens(String account) {
+	public static List<DeviceDescription> getDeviceTokens(String account) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			Query query = pm.newQuery(IOSDevicesRegistryJDO.class);
 			query.setFilter("account == accountParam");
 			query.declareParameters("String accountParam");
 			List<IOSDevicesRegistryJDO> list = (List<IOSDevicesRegistryJDO>) query.execute(account);
-			String[] result = new String[list.size()];
+			ArrayList<DeviceDescription> result = new ArrayList<DeviceDescription>(list.size());
 			int i = 0;
 			for (IOSDevicesRegistryJDO jdo : list) {
-				result[i++] = jdo.getDeviceToken();
+				result.add(toBean(jdo));
 			}
 			return result;
 		}finally {
 			pm.close();
 		}
 		
+	}
+	
+	private static APNDeviceDescription toBean(IOSDevicesRegistryJDO jdo) {
+		if (jdo == null) return null;
+		APNDeviceDescription apnReturn = new APNDeviceDescription();
+		apnReturn.setAccount(jdo.getAccount());
+		apnReturn.setDeviceToken(jdo.getDeviceToken());
+		apnReturn.setDeviceUniqueIdentifier(jdo.getDeviceUniqueIdentifier());
+		return apnReturn;
 	}
 	
 }
