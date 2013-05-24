@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.game.Config;
@@ -78,9 +79,17 @@ public class GameDelegator extends GoogleDelegator {
 		super();
 	}
 
+	public GameDelegator(Account account, String token) throws AuthenticationException {
+		super(account, token);
+	}
+
 	public GamesList getGames(Long from, Long until) {
 		GamesList gl = new GamesList();
-		String myAccount = UserLoggedInManager.getUser(authToken);
+		String myAccount = null;
+		if (account != null) {
+			myAccount = account.getFullId();
+		} else
+			myAccount = UserLoggedInManager.getUser(authToken);
 		if (myAccount == null) {
 			gl.setError("login to retrieve your list of games");
 			return gl;
@@ -151,6 +160,9 @@ public class GameDelegator extends GoogleDelegator {
 	}
 
 	public Game getGame(Long gameId) {
+		if (account != null) {
+			return getGameNew(gameId);
+		}
 		String myAccount = UserLoggedInManager.getUser(authToken);
 		if (myAccount == null) {
 			Game game = new Game();
@@ -158,10 +170,10 @@ public class GameDelegator extends GoogleDelegator {
 			game.setError("login to retrieve game");
 			return game;
 		}
-		if (myAccount.contains(":")) {
-			//TODO check if this user can access the game
-			return getGame(myAccount, gameId);
-		}
+//		if (myAccount.contains(":")) {
+//			//TODO check if this user can access the game
+//			return getGame(myAccount, gameId);
+//		}
 		List<Game> list = MyGamesCache.getInstance().getGameList(gameId, null, myAccount, null, null);
 		if (list == null) {
 			list = GameManager.getGames(gameId, null, myAccount, null, null);
@@ -176,7 +188,7 @@ public class GameDelegator extends GoogleDelegator {
 		return list.get(0);
 	}
 
-	public Game getGame(String account, Long gameId) {
+	public Game getGameNew(Long gameId) {
 		Game gameCache = MyGamesCache.getInstance().getGame(gameId);
 		if (gameCache == null) {
 			List<Game> list = GameManager.getGames(gameId, null, null, null, null);

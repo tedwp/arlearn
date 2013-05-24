@@ -18,23 +18,57 @@
  ******************************************************************************/
 package org.celstec.arlearn2.delegators;
 
+import java.util.StringTokenizer;
 import java.util.logging.Logger;
+
+import org.celstec.arlearn2.beans.account.Account;
+import org.celstec.arlearn2.jdo.classes.ApplicationAccessKeyJDO;
+import org.celstec.arlearn2.jdo.manager.AccountManager;
+import org.celstec.arlearn2.jdo.manager.ApplicationKeyManager;
+
 import com.google.gdata.util.AuthenticationException;
 
 public class GoogleDelegator {
 	protected static final Logger logger = Logger.getLogger(GoogleDelegator.class.getName());
 
 	protected String authToken;
+	protected boolean onBehalfOf = false;
+	protected Account account;
 
 	public GoogleDelegator(String authToken) throws AuthenticationException {
 		if (authToken == null) {
 			this.authToken = null;
-		} else {
+		} if (authToken.contains("auth=")) {
 			authToken = authToken.substring(authToken.indexOf("auth=") + 5);
 			this.authToken = authToken;
+		} if (authToken.startsWith("onBehalfOf")) {
+			StringTokenizer st = new StringTokenizer(authToken, ":");
+//			String onBehalfOf = "";
+			String onBehalfOfToken = "";
+			String accountType = "";
+			String accountLocalId = "";
+			if (st.hasMoreTokens()) st.nextToken();
+			if (st.hasMoreTokens()) onBehalfOfToken = st.nextToken();
+			if (st.hasMoreTokens()) accountType = st.nextToken();
+			if (st.hasMoreTokens()) accountLocalId = st.nextToken();
+			boolean tokenExists = ApplicationKeyManager.getConfigurationObject(onBehalfOfToken);
+			if (tokenExists) {
+				onBehalfOf = true;
+			}
+			try {
+				account = AccountManager.getAccount(accountType+":"+accountLocalId);
+			} catch (Exception e){
+				System.out.println("account does not exist");
+			}
 		}
 	}
 
+	public GoogleDelegator(Account account, String token) throws AuthenticationException {
+		this(token);
+		this.account = account;
+
+	}
+	
 	public GoogleDelegator(GoogleDelegator gd) {
 		this.authToken = gd.authToken;
 	}

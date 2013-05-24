@@ -60,7 +60,7 @@ public class MyGames extends Service {
 		if (from == null) {
 			from = 0l;
 		}
-		GameDelegator qg = new GameDelegator(token);
+		GameDelegator qg = new GameDelegator(account, token);
 		return serialise(qg.getGames(from, until), accept);
 	}
 	
@@ -107,7 +107,7 @@ public class MyGames extends Service {
 			throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		GameDelegator qg = new GameDelegator(token);
+		GameDelegator qg = new GameDelegator(account, token);
 		return serialise(qg.getGame(gameIdentifier), accept);
 	}
 	

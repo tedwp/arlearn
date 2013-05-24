@@ -34,6 +34,7 @@ import org.celstec.arlearn2.cache.UsersCache;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.delegators.notification.NotificationEngine;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
+import org.celstec.arlearn2.jdo.manager.AccountManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
 import org.celstec.arlearn2.tasks.beans.DeleteActions;
 import org.celstec.arlearn2.tasks.beans.DeleteBlobs;
@@ -129,6 +130,7 @@ public class UsersDelegator extends GoogleDelegator {
 	}
 
 	public String getCurrentUserAccount() {
+		if (account != null) return account.getFullId();
 		String accountName = UserLoggedInCache.getInstance().getUser(this.authToken);
 		if (accountName == null) {
 			accountName = UserLoggedInManager.getUser(this.authToken);
@@ -136,6 +138,22 @@ public class UsersDelegator extends GoogleDelegator {
 				UserLoggedInCache.getInstance().putUser(this.authToken, accountName);
 		}
 		return accountName;
+	}
+	
+	public Account getCurrentAccount() {
+		if (account != null) return account;
+		String accountName = UserLoggedInCache.getInstance().getUser(this.authToken);
+		if (accountName == null) {
+			accountName = UserLoggedInManager.getUser(this.authToken);
+			if (accountName != null){
+				UserLoggedInCache.getInstance().putUser(this.authToken, accountName);
+				if (accountName.contains(":")) {
+					AccountManager.getAccount(accountName);
+				}
+			}
+				
+		}
+		return null;
 	}
 
 	public Account getCurrentUserAccountObject() {

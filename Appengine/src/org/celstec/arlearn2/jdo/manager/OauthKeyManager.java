@@ -26,10 +26,6 @@ import org.celstec.arlearn2.beans.oauth.OauthInfo;
 import org.celstec.arlearn2.beans.oauth.OauthInfoList;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.OauthConfigurationJDO;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;

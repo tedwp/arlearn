@@ -76,7 +76,11 @@ public class GameAccessDelegator extends GoogleDelegator {
 
 	public GameAccessList getGamesAccess(Long from, Long until) {
 		GameAccessList gl = new GameAccessList();
-		String myAccount = UserLoggedInManager.getUser(authToken);
+		String myAccount = null;
+		if (account != null) {
+			myAccount = account.getFullId();
+		} else
+			myAccount = UserLoggedInManager.getUser(authToken);
 		if (myAccount == null) {
 			gl.setError("login to retrieve your list of games");
 			return gl;
