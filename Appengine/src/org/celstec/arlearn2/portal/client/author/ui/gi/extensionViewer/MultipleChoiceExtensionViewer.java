@@ -1,7 +1,9 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi.extensionViewer;
 
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.MultipleChoiceAnswer;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.MultipleChoiceTest;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.SingleChoiceTest;
 
 import com.smartgwt.client.widgets.HTMLFlow;
 
@@ -17,7 +19,12 @@ public class MultipleChoiceExtensionViewer extends HTMLFlow implements Extension
 	@Override
 	public void loadGeneralItem(GeneralItem gi) {
 		MultipleChoiceTest yt = (MultipleChoiceTest) gi;
-		String contents = "MultipleChoice choice test: todo work out viewing part";
+		String contents = "<b>Multiple choice test:</b><ul>";
+		for (MultipleChoiceAnswer answer : yt.getAnswers()){
+			contents += "<li>"+answer.getString(MultipleChoiceAnswer.ANSWER);	
+		}
+		
+		contents += "</ul>";
 		setContents(contents);
 	}
 

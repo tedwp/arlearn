@@ -1,6 +1,7 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi.extensionViewer;
 
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.MultipleChoiceAnswer;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.SingleChoiceTest;
 
 import com.smartgwt.client.widgets.HTMLFlow;
@@ -17,7 +18,12 @@ public class SingleChoiceExtensionViewer extends HTMLFlow implements ExtensionVi
 	@Override
 	public void loadGeneralItem(GeneralItem gi) {
 		SingleChoiceTest yt = (SingleChoiceTest) gi;
-		String contents = "Single choice test: todo work out viewing part";
+		String contents = "<b>Single choice test:</b><br><ul>";
+		for (MultipleChoiceAnswer answer : yt.getAnswers()){
+			contents += "<li>"+answer.getString(MultipleChoiceAnswer.ANSWER);	
+		}
+		
+		contents += "</ul>";
 		setContents(contents);
 	}
 }
