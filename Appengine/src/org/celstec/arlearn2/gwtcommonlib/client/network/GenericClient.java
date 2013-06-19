@@ -1,6 +1,7 @@
 package org.celstec.arlearn2.gwtcommonlib.client.network;
 
 
+import org.celstec.arlearn2.gwtcommonlib.client.LocalSettings;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.Authentication;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthClient;
 
@@ -39,6 +40,9 @@ public class GenericClient {
 		RequestBuilder builder = new RequestBuilder(m, url);
 		if (OauthClient.checkAuthentication() == null) return null;
 		String authorization = "GoogleLogin auth=" + OauthClient.checkAuthentication().getAccessToken();
+		if (LocalSettings.getInstance().getOnBehalfOf() != null) {
+			authorization = LocalSettings.getInstance().getOnBehalfOf();
+		}
 		builder.setHeader("Authorization", authorization);
 		builder.setHeader("Accept", "application/json");
 		return builder;
@@ -48,6 +52,9 @@ public class GenericClient {
 		String url = urlPostfix == null ? getUrl() : getUrl() + urlPostfix;
 		RequestBuilder builder = new RequestBuilder(m, url);
 		String authorization = "GoogleLogin auth=" + Authentication.getInstance().getAuthenticationToken();
+		if (LocalSettings.getInstance().getOnBehalfOf() != null) {
+			authorization = LocalSettings.getInstance().getOnBehalfOf();
+		}
 		builder.setHeader("Authorization", authorization);
 		builder.setHeader("Accept", "application/json");
 		return builder;
@@ -62,8 +69,14 @@ public class GenericClient {
 	}
 
 	protected void invokeJsonPOST(String urlPostfix, String object, final JsonCallback jcb) {
+		invokeJsonPOST(urlPostfix, object, null, jcb);
+	}
+
+	protected void invokeJsonPOST(String urlPostfix, String object, String onBehalfOf, final JsonCallback jcb) {
 		RequestBuilder builder = getRequestBuilder(urlPostfix, RequestBuilder.POST);
 		builder.setHeader("Content-Type", "application/json");
+		if (onBehalfOf != null) builder.setHeader("Authorization", onBehalfOf);
+
 		try {
 			Request request = builder.sendRequest(object, new RequestCallback() {
 
@@ -92,7 +105,7 @@ public class GenericClient {
 			jcb.onError();
 		}
 	}
-
+	
 	protected void invokeJsonPUT(String urlPostfix, String object, final JsonCallback jcb) {
 		RequestBuilder builder = getRequestBuilder(urlPostfix, RequestBuilder.PUT);
 		builder.setHeader("Content-Type", "application/json");
@@ -191,8 +204,14 @@ public class GenericClient {
 	}
 	
 	protected void invokeJsonGET(String urlPostfix, final JsonCallback jcb) {
+		invokeJsonGET(urlPostfix, null, jcb);
+	}
+	
+	protected void invokeJsonGET(String urlPostfix, String onBehalfOf, final JsonCallback jcb) {
 		RequestBuilder builder = getRequestBuilder(urlPostfix);
 		if (builder == null) return;
+		if (onBehalfOf != null) builder.setHeader("Authorization", onBehalfOf);
+
 		try {
 			Request request = builder.sendRequest(null, new RequestCallback() {
 				@Override

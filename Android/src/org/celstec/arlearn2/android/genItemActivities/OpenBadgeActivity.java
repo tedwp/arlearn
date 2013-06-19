@@ -59,7 +59,7 @@ public class OpenBadgeActivity extends GeneralActivity {
 		PropertiesAdapter pa = PropertiesAdapter.getInstance(this);
 		Intent intent = new Intent(
 				Intent.ACTION_VIEW, 
-				Uri.parse("http://streetlearn.appspot.com/issuebadge.jsp?runId="+pa.getCurrentRunId()+"&itemId="+badgeBean.getId()+"&email="+pa.getUsername()));
+				Uri.parse("http://streetlearn.appspot.com/issuebadge.jsp?runId="+pa.getCurrentRunId()+"&itemId="+badgeBean.getId()+"&email="+pa.getFullId()));
 		intent.addCategory(Intent.CATEGORY_BROWSABLE);
 		startActivity(intent);
 		this.finish();

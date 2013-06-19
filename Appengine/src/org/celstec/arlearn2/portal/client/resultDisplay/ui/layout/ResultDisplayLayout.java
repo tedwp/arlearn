@@ -180,7 +180,7 @@ public class ResultDisplayLayout extends VLayout {
 	}
 	
 	private void refreshBreadcrumbs(final DynamicForm filterForm) {
-		String bCrumb = "<b>Filtered by: </b>";
+		String bCrumb = "<b>Filtered by: ";
 		
 		@SuppressWarnings("rawtypes")
 		Iterator it = filterForm.getValues().entrySet().iterator();
@@ -201,7 +201,7 @@ public class ResultDisplayLayout extends VLayout {
 	        it.remove(); // avoids a ConcurrentModificationException
 	    }
 	    
-	    breadcrumb.setHTML(bCrumb);
+	    breadcrumb.setHTML(bCrumb+"</b>");
 	}
 
 }

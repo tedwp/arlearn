@@ -2,10 +2,10 @@ package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.oauth.DownloadDetailsTask;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Window;
 import android.webkit.CookieManager;
@@ -13,6 +13,8 @@ import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class OauthActivity extends GeneralActivity {
 
@@ -64,6 +66,7 @@ public class OauthActivity extends GeneralActivity {
 					OauthActivity.this.getMenuHandler().getPropertiesAdapter().setIsAuthenticated();
 					new DownloadDetailsTask(OauthActivity.this).execute();
 		            setResult(RESULT_OK, result);
+		    		new GCMCheck().execute();
 		            finish();
 		          }
 		        }
@@ -80,5 +83,30 @@ public class OauthActivity extends GeneralActivity {
 	@Override
 	public boolean isGenItemActivity() {
 		return false;
+	}
+	
+	public class GCMCheck extends AsyncTask<Object, Long, Void> {
+
+		@Override
+		protected Void doInBackground(Object... arg0) {
+			try {
+				 GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(OauthActivity.this);
+				 String regid = gcm.register("594104153413");
+			} catch (Exception e) {
+				e.printStackTrace();
+
+			}
+			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(Long... delta) {
+		
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+		}
 	}
 }

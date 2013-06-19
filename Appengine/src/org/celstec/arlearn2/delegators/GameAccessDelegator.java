@@ -3,13 +3,18 @@ package org.celstec.arlearn2.delegators;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.account.AccountList;
+import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GameAccess;
 import org.celstec.arlearn2.beans.game.GameAccessList;
+import org.celstec.arlearn2.beans.run.Run;
+import org.celstec.arlearn2.beans.run.RunAccess;
 import org.celstec.arlearn2.beans.run.RunList;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.classes.GameAccessJDO;
 import org.celstec.arlearn2.jdo.manager.GameAccessManager;
+import org.celstec.arlearn2.jdo.manager.RunAccessManager;
 
 import com.google.gdata.util.AuthenticationException;
 
@@ -23,8 +28,21 @@ public class GameAccessDelegator extends GoogleDelegator {
 		super(gd);
 	}
 
-	public void provideAccess(Long gameId, String account, int accessRights) {
-		StringTokenizer st = new StringTokenizer(account, ":");
+	public void provideAccess(Long gameId, Account account, int accessRights) {
+//		StringTokenizer st = new StringTokenizer(account, ":");
+//		int accountType = 0;
+//		String localID = null;
+//		if (st.hasMoreTokens()) {
+//			accountType = Integer.parseInt(st.nextToken());
+//		}
+//		if (st.hasMoreTokens()) {
+//			localID = st.nextToken();
+//		}
+		GameAccessManager.addGameAccess(account.getLocalId(), account.getAccountType(), gameId, accessRights);
+	}
+	
+	public void provideAccess(Long gameId, String accountString, int accessRights) {
+		StringTokenizer st = new StringTokenizer(accountString, ":");
 		int accountType = 0;
 		String localID = null;
 		if (st.hasMoreTokens()) {
@@ -34,10 +52,18 @@ public class GameAccessDelegator extends GoogleDelegator {
 			localID = st.nextToken();
 		}
 		GameAccessManager.addGameAccess(localID, accountType, gameId, accessRights);
+		new NotificationDelegator().broadcast(new Game(), accountString);	
+
 	}
 
+	public void provideAccessWithCheck(Long gameIdentifier, Account account, Integer accessRight) {
+		provideAccess(gameIdentifier, account, accessRight);
+
+	}
+	
 	public void provideAccessWithCheck(Long gameIdentifier, String account, Integer accessRight) {
 		provideAccess(gameIdentifier, account, accessRight);
+		
 
 	}
 
@@ -102,6 +128,12 @@ public class GameAccessDelegator extends GoogleDelegator {
 			return false;
 		}
 
+	}
+	
+	public void broadcastGameUpdate(Game game) {
+		for (GameAccess ga :GameAccessManager.getGameList(game.getGameId())){
+			new NotificationDelegator().broadcast(game, ga.getAccount());	
+		}
 	}
 
 }

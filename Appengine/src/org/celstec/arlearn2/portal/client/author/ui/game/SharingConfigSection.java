@@ -7,6 +7,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
 import org.celstec.arlearn2.portal.client.AuthoringConstants;
 import org.celstec.arlearn2.portal.client.author.ui.SectionConfig;
+import org.celstec.arlearn2.portal.client.author.ui.game.i18.GameConstants;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
@@ -22,7 +23,7 @@ import com.smartgwt.client.widgets.layout.LayoutSpacer;
 
 public class SharingConfigSection extends SectionConfig {
 	private final static String CCBY = "Attribution CC BY";
-	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
+	private static GameConstants constants = GWT.create(GameConstants.class);
 	RadioGroupItem sharingOptions;
 	RadioGroupItem licenseOptions;
 	DynamicForm sharingForm;
@@ -31,7 +32,7 @@ public class SharingConfigSection extends SectionConfig {
 	Game game;
 
 	public SharingConfigSection() {
-		super("Sharing");
+		super(constants.share());
 		HStack layout = new HStack();
 
 		layout.addMember(getAccessForm());

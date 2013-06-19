@@ -39,7 +39,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 
 public class ContactManager {
 	
-	private static final int ACCOUNTS_IN_LIST = 20;
+	private static final int ACCOUNTS_IN_LIST = 10;
 
 	public static ContactJDO addContactInvitation(String localID, int accountType, String email) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -68,7 +68,11 @@ public class ContactManager {
 			account.setLocalId(jdo.getFromLocalId());
 			account.setAccountType(jdo.getFromAccountType());
 			return account;
-		} finally {
+		} catch (Exception ex){
+			Account account = new Account();
+			account.setError("could not retrieve this account");
+			return account;
+		}finally {
 			pm.close();
 		}
 	}
@@ -158,7 +162,7 @@ public class ContactManager {
 			}
 			Cursor c = JDOCursorHelper.getCursor(results);
 			cursorString = c.toWebSafeString();
-			if (returnList.getAccountList().size() == ACCOUNTS_IN_LIST) {
+			if (i == ACCOUNTS_IN_LIST) {
 				returnList.setResumptionToken(cursorString);
 			}
 			returnList.setServerTime(System.currentTimeMillis());

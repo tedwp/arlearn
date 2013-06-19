@@ -75,9 +75,6 @@ public class TabManager {
 		
 	}
 	
-	public void setAccountInformation(String name, String picture) {
-	}
-	
 	public Widget getDrawableWidget() {
 		drawableWidget = new VLayout();  
 		drawableWidget.setMembersMargin(15); 

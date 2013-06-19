@@ -39,7 +39,7 @@ public class AccountApi extends Service {
 		Object inContact = deserialise(contact, Account.class, contentType);
 		if (inContact instanceof java.lang.String)
 			return serialise(getBeanDoesNotParseException((String) inContact), accept);
-		AccountDelegator ad = new AccountDelegator(token);
+		AccountDelegator ad = new AccountDelegator(this);
 		return serialise(ad.createAnonymousContact((Account) inContact), accept);
 	}
 	
@@ -77,14 +77,34 @@ public class AccountApi extends Service {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 		
-		AccountDelegator ad = new AccountDelegator(token);
+		AccountDelegator ad = new AccountDelegator(this);
+//		String myAccount = UserLoggedInManager.getUser(token);
+//		if (myAccount == null) {
+//			Account ac = new Account();
+//			ac.setError("account is not logged in");
+//		}
+		return serialise(ad.getContactDetails(this.account.getFullId()), accept);
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@CacheControlHeader("no-cache")
+	@Path("/accountDetails/{accountFullId}")
+	public String getContactDetailsForId(@HeaderParam("Authorization") String token, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept,
+			@PathParam("accountFullId") String accountFullId
+
+			) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		
+		AccountDelegator ad = new AccountDelegator(this);
 		String myAccount = UserLoggedInManager.getUser(token);
 		if (myAccount == null) {
 			Account ac = new Account();
 			ac.setError("account is not logged in");
 		}
-		return serialise(ad.getContactDetails(myAccount), accept);
+		return serialise(ad.getContactDetails(accountFullId), accept);
 	}
-	
 	
 }

@@ -36,15 +36,21 @@ import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
+import org.celstec.arlearn2.android.activities.ListMessagesActivity;
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
+import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.DatabaseTask;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.asynctasks.download.DownloadQueue;
 import org.celstec.arlearn2.android.asynctasks.download.DownloadTaskHandler;
 
+import org.celstec.arlearn2.android.cache.MediaUploadCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCacheUpload;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.client.GenericClient;
 
 import android.content.Context;
@@ -82,12 +88,17 @@ public class UploadFileSyncTask extends GenericTask implements NetworkTask {
 			return;
 		}
 		publishData(uploadUrl);
+		MediaUploadCache.getInstance(uploadItem.getRunId()).put(uploadItem.buildRemotePath(), MediaCacheUpload.REP_STATUS_SYNCING);
+		ActivityUpdater.updateActivities(ctx, NarratorItemActivity.class.getCanonicalName());
+
 		WriteStatusToDatabase statusWrite = new WriteStatusToDatabase();
 		
 		if (!endWithError) {
+			uploadItem.setReplicated(MediaCacheUpload.REP_STATUS_DONE);
 			statusWrite.setStatus(MediaCacheUpload.REP_STATUS_DONE);
 			statusWrite.taskToRunAfterExecute(new UploadFileSyncTask());
 		} else {
+			uploadItem.setReplicated(MediaCacheUpload.REP_STATUS_TODO);
 			statusWrite.setStatus(MediaCacheUpload.REP_STATUS_TODO);
 		}
 		statusWrite.run(ctx);

@@ -19,28 +19,27 @@
 package org.celstec.arlearn2.android.menu;
 
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.activities.AnnotateActivity;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
 import org.celstec.arlearn2.android.activities.DownloadOSMMapTilesActivity;
 import org.celstec.arlearn2.android.activities.GenericMapViewActivity;
 import org.celstec.arlearn2.android.activities.IntentIntegrator;
-import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
 import org.celstec.arlearn2.android.activities.LoginActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
-import org.celstec.arlearn2.android.activities.OauthActivity;
 import org.celstec.arlearn2.android.activities.OauthProvidersList;
 import org.celstec.arlearn2.android.activities.SplashScreenActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
 import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
-import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.GeneralItemAdapter;
-import org.celstec.arlearn2.android.db.MyActions;
-import org.celstec.arlearn2.android.db.MyResponses;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.android.genItemActivities.AudioObjectActivity;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.view.MenuItem;
+import android.widget.Toast;
 //import org.jivesoftware.smack.Chat;
 //import org.jivesoftware.smack.ChatManager;
 //import org.jivesoftware.smack.ConnectionConfiguration;
@@ -48,17 +47,6 @@ import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 //import org.jivesoftware.smack.XMPPConnection;
 //import org.jivesoftware.smack.XMPPException;
 //import org.jivesoftware.smack.packet.Message;
-
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 public class MenuHandler {
 

@@ -1,9 +1,9 @@
 package org.celstec.arlearn2.portal.client.author.ui.game;
 
+import org.celstec.arlearn2.beans.game.GameAccess;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.CollaboratorModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.ContactModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.UserModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.ContactsDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GameCollaboratorDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.network.CollaborationClient;
@@ -12,7 +12,9 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.game.GameClient;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
 import org.celstec.arlearn2.gwtcommonlib.client.ui.grid.GenericListGrid;
 import org.celstec.arlearn2.portal.client.author.ui.SectionConfig;
+import org.celstec.arlearn2.portal.client.author.ui.game.i18.GameConstants;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.types.Alignment;
@@ -30,15 +32,15 @@ import com.smartgwt.client.widgets.layout.LayoutSpacer;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class CollaboratorsConfig extends SectionConfig {
+	private static GameConstants constants = GWT.create(GameConstants.class);
+
 	private GenericListGrid collabGrid;
-	// private GenericListGrid teamGrid;
-//	private Run run;
 	private DynamicForm addCollaboratorForm;
 	private Game currentGame;
 
 
 	public CollaboratorsConfig() {
-		super("Add Collaborators");
+		super(constants.addCollaborators());
 		VLayout collabLayout = new VLayout();
 //		collabLayout.setWidth(200);
 		
@@ -62,15 +64,15 @@ public class CollaboratorsConfig extends SectionConfig {
 	private Canvas getInviteForm() {
 
 		final DynamicForm form = new DynamicForm();
-		form.setGroupTitle("Invite new contact");
+		form.setGroupTitle(constants.inviteNewContact());
 		form.setIsGroup(true);
 		form.setWidth(300);
 
 		TextItem subjectItem = new TextItem("Contact");
-		subjectItem.setTitle("Contact Email");
+		subjectItem.setTitle(constants.contactEmail());
 
 		ButtonItem saveButton = new ButtonItem("Save");
-		saveButton.setTitle("Invite");
+		saveButton.setTitle(constants.invite());
 		saveButton.setColSpan(2);
 		saveButton.setAlign(Alignment.CENTER);
 
@@ -106,12 +108,12 @@ public class CollaboratorsConfig extends SectionConfig {
 		collabGrid.setAutoFetchData(true);
 
 		collabGrid.setDataSource(GameCollaboratorDataSource.getInstance());
-		ListGridField pictureField = new ListGridField(CollaboratorModel.PICTURE_FIELD, "Pic", 40);
+		ListGridField pictureField = new ListGridField(CollaboratorModel.PICTURE_FIELD, " ", 40);
 		pictureField.setAlign(Alignment.CENTER);
 		pictureField.setType(ListGridFieldType.IMAGE);
 
-		ListGridField nameField = new ListGridField(ContactModel.NAME_FIELD,"name");
-		ListGridField accessField = new ListGridField(CollaboratorModel.ACCESS_PICTURE, "Game Access");
+		ListGridField nameField = new ListGridField(ContactModel.NAME_FIELD,constants.name());
+		ListGridField accessField = new ListGridField(CollaboratorModel.ACCESS_PICTURE, constants.gameAccess());
 		accessField.setType(ListGridFieldType.IMAGE);
 		
 		collabGrid.setFields(new ListGridField[] { pictureField, nameField, accessField });
@@ -120,15 +122,15 @@ public class CollaboratorsConfig extends SectionConfig {
 	}
 
 	private Canvas getAddPlayerForm() {
-		final CheckboxItem canEdit = new CheckboxItem("canEdit", "Can edit");
+		final CheckboxItem canEdit = new CheckboxItem("canEdit", constants.canEdit());
 
 		addCollaboratorForm = new DynamicForm();
 		addCollaboratorForm.setWidth("30%");
-		addCollaboratorForm.setGroupTitle("Add Collaborator");
+		addCollaboratorForm.setGroupTitle(constants.addCollaborators());
 		addCollaboratorForm.setIsGroup(true);
 
 		final MultiComboBoxItem playersComboBox = new MultiComboBoxItem(
-				ContactModel.LOCAL_ID_FIELD, "Select accounts");
+				ContactModel.LOCAL_ID_FIELD, constants.selectAccount());
 		playersComboBox.setDisplayField(ContactModel.NAME_FIELD);
 		playersComboBox.setValueField(ContactModel.ACCOUNT_FIELD);
 		playersComboBox.setAutoFetchData(true);
@@ -136,7 +138,7 @@ public class CollaboratorsConfig extends SectionConfig {
 		// playersComboBox.setShowTitle(false);
 
 		ButtonItem submitButton = new ButtonItem("Submit");
-		submitButton.setTitle("Submit Players");
+		submitButton.setTitle(constants.submit());
 		submitButton.setColSpan(2);
 		submitButton.setAlign(Alignment.CENTER);
 

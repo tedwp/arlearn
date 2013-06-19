@@ -236,7 +236,7 @@ public class ListRunsParticipateActivity extends GeneralActivity implements List
 				}
 
 				startActivity(i);
-				ActionsDelegator.getInstance().publishStartRunActon(this, runId, pa.getUsername());
+				ActionsDelegator.getInstance().publishStartRunActon(this, runId, pa.getFullId());
 			}
 		}
 	}

@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
@@ -64,8 +65,20 @@ public abstract class OauthWorker {
 
 	}
 	
+	protected void error(String error) {
+		try {
+			resp.setContentType("text/html;charset=utf-8");
+			resp.getWriter().write("<h2>Error</h2><br>\n"+error);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	protected void saveAccessToken(String id, String authToken) {
-		UserLoggedInManager.submitOauthUser(id, authToken);
+		if (authToken != null) {
+			UserLoggedInManager.submitOauthUser(id, authToken);
+		}
 	}
 
 	protected String readURL(URL url) throws IOException {
@@ -104,11 +117,12 @@ public abstract class OauthWorker {
 		this.resp = resp;
 
 	}
-
+	private static final Logger log = Logger.getLogger(OauthWorker.class.getName());
 	public class RequestAccessToken {
 
 		private String accessToken;
 		private long expires_in;
+	    
 
 		public void getUrl() {
 
@@ -124,7 +138,9 @@ public abstract class OauthWorker {
 
 		public void postUrl(String url, String data) {
 			try {
+				log.log(Level.SEVERE, "about to open url for code "+url + " *** "+data);
 				URLConnection conn = new URL(url).openConnection();
+//				conn.setConnectTimeout(30);
 				conn.setDoOutput(true);
 				OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 				wr.write(data);
@@ -136,15 +152,17 @@ public abstract class OauthWorker {
 				while ((line = rd.readLine()) != null) {
 					result += line;
 				}
+				log.log(Level.SEVERE, "oauth result"+result);
 				wr.close();
 				rd.close();
 				parseResult(result);
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 
 		private void parseResult(String result) throws JSONException {
+			log.log(Level.WARNING, "parseResult " + result);
 			JSONObject resultJson = new JSONObject(result);
 			accessToken = resultJson.getString("access_token");
 			expires_in = resultJson.getLong("expires_in");

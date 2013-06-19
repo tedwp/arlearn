@@ -3,6 +3,9 @@ package org.celstec.arlearn2.delegators;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import org.celstec.arlearn2.api.Service;
+import org.celstec.arlearn2.beans.account.Account;
+import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.RunAccess;
 import org.celstec.arlearn2.beans.run.RunAccessList;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
@@ -13,6 +16,10 @@ import com.google.gdata.util.AuthenticationException;
 
 public class RunAccessDelegator extends GoogleDelegator {
 
+	public RunAccessDelegator(Service service) {
+		super(service);
+	}
+	
 	public RunAccessDelegator(String authtoken) throws AuthenticationException {
 		super(authtoken);
 	}
@@ -38,14 +45,23 @@ public class RunAccessDelegator extends GoogleDelegator {
 		RunAccessManager.addRunAccess(localID, accountType, runIdentifier, accessRights);
 	}
 	
+	public void provideAccess(Long runIdentifier, Account account, int accessRights) {
+		RunAccessManager.addRunAccess(account.getLocalId(), account.getAccountType(), runIdentifier, accessRights);
+	}
+	
 	public RunAccessList getRunsAccess(Long from, Long until) {
 		RunAccessList gl = new RunAccessList();
-		String myAccount = UserLoggedInManager.getUser(authToken);
-		if (myAccount == null) {
-			gl.setError("login to retrieve your list of runs");
-			return gl;
-		}
-		return getRunsAccess(myAccount, from, until);
+		if (account != null) {
+			return getRunsAccess(account.getFullId(), from, until);
+		} 
+		gl.setError("login to retrieve your list of runs");
+		return gl;
+//		String myAccount = UserLoggedInManager.getUser(authToken);
+//		if (myAccount == null) {
+//			gl.setError("login to retrieve your list of runs");
+//			return gl;
+//		}
+//		return getRunsAccess(myAccount, from, until);
 	}
 	
 	public RunAccessList getRunsAccess(String account, Long from, Long until) {
@@ -68,12 +84,20 @@ public class RunAccessDelegator extends GoogleDelegator {
 		return rl;
 	}
 	
-	public boolean isOwner(String myAccount, Long runId) {
+	public boolean isOwner(Long runId) {
 		try {
-			return RunAccessManager.getAccessById(myAccount + ":" + runId).getAccessRights() == RunAccessJDO.OWNER;
+			return RunAccessManager.getAccessById(account.getFullId() + ":" + runId).getAccessRights() == RunAccessJDO.OWNER;
 		} catch (Exception e) {
 			return false;
 		}
 
+	}
+
+	public void broadcastRunUpdate(Run run) {
+		for (RunAccess ra :RunAccessManager.getRunAccessList(run.getRunId())){
+			new NotificationDelegator().broadcast(run, ra.getAccount());	
+		}
+		
+		
 	}
 }

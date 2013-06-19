@@ -9,6 +9,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class GCMDeviceDescription extends DeviceDescription {
 
 	private String account;
+	private String deviceUniqueIdentifier;
 	private String registrationId;
 	public String getAccount() {
 		return account;
@@ -22,13 +23,19 @@ public class GCMDeviceDescription extends DeviceDescription {
 	public void setRegistrationId(String registrationId) {
 		this.registrationId = registrationId;
 	}
-
+	public String getDeviceUniqueIdentifier() {
+		return deviceUniqueIdentifier;
+	}
+	public void setDeviceUniqueIdentifier(String deviceUniqueIdentifier) {
+		this.deviceUniqueIdentifier = deviceUniqueIdentifier;
+	}
 	
 	@Override
 	public boolean equals(Object obj) {
 		GCMDeviceDescription other = (GCMDeviceDescription ) obj;
 		return super.equals(obj) && 
 		nullSafeEquals(getAccount(), other.getAccount()) && 
+		nullSafeEquals(getDeviceUniqueIdentifier(), other.getDeviceUniqueIdentifier()) && 
 		nullSafeEquals(getRegistrationId(), other.getRegistrationId()); 
 	}
 	
@@ -49,6 +56,7 @@ public class GCMDeviceDescription extends DeviceDescription {
 			super.initBean(object, genericBean);
 			GCMDeviceDescription bean = (GCMDeviceDescription) genericBean;
 			if (object.has("account")) bean.setAccount(object.getString("account"));
+			if (object.has("deviceUniqueIdentifier")) bean.setDeviceUniqueIdentifier(object.getString("deviceUniqueIdentifier"));
 			if (object.has("registrationId")) bean.setRegistrationId(object.getString("registrationId"));
 		}
 
@@ -62,6 +70,7 @@ public class GCMDeviceDescription extends DeviceDescription {
 			JSONObject returnObject = super.toJSON(bean);
 			try {
 				if (statusBean.getAccount() != null) returnObject.put("account", statusBean.getAccount());
+				if (statusBean.getDeviceUniqueIdentifier() != null) returnObject.put("deviceUniqueIdentifier", statusBean.getDeviceUniqueIdentifier());
 				if (statusBean.getRegistrationId() != null) returnObject.put("registrationId", statusBean.getRegistrationId());
 			} catch (JSONException e) {
 				e.printStackTrace();

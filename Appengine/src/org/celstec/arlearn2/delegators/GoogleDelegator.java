@@ -21,6 +21,7 @@ package org.celstec.arlearn2.delegators;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
+import org.celstec.arlearn2.api.Service;
 import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.jdo.classes.ApplicationAccessKeyJDO;
 import org.celstec.arlearn2.jdo.manager.AccountManager;
@@ -38,12 +39,11 @@ public class GoogleDelegator {
 	public GoogleDelegator(String authToken) throws AuthenticationException {
 		if (authToken == null) {
 			this.authToken = null;
-		} if (authToken.contains("auth=")) {
+		} else if (authToken.contains("auth=")) {
 			authToken = authToken.substring(authToken.indexOf("auth=") + 5);
 			this.authToken = authToken;
-		} if (authToken.startsWith("onBehalfOf")) {
+		} else if (authToken.startsWith("onBehalfOf")) {
 			StringTokenizer st = new StringTokenizer(authToken, ":");
-//			String onBehalfOf = "";
 			String onBehalfOfToken = "";
 			String accountType = "";
 			String accountLocalId = "";
@@ -54,26 +54,33 @@ public class GoogleDelegator {
 			boolean tokenExists = ApplicationKeyManager.getConfigurationObject(onBehalfOfToken);
 			if (tokenExists) {
 				onBehalfOf = true;
+				try {
+					account = AccountManager.getAccount(accountType+":"+accountLocalId);
+				} catch (Exception e){
+					System.out.println("account does not exist");
+				}
 			}
-			try {
-				account = AccountManager.getAccount(accountType+":"+accountLocalId);
-			} catch (Exception e){
-				System.out.println("account does not exist");
-			}
+			
 		}
 	}
 
-	public GoogleDelegator(Account account, String token) throws AuthenticationException {
-		this(token);
+	public GoogleDelegator(Account account, String token){
+		this.authToken = token;
 		this.account = account;
 
 	}
 	
 	public GoogleDelegator(GoogleDelegator gd) {
 		this.authToken = gd.authToken;
+		this.account = gd.account;
 	}
 
 	public GoogleDelegator() {
+	}
+
+	public GoogleDelegator(Service service) {
+		this.authToken = service.getToken();
+		this.account = service.getAccount();
 	}
 
 	public String getAuthToken() {

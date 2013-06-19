@@ -166,6 +166,7 @@ public class MediaCacheUpload extends GenericDbTable {
 		ContentValues newValue = new ContentValues();
 		newValue.put(REPLICATED	, status);
 		String remote = uploadItem.buildRemotePath();
+		uploadItem.setRemoteUrl(remote);
 		if (remote != null && status == REP_STATUS_DONE) {
 			newValue.put(REMOTE_FILE, remote);
 		}
@@ -188,6 +189,7 @@ public class MediaCacheUpload extends GenericDbTable {
 			args = addArg(args, ""+uploadItem.getUserId());
 		}
 		db.getSQLiteDb().update(getTableName(), newValue, parameter, args);
+		MediaUploadCache.getInstance(uploadItem.getRunId()).put(uploadItem);
 	}
 	
 	private String addParameter(String parameter, String column) {

@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.celstec.arlearn2.beans.Bean;
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.dependencies.AndDependency;
 import org.celstec.arlearn2.beans.dependencies.BooleanDependency;
@@ -67,6 +68,10 @@ public class GeneralItemDelegator extends GoogleDelegator {
 
 	public GeneralItemDelegator(GoogleDelegator gd) {
 		super(gd);
+	}
+	
+	public GeneralItemDelegator(Account account, String token) throws AuthenticationException {
+		super(account, token);
 	}
 
 	public GeneralItem createGeneralItem(GeneralItem gi) {
@@ -245,8 +250,8 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		ActionDelegator qa = new ActionDelegator(this);
 		ActionList al = qa.getActionList(runId);
 		GeneralItemDelegator gid = new GeneralItemDelegator(this);
-		GeneralItemList visableGIs = gid.getItems(runId, u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS);
-		GeneralItemList disappearedGIs = gid.getItems(runId, u.getEmail(), GeneralItemVisibilityManager.DISAPPEARED_STATUS);
+		GeneralItemList visableGIs = gid.getItems(runId, u.getFullId(), GeneralItemVisibilityManager.VISIBLE_STATUS);
+		GeneralItemList disappearedGIs = gid.getItems(runId, u.getFullId(), GeneralItemVisibilityManager.DISAPPEARED_STATUS);
 
 		// VisibleItemDelegator vid = new VisibleItemDelegator(this);
 
@@ -268,9 +273,11 @@ public class GeneralItemDelegator extends GoogleDelegator {
 				gim.setGeneralItem(generalItem);
 				gim.setItemId(generalItem.getId());
 				generalItem.setVisibleAt(visAt);
-				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS, visAt);
+				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getFullId(), GeneralItemVisibilityManager.VISIBLE_STATUS, visAt);
 
-				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
+//				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
+				new NotificationDelegator().broadcast(generalItem, u.getFullId());
+
 			}
 
 		}
@@ -466,7 +473,7 @@ public class GeneralItemDelegator extends GoogleDelegator {
 			scope = Dependency.USER_SCOPE;
 		switch (scope) {
 		case Dependency.USER_SCOPE:
-			if (!a.getUserEmail().equals(u.getEmail()))
+			if (!a.getUserEmail().equals(u.getFullId()))
 				return -1;
 			break;
 		case Dependency.TEAM_SCOPE:

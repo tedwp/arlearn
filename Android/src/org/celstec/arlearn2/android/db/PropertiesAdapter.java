@@ -19,7 +19,9 @@
 package org.celstec.arlearn2.android.db;
 
 import org.celstec.arlearn2.android.Constants;
+import org.celstec.arlearn2.beans.account.Account;
 
+//import android.accounts.Account;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -84,11 +86,11 @@ public class PropertiesAdapter {
 		editor.commit();
 	}
 	
-	public String getUsername() {
+	public String getFullId() {
 		return getDefaultPrefs().getString(Constants.USER_EMAIL, null);
 	}
 	
-	public void setUsername(String userName) {
+	public void setFullId(String userName) {
 		SharedPreferences.Editor editor = getDefaultPrefs().edit();
 		editor.putString(Constants.USER_EMAIL, userName);
 		editor.commit();
@@ -232,5 +234,16 @@ public class PropertiesAdapter {
 	
 	public String getPicture() {
 		return getDefaultPrefs().getString(Constants.PICTUREL_URL, null);
+	}
+
+	public void setAccountLevel(Integer accountLevel) {
+		SharedPreferences.Editor editor = getDefaultPrefs().edit();
+		editor.putInt(Constants.ACCOUNT_Level, accountLevel);
+		editor.commit();
+	}
+	
+	public int getAccountLevel() {
+		return getDefaultPrefs().getInt(Constants.ACCOUNT_Level, Account.USER);
+
 	}
 }

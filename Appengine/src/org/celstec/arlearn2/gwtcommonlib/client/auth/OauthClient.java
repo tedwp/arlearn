@@ -63,7 +63,14 @@ public class OauthClient {
 	
 	private static OauthClient readFromCookie() {
 		String accessToken = Cookies.getCookie(COOKIE_TOKEN_NAME);
-		int type = Integer.parseInt(Cookies.getCookie(COOKIE_OAUTH_TYPE));
+		String typeString = Cookies.getCookie(COOKIE_OAUTH_TYPE);
+		
+		if (typeString == null || accessToken == null) {
+			Cookies.removeCookie(COOKIE_TOKEN_NAME);
+			Cookies.removeCookie(COOKIE_OAUTH_TYPE);
+			return null;
+		}
+		Integer type = Integer.parseInt(typeString);
 		OauthClient client = null;
 		switch (type) {
 		case AccountJDO.FBCLIENT:

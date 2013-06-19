@@ -19,6 +19,8 @@
 package org.celstec.arlearn2.beans.account;
 
 
+import java.util.StringTokenizer;
+
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.deserializer.json.BeanDeserializer;
 import org.celstec.arlearn2.beans.serializer.json.BeanSerializer;
@@ -27,6 +29,8 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Account extends Bean {
 
+	public final static int ADMINISTRATOR = 1;
+	public final static int USER = 2;
 
 	private String localId;	
 	private Integer accountType;
@@ -35,9 +39,21 @@ public class Account extends Bean {
 	private String givenName;
 	private String familyName;
 	private String picture;
+	private Integer accountLevel;
+
 	
 	public String getFullId() {
 		return accountType+":"+localId;
+	}
+	
+	public void setFullid(String accountName){
+		StringTokenizer st = new StringTokenizer(accountName, ":");
+		if (st.hasMoreTokens()) {
+			setAccountType(Integer.parseInt(st.nextToken()));
+		}
+		if (st.hasMoreTokens()) {
+			setLocalId(st.nextToken());
+		}
 	}
 	
 	public String getLocalId() {
@@ -93,6 +109,14 @@ public class Account extends Bean {
 	public void setPicture(String picture) {
 		this.picture = picture;
 	}
+	
+	public Integer getAccountLevel() {
+		return accountLevel;
+	}
+
+	public void setAccountLevel(Integer accountLevel) {
+		this.accountLevel = accountLevel;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -106,7 +130,9 @@ public class Account extends Bean {
 			nullSafeEquals(getPicture(), other.getPicture()); 
 	}
 	
-	public static BeanDeserializer deserializer = new BeanDeserializer(){
+	public static BeanDeserializer deserializer = new AccountDeserializer();
+	
+	public static class AccountDeserializer extends BeanDeserializer{
 
 		@Override
 		public Account toBean(JSONObject object) {
@@ -129,12 +155,15 @@ public class Account extends Bean {
 			if (object.has("givenName")) bean.setGivenName(object.getString("givenName"));
 			if (object.has("familyName")) bean.setFamilyName(object.getString("familyName"));
 			if (object.has("picture")) bean.setPicture(object.getString("picture"));
+			if (object.has("accountLevel")) bean.setAccountLevel(object.getInt("accountLevel"));
 		}
 	};
 	
 
 	
-	public static BeanSerializer serializer = new BeanSerializer () {
+	public static BeanSerializer serializer = new AccountSerializer(); 
+			
+	public static class AccountSerializer	extends BeanSerializer  {
 
 		@Override
 		public JSONObject toJSON(Object bean) {
@@ -148,6 +177,7 @@ public class Account extends Bean {
 				if (accountBean.getGivenName() != null) returnObject.put("givenName", accountBean.getGivenName());
 				if (accountBean.getFamilyName() != null) returnObject.put("familyName", accountBean.getFamilyName());
 				if (accountBean.getPicture() != null) returnObject.put("picture", accountBean.getPicture());
+				if (accountBean.getAccountLevel() != null) returnObject.put("accountLevel", accountBean.getAccountLevel());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

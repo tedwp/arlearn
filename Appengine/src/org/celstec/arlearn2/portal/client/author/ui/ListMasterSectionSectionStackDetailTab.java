@@ -1,23 +1,16 @@
 package org.celstec.arlearn2.portal.client.author.ui;
 
 import org.celstec.arlearn2.gwtcommonlib.client.ui.grid.GenericListGrid;
-import org.celstec.arlearn2.portal.client.author.ui.game.GamesTab;
 
-import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Visibility;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.ImgButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
-import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
-import com.smartgwt.client.widgets.grid.events.RemoveRecordClickEvent;
-import com.smartgwt.client.widgets.grid.events.RemoveRecordClickHandler;
 
 public abstract class ListMasterSectionSectionStackDetailTab extends VerticalMasterDetailTab {
 
@@ -34,33 +27,32 @@ public abstract class ListMasterSectionSectionStackDetailTab extends VerticalMas
 
 	protected abstract void masterRecordClick(RecordClickEvent event);
 
-	protected abstract void masterRecordEditComplete(EditCompleteEvent event);
-	
 	protected abstract void deleteItem(ListGridRecord rollOverRecord);
 
+	protected Canvas createRecordComponent2(final ListGridRecord record, Integer colNum, String fieldName) {
+		if (fieldName.equals("deleteField")) {
+			ImgButton deleteImg = createDeleteImg();
+			deleteImg.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					ListMasterSectionSectionStackDetailTab.this
+							.deleteItem(record);
+				}
+			});
+			return deleteImg;
+		} 
+		return null;
+	}
 	
-
 	@Override
 	public Canvas getMaster() {
-		masterList = new GenericListGrid(false, true, false, false, false) {
+		masterList = new GenericListGrid(false, false, false, false, false) {
 			@Override
 			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
-
-				String fieldName = this.getFieldName(colNum);
-				if (fieldName != null && fieldName.startsWith("button")) {
-					return ((GamesTab) (ListMasterSectionSectionStackDetailTab.this)).initButton(fieldName, record);
-				} else {
-					return null;
-				}
-
-			}
-			protected void deleteItem(ListGridRecord rollOverRecord) {
-				ListMasterSectionSectionStackDetailTab.this.deleteItem(rollOverRecord);
+				return createRecordComponent2(record, colNum,  this.getFieldName(colNum));
 			}
 		};
 		masterList.setShowRecordComponentsByCell(true);
-//		masterList.setCanRemoveRecords(true);
-		masterList.setShowRollOverCanvas(true);
+		masterList.setShowRollOverCanvas(false);
 
 		masterList.setShowAllRecords(true);
 		masterList.setShowRecordComponents(true);
@@ -75,13 +67,6 @@ public abstract class ListMasterSectionSectionStackDetailTab extends VerticalMas
 		masterList.addRecordClickHandler(new RecordClickHandler() {
 			public void onRecordClick(RecordClickEvent event) {
 				masterRecordClick(event);
-			}
-		});
-		masterList.addEditCompleteHandler(new EditCompleteHandler() {
-			@Override
-			public void onEditComplete(EditCompleteEvent event) {
-				masterRecordEditComplete(event);
-
 			}
 		});
 		return masterList;

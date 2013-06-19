@@ -19,6 +19,8 @@
 package org.celstec.arlearn2.oauth;
 
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.celstec.arlearn2.jdo.classes.AccountJDO;
 import org.celstec.arlearn2.jdo.classes.OauthConfigurationJDO;
@@ -34,6 +36,7 @@ public class OauthGoogleWorker extends OauthWorker {
 	private static String client_secret; 
 	private static String client_id; 
 	private static String redirect_uri;
+    private static final Logger log = Logger.getLogger(OauthGoogleWorker.class.getName());
 
 	static {
 		OauthConfigurationJDO jdo = OauthKeyManager.getConfigurationObject(AccountJDO.GOOGLECLIENT);
@@ -45,17 +48,32 @@ public class OauthGoogleWorker extends OauthWorker {
 	@Override
 	protected String getAuthUrl(String authCode) {
 		return "https://accounts.google.com/o/oauth2/token?code=" + authCode + "&redirect_uri=" + redirect_uri + "&client_id=" + client_id + "&client_secret=" + client_secret + "&grant_type=authorization_code";
+	  //return "https://accounts.google.com/o/oauth2/token?code=" + authCode + "&redirect_uri=" + redirect_uri + "&client_id=" + client_id + "&client_secret=" + client_secret + "&grant_type=authorization_code";
 	}
 
 	public void exchangeCodeForAccessToken() {
 		RequestAccessToken request = new RequestAccessToken();
 		request.postUrl(getAuthUrl(code), "code=" + code + "&" + "client_id=" + client_id + "&" + "client_secret=" + client_secret + "&" + "redirect_uri=" + redirect_uri + "&" + "grant_type=authorization_code");
-		saveAccount(request.getAccessToken());
-		sendRedirect(request.getAccessToken(), ""+request.getExpires_in(), AccountJDO.GOOGLECLIENT);
+//        request.postUrl(getAuthUrl(code), "code=" + code + "&" + "client_id=" + client_id + "&" + "client_secret=" + client_secret + "&" + "redirect_uri=" + redirect_uri + "&" + "grant_type=authorization_code");
+
+		log.log(Level.SEVERE, "code "+code); 
+		log.log(Level.SEVERE, "client_id "+client_id); 
+		log.log(Level.SEVERE, "client_secret "+client_secret); 
+		log.log(Level.SEVERE, "redirect_uri "+redirect_uri); 
+		log.log(Level.SEVERE, "returning accessToken "+request.getAccessToken()); 
+		if (request.getAccessToken() !=  null) {
+			saveAccount(request.getAccessToken());
+			sendRedirect(request.getAccessToken(), ""+request.getExpires_in(), AccountJDO.GOOGLECLIENT);
+		} else {
+			error("The google authentication servers are currently not functional. Please retry later. <br> The service usually works again after 15:00 CEST. Find more (technical) information about this problem on. <ul> " +
+					"<li ><a href=\"https://code.google.com/p/google-glass-api/issues/detail?id=99\">oauth2 java.net.SocketTimeoutException on AppEngine</a>" +
+					"<li ><a href=\"https://groups.google.com/forum/?fromgroups#!topic/google-appengine-downtime-notify/TqKVL9TNq2A\">Google groups downtime</a></ul> ");
+		}
 	}
 
 	public void saveAccount(String accessToken) {
 		try {
+			log.log(Level.SEVERE, "url: https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken);
 			JSONObject profileJson = new JSONObject(readURL(new URL("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken)));
 			String id = "";
 			String picture = "";

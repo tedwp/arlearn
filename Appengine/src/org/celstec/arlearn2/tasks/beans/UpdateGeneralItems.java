@@ -123,7 +123,6 @@ public class UpdateGeneralItems extends GenericBean{
 		boolean teamRelevant = arp.isRelevantForTeam(a); 
 		boolean allRelevant = arp.isRelevantForAll(a); 
 		if (userRelevant) {
-			System.out.println("checking effect for " + u.getEmail());
 
 			gid.checkActionEffect(a, runId, u);	
 		} 
@@ -131,7 +130,7 @@ public class UpdateGeneralItems extends GenericBean{
 
 			if (teamRelevant ||allRelevant) {
 				for (User otherUser :qu.getUsers(runId).getUsers()) {
-					if (!(userRelevant && u.getEmail().equals(otherUser.getEmail())))
+					if (!(userRelevant && u.getFullId().equals(otherUser.getFullId())))
 					if (teamRelevant && u.getTeamId().equals(otherUser.getTeamId())) {
 						gid.checkActionEffect(a, runId, otherUser);
 					} else if (allRelevant) {

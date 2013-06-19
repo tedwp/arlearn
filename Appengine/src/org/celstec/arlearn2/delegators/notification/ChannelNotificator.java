@@ -25,6 +25,7 @@ import com.google.appengine.api.channel.ChannelMessage;
 import com.google.appengine.api.channel.ChannelService;
 import com.google.appengine.api.channel.ChannelServiceFactory;
 
+@Deprecated
 public class ChannelNotificator implements NotificationChannel{
 
 	private static ChannelNotificator instance;
@@ -46,7 +47,6 @@ public class ChannelNotificator implements NotificationChannel{
 	}
 	
 	public void notify(String account, String message) {
-
-		channelService.sendMessage(new ChannelMessage(account, message));
+		if (account != null) channelService.sendMessage(new ChannelMessage(account, message));
 	}
 }

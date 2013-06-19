@@ -33,6 +33,11 @@ public class AccountJDO {
 	public final static int GOOGLECLIENT = 2;
 	public final static int LINKEDINCLIENT = 3;
 
+	public final static int ADMINISTRATOR = 1;
+	public final static int USER = 2;
+
+
+	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key uniqueId;
@@ -60,6 +65,9 @@ public class AccountJDO {
 	
 	@Persistent
 	private Long lastModificationDate;
+	
+	@Persistent
+	private Integer accountLevel;
 
 	public String getUniqueId() {
 		return uniqueId.getName();
@@ -132,4 +140,13 @@ public class AccountJDO {
 	public void setLastModificationDate(Long lastModificationDate) {
 		this.lastModificationDate = lastModificationDate;
 	}
+
+	public Integer getAccountLevel() {
+		return accountLevel;
+	}
+
+	public void setAccountLevel(Integer accountLevel) {
+		this.accountLevel = accountLevel;
+	}
+	
 }

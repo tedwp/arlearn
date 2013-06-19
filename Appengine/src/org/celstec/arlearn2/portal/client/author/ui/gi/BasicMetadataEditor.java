@@ -5,6 +5,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 
 import com.google.gwt.json.client.JSONString;
 import com.smartgwt.client.types.Visibility;
+import com.smartgwt.client.util.StringUtil;
 import com.smartgwt.client.widgets.RichTextEditor;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
@@ -82,12 +83,15 @@ public class BasicMetadataEditor extends VLayout {
 	
 	public void saveToBean(GeneralItem ni) {
 		ni.getJsonRep().put(GeneralItemModel.NAME_FIELD, new JSONString(form.getValueAsString(GeneralItemModel.NAME_FIELD)));
+		String richText ="";
 		if (showRichtText) {
-			ni.getJsonRep().put(GeneralItemModel.RICH_TEXT_FIELD, new JSONString(richTextEditor.getValue()));
-			
+			richText = richTextEditor.getValue();
 		} else {
-			ni.getJsonRep().put(GeneralItemModel.RICH_TEXT_FIELD, new JSONString(form.getValueAsString(GeneralItemModel.RICH_TEXT_FIELD)));
+			richText = form.getValueAsString(GeneralItemModel.RICH_TEXT_FIELD); 
 		}
+		ni.getJsonRep().put(GeneralItemModel.RICH_TEXT_FIELD, new JSONString(richText));
+		ni.getJsonRep().put("description", new JSONString(StringUtil.unescapeHTML(richText)));
+
 	}
 
 	public void loadGeneralItem(GeneralItem gi) {

@@ -7,6 +7,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window.Location;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
@@ -24,7 +25,11 @@ public class AddContactPage {
 		final String addContactToken = Location.getParameter("id");
 		CollaborationClient.getInstance().getContactDetails(addContactToken, new JsonCallback(){
 			public void onJsonReceived(JSONValue jsonValue) {
-				buildPage(jsonValue.isObject(), addContactToken);
+				if (jsonValue.isObject().containsKey("error")){
+					SC.say("Error", "This invitation is no longer valid");
+				} else {
+					buildPage(jsonValue.isObject(), addContactToken);
+				}
 			}
 		});
 	}
@@ -91,13 +96,13 @@ public class AddContactPage {
 	public void addContact(final String addContactToken) {
 		CollaborationClient.getInstance().confirmAddContact(addContactToken, new JsonCallback(){
 			public void onJsonReceived(JSONValue jsonValue) {
-				com.google.gwt.user.client.Window.open("/portal.html", "_self", "");
+				com.google.gwt.user.client.Window.open("/index.html", "_self", "");
 			}
 		});
 	}
 	
 	public void ignore() {
-		com.google.gwt.user.client.Window.open("/portal.html", "_self", "");
+		com.google.gwt.user.client.Window.open("/index.html", "_self", "");
 
 	}
 

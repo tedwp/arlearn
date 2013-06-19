@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ARLearn2</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    
+     <!--Menu Strings-->
+    <string name="login">LOGIN</string>
+    <string name="logout">LOGOUT</string>
+    <string name="exit">SALIR</string>
+    
+     <!--Login Activity Strings-->
+    <string name="loginHeader">Login con cuenta de Google</string>
+    <string name="uNameHint">E-mail</string>
+    <string name="passwordHint">Contraseña</string>
+    <string name="emailMissing">No es posible hacer login:\n El campo e-mail es obligatorio</string>
+    <string name="pwMissing">No es posible hacer login:\n El campo contraseña es obligatorio</string>
+    <string name="serviceMissing">No es posible hacer login:\n Error interno. No está definido el servicio</string>
+    <string name="loginFailed">No se ha podido hacer login para  *** </string>
+    <string name="checkCredentials">Verificando credenciales</string>
+    <string name="sendInstructions">Enviame instrucciones</string>
+        
+    <!--NfcScanOnDemand Activity Strings-->
+    <string name="scanTag">Escanea una etiqueta NFC o un código de barras</string>
+    <string name="scanTagMenu">Escanear codigo de barras</string>
+    <string name="cancel">Cancelar</string>
+     
+     <!--List Excursion Activity Strings-->
+    <string name="listExcursionsHeader">Seleccionar una excursión</string>
+    <string name="loadingExcursions">Cargando excursiones</string>
+    <string name="registerRun">¿Quieres registrarte a este run?</string>
+    <string name="cacheGame">¿Quieres descargarte este game para utilizarlo offline?</string>
+    
+    <!--Map View Activity Strings-->
+    <string name="mapViewHeader">Excursión</string>
+    <string name="messagesMenu">Mensajes</string>
+    <string name="myLocationMenu">Mi ubicación</string>
+    
+     <!--Multiple Choice Detail Activity Strings-->
+    <string name="mct_header">Preguntas de opción multiple</string>
+    <string name="mct_submit">Enviar respuesta</string>
+    
+    <!--Audio Object Activity Strings-->
+    <string name="ao_answer_menu">Dar respuesta</string>
+    
+    <!--Answer Activity Strings-->
+    <string name="answerQuestionHeader">Responder pregunta</string>
+    <string name="annotateCounterReset">00:00.0</string>
+    <string name="removePicture">¿Borrar esta imagen?</string>
+    <string name="gpsOff">El GPS está desconectado. Conectalo y vuelve a intentarlo </string>
+    <string name="nothingToPublish">Nada que publicar</string>
+    <string name="addVideo">Añadir video</string>
+    <string name="addPicture">Hacer foto</string>
+    
+    <!--Display Message Activity Strings-->
+    <string name="messageHeader">Mensaje</string>
+    
+     <!-- View Answer Activity Strings-->
+    <string name="viewAnswerHeader">tu respuesta</string>
+    <string name="deleteAnswer">borrar respuesta</string>
+    <string name="listMessagesHeader">Lista de mensajes</string>
+    
+    <!-- OSM Downloader -->  
+    <string name="startDownloading">Descargar mapa</string>
+    <string name="offlineDownloadExplanation">Este game permite descargar secciones de mapas, de tal forma que el game puede continuar descargando tu mapa un cuando no hay conexión a internet. Haz click sobre el botton para comenzar la descarga del mapa. Ten en cuenta que esta acción necesita almacenar información en el teléfono.</string>
+    <string name="downloadMap">Descargar mapa</string>
+    <string name="deleteMap">Borrar mapa</string>
+    
+    <!--Todo-->
+     <string name="makeAnnotation">¿Quieres crear una antoación aquí?</string>
+     <string name="reset">RESETEAR</string>
+     <string name="refresh">REFRESCAR</string>
+     <string name="resetQuestion">¿Estás seguro de que quieres borrar el historial de progreso?</string>
+     
+        <string name="downloadBusy">Paciencia. El archivo aun no se ha descargado</string>
+    
+</resources>

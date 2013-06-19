@@ -67,6 +67,10 @@ public class GameClient extends GenericClient {
 		invokeJsonGET("/removeAccess/gameId/"+gameId+"/account/"+account, jcb);
 	}
 	
+	public void removeAccess(long gameId, final JsonCallback jcb) {
+		invokeJsonGET("/removeAccess/gameId/"+gameId, jcb);
+	}
+	
 	public void getGame(long gameId, final JsonCallback jcb) {
 		invokeJsonGET("/gameId/"+gameId, jcb);
 	}

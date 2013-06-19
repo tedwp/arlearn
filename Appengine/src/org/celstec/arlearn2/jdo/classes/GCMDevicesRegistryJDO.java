@@ -23,6 +23,9 @@ public class GCMDevicesRegistryJDO {
 	@Persistent
 	private String registrationId;
 	
+	@Persistent
+	private String deviceId;
+	
 	public String getAccount() {
 		return account;
 	}
@@ -35,9 +38,17 @@ public class GCMDevicesRegistryJDO {
 		return registrationId;
 	}
 
-	public void setRegistrationId(String registrationId) {
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
 		if (registrationId != null) 
-			this.id = KeyFactory.createKey(GCMDevicesRegistryJDO.class.getSimpleName(), registrationId);
+			this.id = KeyFactory.createKey(GCMDevicesRegistryJDO.class.getSimpleName(), deviceId);
+		this.deviceId = deviceId;
+	}
+
+	public void setRegistrationId(String registrationId) {
 		this.registrationId = registrationId;
 	}
 	

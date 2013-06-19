@@ -28,7 +28,13 @@ public class OauthGoogleClient extends OauthClient {
 	}
 	
 	public String getLoginRedirectURL() {
-		return "https://accounts.google.com/o/oauth2/auth?redirect_uri=" + redirect_uri + "&response_type=code&client_id=" + client_id_google + "&approval_prompt=force&scope=profile+email";
+		 return "https://accounts.google.com/o/oauth2/auth?redirect_uri=" + redirect_uri + "&response_type=code&client_id=" + client_id_google + "&approval_prompt=force&scope=profile+email";
+//		return "https://accounts.google.com/o/oauth2/auth?redirect_uri=" + redirect_uri + 
+//				"&response_type=code" +
+//				"&state=%2Fprofile" +
+//				"&client_id=" + client_id_google + 
+//				"&approval_prompt=force" +
+//				"&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile";
 	}
 
 }

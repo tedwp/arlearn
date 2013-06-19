@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.celstec.arlearn2.android"
-    android:versionCode="24"
-    android:versionName="1.2 (code 24)" >
+    android:versionCode="25"
+    android:versionName="1.2 (code 25)" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -164,8 +164,9 @@
         <service android:name=".service.NotificationService" />
         <service android:name=".service.AudioPlayerService" />
         <service android:name=".service.AlarmService" />
-        <service android:name=".service.ChannelAPINotificationService" />
-
+        <!-- <service android:name=".service.ChannelAPINotificationService" /> -->
+        <service android:name=".GCMIntentService" />
+        
         <receiver android:name=".broadcast.BeanReceiver" >
             <intent-filter>
                 <action android:name="org.celstec.arlearn.beanbroadcast" />
@@ -201,9 +202,24 @@
             <intent-filter>
                 <action android:name="org.celstec.arlearn.proximityAction" />
             </intent-filter>
+        </receiver>    
+        <receiver
+            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="org.celstec.arlearn.android" />
+            </intent-filter>
         </receiver>
+        
     </application>
 
+     <permission
+        android:name="org.celstec.arlearn2.android.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -217,6 +233,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="org.celstec.arlearn2.android.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature
         android:name="android.hardware.camera"

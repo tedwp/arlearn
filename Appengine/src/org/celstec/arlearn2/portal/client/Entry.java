@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.portal.client;
 
+import org.celstec.arlearn2.gwtcommonlib.client.LocalSettings;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthClient;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthFbClient;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthGoogleClient;
@@ -26,6 +27,8 @@ import org.celstec.arlearn2.gwtcommonlib.client.datasource.JsonObjectListCallbac
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.OauthNetworkClient;
 import org.celstec.arlearn2.portal.client.author.AuthorPage;
+import org.celstec.arlearn2.portal.client.game.GamePage;
+import org.celstec.arlearn2.portal.client.network.NetworkPage;
 import org.celstec.arlearn2.portal.client.resultDisplay.ResultDisplayPage;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -35,6 +38,7 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class Entry implements EntryPoint {
@@ -47,7 +51,17 @@ public class Entry implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
-		OauthNetworkClient.getInstance().getOauthClientPackage(new JsonObjectListCallback("oauthInfoList", null) {
+		if (Window.Location.getParameter("onBehalfOf")!= null) {
+			LocalSettings.getInstance().setOnBehalfOf(Window.Location.getParameter("onBehalfOf"));
+		} else {
+			LocalSettings.getInstance().setOnBehalfOf(null);
+		}
+		String localeExtension = LocalSettings.getInstance().getLocateExtension();
+
+		if (!"".equals(localeExtension) && Window.Location.getParameter("locale") == null) {
+			Window.open(Window.Location.getPath()+localeExtension, "_self", ""); 
+		} else
+			OauthNetworkClient.getInstance().getOauthClientPackage(new JsonObjectListCallback("oauthInfoList", null) {
 			public void onJsonArrayReceived(JSONObject jsonObject) {
 				super.onJsonArrayReceived(jsonObject);
 				loadPage();
@@ -70,31 +84,6 @@ public class Entry implements EntryPoint {
 				}
 			 }
 		 });
-				
-		 
-//		OauthNetworkClient.getInstance().getOauthClientPackage(new JsonCallback() {
-//			public void onJsonReceived(JSONValue jsonValue) {
-//				for (int i = 0; i < jsonValue.isArray().size(); i++) {
-//					JSONObject object = jsonValue.isArray().get(i).isObject();
-//					System.out.println(object);
-//					switch ((int) object.get("provider_id").isNumber().doubleValue()) {
-//					case OauthClient.FBCLIENT:
-//						OauthFbClient.init(object.get("client_id").isString().stringValue(), object.get("redirect_uri").isString().stringValue());
-//						break;
-//					case OauthClient.GOOGLECLIENT:
-//						OauthGoogleClient.init(object.get("client_id").isString().stringValue(), object.get("redirect_uri").isString().stringValue());
-//						break;
-//					case OauthClient.LINKEDINCLIENT:
-//						OauthLinkedIn.init(object.get("client_id").isString().stringValue(), object.get("redirect_uri").isString().stringValue());
-//						break;
-//
-//					default:
-//						break;
-//					}
-//				}
-//				loadPage();
-//			}
-//		});
 	}
 
 	public void loadPage() {
@@ -108,8 +97,6 @@ public class Entry implements EntryPoint {
 			} else {
 				if (RootPanel.get("button-facebook") != null)
 					(new OauthPage()).loadPage();
-//				if (RootPanel.get("button-create") != null)
-//					(new PortalPage()).loadPage();
 				if (RootPanel.get("author") != null)
 					(new AuthorPage()).loadPage();
 				if (RootPanel.get("test") != null)
@@ -120,8 +107,10 @@ public class Entry implements EntryPoint {
 					(new ResultDisplayPage()).loadPage();
 				if (RootPanel.get("portal") != null) (new org.celstec.arlearn2.portal.client.portal.PortalPage()).loadPage();
 				if (RootPanel.get("oauth_new") != null) (new OauthPage()).loadPage();
-				if (RootPanel.get("resultDisplayRuns") != null) 
-					(new ResultDisplayRuns()).loadPage();
+				if (RootPanel.get("resultDisplayRuns") != null) (new ResultDisplayRuns()).loadPage();
+				if (RootPanel.get("network") != null) (new NetworkPage()).loadPage();
+				if (RootPanel.get("search") != null) (new SearchPage()).loadPage();
+				if (RootPanel.get("game") != null) (new GamePage()).loadPage();
 			}
 		} else {
 			String href = Window.Location.getHref();
@@ -132,53 +121,6 @@ public class Entry implements EntryPoint {
 				Window.open("/oauth.html", "_self", "");
 			}
 		}
-	}
-
-	public void setOauthConfig() {
-		final OauthClient client = OauthClient.checkAuthentication();
-		if (client != null) {
-			// authenticated( client);
-		} else {
-
-			notauthenticated();
-		}
-	}
-
-	// public void authenticated(final OauthClient client) {
-	// RootPanel.get("sendButtonContainerFacebook").add(new
-	// Anchor("you are authenticated"));
-	// RootPanel.get("sendButtonContainerGoogle").add(new
-	// Anchor("you are authenticated"));
-	// RootPanel.get("sendButtonContainerLinkedIn").add(new
-	// Anchor("you are authenticated"));
-	// Button b = new Button("disauthenticate");
-	// b.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-	//
-	// @Override
-	// public void onClick(com.smartgwt.client.widgets.events.ClickEvent event)
-	// {
-	// client.disAuthenticate();
-	// Window.Location.reload();
-	// }
-	// });
-	// vLayout = new VLayout();
-	// vLayout.setMembersMargin(15);
-	// Label accestoken = new Label(client.getAccessToken());
-	// vLayout.addMember(b);
-	// vLayout.addMember(accestoken);
-	// RootPanel.get("container").add(vLayout);
-	// System.out.println(Window.Location.getParameter("type"));
-	//
-	// }
-
-	public void notauthenticated() {
-		RootPanel.get("sendButtonContainerFacebook").add(anchorFacebook);
-		RootPanel.get("sendButtonContainerGoogle").add(anchorGoogle);
-		RootPanel.get("sendButtonContainerLinkedIn").add(anchorLinkedIn);
-		anchorFacebook.setHref((new OauthFbClient()).getLoginRedirectURL());
-
-		anchorGoogle.setHref((new OauthGoogleClient()).getLoginRedirectURL());
-		anchorLinkedIn.setHref((new OauthLinkedIn()).getLoginRedirectURL());
 	}
 
 }

@@ -2,6 +2,7 @@ package org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors;
 
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 import org.celstec.arlearn2.portal.client.AuthoringConstants;
+import org.celstec.arlearn2.portal.client.author.ui.gi.i18.GeneralItemConstants;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONBoolean;
@@ -15,6 +16,7 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class DataCollectionEditor extends VLayout implements ExtensionEditor{
+	private static GeneralItemConstants constants = GWT.create(GeneralItemConstants.class);
 
 	protected DynamicForm form;
 	private CheckboxItem openQuestionCBItem ;
@@ -23,7 +25,6 @@ public class DataCollectionEditor extends VLayout implements ExtensionEditor{
 	private CheckboxItem openQuestionWithAudioCBItem ;
 	private CheckboxItem openQuestionWithTextCBItem ;
 
-	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 	private final static String OPENQUESTIONWITHAUTDIO = "openQuestionWithAudio";
 	private final static String OPENQUESTIONWITHTEXT = "openQuestionWithText";
 	
@@ -31,7 +32,7 @@ public class DataCollectionEditor extends VLayout implements ExtensionEditor{
 		form = new DynamicForm();
 		openQuestionCBItem = new CheckboxItem();
 		openQuestionCBItem.setName("isOpenQuestion");
-		openQuestionCBItem.setTitle("enable data collection");
+		openQuestionCBItem.setTitle(constants.enableDataCollection());
 		openQuestionCBItem.setRedrawOnChange(true);
 
 		openQuestionWithImageCBItem = new CheckboxItem();

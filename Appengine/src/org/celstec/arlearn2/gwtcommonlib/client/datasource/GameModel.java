@@ -1,8 +1,11 @@
 package org.celstec.arlearn2.gwtcommonlib.client.datasource;
 
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.i18.DataSourceConstants;
 import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationHandler;
 import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationSubscriber;
+import org.celstec.arlearn2.portal.client.author.ui.game.i18.GameConstants;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
@@ -12,10 +15,16 @@ public class GameModel extends DataSourceModel {
 	public static final String GAME_ACCESS = "accessRights";
 	public static final String GAME_ACCESS_STRING = "accessRightsString";
 	public static final String GAME_TITLE_FIELD = "title";
+	public static final String GAME_DESCRIPTION_FIELD = "description";
 	public static final String TIME_FIELD = "time";
 	public static final String DELETED_FIELD = "deleted";
 	public static final String SHARING_FIELD = "sharing";
 	public static final String LICENSE_CODE = "licenseCode";
+	public static final String MAP_AVAILABLE = "mapAvailable";
+	public static final String MAP_ICON = "mapIcon";
+	
+	private DataSourceConstants constants = GWT.create(DataSourceConstants.class);
+
 
 	public GameModel(DataSourceAdapter dataSourceAdapter) {
 		super(dataSourceAdapter);
@@ -29,6 +38,60 @@ public class GameModel extends DataSourceModel {
 		addField(STRING_DATA_TYPE, LICENSE_CODE, false, true);
 		addField(INTEGER_DATA_TYPE, TIME_FIELD, false, true);
 //		addField(BOOLEAN_DATA_TYPE, DELETED_FIELD, false, true);
+		addDerivedField(new DerivedFieldTask() {
+			JSONObject jsonObject;
+			
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {
+				this.jsonObject = jsonObject;	
+			}
+			
+			@Override
+			public Object process() {
+				if (jsonObject.containsKey("config")) {
+					if (jsonObject.get("config").isObject().get(MAP_AVAILABLE).isBoolean().booleanValue()) {
+						return "icon_maps";
+					}
+				}
+				return "list_icon";
+			}
+
+			@Override
+			public int getType() {
+				return STRING_DATA_TYPE;
+			}
+
+			@Override
+			public String getTargetFieldName() {
+				return MAP_ICON;
+			}
+		}, false, false);
+		addDerivedField(new DerivedFieldTask() {
+			JSONObject jsonObject;
+			
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {
+				this.jsonObject = jsonObject;	
+			}
+			
+			@Override
+			public Object process() {
+				if (jsonObject.containsKey("config")) {
+					return jsonObject.get("config").isObject().get(MAP_AVAILABLE).isBoolean().booleanValue();
+				}
+				return false;
+			}
+
+			@Override
+			public int getType() {
+				return BOOLEAN_DATA_TYPE;
+			}
+
+			@Override
+			public String getTargetFieldName() {
+				return MAP_AVAILABLE;
+			}
+		}, false, false);
 		
 		addDerivedField(new DerivedFieldTask() {
 			JSONObject jsonObject;
@@ -67,13 +130,14 @@ public class GameModel extends DataSourceModel {
 			
 			@Override
 			public Object process() {
+				if (!jsonObject.containsKey(GAME_ACCESS)) return "";
 				switch ((int)jsonObject.get(GAME_ACCESS).isNumber().doubleValue()) {
 				case 1:
-					return "Owner";
+					return constants.owner();
 				case 2:
-					return "Can write";
+					return constants.write();
 				case 3:
-					return "Can read";
+					return constants.read();
 
 				default:
 					break;
@@ -92,20 +156,9 @@ public class GameModel extends DataSourceModel {
 			}
 		}, false, false);
 	}
-
-//	@Override
-//	protected void registerForNotifications() {
-//		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.GameModification", new NotificationHandler() {
-//
-//			@Override
-//			public void onNotification(JSONObject bean) {
-//				processNotification(bean);
-//			}
-//		});
-//	}
 	
 	protected String getNotificationType() {
-		return "org.celstec.arlearn2.beans.notification.GameModification";
+		return "org.celstec.arlearn2.beans.game.Game";
 	}
 
 	@Override

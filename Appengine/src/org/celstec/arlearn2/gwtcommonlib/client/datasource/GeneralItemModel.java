@@ -2,6 +2,9 @@ package org.celstec.arlearn2.gwtcommonlib.client.datasource;
 
 import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationHandler;
 import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationSubscriber;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.MozillaOpenBadge;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.MultipleChoiceImage;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.SingleChoiceImage;
 
 import com.google.gwt.json.client.JSONObject;
 
@@ -66,6 +69,9 @@ public class GeneralItemModel extends DataSourceModel {
 				if (firstValue.contains("YoutubeObject")) return "Youtube movie";
 				if (firstValue.contains("OpenBadge")) return "Mozilla Open Badge";
 				if (firstValue.contains("ScanTag")) return "Scan Tag";
+				if (firstValue.equals(SingleChoiceImage.TYPE)) return SingleChoiceImage.HUMAN_READABLE_NAME;
+				if (firstValue.equals(MultipleChoiceImage.TYPE)) return MultipleChoiceImage.HUMAN_READABLE_NAME;
+				if (firstValue.equals(MozillaOpenBadge.TYPE)) return MozillaOpenBadge.HUMAN_READABLE_NAME;
 				return firstValue;
 			}
 

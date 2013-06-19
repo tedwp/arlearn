@@ -40,10 +40,10 @@ public class List extends ListGrid {
         ListGridField userField = new ListGridField(UserModel.NAME_FIELD, "User");  
         ListGridField fullAccountField = new ListGridField(UserModel.FULL_ACCOUNT_FIELD, "FullAccount");  
         ListGridField rolField = new ListGridField(ResponseModel.ROLE_VALUE_FIELD, "Rol"); 
-        ListGridField teamField = new ListGridField(TeamModel.TEAMID_FIELD, "Team");
-        teamField.setHidden(true);
+        ListGridField teamField = new ListGridField(TeamModel.TEAMID_FIELD, "Team Id");
+        fullAccountField.setHidden(true);
   
-        setFields(previewImageField/*,previewImageField2*/, timestampField, informationField, userField, fullAccountField, rolField, teamField);  
+        setFields(previewImageField, timestampField, informationField, userField, fullAccountField, rolField, teamField);  
         setCanResizeFields(true);
 	}
 

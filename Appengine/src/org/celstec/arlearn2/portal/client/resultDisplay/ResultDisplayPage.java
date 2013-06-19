@@ -1,11 +1,14 @@
 package org.celstec.arlearn2.portal.client.resultDisplay;
 
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GeneralItemDataSource;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OnFinishedInterface;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.OwnerResponseDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.TeamDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.UserDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.run.RunClient;
+import org.celstec.arlearn2.portal.client.account.AccountManager;
+import org.celstec.arlearn2.portal.client.account.AccountManager.NotifyAccountLoaded;
 import org.celstec.arlearn2.portal.client.resultDisplay.ui.layout.ResultDisplayLayout;
 import org.celstec.arlearn2.portal.client.resultDisplay.ui.layout.ResultDisplayLayoutSideBar;
 import org.celstec.arlearn2.portal.client.resultDisplay.ui.slideShow.SlideShow;
@@ -15,6 +18,7 @@ import org.celstec.arlearn2.portal.client.resultDisplay.ui.view.Mixed;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.smartgwt.client.data.Record;
@@ -39,6 +43,17 @@ public class ResultDisplayPage {
 											// Set this parameter to 2 to use second Layout
 	
 
+//	public void loadPage() {
+//		AccountManager accountManager = AccountManager.getInstance();
+//		accountManager.setAccountNotification(new NotifyAccountLoaded() {
+//			
+//			@Override
+//			public void accountLoaded() {
+//				buildUi();
+//			}
+//		});
+//	}
+	
 	public void loadPage() {
 
 		runId = Long.parseLong(com.google.gwt.user.client.Window.Location.getParameter("runId"));
@@ -48,7 +63,27 @@ public class ResultDisplayPage {
 		GWT.log("version: "+NUMBER_VERSION );
 
 		TeamDataSource.getInstance().loadDataFromWeb(runId);
-		UserDataSource.getInstance().loadDataFromWeb(runId);
+//		UserDataSource.getInstance().loadDataFromWeb(runId);
+		final UserDataSource userDataSource = UserDataSource.getInstance();
+		userDataSource.setOnFinished(new OnFinishedInterface() {
+			@Override
+			public void finishedLoadingResults() {
+				OwnerResponseDataSource.getInstance().loadDataFromWeb(runId);			
+//				Timer t = new Timer() {
+//				      public void run() {
+//							OwnerResponseDataSource.getInstance().loadDataFromWeb(runId);				
+//
+//				      }
+//				    };
+//
+//				    // Schedule the timer to run once in 5 seconds.
+//				    t.schedule(2000);
+			}
+		});
+		
+		
+				
+		userDataSource.loadDataFromWeb(runId);
 		
 		RunClient.getInstance().getItemsForRun(runId, new JsonCallback(){
 			public void onJsonReceived(JSONValue jsonValue) {
@@ -56,7 +91,6 @@ public class ResultDisplayPage {
 			}
 		});
 				
-		OwnerResponseDataSource.getInstance().loadDataFromWeb(runId);
 	
 		tileGrid = Grid.getInstance();		
 		listGrid = List.getInstance();		

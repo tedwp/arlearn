@@ -81,7 +81,7 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (pa.isAuthenticated()) ChannelAPINotificationService.startService(this);
+//		if (pa.isAuthenticated()) ChannelAPINotificationService.startService(this);
 		if  (showStatusLed()) LedStatus.updateStatus(this); //TODO pass pa object
 		if (broadcastReceiver != null)
 			broadcastReceiver.onResume();
@@ -150,7 +150,7 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 	}
 	
 	protected void newNfcAction(String action) {
-		ActionsDelegator.getInstance().publishAction(this, action, pa.getCurrentRunId(), pa.getUsername(), null, null);
+		ActionsDelegator.getInstance().publishAction(this, action, pa.getCurrentRunId(), pa.getFullId(), null, null);
 	}
 
 	public void onBroadcastMessage(Bundle bundle, boolean render) {
@@ -203,7 +203,7 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 			generalItemId = item.getId();
 			generalItemType = item.getClass().getName();
 		}
-		ActionsDelegator.getInstance().publishAction(this, "read", pa.getCurrentRunId(), pa.getUsername(), generalItemId, generalItemType);
+		ActionsDelegator.getInstance().publishAction(this, "read", pa.getCurrentRunId(), pa.getFullId(), generalItemId, generalItemType);
 	}
 	
 	public boolean showStatusLed() {

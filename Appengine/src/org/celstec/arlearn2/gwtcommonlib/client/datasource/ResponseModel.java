@@ -1,5 +1,7 @@
 package org.celstec.arlearn2.gwtcommonlib.client.datasource;
 
+import java.sql.Timestamp;
+
 import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationHandler;
 import org.celstec.arlearn2.gwtcommonlib.client.notification.NotificationSubscriber;
 
@@ -9,7 +11,7 @@ import com.google.gwt.json.client.JSONParser;
 public class ResponseModel extends DataSourceModel {
 
 	public static final String TIMESTAMP_FIELD = "timestamp";
-	public static final String USEREMAIL_FIELD = "userEmail";
+	public static final String FULL_ACCOUNT_ID = "userEmail";
 	public static final String DELETED_FIELD = "deleted";
 	public static final String GENERALITEMID_FIELD = "generalItemId";
 	public static final String RESPONSE_VALUE_FIELD = "responseValue";
@@ -35,15 +37,44 @@ public class ResponseModel extends DataSourceModel {
 		//correct
 		//role
 		
-		addField(INTEGER_DATA_TYPE, TIMESTAMP_FIELD, true, true);
+//		addField(INTEGER_DATA_TYPE, TIMESTAMP_FIELD, true, true);
 		addField(INTEGER_DATA_TYPE, RunModel.RUNID_FIELD, false, true);
 		addField(BOOLEAN_DATA_TYPE, DELETED_FIELD, false, true);
 		addField(INTEGER_DATA_TYPE, GENERALITEMID_FIELD, false, true);
-		addField(STRING_DATA_TYPE, USEREMAIL_FIELD, false, true);
+		addField(STRING_DATA_TYPE, FULL_ACCOUNT_ID, false, true);
 		addField(STRING_DATA_TYPE, UserModel.NAME_FIELD, false, true);
 		addField(STRING_DATA_TYPE, RESPONSE_VALUE_FIELD, false, true);
 		addField(STRING_DATA_TYPE, TeamModel.TEAMID_FIELD, false, true);
 		addField(ENUM_DATA_TYPE, ROLE_VALUE_FIELD, false, true);
+		addDerivedField(new DerivedFieldTask() {
+			JSONObject jsonObject;
+			
+			@Override
+			public void setJsonSource(JSONObject jsonObject) {
+				this.jsonObject = jsonObject;	
+			}
+			
+			@Override
+			public Object process() {
+				
+				long timeStamp = (long) jsonObject.get(TIMESTAMP_FIELD).isNumber().doubleValue();
+				
+				Timestamp stamp = new Timestamp(timeStamp);
+				 
+				return stamp.toString();
+			}
+
+			@Override
+			public int getType() {
+				return STRING_DATA_TYPE;
+			}
+
+			@Override
+			public String getTargetFieldName() {
+				return TIMESTAMP_FIELD;
+			}
+		}, true, true);
+
 		addDerivedField(new DerivedFieldTask() {
 			JSONObject jsonObject;
 			

@@ -198,7 +198,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(YoutubeObject.class.getCanonicalName(), YoutubeObject.serializer);
 		customSerializerMap.put(OpenBadge.class.getCanonicalName(), OpenBadge.serializer);
 		customSerializerMap.put(OpenBadgeAssertion.class.getCanonicalName(), OpenBadgeAssertion.serializer);
-		customSerializerMap.put(User.class.getCanonicalName(), new UserSerializer());
+		customSerializerMap.put(User.class.getCanonicalName(), User.serializer);
 		customSerializerMap.put(UserList.class.getCanonicalName(), new UserListSerializer());
 		customSerializerMap.put(Team.class.getCanonicalName(), new TeamSerializer());
 		customSerializerMap.put(TeamList.class.getCanonicalName(), new TeamListSerializer());

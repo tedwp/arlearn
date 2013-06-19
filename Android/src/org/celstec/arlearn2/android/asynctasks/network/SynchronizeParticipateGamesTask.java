@@ -70,8 +70,6 @@ public class SynchronizeParticipateGamesTask extends GenericTask implements Netw
 				} else {
 					gl = GameClient.getGameClient().getGamesParticipate(PropertiesAdapter.getInstance(ctx).getAuthToken(), lastDate);
 				}
-				Log.i("GAMEPROBLEM", "lastDate "+lastDate);
-				Log.i("GAMEPROBLEM", "returned list "+gl);
 				if (gl.getError() == null) {
 					GameDelegator.getInstance().saveServerGamesToAndroidDb(ctx, gl);
 					PropertiesAdapter.getInstance(ctx).setParticipateGameLastSynchronizationDate(gl.getServerTime());

@@ -1,4 +1,6 @@
 <module>
 	<inherits name="com.google.gwt.user.User"/>
 	<inherits name='com.google.gwt.appengine.channel.Channel'/>
+	
+	<extend-property name="locale" values="nl"/>
 </module>

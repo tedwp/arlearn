@@ -148,7 +148,7 @@ public class GeneralItemDependencyHandler extends GenericTask implements  Databa
 					currentUserRoles[i] = userRolesJson.getString(i);
 				}
 				;
-				accountRolesMap.put(PropertiesAdapter.getInstance(db.getContext()).getUsername(), currentUserRoles);
+				accountRolesMap.put(PropertiesAdapter.getInstance(db.getContext()).getFullId(), currentUserRoles);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

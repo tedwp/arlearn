@@ -23,13 +23,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import org.celstec.arlearn2.beans.AuthResponseDeserializer;
-import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.GamePackageDeserializer;
 import org.celstec.arlearn2.beans.Info;
 import org.celstec.arlearn2.beans.RunPackage;
@@ -49,7 +47,6 @@ import org.celstec.arlearn2.beans.game.ConfigDeserializer;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GameAccess;
 import org.celstec.arlearn2.beans.game.GameAccessList;
-import org.celstec.arlearn2.beans.game.LocationUpdateConfig;
 import org.celstec.arlearn2.beans.game.LocationUpdateConfigDeserializer;
 import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.beans.generalItem.AudioObject;
@@ -92,7 +89,6 @@ import org.celstec.arlearn2.beans.run.RunAccess;
 import org.celstec.arlearn2.beans.run.RunAccessList;
 import org.celstec.arlearn2.beans.run.RunBean;
 import org.celstec.arlearn2.beans.run.RunDeserializer;
-import org.celstec.arlearn2.beans.run.RunList;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserScoreDeserializer;
 import org.codehaus.jettison.json.JSONArray;
@@ -295,7 +291,6 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		RunBeanDeserializer rbd = new RunBeanDeserializer();
 		RunDeserializer rd = new RunDeserializer();
 		MultipleChoiceAnswerItemDeserializer mcaid = new MultipleChoiceAnswerItemDeserializer();
-		UserDeserializer ud = new UserDeserializer();
 		
 		customDeserializerMap.put(GeneralItem.class, gid);
 		customDeserializerMap.put(NarratorItem.class, nid);
@@ -318,7 +313,7 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMap.put(SingleChoiceTest.class, SingleChoiceTest.deserializer);
 		customDeserializerMap.put(SingleChoiceImageTest.class, SingleChoiceImageTest.deserializer);
 		customDeserializerMap.put(MultipleChoiceImageTest.class, MultipleChoiceImageTest.deserializer);
-		customDeserializerMap.put(User.class, ud);
+		customDeserializerMap.put(User.class, User.deserializer);
 
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.Bean", new org.celstec.arlearn2.beans.deserializer.json.BeanDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.Info", Info.deserializer);
@@ -368,7 +363,7 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.ScanTag", ScanTag.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.YoutubeObject", YoutubeObject.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.OpenBadge", OpenBadge.deserializer);
-		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.User", ud);
+		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.User", User.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.AuthResponse", new AuthResponseDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.Version", new VersionDeserializer());
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.UserList", new UserListDeserializer());

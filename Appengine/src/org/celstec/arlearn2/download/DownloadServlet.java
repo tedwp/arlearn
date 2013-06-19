@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.celstec.arlearn2.beans.GamePackage;
 import org.celstec.arlearn2.beans.RunPackage;
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.game.ScoreDefinitionList;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.Team;
@@ -40,6 +41,7 @@ import org.celstec.arlearn2.delegators.ScoreDefinitionDelegator;
 import org.celstec.arlearn2.delegators.TeamsDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.generalitems.QueryGeneralItems;
+import org.celstec.arlearn2.jdo.UserLoggedInManager;
 
 import com.google.gdata.util.AuthenticationException;
 
@@ -73,7 +75,9 @@ public class DownloadServlet extends HttpServlet {
 		String auth = "auth="+request.getParameter("auth");
 		GamePackage gp = new GamePackage();
 		try {
-			GameDelegator gd = new GameDelegator(auth);
+			UsersDelegator qu = new UsersDelegator(auth);
+			Account account = qu.getCurrentAccount();
+			GameDelegator gd = new GameDelegator(account, auth);
 			gp.setGame(gd.getGame(gameId));
 
 			GeneralItemDelegator gid = new GeneralItemDelegator(gd);

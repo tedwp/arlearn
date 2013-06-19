@@ -18,32 +18,50 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.genItemActivities;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
+import org.celstec.arlearn2.android.answerQuestion.DataCollectorDelegate;
+import org.celstec.arlearn2.android.answerQuestion.DataCollectorDelegateManager;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
+import org.celstec.arlearn2.android.asynctasks.db.RegisterUploadInDbTask;
+import org.celstec.arlearn2.android.asynctasks.network.UploadFileSyncTask;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.ActionsDelegator;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
+import org.celstec.arlearn2.android.delegators.ResponseDelegator;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ItemResponseListRecord;
 import org.celstec.arlearn2.android.menu.MenuHandler;
+import org.celstec.arlearn2.android.util.MediaFolders;
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
+import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.celstec.arlearn2.beans.run.Response;
+import org.celstec.arlearn2.client.GenericClient;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 public class NarratorItemActivity extends GeneralItemActivity {
@@ -85,8 +103,6 @@ public class NarratorItemActivity extends GeneralItemActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(getContentView());
-
-//		checkIfNotification();
 		getGuiComponents();
 		loadDataToGui();
 		fireAction();
@@ -112,7 +128,7 @@ public class NarratorItemActivity extends GeneralItemActivity {
 			generalItemId = narratorBean.getId();
 			generalItemType = narratorBean.getClass().getName();
 		}
-		ActionsDelegator.getInstance().publishAction(this, "read", pa.getCurrentRunId(), pa.getUsername(), generalItemId, generalItemType);
+		ActionsDelegator.getInstance().publishAction(this, "read", pa.getCurrentRunId(), pa.getFullId(), generalItemId, generalItemType);
 
 	}
 
@@ -125,7 +141,11 @@ public class NarratorItemActivity extends GeneralItemActivity {
 		webview = (WebView) findViewById(R.id.giNarratorWebView);
 		provideAnswerButton = (Button) findViewById(R.id.provideAnswerButton);
 		provideAnswerButton.setText(getString(R.string.ao_answer_menu));
-		if (narratorBean.getOpenQuestion() != null) {
+		LinearLayout dcLayout = (LinearLayout) findViewById(R.id.datacollectionbar);
+		ImageView pictureView = (ImageView) findViewById(R.id.picture_button);
+		ImageView audioView = (ImageView) findViewById(R.id.speech_button);
+		OpenQuestion oq = narratorBean.getOpenQuestion();
+		if (oq != null) {
 			provideAnswerButton.setVisibility(View.VISIBLE);
 
 			provideAnswerButton.setOnClickListener(new View.OnClickListener() {
@@ -140,11 +160,37 @@ public class NarratorItemActivity extends GeneralItemActivity {
 
 				}
 			});
-
+			if (PropertiesAdapter.getInstance(this).getAccountLevel() == Account.ADMINISTRATOR) {
+				dcLayout.setVisibility(View.VISIBLE);
+				dataCollectorManager = new DataCollectorDelegateManager(oq, this);
+				if (oq.isWithPicture()) {
+					
+				}
+				if (oq.isWithAudio()) {
+					(audioView).setImageDrawable(getResources().getDrawable(R.drawable.dc_voice_search_128));
+				}
+			}
 		} else {
 			provideAnswerButton.setVisibility(View.GONE);
+			dcLayout.setVisibility(View.VISIBLE);
 		}
 	}
+	
+	
+	private DataCollectorDelegateManager dataCollectorManager;
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		dataCollectorManager.processResult(resultCode, data);
+		if (resultCode == -1 && requestCode == 1) {
+			onActivityResult(data);
+		}
+		
+	}
+	public void onActivityResult(Intent data) {
+		
+	}
+	
+	
 
 	private void reloadBeanFromDb() {
 		NarratorItem ni = (NarratorItem) GeneralItemsCache.getInstance().getGeneralItems(narratorBean.getId());
@@ -205,15 +251,15 @@ public class NarratorItemActivity extends GeneralItemActivity {
 		if (resp == null) {
 			return;
 		}
-		ArrayList<GenericListRecord> users = new ArrayList<GenericListRecord>();
+		ArrayList<GenericListRecord> recordArrayList = new ArrayList<GenericListRecord>();
 
 		for (Response response : resp) {
 			GenericListRecord r = new ItemResponseListRecord(getMenuHandler().getPropertiesAdapter().getCurrentRunId(), response);
-			users.add(r);
+			recordArrayList.add(r);
 		}
 
 		LinearLayout listView = (LinearLayout) findViewById(R.id.narratoranswerlist);
-		adapter = new GenericMessageListAdapter(this, getContentView(), users);
+		adapter = new GenericMessageListAdapter(this, getContentView(), recordArrayList);
 		listView.removeAllViews();
 		for (int i = 0; i < adapter.getCount(); i++) {
 			View v = adapter.getView(i, null, listView);

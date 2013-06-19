@@ -27,24 +27,39 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.celstec.arlearn2.beans.Bean;
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.notification.APNDeviceDescription;
 import org.celstec.arlearn2.beans.notification.DeviceDescription;
 import org.celstec.arlearn2.beans.notification.DeviceDescriptionList;
 import org.celstec.arlearn2.beans.notification.GCMDeviceDescription;
+import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
+import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
+import org.celstec.arlearn2.jdo.manager.ConfigurationManager;
 import org.celstec.arlearn2.jdo.manager.GCMDevicesRegistryManager;
 import org.celstec.arlearn2.jdo.manager.IOSDevicesRegistryManager;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.mortbay.log.Log;
 
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
+import com.google.appengine.api.channel.ChannelMessage;
+import com.google.appengine.api.channel.ChannelService;
+import com.google.appengine.api.channel.ChannelServiceFactory;
 import com.google.apphosting.api.search.AclPb.Entry;
 import com.google.gdata.util.AuthenticationException;
 
 public class NotificationDelegator extends GoogleDelegator {
+//AIzaSyAczgll7jcWPwGvepcso_YEE_zI_V9qSWU
+	public static final String GCM_KEY = "GCM_KEY";
+	static ChannelService channelService = ChannelServiceFactory.getChannelService();
 
+	
 	public NotificationDelegator(String authtoken) throws AuthenticationException {
 		super(authtoken);
 	}
@@ -55,6 +70,10 @@ public class NotificationDelegator extends GoogleDelegator {
 
 	public NotificationDelegator() {
 		super();
+	}
+
+	public NotificationDelegator(Account account, String token) {
+		super(account, token);
 	}
 
 	public void registerDescription(APNDeviceDescription descriptionDevice) {
@@ -116,9 +135,12 @@ public class NotificationDelegator extends GoogleDelegator {
 		String json = "{\"aps\":{\"alert\":\"" + text + "\", \"requestType\":1, \"sound\":\"default\"}}";
 		sendiOSNotificationAsJson(account, deviceToken, json);
 	}
+    private static final Logger log = Logger.getLogger(NotificationDelegator.class.getName());
 
 	public void sendGCMNotificationAsJson(String account, String registrationId, HashMap<String, Object> valueMap) {
-		Sender sender = new Sender("AIzaSyBBHzixGmnJnu8YhZS44zCObl85JTspo_Q");
+		log.log(Level.WARNING, "gcm key "+ConfigurationManager.getValue(GCM_KEY));
+		log.log(Level.WARNING, "regId "+registrationId);
+		Sender sender = new Sender(ConfigurationManager.getValue(GCM_KEY));
 		Message.Builder builder = new Message.Builder();
 		for (Map.Entry<String, Object> entry : valueMap.entrySet()) {
 			builder.addData(entry.getKey(), "" + entry.getValue());
@@ -126,20 +148,25 @@ public class NotificationDelegator extends GoogleDelegator {
 		Message message = builder.build();
 		try {
 			Result result = sender.send(message, registrationId, 5);
+			log.log(Level.WARNING, "sent "+message.toString());
+			log.log(Level.WARNING, "result "+result);
 		} catch (IOException e) {
+			log.log(Level.SEVERE, "errr",e);
 			e.printStackTrace();
 		}
 	}
 
 	public void sendGCMNotificationAsJson(String account, String registrationId, String json) {
-		Sender sender = new Sender("AIzaSyBBHzixGmnJnu8YhZS44zCObl85JTspo_Q");
+		Sender sender = new Sender(ConfigurationManager.getValue(GCM_KEY));
 		Message message = new Message.Builder().addData("runId", "1234").build();
 
 		try {
 			Result result = sender.send(message, registrationId, 5);
-
+//			log.log(Level.WARNING, "sent "+message.toString());
+//			log.log(Level.WARNING, "result "+result);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			log.log(Level.SEVERE, "errr",e);
 			e.printStackTrace();
 		}
 	}
@@ -209,24 +236,34 @@ public class NotificationDelegator extends GoogleDelegator {
 		}
 	}
 
+	public void broadcast(Bean bean, String account) {
+			broadcast(JsonBeanSerialiser.serialiseToJson(bean), account);
+	}
+	
 	public void broadcast(String notification, String account) {
 		try {
 			JSONObject json = new JSONObject(notification);
-			Iterator<String> it = json.keys();
+			broadcast(json, account);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public void broadcast(JSONObject notification, String account) {
+		try {
+			Iterator<String> it = notification.keys();
 			HashMap<String, Object> valueMap = new HashMap<String, Object>();
 			while (it.hasNext()) {
 				String key = it.next();
-				if (!(json.get(key) instanceof JSONObject))
-					valueMap.put(key, json.get(key));
+				if (!(notification.get(key) instanceof JSONObject))
+					valueMap.put(key, notification.get(key));
 
 			}
-			System.out.println("valueMap " + valueMap);
-
 			sendGCMNotification(account, valueMap);
-			// sendGCMNotification(account, json.toString());
-
-			 sendiOSNotificationAsJson(account, valueMap); //TODO rename
-			// this one
+			sendiOSNotificationAsJson(account, valueMap); //TODO rename
+			channelService.sendMessage(new ChannelMessage(account, notification.toString()));
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

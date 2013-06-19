@@ -105,15 +105,13 @@ public abstract class DataSourceModel {
 	public void addJsonObject(JSONObject object) {
 		AbstractRecord record = createRecord(object);
 		record.setCorrespondingJsonObject(object);
+		
 		dataSourceAdapter.removeRecord(record);
-		
-		
-
-		if (object.containsKey("deleted") && object.get("deleted").isBoolean().booleanValue()) {
-//			dataSourceAdapter.removeRecord(record);
-		} else {
+//		if (object.containsKey("deleted") && object.get("deleted").isBoolean().booleanValue()) {
+//
+//		} else {
 			dataSourceAdapter.saveRecord(record);
-		}
+//		}
 
 	}
 

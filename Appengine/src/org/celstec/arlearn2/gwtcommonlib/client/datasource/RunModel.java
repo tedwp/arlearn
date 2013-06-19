@@ -75,7 +75,7 @@ public class RunModel extends DataSourceModel {
 
 	@Override
 	protected void registerForNotifications() {
-		NotificationSubscriber.getInstance().addNotificationHandler("org.celstec.arlearn2.beans.notification.RunModification",new NotificationHandler() {
+		NotificationSubscriber.getInstance().addNotificationHandler(getNotificationType()	,new NotificationHandler() {
 			
 			@Override
 			public void onNotification(JSONObject bean) {
@@ -85,7 +85,7 @@ public class RunModel extends DataSourceModel {
 	}
 	
 	protected String getNotificationType() {
-		return "org.celstec.arlearn2.beans.notification.RunModification";
+		return "org.celstec.arlearn2.beans.run.Run";
 	}
 	
 	@Override

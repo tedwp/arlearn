@@ -6,6 +6,7 @@ public class MultipleChoiceAnswer extends Bean {
 
 	public  final static String TYPE = "org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem";
 	public  final static String ANSWER = "answer";
+	public  final static String ID = "id";
 
 
 	public MultipleChoiceAnswer() {

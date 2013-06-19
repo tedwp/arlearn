@@ -93,7 +93,7 @@ public class Collaboration extends Service {
 			) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		AccountDelegator gd = new AccountDelegator(token);
+		AccountDelegator gd = new AccountDelegator(this);
 		return serialise(gd.getContactDetails(accountId), accept);
 	}
 	

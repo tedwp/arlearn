@@ -20,6 +20,7 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.LayoutSpacer;
 import com.smartgwt.client.widgets.layout.VStack;
 
+@Deprecated
 public class GameForm {
 	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
 
@@ -116,8 +117,7 @@ public class GameForm {
 		layout.setWidth(200);
 
 		Label title = new Label(
-				"<span style=\"font-size:125%; font-weight: bold;\">"
-						+ constants.share() + "</span>");
+				"<span style=\"font-size:125%; font-weight: bold;\">share</span>");
 		title.setHeight(15);
 		layout.addMember(title);
 

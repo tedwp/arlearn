@@ -30,16 +30,17 @@ public class ContactsDataSource extends GenericDataSource {
 	}
 
 	public void loadDataFromWeb() {
+		final long lastSyncDateLocal = ContactsDataSource.this.lastSyncDate;
 			JsonResumptionListCallback callback = new JsonResumptionListCallback(getBeanType(), this.getDataSourceModel(), 0l) {
 
 				@Override
 				public void nextCall() {
-					((CollaborationClient) getHttpClient()).getContacts(ContactsDataSource.this.lastSyncDate, resumptionToken, this);
+					((CollaborationClient) getHttpClient()).getContacts(lastSyncDateLocal, resumptionToken, this);
 
 				}
 
 			};
-		((CollaborationClient) getHttpClient()).getContacts(ContactsDataSource.this.lastSyncDate, null, callback);
+		((CollaborationClient) getHttpClient()).getContacts(lastSyncDateLocal, null, callback);
 		AccountClient.getInstance().accountDetails(new JsonCallback(){
 			public void onJsonReceived(JSONValue jsonValue) {
 				getDataSourceModel().addJsonObject(jsonValue.isObject());

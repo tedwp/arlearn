@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.portal.client.portal;
 
+import org.celstec.arlearn2.gwtcommonlib.client.LocalSettings;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.RunDataSource;
 import org.celstec.arlearn2.portal.client.toolbar.ToolBar;
 
@@ -65,7 +66,7 @@ public class PortalPage {
 				public void onRecordClick(RecordClickEvent event) {
 					switch (event.getRecord().getAttributeAsInt("rec")) {
 					case 1:
-						Window.open("/author.html", "_self", ""); 
+						Window.open("/author.html"+LocalSettings.getInstance().getLocateExtension(), "_self", ""); 
 						break;
 					case 2:
 						Window.open("/resultDisplayRuns.html", "_self", "");
@@ -125,19 +126,6 @@ public class PortalPage {
 	        });  
 	  
 	        DetailViewerField statusField = new DetailViewerField("status");  
-//	        statusField.setCellStyleHandler(new CellStyleHandler() {  
-//	            public String execute(Object value, DetailViewerField field, Record record) {  
-//	                if("Endangered".equals(value)) {  
-//	                    return "endangered";  
-//	                } else if ("Threatened".equals(value)) {  
-//	                    return "threatened";  
-//	                } else if ("Not Endangered".equals(value)) {  
-//	                    return "notEndangered";  
-//	                } else {  
-//	                    return null;  
-//	                }  
-//	            }  
-//	        });  
 	        tileGrid.setFields(pictureField, commonNameField);  
 	  
 	}

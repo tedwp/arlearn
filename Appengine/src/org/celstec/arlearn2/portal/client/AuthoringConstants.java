@@ -344,20 +344,8 @@ public interface AuthoringConstants extends Constants {
 	@DefaultStringValue("Send")
 	String send();
 	
-	@DefaultStringValue("Share")
-	String share();
 	
-	@DefaultStringValue("Visibility options")
-	String shareVisibilityOptions();
 	
-	@DefaultStringValue("Private")
-	String privateSharing();
-	
-	@DefaultStringValue("Anyone with the link")
-	String linkSharing();
-	
-	@DefaultStringValue("Public on the web")
-	String publicSharing();
 	
 	// Modal windows
 	

@@ -107,6 +107,25 @@ public class Game extends Bean{
 		GameClient.getInstance().createGame(this, jsonCallback);
 	}
 
+	public void setMapAvailable(boolean b) {
+		if (!jsonRep.containsKey("config")) {
+			jsonRep.put("config", new JSONObject());
+		}
+		JSONObject config = jsonRep.get("config").isObject();
+		config.put(GameModel.MAP_AVAILABLE, JSONBoolean.getInstance(b));
+		
+	}
+	
+	public boolean getMapAvailable() {
+		if (!jsonRep.containsKey("config")) {
+			return false;
+		}
+		if (!jsonRep.get("config").isObject().containsKey(GameModel.MAP_AVAILABLE)) { 
+			return false;
+		}
+		return jsonRep.get("config").isObject().get(GameModel.MAP_AVAILABLE).isBoolean().booleanValue();
+	}
+
 	
 
 }

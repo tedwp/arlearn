@@ -13,6 +13,10 @@ public abstract class Bean {
 		this.jsonRep = json;
 	}
 	
+	public void setJsonRep(JSONObject json) {
+		this.jsonRep = json;
+	}
+	
 	public Bean() {
 		this.jsonRep = new JSONObject();
 		this.jsonRep.put("type", new JSONString(getType()));
@@ -42,6 +46,13 @@ public abstract class Bean {
 	public int getInteger(String fieldName) {
 		if (jsonRep.containsKey(fieldName)) {
 			return (int) jsonRep.get(fieldName).isNumber().doubleValue();
+		}
+		return 0;
+	}
+	
+	public long getLong(String fieldName) {
+		if (jsonRep.containsKey(fieldName)) {
+			return (long) jsonRep.get(fieldName).isNumber().doubleValue();
 		}
 		return 0;
 	}

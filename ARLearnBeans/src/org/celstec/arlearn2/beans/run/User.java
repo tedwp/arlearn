@@ -20,18 +20,22 @@ package org.celstec.arlearn2.beans.run;
 
 import java.util.List;
 
-public class User extends RunBean{
+import org.celstec.arlearn2.beans.Bean;
+import org.celstec.arlearn2.beans.account.Account;
+import org.celstec.arlearn2.beans.deserializer.json.BeanDeserializer;
+import org.celstec.arlearn2.beans.deserializer.json.ListDeserializer;
+import org.celstec.arlearn2.beans.serializer.json.BeanSerializer;
+import org.celstec.arlearn2.beans.serializer.json.ListSerializer;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
+public class User extends Account{
+
+	private Long runId;
+	private Boolean deleted;
 	private String teamId;
-	private String email;
-	private String fullEmail;
-	private String name;
-
 	private List<String> roles;
 
-	private Double lng;
-	private Double lat;
-	
 	private Long gameId;
 	private Long lastModificationDateGame;
 	
@@ -39,63 +43,49 @@ public class User extends RunBean{
 		
 	}
 	
+	public void setAccountData(Account data) {
+		setEmail(data.getEmail());
+		setName(data.getName());
+		setGivenName(data.getGivenName());
+		setFamilyName(data.getFamilyName());
+		setPicture(data.getPicture());
+		setAccountLevel(data.getAccountLevel());
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		User other = (User) obj;
 		return super.equals(obj) && 
+			nullSafeEquals(getDeleted(), other.getDeleted()) &&
+			nullSafeEquals(getGameId(), other.getGameId()) &&
+			nullSafeEquals(getRunId(), other.getRunId()) &&
 			nullSafeEquals(getTeamId(), other.getTeamId()) &&
-			nullSafeEquals(getEmail(), other.getEmail()) &&
-			nullSafeEquals(getFullEmail(), other.getFullEmail()) &&
-			nullSafeEquals(getName(), other.getName()) &&
 			nullSafeEquals(getRoles(), other.getRoles()) ; 
 	}
 
+	public Long getRunId() {
+		return runId;
+	}
+
+	public void setRunId(Long runId) {
+		this.runId = runId;
+	}
+	
+	public Boolean getDeleted() {
+		if (deleted == null) return false;
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+	
 	public String getTeamId() {
 		return teamId;
 	}
 
 	public void setTeamId(String teamId) {
 		this.teamId = teamId;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getFullEmail() {
-		return fullEmail;
-	}
-
-	public void setFullEmail(String fullEmail) {
-		this.fullEmail = fullEmail;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Double getLng() {
-		return lng;
-	}
-
-	public void setLng(Double lng) {
-		this.lng = lng;
-	}
-
-	public Double getLat() {
-		return lat;
-	}
-
-	public void setLat(Double lat) {
-		this.lat = lat;
 	}
 	
 	public List<String> getRoles() {
@@ -130,5 +120,58 @@ public class User extends RunBean{
 	public void setLastModificationDateGame(Long lastModificationDateGame) {
 		this.lastModificationDateGame = lastModificationDateGame;
 	}
+	
+	public void setFullIdentifier(String id) {
+		if (!id.contains(":")) return;
+		setAccountType(Integer.parseInt(id.substring(0, id.indexOf(":"))));
+		setLocalId(id.substring(id.indexOf(":")+1));
+	}
+	
+	public static BeanDeserializer deserializer = new AccountDeserializer() {
+		@Override
+		public User toBean(JSONObject object) {
+			User bean = new User();
+			try {
+				initBean(object, bean);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			return bean;
+		}
+		
+		public void initBean(JSONObject object, Bean genericBean) throws JSONException {
+			super.initBean(object, genericBean);
+			User bean = (User) genericBean;
+
+			if (object.has("runId")) bean.setRunId(object.getLong("runId"));
+			if (object.has("deleted")) bean.setDeleted(object.getBoolean("deleted"));
+			if (object.has("teamId")) bean.setTeamId(object.getString("teamId"));
+			if (object.has("roles")) bean.setRoles(ListDeserializer.toStringList(object.getJSONArray("roles")));
+			if (object.has("gameId")) bean.setGameId(object.getLong("gameId"));
+			if (object.has("lastModificationDateGame")) bean.setLastModificationDateGame(object.getLong("lastModificationDateGame"));
+
+
+		}
+	};
+	
+	public static BeanSerializer serializer = new AccountSerializer(){
+		@Override
+		public JSONObject toJSON(Object bean) {
+			User runBean = (User) bean;
+			JSONObject returnObject = super.toJSON(bean);
+			try {
+				if (runBean.getRunId() != null) returnObject.put("runId", runBean.getRunId());
+				if (runBean.getDeleted() != null) returnObject.put("deleted", runBean.getDeleted());
+				if (runBean.getTeamId() != null) returnObject.put("teamId", runBean.getTeamId());
+				if (runBean.getRoles() != null) returnObject.put("roles", ListSerializer.toStringList(runBean.getRoles()));
+				if (runBean.getGameId() != null) returnObject.put("gameId", runBean.getGameId());
+				if (runBean.getLastModificationDateGame() != null) returnObject.put("lastModificationDateGame", runBean.getLastModificationDateGame());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			return returnObject;
+		}
+	}; 
+
 	
 }

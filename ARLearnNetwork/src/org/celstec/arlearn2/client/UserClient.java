@@ -37,17 +37,17 @@ public class UserClient extends GenericClient{
 		return instance;
 	}
 
-	public LocationList publishLocations(String token, LocationList locations, Long runId) {
-		return (LocationList) executePost(getUrlPrefix()+ "/locations/runId/"+runId, token, locations, LocationList.class);
-	}
+//	public LocationList publishLocations(String token, LocationList locations, Long runId) {
+//		return (LocationList) executePost(getUrlPrefix()+ "/locations/runId/"+runId, token, locations, LocationList.class);
+//	}
 	
 	public User getUser(String token, Long runId, String userEmail) {
-		return (User)  executeGet(getUrlPrefix()+"/loggedInUser/"+runId+"/email/"+userEmail, token, User.class);
+		return (User)  executeGet(getUrlPrefix()+"/runId/"+runId+"/account/"+userEmail, token, User.class);
 	}
 	
-	public User createUser(String token, User user) {
-		return (User) executePost(getUrlPrefix(), token, user, User.class);
-	}
+//	public User createUser(String token, User user) {
+//		return (User) executePost(getUrlPrefix(), token, user, User.class);
+//	}
 	
 	public User deleteUser(String token, long runId){
 		return (User) executeDelete(getUrlPrefix()+"/runId/"+runId, token, User.class);

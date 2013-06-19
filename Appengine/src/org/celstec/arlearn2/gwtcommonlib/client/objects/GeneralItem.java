@@ -12,6 +12,7 @@ import com.google.gwt.json.client.JSONString;
 import com.smartgwt.client.widgets.Canvas;
 
 public abstract class GeneralItem extends Bean {
+	public  final static String ID = "id";
 
 	public GeneralItem(JSONObject json) {
 		super(json);
@@ -54,8 +55,14 @@ public abstract class GeneralItem extends Bean {
 			return new MultipleChoiceTest(object);
 		} else if (type.equals(SingleChoiceTest.TYPE)) {
 			return new SingleChoiceTest(object);
-		} else if (type.equals(ScanTagObject.TYPE)){
+		} else if (type.equals(ScanTagObject.TYPE)) {
 			return new ScanTagObject(object);
+		} else if (type.equals(MultipleChoiceImage.TYPE)) {
+			return new MultipleChoiceImage(object);
+		} else if (type.equals(SingleChoiceImage.TYPE)) {
+			return new SingleChoiceImage(object);
+		} else if (type.equals(MozillaOpenBadge.TYPE)) {
+			return new MozillaOpenBadge(object);
 		}
 		return null;
 	}
@@ -68,5 +75,7 @@ public abstract class GeneralItem extends Bean {
 	public void writeToCloud(JsonCallback jsonCallback) {
 		GeneralItemsClient.getInstance().createGeneralItem(this, jsonCallback);
 	}
+
+	
 	
 }

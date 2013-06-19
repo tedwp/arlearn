@@ -5,20 +5,27 @@ import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GeneralItemDa
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.generalItem.GeneralItemsClient;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
-import org.celstec.arlearn2.portal.client.author.ui.gi.dependency.DependencyEditor;
+import org.celstec.arlearn2.portal.client.account.AccountManager;
+import org.celstec.arlearn2.portal.client.author.ui.gi.dependency.forms.DependencyEditor;
 import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.DataCollectionEditor;
 import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.ExtensionEditor;
+import org.celstec.arlearn2.portal.client.author.ui.gi.i18.GeneralItemConstants;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
+import com.google.maps.gwt.client.LatLng;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.tab.Tab;
 
 public class GeneralItemDetailEdit extends VLayout {
+
+	private static GeneralItemConstants constants = GWT.create(GeneralItemConstants.class);
 
 	private GeneralItem gi;
 
@@ -33,8 +40,10 @@ public class GeneralItemDetailEdit extends VLayout {
 	protected DependencyEditor appearEdit;
 	protected DependencyEditor disappearEdit;
 	protected DataCollectionEditor dataCollectionEditor;
+	protected Tab mapTab;
 
-	public GeneralItemDetailEdit() {
+	public GeneralItemDetailEdit(Tab mapTab) {
+		this.mapTab = mapTab;
 		createEditButton();
 		createButtonLayout(saveButton);
 		createBasicMetadataEditor();
@@ -53,7 +62,7 @@ public class GeneralItemDetailEdit extends VLayout {
 	}
 
 	private void createEditButton() {
-		saveButton = new IButton("save");
+		saveButton = new IButton(constants.save());
 		saveButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				saveClick();
@@ -71,11 +80,11 @@ public class GeneralItemDetailEdit extends VLayout {
 		if (dataCollectionEditor != null) dataCollectionEditor.saveToBean(gi);
 		if (appearEdit != null) {
 			JSONObject appearDep = appearEdit.getJson();
-			if (appearDep != null) gi.getJsonRep().put("dependsOn", appearDep);
+			gi.getJsonRep().put("dependsOn", appearDep);
 		}
 		if (disappearEdit != null) {
 			JSONObject disappearDep = disappearEdit.getJson();
-			if (disappearDep != null) gi.getJsonRep().put("disappearOn", disappearDep);
+			 gi.getJsonRep().put("disappearOn", disappearDep);
 		}
 		GeneralItemsClient.getInstance().createGeneralItem(gi, new JsonCallback(){
 			public void onJsonReceived(JSONValue jsonValue) {
@@ -125,11 +134,11 @@ public class GeneralItemDetailEdit extends VLayout {
 			dataCollectionEditor = new DataCollectionEditor(gi);
 			stack.setDataCollection(dataCollectionEditor);
 		}
-		disappearEdit = new DependencyEditor();
+		disappearEdit = new DependencyEditor(gi.getLong(GameModel.GAMEID_FIELD), mapTab);
 		if (gi.getJsonRep().containsKey("disappearOn")){
 			disappearEdit.loadGeneralItem(gi.getJsonRep().get("disappearOn").isObject());
 		}
-		appearEdit =  new DependencyEditor();
+		appearEdit =  new DependencyEditor(gi.getLong(GameModel.GAMEID_FIELD), mapTab);
 		if (gi.getJsonRep().containsKey("dependsOn")){
 			appearEdit.loadGeneralItem(gi.getJsonRep().get("dependsOn").isObject());
 		}
@@ -138,6 +147,21 @@ public class GeneralItemDetailEdit extends VLayout {
 		}
 		stack.setAppearStack(appearEdit);
 		stack.setDisappearStack(disappearEdit);
+		if (AccountManager.getInstance().isAdministrator()) {
+			JsonEditor jsonEditor = new JsonEditor();
+			jsonEditor.loadDataFromRecord(gi);
+			stack.setJsonEditor(jsonEditor);
+		}
+		
+	}
+
+	public void coordinatesChanged(LatLng newCoordinates) {
+		editor.coordinatesChanged(newCoordinates);
+	}
+
+	public void deselect() {
+		if (disappearEdit != null) disappearEdit.deselect();
+		if (appearEdit != null) appearEdit.deselect();
 		
 	}
 }

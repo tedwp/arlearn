@@ -36,6 +36,11 @@ public class JsonObjectListCallback extends JsonCallback {
 		for (int i = 0; i < array.size(); i++) {
 			onJsonObjectReceived(array.get(i).isObject());
 		}
+		finishedLoadingArray(array.size());
+	}
+	
+	public void finishedLoadingArray(int i) {
+		
 	}
 
 	public void onJsonObjectReceived(JSONObject jsonObject) {

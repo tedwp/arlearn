@@ -19,6 +19,9 @@
 package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.activities.GeneralActivity;
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
+import org.celstec.arlearn2.android.activities.OauthProvidersList;
 import org.celstec.arlearn2.android.asynctasks.db.CleanUpFilesThatAreNotInDatabase;
 import org.celstec.arlearn2.android.asynctasks.db.LoadRunsAndGamesToCache;
 import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
@@ -27,14 +30,18 @@ import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 import org.celstec.arlearn2.beans.Info;
+import org.celstec.arlearn2.beans.notification.GCMDeviceDescription;
 import org.celstec.arlearn2.client.InfoClient;
+import org.celstec.arlearn2.client.NotificationClient;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,6 +49,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.android.gcm.GCMRegistrar;
+import com.google.android.gcm.GCMRegistrar;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class SplashScreenActivity extends GeneralActivity {
 
@@ -68,7 +78,10 @@ public class SplashScreenActivity extends GeneralActivity {
 		cleanUpTask.run(this);
 
 		new TimeCheck().execute();
+//		setGCMConfiguration();
 	}
+
+	
 
 	@Override
 	protected void onResume() {
@@ -99,11 +112,12 @@ public class SplashScreenActivity extends GeneralActivity {
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
+		System.out.println("create options");
 		if (menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			menu.add(0, MenuHandler.LOGOUT, 0, getString(R.string.logout));
 		} else {
 			menu.add(0, MenuHandler.OAUTH_LOGIN, 0, "LOGIN");
-			menu.add(0, MenuHandler.LOGIN, 0, getString(R.string.login) + " old");
+//			menu.add(0, MenuHandler.LOGIN, 0, getString(R.string.login) + " old");
 
 		}
 		menu.add(0, MenuHandler.EXIT, 0, getString(R.string.exit));
@@ -198,5 +212,7 @@ public class SplashScreenActivity extends GeneralActivity {
 			super.onPostExecute(result);
 		}
 	}
-
+	
+	
+	
 }

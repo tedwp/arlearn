@@ -9,6 +9,8 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.media.client.Audio;
 import com.google.gwt.media.client.Video;
+import com.google.gwt.media.dom.client.MediaError;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -38,7 +40,7 @@ public class SlideShow extends PopupPanel {
 	private static int currentPosition;
 	private static Widget currentElement;
 	
-	private static String __width_max_poppanel = "90%";
+	private static String __width_max_poppanel = "85%";
 	
 	private boolean playingVideo;
 	
@@ -199,7 +201,7 @@ public class SlideShow extends PopupPanel {
 				
 				VerticalPanel vPanel = new VerticalPanel();
 				
-				vPanel.add(createImage(auxPic, Long.parseLong(wid.getAttribute("width")), Long.parseLong(wid.getAttribute("height"))));
+				vPanel.add(createImage(auxPic, Long.parseLong(wid.getAttribute("width")), Long.parseLong(wid.getAttribute("height")), false));
 				vPanel.add(createAudio(auxAud));
 				
 				currentElement = vPanel;
@@ -232,7 +234,7 @@ public class SlideShow extends PopupPanel {
 				VerticalPanel vPanel = new VerticalPanel();
 				
 				vPanel.add(createText(auxText));
-				vPanel.add(createImage(auxPic, Long.parseLong(wid.getAttribute("width")), Long.parseLong(wid.getAttribute("height"))));				
+//				vPanel.add(createImage(auxPic, Long.parseLong(wid.getAttribute("width")), Long.parseLong(wid.getAttribute("height"))));				
 				
 				currentElement = vPanel;
 			
@@ -257,18 +259,19 @@ public class SlideShow extends PopupPanel {
 			}
 		}else if (!auxVid.equals("")) {
 			// Video
-			System.out.println("Video:"+auxVid);
+			System.out.println("Video:"+auxVid+" "+Long.parseLong(wid.getAttribute("width"))+" "+Long.parseLong(wid.getAttribute("height")));
 			
-			currentElement = new Image("images/loading.jpg");
+//			currentElement = new Image("images/loading.jpg");
+			
 
 			currentElement = createVideo(auxVid, Long.parseLong(wid.getAttribute("width")), Long.parseLong(wid.getAttribute("height")));
-			currentElement = addFocusElementForVideo((Video)currentElement);
+			currentElement = addFocusElementForVideo((Video)currentElement);			
 			
 		}else if (!auxPic.equals("")) {
 			// Image
 			System.out.println("Image:"+auxPic);
 			
-			currentElement = createImage(auxPic, Long.parseLong(wid.getAttribute("width")), Long.parseLong(wid.getAttribute("height")));
+			currentElement = createImage(auxPic, Long.parseLong(wid.getAttribute("width")), Long.parseLong(wid.getAttribute("height")), true);
 			currentElement = addFocusElement(currentElement);
 		
 		}else {
@@ -360,7 +363,7 @@ public class SlideShow extends PopupPanel {
 
 	private Widget createVideo(String auxVid, long w, long h) {
 		
-		Video video = Video.createIfSupported();
+		final Video video = Video.createIfSupported();
 		if (video == null) {
 			return null;
 		}
@@ -368,6 +371,8 @@ public class SlideShow extends PopupPanel {
 		video.load();
 		
 		video.addSource(auxVid);
+		
+		
 		
 		if (w >= h) {
 			// TODO with this we use all width of the screen
@@ -390,11 +395,39 @@ public class SlideShow extends PopupPanel {
 		
 		video.setControls(true);		
 		video.setAutoplay(true);
+		
 
 		return video;
 	}
 
-	private Widget createAudio(String auxAud) {
+	
+	private Widget createVideo1(String auxVid, long w, long h) {
+		
+		HTML video =  new HTML("<embed src='"+auxVid+"'>");
+		
+		if (w >= h) {
+			// TODO with this we use all width of the screen
+			getElement().getStyle().setProperty("width", __width_max_poppanel);
+			
+			// TODO with this we set image, video, etc to width of its father (popupanel)
+			video.getElement().getStyle().setProperty("width", "100%");
+		}else if(w < h){
+			
+			double scaleFactor = getScaleFactor(w, h);
+			
+			final int width = (int) (w * scaleFactor);
+			final int height = (int) (h * scaleFactor*0.90);
+			video.setPixelSize(width, height);
+			
+			getElement().getStyle().setWidth(width, Unit.PX);
+			
+			video.getElement().getStyle().setProperty("width", "100%");
+		}
+	
+		return video;
+	}
+
+	private Widget createAudio1(String auxAud) {
 		Audio audio = Audio.createIfSupported();
 		if (audio == null) {
 			return null;
@@ -407,6 +440,11 @@ public class SlideShow extends PopupPanel {
 		return audio;
 	}
 
+	private Widget createAudio(String auxAud) {
+		HTML audio =  new HTML("<embed height='50' width='80%' src='"+auxAud+"'>");
+		return audio;
+	}
+	
 	private HTML noneElement() {
 		HTML noneElement = new HTML();
 		
@@ -441,7 +479,7 @@ public class SlideShow extends PopupPanel {
 		
 		HTML richText = new HTML();
 		
-		richText.setHTML(auxDoc);
+		richText.setHTML("<p>"+auxDoc+"</p>");
 		
 		//richText.getElement().getStyle().setProperty("height", "400px");
 		
@@ -451,15 +489,25 @@ public class SlideShow extends PopupPanel {
 		return richText;
 	}
 
-	private Image createImage(String auxPic, long w, long h) {
+	private Image createImage(String auxPic, long w, long h, boolean option) {
 		Image image;
 		image = new Image(auxPic);
 
 		if (w >= h) {
 			
-			getElement().getStyle().setProperty("width", __width_max_poppanel);
+			if (w == 0 & h == 0) {
+				System.out.println("Original size. Images are not resized.");
+			}
+			else{
+				getElement().getStyle().setProperty("width", __width_max_poppanel);
+				
+				if (option) {
+					image.getElement().getStyle().setProperty("width", "100%");
+				}
+			}
 			
-			image.getElement().getStyle().setProperty("width", "100%");
+
+			
 			
 		}else if(image.getWidth() < image.getHeight()){
 			
@@ -470,7 +518,12 @@ public class SlideShow extends PopupPanel {
 			image.setPixelSize(width, height);
 			getElement().getStyle().setWidth(width, Unit.PX);
 			
-			image.getElement().getStyle().setProperty("width", "100%");
+			if (option) {
+				image.getElement().getStyle().setProperty("width", "100%");
+			}
+		}
+		else{
+			System.out.println("Width:"+w+" Height: "+h);
 		}
 		
 		return image;

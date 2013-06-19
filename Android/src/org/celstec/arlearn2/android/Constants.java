@@ -23,6 +23,7 @@ public class Constants {
 	public static String SHARED_PREFERENCES = "prefs";
 	public static String AUTHENTICATED = "authenticated";
 	public static String USER_EMAIL = "userEmail";
+	public static String ACCOUNT_Level = "accountLevel";
 	public static final String PASSWORD = "password";
 	public static final String PLAYING = "isPlaying";
 	public static String RECORDING = "isRecording";

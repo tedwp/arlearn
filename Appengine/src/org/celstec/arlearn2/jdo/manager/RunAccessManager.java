@@ -75,7 +75,7 @@ public class RunAccessManager {
 		return accessDefinitions;
 	}
 	
-	public static List<RunAccess> getGameList(long runId) {
+	public static List<RunAccess> getRunAccessList(long runId) {
 		ArrayList<RunAccess> accessDefinitions = new ArrayList<RunAccess>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query query = pm.newQuery(RunAccessJDO.class);

@@ -18,9 +18,6 @@
  ******************************************************************************/
 package org.celstec.arlearn2.api;
 
-import java.util.Iterator;
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -33,7 +30,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.run.Response;
-import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.delegators.ResponseDelegator;
 
 import com.google.gdata.util.AuthenticationException;
@@ -53,7 +49,7 @@ public class ResponseAPI extends Service {
 			throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		ResponseDelegator rd = new ResponseDelegator(token);
+		ResponseDelegator rd = new ResponseDelegator(this);
 		if (from == null && until == null) {
 			return serialise(rd.getResponses(runIdentifier, null, null), accept);
 		}
@@ -69,7 +65,7 @@ public class ResponseAPI extends Service {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 
-		ResponseDelegator rd = new ResponseDelegator(token);
+		ResponseDelegator rd = new ResponseDelegator(this);
 		return serialise(rd.getResponses(runIdentifier, null, account), accept);
 	}
 	
@@ -81,7 +77,7 @@ public class ResponseAPI extends Service {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 
-		ResponseDelegator rd = new ResponseDelegator(token);
+		ResponseDelegator rd = new ResponseDelegator(this);
 		return serialise(rd.getResponses(runIdentifier, itemId, null), accept);
 	}
 	
@@ -93,7 +89,7 @@ public class ResponseAPI extends Service {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 
-		ResponseDelegator rd = new ResponseDelegator(token);
+		ResponseDelegator rd = new ResponseDelegator(this);
 		return serialise(rd.getResponses(runIdentifier, itemId, account), accept);
 	}
 
@@ -110,7 +106,7 @@ public class ResponseAPI extends Service {
 			return serialise(getBeanDoesNotParseException((String) inResponse), accept);
 		Response r = (Response) inResponse;
 		
-		ResponseDelegator cr = new ResponseDelegator(token);
+		ResponseDelegator cr = new ResponseDelegator(this);
 		if (r.getRevoked() != null && r.getRevoked()) {
 			return serialise(cr.revokeResponse(r), accept);
 		} else {

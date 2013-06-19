@@ -40,7 +40,7 @@ public class DownloadDetailsTask extends AsyncTask<Void, String, Void> {
 	protected Void doInBackground(Void... params) {
 		try {
 			if (NetworkSwitcher.isOnline(ctx)) {
-				Account ac = AccountClient.getAccountClient().accountDetails(PropertiesAdapter.getInstance(ctx).getAuthToken());
+//				Account ac = AccountClient.getAccountClient().accountDetails(PropertiesAdapter.getInstance(ctx).getAuthToken());
 				DownloadDetailsTask.downloadAndStoreAccountDetails(ctx);
 			} else {
 				publishProgress(ctx.getString(R.string.networkUnavailable));
@@ -65,7 +65,8 @@ public class DownloadDetailsTask extends AsyncTask<Void, String, Void> {
 
 	public static void downloadAndStoreAccountDetails(Context ctx) {
 		Account ac = AccountClient.getAccountClient().accountDetails(PropertiesAdapter.getInstance(ctx).getAuthToken());
-		String oldAddress = User.normalizeEmail(PropertiesAdapter.getInstance(ctx).getUsername());
+		
+		String oldAddress = User.normalizeEmail(PropertiesAdapter.getInstance(ctx).getFullId());
 		String newAddress = User.normalizeEmail(ac.getFullId());
 		if (oldAddress != null && !oldAddress.equals(newAddress)) {
 			Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
@@ -78,13 +79,14 @@ public class DownloadDetailsTask extends AsyncTask<Void, String, Void> {
 			};
 			m.sendToTarget();
 		}
-		PropertiesAdapter.getInstance(ctx).setUsername(newAddress);
+		PropertiesAdapter.getInstance(ctx).setFullId(newAddress);
 		PropertiesAdapter.getInstance(ctx).setFullName(ac.getName());
 		PropertiesAdapter.getInstance(ctx).setParticipateGameLastSynchronizationDate(0l);
 		PropertiesAdapter.getInstance(ctx).setMyGameLastSynchronizationDate(0l);
 		PropertiesAdapter.getInstance(ctx).setRunLastSynchronizationDate(0l);
+		PropertiesAdapter.getInstance(ctx).setAccountLevel(ac.getAccountLevel());
 		String picture = ac.getPicture();
-		if (picture != null) {
+		if (picture != null &&picture.startsWith("http://")) {
 			downloadPicture(picture, ctx);
 		}
 	}
@@ -129,7 +131,7 @@ public class DownloadDetailsTask extends AsyncTask<Void, String, Void> {
 			System.out.println("file storeed as "+outputFile.getAbsolutePath());
 		} catch (FileNotFoundException e) {
 			PropertiesAdapter.getInstance(ctx).setPicture(null);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Log.e("error while retrieve media item - addToCache", e.getMessage(), e);
 		}
 		

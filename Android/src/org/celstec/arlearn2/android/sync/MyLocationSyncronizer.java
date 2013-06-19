@@ -56,10 +56,10 @@ public class MyLocationSyncronizer extends GenericSyncroniser {
 		ll.addLocations(loc);
 		ll.setTimestamp(System.currentTimeMillis());
 		try {
-			LocationList listResult = UserClient.getUserClient().publishLocations(pa.getAuthToken(), ll, pa.getCurrentRunId());
+//			LocationList listResult = UserClient.getUserClient().publishLocations(pa.getAuthToken(), ll, pa.getCurrentRunId());
 	
-			MyLocations dbAdapter = ((MyLocations) db.table(DBAdapter.MYLOCATIONS_ADAPTER));
-			dbAdapter.confirmReplicated(listResult.getLocations());
+//			MyLocations dbAdapter = ((MyLocations) db.table(DBAdapter.MYLOCATIONS_ADAPTER));
+//			dbAdapter.confirmReplicated(listResult.getLocations());
 
 		} catch (Exception e) {
 			Log.e("exception", e.getMessage(), e);

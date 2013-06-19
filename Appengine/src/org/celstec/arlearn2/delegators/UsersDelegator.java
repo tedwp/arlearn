@@ -19,6 +19,7 @@
 package org.celstec.arlearn2.delegators;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -29,6 +30,7 @@ import org.celstec.arlearn2.beans.run.Team;
 import org.celstec.arlearn2.beans.run.TeamList;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
+import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.celstec.arlearn2.cache.UserLoggedInCache;
 import org.celstec.arlearn2.cache.UsersCache;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
@@ -54,6 +56,10 @@ public class UsersDelegator extends GoogleDelegator {
 		super(gd);
 	}
 
+	public UsersDelegator(Account account, String token) {
+		super(account, token);
+	}
+
 	public User createUser(User u) {
 		User check = checkUser(u);
 		if (check != null)
@@ -72,8 +78,12 @@ public class UsersDelegator extends GoogleDelegator {
 		RunModification rm = new RunModification();
 		rm.setModificationType(RunModification.CREATED);
 		rm.setRun(run);
-		NotificationEngine.getInstance().notify(u.getEmail(), rm);
+//		NotificationEngine.getInstance().notify(u.getEmail(), rm);
+		new NotificationDelegator().broadcast(run, u.getFullId());
+		if (this.account != null) {
+			new NotificationDelegator().broadcast(u, u.getFullId());
 
+		}
 		// ChannelNotificator.getInstance().notify(u.getEmail(), rm);
 
 		(new UpdateGeneralItemsVisibility(authToken, u.getRunId(), u.getEmail(), 1)).scheduleTask();
@@ -145,15 +155,16 @@ public class UsersDelegator extends GoogleDelegator {
 		String accountName = UserLoggedInCache.getInstance().getUser(this.authToken);
 		if (accountName == null) {
 			accountName = UserLoggedInManager.getUser(this.authToken);
-			if (accountName != null){
-				UserLoggedInCache.getInstance().putUser(this.authToken, accountName);
-				if (accountName.contains(":")) {
-					AccountManager.getAccount(accountName);
-				}
-			}
+			
 				
 		}
-		return null;
+		if (accountName != null){
+			UserLoggedInCache.getInstance().putUser(this.authToken, accountName);
+			if (accountName.contains(":")) {
+				account = AccountManager.getAccount(accountName);
+			}
+		}
+		return account;
 	}
 
 	public Account getCurrentUserAccountObject() {
@@ -176,6 +187,14 @@ public class UsersDelegator extends GoogleDelegator {
 		List<User> users = UsersCache.getInstance().getUserList(runId, name, email, teamId);
 		if (users == null) {
 			users = UserManager.getUserList(name, email, teamId, runId);
+			AccountDelegator ad = new AccountDelegator(this);
+			Iterator<User> it = users.iterator();
+			while (it.hasNext()) {
+				User u =  it.next();
+				Account ac = ad.getContactDetails(u.getFullId());
+				if (ac.getError()!= null) it.remove();
+				u.setAccountData(ac);
+			}
 			UsersCache.getInstance().putUserList(users, runId, name, email, teamId);
 		}
 		return users;
@@ -214,9 +233,9 @@ public class UsersDelegator extends GoogleDelegator {
 	 * @param email
 	 * @return
 	 */
-	public User getUserByEmail(Long runId, String email) {
-		email = User.normalizeEmail(email);
-		List<User> users = getUserList(runId, null, email, null);
+	public User getUserByEmail(Long runId, String account) {
+		account = User.normalizeEmail(account); //TODO delete this line
+		List<User> users = getUserList(runId, null, account, null);
 		if (users.isEmpty())
 			return null;
 		return users.get(0);
@@ -244,8 +263,10 @@ public class UsersDelegator extends GoogleDelegator {
 		(new DeleteResponses(authToken, runId, email)).scheduleTask();
 		(new DeleteScoreRecords(authToken, runId, email)).scheduleTask();
 		(new UpdateGeneralItemsVisibility(authToken, runId, email, 2)).scheduleTask();
-		notifyRunDeleted(runId, email);
-
+//		notifyRunDeleted(runId, email);
+		if (this.account != null) {
+			new NotificationDelegator().broadcast(user, user.getFullId());
+		}
 		return user;
 	}
 
@@ -276,6 +297,8 @@ public class UsersDelegator extends GoogleDelegator {
 		rm.setRun(new Run());
 		rm.getRun().setRunId(runId);
 		NotificationEngine.getInstance().notify(email, rm);
+		new NotificationDelegator().broadcast(rm.getRun(), email);
+
 		// ChannelNotificator.getInstance().notify(email, rm);
 	}
 

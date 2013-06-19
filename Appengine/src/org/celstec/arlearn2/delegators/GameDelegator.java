@@ -29,6 +29,7 @@ import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.game.GameAccess;
 import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
@@ -250,14 +251,17 @@ public class GameDelegator extends GoogleDelegator {
 
 	public Game createGame(Game game, int modificationType, boolean notify) {
 		UsersDelegator qu = new UsersDelegator(this);
+		if (this.account != null) {
+			return createGame(game, account, modificationType, notify);
+		}
 		String myAccount = qu.getCurrentUserAccount();
 		if (myAccount == null) {
 			game.setError("login to create a game");
 			return game;
 		}
-		if (myAccount.contains(":")) {
-			return createGame(game, myAccount, modificationType, notify);
-		} else {
+//		if (myAccount.contains(":")) {
+//			return createGame(game, myAccount, modificationType, notify);
+//		} else {
 			// game.setGameId(GameManager.addGame(game.getTitle(), myAccount,
 			// game.getCreator(), game.getFeedUrl(), game.getGameId(),
 			// game.getConfig()));
@@ -275,25 +279,29 @@ public class GameDelegator extends GoogleDelegator {
 			(new NotifyRunsFromGame(authToken, game.getGameId(), null, modificationType)).scheduleTask();
 
 			return game;
-		}
+//		}
 
 	}
 
-	public Game createGame(Game game, String account, int modificationType, boolean notify) {
+	public Game createGame(Game game, Account account, int modificationType, boolean notify) {
+		Game oldGame = null;
+		if (game.getGameId() != null) {
+			oldGame = getGame(game.getGameId());
+		}
 		game.setGameId(GameManager.addGame(game));
+		MyGamesCache.getInstance().removeGame(game.getGameId());
+		MyGamesCache.getInstance().removeGameList(game.getGameId(), null, null, null, null);
 
 		GameAccessDelegator gad = new GameAccessDelegator(this);
 		gad.provideAccess(game.getGameId(), account, GameAccessJDO.OWNER);
-
-		MyGamesCache.getInstance().removeGame(game.getGameId());
-
-		GameModification gm = new GameModification();
-		gm.setModificationType(modificationType);
-		gm.setGame(game);
-		if (notify)
-			ChannelNotificator.getInstance().notify(account, gm);
-
+		GameAccessManager.resetGameAccessLastModificationDate(game.getGameId());
+		if (notify){
+			gad.broadcastGameUpdate(game);
+		}
 		(new NotifyRunsFromGame(authToken, game.getGameId(), null, modificationType)).scheduleTask();
+		if (oldGame != null) {
+			checkSharing(oldGame, game);
+		}
 		return game;
 	}
 
@@ -329,6 +337,9 @@ public class GameDelegator extends GoogleDelegator {
 		GameModification gm = new GameModification();
 		gm.setModificationType(GameModification.DELETED);
 		gm.setGame(g);
+		if (this.account != null) {
+			new NotificationDelegator().broadcast(g, account.getFullId());
+		}
 		ChannelNotificator.getInstance().notify(myAccount, gm);
 
 		return g;
@@ -393,6 +404,15 @@ public class GameDelegator extends GoogleDelegator {
 		}
 		new GameSearchIndex(g.getTitle(), g.getCreator(), sharingType, g.getGameId()).scheduleTask();
 		return g;
+	}
+	
+	public void checkSharing(Game oldGame, Game newGame) {
+		 Integer newSharingType = newGame.getSharing();
+		if (oldGame.getError() != null)
+			return ;
+		if (!oldGame.getSharing().equals(newSharingType)) {
+			new GameSearchIndex(newGame.getTitle(), newGame.getCreator(), newSharingType, newGame.getGameId()).scheduleTask();	
+		}
 	}
 
 	public Game setRegions(Long gameIdentifier, List<MapRegion> regions) {
@@ -494,8 +514,8 @@ public class GameDelegator extends GoogleDelegator {
 			for (ScoredDocument document : results) {
 				Game g = new Game();
 				g.setTitle(document.getFields("title").iterator().next().getText());
-				g.setCreator(document.getFields("author").iterator().next().getText());
-				g.setGameId(document.getFields("gameId").iterator().next().getNumber().longValue());
+//				g.setCreator(document.getFields("author").iterator().next().getText());
+				g.setGameId(Long.parseLong(document.getFields("gameId").iterator().next().getText()));
 				// Use the document for display.
 				resultsList.addGame(g);
 			}

@@ -6,6 +6,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.GenericClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.game.GameClient;
 
+import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 
@@ -42,6 +43,16 @@ public class GameDataSource extends GenericDataSource {
 				super.onJsonObjectReceived(jsonObject);
 			}
 		});
+	}
+	
+	public void loadGame(long gameId) {
+		((GameClient) getHttpClient()).getGame(gameId, new JsonCallback(){
+			public void onJsonReceived(JSONValue jsonValue) {
+				jsonValue.isObject().put("accessRights", new JSONNumber(1));
+				getDataSourceModel().addJsonObject(jsonValue.isObject());
+			}
+			
+		});		
 	}
 
 	protected String getBeanType() {

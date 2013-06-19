@@ -1,9 +1,13 @@
 package org.celstec.arlearn2.portal.client.resultDisplay.ui.layout;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.celstec.arlearn2.portal.client.resultDisplay.ui.view.Grid;
 import org.celstec.arlearn2.portal.client.resultDisplay.ui.view.List;
 import org.celstec.arlearn2.portal.client.resultDisplay.ui.view.Mixed;
 
+import com.google.gwt.user.client.ui.HTML;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.ImgButton;
 import com.smartgwt.client.widgets.Label;
@@ -37,8 +41,8 @@ public class ResultDisplayLayoutSideBar extends HLayout {
 	private Grid grid = null;
 	private List list = null;
 	private Mixed mixed = null;
-//	private final HTML breadcrumb = new HTML();
-	private final Breadcrumb breadcrumb;
+	private final HTML breadcrumb = new HTML();
+//	private final Breadcrumb breadcrumb;
 	private FilterForm filter = null; 
 	
 	private VLayout rigthSide = null;
@@ -60,12 +64,12 @@ public class ResultDisplayLayoutSideBar extends HLayout {
         toolbar.setHeight(22);
         toolbar.setPadding(10);
         
-//      breadcrumb.setHTML("<b>Filters</b>");
+      breadcrumb.setHTML("<b>Filters</b>");
 //        breadcrumb = new Layout();
-        breadcrumb = new Breadcrumb();
-//        breadcrumb.setStyleName("breadcrumb-left-side-style");
-//		breadcrumb.setWidth("80%");
-//		breadcrumb.setHeight("30px");
+//        breadcrumb = new Breadcrumb();
+        breadcrumb.setStyleName("breadcrumb-left-side-style");
+		breadcrumb.setWidth("80%");
+		breadcrumb.setHeight("30px");
 		refreshBreadcrumbs(filter);
         
         toolbar.addMember(createVisualizationToolbar());
@@ -182,23 +186,47 @@ public class ResultDisplayLayoutSideBar extends HLayout {
 		return toolStrip;
 	}
 	
-	private void refreshBreadcrumbs(final DynamicForm f) {
+	private void refreshBreadcrumbs(final DynamicForm filterForm) {
 		
-		if (f.getValue("teamId") != null) {
-			breadcrumb.updateTeamIdLabel(f.getValue("teamId").toString());
-		}
+		String bCrumb = "<b>Filtered by: ";
 		
-		if (f.getValue("generalItemId") != null) {
-			breadcrumb.updateGeneralItemLabel(f.getValue("generalItemId").toString());
-		}
+		@SuppressWarnings("rawtypes")
+		Iterator it = filterForm.getValues().entrySet().iterator();
+	    while (it.hasNext()) {
+	        @SuppressWarnings("rawtypes")
+			Map.Entry pairs = (Map.Entry)it.next();
+	        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+	        
+	        
+	        if (pairs.getValue() != null) {
+	        	bCrumb += " "+pairs.getKey();
+		        bCrumb += " = "+pairs.getValue();
+		        if (it.hasNext()) {
+			        bCrumb += " >> ";
+				}
+			}
+	        
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
+	    
+	    breadcrumb.setHTML(bCrumb+"</b>");
 		
-		if (f.getValue("userEmail") != null) {
-			breadcrumb.updateUserEmailLabel(f.getValue("userEmail").toString());	
-		}
 		
-		if (f.getValue("role") != null) {
-			breadcrumb.updateRoleLabel(f.getValue("role").toString());
-		}
+//		if (f.getValue("teamId") != null) {
+//			breadcrumb.updateTeamIdLabel(f.getValue("teamId").toString());
+//		}
+//		
+//		if (f.getValue("generalItemId") != null) {
+//			breadcrumb.updateGeneralItemLabel(f.getValue("generalItemId").toString());
+//		}
+//		
+//		if (f.getValue("userEmail") != null) {
+//			breadcrumb.updateUserEmailLabel(f.getValue("userEmail").toString());	
+//		}
+//		
+//		if (f.getValue("role") != null) {
+//			breadcrumb.updateRoleLabel(f.getValue("role").toString());
+//		}
 		
 //			teamId = new Label("Team = "+f.getValue("teamId"));
 //			System.out.println("TeamId: "+f.getValue("teamId"));
@@ -331,94 +359,94 @@ public class ResultDisplayLayoutSideBar extends HLayout {
 //	    breadcrumb.addMember(component);
 	}
 	
-	public class Breadcrumb extends Layout{
-		private Label teamId;
-		private Label generalItem;
-		private Label role;
-		private Label userEmail;
-		
-		public Breadcrumb() {
-			super();
-			
-	        setStyleName("breadcrumb-left-side-style");
-			setWidth("80%");
-			setHeight("30px");
-			
-			teamId = new Label();
-			userEmail = new Label();
-			role = new Label();
-			generalItem = new Label();
-			
-			teamId.addClickHandler(new ClickHandler() {
-				
-				@Override
-				public void onClick(ClickEvent event) {
-					// TODO Auto-generated method stub
-					if (breadcrumb.hasMember(teamId)) {
-						breadcrumb.removeMember(teamId);
-					}
-				}
-			});
-			
-			userEmail.addClickHandler(new ClickHandler() {
-				
-				@Override
-				public void onClick(ClickEvent event) {
-					// TODO Auto-generated method stub
-					if (breadcrumb.hasMember(userEmail)) {
-						breadcrumb.removeMember(userEmail);
-					}
-				}
-			});
-			
-			role.addClickHandler(new ClickHandler() {
-				
-				@Override
-				public void onClick(ClickEvent event) {
-					// TODO Auto-generated method stub
-					if (breadcrumb.hasMember(role)) {
-						breadcrumb.removeMember(role);
-					}
-				}
-			});
-			
-			generalItem.addClickHandler(new ClickHandler() {
-				
-				@Override
-				public void onClick(ClickEvent event) {
-					// TODO Auto-generated method stub
-					if (breadcrumb.hasMember(generalItem)) {
-						breadcrumb.removeMember(generalItem);
-					}
-				}
-			});
-			
-			addMember(teamId);
-			addMember(userEmail);
-			addMember(role);
-			addMember(generalItem);
-		}
-		
-		public void updateTeamIdLabel(String teamIdFilter) {
-			teamId.setContents(teamIdFilter);
-			// TODO HERE I NEED TO REFRESH GRID AND LIST
-		}
-		
-		public void updateUserEmailLabel(String emailFilter) {
-			userEmail.setContents(emailFilter);
-			// TODO HERE I NEED TO REFRESH GRID AND LIST
-
-		}
-		
-		public void updateRoleLabel(String roleFilter) {
-			role.setContents(roleFilter);
-			// TODO HERE I NEED TO REFRESH GRID AND LIST
-		}
-		
-		public void updateGeneralItemLabel(String generalItemFilter) {
-			generalItem.setContents(generalItemFilter);
-			// TODO HERE I NEED TO REFRESH GRID AND LIST
-		}
-	}
+//	public class Breadcrumb extends Layout{
+//		private Label teamId;
+//		private Label generalItem;
+//		private Label role;
+//		private Label userEmail;
+//		
+//		public Breadcrumb() {
+//			super();
+//			
+//	        setStyleName("breadcrumb-left-side-style");
+//			setWidth("80%");
+//			setHeight("30px");
+//			
+//			teamId = new Label();
+//			userEmail = new Label();
+//			role = new Label();
+//			generalItem = new Label();
+//			
+//			teamId.addClickHandler(new ClickHandler() {
+//				
+//				@Override
+//				public void onClick(ClickEvent event) {
+//					// TODO Auto-generated method stub
+//					if (breadcrumb.hasMember(teamId)) {
+//						breadcrumb.removeMember(teamId);
+//					}
+//				}
+//			});
+//			
+//			userEmail.addClickHandler(new ClickHandler() {
+//				
+//				@Override
+//				public void onClick(ClickEvent event) {
+//					// TODO Auto-generated method stub
+//					if (breadcrumb.hasMember(userEmail)) {
+//						breadcrumb.removeMember(userEmail);
+//					}
+//				}
+//			});
+//			
+//			role.addClickHandler(new ClickHandler() {
+//				
+//				@Override
+//				public void onClick(ClickEvent event) {
+//					// TODO Auto-generated method stub
+//					if (breadcrumb.hasMember(role)) {
+//						breadcrumb.removeMember(role);
+//					}
+//				}
+//			});
+//			
+//			generalItem.addClickHandler(new ClickHandler() {
+//				
+//				@Override
+//				public void onClick(ClickEvent event) {
+//					// TODO Auto-generated method stub
+//					if (breadcrumb.hasMember(generalItem)) {
+//						breadcrumb.removeMember(generalItem);
+//					}
+//				}
+//			});
+//			
+//			addMember(teamId);
+//			addMember(userEmail);
+//			addMember(role);
+//			addMember(generalItem);
+//		}
+//		
+//		public void updateTeamIdLabel(String teamIdFilter) {
+//			teamId.setContents(teamIdFilter);
+//			// TODO HERE I NEED TO REFRESH GRID AND LIST
+//		}
+//		
+//		public void updateUserEmailLabel(String emailFilter) {
+//			userEmail.setContents(emailFilter);
+//			// TODO HERE I NEED TO REFRESH GRID AND LIST
+//
+//		}
+//		
+//		public void updateRoleLabel(String roleFilter) {
+//			role.setContents(roleFilter);
+//			// TODO HERE I NEED TO REFRESH GRID AND LIST
+//		}
+//		
+//		public void updateGeneralItemLabel(String generalItemFilter) {
+//			generalItem.setContents(generalItemFilter);
+//			// TODO HERE I NEED TO REFRESH GRID AND LIST
+//		}
+//	}
 
 }

@@ -142,7 +142,7 @@ public class AnswerQuestionActivity extends AnnotateActivity {
 
 	public void publish() {
 		PropertiesAdapter pa = new PropertiesAdapter(this);
-		ActionsDelegator.getInstance().publishAction(this, "answer_given", runId, pa.getUsername(), generalItemId, narratorItemBean.getType());
+		ActionsDelegator.getInstance().publishAction(this, "answer_given", runId, pa.getFullId(), generalItemId, narratorItemBean.getType());
 		super.publish();
 	}
 

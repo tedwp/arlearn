@@ -32,14 +32,18 @@ import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MessageListRecord extends GenericListRecord {
 	
 	private boolean read = false;
+	private GeneralItem generalItem;
 
 	public MessageListRecord(GeneralItem generalItem, long runId, Context ctx) {
+		this.generalItem = generalItem;
 		setMessageHeader(generalItem.getName());
 		setRead(ActionCache.getInstance().isRead(runId, generalItem.getId()));
 		String description = "";
@@ -86,6 +90,11 @@ public class MessageListRecord extends GenericListRecord {
 		} else {
 			textHeader.setTypeface(null, Typeface.BOLD);
 			textHeader.setTextColor(Color.BLACK);
+		}
+		if (generalItem.getIconUrl() != null) {
+			Uri localAudioUri = GeneralItemsDelegator.getInstance().getLocalMediaUriMap(generalItem).get(GeneralItemsDelegator.ICON_LOCAL_ID);
+			 ImageView iv = (ImageView) v.findViewById(R.id.list_icon);
+			 iv.setImageURI(localAudioUri);
 		}
 		return v;
 	}

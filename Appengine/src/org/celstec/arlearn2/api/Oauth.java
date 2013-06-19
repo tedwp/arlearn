@@ -40,18 +40,18 @@ import org.celstec.arlearn2.jdo.manager.OauthKeyManager;
 public class Oauth extends Service {
 
 	
-//	@GET
-//	@Path("/addkey")
-//	public String addKey(
-//			@QueryParam("oauthProviderId") int oauthProviderId,  
-//			@QueryParam("client_id") String client_id,  
-//			@QueryParam("client_secret") String client_secret,  
-//			@QueryParam("redirect_uri") String redirect_uri
-//		) {
-//		OauthKeyManager.addKey(oauthProviderId, client_id, client_secret, redirect_uri);
-//		
-//		return "{}";
-//	}
+	@GET
+	@Path("/addkey")
+	public String addKey(
+			@QueryParam("oauthProviderId") int oauthProviderId,  
+			@QueryParam("client_id") String client_id,  
+			@QueryParam("client_secret") String client_secret,  
+			@QueryParam("redirect_uri") String redirect_uri
+		) {
+		OauthKeyManager.addKey(oauthProviderId, client_id, client_secret, redirect_uri);
+		
+		return "{}";
+	}
 
 	@GET
 	@Path("/addOnBehalfOfKey")

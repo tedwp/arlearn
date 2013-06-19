@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.delegators;
 
+import org.celstec.arlearn2.api.Service;
 import org.celstec.arlearn2.beans.run.Response;
 import org.celstec.arlearn2.beans.run.ResponseList;
 import org.celstec.arlearn2.beans.run.Run;
@@ -28,6 +29,10 @@ import com.google.gdata.util.AuthenticationException;
 
 public class ResponseDelegator extends GoogleDelegator {
 
+	public ResponseDelegator(Service service) {
+		super(service);
+	}
+	
 	public ResponseDelegator(String authtoken) throws AuthenticationException {
 		super(authtoken);
 	}

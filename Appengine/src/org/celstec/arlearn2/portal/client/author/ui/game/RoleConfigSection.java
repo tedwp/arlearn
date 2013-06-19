@@ -7,8 +7,8 @@ import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GameRolesData
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
 import org.celstec.arlearn2.gwtcommonlib.client.ui.grid.GenericListGrid;
-import org.celstec.arlearn2.portal.client.AuthoringConstants;
 import org.celstec.arlearn2.portal.client.author.ui.SectionConfig;
+import org.celstec.arlearn2.portal.client.author.ui.game.i18.GameConstants;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
@@ -26,7 +26,7 @@ import com.smartgwt.client.widgets.layout.HStack;
 import com.smartgwt.client.widgets.layout.LayoutSpacer;
 
 public class RoleConfigSection  extends SectionConfig {
-	private AuthoringConstants constants = GWT.create(AuthoringConstants.class);
+	private static GameConstants constants = GWT.create(GameConstants.class);
 
 	private GenericListGrid listGrid;
 	private Game currentGame;
@@ -68,7 +68,7 @@ public class RoleConfigSection  extends SectionConfig {
 		listGrid.setAutoFetchData(true);
 		
 		listGrid.setDataSource(GameRolesDataSource.getInstance());
-		ListGridField roleField = new ListGridField(GameRoleModel.ROLE_FIELD, "Role");
+		ListGridField roleField = new ListGridField(GameRoleModel.ROLE_FIELD, constants.roles());
 		listGrid.setFields(new ListGridField[] { roleField });
 		return listGrid;
 	}
@@ -76,14 +76,14 @@ public class RoleConfigSection  extends SectionConfig {
 	private Canvas getAddRoleForm() {
 		final DynamicForm form = new DynamicForm();
 		form.setWidth(300);
-        form.setGroupTitle("New Role");  
+        form.setGroupTitle(constants.newRole());  
         form.setIsGroup(true);  
 
         TextItem subjectItem = new TextItem("Role");  
-        subjectItem.setTitle("Role");  
+        subjectItem.setTitle(constants.role());  
         
         ButtonItem saveButton = new ButtonItem("Save");
-        saveButton.setTitle("Save Role");
+        saveButton.setTitle(constants.saveRole());
         saveButton.setColSpan(2);  
         saveButton.setAlign(Alignment.CENTER);
         
@@ -97,7 +97,6 @@ public class RoleConfigSection  extends SectionConfig {
 					currentGame.addRole(form.getValueAsString("Role"));
 					currentGame.writeToCloud(new JsonCallback() {
 						public void onJsonReceived(JSONValue jsonValue) {
-							System.out.println("dit komt terug: "+jsonValue);
 //							GameRolesDataSource.getInstance().addRole(gameId, role)
 						}
 						
@@ -110,7 +109,7 @@ public class RoleConfigSection  extends SectionConfig {
 	
 	protected void deleteRole(final String role) {
 		
-		SC.ask(constants.confirmDeleteUser().replace("***", role), new BooleanCallback() {
+		SC.ask(constants.confirmDeleteRole().replace("***", role), new BooleanCallback() {
 			public void execute(Boolean value) {
 				if (value != null && value) {
 					if (currentGame != null) {

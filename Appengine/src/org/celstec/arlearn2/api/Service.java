@@ -31,6 +31,7 @@ import com.google.gdata.util.AuthenticationException;
 public class Service {
 	
 	protected Account account;
+	protected String token;
 
 	protected UsersDelegator verifyCredentials(String authToken) throws AuthenticationException {
 		UsersDelegator qu = new UsersDelegator(authToken);
@@ -56,6 +57,7 @@ public class Service {
 		try {
 			qu = new UsersDelegator(authToken);
 			account = qu.getCurrentAccount();
+			token = qu.getAuthToken();
 			if (account != null) return true;
 			return (qu.getCurrentUserAccount() != null);
 		} catch (AuthenticationException e) {
@@ -95,4 +97,22 @@ public class Service {
 			return e.getMessage();
 		}
 	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
+	
 }

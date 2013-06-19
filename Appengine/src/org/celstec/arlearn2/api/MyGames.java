@@ -31,15 +31,14 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
 import org.celstec.arlearn2.beans.Bean;
-import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.deserializer.json.ListDeserializer;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.delegators.GameAccessDelegator;
 import org.celstec.arlearn2.delegators.GameDelegator;
-import org.celstec.arlearn2.tasks.beans.GameSearchIndex;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
@@ -48,6 +47,43 @@ import com.google.gdata.util.AuthenticationException;
 @Path("/myGames")
 public class MyGames extends Service {
 
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@CacheControlHeader("no-cache")
+	@Path("/gadget/{gameId}/game.xml")
+	public String getGadget(@PathParam("gameId") Long gameIdentifier, @QueryParam("height") Integer heightIn) throws AuthenticationException {
+		GameDelegator gd = new GameDelegator();
+		Game game = gd.getGameWithoutAccount(gameIdentifier);
+		String returnString = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
+		String title = "No game available";
+		String html = "No game available";
+		String icon = "http://streetlearn.appspot.com/images/list_icon.png";
+		int height  = 100;
+		if (heightIn!= null) {
+			height = heightIn;
+		}
+		if (game != null & game.getSharing() != Game.PRIVATE ) {
+			title = game.getTitle();
+			html = game.getDescription();
+		}
+		if (game.getConfig() != null &&game.getConfig().getMapAvailable()) {
+			icon ="http://streetlearn.appspot.com/images/icon_maps.png";
+		}
+		returnString += "<Module><ModulePrefs height =\""+height+"\" title=\""+title+"\" title_url=\"http://groups.google.com/group/Google-Gadgets-API\" category=\"games\">";
+		returnString += "<Require feature=\"dynamic-height\"/>";
+		returnString += "<Icon>"+icon+"</Icon>";
+		returnString += "</ModulePrefs>";
+		returnString += "<Content type=\"html\"><![CDATA[<style rel=\"text/css\">";
+		returnString += "body { background-color: transparent !important;}";
+		returnString += " </style>";
+		returnString += html;
+		returnString += "]]> </Content> </Module>";
+		
+		
+		return returnString;
+	}
+	
+	
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@CacheControlHeader("no-cache")
@@ -62,6 +98,21 @@ public class MyGames extends Service {
 		}
 		GameDelegator qg = new GameDelegator(account, token);
 		return serialise(qg.getGames(from, until), accept);
+	}
+	
+	@POST
+	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public String put(@HeaderParam("Authorization") String token, String gameString, 
+			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		Object inGame = deserialise(gameString, Game.class, contentType);
+		if (inGame instanceof java.lang.String)
+			return serialise(getBeanDoesNotParseException((String) inGame), accept);
+		
+		GameDelegator cg = new GameDelegator(this.account, token);
+		return serialise(cg.createGame((Game) inGame, GameModification.CREATED), accept);
 	}
 	
 	@GET
@@ -116,14 +167,14 @@ public class MyGames extends Service {
 	@Path("/access/gameId/{gameIdentifier}/account/{account}/accessRight/{accessRight}")
 	public String access(@HeaderParam("Authorization") String token, 
 			@PathParam("gameIdentifier") Long gameIdentifier, 
-			@PathParam("account") String account, 
+			@PathParam("account") String accountString, 
 			@PathParam("accessRight") Integer accessRight, 
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept)
 			throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 		GameAccessDelegator gad = new GameAccessDelegator(token);
-		gad.provideAccessWithCheck(gameIdentifier, account, accessRight);
+		gad.provideAccessWithCheck(gameIdentifier, accountString, accessRight);
 		return "{}";
 	}
 	
@@ -160,20 +211,24 @@ public class MyGames extends Service {
 		return "{}";
 	}
 	
-	@POST
-	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public String put(@HeaderParam("Authorization") String token, String gameString, 
-			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
-			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/removeAccess/gameId/{gameIdentifier}")
+	public String removeMyAccess(@HeaderParam("Authorization") String token, 
+			@PathParam("gameIdentifier") Long gameIdentifier, 
+			@PathParam("account") String account, 
+			@PathParam("accessRight") Integer accessRight, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		Object inGame = deserialise(gameString, Game.class, contentType);
-		if (inGame instanceof java.lang.String)
-			return serialise(getBeanDoesNotParseException((String) inGame), accept);
-		
-		GameDelegator cg = new GameDelegator(token);
-		return serialise(cg.createGame((Game) inGame, GameModification.CREATED), accept);
+		//TODO check if owner
+		GameAccessDelegator gad = new GameAccessDelegator(token);
+		gad.removeAccessWithCheck(gameIdentifier, this.account.getFullId());
+		return "{}";
 	}
+	
+	
 
 	@DELETE
 	@Path("/gameId/{gameIdentifier}")
@@ -181,7 +236,7 @@ public class MyGames extends Service {
 			throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		GameDelegator cg = new GameDelegator(token);
+		GameDelegator cg = new GameDelegator(account, token);
 		return serialise(cg.deleteGame(gameIdentifier), accept);
 	}
 	

@@ -54,7 +54,7 @@ public class ResponseDelegator {
 		PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
 		Log.i("VIS", "inside publish multiplechoice reesp");
 
-		ActionsDelegator.getInstance().publishAction(ctx, "answer_" + answer.getId(), pa.getCurrentRunId(), pa.getUsername(), generalItem.getId(), generalItem.getType());
+		ActionsDelegator.getInstance().publishAction(ctx, "answer_" + answer.getId(), pa.getCurrentRunId(), pa.getFullId(), generalItem.getId(), generalItem.getType());
 		try {
 			JSONObject responseValueJson = new JSONObject();
 			responseValueJson.put("isCorrect", answer.getIsCorrect());
@@ -67,9 +67,9 @@ public class ResponseDelegator {
 
 	public void publishResponse(Context ctx,GeneralItem generalItem, String responseValue) {
 		PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
-		ActionsDelegator.getInstance().publishAction(ctx, "answer_given", pa.getCurrentRunId(), pa.getUsername(), generalItem.getId(), generalItem.getType());
+		ActionsDelegator.getInstance().publishAction(ctx, "answer_given", pa.getCurrentRunId(), pa.getFullId(), generalItem.getId(), generalItem.getType());
 		Response r = new Response();
-		r.setUserEmail(pa.getUsername());
+		r.setUserEmail(pa.getFullId());
 		r.setRunId(pa.getCurrentRunId());
 		r.setTimestamp(System.currentTimeMillis());
 		r.setGeneralItemId(generalItem.getId());

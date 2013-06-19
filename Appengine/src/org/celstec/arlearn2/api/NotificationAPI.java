@@ -27,12 +27,14 @@ public class NotificationAPI extends Service {
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/gcm")
 	public String registerAndroidDevice( 
+			@HeaderParam("Authorization") String token,
 			String deviceDescription,
 			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
 		GCMDeviceDescription gcmDeviceBean = (GCMDeviceDescription) deserialise(deviceDescription, GCMDeviceDescription.class, contentType);
-		System.out.println("register device "+gcmDeviceBean);
-		new NotificationDelegator().registerDescription(gcmDeviceBean);
+		new NotificationDelegator(account, token).registerDescription(gcmDeviceBean);
 		return "{}";
 	}
 	

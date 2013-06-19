@@ -19,6 +19,7 @@ public class GCMDevicesRegistryManager {
 		GCMDevicesRegistryJDO jdo = new GCMDevicesRegistryJDO();
 		jdo.setAccount(deviceDes.getAccount());
 		jdo.setRegistrationId(deviceDes.getRegistrationId());
+		jdo.setDeviceId(deviceDes.getDeviceUniqueIdentifier());
 		try {
 			pm.makePersistent(jdo);
 		} finally {
