@@ -1,15 +1,25 @@
 package org.celstec.arlearn2.android.answerQuestion;
 
+import org.celstec.arlearn2.android.asynctasks.GenericTask;
+import org.celstec.arlearn2.android.asynctasks.db.RegisterUploadInDbTask;
+import org.celstec.arlearn2.android.asynctasks.network.UploadFileSyncTask;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.ResponseDelegator;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.beans.run.Response;
 import org.celstec.arlearn2.client.GenericClient;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import android.content.Context;
 import android.net.Uri;
 
 public abstract class DataCollectorDelegate {
 	public static final int PICTURE_RESULT = 1;
+	public static final int AUDIO_RESULT = 2;
+	public static final int VIDEO_RESULT = 3;
+	public static final int TEXT_RESULT = 4;
+	
 	protected NarratorItemActivity ctx;
 	protected long runId;
 	protected String fullAccount;
@@ -22,12 +32,48 @@ public abstract class DataCollectorDelegate {
 	
 	protected abstract void dcButtonClick();
 
-	public Response createResponse(long currentTime, Uri recordingUri, Uri imageUri, Uri videoUri, String text, int width, int height) {
-		Response r = createResponse(currentTime);
+	public Response createAudioResponse(Uri recordingUri) {
+		Response r = createResponse();
 		try {
-			JSONObject jsonResponse = createJsonResponse(recordingUri, imageUri, videoUri, text);
+			JSONObject jsonResponse = createJsonResponse(recordingUri, null, null, null);
+			r.setResponseValue(jsonResponse.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return r;
+	}
+	
+	public Response createPictureResponse(Uri pictureUri, int width, int height) {
+		Response r = createResponse();
+		try {
+			JSONObject jsonResponse = createJsonResponse(null, pictureUri, null, null);
 			jsonResponse.put("width", width);
 			jsonResponse.put("height", height);
+			r.setResponseValue(jsonResponse.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return r;
+	}
+	
+	public Response createVideoResponse(Uri videoUri, int width, int height) {
+		Response r = createResponse();
+		try {
+			JSONObject jsonResponse = createJsonResponse(null, null, videoUri, null);
+			jsonResponse.put("width", width);
+			jsonResponse.put("height", height);
+			r.setResponseValue(jsonResponse.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return r;
+	}
+	
+	public Response createTextResponse(String text) {
+		Response r = createResponse();
+		try {
+			JSONObject jsonResponse = createJsonResponse(null, null, null, text);
+			r.setTimestamp(System.currentTimeMillis());
 			r.setResponseValue(jsonResponse.toString());
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -58,12 +104,36 @@ public abstract class DataCollectorDelegate {
 		return GenericClient.urlPrefix + "/uploadService/" + runId + "/" + account + "/" + uri.getLastPathSegment();
 	}
 	
-	public Response createResponse(long currentTime) {
+	public Response createResponse() {
 		Response r = new Response();
 		r.setUserEmail(fullAccount);
 		r.setRunId(runId);
-		r.setTimestamp(currentTime);
 		return r;
 	}
 
+	protected void publishResponseWithFile(Uri localFile, final Response r) {
+		final long currentTime = System.currentTimeMillis();
+		r.setTimestamp(currentTime);
+
+	
+        r.setGeneralItemId(ctx.getNarratorBean().getId());
+		RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, "audio:" + currentTime, PropertiesAdapter.getInstance(ctx).getFullId(), localFile, getMimeType());
+		UploadFileSyncTask fileSyncTask = new UploadFileSyncTask(); 
+		
+		task.taskToRunAfterExecute(fileSyncTask);
+	
+		fileSyncTask.taskToRunAfterExecute(new GenericTask() {
+			
+			@Override
+			protected void run(Context ctx) {
+				ResponseDelegator.getInstance().publishResponse(ctx, r);
+			}
+		});
+		
+		task.run(ctx);
+		
+	}
+	
+
+	protected abstract String getMimeType() ;
 }

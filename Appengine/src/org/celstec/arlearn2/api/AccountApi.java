@@ -107,4 +107,26 @@ public class AccountApi extends Service {
 		return serialise(ad.getContactDetails(accountFullId), accept);
 	}
 	
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@CacheControlHeader("no-cache")
+	@Path("/makesuper/{accountFullId}")
+	public String makesuper(@HeaderParam("Authorization") String token, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept,
+			@PathParam("accountFullId") String accountFullId
+
+			) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		
+		AccountDelegator ad = new AccountDelegator(this);
+		String myAccount = UserLoggedInManager.getUser(token);
+		if (myAccount == null) {
+			Account ac = new Account();
+			ac.setError("account is not logged in");
+		}
+		ad.makeSuper(accountFullId);
+		return "{}";
+	}
+	
 }

@@ -57,6 +57,7 @@ public class GeneralItemEditStack extends SectionStack {
 	}
 	
 	public void setDisappearStack(DependencyEditor depEditor) {
+		depEditor.setShowCountDownOption();
 		if (disappearStackSection != null) {
 			removeSection(disappearStackSection.getID());
 		}

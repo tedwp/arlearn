@@ -88,6 +88,19 @@ public class AccountManager {
 		return account;
 	}
 
+	public static void makeSuper(String accountId) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			pm.getObjectById(AccountJDO.class, KeyFactory
+					.createKey(AccountJDO.class.getSimpleName(), accountId)).setAccountLevel(Account.ADMINISTRATOR);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pm.close();
+		}
+		
+	}
+
 	
 
 }

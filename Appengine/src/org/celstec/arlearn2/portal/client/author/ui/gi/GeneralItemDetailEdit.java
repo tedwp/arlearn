@@ -12,6 +12,7 @@ import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.Extensio
 import org.celstec.arlearn2.portal.client.author.ui.gi.i18.GeneralItemConstants;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.maps.gwt.client.LatLng;
@@ -84,6 +85,8 @@ public class GeneralItemDetailEdit extends VLayout {
 		}
 		if (disappearEdit != null) {
 			JSONObject disappearDep = disappearEdit.getJson();
+			JSONBoolean showCountDown = disappearEdit.getCountDown();
+			if (showCountDown != null) gi.getJsonRep().put("showCountDown", showCountDown);
 			 gi.getJsonRep().put("disappearOn", disappearDep);
 		}
 		GeneralItemsClient.getInstance().createGeneralItem(gi, new JsonCallback(){
@@ -137,6 +140,9 @@ public class GeneralItemDetailEdit extends VLayout {
 		disappearEdit = new DependencyEditor(gi.getLong(GameModel.GAMEID_FIELD), mapTab);
 		if (gi.getJsonRep().containsKey("disappearOn")){
 			disappearEdit.loadGeneralItem(gi.getJsonRep().get("disappearOn").isObject());
+		}
+		if (gi.getJsonRep().containsKey("showCountDown")){
+			disappearEdit.setShowCountDown(gi.getJsonRep().get("showCountDown"));
 		}
 		appearEdit =  new DependencyEditor(gi.getLong(GameModel.GAMEID_FIELD), mapTab);
 		if (gi.getJsonRep().containsKey("dependsOn")){

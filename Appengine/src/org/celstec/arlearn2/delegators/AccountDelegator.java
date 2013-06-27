@@ -43,4 +43,9 @@ public class AccountDelegator extends GoogleDelegator {
 		return AccountManager.toBean(AccountManager.addAccount(localID, 0, inContact.getEmail(), inContact.getGivenName(), inContact.getFamilyName(), inContact.getName(), inContact.getPicture()));
 	}
 
+	public void makeSuper(String accountId) {
+		AccountManager.makeSuper(accountId);
+		
+	}
+
 }

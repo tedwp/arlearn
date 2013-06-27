@@ -164,7 +164,7 @@ public class NetworkPage {
 
 		TextAreaItem messageItem = new TextAreaItem("fromMessage");
 		messageItem.setShowTitle(false);
-		messageItem.setLength(5000);
+		messageItem.setLength(500000);
 		messageItem.setColSpan(2);
 		messageItem.setWidth("*");
 		messageItem.setHeight("*");
@@ -191,7 +191,7 @@ public class NetworkPage {
 
 		TextAreaItem messageItem = new TextAreaItem("toMessage");
 		messageItem.setShowTitle(false);
-		messageItem.setLength(5000);
+		messageItem.setLength(500000);
 		messageItem.setColSpan(2);
 		messageItem.setWidth("*");
 		messageItem.setHeight("*");

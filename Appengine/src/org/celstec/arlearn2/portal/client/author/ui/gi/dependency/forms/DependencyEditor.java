@@ -6,11 +6,18 @@ import org.celstec.arlearn2.portal.client.author.ui.gi.dependency.nodes.ActionDe
 import org.celstec.arlearn2.portal.client.author.ui.gi.i18.GeneralItemConstants;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -26,13 +33,18 @@ public class DependencyEditor extends VLayout {
 	protected ActionForm simpleEditor;
 	protected long gameId;
 	protected Tab mapTab;
+	
+	private DynamicForm countDownForm;
+	
 	public DependencyEditor(long gameId, Tab mapTab) {
 		this.mapTab = mapTab;
 		this.gameId = gameId;
 		createAdvDepButton();
+		createShowCountDownForm();
 		simpleEditor = new ActionForm(false, gameId);
 		simpleEditor.showActionForm();
 		addMember(simpleEditor);
+		addMember(countDownForm);
 		createButtonLayout(advButton);
 		addMember(buttonLayout);
 	}
@@ -55,6 +67,16 @@ public class DependencyEditor extends VLayout {
 				toggle(true);
 			}
 		});
+	}
+	
+	private void createShowCountDownForm() {
+		countDownForm = new DynamicForm();
+		countDownForm.setIsGroup(true);
+		countDownForm.setGroupTitle(constants.countDown());
+		CheckboxItem checkBox = new CheckboxItem("showCountDown", constants.showCountDown());
+		countDownForm.setFields(checkBox);
+		countDownForm.setVisibility(Visibility.HIDDEN);
+		
 	}
 
 	public void toggle(boolean loadDep) {
@@ -94,6 +116,14 @@ public class DependencyEditor extends VLayout {
 		}
 		return null;
 	}
+	
+	public JSONBoolean getCountDown() {
+		if (countDownForm.getVisibility() == Visibility.INHERIT) {
+			return JSONBoolean.getInstance(countDownForm.getValue("showCountDown")==null?false:(Boolean)countDownForm.getValue("showCountDown"));
+		}
+		return null;
+	}
+	
 
 	public void loadGeneralItem(JSONObject object) {
 		if (!object.get("type").isString().stringValue().equals(ActionDependencyNode.DEP_TYPE)) {
@@ -105,11 +135,21 @@ public class DependencyEditor extends VLayout {
 			simpleEditor.loadJson(object);
 		}
 		
+		
 	}
 
 	public void deselect() {
 		if (advEditor != null) advEditor.deselect();
 		
+	}
+
+	public void setShowCountDownOption() {
+		countDownForm.setVisibility(Visibility.INHERIT);
+		
+	}
+
+	public void setShowCountDown(JSONValue jsonValue) {
+				countDownForm.setValue("showCountDown", jsonValue.isBoolean().booleanValue());		
 	}
 
 }

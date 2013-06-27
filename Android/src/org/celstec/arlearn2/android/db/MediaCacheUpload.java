@@ -144,7 +144,7 @@ public class MediaCacheUpload extends GenericDbTable {
 	}
 
 	public void deleteRun(Long runId) {
-		
+		db.getSQLiteDb().delete(getTableName(), RUN_ID + " = " + runId, null);
 	}
 
 	public UploadItem getNextItemToUpload() {

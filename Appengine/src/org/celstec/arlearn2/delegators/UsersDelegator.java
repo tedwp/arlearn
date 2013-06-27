@@ -244,7 +244,7 @@ public class UsersDelegator extends GoogleDelegator {
 	public HashMap<String, User> getUserMap(Long runId) {
 		HashMap<String, User> map = new HashMap<String, User>();
 		for (User u : getUserList(runId, null, null, null)) {
-			map.put(u.getEmail(), u);
+			map.put(u.getFullId(), u);
 		}
 		return map;
 	}

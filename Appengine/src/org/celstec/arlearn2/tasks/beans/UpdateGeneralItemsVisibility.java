@@ -32,7 +32,7 @@ import com.google.gdata.util.AuthenticationException;
 public class UpdateGeneralItemsVisibility extends GenericBean{
 	
 	private Long runId;
-	private String userEmail;
+	private String userEmail; //TODO check whether userEmail should not be fullId
 	private Integer updateType;
 	
 

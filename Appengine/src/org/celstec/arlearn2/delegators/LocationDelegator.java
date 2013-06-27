@@ -67,7 +67,7 @@ public class LocationDelegator extends GoogleDelegator{
 			if ("all".equals(luc.getScope())) {
 				for (User u: ud.getUsers(runId).getUsers()){
 					lu.setAccount(u.getEmail());
-					ChannelNotificator.getInstance().notify(u.getEmail(), lu.toString());
+//					ChannelNotificator.getInstance().notify(u.getEmail(), lu.toString());
 				}
 			}
 		}

@@ -98,6 +98,7 @@ import org.celstec.arlearn2.beans.run.GeneralItemVisibilityList;
 import org.celstec.arlearn2.beans.run.Location;
 import org.celstec.arlearn2.beans.run.LocationUpdate;
 import org.celstec.arlearn2.beans.run.LocationUpdateSerializer;
+import org.celstec.arlearn2.beans.run.Message;
 import org.celstec.arlearn2.beans.run.Response;
 import org.celstec.arlearn2.beans.run.ResponseList;
 import org.celstec.arlearn2.beans.run.ResponseListSerializer;
@@ -179,6 +180,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(RunBean.class.getCanonicalName(), new RunBeanSerialiser());
 		customSerializerMap.put(GeneralItemVisibility.class.getCanonicalName(), GeneralItemVisibility.serializer);
 		customSerializerMap.put(GeneralItemVisibilityList.class.getCanonicalName(), GeneralItemVisibilityList.serializer);
+		customSerializerMap.put(Message.class.getCanonicalName(), Message.serializer);
 		
 		customSerializerMap.put(Action.class.getCanonicalName(), new ActionSerializer());
 		customSerializerMap.put(ActionList.class.getCanonicalName(), new ActionListSerializer());

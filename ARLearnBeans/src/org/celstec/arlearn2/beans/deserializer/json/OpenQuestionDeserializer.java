@@ -49,7 +49,13 @@ public class OpenQuestionDeserializer extends BeanDeserializer{
 			oq.setWithPicture(object.getBoolean("withPicture"));
 		if (object.has("withVideo"))
 			oq.setWithVideo(object.getBoolean("withVideo"));
-
+		if (object.has("withValue"))
+			oq.setWithValue(object.getBoolean("withValue"));
 		
+		
+		if (object.has("textDescription"))
+			oq.setTextDescription(object.getString("textDescription"));
+		if (object.has("valueDescription"))
+			oq.setValueDescription(object.getString("valueDescription"));
 	}
 }

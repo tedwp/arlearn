@@ -1,10 +1,12 @@
 package org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop;
 
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.JsonObjectListCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.network.GenericClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.game.GameClient;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
 
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -62,6 +64,10 @@ public class GameDataSource extends GenericDataSource {
 	@Override
 	public void processNotification(JSONObject bean) {
 		loadDataFromWeb();
+	}
+
+	public Game getGame(long gameId) {
+		return new Game(((AbstractRecord)GameDataSource.getInstance().getRecord(gameId)).getCorrespondingJsonObject());
 	}
 	
 	

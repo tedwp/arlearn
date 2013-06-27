@@ -31,4 +31,10 @@ public class User extends Account {
 	public String getType() {
 		return "org.celstec.arlearn2.beans.run.User";
 	}
+
+
+	public void setTeam(String teamId) {
+		setString("teamId", teamId);
+		
+	}
 }

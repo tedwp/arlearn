@@ -24,8 +24,12 @@ public class OpenQuestion extends Bean {
 
 	private boolean withAudio;
 	private boolean withText;
+	private boolean withValue;
 	private boolean withPicture;
 	private boolean withVideo;
+	
+	private String textDescription;
+	private String valueDescription;
 	
 	public boolean isWithAudio() {
 		return withAudio;
@@ -52,6 +56,26 @@ public class OpenQuestion extends Bean {
 	public void setWithVideo(boolean withVideo) {
 		this.withVideo = withVideo;
 	}
+	
+	
+	public boolean isWithValue() {
+		return withValue;
+	}
+	public void setWithValue(boolean withValue) {
+		this.withValue = withValue;
+	}
+	public String getTextDescription() {
+		return textDescription;
+	}
+	public void setTextDescription(String textDescription) {
+		this.textDescription = textDescription;
+	}
+	public String getValueDescription() {
+		return valueDescription;
+	}
+	public void setValueDescription(String valueDescription) {
+		this.valueDescription = valueDescription;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		if (!super.equals(obj)) return false;
@@ -60,6 +84,9 @@ public class OpenQuestion extends Bean {
 				 nullSafeEquals(isWithVideo(), other.isWithVideo()) && 
 				 nullSafeEquals(isWithPicture(), other.isWithPicture()) && 
 				 nullSafeEquals(isWithText(), other.isWithText()) && 
+				 nullSafeEquals(isWithValue(), other.isWithValue()) && 
+				 nullSafeEquals(getTextDescription(), other.getTextDescription()) && 
+				 nullSafeEquals(getValueDescription(), other.getValueDescription()) && 
 				 nullSafeEquals(isWithAudio(), other.isWithAudio()); 
 
 	}

@@ -30,6 +30,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.run.Response;
+import org.celstec.arlearn2.beans.run.ResponseList;
 import org.celstec.arlearn2.delegators.ResponseDelegator;
 
 import com.google.gdata.util.AuthenticationException;
@@ -113,5 +114,27 @@ public class ResponseAPI extends Service {
 			return serialise(cr.createResponse(r.getRunId(), r), accept);
 		}
 	}
+	
+	
+	@POST
+	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/list")
+	public String putList(@HeaderParam("Authorization") String token, String rString,
+			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		
+		Object inResponse = deserialise(rString, ResponseList.class, contentType);
+		if (inResponse instanceof java.lang.String)
+			return serialise(getBeanDoesNotParseException((String) inResponse), accept);
+		ResponseList rl = (ResponseList) inResponse;
+		
+		for (Response r: rl.getResponses()) {
+			put(token, r.toString(), contentType, accept);
+		}
+		return "{}";
+	}
+	
 
 }

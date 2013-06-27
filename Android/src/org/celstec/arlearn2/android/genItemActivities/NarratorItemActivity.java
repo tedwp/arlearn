@@ -69,7 +69,7 @@ public class NarratorItemActivity extends GeneralItemActivity {
 	protected WebView webview;
 	protected NarratorItem narratorBean;
 	protected String richText;
-	protected Button provideAnswerButton;
+//	protected Button provideAnswerButton;
 
 	protected GenericMessageListAdapter adapter;
 
@@ -138,41 +138,40 @@ public class NarratorItemActivity extends GeneralItemActivity {
 
 	protected void getGuiComponents() {
 		super.getGuiComponents();
+		final long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
+		final String account = menuHandler.getPropertiesAdapter().getFullId();
 		webview = (WebView) findViewById(R.id.giNarratorWebView);
-		provideAnswerButton = (Button) findViewById(R.id.provideAnswerButton);
-		provideAnswerButton.setText(getString(R.string.ao_answer_menu));
+//		provideAnswerButton = (Button) findViewById(R.id.provideAnswerButton);
+//		provideAnswerButton.setText(getString(R.string.ao_answer_menu));
 		LinearLayout dcLayout = (LinearLayout) findViewById(R.id.datacollectionbar);
 		ImageView pictureView = (ImageView) findViewById(R.id.picture_button);
 		ImageView audioView = (ImageView) findViewById(R.id.speech_button);
 		OpenQuestion oq = narratorBean.getOpenQuestion();
 		if (oq != null) {
-			provideAnswerButton.setVisibility(View.VISIBLE);
-
-			provideAnswerButton.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(NarratorItemActivity.this, AnswerQuestionActivity.class);
-					intent.putExtra("runId", menuHandler.getPropertiesAdapter().getCurrentRunId());
-					intent.putExtra("bean", ((NarratorItemActivity) NarratorItemActivity.this).getNarratorBean());
-					intent.putExtra("generalItemId", ((NarratorItemActivity) NarratorItemActivity.this).getItemId());
-					NarratorItemActivity.this.startActivity(intent);
-
-				}
-			});
-			if (PropertiesAdapter.getInstance(this).getAccountLevel() == Account.ADMINISTRATOR) {
+//			provideAnswerButton.setVisibility(View.VISIBLE);
+//
+//			provideAnswerButton.setOnClickListener(new View.OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+//					Intent intent = new Intent(NarratorItemActivity.this, AnswerQuestionActivity.class);
+//					intent.putExtra("runId", runId);
+//					intent.putExtra("bean", ((NarratorItemActivity) NarratorItemActivity.this).getNarratorBean());
+//					intent.putExtra("generalItemId", ((NarratorItemActivity) NarratorItemActivity.this).getItemId());
+//					NarratorItemActivity.this.startActivity(intent);
+//
+//				}
+//			});
+//			if (PropertiesAdapter.getInstance(this).getAccountLevel() == Account.ADMINISTRATOR) {
 				dcLayout.setVisibility(View.VISIBLE);
-				dataCollectorManager = new DataCollectorDelegateManager(oq, this);
-				if (oq.isWithPicture()) {
-					
-				}
+				dataCollectorManager = new DataCollectorDelegateManager(oq, this, runId, account);
 				if (oq.isWithAudio()) {
 					(audioView).setImageDrawable(getResources().getDrawable(R.drawable.dc_voice_search_128));
 				}
-			}
+//			}
 		} else {
-			provideAnswerButton.setVisibility(View.GONE);
-			dcLayout.setVisibility(View.VISIBLE);
+//			provideAnswerButton.setVisibility(View.GONE);
+			dcLayout.setVisibility(View.GONE);
 		}
 	}
 	
@@ -180,7 +179,7 @@ public class NarratorItemActivity extends GeneralItemActivity {
 	private DataCollectorDelegateManager dataCollectorManager;
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		dataCollectorManager.processResult(resultCode, data);
+		dataCollectorManager.processResult(requestCode, data);
 		if (resultCode == -1 && requestCode == 1) {
 			onActivityResult(data);
 		}

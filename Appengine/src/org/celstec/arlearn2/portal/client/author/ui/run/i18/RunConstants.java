@@ -61,4 +61,22 @@ public interface RunConstants extends Constants {
 	
 	@DefaultStringValue("Submit Players")
 	String submitPlayers();
+
+	@DefaultStringValue("Create Team")
+	String team();
+	
+	@DefaultStringValue("Team name")
+	String teamName();
+	
+	@DefaultStringValue("Add teams")
+	String addTeams();
+	
+	@DefaultStringValue("Submit team")
+	String submitTeam();
+	
+	@DefaultStringValue("Delete team")
+	String deleteTeam();
+	
+	@DefaultStringValue("Delete team '***' from this run? <br>")
+	String confirmDeleteTeam();
 }

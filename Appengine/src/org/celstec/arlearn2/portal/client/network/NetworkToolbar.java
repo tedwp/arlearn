@@ -24,9 +24,56 @@ public class NetworkToolbar extends ToolBar {
 		addMenuButton(addUsersMenuButtons());
 		addMenuButton(addAccountsMenuButtons());
 		addMenuButton(addReponsesMenuButtons());
+		addMenuButton(addActionsMenuButtons());
+		addMenuButton(addMessageMenuButtons());
 
 	}
 
+	private ToolStripMenuButton addMessageMenuButtons() {
+		Menu menu = new Menu();
+		menu.setShowShadow(true);
+		menu.setShadowDepth(3);
+
+		MenuItemSeparator separator = new MenuItemSeparator();
+
+		menu.setItems(
+
+//				createMenuItemGET("Get responses", "response/runId/***"),
+//				createMenuItemGET("Get responses (resumption)", "response/runId/***?resumptionToken=**"),
+//				createMenuItemGET("Get responses (from/until)", "response/runId/***?from=0&until="+System.currentTimeMillis()),
+//				separator,
+				createMenuItemPOST(
+						"Create Message",
+						"messages/userId/***",
+						"{  \"type\": \"org.celstec.arlearn2.beans.run.Message\",  \"runId\": 0, \"title\": \"Heading\", \"messageBody\": \"Here comes some text\" }")
+				
+		);
+		
+		
+		
+
+		ToolStripMenuButton menuButton = new ToolStripMenuButton("User Messages",
+				menu);
+		menuButton.setWidth(100);
+		// addMenuButton(menuButton);
+		return menuButton;
+	}
+	
+	private ToolStripMenuButton addActionsMenuButtons() {
+		Menu menu = new Menu();
+		menu.setShowShadow(true);
+		menu.setShadowDepth(3);
+		MenuItemSeparator separator = new MenuItemSeparator();
+		menu.setItems(
+				createMenuItemGET("Get actions", "actions/runId/***")				
+		);
+		ToolStripMenuButton menuButton = new ToolStripMenuButton("User Actions",
+				menu);
+		menuButton.setWidth(100);
+		// addMenuButton(menuButton);
+		return menuButton;
+	}
+	
 	private ToolStripMenuButton addReponsesMenuButtons() {
 		Menu menu = new Menu();
 		menu.setShowShadow(true);

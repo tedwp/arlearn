@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.gwtcommonlib.client.objects;
 
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.RunModel;
 
 import com.google.gwt.json.client.JSONNumber;
@@ -33,5 +34,9 @@ public class Run {
 	
 	public long getRunId() {
 		return (long) jsonRep.get(RunModel.RUNID_FIELD).isNumber().doubleValue();
+	}
+	
+	public long getGameId() {
+		return (long) jsonRep.get(GameModel.GAMEID_FIELD).isNumber().doubleValue();
 	}
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.notification.GeneralItemModification;
+import org.celstec.arlearn2.beans.run.Message;
 import org.celstec.arlearn2.beans.run.Run;
 
 import android.content.Context;
@@ -22,6 +23,8 @@ public abstract class GCMHandler {
 				return new GCMGameHandler(ctx);
 			} else if (map.get("type").equals(GeneralItemModification.class.getName())){
 				return new GCMGeneralItemHandler(ctx, Long.parseLong(map.get("runId")),Long.parseLong(map.get("gameId")));
+			}else if (map.get("type").equals(Message.class.getName())) {
+				return new GCMMessageHandler(ctx, map);
 			}
 		}
 		return null;

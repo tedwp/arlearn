@@ -5,7 +5,6 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
@@ -52,7 +51,7 @@
         </LinearLayout>
 
         <FrameLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+
             android:id="@+id/videoViewLayout"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
@@ -64,7 +63,6 @@
             android:visibility="invisible" >
 
             <RelativeLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
@@ -93,7 +91,6 @@
         </FrameLayout>
 
         <FrameLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/videoViewLayout"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
@@ -125,7 +122,6 @@
     </LinearLayout>
 
     <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0" >
@@ -180,7 +176,7 @@
         </LinearLayout>
         
     <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0" >

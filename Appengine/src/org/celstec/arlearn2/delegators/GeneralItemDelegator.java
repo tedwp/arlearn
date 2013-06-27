@@ -115,7 +115,7 @@ public class GeneralItemDelegator extends GoogleDelegator {
 				return gi;
 			}
 		}
-		GeneralItemManager.setStatusDeleted(gameId, itemId);
+		gi = GeneralItemManager.setStatusDeleted(gameId, itemId);
 		GeneralitemsCache.getInstance().removeGeneralItemList(gameId);
 		(new NotifyRunsFromGame(authToken, gi.getGameId(), gi, GeneralItemModification.DELETED)).scheduleTask();
 		return gi;
@@ -296,7 +296,7 @@ public class GeneralItemDelegator extends GoogleDelegator {
 				generalItem.setDisappearAt(disAt);
 
 				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getEmail(), GeneralItemVisibilityManager.DISAPPEARED_STATUS, disAt);
-				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
+//				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
 			}
 		}
 	}

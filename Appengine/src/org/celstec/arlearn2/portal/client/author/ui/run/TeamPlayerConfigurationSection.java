@@ -2,9 +2,13 @@ package org.celstec.arlearn2.portal.client.author.ui.run;
 
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.ContactModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameRoleModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.RunModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.TeamModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.UserModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.ContactsDataSource;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GameRolesDataSource;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.TeamDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.UserDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.network.AccountClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
@@ -31,6 +35,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.form.validator.IsIntegerValidator;
@@ -47,7 +52,11 @@ public class TeamPlayerConfigurationSection extends SectionConfig {
 	private ListGrid playersGrid;
 	private Run run;
 	private DynamicForm playerForm;
-
+	private SelectItem roleSelect;
+	private SelectItem roleSelectQR;
+	private SelectItem teamSelect;
+	private SelectItem teamSelectQR;
+	
 	public TeamPlayerConfigurationSection() {
 		super(constants.teamAndUsers());
 		VLayout collabLayout = new VLayout();
@@ -156,6 +165,20 @@ public class TeamPlayerConfigurationSection extends SectionConfig {
 		validator.setMin(1);
 		amountTextItem.setValidators(new IsIntegerValidator(),validator);
 		
+		roleSelectQR = new SelectItem("roleSelect", "role");
+		roleSelectQR.setAllowEmptyValue(true);
+		roleSelectQR.setOptionDataSource(GameRolesDataSource.getInstance());
+		roleSelectQR.setDisplayField(GameRoleModel.ROLE_FIELD);
+		roleSelectQR.setValueField(GameRoleModel.ROLE_FIELD);
+		roleSelectQR.setMultiple(true);
+		
+		
+		teamSelectQR = new SelectItem("teamSelect", "team");
+		teamSelectQR.setAllowEmptyValue(true);
+		teamSelectQR.setOptionDataSource(TeamDataSource.getInstance());
+		teamSelectQR.setDisplayField(TeamModel.NAME_FIELD);
+		teamSelectQR.setValueField(TeamModel.TEAMID_FIELD);
+		
 		ButtonItem submitButton = new ButtonItem("Submit");
 		submitButton.setTitle(constants.submitPlayers());
 		submitButton.setColSpan(2);
@@ -184,6 +207,10 @@ public class TeamPlayerConfigurationSection extends SectionConfig {
 								User u = new User();
 								u.setRunId(run.getRunId());
 								u.setFullIdentifier("0:"+account.get("localId").isString().stringValue());
+								u.setRoles(roleSelectQR.getValues());
+								if (teamSelectQR.getValue() != null && !teamSelectQR.getValue().equals("")) {
+									u.setTeam(teamSelectQR.getValueAsString());
+								}
 								UserClient.getInstance().createUser(u, new JsonCallback(){
 									public void onJsonReceived(JSONValue jsonValue) {
 										UserDataSource.getInstance().loadDataFromWeb(run.getRunId());
@@ -211,8 +238,8 @@ public class TeamPlayerConfigurationSection extends SectionConfig {
 				Window.open("/qrsFor.jsp?runId="+run.getRunId(), "_blank", "");
 			}
 		});
-		anonymousAccountForm.setFields( nameTextItem, amountTextItem,  submitButton, printtags);
-
+		
+		anonymousAccountForm.setFields( nameTextItem, amountTextItem,  roleSelectQR, teamSelectQR, submitButton, printtags);
 		
 		return anonymousAccountForm;
 	}
@@ -236,7 +263,22 @@ public class TeamPlayerConfigurationSection extends SectionConfig {
 //		qrToggle.setValue(true);
 //		qrToggle.setRedrawOnChange(true);
 		
-	
+		roleSelect = new SelectItem("roleSelect", "role");
+		roleSelect.setAllowEmptyValue(true);
+		roleSelect.setOptionDataSource(GameRolesDataSource.getInstance());
+		roleSelect.setDisplayField(GameRoleModel.ROLE_FIELD);
+		roleSelect.setValueField(GameRoleModel.ROLE_FIELD);
+		roleSelect.setMultiple(true);
+		
+		
+		teamSelect = new SelectItem("teamSelect", "team");
+		teamSelect.setAllowEmptyValue(true);
+		teamSelect.setOptionDataSource(TeamDataSource.getInstance());
+		teamSelect.setDisplayField(TeamModel.NAME_FIELD);
+		teamSelect.setValueField(TeamModel.TEAMID_FIELD);
+		
+		
+		
 		
 		ButtonItem submitButton = new ButtonItem("Submit");
 		submitButton.setTitle(constants.submitPlayers());
@@ -252,6 +294,10 @@ public class TeamPlayerConfigurationSection extends SectionConfig {
 						User u = new User();
 						u.setRunId(run.getRunId());
 						u.setFullIdentifier(account);
+						u.setRoles(roleSelect.getValues());
+						if (teamSelect.getValue() != null && !teamSelect.getValue().equals("")) {
+							u.setTeam(teamSelect.getValueAsString());
+						}
 						
 						UserClient.getInstance().createUser(u, new JsonCallback(){
 							public void onJsonReceived(JSONValue jsonValue) {
@@ -264,7 +310,7 @@ public class TeamPlayerConfigurationSection extends SectionConfig {
 				
 			}
 		});
-		playerForm.setFields(playersComboBox,  submitButton);
+		playerForm.setFields(playersComboBox,  roleSelect, teamSelect, submitButton);
 		return playerForm;
 	}
 	
@@ -294,6 +340,12 @@ public class TeamPlayerConfigurationSection extends SectionConfig {
 		criteria.addCriteria(RunModel.RUNID_FIELD,""+ runId);
 		criteria.addCriteria(GameModel.DELETED_FIELD, false);
 		playersGrid.setCriteria(criteria);
+		
+		Criteria crit = new Criteria();
+		crit.addCriteria(GameModel.GAMEID_FIELD,""+ run.getGameId());
+		System.out.println("set game id to "+ run.getGameId());
+		roleSelect.setPickListCriteria(crit);
+		GameRolesDataSource.getInstance().loadRoles(run.getGameId());
 //		teamGrid.setCriteria(criteria);
 		
 	}

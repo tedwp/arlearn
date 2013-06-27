@@ -53,17 +53,24 @@ public class PictureDataCollectorDelegate extends DataCollectorDelegate {
 		Bitmap preview_bitmap;
 		try {
 			preview_bitmap = BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(pictureUri),null,options);
-			long currentTime = System.currentTimeMillis();
-			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, 
-					"picture:" + currentTime,  fullAccount, pictureUri, "application/jpg");
-			task.taskToRunAfterExecute(new UploadFileSyncTask());
-			task.run(ctx);
-			Response r = createResponse(currentTime, null, pictureUri, null, null, preview_bitmap.getWidth(), preview_bitmap.getHeight());
+//			long currentTime = System.currentTimeMillis();
+//			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, 
+//					"picture:" + currentTime,  fullAccount, pictureUri, "application/jpg");
+//			task.taskToRunAfterExecute(new UploadFileSyncTask());
+//			task.run(ctx);
+//			Response r = createResponse( null, pictureUri, null, null, preview_bitmap.getWidth(), preview_bitmap.getHeight());
+//			
+//			r.setGeneralItemId(ctx.getNarratorBean().getId());
+//			ResponseDelegator.getInstance().publishResponse(ctx, r);
 			
-			r.setGeneralItemId(ctx.getNarratorBean().getId());
-			ResponseDelegator.getInstance().publishResponse(ctx, r);
+			publishResponseWithFile(pictureUri, createPictureResponse(pictureUri, preview_bitmap.getWidth(), preview_bitmap.getHeight()));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}		
+	}
+
+	@Override
+	protected String getMimeType() {
+		return "application/jpg";
 	}
 }

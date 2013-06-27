@@ -49,6 +49,9 @@ public interface GeneralItemConstants  extends Constants {
 	@DefaultStringValue("Answer with text") 
 	String answerWithText();
 	
+	@DefaultStringValue("Answer with number") 
+	String answerWithValue(); //TODO translate
+	
 	@DefaultStringValue("Answer with picture")
 	String answerWithPicture();
 	
@@ -130,6 +133,13 @@ public interface GeneralItemConstants  extends Constants {
 	
 	@DefaultStringValue("Is correct")
 	String isCorrect();
+	
+	@DefaultStringValue("Show Countdown")
+	String showCountDown();
+	
+	@DefaultStringValue("Countdown")
+	String countDown();
+	
 	
 	
 }

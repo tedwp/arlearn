@@ -132,8 +132,7 @@ public class GeneralItems extends Service {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 		GeneralItemDelegator gid = new GeneralItemDelegator(token);
-		gid.deleteGeneralItem(gameIdentifier, itemId);
-		return "";
+		return serialise(gid.deleteGeneralItem(gameIdentifier, itemId), accept);
 	}
 
 	@GET

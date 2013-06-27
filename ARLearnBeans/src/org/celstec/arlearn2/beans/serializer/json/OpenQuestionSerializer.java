@@ -33,6 +33,9 @@ public class OpenQuestionSerializer extends BeanSerializer{
 			returnObject.put("withText", openQuestion.isWithText());
 			returnObject.put("withPicture", openQuestion.isWithPicture());
 			returnObject.put("withVideo", openQuestion.isWithVideo());
+			returnObject.put("withValue", openQuestion.isWithValue());
+			returnObject.put("textDescription", openQuestion.getTextDescription());
+			returnObject.put("valueDescription", openQuestion.getValueDescription());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

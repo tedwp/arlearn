@@ -25,6 +25,7 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 
 	public static RunsTab instance;
 	TeamPlayerConfigurationSection teamPlayerConfigurationSection;
+	TeamConfigurationSection teamConfigurationSection;
 	
 	public RunsTab() {
 		super(constants.runs());
@@ -69,7 +70,10 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 	@Override
 	protected void initConfigSections() {
 		teamPlayerConfigurationSection = new TeamPlayerConfigurationSection();
+		teamConfigurationSection = new TeamConfigurationSection();
 		addSectionDetail(teamPlayerConfigurationSection);
+		addSectionDetail(teamConfigurationSection);
+		
 	}
 
 	@Override
@@ -77,6 +81,7 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 		if (event.getRecord() == null || event.getRecord().getAttributeAsLong(RunModel.RUNID_FIELD) == null) return;
 		Run run = new Run(((AbstractRecord) RunDataSource.getInstance().getRecord(event.getRecord().getAttributeAsLong(RunModel.RUNID_FIELD))).getCorrespondingJsonObject());
 		teamPlayerConfigurationSection.loadRun(run);
+		teamConfigurationSection.loadRun(run);
 		showDetail();
 		
 	}

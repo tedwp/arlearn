@@ -44,7 +44,27 @@ public class OauthActivity extends GeneralActivity {
 		      @Override
 		      public void onPageStarted(WebView view, String url, Bitmap favicon) {
 		        setTitle(url);
+		        System.out.println("onPageStarted "+url);
+		        if (url.contains("oauth.html?accessToken=")) {
+		        	String token = url.substring(url.indexOf("?")+1);
+		        	token = token.substring(token.indexOf("=")+1, token.indexOf("&"));
+		        	System.out.println("auth token is "+token);
+		        	 Intent result = new Intent();
+			            result.putExtra("token", token);
+		        	 OauthActivity.this.getMenuHandler().getPropertiesAdapter().setAuthToken(token);
+						OauthActivity.this.getMenuHandler().getPropertiesAdapter().setIsAuthenticated();
+						new DownloadDetailsTask(OauthActivity.this).execute();
+			            setResult(RESULT_OK, result);
+			    		new GCMCheck().execute();
+			            finish();
+		        }
 		      }
+		      
+		      @Override 
+		      public void onLoadResource(WebView view, String url) {
+		    	  System.out.println("loading "+url);
+		      }
+		      
 		      @Override
 		      public void onPageFinished(WebView view, String url) {
 		        CookieSyncManager.getInstance().sync();
@@ -62,6 +82,7 @@ public class OauthActivity extends GeneralActivity {
 		             parts[0].equalsIgnoreCase("arlearn.AccessToken")) {
 		            Intent result = new Intent();
 		            result.putExtra("token", parts[1]);
+		            System.out.println("token is "+parts[1]);
 		            OauthActivity.this.getMenuHandler().getPropertiesAdapter().setAuthToken(parts[1]);
 					OauthActivity.this.getMenuHandler().getPropertiesAdapter().setIsAuthenticated();
 					new DownloadDetailsTask(OauthActivity.this).execute();

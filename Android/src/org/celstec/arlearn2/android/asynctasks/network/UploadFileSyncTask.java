@@ -80,29 +80,65 @@ public class UploadFileSyncTask extends GenericTask implements NetworkTask {
 		loadItem.run(ctx);
 	}
 	
-	private void startUpload() {
-		String uploadUrl = requestExternalUrl();
-		System.out.println("uploading "+uploadItem.getLocalId());	
-		if (uploadUrl == null) {
-			endWithError = true;
-			return;
-		}
-		publishData(uploadUrl);
-		MediaUploadCache.getInstance(uploadItem.getRunId()).put(uploadItem.buildRemotePath(), MediaCacheUpload.REP_STATUS_SYNCING);
-		ActivityUpdater.updateActivities(ctx, NarratorItemActivity.class.getCanonicalName());
-
-		WriteStatusToDatabase statusWrite = new WriteStatusToDatabase();
+	private class UploadItem extends GenericTask implements NetworkTask {
 		
-		if (!endWithError) {
-			uploadItem.setReplicated(MediaCacheUpload.REP_STATUS_DONE);
-			statusWrite.setStatus(MediaCacheUpload.REP_STATUS_DONE);
-			statusWrite.taskToRunAfterExecute(new UploadFileSyncTask());
-		} else {
-			uploadItem.setReplicated(MediaCacheUpload.REP_STATUS_TODO);
-			statusWrite.setStatus(MediaCacheUpload.REP_STATUS_TODO);
+		@Override
+		public void run(Context ctx) {
+			Message m = Message.obtain(DownloadQueue.getNetworkTaskHandler());
+			m.what = DownloadTaskHandler.SYNC_USER_MEDIA;
+			m.obj = UploadItem.this;
+			m.sendToTarget();
 		}
-		statusWrite.run(ctx);
+		
+		@Override
+		public void execute() {
+			String uploadUrl = requestExternalUrl();
+			if (uploadUrl == null) {
+				endWithError = true;
+				return;
+			}
+			publishData(uploadUrl);
+			MediaUploadCache.getInstance(uploadItem.getRunId()).put(uploadItem.buildRemotePath(), MediaCacheUpload.REP_STATUS_SYNCING);
+			ActivityUpdater.updateActivities(ctx, NarratorItemActivity.class.getCanonicalName());
+
+			WriteStatusToDatabase statusWrite = new WriteStatusToDatabase();
+			
+			if (!endWithError) {
+				uploadItem.setReplicated(MediaCacheUpload.REP_STATUS_DONE);
+				statusWrite.setStatus(MediaCacheUpload.REP_STATUS_DONE);
+				statusWrite.taskToRunAfterExecute(new UploadFileSyncTask());
+			} else {
+				uploadItem.setReplicated(MediaCacheUpload.REP_STATUS_TODO);
+				statusWrite.setStatus(MediaCacheUpload.REP_STATUS_TODO);
+			}
+			statusWrite.run(ctx);
+			UploadFileSyncTask.this.runAfterTasks(ctx);
+		}
 	}
+	
+//	private void startUpload() {
+//		String uploadUrl = requestExternalUrl();
+//		if (uploadUrl == null) {
+//			endWithError = true;
+//			return;
+//		}
+//		publishData(uploadUrl);
+//		MediaUploadCache.getInstance(uploadItem.getRunId()).put(uploadItem.buildRemotePath(), MediaCacheUpload.REP_STATUS_SYNCING);
+//		ActivityUpdater.updateActivities(ctx, NarratorItemActivity.class.getCanonicalName());
+//
+//		WriteStatusToDatabase statusWrite = new WriteStatusToDatabase();
+//		
+//		if (!endWithError) {
+//			uploadItem.setReplicated(MediaCacheUpload.REP_STATUS_DONE);
+//			statusWrite.setStatus(MediaCacheUpload.REP_STATUS_DONE);
+//			statusWrite.taskToRunAfterExecute(new UploadFileSyncTask());
+//		} else {
+//			uploadItem.setReplicated(MediaCacheUpload.REP_STATUS_TODO);
+//			statusWrite.setStatus(MediaCacheUpload.REP_STATUS_TODO);
+//		}
+//		statusWrite.run(ctx);
+//		runAfterTasks(ctx);
+//	}
 	
 	private class LoadItemFromDatabase extends GenericTask implements DatabaseTask {
 
@@ -110,7 +146,8 @@ public class UploadFileSyncTask extends GenericTask implements NetworkTask {
 		public void execute(DBAdapter db) {
 			uploadItem = db.getMediaCacheUpload().getNextItemToUpload();
 			if (uploadItem != null) {
-				startUpload();
+//				startUpload();
+				new UploadItem().run(ctx);
 			}
 		}
 

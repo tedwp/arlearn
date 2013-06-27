@@ -4,9 +4,13 @@ import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameRoleModel;
 import org.celstec.arlearn2.gwtcommonlib.client.network.GenericClient;
+import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
+import org.celstec.arlearn2.gwtcommonlib.client.network.game.GameClient;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 
 public class GameRolesDataSource extends GenericDataSource {
 	
@@ -55,4 +59,22 @@ public class GameRolesDataSource extends GenericDataSource {
 			addRole(gameId, role);
 		}
 	}
+
+	public void loadRoles(long gameId) {
+		Game game = GameDataSource.getInstance().getGame(gameId);
+		if (game != null) {
+			loadRoles(game);
+		} else {
+			GameClient.getInstance().getGame(gameId, new JsonCallback() {
+				public void onJsonReceived(JSONValue jsonValue) {
+					loadRoles(new Game(jsonValue.isObject()));
+				}
+			});
+		}
+	}
+	
+	public void loadRoles(Game game) {
+		addRole(game.getGameId(), game.getRoles());
+	}
+
 }
