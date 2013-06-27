@@ -26,9 +26,39 @@ public class NetworkToolbar extends ToolBar {
 		addMenuButton(addReponsesMenuButtons());
 		addMenuButton(addActionsMenuButtons());
 		addMenuButton(addMessageMenuButtons());
-
+		addMenuButton(addVariablesMenuButtons());
 	}
 
+	private ToolStripMenuButton addVariablesMenuButtons() {
+		Menu menu = new Menu();
+		menu.setShowShadow(true);
+		menu.setShadowDepth(3);
+
+		MenuItemSeparator separator = new MenuItemSeparator();
+
+		menu.setItems(
+
+//				createMenuItemGET("Get responses", "response/runId/***"),
+//				createMenuItemGET("Get responses (resumption)", "response/runId/***?resumptionToken=**"),
+//				createMenuItemGET("Get responses (from/until)", "response/runId/***?from=0&until="+System.currentTimeMillis()),
+//				separator,
+				createMenuItemPOST(
+						"Create Definiton",
+						"variables/gameId/***",
+						"{  \"type\": \"org.celstec.arlearn2.beans.game.VariableDefinition\",  \"name\": \"score\"}")
+				
+		);
+		
+		
+		
+
+		ToolStripMenuButton menuButton = new ToolStripMenuButton("Variables",
+				menu);
+		menuButton.setWidth(100);
+		// addMenuButton(menuButton);
+		return menuButton;
+	}
+	
 	private ToolStripMenuButton addMessageMenuButtons() {
 		Menu menu = new Menu();
 		menu.setShowShadow(true);

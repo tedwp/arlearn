@@ -17,7 +17,7 @@ public class Variables extends Service {
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Path("/game/{gameId}")
+	@Path("/gameId/{gameId}")
 	public String sendMessage(@HeaderParam("Authorization") String token, 
 			String messageString, 
 			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType, 
