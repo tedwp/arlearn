@@ -15,7 +15,6 @@ public class MessageDelegator extends GoogleDelegator {
 
 
 	public Message sendMessage(Message message, String userId) {
-		System.out.println("about to send "+message + " to "+userId);
 		new NotificationDelegator().broadcast(message, account.getFullId());
 		return message;
 	}
