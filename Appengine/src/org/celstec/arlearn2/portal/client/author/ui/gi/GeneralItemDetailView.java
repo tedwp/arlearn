@@ -1,46 +1,46 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi;
 
+import com.smartgwt.client.widgets.layout.SectionStack;
+import com.smartgwt.client.widgets.layout.SectionStackSection;
+import com.smartgwt.client.widgets.viewer.DetailViewer;
+import com.smartgwt.client.widgets.viewer.DetailViewerField;
+import com.smartgwt.client.widgets.viewer.DetailViewerRecord;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.Visibility;
-import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
-import com.smartgwt.client.widgets.tab.Tab;
+
+import java.util.LinkedHashMap;
 
 public class GeneralItemDetailView extends VLayout {
 
-	protected VLayout basicMetadataLayout;
-	protected VLayout extendedMetadataLayout;
-//	protected Label titleLabel = new Label("nog");
-	protected HTMLPane htmlPane;
+    private SectionStack extendedStack;
+    private SectionStack basicStack;
+    private DetailViewer basicMetadataDetailViewer;
+    private DetailViewer extendedMetadataDetailViewer;
+
 	protected HLayout buttonLayout;
 	protected IButton editButton;
-
-//	public void setVisibility(Visibility visibility) {
-//		super.setVisibility(visibility);
-//		basicMetadataLayout.setVisibility(visibility)
-//	}
 	
 	public GeneralItemDetailView(boolean canEdit) {
 		if (canEdit) createEditButton();
 		if (canEdit) createButtonLayout(editButton);
-		
-//		createTitleLabel();
-		createHtmlLabel();
-		createBasicMetadataView();
-		createExtendedMetadataView();
+
+		createMetadataViews();
+        createExtendedLayout();
+        createBasicLayout();
 		setHeight100();
 		
 		HLayout layout = new HLayout();
-		layout.addMember(basicMetadataLayout);
-		layout.addMember(extendedMetadataLayout);
-		setAlign(Alignment.LEFT);
+        layout.setCanDragResize(true);
+		layout.addMember(extendedStack);
+        layout.addMember(basicStack);
+        setAlign(Alignment.LEFT);
 
 		setBorder("1px solid #d6d6d6");
 		setPadding(5);
@@ -48,27 +48,44 @@ public class GeneralItemDetailView extends VLayout {
 		addMember(layout);
 		if (canEdit) addMember(buttonLayout);
 	}
-	
-	private void createBasicMetadataView() {
-		basicMetadataLayout = new VLayout();
-		basicMetadataLayout.setWidth(350);
-		basicMetadataLayout.setLayoutAlign(Alignment.LEFT);
-		basicMetadataLayout.setBorder("1px solid #d6d6d6");
 
-//		basicMetadataLayout.addMember(titleLabel);
-		basicMetadataLayout.addMember(htmlPane);
-		basicMetadataLayout.setPadding(10);
-//		basicMetadataLayout.addMember(editButton);
-		
-	}
-	
-	private void createExtendedMetadataView() {
-		extendedMetadataLayout = new VLayout();
-		extendedMetadataLayout.setVisibility(Visibility.INHERIT);
-		extendedMetadataLayout.setBorder("1px solid #d6d6d6");
-		extendedMetadataLayout.setPadding(10);
-	}
+    private void createBasicLayout() {
+        basicStack = new SectionStack();
+        SectionStackSection stackSection = new SectionStackSection();
 
+        stackSection.setItems(basicMetadataDetailViewer);
+        basicStack.addSection(stackSection);
+        stackSection.setExpanded(true);
+        stackSection.setCanCollapse(false);
+
+    }
+    private void createExtendedLayout() {
+        extendedStack = new SectionStack();
+        SectionStackSection extendedSection = new SectionStackSection();
+
+        extendedSection.setItems(extendedMetadataDetailViewer);
+        extendedStack.addSection(extendedSection);
+        extendedSection.setExpanded(true);
+        extendedSection.setCanCollapse(false);
+        extendedStack.setShowResizeBar(true);
+    }
+	
+	private void createMetadataViews() {
+
+        basicMetadataDetailViewer = new DetailViewer();
+        basicMetadataDetailViewer.setWidth100();
+        basicMetadataDetailViewer.setFields(
+                new DetailViewerField(GeneralItemModel.NAME_FIELD, "Title"),
+                new DetailViewerField(GeneralItemModel.RICH_TEXT_FIELD, "Description"),
+                new DetailViewerField(GeneralItemModel.AUTO_LAUNCH, "Automatic Launch"),
+                new DetailViewerField(GeneralItemModel.SORTKEY_FIELD, "Order")
+        );
+
+        extendedMetadataDetailViewer = new DetailViewer();
+        extendedMetadataDetailViewer.setWidth100();
+        extendedMetadataDetailViewer.setEmptyMessage("Select an item to view its details");
+
+	}
 	
 	private void createEditButton() {
 		editButton = new IButton("edit");
@@ -77,17 +94,6 @@ public class GeneralItemDetailView extends VLayout {
 				editClick();
 			}
 		});
-	}
-
-//	private void createTitleLabel() {
-//		titleLabel.setHeight(50);
-//		titleLabel.setBorder("1px solid #d6d6d6");
-//	}
-
-	private void createHtmlLabel() {
-		htmlPane = new HTMLPane();
-		htmlPane.setWidth(350);
-		htmlPane.setHeight("*");
 	}
 
 	private void createButtonLayout(IButton... buttons) {
@@ -109,12 +115,33 @@ public class GeneralItemDetailView extends VLayout {
 	
 	
 	public void loadGeneralItem(GeneralItem gi) {
-//		titleLabel.setContents(gi.getTitle());
-		String contents = "<b>Title:</b> "+gi.getTitle()+"<br><br>";
-		if (gi.getRichText()!= null)
-		contents += "<b>Description:</b><br>"+gi.getRichText();
-		htmlPane.setContents(contents);
-		extendedMetadataLayout.removeMembers(extendedMetadataLayout.getMembers());
-		extendedMetadataLayout.addMember(gi.getViewerComponent());
+        DetailViewerRecord[] rec = new DetailViewerRecord[1];
+        rec[0] = new DetailViewerRecord();
+        rec[0].setAttribute(GeneralItemModel.NAME_FIELD, gi.getTitle());
+        rec[0].setAttribute(GeneralItemModel.RICH_TEXT_FIELD, gi.getRichText());
+        rec[0].setAttribute(GeneralItemModel.AUTO_LAUNCH, gi.getBoolean(GeneralItemModel.AUTO_LAUNCH));
+        rec[0].setAttribute(GeneralItemModel.SORTKEY_FIELD, gi.getInteger(GeneralItemModel.SORTKEY_FIELD));
+        basicMetadataDetailViewer.setData(rec);
+
+        LinkedHashMap<String, String> sortedMap= gi.getMetadataFields();
+        extendedMetadataDetailViewer.setFields(getFields(sortedMap));
+        extendedMetadataDetailViewer.setData(getDetailViewerRecord(sortedMap));
 	}
+
+    private DetailViewerField[] getFields(LinkedHashMap<String, String> sortedMap) {
+        DetailViewerField[] result = new DetailViewerField[sortedMap.size()];
+        int i = 0;
+        for (String s : sortedMap.keySet()) {
+            result[i++] = new DetailViewerField(s,s);
+        }
+        return result;
+    }
+
+    private DetailViewerRecord[] getDetailViewerRecord(LinkedHashMap<String, String> sortedMap) {
+        DetailViewerRecord result = new DetailViewerRecord();
+        for (String s : sortedMap.keySet()) {
+            result.setAttribute(s,sortedMap.get(s));
+        }
+        return new DetailViewerRecord[]{result};
+    }
 }

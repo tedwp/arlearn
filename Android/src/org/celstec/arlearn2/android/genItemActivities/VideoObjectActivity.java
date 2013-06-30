@@ -18,18 +18,16 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.genItemActivities;
 
-import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.generalItem.NarratorItem;
-import org.celstec.arlearn2.beans.generalItem.VideoObject;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.generalItem.VideoObject;
 
 public class VideoObjectActivity extends NarratorItemActivity {
 
@@ -39,7 +37,7 @@ public class VideoObjectActivity extends NarratorItemActivity {
 		super.onCreate(savedInstanceState);
 		if (!firststart) {
 			firststart = true;
-			startVideo();
+//			startVideo();
 		}
 		startVideoImage.setOnClickListener(new View.OnClickListener() {
 			

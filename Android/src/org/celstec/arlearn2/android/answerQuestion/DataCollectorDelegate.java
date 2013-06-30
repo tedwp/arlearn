@@ -1,6 +1,6 @@
 package org.celstec.arlearn2.android.answerQuestion;
 
-import org.celstec.arlearn2.android.asynctasks.GenericTask;
+import android.net.Uri;
 import org.celstec.arlearn2.android.asynctasks.db.RegisterUploadInDbTask;
 import org.celstec.arlearn2.android.asynctasks.network.UploadFileSyncTask;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
@@ -10,9 +10,6 @@ import org.celstec.arlearn2.beans.run.Response;
 import org.celstec.arlearn2.client.GenericClient;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-
-import android.content.Context;
-import android.net.Uri;
 
 public abstract class DataCollectorDelegate {
 	public static final int PICTURE_RESULT = 1;
@@ -117,18 +114,19 @@ public abstract class DataCollectorDelegate {
 
 	
         r.setGeneralItemId(ctx.getNarratorBean().getId());
+        ResponseDelegator.getInstance().publishResponse(ctx, r);
 		RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, "audio:" + currentTime, PropertiesAdapter.getInstance(ctx).getFullId(), localFile, getMimeType());
 		UploadFileSyncTask fileSyncTask = new UploadFileSyncTask(); 
 		
 		task.taskToRunAfterExecute(fileSyncTask);
 	
-		fileSyncTask.taskToRunAfterExecute(new GenericTask() {
-			
-			@Override
-			protected void run(Context ctx) {
-				ResponseDelegator.getInstance().publishResponse(ctx, r);
-			}
-		});
+//		fileSyncTask.taskToRunAfterExecute(new GenericTask() {
+//
+//			@Override
+//			protected void run(Context ctx) {
+//				ResponseDelegator.getInstance().publishResponse(ctx, r);
+//			}
+//		});
 		
 		task.run(ctx);
 		

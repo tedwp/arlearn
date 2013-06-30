@@ -8,6 +8,7 @@ import org.celstec.arlearn2.beans.run.Message;
 import org.celstec.arlearn2.beans.run.Run;
 
 import android.content.Context;
+import org.celstec.arlearn2.beans.run.User;
 
 public abstract class GCMHandler {
 	protected Context ctx;
@@ -25,8 +26,12 @@ public abstract class GCMHandler {
 				return new GCMGeneralItemHandler(ctx, Long.parseLong(map.get("runId")),Long.parseLong(map.get("gameId")));
 			}else if (map.get("type").equals(Message.class.getName())) {
 				return new GCMMessageHandler(ctx, map);
-			}
-		}
+			} else if (map.get("type").equals(Run.class.getName())) {
+                return new GCMRunHandler(ctx);
+            } else if (map.get("type").equals(User.class.getName())) {
+                return new GCMRunHandler(ctx);
+            }
+        }
 		return null;
 	}
 

@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.game.VariableDefinition;
+import org.celstec.arlearn2.beans.game.VariableEffectDefinition;
 import org.celstec.arlearn2.delegators.VariableDelegator;
 
 import com.google.gdata.util.AuthenticationException;
@@ -17,7 +18,7 @@ public class Variables extends Service {
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Path("/gameId/{gameId}")
+	@Path("/definition")
 	public String sendMessage(@HeaderParam("Authorization") String token, 
 			String messageString, 
 			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType, 
@@ -33,4 +34,23 @@ public class Variables extends Service {
 		VariableDelegator rd = new VariableDelegator(this);
 		return serialise(rd.createVariableDefinition(variableDef), accept);
 	}
+
+    @POST
+    @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/effectDefinition")
+    public String createEffectDefinition(@HeaderParam("Authorization") String token,
+                              String messageString,
+                              @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+                              @HeaderParam("Accept") String accept) throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+
+        Object inRun = deserialise(messageString, VariableEffectDefinition.class, contentType);
+        if (inRun instanceof java.lang.String)
+            return serialise(getBeanDoesNotParseException((String) inRun), accept);
+        VariableEffectDefinition variableDef = (VariableEffectDefinition) inRun;
+
+        VariableDelegator rd = new VariableDelegator(this);
+        return serialise(rd.createVariableEffectDefinition(variableDef), accept);
+    }
 }

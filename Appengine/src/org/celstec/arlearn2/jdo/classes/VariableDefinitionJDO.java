@@ -1,25 +1,28 @@
 package org.celstec.arlearn2.jdo.classes;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
+import com.google.appengine.api.datastore.KeyFactory;
+
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
-
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 
 @PersistenceCapable
 public class VariableDefinitionJDO extends GameClass {
 
-	@PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Key uniqueId;
 	
 	@Persistent
 	private String name;
-	
+
+    @Persistent
+    private Long minValue;
+
+    @Persistent
+    private Long maxValue;
+
+    @Persistent
+    private Integer scope;
+
 	public void setUniqueId() {
-		this.uniqueId = KeyFactory.createKey(GameAccessJDO.class.getSimpleName(), getGameId()+":"+getName());
+		this.id = KeyFactory.createKey(VariableDefinitionJDO.class.getSimpleName(), getGameId()+":"+getName());
 	}
 
 	public String getName() {
@@ -29,6 +32,28 @@ public class VariableDefinitionJDO extends GameClass {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
+    public Long getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(Long minValue) {
+        this.minValue = minValue;
+    }
+
+    public Long getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(Long maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    public Integer getScope() {
+        return scope;
+    }
+
+    public void setScope(Integer scope) {
+        this.scope = scope;
+    }
 }

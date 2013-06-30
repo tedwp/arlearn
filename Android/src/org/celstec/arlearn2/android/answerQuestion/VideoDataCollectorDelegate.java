@@ -1,11 +1,5 @@
 package org.celstec.arlearn2.android.answerQuestion;
 
-import java.io.File;
-
-import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
-import org.celstec.arlearn2.android.util.MediaFolders;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,6 +9,10 @@ import android.os.Build;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
+
+import java.io.File;
 
 public class VideoDataCollectorDelegate extends DataCollectorDelegate {
 	

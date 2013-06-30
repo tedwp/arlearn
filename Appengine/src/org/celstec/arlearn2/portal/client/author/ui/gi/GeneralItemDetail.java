@@ -11,12 +11,21 @@ public class GeneralItemDetail extends HLayout {
 
 	private GeneralItemDetailView view;
 	private GeneralItemDetailEdit edit;
-	
+    private LayoutSpacer spacer;
+
 	public GeneralItemDetail() {
-		LayoutSpacer spacer = new LayoutSpacer();
+		spacer = new LayoutSpacer();
 		spacer.setWidth(24);
 		addMember(spacer);
 	}
+
+    public void setMapAvailable(boolean mapAvailable) {
+       if (mapAvailable) {
+           spacer.setWidth(24);
+       } else {
+           spacer.setWidth(0);
+       }
+    }
 
 	public void viewGeneralItem(final GeneralItem gi, final boolean canEdit, final Tab mapTab) {
 		eraseView();
@@ -56,5 +65,6 @@ public class GeneralItemDetail extends HLayout {
 		if (edit != null) edit.deselect();
 		
 	}
+
 
 }

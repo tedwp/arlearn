@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.android.activities;
 
+import org.celstec.arlearn2.android.GCMIntentService;
 import org.celstec.arlearn2.android.oauth.DownloadDetailsTask;
 
 import android.content.Context;
@@ -112,7 +113,7 @@ public class OauthActivity extends GeneralActivity {
 		protected Void doInBackground(Object... arg0) {
 			try {
 				 GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(OauthActivity.this);
-				 String regid = gcm.register("594104153413");
+				 String regid = gcm.register(GCMIntentService.SENDER_ID);
 			} catch (Exception e) {
 				e.printStackTrace();
 

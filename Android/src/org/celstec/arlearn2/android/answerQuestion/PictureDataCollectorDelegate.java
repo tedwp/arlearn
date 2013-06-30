@@ -1,16 +1,5 @@
 package org.celstec.arlearn2.android.answerQuestion;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-
-import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.asynctasks.db.RegisterUploadInDbTask;
-import org.celstec.arlearn2.android.asynctasks.network.UploadFileSyncTask;
-import org.celstec.arlearn2.android.delegators.ResponseDelegator;
-import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
-import org.celstec.arlearn2.android.util.MediaFolders;
-import org.celstec.arlearn2.beans.run.Response;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +7,12 @@ import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
+import org.celstec.arlearn2.android.util.MediaFolders;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class PictureDataCollectorDelegate extends DataCollectorDelegate {
 	private File bitmapFile;

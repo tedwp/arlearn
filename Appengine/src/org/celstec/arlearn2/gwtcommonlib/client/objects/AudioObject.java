@@ -6,6 +6,8 @@ import org.celstec.arlearn2.portal.client.author.ui.gi.extensionViewer.AudioExte
 import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.widgets.Canvas;
 
+import java.util.LinkedHashMap;
+
 public class AudioObject extends NarratorItem {
 
 	public  final static String AUDIO_FEED = "audioFeed";
@@ -37,4 +39,11 @@ public class AudioObject extends NarratorItem {
 	public Canvas getMetadataExtensionEditor() {
 		return new AudioExtensionEditor(this);
 	}
+
+    public LinkedHashMap<String, String> getMetadataFields() {
+        LinkedHashMap<String, String> sortList = new LinkedHashMap<String, String>();
+        sortList.put(AUDIO_FEED, getString(AUDIO_FEED));
+        sortList.putAll(super.getMetadataFields());
+        return sortList;
+    }
 }

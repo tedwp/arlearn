@@ -52,7 +52,9 @@ public class GeneralItemDetailEdit extends VLayout {
 
 		HLayout layout = new HLayout();
 		layout.addMember(stack);
-		layout.addMember(editor);
+        stack.setShowResizeBar(true);
+
+        layout.addMember(editor);
 		
 		setAlign(Alignment.LEFT);
 		// setBorder("1px dashed blue");

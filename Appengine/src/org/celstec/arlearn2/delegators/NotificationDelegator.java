@@ -43,7 +43,6 @@ import org.celstec.arlearn2.jdo.manager.GCMDevicesRegistryManager;
 import org.celstec.arlearn2.jdo.manager.IOSDevicesRegistryManager;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.mortbay.log.Log;
 
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;

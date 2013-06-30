@@ -75,6 +75,7 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 
 	@Override
 	protected void onResume() {
+        super.onResume();
 		gameId = RunCache.getInstance().getGameId(runId);
 		if (gameId != null) {
 			GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, runId, gameId);

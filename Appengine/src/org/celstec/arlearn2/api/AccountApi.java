@@ -1,26 +1,15 @@
 package org.celstec.arlearn2.api;
 
-import java.util.UUID;
-
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import com.google.gdata.util.AuthenticationException;
 import org.celstec.arlearn2.beans.AuthResponse;
 import org.celstec.arlearn2.beans.account.Account;
-import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.delegators.AccountDelegator;
-import org.celstec.arlearn2.delegators.CollaborationDelegator;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.manager.AccountManager;
-import org.celstec.arlearn2.jdo.manager.ContactManager;
 
-import com.google.gdata.util.AuthenticationException;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.UUID;
 
 @Path("/account")
 public class AccountApi extends Service {
@@ -78,11 +67,6 @@ public class AccountApi extends Service {
 			return serialise(getInvalidCredentialsBean(), accept);
 		
 		AccountDelegator ad = new AccountDelegator(this);
-//		String myAccount = UserLoggedInManager.getUser(token);
-//		if (myAccount == null) {
-//			Account ac = new Account();
-//			ac.setError("account is not logged in");
-//		}
 		return serialise(ad.getContactDetails(this.account.getFullId()), accept);
 	}
 	
@@ -128,5 +112,22 @@ public class AccountApi extends Service {
 		ad.makeSuper(accountFullId);
 		return "{}";
 	}
+
+    @POST
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @CacheControlHeader("no-cache")
+    @Path("/createAccount")
+    public String createAccount(@HeaderParam("Authorization") String token,
+                                      @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+                                      @DefaultValue("application/json") @HeaderParam("Accept") String accept,
+                                      String contact
+    ) throws AuthenticationException {
+
+        Object inContact = deserialise(contact, Account.class, contentType);
+        if (inContact instanceof java.lang.String)
+            return serialise(getBeanDoesNotParseException((String) inContact), accept);
+        AccountDelegator ad = new AccountDelegator(this);
+        return serialise(ad.createAccount((Account) inContact, token), accept);
+    }
 	
 }

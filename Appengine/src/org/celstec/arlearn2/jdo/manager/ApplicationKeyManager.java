@@ -32,7 +32,7 @@ public class ApplicationKeyManager {
 			pm.getObjectById(ApplicationAccessKeyJDO.class, key);
 			return true;
 		} catch (Exception e){
-			return false;
+            return false;
 		}finally {
 			pm.close();
 		} 

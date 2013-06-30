@@ -1,11 +1,9 @@
 package org.celstec.arlearn2.gwtcommonlib.client.objects;
 
-import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.VideoObjectEditor;
-import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.YoutubeObjectEditor;
-import org.celstec.arlearn2.portal.client.author.ui.gi.extensionViewer.YoutubeExtensionViewer;
-
 import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.widgets.Canvas;
+
+import java.util.LinkedHashMap;
 
 public class NarratorItem extends GeneralItem {
 	
@@ -36,5 +34,22 @@ public class NarratorItem extends GeneralItem {
 	public boolean enableDataCollection() {
 		return true;
 	}
+
+
+
+    public LinkedHashMap<String, String> getMetadataFields() {
+        LinkedHashMap<String, String> sortList = super.getMetadataFields();
+        if (jsonRep.containsKey("openQuestion"))  {
+            JSONObject openQuestion = jsonRep.get("openQuestion").isObject();
+            sortList.put("dataCollection", "true");
+            sortList.put("withAudio", ""+ openQuestion.get("withAudio").isBoolean().booleanValue());
+            sortList.put("withText", ""+ openQuestion.get("withText").isBoolean().booleanValue());
+            sortList.put("withPicture", ""+ openQuestion.get("withPicture").isBoolean().booleanValue());
+            sortList.put("withVideo", ""+ openQuestion.get("withVideo").isBoolean().booleanValue());
+        }   else {
+            sortList.put("dataCollection", "false");
+        }
+        return sortList;
+    }
 	
 }

@@ -1,11 +1,11 @@
 package org.celstec.arlearn2.gwtcommonlib.client.objects;
 
-import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.VideoObjectEditor;
-import org.celstec.arlearn2.portal.client.author.ui.gi.extensionViewer.VideoExtensionViewer;
-import org.celstec.arlearn2.portal.client.author.ui.gi.extensionViewer.YoutubeExtensionViewer;
-
 import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.widgets.Canvas;
+import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.VideoObjectEditor;
+import org.celstec.arlearn2.portal.client.author.ui.gi.extensionViewer.VideoExtensionViewer;
+
+import java.util.LinkedHashMap;
 
 public class VideoObject extends NarratorItem {
 
@@ -38,4 +38,10 @@ public class VideoObject extends NarratorItem {
 	public Canvas getMetadataExtensionEditor() {
 		return new VideoObjectEditor(this);
 	}
+    public LinkedHashMap<String, String> getMetadataFields() {
+        LinkedHashMap<String, String> sortList = new LinkedHashMap<String, String>();
+        sortList.put(VIDEO_FEED, getString(VIDEO_FEED));
+        sortList.putAll(super.getMetadataFields());
+        return sortList;
+    }
 }

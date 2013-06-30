@@ -18,38 +18,15 @@
  ******************************************************************************/
 package org.celstec.arlearn2.delegators.generalitems;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.apache.juli.logging.Log;
+import com.google.gdata.util.AuthenticationException;
+import org.celstec.arlearn2.beans.game.DependsOn;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.ActionList;
-import org.celstec.arlearn2.beans.Bean;
-import org.celstec.arlearn2.beans.game.DependsOn;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
-import org.celstec.arlearn2.beans.run.InventoryRecord;
-import org.celstec.arlearn2.beans.generalItem.PickupItem;
-import org.celstec.arlearn2.beans.run.Run;
-import org.celstec.arlearn2.beans.run.User;
-import org.celstec.arlearn2.cache.GeneralitemsCache;
-import org.celstec.arlearn2.delegators.ActionDelegator;
 import org.celstec.arlearn2.delegators.GoogleDelegator;
-import org.celstec.arlearn2.delegators.RunDelegator;
-import org.celstec.arlearn2.delegators.UsersDelegator;
-import org.celstec.arlearn2.delegators.VisibleItemDelegator;
-import org.celstec.arlearn2.delegators.inventory.CreateInventoryRecord;
-import org.celstec.arlearn2.delegators.inventory.QueryInventoryRecord;
-import org.celstec.arlearn2.delegators.notification.Notification;
-import org.celstec.arlearn2.jdo.UserLoggedInManager;
-import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
-import org.celstec.arlearn2.tasks.beans.NotifyItemVisible;
-import org.celstec.arlearn2.tasks.beans.UpdateGeneralItems;
 
-import com.google.gdata.util.AuthenticationException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class QueryGeneralItems extends GoogleDelegator {
 	private static final Logger log = Logger.getLogger(QueryGeneralItems.class.getName());

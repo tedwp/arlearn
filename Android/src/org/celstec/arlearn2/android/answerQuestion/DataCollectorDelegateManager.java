@@ -1,10 +1,8 @@
 package org.celstec.arlearn2.android.answerQuestion;
 
+import android.content.Intent;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
-
-import android.app.Activity;
-import android.content.Intent;
 
 public class DataCollectorDelegateManager {
 	PictureDataCollectorDelegate pictureDC;

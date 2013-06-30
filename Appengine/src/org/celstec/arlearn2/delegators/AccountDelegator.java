@@ -1,14 +1,13 @@
 package org.celstec.arlearn2.delegators;
 
-import java.util.UUID;
-
+import com.google.gdata.util.AuthenticationException;
 import org.celstec.arlearn2.api.Service;
 import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.cache.AccountCache;
-import org.celstec.arlearn2.jdo.classes.AccountJDO;
 import org.celstec.arlearn2.jdo.manager.AccountManager;
+import org.celstec.arlearn2.jdo.manager.ApplicationKeyManager;
 
-import com.google.gdata.util.AuthenticationException;
+import java.util.UUID;
 
 public class AccountDelegator extends GoogleDelegator {
 
@@ -45,7 +44,32 @@ public class AccountDelegator extends GoogleDelegator {
 
 	public void makeSuper(String accountId) {
 		AccountManager.makeSuper(accountId);
-		
 	}
+
+    public Account createAccount(Account account, String applicationKey) {
+        if (account.getAccountType() == null) {
+            account.setError("accountType attribute is missing");
+            return account;
+        }
+        if (account.getLocalId() == null) {
+            account.setError("localID attribute is missing");
+            return account;
+        }
+        if (account.getEmail() == null) {
+            account.setError("email attribute is missing");
+            return account;
+        }
+        if (account.getName() == null) {
+            account.setError("name attribute is missing");
+            return account;
+        }
+        if (applicationKey.contains(":")) applicationKey = applicationKey.substring(0,applicationKey.indexOf(":"));
+        boolean tokenExists = ApplicationKeyManager.getConfigurationObject(applicationKey);
+        if (tokenExists) {
+            return AccountManager.addAccount(account);
+        }
+        account.setError("token invalid");
+        return account;
+    }
 
 }

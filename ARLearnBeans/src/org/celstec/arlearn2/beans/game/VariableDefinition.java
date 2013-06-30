@@ -9,8 +9,13 @@ import org.codehaus.jettison.json.JSONObject;
 public class VariableDefinition extends Bean{
 	
 	private String name;
+    private Long minValue;
+    private Long maxValue;
+    private Integer scope;
 
-	public String getName() {
+    private Long gameId;
+
+    public String getName() {
 		return name;
 	}
 
@@ -18,7 +23,39 @@ public class VariableDefinition extends Bean{
 		this.name = name;
 	}
 
-	public static BeanDeserializer deserializer = new BeanDeserializer(){
+    public Long getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(Long minValue) {
+        this.minValue = minValue;
+    }
+
+    public Long getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(Long maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    public Integer getScope() {
+        return scope;
+    }
+
+    public void setScope(Integer scope) {
+        this.scope = scope;
+    }
+
+    public Long getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(Long gameId) {
+        this.gameId = gameId;
+    }
+
+    public static BeanDeserializer deserializer = new BeanDeserializer(){
 
 		@Override
 		public VariableDefinition toBean(JSONObject object) {
@@ -35,6 +72,10 @@ public class VariableDefinition extends Bean{
 			super.initBean(object, genericBean);
 			VariableDefinition bean = (VariableDefinition) genericBean;
 			if (object.has("name")) bean.setName(object.getString("name"));
+            if (object.has("minValue")) bean.setMinValue(object.getLong("minValue"));
+            if (object.has("maxValue")) bean.setMaxValue(object.getLong("maxValue"));
+            if (object.has("scope")) bean.setScope(object.getInt("scope"));
+            if (object.has("gameId")) bean.setGameId(object.getLong("gameId"));
 			
 		}
 	};
@@ -47,7 +88,10 @@ public class VariableDefinition extends Bean{
 			JSONObject returnObject = super.toJSON(bean);
 			try {
 				if (teamBean.getName() != null) returnObject.put("name", teamBean.getName());
-				
+                if (teamBean.getMaxValue() != null) returnObject.put("maxValue", teamBean.getMaxValue());
+                if (teamBean.getMinValue() != null) returnObject.put("minValue", teamBean.getMinValue());
+                if (teamBean.getScope() != null) returnObject.put("scope", teamBean.getScope());
+                if (teamBean.getGameId() != null) returnObject.put("gameId", teamBean.getGameId());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

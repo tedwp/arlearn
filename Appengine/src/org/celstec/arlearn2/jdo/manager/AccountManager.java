@@ -10,6 +10,10 @@ import com.google.appengine.api.datastore.KeyFactory;
 
 public class AccountManager {
 
+
+    public static Account addAccount(Account account) {
+        return toBean(addAccount(account.getLocalId(),account.getAccountType(), account.getEmail(), account.getGivenName(), account.getFamilyName(), account.getName(), account.getPicture()));
+    }
 	public static AccountJDO addAccount(String localID, int accountType,
 			String email, String given_name, String family_name, String name,
 			String picture) {

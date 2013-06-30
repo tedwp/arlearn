@@ -1,32 +1,27 @@
 package org.celstec.arlearn2.android.oauth;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import org.celstec.arlearn2.android.Constants;
-import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.activities.ListMessagesActivity;
-import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
-import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
-import org.celstec.arlearn2.android.cache.GenericCache;
-import org.celstec.arlearn2.android.cache.MediaGeneralItemCache;
-import org.celstec.arlearn2.android.db.DBAdapter;
-import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.beans.account.Account;
-import org.celstec.arlearn2.beans.run.User;
-import org.celstec.arlearn2.client.AccountClient;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
+import org.celstec.arlearn2.android.Constants;
+import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
+import org.celstec.arlearn2.android.cache.GenericCache;
+import org.celstec.arlearn2.android.db.DBAdapter;
+import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.beans.account.Account;
+import org.celstec.arlearn2.beans.run.User;
+import org.celstec.arlearn2.client.AccountClient;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class DownloadDetailsTask extends AsyncTask<Void, String, Void> {
 
@@ -46,6 +41,7 @@ public class DownloadDetailsTask extends AsyncTask<Void, String, Void> {
 				publishProgress(ctx.getString(R.string.networkUnavailable));
 			}
 		} catch (Exception e) {
+            e.printStackTrace();
 			PropertiesAdapter.getInstance(ctx).disAuthenticate();
 			publishProgress("downloading account details failed");
 		}
@@ -84,6 +80,7 @@ public class DownloadDetailsTask extends AsyncTask<Void, String, Void> {
 		PropertiesAdapter.getInstance(ctx).setParticipateGameLastSynchronizationDate(0l);
 		PropertiesAdapter.getInstance(ctx).setMyGameLastSynchronizationDate(0l);
 		PropertiesAdapter.getInstance(ctx).setRunLastSynchronizationDate(0l);
+        if (ac.getAccountLevel()== null) ac.setAccountLevel(2);
 		PropertiesAdapter.getInstance(ctx).setAccountLevel(ac.getAccountLevel());
 		String picture = ac.getPicture();
 		if (picture != null &&picture.startsWith("http://")) {

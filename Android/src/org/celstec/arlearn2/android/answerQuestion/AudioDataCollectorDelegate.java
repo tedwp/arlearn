@@ -1,20 +1,5 @@
 package org.celstec.arlearn2.android.answerQuestion;
 
-import java.io.File;
-
-import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.asynctasks.GenericTask;
-import org.celstec.arlearn2.android.asynctasks.db.RegisterUploadInDbTask;
-import org.celstec.arlearn2.android.asynctasks.network.UploadFileSyncTask;
-import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.android.delegators.ResponseDelegator;
-import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
-import org.celstec.arlearn2.android.util.MediaFolders;
-import org.celstec.arlearn2.beans.run.Response;
-
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
-
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -23,6 +8,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.Toast;
+import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
+import org.celstec.arlearn2.android.util.MediaFolders;
+
+import java.io.File;
 
 public class AudioDataCollectorDelegate extends DataCollectorDelegate {
 	private File audiofile;

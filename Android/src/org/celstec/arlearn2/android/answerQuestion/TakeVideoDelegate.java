@@ -18,9 +18,6 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.answerQuestion;
 
-import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.activities.AnnotateActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,11 +25,9 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.MediaController;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.VideoView;
+import android.widget.*;
+import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.activities.AnnotateActivity;
 
 public class TakeVideoDelegate {
 	AnnotateActivity ctx;

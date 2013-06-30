@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi;
 
+import com.smartgwt.client.widgets.grid.events.*;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
@@ -27,10 +28,6 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
-import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
-import com.smartgwt.client.widgets.grid.events.RecordDropEvent;
-import com.smartgwt.client.widgets.grid.events.RecordDropHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -112,8 +109,10 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 		masterLayout.removeMembers(masterLayout.getMembers());
 		if (game.getMapAvailable()) {
 			masterLayout.addMember(mapListTabSet);
+            giDetail.setMapAvailable(true);
 		} else {
 			masterLayout.addMember(generalItemsGrid);
+            giDetail.setMapAvailable(false);
 		}
 		masterLayout.addMember(createReuseItemsPane);
 	}
@@ -246,6 +245,13 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 			}
 		});
 
+        generalItemsGrid.addRecordDoubleClickHandler(new RecordDoubleClickHandler() {
+            @Override
+            public void onRecordDoubleClick(RecordDoubleClickEvent event) {
+                masterRecordDoubleClick(event);
+            }
+        });
+
 		GeneralItemDataSource.getInstance().loadDataFromWeb(game.getGameId());
 		Criteria criteria = new Criteria();
 		criteria.addCriteria(GameModel.GAMEID_FIELD, game.getGameId());
@@ -311,6 +317,12 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 	protected void masterRecordClick(RecordClickEvent event) {
 		giDetail.viewGeneralItem(recordToGeneralItem(event.getRecord()), true, mapTab);
 	}
+
+    protected void masterRecordDoubleClick(RecordDoubleClickEvent event) {
+        GeneralItem gi =  recordToGeneralItem(event.getRecord());
+//        giDetail.viewGeneralItem(gi, true, mapTab);
+        giDetail.editGeneralItem(gi, mapTab);
+    }
 
 	public static GeneralItem recordToGeneralItem(Record record) {
 		String idAsString = record.getAttributeAsString(GeneralItemModel.ID_FIELD);

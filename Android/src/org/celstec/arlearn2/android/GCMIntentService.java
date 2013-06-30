@@ -16,12 +16,19 @@ import com.google.android.gcm.GCMBaseIntentService;
     
 public class GCMIntentService extends GCMBaseIntentService {
 
+    public static final String SENDER_ID = "594104153413";
 //	public GCMIntentService() {
 //        super("594104153413" );
 //        // TODO Auto-generated constructor stub
 //        Log.i( "TEST", "GCMIntentService constructor called" );
 //    }
-	
+    @Override
+    protected String[] getSenderIds (Context context) {
+        String[] ids = new String[1];
+        ids[0] = SENDER_ID;
+        return ids;
+    }
+
 	@Override
 	protected void onError(Context arg0, String arg1) {
         Log.i( "TEST", "GCMIntentService constructor called" );

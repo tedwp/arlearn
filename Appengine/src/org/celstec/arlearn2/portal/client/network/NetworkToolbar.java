@@ -44,8 +44,17 @@ public class NetworkToolbar extends ToolBar {
 //				separator,
 				createMenuItemPOST(
 						"Create Definiton",
-						"variables/gameId/***",
-						"{  \"type\": \"org.celstec.arlearn2.beans.game.VariableDefinition\",  \"name\": \"score\"}")
+						"variables/definition",
+						"{  \"type\": \"org.celstec.arlearn2.beans.game.VariableDefinition\",  " +
+                                "\"name\": \"score\",  \"maxValue\": 100, \"minValue\": 0, \"scope\": 0 }"),
+                createMenuItemPOST(
+                        "Create Effect Definiton",
+                        "variables/effectDefinition",
+                        "{  \"type\": \"org.celstec.arlearn2.beans.game.VariableEffectDefinition\",  " +
+                                "\"name\": \"score\",  \"effectType\": \"add\", \"effectValue\": 10, \"gameId\": 0, " +
+                                "\"dependsOn\":   {  \"type\": \"org.celstec.arlearn2.beans.dependencies.ActionDependency\",    \"action\": \"answer_given\"," +
+                                "        \"generalItemId\": 0" +
+                                "      }}")
 				
 		);
 		

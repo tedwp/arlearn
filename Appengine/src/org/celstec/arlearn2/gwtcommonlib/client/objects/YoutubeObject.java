@@ -6,6 +6,8 @@ import org.celstec.arlearn2.portal.client.author.ui.gi.extensionViewer.YoutubeEx
 import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.widgets.Canvas;
 
+import java.util.LinkedHashMap;
+
 public class YoutubeObject extends NarratorItem {
 
 	public  final static String YOUTUBE_URL = "youtubeUrl";
@@ -38,4 +40,11 @@ public class YoutubeObject extends NarratorItem {
 	public Canvas getMetadataExtensionEditor() {
 		return new YoutubeObjectEditor(this);
 	}
+
+    public LinkedHashMap<String, String> getMetadataFields() {
+        LinkedHashMap<String, String> sortList = new LinkedHashMap<String, String>();
+        sortList.put(YOUTUBE_URL, getString(YOUTUBE_URL));
+        sortList.putAll(super.getMetadataFields());
+        return sortList;
+    }
 }

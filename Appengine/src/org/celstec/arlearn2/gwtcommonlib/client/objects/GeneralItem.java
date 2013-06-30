@@ -1,15 +1,14 @@
 package org.celstec.arlearn2.gwtcommonlib.client.objects;
 
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.smartgwt.client.widgets.Canvas;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
-import org.celstec.arlearn2.gwtcommonlib.client.network.game.GameClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.generalItem.GeneralItemsClient;
 
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
-import com.smartgwt.client.widgets.Canvas;
+import java.util.LinkedHashMap;
 
 public abstract class GeneralItem extends Bean {
 	public  final static String ID = "id";
@@ -76,6 +75,9 @@ public abstract class GeneralItem extends Bean {
 		GeneralItemsClient.getInstance().createGeneralItem(this, jsonCallback);
 	}
 
-	
-	
+
+    public LinkedHashMap<String, String> getMetadataFields() {
+        LinkedHashMap<String, String> sortList = new LinkedHashMap<String, String>();
+        return sortList;
+    }
 }

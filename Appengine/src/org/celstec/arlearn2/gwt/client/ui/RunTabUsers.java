@@ -18,34 +18,11 @@
  ******************************************************************************/
 package org.celstec.arlearn2.gwt.client.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.bcel.generic.NEW;
-import org.celstec.arlearn2.gwt.client.AuthoringConstants;
-import org.celstec.arlearn2.gwt.client.control.Authentication;
-import org.celstec.arlearn2.gwt.client.control.GeneralItemsDataSource_Old;
-import org.celstec.arlearn2.gwt.client.network.ChannelClient;
-import org.celstec.arlearn2.gwt.client.network.JsonCallback;
-import org.celstec.arlearn2.gwt.client.network.action.ActionDatasource;
-import org.celstec.arlearn2.gwt.client.network.generalItem.GeneralItemRunDataSource;
-import org.celstec.arlearn2.gwt.client.network.response.ResponseDataSource;
-import org.celstec.arlearn2.gwt.client.network.user.UserClient;
-import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
-import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
-import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
-import org.celstec.arlearn2.gwt.client.ui.modal.UserActionsWindow;
-import org.celstec.arlearn2.gwt.client.ui.modal.UserWindow;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Timer;
-import com.smartgwt.client.data.Criteria;
-import com.smartgwt.client.data.DSCallback;
-import com.smartgwt.client.data.DSRequest;
-import com.smartgwt.client.data.DSResponse;
-import com.smartgwt.client.data.Record;
+import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.Overflow;
@@ -61,6 +38,21 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
+import org.celstec.arlearn2.gwt.client.AuthoringConstants;
+import org.celstec.arlearn2.gwt.client.control.Authentication;
+import org.celstec.arlearn2.gwt.client.network.ChannelClient;
+import org.celstec.arlearn2.gwt.client.network.JsonCallback;
+import org.celstec.arlearn2.gwt.client.network.action.ActionDatasource;
+import org.celstec.arlearn2.gwt.client.network.response.ResponseDataSource;
+import org.celstec.arlearn2.gwt.client.network.user.UserClient;
+import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
+import org.celstec.arlearn2.gwt.client.notification.NotificationHandler;
+import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
+import org.celstec.arlearn2.gwt.client.ui.modal.UserActionsWindow;
+import org.celstec.arlearn2.gwt.client.ui.modal.UserWindow;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RunTabUsers extends Canvas {
 

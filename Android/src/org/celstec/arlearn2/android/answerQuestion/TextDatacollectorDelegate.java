@@ -1,16 +1,15 @@
 package org.celstec.arlearn2.android.answerQuestion;
 
-import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.delegators.ResponseDelegator;
-import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
-import org.celstec.arlearn2.beans.run.Response;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.delegators.ResponseDelegator;
+import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
+import org.celstec.arlearn2.beans.run.Response;
 
 public class TextDatacollectorDelegate extends DataCollectorDelegate {
 
