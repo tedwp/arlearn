@@ -37,7 +37,7 @@ public class GenericMessageListAdapter extends ArrayAdapter<GenericListRecord> {
 
 	private ArrayList<GenericListRecord> messages;
 	private ListitemClickInterface callback;
-	
+	private int lineResourceId= R.layout.list_map_generic_line;
 
 	public GenericMessageListAdapter(Context context, int textViewResourceId, ArrayList<GenericListRecord> messages) {
 		super(context, textViewResourceId, messages);
@@ -78,8 +78,12 @@ public class GenericMessageListAdapter extends ArrayAdapter<GenericListRecord> {
 		this.callback = callback;
 	}
 
+    public void setLineResourceId(int lineResourceId) {
+        this.lineResourceId = lineResourceId;
+    }
+
 	protected int listLineResourceId() {
-		return R.layout.list_map_generic_line;
+		return lineResourceId;
 	}
 	
 	public boolean isEqual(ArrayList<GenericListRecord> newMessages) {

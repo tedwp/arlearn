@@ -43,7 +43,7 @@ public class OauthProvidersList extends GeneralActivity implements ListitemClick
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTitle("authenticate");
+		setTitle("Authenticate"); //TODO Localize this
 		setContentView(R.layout.listexcursionscreen);
 	}
 
@@ -64,6 +64,7 @@ public class OauthProvidersList extends GeneralActivity implements ListitemClick
 		ListView listView = (ListView) findViewById(R.id.listRuns);
 		if (adapter == null || !adapter.isEqual(runsRecordList)) {
 			adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, runsRecordList);
+            adapter.setLineResourceId(R.layout.list_oauth_provider_line);
 			adapter.setOnListItemClickCallback(this);
 			listView.setAdapter(adapter);
 		}
