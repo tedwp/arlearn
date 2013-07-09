@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12E55" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Account" representedClassName="Account" syncable="YES">
+        <attribute name="accountLevel" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="accountType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="familyName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="givenName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="localId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="picture" optional="YES" attributeType="Binary" syncable="YES"/>
+    </entity>
+    <entity name="Game" representedClassName="Game" syncable="YES">
+        <attribute name="creator" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gameId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="hasMap" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="owner" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="correspondingRuns" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Run" inverseName="game" inverseEntity="Run" syncable="YES"/>
+        <relationship name="hasItems" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GeneralItem" inverseName="ownerGame" inverseEntity="GeneralItem" syncable="YES"/>
+    </entity>
+    <entity name="GeneralItem" representedClassName="GeneralItem" syncable="YES">
+        <attribute name="descriptionText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gameId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="json" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="lat" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="lng" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="richText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortKey" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="data" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GeneralItemData" inverseName="generalItem" inverseEntity="GeneralItemData" syncable="YES"/>
+        <relationship name="ownerGame" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Game" inverseName="hasItems" inverseEntity="Game" syncable="YES"/>
+        <relationship name="visibility" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GeneralItemVisibility" inverseName="generalItem" inverseEntity="GeneralItemVisibility" syncable="YES"/>
+    </entity>
+    <entity name="GeneralItemData" representedClassName="GeneralItemData" syncable="YES">
+        <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="generalItem" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GeneralItem" inverseName="data" inverseEntity="GeneralItem" syncable="YES"/>
+    </entity>
+    <entity name="GeneralItemVisibility" representedClassName="GeneralItemVisibility" syncable="YES">
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="generalItemId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="runId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="timeStamp" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="correspondingRun" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Run" inverseName="itemVisibilityRules" inverseEntity="Run" syncable="YES"/>
+        <relationship name="generalItem" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GeneralItem" inverseName="visibility" inverseEntity="GeneralItem" syncable="YES"/>
+    </entity>
+    <entity name="Run" representedClassName="Run" syncable="YES">
+        <attribute name="deleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="gameId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="owner" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="runId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="game" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Game" inverseName="correspondingRuns" inverseEntity="Game" syncable="YES"/>
+        <relationship name="itemVisibilityRules" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GeneralItemVisibility" inverseName="correspondingRun" inverseEntity="GeneralItemVisibility" syncable="YES"/>
+    </entity>
+    <entity name="SynchronizationBookKeeping" representedClassName="SynchronizationBookKeeping" syncable="YES">
+        <attribute name="context" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastSynchronization" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Game" positionX="-684" positionY="-171" width="128" height="150"/>
+        <element name="GeneralItem" positionX="-405" positionY="-153" width="128" height="238"/>
+        <element name="GeneralItemData" positionX="-182" positionY="-148" width="128" height="88"/>
+        <element name="GeneralItemVisibility" positionX="-722" positionY="135" width="128" height="150"/>
+        <element name="Run" positionX="-936" positionY="-144" width="128" height="150"/>
+        <element name="SynchronizationBookKeeping" positionX="-927" positionY="153" width="128" height="90"/>
+        <element name="Account" positionX="-387" positionY="162" width="128" height="163"/>
+    </elements>
+</model>
