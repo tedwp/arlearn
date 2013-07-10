@@ -24,7 +24,12 @@
     account.givenName = [acDict objectForKey:@"givenName"];
     account.familyName = [acDict objectForKey:@"familyName"];
     account.accountLevel= [acDict objectForKey:@"accountLevel"];
-//    account.picture
+    NSURL  *url = [NSURL URLWithString:[acDict objectForKey:@"picture"]];
+    NSData *urlData = [NSData dataWithContentsOfURL:url];
+    if ( urlData ){
+        account.picture = urlData;
+    }
+
     NSError * error;
     
     if (![context save:&error]) {
@@ -35,12 +40,29 @@
 
 
 
+
 + (Account *) retrieveFromDb: (NSDictionary *) giDict withManagedContext: (NSManagedObjectContext*) context{
     Account * account = nil;
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Account"];
     NSLog(@"(localId = %@) AND (accountType = %d)", [giDict objectForKey:@"localId"], [[giDict objectForKey:@"accountType"] intValue]);
     request.predicate = [NSPredicate predicateWithFormat:@"(localId = %@) AND (accountType = %d)", [giDict objectForKey:@"localId"], [[giDict objectForKey:@"accountType"] intValue]];
+    NSArray *accountsFromDb = [context executeFetchRequest:request error:nil];
+    if (!accountsFromDb || ([accountsFromDb count] != 1)) {
+        return nil;
+    } else {
+        account = [accountsFromDb lastObject];
+        return account;
+    }
+    
+}
+
++ (Account *) retrieveFromDbWithLocalId: (NSString *) localId withManagedContext: (NSManagedObjectContext*) context{
+    Account * account = nil;
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Account"];
+    NSLog(@"(localId = %@)", localId);
+    request.predicate = [NSPredicate predicateWithFormat:@"(localId = %@) ", localId];
     NSArray *accountsFromDb = [context executeFetchRequest:request error:nil];
     if (!accountsFromDb || ([accountsFromDb count] != 1)) {
         return nil;

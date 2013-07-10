@@ -67,57 +67,97 @@
 - (IBAction)qrScan:(id)sender {
     
     NSLog(@"clicked scan");
-    ZXingWidgetController *widController =
-    [[ZXingWidgetController alloc] initWithDelegate:self showCancel:YES OneDMode:NO];
     
-    NSMutableSet *readers = [[NSMutableSet alloc ] init];
+    ZBarReaderViewController *reader = [ZBarReaderViewController new];
+    reader.readerDelegate = self;
+    reader.supportedOrientationsMask = ZBarOrientationMaskAll;
     
-    MultiFormatReader* reader = [[MultiFormatReader alloc] init];
-    [readers addObject:reader];
+    ZBarImageScanner *scanner = reader.scanner;
+    // TODO: (optional) additional reader configuration here
+    
+    // EXAMPLE: disable rarely used I2/5 to improve performance
+    [scanner setSymbology: ZBAR_I25
+                   config: ZBAR_CFG_ENABLE
+                       to: 0];
+    
+    // present and release the controller
+    [self presentModalViewController: reader
+                            animated: YES];
     
     
-    widController.readers = readers;
-    //    [readers release];
-    
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    widController.soundToPlay =
-    [NSURL fileURLWithPath:[mainBundle pathForResource:@"beep-beep" ofType:@"aiff"] isDirectory:NO];
-    
-    [self presentModalViewController:widController animated:YES];
-
-    // [self presentViewController:widController animated:YES completion:nil];
-    
-    //    [widController release];
+//    ZXingWidgetController *widController =
+//    [[ZXingWidgetController alloc] initWithDelegate:self showCancel:YES OneDMode:NO];
+//    
+//    NSMutableSet *readers = [[NSMutableSet alloc ] init];
+//     QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
+////    MultiFormatReader* reader = [[MultiFormatReader alloc] init];
+//    [readers addObject:qRCodeReader];
+//    
+//    
+//    widController.readers = readers;
+//    
+//    NSBundle *mainBundle = [NSBundle mainBundle];
+//    widController.soundToPlay =[NSURL fileURLWithPath:[mainBundle pathForResource:@"beep-beep" ofType:@"aiff"] isDirectory:NO];
+//    
+//    [self presentViewController:widController animated:YES completion:nil];
 
 }
 
 
-
-- (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
-    NSLog(@"code %@", result);
-    NSDictionary * auth = [ARLNetwork anonymousLogin:result];
-    NSLog(@"auth %@", auth);
-    if ([auth objectForKey:@"error"]){
-    NSLog(@"error ");
-    } else {
-        NSString * authString = [auth objectForKey:@"auth"];
-        [[NSUserDefaults standardUserDefaults] setObject:authString forKey:@"auth"];
-        NSLog(@"auth %@", authString);
-        NSDictionary *accountDetails = [ARLNetwork accountDetails];
-            ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        [Account accountWithDictionary:accountDetails inManagedObjectContext:appDelegate.arlearnDatabase.managedObjectContext];
-        [ARLAccountDelegator resetAccount:appDelegate.arlearnDatabase.managedObjectContext];
-        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-    }
-//        [self dismissModalViewControllerAnimated:NO];
-
-//    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+- (void) imagePickerController: (UIImagePickerController*) reader didFinishPickingMediaWithInfo: (NSDictionary*) info
+{
+    // ADD: get the decode results
+    id<NSFastEnumeration> results =
+    [info objectForKey: ZBarReaderControllerResults];
+    ZBarSymbol *symbol = nil;
+    for(symbol in results)
+        break;
+    NSLog(@"scanned %@", symbol.data);
+    
+//    [reader dismissModalViewControllerAnimated: YES];
+    
+        NSDictionary * auth = [ARLNetwork anonymousLogin:symbol.data];
+        NSLog(@"auth %@", auth);
+        if ([auth objectForKey:@"error"]){
+        } else {
+            NSString * authString = [auth objectForKey:@"auth"];
+            [[NSUserDefaults standardUserDefaults] setObject:authString forKey:@"auth"];
+            NSLog(@"auth %@", authString);
+            NSDictionary *accountDetails = [ARLNetwork accountDetails];
+                ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+            [Account accountWithDictionary:accountDetails inManagedObjectContext:appDelegate.arlearnDatabase.managedObjectContext];
+            [ARLAccountDelegator resetAccount:appDelegate.arlearnDatabase.managedObjectContext];
+            [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+        }
 
 }
 
-- (void)zxingControllerDidCancel:(ZXingWidgetController*)controller {
-    [self dismissModalViewControllerAnimated:NO];
-}
+
+//- (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
+//    NSLog(@"code %@", result);
+//    NSDictionary * auth = [ARLNetwork anonymousLogin:result];
+//    NSLog(@"auth %@", auth);
+//    if ([auth objectForKey:@"error"]){
+//    NSLog(@"error ");
+//    } else {
+//        NSString * authString = [auth objectForKey:@"auth"];
+//        [[NSUserDefaults standardUserDefaults] setObject:authString forKey:@"auth"];
+//        NSLog(@"auth %@", authString);
+//        NSDictionary *accountDetails = [ARLNetwork accountDetails];
+//            ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+//        [Account accountWithDictionary:accountDetails inManagedObjectContext:appDelegate.arlearnDatabase.managedObjectContext];
+//        [ARLAccountDelegator resetAccount:appDelegate.arlearnDatabase.managedObjectContext];
+//        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+//    }
+////        [self dismissModalViewControllerAnimated:NO];
+//
+////    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+//
+//}
+//
+//- (void)zxingControllerDidCancel:(ZXingWidgetController*)controller {
+//    [self dismissModalViewControllerAnimated:NO];
+//}
 
 
 -(void) disappear {

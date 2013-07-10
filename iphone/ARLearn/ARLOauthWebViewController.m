@@ -9,6 +9,7 @@
 #import "ARLOauthWebViewController.h"
 #import "ARLAccountDelegator.h"
 #import "ARLAppDelegate.h"
+#import "Account+create.h"
 
 @interface ARLOauthWebViewController ()
 
@@ -49,19 +50,20 @@
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    //oauth.html?accessToken=ya29.AHES6ZTbojIRQPQdMylHjhzJ6EBdr2aLtLnYH5BcGxkZmac&type=2&exp=604800
     NSString * urlAsString =request.URL.description;
     if (!([urlAsString rangeOfString:@"oauth.html?accessToken="].location == NSNotFound)) {
-        NSLog(@"contaisn ok %@", urlAsString);
         NSArray *listItems = [urlAsString componentsSeparatedByString:@"accessToken="];
         NSString * lastObject =[listItems lastObject];
         listItems = [lastObject componentsSeparatedByString:@"&"];
-        NSLog(@"contaisn ok %@", [listItems objectAtIndex:0]);
         [[NSUserDefaults standardUserDefaults] setObject:[listItems objectAtIndex:0] forKey:@"auth"];
         ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        NSDictionary *accountDetails = [ARLNetwork accountDetails];
+        NSLog(@"accountDetails %@", accountDetails.description);
+        [Account accountWithDictionary:accountDetails inManagedObjectContext:appDelegate.arlearnDatabase.managedObjectContext];
+        [[NSUserDefaults standardUserDefaults] setObject:[accountDetails objectForKey:@"localId"] forKey:@"accountLocalId"];
+        
         
         [ARLAccountDelegator resetAccount:appDelegate.arlearnDatabase.managedObjectContext];
-//         [self dismissViewControllerAnimated:YES completion:nil];
         [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 
         return NO;

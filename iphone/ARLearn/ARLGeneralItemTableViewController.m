@@ -97,6 +97,9 @@
     if ([segue.destinationViewController respondsToSelector:@selector(setGeneralItem:)]) {
         [segue.destinationViewController performSelector:@selector(setGeneralItem:) withObject:generalItem];
     }
+    if ([segue.destinationViewController respondsToSelector:@selector(setRun:)]) {
+        [segue.destinationViewController performSelector:@selector(setRun:) withObject:self.run];
+    }
     [ARLNetwork publishAction:self.run.runId action:@"read" itemId:generalItem.id itemType:generalItem.type];
 }
 

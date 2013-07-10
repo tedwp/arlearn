@@ -82,6 +82,8 @@
     
     if (appDelegate.arlearnDatabase.documentState == UIDocumentStateNormal) {
         [self fetchARLearnGamesAndRuns: appDelegate.arlearnDatabase];
+    } else {
+        NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
     }
     //    [self setupFetchedResultsController];
 }
@@ -130,6 +132,8 @@
 //        [ARLCloudSynchronizer synchronizeGeneralItemsWithGame:selectedRun.game ];
 //        [ARLCloudSynchronizer synchronizeGeneralItemVisiblityStatementsWithRun:selectedRun ];
         [ARLCloudSynchronizer synchronizeGeneralItemsAndVisibilityStatments:selectedRun];
+            ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+         NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
         for (UIViewController *v in [segue.destinationViewController viewControllers]) {
             if ([v respondsToSelector:@selector(setRun:)]) {
                 [v performSelector:@selector(setRun:) withObject:selectedRun];

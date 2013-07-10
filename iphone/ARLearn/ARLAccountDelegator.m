@@ -14,6 +14,9 @@
 + (void) resetAccount: (NSManagedObjectContext * ) context {
     NSNumber* serverTime = [NSNumber numberWithLong:0];
     [SynchronizationBookKeeping createEntry:@"myRuns" time:serverTime inManagedObjectContext:context];
+    [SynchronizationBookKeeping createEntry:@"myGames" time:serverTime inManagedObjectContext:context];
+    [SynchronizationBookKeeping createEntry:@"generalItems" time:serverTime inManagedObjectContext:context];
+    [SynchronizationBookKeeping createEntry:@"generalItemsVisibility" time:serverTime inManagedObjectContext:context];
     [Run deleteAllRuns:context];
     
 }

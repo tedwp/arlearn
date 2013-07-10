@@ -110,16 +110,20 @@ static NSMutableDictionary *syncDates;
 + (void) synchronizeGeneralItemsAndVisibilityStatments: (Run *) run {
     Game * game = run.game;
     NSManagedObjectContext * context = game.managedObjectContext;
+    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
     [context performBlock:^{
         //        NSNumber * gameId = [NSNumber numberWithLongLong:game.gameId];
+        ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
         NSNumber * lastDate = [self getLastSynchronizationDate:context type:@"generalItems" context:game.gameId];
         dispatch_queue_t fetchQ = dispatch_queue_create("GeneralItems fetcher", NULL);
         dispatch_async(fetchQ, ^{
             NSDictionary * gisDict = [ARLNetwork itemsForGameFrom:game.gameId from:lastDate];
             NSNumber * serverTime = [gisDict objectForKey:@"serverTime"];
-            
+            NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
             NSLog(@"generalItems (gameId %@) %@", game.gameId, [gisDict objectForKey:@"serverTime"]);
-            
+            NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
             [context performBlock:^{
                 for (NSDictionary *generalItemDict in [gisDict objectForKey:@"generalItems"]) {
                     [GeneralItem generalItemWithDictionary:generalItemDict
@@ -132,16 +136,37 @@ static NSMutableDictionary *syncDates;
                                                   idContext:game.gameId
                                      inManagedObjectContext:context];
                 }
+                NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
                 [run.managedObjectContext save:nil];
+                NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
                 ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-                [appDelegate.arlearnDatabase saveToURL:appDelegate.arlearnDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL succes) {
+//                [appDelegate.arlearnDatabase saveToURL:appDelegate.arlearnDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL succes) {
+                    NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
+//                    [self useDocument:run];
                     [self synchronizeGeneralItemVisiblityStatementsWithRun:run];
-                }];
+//                }];
             }];
         });
     }];
     
 }
+
+//+ (void) useDocument: (Run *) run {
+//    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+//    
+//    if (![[NSFileManager defaultManager] fileExistsAtPath:[appDelegate.arlearnDatabase.fileURL path]]) {
+//        [appDelegate.arlearnDatabase saveToURL:appDelegate.arlearnDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL succes) {
+//            [self synchronizeGeneralItemVisiblityStatementsWithRun:run];
+//        }];
+//    } else if (appDelegate.arlearnDatabase.documentState == UIDocumentStateClosed) {
+//        [appDelegate.arlearnDatabase openWithCompletionHandler:^(BOOL succes) {
+//           [self synchronizeGeneralItemVisiblityStatementsWithRun:run];
+//        }];
+//    } else if (appDelegate.arlearnDatabase.documentState == UIDocumentStateNormal) {
+//        [self synchronizeGeneralItemVisiblityStatementsWithRun:run];
+//    }
+//}
+
 
 + (void) synchronizeGeneralItemsAndVisibilityStatments: (NSNumber *) runId withManagedContext:(NSManagedObjectContext *) context {
     [context performBlock:^{
@@ -160,7 +185,9 @@ static NSMutableDictionary *syncDates;
 
 + (void) synchronizeGeneralItemVisiblityStatementsWithRun: (Run *) run {
     NSManagedObjectContext * context = run.managedObjectContext;
-    //    [context performBlock:^{
+        [context performBlock:^{
+            ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+            NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
     NSNumber * lastDate = [self getLastSynchronizationDate:context type:@"generalItemsVisibility" context:run.runId];
     dispatch_queue_t fetchQ2 = dispatch_queue_create("itemsVisFetcher", NULL);
     dispatch_async(fetchQ2, ^{
@@ -175,13 +202,18 @@ static NSMutableDictionary *syncDates;
             }];
         }
         if (serverTime) {
-            [SynchronizationBookKeeping createEntry:@"generalItemsVisibility"
-                                               time:serverTime
-                                          idContext:run.runId
-                             inManagedObjectContext:context];
+            [context performBlock:^{
+                [SynchronizationBookKeeping createEntry:@"generalItemsVisibility"
+                                                   time:serverTime
+                                              idContext:run.runId
+                                 inManagedObjectContext:context];
+            }];
+            
         }
+        ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
     });
-    //    }];
+        }];
 }
 
 + (void) synchronizeGeneralItemVisiblityStatements: (NSNumber *) runId withManagedContext:(NSManagedObjectContext *) context {

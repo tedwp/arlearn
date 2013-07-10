@@ -8,10 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "ARLOauthWebViewController.h"
-#import "ZXingWidgetController.h"
-#import "MultiFormatReader.h"
-#import "ARLNetwork.h"
-@interface ARLOauthListViewController : UIViewController <ZXingDelegate>
+//#import "ZXingWidgetController.h"
+//#import "MultiFormatReader.h"
+//#import "ARLNetwork.h"
+//#import "QRCodeReader.h"
+#import "ZBarSDK.h"
+
+
+
+@interface ARLOauthListViewController : UIViewController  < ZBarReaderDelegate >//<ZXingDelegate>
 
 @property (nonatomic, assign) BOOL *dismiss;
 - (IBAction)facebookButton:(id)sender;
