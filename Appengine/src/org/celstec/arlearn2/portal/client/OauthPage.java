@@ -3,6 +3,7 @@ package org.celstec.arlearn2.portal.client;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthFbClient;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthGoogleClient;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthLinkedIn;
+import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthTwitter;
 import org.celstec.arlearn2.portal.client.toolbar.ToolBar;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -26,14 +27,14 @@ public class OauthPage {
 	
 	public void loadPage() {
 //		createToolstrip();
-		SC.say("Welcome", "Dear ARLearn author,<br><br> " +
-				"Welcome to the new ARLearn set of tools. Some of the new features include:"+
-				"<ol><li>	Collaborative authoring of games. Share your games with contacts." +
-				"<li>	License public games with a creative commons license." +
-				"<li>	Login with facebook, linkedin or google.</ol>" +
-				"<br> As you will see, most of the functionality is already implemented in this new environment... but in a slightly different manner<br>" +
-				"<br><br> Logging with google will automatically migrate your games and will render them unavailable in the <a href=\"Authoring.html\">old environment</a>. Logging in with Facebook or LinkedIn will not affect your old games and runs."+
-				"<br><br>If things are not clear, don't hesitate to contact me via <a href=\"skype:stefaanternier2?call\">Skype</a> or contact me via email: stefaan.ternier@ou.nl ");
+//		SC.say("Welcome", "Dear ARLearn author,<br><br> " +
+//				"Welcome to the new ARLearn set of tools. Some of the new features include:"+
+//				"<ol><li>	Collaborative authoring of games. Share your games with contacts." +
+//				"<li>	License public games with a creative commons license." +
+//				"<li>	Login with facebook, linkedin or google.</ol>" +
+//				"<br> As you will see, most of the functionality is already implemented in this new environment... but in a slightly different manner<br>" +
+//				"<br><br> Logging with google will automatically migrate your games and will render them unavailable in the <a href=\"Authoring.html\">old environment</a>. Logging in with Facebook or LinkedIn will not affect your old games and runs."+
+//				"<br><br>If things are not clear, don't hesitate to contact me via <a href=\"skype:stefaanternier2?call\">Skype</a> or contact me via email: stefaan.ternier@ou.nl ");
 		toolStrip = new ToolBar();
 
 		
@@ -47,7 +48,7 @@ public class OauthPage {
 		
 		verticalGrid.setLayoutAlign(Alignment.CENTER);
 		verticalGrid.setAlign(Alignment.CENTER);  
-		verticalGrid.setDefaultLayoutAlign(Alignment.CENTER); // As promised!  
+		verticalGrid.setDefaultLayoutAlign(Alignment.CENTER);
 
 		verticalGrid.setWidth100();
 		verticalGrid.setHeight("*");
@@ -67,7 +68,7 @@ public class OauthPage {
 	        tileGrid.setTileWidth(250);  
 	        tileGrid.setTileHeight(250);  
 	        tileGrid.setHeight(400);  
-	        tileGrid.setWidth(800);  
+	        tileGrid.setWidth(1100);
 	        tileGrid.setID("boundList");  
 	        tileGrid.setCanReorderTiles(false);  
 	        tileGrid.setShowAllRecords(false);  
@@ -87,6 +88,9 @@ public class OauthPage {
 					case 3:
 						Window.open((new OauthLinkedIn()).getLoginRedirectURL(), "_self", ""); 
 						break;
+                    case 4:
+                        Window.open((new OauthTwitter()).getLoginRedirectURL(), "_self", "");
+                        break;
 					default:
 						break;
 					}
@@ -111,11 +115,17 @@ public class OauthPage {
 	        linkedIn.setAttribute("commonName", "Sign in with LinkedIn");
 	        linkedIn.setAttribute("rec", 3);
 
+            Record twitterRec = new Record();
+            twitterRec.setAttribute("picture", "twitter.png");
+            twitterRec.setAttribute("commonName", "Sign in with Twitter");
+            twitterRec.setAttribute("rec", 4);
+
 	        DataSource ds =new DataSource();
 	        ds.setClientOnly(true);
 	        ds.addData(facebook);
 	        ds.addData(google);
 	        ds.addData(linkedIn);
+            ds.addData(twitterRec);
 	        
 	        tileGrid.setDataSource(ds); 
 	        tileGrid.setAutoFetchData(true);  
@@ -138,19 +148,7 @@ public class OauthPage {
 	        });  
 	  
 	        DetailViewerField statusField = new DetailViewerField("status");  
-//	        statusField.setCellStyleHandler(new CellStyleHandler() {  
-//	            public String execute(Object value, DetailViewerField field, Record record) {  
-//	                if("Endangered".equals(value)) {  
-//	                    return "endangered";  
-//	                } else if ("Threatened".equals(value)) {  
-//	                    return "threatened";  
-//	                } else if ("Not Endangered".equals(value)) {  
-//	                    return "notEndangered";  
-//	                } else {  
-//	                    return null;  
-//	                }  
-//	            }  
-//	        });  
+
 	        tileGrid.setFields(pictureField, commonNameField);  
 	  
 	}

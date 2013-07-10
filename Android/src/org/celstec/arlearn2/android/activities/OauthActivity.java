@@ -55,13 +55,16 @@ public class OauthActivity extends GeneralActivity {
 		        	System.out.println("auth token is "+token);
 		        	 Intent result = new Intent();
 			            result.putExtra("token", token);
-		        	 OauthActivity.this.getMenuHandler().getPropertiesAdapter().setAuthToken(token);
+		        	    OauthActivity.this.getMenuHandler().getPropertiesAdapter().setAuthToken(token);
 						OauthActivity.this.getMenuHandler().getPropertiesAdapter().setIsAuthenticated();
 						new DownloadDetailsTask(OauthActivity.this).execute();
 			            setResult(RESULT_OK, result);
 			    		new GCMCheck().execute();
 			            finish();
 		        }
+                  if (url.endsWith("oauth.html") || url.contains("twitter?denied")) {
+                      finish();
+                  }
 		      }
 		      
 		      @Override 

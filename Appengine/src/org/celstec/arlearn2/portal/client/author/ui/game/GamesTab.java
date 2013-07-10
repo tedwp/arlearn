@@ -125,7 +125,7 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 		runImg.setShowDown(false);
 		runImg.setShowRollOver(false);
 		runImg.setAlign(Alignment.CENTER);
-		runImg.setSrc("/images/run.png");
+		runImg.setSrc("/images/add_user.png");
 		runImg.setPrompt(constants.createRunMessageHoover());
 		runImg.setHeight(16);
 		runImg.setWidth(16);
@@ -137,7 +137,7 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 		itemsImg.setShowDown(false);
 		itemsImg.setShowRollOver(false);
 		itemsImg.setAlign(Alignment.CENTER);
-		itemsImg.setSrc("/images/messages.png");
+		itemsImg.setSrc("/images/gi_add.png");
 		itemsImg.setPrompt(constants.openGeneralItemsHoover());
 		itemsImg.setHeight(16);
 		itemsImg.setWidth(16);
@@ -207,9 +207,9 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 		deleteField.setPrompt(constants.deleteGame());
 		
 		if (AccountManager.getInstance().isAdvancedUser()) { //
-			getMasterListGrid().setFields(new ListGridField[] {mapStatusField, idField, runField, giField, downloadField, titleGameField,    ccField, accessGameField, deleteField });
+			getMasterListGrid().setFields(new ListGridField[] {mapStatusField, giField,  idField, runField, downloadField, titleGameField,    ccField, accessGameField, deleteField });
 		} else {
-			getMasterListGrid().setFields(new ListGridField[] {mapStatusField, idField, runField, giField, titleGameField,    ccField, accessGameField, deleteField });	
+			getMasterListGrid().setFields(new ListGridField[] {mapStatusField, giField, idField, runField, titleGameField,    ccField, accessGameField, deleteField });
 		}
 			
 		

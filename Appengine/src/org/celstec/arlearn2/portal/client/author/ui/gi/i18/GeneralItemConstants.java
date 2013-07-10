@@ -140,6 +140,12 @@ public interface GeneralItemConstants  extends Constants {
 	@DefaultStringValue("Countdown")
 	String countDown();
 	
-	
-	
+	//Metadata viewer
+
+    @DefaultStringValue("Generic properties")
+    String basicMetadata();
+
+    @DefaultStringValue("Message dependent properties")
+    String specificMetadata();
+
 }

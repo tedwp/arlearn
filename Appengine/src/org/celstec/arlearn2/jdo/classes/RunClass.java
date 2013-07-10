@@ -41,6 +41,10 @@ public class RunClass {
 	@Persistent
 	private Boolean deleted;
 
+    public Long getId() {
+        return id.getId();
+    }
+
 	public Long getRunId() {
 		return runId;
 	}

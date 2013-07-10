@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.tasks.beans;
 
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.delegators.ResponseDelegator;
 import org.celstec.arlearn2.delegators.TeamsDelegator;
 import org.celstec.arlearn2.jdo.manager.ResponseManager;
@@ -27,21 +28,21 @@ import com.google.gdata.util.AuthenticationException;
 public class DeleteResponses extends GenericBean {
 
 	private Long runId;
-	private String account;
+    private String fullAccount;
 
 	public DeleteResponses() {
 		super();
 	}
 
-	public DeleteResponses(String token, Long runId) {
-		super(token);
+	public DeleteResponses(String token, Account account, Long runId) {
+		super(token, account);
 		this.runId = runId;
 	}
 
-	public DeleteResponses(String token, Long runId, String account) {
-		super(token);
+	public DeleteResponses(String token, Account account, Long runId, String fullAccount) {
+		super(token, account);
 		this.runId = runId;
-		this.account = account;
+        this.fullAccount = fullAccount;
 	}
 	
 	public Long getRunId() {
@@ -51,23 +52,23 @@ public class DeleteResponses extends GenericBean {
 	public void setRunId(Long runId) {
 		this.runId = runId;
 	}
-	
-	public String getAccount() {
-		return account;
-	}
 
-	public void setAccount(String account) {
-		this.account = account;
-	}
+    public String getFullAccount() {
+        return fullAccount;
+    }
+
+    public void setFullAccount(String fullAccount) {
+        this.fullAccount = fullAccount;
+    }
 	
 	@Override
 	public void run() {
 		try {
 			ResponseDelegator rd = new ResponseDelegator(getToken());
-			if (account == null) {
+			if (getFullAccount() == null) {
 				rd.deleteResponses(runId);
 			} else{
-				rd.deleteResponses(runId, getAccount());
+				rd.deleteResponses(runId, getFullAccount());
 
 			}
 		} catch (AuthenticationException e) {

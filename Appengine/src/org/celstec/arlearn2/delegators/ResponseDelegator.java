@@ -62,7 +62,15 @@ public class ResponseDelegator extends GoogleDelegator {
 		rl.setResponses(ResponseManager.getResponse(runId, itemId, account, null, false));
 		return rl;
 	}
-	
+
+    public ResponseList getResponsesFromUntil(Long runId, Long itemId, String fullId, Long from, Long until, String cursor) {
+        return ResponseManager.getResponse(runId, itemId, fullId, from, until, cursor);
+    }
+
+    public ResponseList getResponsesFromUntil(Long runId, Long itemId, Long from, Long until, String cursor) {
+        return ResponseManager.getResponse(runId, itemId, from, until, cursor);
+    }
+
 	public ResponseList getResponsesFromUntil(Long runId, Long from, Long until, String cursor) {
 		return ResponseManager.getResponse(runId, from, until, cursor);
 	}

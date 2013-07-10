@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.tasks.beans;
 
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.generalitems.CreateGeneralItems;
 
@@ -31,12 +32,12 @@ public class DeleteGeneralItems  extends GenericBean {
 		super();
 	}
 
-	public DeleteGeneralItems(String token, Long gameId) {
-		super(token);
-		this.gameId = gameId;
-	}
+    public DeleteGeneralItems(String authToken, Account account, Long gameIdentifier) {
+        super(authToken, account);
+        this.gameId = gameIdentifier;
+    }
 
-	public Long getGameId() {
+    public Long getGameId() {
 		return gameId;
 	}
 
@@ -47,7 +48,7 @@ public class DeleteGeneralItems  extends GenericBean {
 	@Override
 	public void run() {
 		try {
-			GeneralItemDelegator gid = new GeneralItemDelegator("auth=" + getToken());
+			GeneralItemDelegator gid = new GeneralItemDelegator(getAccountBean(), getToken());
 
 //			CreateGeneralItems cgi = new CreateGeneralItems("auth=" + getToken());
 			if (getGameId() !=null) gid.deleteGeneralItems(getGameId());

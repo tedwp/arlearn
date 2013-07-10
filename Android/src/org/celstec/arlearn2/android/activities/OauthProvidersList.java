@@ -61,6 +61,8 @@ public class OauthProvidersList extends GeneralActivity implements ListitemClick
 		for (final OauthInfo info : infoList.getOauthInfoList()) {
 			runsRecordList.add(new ListRecord(info));
 		}
+
+
 		ListView listView = (ListView) findViewById(R.id.listRuns);
 		if (adapter == null || !adapter.isEqual(runsRecordList)) {
 			adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, runsRecordList);
@@ -78,6 +80,10 @@ public class OauthProvidersList extends GeneralActivity implements ListitemClick
 			try {
 				if (NetworkSwitcher.isOnline(OauthProvidersList.this)) {
 					OauthInfoList list = OauthClient.getOauthClient().getOauthInfo();
+//                    OauthInfo twitter = new OauthInfo();
+//                    twitter.setProviderId(4);
+//                    twitter.setRedirectUri("http://ar-learn.appspot.com/oauth/twitter?twitter=init");
+//                    list.addOauthInfo(twitter);
 					publishProgress(list);
 				} else {
 					publishProgress();
@@ -140,6 +146,11 @@ public class OauthProvidersList extends GeneralActivity implements ListitemClick
 			intent2.setData(Uri.parse(getLinkedInLoginRedirectURL(oi.getRedirectUri(), oi.getClientId())));
 			finish();
 			break;
+        case 4:
+            intent2.setData(Uri.parse(getTwitterLoginUrl(oi.getRedirectUri())));
+
+            finish();
+            break;
 		default:
 			break;
 		}
@@ -166,4 +177,8 @@ public class OauthProvidersList extends GeneralActivity implements ListitemClick
 				"&state=BdhOU9fFb6JcK5BmoDeOZbaY58" +
 				"&redirect_uri="+redirect_uri;
 	}
+
+    public String getTwitterLoginUrl(String redirectUri) {
+        return redirectUri +"?twitter=init";
+    }
 }

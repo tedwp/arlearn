@@ -42,6 +42,8 @@
           <element id="library" level="application" name="smartgwt-3.1" />
           <element id="library" level="module" name="smartgwt.jar" module-name="ARLearn2Appengine" />
           <element id="library" level="project" name="jersey libs" />
+          <element id="library" level="project" name="json-simple" />
+          <element id="library" level="project" name="twitter4j-core-3.0.3" />
         </element>
       </element>
       <element id="gwt-compiler-output" facet="ARLearn2Appengine/gwt/GWT" />

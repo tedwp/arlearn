@@ -79,8 +79,15 @@ public class ResponseDelegator {
 	
 	public void publishResponse(Context ctx, Response r) {
 		DBAdapter.getAdapter(ctx).getMyResponses().publishResponse(r);
-	}
+        PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
+    }
 
+    public void publishResponse(Context ctx, Response r, GeneralItem generalItem) {
+        DBAdapter.getAdapter(ctx).getMyResponses().publishResponse(r);
+        PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
+        ActionsDelegator.getInstance().publishAction(ctx, "answer_given", r.getRunId(), pa.getFullId(), generalItem.getId(), generalItem.getType());
+
+    }
 	public void synchronizeResponsesWithServer(Context ctx, final long runId) {
 		//TODO also sync with server
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));

@@ -39,7 +39,6 @@ import org.celstec.arlearn2.jdo.manager.UserManager;
 import org.celstec.arlearn2.tasks.beans.DeleteActions;
 import org.celstec.arlearn2.tasks.beans.DeleteBlobs;
 import org.celstec.arlearn2.tasks.beans.DeleteResponses;
-import org.celstec.arlearn2.tasks.beans.DeleteScoreRecords;
 import org.celstec.arlearn2.tasks.beans.DeleteTeams;
 import org.celstec.arlearn2.tasks.beans.UpdateGeneralItemsVisibility;
 import org.celstec.arlearn2.util.RunsCache;
@@ -243,14 +242,14 @@ public class RunDelegator extends GoogleDelegator {
 		RunManager.setStatusDeleted(r.getRunId());
 		RunAccessManager.resetGameAccessLastModificationDate(r.getRunId());
 		RunsCache.getInstance().removeRun(r.getRunId());
-		(new UpdateGeneralItemsVisibility(authToken, r.getRunId(), null, 2)).scheduleTask();
+		(new UpdateGeneralItemsVisibility(authToken, this.account, r.getRunId(), null, 2)).scheduleTask();
 
 //		(new DeleteVisibleItems(authToken, r.getRunId())).scheduleTask();
-		(new DeleteActions(authToken, r.getRunId())).scheduleTask();
-		(new DeleteTeams(authToken, r.getRunId(), null)).scheduleTask();
-		(new DeleteBlobs(authToken, r.getRunId())).scheduleTask();
-		(new DeleteResponses(authToken, r.getRunId())).scheduleTask();
-		(new DeleteScoreRecords(authToken, r.getRunId())).scheduleTask();
+		(new DeleteActions(authToken, this.account, r.getRunId())).scheduleTask();
+		(new DeleteTeams(authToken, this.account,r.getRunId(), null)).scheduleTask();
+		(new DeleteBlobs(authToken, this.account,r.getRunId())).scheduleTask();
+		(new DeleteResponses(authToken, this.account,r.getRunId())).scheduleTask();
+//		(new DeleteScoreRecords(authToken, this.account,r.getRunId())).scheduleTask();
 		//TODO  switch on DeleteInventoryRecords
 //		(new DeleteInventoryRecords(authToken, r.getRunId())).scheduleTask();
 //		(new DeleteProgressRecord(authToken, r.getRunId())).scheduleTask();
@@ -263,7 +262,7 @@ public class RunDelegator extends GoogleDelegator {
 	}
 
 	public void deleteRuns(long gameId, String email) {
-		List<Run> runList = RunManager.getRuns(null, gameId, email, null, null);
+		List<Run> runList = RunManager.getRuns(null, gameId, null, null, null);
 		for (Run r : runList) {
 			deleteRun(r, email);
 		}

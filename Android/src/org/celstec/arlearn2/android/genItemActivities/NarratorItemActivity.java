@@ -179,15 +179,9 @@ public class NarratorItemActivity extends GeneralItemActivity {
 	private DataCollectorDelegateManager dataCollectorManager;
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		dataCollectorManager.processResult(requestCode, data);
-		if (resultCode == -1 && requestCode == 1) {
-			onActivityResult(data);
-		}
-		
+		if (resultCode != 0) dataCollectorManager.processResult(requestCode, data);
 	}
-	public void onActivityResult(Intent data) {
-		
-	}
+
 	
 	
 

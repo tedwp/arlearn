@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.tasks.beans;
 
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.delegators.RunDelegator;
 
 import com.google.gdata.util.AuthenticationException;
@@ -31,8 +32,8 @@ public class DeleteRuns extends GenericBean {
 		super();
 	}
 	
-	public DeleteRuns(String token, Long gameId, String userEmail) {
-		super(token);
+	public DeleteRuns(String token, Account account, Long gameId, String userEmail) {
+		super(token, account);
 		this.gameId = gameId;
 		this.userEmail = userEmail;
 	}
@@ -56,12 +57,13 @@ public class DeleteRuns extends GenericBean {
 	@Override
 	public void run() {
 		RunDelegator rd;
-		try {
-			rd = new RunDelegator("auth=" + getToken());
+//		try {
+            rd =new RunDelegator(getAccountBean(), getToken());
+//			rd = new RunDelegator("auth=" + getToken());
 			rd.deleteRuns(getGameId(),getUserEmail());
-		} catch (AuthenticationException e) {
-			e.printStackTrace();
-		}
+//		} catch (AuthenticationException e) {
+//			e.printStackTrace();
+//		}
 		
 		
 	}

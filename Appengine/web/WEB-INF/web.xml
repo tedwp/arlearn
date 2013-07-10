@@ -15,7 +15,7 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-    <servlet>
+    <servlet>                                               ƒ
         <servlet-name>AsyncTasksServlet</servlet-name>
         <servlet-class>org.celstec.arlearn2.tasks.AsyncTasksServlet</servlet-class>
     </servlet>

@@ -95,16 +95,12 @@ public class Entry implements EntryPoint {
 				Window.open(href, "_self", "");
 
 			} else {
-				if (RootPanel.get("button-facebook") != null)
-					(new OauthPage()).loadPage();
-				if (RootPanel.get("author") != null)
-					(new AuthorPage()).loadPage();
-				if (RootPanel.get("test") != null)
-					(new TestPage()).loadPage();
-				if (RootPanel.get("contact") != null)
-					(new AddContactPage()).loadPage();
-				if (RootPanel.get("result") != null)
-					(new ResultDisplayPage()).loadPage();
+				if (RootPanel.get("button-facebook") != null) (new OauthPage()).loadPage();
+				if (RootPanel.get("author") != null) (new AuthorPage()).loadPage();
+				if (RootPanel.get("test") != null) (new TestPage()).loadPage();
+				if (RootPanel.get("contact") != null) (new AddContactPage()).loadPage();
+                if (RootPanel.get("register") != null) (new RegisterForGame()).loadPage();
+				if (RootPanel.get("result") != null) (new ResultDisplayPage()).loadPage();
 				if (RootPanel.get("portal") != null) (new org.celstec.arlearn2.portal.client.portal.PortalPage()).loadPage();
 				if (RootPanel.get("oauth_new") != null) (new OauthPage()).loadPage();
 				if (RootPanel.get("resultDisplayRuns") != null) (new ResultDisplayRuns()).loadPage();

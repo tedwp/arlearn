@@ -46,6 +46,7 @@ public class ActionForm extends DynamicForm {
 	protected SelectItem selectScope;
 	private boolean scantagStringAppear = false;
 	private boolean hasDependency = true;
+    private boolean showHasDependencyCheckBox = true;
 	private boolean saveToTree = false;
 	
 
@@ -112,12 +113,15 @@ public class ActionForm extends DynamicForm {
 	}
 
 	public void setTreeNode(TreeNode tn, Tree tree) {
+        showHasDependencyCheckBox = false;
 		actionTreeNode = tn;
 		actionTree = tree;
 		for (TreeNode node : actionTree.getChildren(actionTreeNode)) {
 			if (node.getAttribute("type").equals(ActionDependencyNode.ACTION)) {
-				setValue(ACTION_DEP, node.getAttribute("Value"));	
-			}
+				setValue(ACTION_DEP, node.getAttribute("Value"));
+                setValue(ACTION_DEP_STRING, node.getAttribute("Value"));
+
+            }
 			if (node.getAttribute("type").equals(ActionDependencyNode.GENERALITEM)) {
 				setValue(GENITEM_DEP, node.getAttribute("Value"));
 				if (node.getAttribute("Value")  != null) {
@@ -148,6 +152,12 @@ public class ActionForm extends DynamicForm {
 				
 			}
 		});
+        hasDependencyCheckboxItem.setShowIfCondition(new FormItemIfFunction() {
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return showHasDependencyCheckBox;
+            }
+        });
 	}
 	
 	private void initAction() {
@@ -241,8 +251,8 @@ public class ActionForm extends DynamicForm {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-//				String id = selectGeneralItem.getValueAsString();
-				long recId = (Long)event.getValue();
+				String id = selectGeneralItem.getValueAsString();
+				long recId = Long.parseLong(id);
 				
 				loadGeneralItemOptions(recId);
 				if (saveToTree) onSave();
@@ -258,7 +268,6 @@ public class ActionForm extends DynamicForm {
 		if (gi instanceof SingleChoiceTest || gi instanceof MultipleChoiceTest) {
 			LinkedHashMap<String, String> map = createSimpleDependencyValues();
 			for (MultipleChoiceAnswer answer :((SingleChoiceTest) gi).getAnswers()) {
-				System.out.println("answer_"+answer.getString(MultipleChoiceAnswer.ID));
 				map.put("answer_"+answer.getString(MultipleChoiceAnswer.ID), answer.getString(MultipleChoiceAnswer.ANSWER));
 			}
 			selectAction.setValueMap(map);
@@ -297,6 +306,7 @@ public class ActionForm extends DynamicForm {
 
 	public void loadJson(JSONObject object) {
 		hasDependency = true;
+        showHasDependencyCheckBox = true;
 		hasDependencyCheckboxItem.setValue(true);
 		if (object.containsKey("generalItemId")) {
 			loadGeneralItemOptions((long) object.get("generalItemId").isNumber().doubleValue());	

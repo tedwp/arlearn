@@ -62,7 +62,7 @@ public class TextDatacollectorDelegate extends DataCollectorDelegate {
 	
 	private void publishResponse(String text) {
 		Response r = createTextResponse(text);
-		ResponseDelegator.getInstance().publishResponse(ctx, r);
+		ResponseDelegator.getInstance().publishResponse(ctx, r, ctx.getNarratorBean());
 	}
 	
 	

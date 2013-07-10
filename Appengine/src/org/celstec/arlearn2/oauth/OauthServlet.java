@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.oauth;
 
+import org.celstec.arlearn2.jdo.classes.AccountJDO;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -31,20 +32,26 @@ public class OauthServlet  extends HttpServlet {
 	private static final String FACEBOOK = "facebook";
 	private static final String GOOGLE = "google";
 	private static final String LINKEDIN = "linkedin";
+    private static final String TWITTER = "twitter";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		this.doPost(req, resp);
+        if (req.getParameter("twitter") != null && req.getParameter("twitter").equals("init")) {
+            new OauthTwitterWorker().redirectToTwitterForAuthentication(req, resp);
+        } else {
+            this.doPost(req, resp);
+        }
+
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String baseurl =  "http://" +req.getServerName();
-		if (req.getServerPort() != 80) baseurl+=":"+req.getServerPort();
-		if (req.getParameter("error") != null) {
-			resp.sendRedirect(baseurl+"/oauth.html");
+		String baseUrl =  "http://" +req.getServerName();
+		if (req.getServerPort() != 80) baseUrl+=":"+req.getServerPort();
+		if (req.getParameter("error") != null || req.getParameter("denied") != null ) {
+			resp.sendRedirect(baseUrl+"/oauth.html");
 			return;
 
 		}
@@ -53,11 +60,18 @@ public class OauthServlet  extends HttpServlet {
 			worker = new OauthFbWorker();
 		} else if (req.getPathInfo().contains(GOOGLE)) {
 			worker = new OauthGoogleWorker();
-		}else if (req.getPathInfo().contains(LINKEDIN)) {
+		} else if (req.getPathInfo().contains(LINKEDIN)) {
 			worker = new OauthLinkedInWorker();
-		}
+		}  else if (req.getPathInfo().contains(TWITTER)) {
+            OauthTwitterWorker twitterWorker = new OauthTwitterWorker();
+            String accessToken = twitterWorker.afterSuccesfullAuthentication(req);
+            if (accessToken != null) {
+                long expiresLong = 3600*24*7l;
+                resp.sendRedirect(baseUrl+"/oauth.html?accessToken=" + accessToken + "&type=" + AccountJDO.LINKEDINCLIENT + "&exp=" + expiresLong);
+            }
+        }
 		if (worker != null) {
-			worker.setBaseUrl(baseurl);
+			worker.setBaseUrl(baseUrl);
 			worker.setCode(req.getParameter("code"));
 			worker.setResponse(resp);
 			worker.exchangeCodeForAccessToken();

@@ -18,31 +18,17 @@
  ******************************************************************************/
 package org.celstec.arlearn2.api;
 
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import org.celstec.arlearn2.beans.run.Location;
+import com.google.gdata.util.AuthenticationException;
 import org.celstec.arlearn2.beans.run.LocationList;
-import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.beans.run.User;
-
+import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.delegators.ActionDelegator;
 import org.celstec.arlearn2.delegators.ResponseDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.location.QueryLocations;
-import org.celstec.arlearn2.delegators.location.SubmitLocations;
 
-import com.google.gdata.util.AuthenticationException;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
 @Path("/users")
 public class Users extends Service {
@@ -191,8 +177,6 @@ public class Users extends Service {
 
 		}
 		long delta = System.currentTimeMillis() - locations.getTimestamp();
-		SubmitLocations sl = new SubmitLocations(token);
-		sl.submitLocations(delta, locations, runIdentifier);
 		return serialise(locations, accept);
 
 	}

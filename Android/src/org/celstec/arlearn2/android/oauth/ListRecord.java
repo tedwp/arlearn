@@ -30,7 +30,8 @@ public class ListRecord extends GenericListRecord{
 			return "Google";
 		case 3:
 			return "LinkedIn";
-
+        case 4:
+            return "Twitter";
 		default:
 			break;
 		}
@@ -48,7 +49,8 @@ public class ListRecord extends GenericListRecord{
 			return R.drawable.google;
 		case 3:
 			return R.drawable.linkedin;
-
+        case 4:
+                return R.drawable.twitter;
 		default:
 			break;
 		}

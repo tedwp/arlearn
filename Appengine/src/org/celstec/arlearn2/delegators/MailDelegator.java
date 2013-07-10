@@ -78,10 +78,10 @@ public class MailDelegator extends GoogleDelegator {
 		msgBody += "Welcome to ARLearn. We hope you'll find this a useful tool.";
 		msgBody += "</p>";
 		msgBody += "<p>";
-		msgBody += "ARLearn content is organized in games and runs. Both can be created and managed with the <a href=\"http://streetlearn.appspot.com/Authoring.html\">ARLearn authoring tool</a>.";
+		msgBody += "ARLearn content is organized in games and runs. Both can be created and managed with the <a href=\"http://streetlearn.appspot.com/\">ARLearn authoring tool</a>.";
 		msgBody += "</p>";
 		msgBody += "<p>";
-		msgBody += "For more information on using ARLearn, visit our <a href=\"http://portal.ou.nl/web/topic-mobile-learning/home/-/wiki/Main/Get%20Started\">get started page</a>.";
+		msgBody += "For more information on using ARLearn, visit our <a href=\"http://ou.nl/arlearn\">get started page</a>.";
 		msgBody += "</p>";
 		msgBody += "<p>";
 		msgBody += "Have fun<br>"; 

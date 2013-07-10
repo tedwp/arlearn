@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.android.answerQuestion;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -33,10 +34,18 @@ public class AudioDataCollectorDelegate extends DataCollectorDelegate {
 
 	@Override
 	protected void dcButtonClick() {
-		Intent audioIntent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-		audiofile = MediaFolders.createOutgoingAmrFile();
-		audioIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(audiofile));
-		ctx.startActivityForResult(audioIntent, AUDIO_RESULT);
+        try {
+		    Intent audioIntent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+
+		    audiofile = MediaFolders.createOutgoingAmrFile();
+		    audioIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(audiofile));
+		    ctx.startActivityForResult(audioIntent, AUDIO_RESULT);
+        } catch (ActivityNotFoundException notFound) {
+            Intent audioIntent = new Intent(ctx, RecordAudioActivity.class);
+            audiofile = MediaFolders.createOutgoingAmrFile();
+           // audioIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(audiofile));
+            ctx.startActivityForResult(audioIntent, AUDIO_RESULT);
+        }
 		
 	}
 	
@@ -60,6 +69,7 @@ public class AudioDataCollectorDelegate extends DataCollectorDelegate {
 	
 	
 	public String getRealPathFromURI(Uri contentUri) {
+        if (contentUri.getScheme().equals("file"))    return  contentUri.getPath();
 	    String[] proj = { MediaStore.Images.Media.DATA };
 	    Cursor cursor = ctx.managedQuery(contentUri, proj, null, null, null);
 	    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);

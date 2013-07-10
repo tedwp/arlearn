@@ -20,6 +20,7 @@ package org.celstec.arlearn2.tasks.beans;
 
 import java.util.logging.Logger;
 
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
 import org.celstec.arlearn2.beans.run.User;
@@ -43,8 +44,8 @@ public class UpdateGeneralItemsVisibility extends GenericBean{
 
 	}
 	
-	public UpdateGeneralItemsVisibility(String token,Long runId, String userEmail, Integer updateType) {
-		super(token);
+	public UpdateGeneralItemsVisibility(String token,  Account account,Long runId, String userEmail, Integer updateType) {
+		super(token, account);
 		this.runId = runId;
 		this.userEmail = userEmail;
 		this.updateType = updateType;
