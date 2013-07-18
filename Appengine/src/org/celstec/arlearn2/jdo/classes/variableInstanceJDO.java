@@ -1,5 +1,10 @@
 package org.celstec.arlearn2.jdo.classes;
 
+import com.google.appengine.api.datastore.KeyFactory;
+
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+
 /**
  * ****************************************************************************
  * Copyright (C) 2013 Open Universiteit Nederland
@@ -20,5 +25,65 @@ package org.celstec.arlearn2.jdo.classes;
  * Contributors: Stefaan Ternier
  * ****************************************************************************
  */
-public class variableInstanceJDO {
+@PersistenceCapable
+public class VariableInstanceJDO extends RunClass {
+
+    @Persistent
+    private String account;
+
+    @Persistent
+    private String teamId;
+
+    @Persistent
+    private Long value;
+
+    @Persistent
+    private Long gameId;
+
+    @Persistent
+    private String name;
+
+    public void setUniqueId() {
+        this.id = KeyFactory.createKey(VariableInstanceJDO.class.getSimpleName(), getGameId() + ":" + getRunId()+":"+ getName());
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
+    public Long getValue() {
+        return value;
+    }
+
+    public void setValue(Long value) {
+        this.value = value;
+    }
+
+    public Long getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(Long gameId) {
+        this.gameId = gameId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

@@ -70,22 +70,7 @@ import org.celstec.arlearn2.beans.notification.TeamModification;
 import org.celstec.arlearn2.beans.notification.authoring.RunCreationStatus;
 import org.celstec.arlearn2.beans.oauth.OauthInfo;
 import org.celstec.arlearn2.beans.oauth.OauthInfoList;
-import org.celstec.arlearn2.beans.run.ActionDeserializer;
-import org.celstec.arlearn2.beans.run.ActionListDeserializer;
-import org.celstec.arlearn2.beans.run.GeneralItemVisibility;
-import org.celstec.arlearn2.beans.run.GeneralItemVisibilityList;
-import org.celstec.arlearn2.beans.run.Location;
-import org.celstec.arlearn2.beans.run.LocationUpdateDeserializer;
-import org.celstec.arlearn2.beans.run.Message;
-import org.celstec.arlearn2.beans.run.ResponseDeserializer;
-import org.celstec.arlearn2.beans.run.ResponseListDeserializer;
-import org.celstec.arlearn2.beans.run.Run;
-import org.celstec.arlearn2.beans.run.RunAccess;
-import org.celstec.arlearn2.beans.run.RunAccessList;
-import org.celstec.arlearn2.beans.run.RunBean;
-import org.celstec.arlearn2.beans.run.RunDeserializer;
-import org.celstec.arlearn2.beans.run.User;
-import org.celstec.arlearn2.beans.run.UserScoreDeserializer;
+import org.celstec.arlearn2.beans.run.*;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -350,7 +335,8 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.GeneralItemVisibility", GeneralItemVisibility.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.GeneralItemVisibilityList", GeneralItemVisibilityList.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Message", Message.deserializer);
-		
+        customDeserializerMapString.put("org.celstec.arlearn2.beans.run.VariableInstance", VariableInstance.deserializer);
+
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem", mcaid);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem", MultipleChoiceImageAnswerItem.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest", MultipleChoiceTest.deserializer);
