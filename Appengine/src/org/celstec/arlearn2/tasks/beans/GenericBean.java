@@ -30,15 +30,28 @@ import java.util.logging.Logger;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
+import org.celstec.arlearn2.beans.account.Account;
+import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 
 public abstract class GenericBean  implements Runnable{
     private static final Logger log = Logger.getLogger(GenericBean.class.getName());
 
 	private String token;
+
+    private String account;
 	
 	public GenericBean() {
 		
 	}
+
+    public GenericBean(String token, String account) {
+        this.token = token;
+        this.account = account;
+    }
+
+    public GenericBean(String token, Account account) {
+        this(token, account.toString());
+    }
 	
 	public GenericBean(String token) {
 		super();
@@ -53,7 +66,26 @@ public abstract class GenericBean  implements Runnable{
 		this.token = token;
 	}
 
-	public void scheduleTask() {
+    public String getAccount() {
+        return account;
+    }
+
+    public Account getAccountBean() {
+        try {
+        JsonBeanDeserializer jbd = new JsonBeanDeserializer(account);
+
+            return (Account) jbd.deserialize(Account.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public void scheduleTask() {
 		Queue queue = QueueFactory.getDefaultQueue();
 		TaskOptions to  = TaskOptions.Builder.withUrl("/asyncTask")
 	    		.param("type", this.getClass().getName());

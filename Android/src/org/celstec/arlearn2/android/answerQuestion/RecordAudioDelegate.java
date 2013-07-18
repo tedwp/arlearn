@@ -44,7 +44,8 @@ public class RecordAudioDelegate {
 	private static final int PLAYBACK_AUDIO = 4;
 	private static final int PAUSE_WITH_AUDIO = 5;
 	
-	AnnotateActivity ctx;
+//	AnnotateActivity ctx;
+    RecordAudioActivity ctx;
 	
 	private MediaRecorder mRecorder;
 	private MediaPlayer mPlayer;
@@ -64,16 +65,25 @@ public class RecordAudioDelegate {
 
 	
 	public RecordAudioDelegate(AnnotateActivity answerQuestionActivity) {
-		this.ctx = answerQuestionActivity;
-		
-		if (mRecorder == null) mRecorder = new MediaRecorder();
-		
-		audioButtons = (LinearLayout) ctx.findViewById(R.id.audioButtons);
-		audioButtons.setVisibility(audioButtons.GONE);
-		initSoundCapture();
+//		this.ctx = answerQuestionActivity;
+//
+//		if (mRecorder == null) mRecorder = new MediaRecorder();
+//
+//		audioButtons = (LinearLayout) ctx.findViewById(R.id.audioButtons);
+//		audioButtons.setVisibility(audioButtons.GONE);
+//		initSoundCapture();
 	}
-	
-	private void initSoundCapture() {
+
+    public RecordAudioDelegate(RecordAudioActivity recordAudioActivity) {
+        this.ctx = recordAudioActivity;
+        if (mRecorder == null) mRecorder = new MediaRecorder();
+
+        audioButtons = (LinearLayout) ctx.findViewById(R.id.audioButtons);
+        audioButtons.setVisibility(audioButtons.GONE);
+        initSoundCapture();
+    }
+
+    private void initSoundCapture() {
 		counter = (TextView) ctx.findViewById(R.id.timeRecording);
 		counter.setText(ctx.getString(R.string.annotateCounterReset));
 		

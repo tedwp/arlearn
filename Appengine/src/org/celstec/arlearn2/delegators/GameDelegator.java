@@ -329,10 +329,10 @@ public class GameDelegator extends GoogleDelegator {
 		GameAccessManager.resetGameAccessLastModificationDate(g.getGameId());
 		MyGamesCache.getInstance().removeGameList(null, null, myAccount, null, null);
 		MyGamesCache.getInstance().removeGameList(gameIdentifier, null, myAccount, null, null);
-		(new DeleteRuns(authToken, gameIdentifier, myAccount)).scheduleTask();
-		(new DeleteProgressDefinitions(authToken, gameIdentifier)).scheduleTask();
-		(new DeleteScoreDefinitions(authToken, gameIdentifier)).scheduleTask();
-		(new DeleteGeneralItems(authToken, gameIdentifier)).scheduleTask();
+		(new DeleteRuns(authToken, this.account, gameIdentifier, myAccount)).scheduleTask();
+//		(new DeleteProgressDefinitions(authToken, gameIdentifier)).scheduleTask();
+//		(new DeleteScoreDefinitions(authToken, gameIdentifier)).scheduleTask();
+		(new DeleteGeneralItems(authToken, this.account, gameIdentifier)).scheduleTask();
 
 		GameModification gm = new GameModification();
 		gm.setModificationType(GameModification.DELETED);

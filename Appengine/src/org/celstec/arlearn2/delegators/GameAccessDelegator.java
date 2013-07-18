@@ -129,6 +129,16 @@ public class GameAccessDelegator extends GoogleDelegator {
 		}
 
 	}
+
+    public boolean canEdit(String myAccount, Long gameId) {
+        try {
+            int accessRights =     GameAccessManager.getAccessById(myAccount + ":" + gameId).getAccessRights();
+            return  accessRights == GameAccessJDO.OWNER || accessRights == GameAccessJDO.CAN_EDIT;
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
 	
 	public void broadcastGameUpdate(Game game) {
 		for (GameAccess ga :GameAccessManager.getGameList(game.getGameId())){

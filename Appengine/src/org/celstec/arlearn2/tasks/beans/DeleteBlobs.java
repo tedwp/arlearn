@@ -22,6 +22,7 @@ import java.util.Iterator;
 
 import javax.jdo.PersistenceManager;
 
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.FilePathJDO;
 import org.celstec.arlearn2.jdo.manager.FilePathManager;
@@ -32,21 +33,21 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 public class DeleteBlobs extends GenericBean {
 	
 	private Long runId;
-	private String account;
+	private String fullAccount;
 
 	public DeleteBlobs() {
 		super();
 	}
 	
-	public DeleteBlobs(String token, Long runId) {
-		super(token);
+	public DeleteBlobs(String token, Account account,Long runId) {
+		super(token, account);
 		this.runId = runId;
 	}
 	
-	public DeleteBlobs(String token, Long runId, String account) {
-		super(token);
+	public DeleteBlobs(String token, Account account, Long runId, String fullAccount) {
+		super(token, account);
 		this.runId = runId;
-		this.account = account;
+		this.fullAccount = fullAccount;
 	}
 
 	public Long getRunId() {
@@ -56,20 +57,20 @@ public class DeleteBlobs extends GenericBean {
 	public void setRunId(Long runId) {
 		this.runId = runId;
 	}
-	
-	public String getAccount() {
-		return account;
-	}
 
-	public void setAccount(String account) {
-		this.account = account;
-	}
+    public String getFullAccount() {
+        return fullAccount;
+    }
 
-	@Override
+    public void setFullAccount(String fullAccount) {
+        this.fullAccount = fullAccount;
+    }
+
+    @Override
 	public void run() {
 		BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		for (Iterator<FilePathJDO> iterator = FilePathManager.getFilePathJDOs(pm, getAccount(), getRunId(), null).iterator(); iterator.hasNext();) {
+		for (Iterator<FilePathJDO> iterator = FilePathManager.getFilePathJDOs(pm, getFullAccount(), getRunId(), null).iterator(); iterator.hasNext();) {               //TODO check if this deletion works and iff fullAccount is not an email but 1:123
 			FilePathJDO fpjdo = (FilePathJDO) iterator.next();
 			try {
 				blobstoreService.delete(fpjdo.getBlobKey());

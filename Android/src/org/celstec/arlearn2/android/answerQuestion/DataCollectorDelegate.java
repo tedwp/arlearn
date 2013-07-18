@@ -6,6 +6,7 @@ import org.celstec.arlearn2.android.asynctasks.network.UploadFileSyncTask;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.ResponseDelegator;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
+import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.run.Response;
 import org.celstec.arlearn2.client.GenericClient;
 import org.codehaus.jettison.json.JSONException;
@@ -71,6 +72,7 @@ public abstract class DataCollectorDelegate {
 		try {
 			JSONObject jsonResponse = createJsonResponse(null, null, null, text);
 			r.setTimestamp(System.currentTimeMillis());
+            r.setGeneralItemId(ctx.getNarratorBean().getId());
 			r.setResponseValue(jsonResponse.toString());
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -111,10 +113,9 @@ public abstract class DataCollectorDelegate {
 	protected void publishResponseWithFile(Uri localFile, final Response r) {
 		final long currentTime = System.currentTimeMillis();
 		r.setTimestamp(currentTime);
-
-	
         r.setGeneralItemId(ctx.getNarratorBean().getId());
-        ResponseDelegator.getInstance().publishResponse(ctx, r);
+
+        ResponseDelegator.getInstance().publishResponse(ctx, r, ctx.getNarratorBean());
 		RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, "audio:" + currentTime, PropertiesAdapter.getInstance(ctx).getFullId(), localFile, getMimeType());
 		UploadFileSyncTask fileSyncTask = new UploadFileSyncTask(); 
 		

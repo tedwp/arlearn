@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import org.celstec.arlearn2.api.Service;
 import org.celstec.arlearn2.beans.account.Account;
+import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.jdo.classes.ApplicationAccessKeyJDO;
 import org.celstec.arlearn2.jdo.manager.AccountManager;
 import org.celstec.arlearn2.jdo.manager.ApplicationKeyManager;
@@ -74,6 +75,13 @@ public class GoogleDelegator {
 		this.authToken = gd.authToken;
 		this.account = gd.account;
 	}
+
+//    public GoogleDelegator(String token, String account) {
+//        this.authToken = token;
+//        JsonBeanDeserializer jbd = new JsonBeanDeserializer(account);
+//        this.account = (Account) jbd.deserialize(Account.class);
+//
+//    }
 
 	public GoogleDelegator() {
 	}

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.Toast;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.util.MediaFolders;
@@ -57,8 +58,18 @@ public class PictureDataCollectorDelegate extends DataCollectorDelegate {
 //			
 //			r.setGeneralItemId(ctx.getNarratorBean().getId());
 //			ResponseDelegator.getInstance().publishResponse(ctx, r);
+
+            int width =200;
+            int height = 600;
+            if (preview_bitmap != null) {
+                width =  preview_bitmap.getWidth();
+                height = preview_bitmap.getHeight();
+            }
+            if (pictureUri == null) {
+                Toast.makeText(ctx, "picture uri is null", Toast.LENGTH_LONG).show();
+            }
 			
-			publishResponseWithFile(pictureUri, createPictureResponse(pictureUri, preview_bitmap.getWidth(), preview_bitmap.getHeight()));
+			publishResponseWithFile(pictureUri, createPictureResponse(pictureUri, width, height));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}		

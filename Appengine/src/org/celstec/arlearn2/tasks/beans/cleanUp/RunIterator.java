@@ -18,16 +18,12 @@
  ******************************************************************************/
 package org.celstec.arlearn2.tasks.beans.cleanUp;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.jdo.PersistenceManager;
 import org.datanucleus.store.appengine.query.JDOCursorHelper;
 import com.google.appengine.api.datastore.Cursor;
 
-import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.delegators.GameDelegator;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.RunJDO;
@@ -35,7 +31,6 @@ import org.celstec.arlearn2.jdo.manager.RunManager;
 import org.celstec.arlearn2.tasks.beans.DeleteActions;
 import org.celstec.arlearn2.tasks.beans.DeleteBlobs;
 import org.celstec.arlearn2.tasks.beans.DeleteResponses;
-import org.celstec.arlearn2.tasks.beans.DeleteScoreRecords;
 import org.celstec.arlearn2.tasks.beans.DeleteTeams;
 import org.celstec.arlearn2.tasks.beans.GenericBean;
 import org.celstec.arlearn2.tasks.beans.UpdateGeneralItemsVisibility;
@@ -108,20 +103,18 @@ public class RunIterator extends GenericBean {
 	}
 	
 	private void processrun(PersistenceManager pm, RunJDO runJDO) {
-		System.out.println("dealing with run " + runJDO.getTitle() + " " + runJDO.getDeleted());
 		String authToken = null;
 		GameDelegator gd = new GameDelegator();
 		if (gd.getGameWithoutAccount(runJDO.getGameId()) == null) {
 			RunManager.setStatusDeleted(runJDO.getRunId());
 			RunsCache.getInstance().removeRun(runJDO.getRunId());
-			(new UpdateGeneralItemsVisibility(authToken, runJDO.getRunId(), null, 2)).scheduleTask();
+			(new UpdateGeneralItemsVisibility(authToken, null, runJDO.getRunId(), null, 2)).scheduleTask();
 
 //			(new DeleteVisibleItems(authToken, r.getRunId())).scheduleTask();
-			(new DeleteActions(authToken, runJDO.getRunId())).scheduleTask();
-			(new DeleteTeams(authToken, runJDO.getRunId(), null)).scheduleTask();
-			(new DeleteBlobs(authToken, runJDO.getRunId())).scheduleTask();
-			(new DeleteResponses(authToken, runJDO.getRunId())).scheduleTask();
-			(new DeleteScoreRecords(authToken, runJDO.getRunId())).scheduleTask();
+			(new DeleteActions(authToken, null, runJDO.getRunId())).scheduleTask();
+			(new DeleteTeams(authToken, null, runJDO.getRunId(), null)).scheduleTask();
+			(new DeleteBlobs(authToken, null, runJDO.getRunId())).scheduleTask();
+			(new DeleteResponses(authToken, null, runJDO.getRunId())).scheduleTask();
 		}
 		if (runJDO.getDeleted() != null && runJDO.getDeleted() && (runJDO.getLastModificationDate()+ (2592000000l)) < System.currentTimeMillis()) {
 			RunManager.deleteRun(pm, runJDO);

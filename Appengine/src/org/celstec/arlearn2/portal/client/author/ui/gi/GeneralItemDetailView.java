@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi;
 
+import com.google.gwt.core.client.GWT;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
 import com.smartgwt.client.widgets.viewer.DetailViewer;
@@ -14,10 +15,12 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
+import org.celstec.arlearn2.portal.client.author.ui.gi.i18.GeneralItemConstants;
 
 import java.util.LinkedHashMap;
 
 public class GeneralItemDetailView extends VLayout {
+    private static GeneralItemConstants constants = GWT.create(GeneralItemConstants.class);
 
     private SectionStack extendedStack;
     private SectionStack basicStack;
@@ -52,7 +55,7 @@ public class GeneralItemDetailView extends VLayout {
     private void createBasicLayout() {
         basicStack = new SectionStack();
         SectionStackSection stackSection = new SectionStackSection();
-
+        stackSection.setTitle(constants.basicMetadata());
         stackSection.setItems(basicMetadataDetailViewer);
         basicStack.addSection(stackSection);
         stackSection.setExpanded(true);
@@ -62,7 +65,7 @@ public class GeneralItemDetailView extends VLayout {
     private void createExtendedLayout() {
         extendedStack = new SectionStack();
         SectionStackSection extendedSection = new SectionStackSection();
-
+        extendedSection.setTitle(constants.specificMetadata());
         extendedSection.setItems(extendedMetadataDetailViewer);
         extendedStack.addSection(extendedSection);
         extendedSection.setExpanded(true);
@@ -76,9 +79,10 @@ public class GeneralItemDetailView extends VLayout {
         basicMetadataDetailViewer.setWidth100();
         basicMetadataDetailViewer.setFields(
                 new DetailViewerField(GeneralItemModel.NAME_FIELD, "Title"),
-                new DetailViewerField(GeneralItemModel.RICH_TEXT_FIELD, "Description"),
+                new DetailViewerField(GeneralItemModel.SORTKEY_FIELD, "Order")  ,
                 new DetailViewerField(GeneralItemModel.AUTO_LAUNCH, "Automatic Launch"),
-                new DetailViewerField(GeneralItemModel.SORTKEY_FIELD, "Order")
+                new DetailViewerField(GeneralItemModel.RICH_TEXT_FIELD, "Description")
+
         );
 
         extendedMetadataDetailViewer = new DetailViewer();

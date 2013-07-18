@@ -101,7 +101,7 @@ public class GeneralItemDelegator extends GoogleDelegator {
 
 		if (myAccount.contains(":")) {
 			GameAccessDelegator gad = new GameAccessDelegator(this);
-			if (!gad.isOwner(myAccount, gi.getGameId())){
+			if (!gad.canEdit(myAccount, gi.getGameId())){
 				gi = new GeneralItem();
 				gi.setError("You are not the owner of this game");
 				return gi;

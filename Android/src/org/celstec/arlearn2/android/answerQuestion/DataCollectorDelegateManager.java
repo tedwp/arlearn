@@ -29,8 +29,9 @@ public class DataCollectorDelegateManager {
 		}
 		
 	}
-	public void processResult(int resultCode, Intent data) {
-		switch (resultCode) {
+	public void processResult(int requestCode, Intent data) {
+
+		switch (requestCode) {
 		case DataCollectorDelegate.PICTURE_RESULT:
 			pictureDC.processResult(data);
 			break;

@@ -44,7 +44,7 @@ public class AccountApi extends Service {
 		Account account = AccountManager.getAccount("0:"+anonToken);
 		AuthResponse ar = new AuthResponse();
 
-		if (account != null) {
+		if (account != null && account.getError() == null) {
 			ar.setAuth(UUID.randomUUID().toString());
 			UserLoggedInManager.submitOauthUser("0:"+anonToken, ar.getAuth());		
 			return serialise(ar, accept);

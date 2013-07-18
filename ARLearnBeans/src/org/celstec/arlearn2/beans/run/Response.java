@@ -20,8 +20,9 @@ package org.celstec.arlearn2.beans.run;
 
 
 public class Response extends RunBean implements Comparable<Response>{
-	
-	
+
+
+    private Long responseId;
 	private Long generalItemId;
 	private String userEmail;
 	private String responseValue;
@@ -33,7 +34,15 @@ public class Response extends RunBean implements Comparable<Response>{
     	
     }
 
-	public Long getGeneralItemId() {
+    public Long getResponseId() {
+        return responseId;
+    }
+
+    public void setResponseId(Long responseId) {
+        this.responseId = responseId;
+    }
+
+    public Long getGeneralItemId() {
 		return generalItemId;
 	}
 
@@ -84,8 +93,9 @@ public class Response extends RunBean implements Comparable<Response>{
 	@Override
 	public boolean equals(Object obj) {
 		Response other = (Response ) obj;
-		return super.equals(obj) && 
-			nullSafeEquals(getGeneralItemId(), other.getGeneralItemId()) && 
+		return super.equals(obj) &&
+            nullSafeEquals(getResponseId(), other.getResponseId()) &&
+            nullSafeEquals(getGeneralItemId(), other.getGeneralItemId()) &&
 			nullSafeEquals(getUserEmail(), other.getUserEmail()) && 
 			nullSafeEquals(getResponseValue(), other.getResponseValue()) && 
 			nullSafeEquals(getResponseItemId(), other.getResponseItemId()) && 

@@ -18,33 +18,22 @@
  ******************************************************************************/
 package org.celstec.arlearn2.gwt.client.network.generalItem;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
+import com.smartgwt.client.data.*;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import org.celstec.arlearn2.gwt.client.control.ReadyCallback;
-import org.celstec.arlearn2.gwt.client.network.ActionClient;
-import org.celstec.arlearn2.gwt.client.network.ActionsCallback;
 import org.celstec.arlearn2.gwt.client.network.DatasourceUpdateHandler;
 import org.celstec.arlearn2.gwt.client.network.DerivedFieldTask;
 import org.celstec.arlearn2.gwt.client.network.GenericClient;
 import org.celstec.arlearn2.gwt.client.network.GenericDataSource;
-import org.celstec.arlearn2.gwt.client.network.ResponseCallback;
-import org.celstec.arlearn2.gwt.client.network.ResponseClient;
 import org.celstec.arlearn2.gwt.client.network.action.ActionDatasource;
 import org.celstec.arlearn2.gwt.client.network.response.ResponseDataSource;
 import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
 import org.celstec.arlearn2.gwt.client.ui.RunTab;
 
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
-import com.smartgwt.client.data.Criteria;
-import com.smartgwt.client.data.DSCallback;
-import com.smartgwt.client.data.DSRequest;
-import com.smartgwt.client.data.DSResponse;
-import com.smartgwt.client.data.Record;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
+import java.util.HashMap;
 
 public class GeneralItemRunDataSource extends GenericDataSource {
 	

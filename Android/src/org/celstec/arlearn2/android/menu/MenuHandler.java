@@ -81,7 +81,7 @@ public class MenuHandler {
 			break;
 		case LOGOUT:
 			pa.disAuthenticate();
-			context.startService(new Intent(context, ChannelAPINotificationService.class).putExtra("stop", true));
+//			context.startService(new Intent(context, ChannelAPINotificationService.class).putExtra("stop", true));
 			context.finish();
 			context.startActivity(new Intent(context, SplashScreenActivity.class));
 			break;

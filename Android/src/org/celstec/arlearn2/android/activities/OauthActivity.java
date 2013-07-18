@@ -19,9 +19,12 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class OauthActivity extends GeneralActivity {
 
-	@Override
+    public boolean downloadDetailsWasExecuted = false;
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        downloadDetailsWasExecuted = false;
 		// Allow the title bar to show loading progress.
 		requestWindowFeature(Window.FEATURE_PROGRESS);
 
@@ -52,13 +55,16 @@ public class OauthActivity extends GeneralActivity {
 		        	System.out.println("auth token is "+token);
 		        	 Intent result = new Intent();
 			            result.putExtra("token", token);
-		        	 OauthActivity.this.getMenuHandler().getPropertiesAdapter().setAuthToken(token);
+		        	    OauthActivity.this.getMenuHandler().getPropertiesAdapter().setAuthToken(token);
 						OauthActivity.this.getMenuHandler().getPropertiesAdapter().setIsAuthenticated();
 						new DownloadDetailsTask(OauthActivity.this).execute();
 			            setResult(RESULT_OK, result);
 			    		new GCMCheck().execute();
 			            finish();
 		        }
+                  if (url.endsWith("oauth.html") || url.contains("twitter?denied")) {
+                      finish();
+                  }
 		      }
 		      
 		      @Override 
@@ -68,6 +74,7 @@ public class OauthActivity extends GeneralActivity {
 		      
 		      @Override
 		      public void onPageFinished(WebView view, String url) {
+                if (downloadDetailsWasExecuted) return;
 		        CookieSyncManager.getInstance().sync();
 		        // Get the cookie from cookie jar.
 		        String cookie = CookieManager.getInstance().getCookie(url);
@@ -86,10 +93,15 @@ public class OauthActivity extends GeneralActivity {
 		            System.out.println("token is "+parts[1]);
 		            OauthActivity.this.getMenuHandler().getPropertiesAdapter().setAuthToken(parts[1]);
 					OauthActivity.this.getMenuHandler().getPropertiesAdapter().setIsAuthenticated();
-					new DownloadDetailsTask(OauthActivity.this).execute();
-		            setResult(RESULT_OK, result);
-		    		new GCMCheck().execute();
-		            finish();
+					if (!downloadDetailsWasExecuted) {
+                        downloadDetailsWasExecuted = true;
+                        new DownloadDetailsTask(OauthActivity.this).execute();
+                        setResult(RESULT_OK, result);
+                        new GCMCheck().execute();
+                        finish();
+
+                    }
+
 		          }
 		        }
 		      }
@@ -97,7 +109,7 @@ public class OauthActivity extends GeneralActivity {
 		  
 		  
 	}
-	
+
 	public static void processToken(Context ctx, String token) {
 	
 	}

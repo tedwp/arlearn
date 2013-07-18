@@ -30,7 +30,6 @@ import org.celstec.arlearn2.beans.run.Team;
 import org.celstec.arlearn2.beans.run.TeamList;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
-import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.celstec.arlearn2.cache.UserLoggedInCache;
 import org.celstec.arlearn2.cache.UsersCache;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
@@ -41,7 +40,6 @@ import org.celstec.arlearn2.jdo.manager.UserManager;
 import org.celstec.arlearn2.tasks.beans.DeleteActions;
 import org.celstec.arlearn2.tasks.beans.DeleteBlobs;
 import org.celstec.arlearn2.tasks.beans.DeleteResponses;
-import org.celstec.arlearn2.tasks.beans.DeleteScoreRecords;
 import org.celstec.arlearn2.tasks.beans.UpdateGeneralItemsVisibility;
 
 import com.google.gdata.util.AuthenticationException;
@@ -86,7 +84,7 @@ public class UsersDelegator extends GoogleDelegator {
 		}
 		// ChannelNotificator.getInstance().notify(u.getEmail(), rm);
 
-		(new UpdateGeneralItemsVisibility(authToken, u.getRunId(), u.getEmail(), 1)).scheduleTask();
+		(new UpdateGeneralItemsVisibility(authToken, this.account, u.getRunId(), u.getEmail(), 1)).scheduleTask();
 
 		return u;
 	}
@@ -127,8 +125,6 @@ public class UsersDelegator extends GoogleDelegator {
 		RunModification rm = new RunModification();
 		rm.setModificationType(RunModification.DELETED);
 		rm.setRun(run);
-		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
-
 		UserManager.addUser(u);
 
 		rm = new RunModification();
@@ -226,13 +222,6 @@ public class UsersDelegator extends GoogleDelegator {
 		return returnList;
 	}
 
-	/**
-	 * retrieves a user for a run, given the email identifier of the user.
-	 * 
-	 * @param runId
-	 * @param email
-	 * @return
-	 */
 	public User getUserByEmail(Long runId, String account) {
 		account = User.normalizeEmail(account); //TODO delete this line
 		List<User> users = getUserList(runId, null, account, null);
@@ -258,11 +247,10 @@ public class UsersDelegator extends GoogleDelegator {
 													// might be cached in a team
 		// (new NotifyUpdateRun(authToken,runId, false, true,
 		// user.getEmail())).scheduleTask();
-		(new DeleteActions(authToken, runId, email)).scheduleTask();
-		(new DeleteBlobs(authToken, runId, email)).scheduleTask();
-		(new DeleteResponses(authToken, runId, email)).scheduleTask();
-		(new DeleteScoreRecords(authToken, runId, email)).scheduleTask();
-		(new UpdateGeneralItemsVisibility(authToken, runId, email, 2)).scheduleTask();
+		(new DeleteActions(authToken, this.account, runId, email)).scheduleTask();
+		(new DeleteBlobs(authToken, this.account, runId, email)).scheduleTask();
+		(new DeleteResponses(authToken,this.account,  runId, email)).scheduleTask();
+		(new UpdateGeneralItemsVisibility(authToken, this.account, runId, email, 2)).scheduleTask();
 //		notifyRunDeleted(runId, email);
 		if (this.account != null) {
 			new NotificationDelegator().broadcast(user, user.getFullId());

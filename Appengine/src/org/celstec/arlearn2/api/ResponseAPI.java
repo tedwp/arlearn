@@ -73,25 +73,39 @@ public class ResponseAPI extends Service {
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/runId/{runIdentifier}/itemId/{itemId}")
-	public String getAnswers(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @PathParam("itemId") Long itemId, @HeaderParam("Accept") String accept)
+	public String getAnswers(@HeaderParam("Authorization") String token,
+                             @QueryParam("from") Long from,
+                             @QueryParam("until") Long until,
+                             @QueryParam("resumptionToken") String cursor,
+                             @PathParam("runIdentifier") Long runIdentifier, @PathParam("itemId") Long itemId, @HeaderParam("Accept") String accept)
 			throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 
 		ResponseDelegator rd = new ResponseDelegator(this);
-		return serialise(rd.getResponses(runIdentifier, itemId, null), accept);
+        if (from == null && until == null) {
+            return serialise(rd.getResponses(runIdentifier, itemId, null), accept);
+        }
+        return serialise(rd.getResponsesFromUntil(runIdentifier, itemId, from, until, cursor), accept);
 	}
 	
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/runId/{runIdentifier}/itemId/{itemId}/account/{account}")
-	public String getAnswers(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @PathParam("itemId") Long itemId, @PathParam("account") String account, @HeaderParam("Accept") String accept)
+	public String getAnswers(@HeaderParam("Authorization") String token,
+                             @QueryParam("from") Long from,
+                             @QueryParam("until") Long until,
+                             @QueryParam("resumptionToken") String cursor,
+                             @PathParam("runIdentifier") Long runIdentifier, @PathParam("itemId") Long itemId, @PathParam("account") String account, @HeaderParam("Accept") String accept)
 			throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 
 		ResponseDelegator rd = new ResponseDelegator(this);
-		return serialise(rd.getResponses(runIdentifier, itemId, account), accept);
+        if (from == null && until == null) {
+            return serialise(rd.getResponses(runIdentifier, itemId, account), accept);
+        }
+        return serialise(rd.getResponsesFromUntil(runIdentifier, itemId, account, from, until, cursor), accept);
 	}
 
 	@POST

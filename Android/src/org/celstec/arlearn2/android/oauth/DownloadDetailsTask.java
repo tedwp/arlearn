@@ -83,7 +83,7 @@ public class DownloadDetailsTask extends AsyncTask<Void, String, Void> {
         if (ac.getAccountLevel()== null) ac.setAccountLevel(2);
 		PropertiesAdapter.getInstance(ctx).setAccountLevel(ac.getAccountLevel());
 		String picture = ac.getPicture();
-		if (picture != null &&picture.startsWith("http://")) {
+		if (picture != null &&(picture.startsWith("http://") || picture.startsWith("https://"))) {
 			downloadPicture(picture, ctx);
 		}
 	}

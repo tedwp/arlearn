@@ -21,6 +21,7 @@ public class AnonymousTokenAuthenticate extends AsyncTask<String, String, Void> 
 	@Override
 	protected Void doInBackground(String... params) {
 		String action = params[0];
+        if (action == null) return null;       //in case the user hit the back button inside the scanner
 		try {
 			if (NetworkSwitcher.isOnline(ctx)) {
 				AuthResponse resp = AccountClient.getAccountClient().anonymousLogin(action);

@@ -132,9 +132,10 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 		if (scanMenu())
 		if (menuHandler.getPropertiesAdapter().isAuthenticated()) {
 			menu.add(0, MenuHandler.SCAN, 0, getString(R.string.scanTagMenu));
-		} else {
-			menu.add(0, MenuHandler.LOGIN, 0, getString(R.string.login));
 		}
+//        else {
+//			menu.add(0, MenuHandler.LOGIN, 0, getString(R.string.login));
+//		}
 		return true;
 	}
 	

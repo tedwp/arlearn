@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.tasks.beans;
 
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.delegators.ActionDelegator;
 
 import com.google.gdata.util.AuthenticationException;
@@ -25,21 +26,21 @@ import com.google.gdata.util.AuthenticationException;
 public class DeleteActions extends GenericBean {
 	
 	private Long runId;
-	private String account;
+	private String fullAccount;
 
 	public DeleteActions() {
 		super();
 	}
 	
-	public DeleteActions(String token, Long runId) {
-		super(token);
+	public DeleteActions(String token,  Account account,Long runId) {
+		super(token, account);
 		this.runId = runId;
 	}
 	
-	public DeleteActions(String token, Long runId, String account) {
-		super(token);
+	public DeleteActions(String token, Account account, Long runId, String fullAccount) {
+		super(token, account);
 		this.runId = runId;
-		this.account = account;
+		this.fullAccount = fullAccount;
 	}
 
 	public Long getRunId() {
@@ -49,23 +50,19 @@ public class DeleteActions extends GenericBean {
 	public void setRunId(Long runId) {
 		this.runId = runId;
 	}
-	
-	public String getAccount() {
-		return account;
-	}
 
-	public void setAccount(String account) {
-		this.account = account;
-	}
+    public String getFullAccount() {
+        return fullAccount;
+    }
 
-	@Override
+    public void setFullAccount(String fullAccount) {
+        this.fullAccount = fullAccount;
+    }
+
+    @Override
 	public void run() {
-		try {
-			ActionDelegator ad = new ActionDelegator("auth"+getToken());
-			if (account == null) ad.deleteActions(getRunId());
-			ad.deleteActions(getRunId(), getAccount());
-		} catch (AuthenticationException e) {
-			e.printStackTrace();
-		}
+			ActionDelegator ad = new ActionDelegator(getAccountBean(), getToken());
+			if (fullAccount == null) ad.deleteActions(getRunId());
+			ad.deleteActions(getRunId(), getFullAccount());
 	}
 }

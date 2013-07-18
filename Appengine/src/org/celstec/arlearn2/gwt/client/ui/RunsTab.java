@@ -125,7 +125,8 @@ public class RunsTab extends GenericTab implements NotificationHandler {
 
 		button.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-				RunClient.getInstance().createRun(form.getValue("itemID"), form.getValueAsString("titleRun"), new JsonCallback() {
+                String gameId = form.getValueAsString("itemID");
+				RunClient.getInstance().createRun(Long.parseLong(gameId), form.getValueAsString("titleRun"), new JsonCallback() {
 					public void onJsonReceived(JSONValue jsonValue) {
 						tabSelect();
 					}

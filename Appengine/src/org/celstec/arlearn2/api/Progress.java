@@ -18,42 +18,14 @@
  ******************************************************************************/
 package org.celstec.arlearn2.api;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import org.celstec.arlearn2.beans.run.Action;
-import org.celstec.arlearn2.beans.run.ActionList;
-import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
-import org.celstec.arlearn2.beans.run.GameStateRecord;
-import org.celstec.arlearn2.beans.game.ProgressDefinition;
-import org.celstec.arlearn2.beans.run.Run;
-import org.celstec.arlearn2.beans.run.Team;
-import org.celstec.arlearn2.beans.run.TeamList;
-import org.celstec.arlearn2.beans.run.User;
-import org.celstec.arlearn2.beans.run.UserList;
-import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
-
-import org.celstec.arlearn2.delegators.ActionDelegator;
-import org.celstec.arlearn2.delegators.ProgressDefinitionDelegator;
-import org.celstec.arlearn2.delegators.RunDelegator;
-import org.celstec.arlearn2.delegators.TeamsDelegator;
-import org.celstec.arlearn2.delegators.UsersDelegator;
-import org.celstec.arlearn2.delegators.progressRecord.QueryProgressRecord;
-import org.celstec.arlearn2.delegators.scoreRecord.QueryScoreRecord;
-import org.codehaus.jettison.json.JSONObject;
-
 import com.google.gdata.util.AuthenticationException;
+import org.celstec.arlearn2.beans.game.ProgressDefinition;
+import org.celstec.arlearn2.beans.run.Action;
+import org.celstec.arlearn2.delegators.ProgressDefinitionDelegator;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.logging.Logger;
 
 @Path("/progress")
 public class Progress extends Service {

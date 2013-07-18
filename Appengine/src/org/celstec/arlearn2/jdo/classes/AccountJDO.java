@@ -32,6 +32,7 @@ public class AccountJDO {
 	public final static int FBCLIENT = 1;
 	public final static int GOOGLECLIENT = 2;
 	public final static int LINKEDINCLIENT = 3;
+    public final static int TWITTERCLIENT = 4;
 
 	public final static int ADMINISTRATOR = 1;
 	public final static int USER = 2;

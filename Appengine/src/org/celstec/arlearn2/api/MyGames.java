@@ -32,6 +32,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.google.appengine.api.utils.SystemProperty;
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.deserializer.json.ListDeserializer;
 import org.celstec.arlearn2.beans.game.Game;
@@ -77,6 +78,8 @@ public class MyGames extends Service {
 		returnString += "body { background-color: transparent !important;}";
 		returnString += " </style>";
 		returnString += html;
+        returnString += "<br><center> " +
+                "<INPUT TYPE=\"submit\" NAME=\"gameId\" Value=\"Play\" onClick=\"window.open('http://"+ SystemProperty.applicationId.get()+".appspot.com/register.html?gameId="+game.getGameId()+"');\"> </center>"         ;
 		returnString += "]]> </Content> </Module>";
 		
 		
