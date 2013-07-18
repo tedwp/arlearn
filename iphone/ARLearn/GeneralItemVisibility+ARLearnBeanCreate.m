@@ -29,10 +29,7 @@
     giVis.status = [visDict objectForKey:@"status"] ;
     giVis.timeStamp =[visDict objectForKey:@"timeStamp"] ;
     giVis.email =[visDict objectForKey:@"email"];
-    NSError * error;
-    if (![run.managedObjectContext save:&error]) {
-        NSLog(@"error %@", error);
-    }
+   
     
     return giVis;
 }
@@ -43,22 +40,15 @@
 //        NSLog(@"adding a general Item to vis %@", generalItem);
         GeneralItemVisibility * vis = [self visibilityWithDictionary:visDict
                                       withRun:run withGeneralItem:generalItem];
-        
         [generalItem addVisibilityObject:vis];
         return vis;
     }
-//    for (GeneralItem * generalItem in run.game.hasItems) {
-//        if ([generalItem.id isEqualToNumber:[visDict objectForKey:@"generalItemId"]]){
-////            NSLog(@"adding a general Item to vis %@", generalItem);
-//
-//            return [self visibilityWithDictionary:visDict
-//                                          withRun:run withGeneralItem:generalItem];
-//        }
-//    }
     NSLog(@"no generalItem found");
     return nil;
     
 }
+
+
 
 + (GeneralItemVisibility *) retrieveFromDb: (NSDictionary *) visDict withManagedContext: (NSManagedObjectContext*) context{
     GeneralItemVisibility * giVis = nil;
@@ -69,8 +59,12 @@
                          [[visDict objectForKey:@"runId"] longLongValue],
                          [[visDict objectForKey:@"status"] intValue]
                          ];
+    NSError *error = nil;
     
-    NSArray *giVises = [context executeFetchRequest:request error:nil];
+    NSArray *giVises = [context executeFetchRequest:request error:&error];
+    if (error) {
+        NSLog(@"error %@", error);
+    }
     if (!giVises || ([giVises count] != 1)) {
         return nil;
     } else {
@@ -78,5 +72,21 @@
         return giVis;
     }
 }
+
+
++ (void) deleteAll: (NSManagedObjectContext * ) context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GeneralItemVisibility"];
+    
+    NSError *error = nil;
+    NSArray *visibilities = [context executeFetchRequest:request error:&error];
+    if (error) {
+        NSLog(@"error %@", error);
+    }
+    for (id visi in visibilities) {
+        [context deleteObject:visi];
+    }
+    
+}
+
 
 @end

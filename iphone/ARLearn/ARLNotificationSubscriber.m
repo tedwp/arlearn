@@ -36,17 +36,27 @@
     if ([@"org.celstec.arlearn2.beans.notification.RunModification" isEqualToString:[message objectForKey:@"type"]]) {
         NSLog(@"about to update runs %@", [[message objectForKey:@"run"] objectForKey:@"runId"]);
         ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        NSManagedObjectContext *moc = [appDelegate.arlearnDatabase managedObjectContext];
-
-        [ARLCloudSynchronizer syncronizeRuns:moc];
-
+        NSManagedObjectContext *moc = [appDelegate managedObjectContext];
+        ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
+        synchronizer.syncRuns = YES;
+        [synchronizer sync];
+        
+//        [ARLCloudSynchronizer syncronizeRuns:moc];
+//        [ARLCloudSynchronizer syncronizeRuns];
+        
     }
     if ([@"org.celstec.arlearn2.beans.notification.GeneralItemModification" isEqualToString:[message objectForKey:@"type"]]) {
         NSLog(@"about to update gi %@", [message objectForKey:@"itemId"] );
         ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        NSManagedObjectContext *moc = [appDelegate.arlearnDatabase managedObjectContext];
-        [ARLCloudSynchronizer synchronizeGeneralItemsAndVisibilityStatments:[message objectForKey:@"runId"] withManagedContext:moc];
-
+        NSManagedObjectContext *moc = [appDelegate managedObjectContext];
+        
+        ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
+        synchronizer.gameId = [message objectForKey:@"gameId"];
+        synchronizer.visibilityRunId = [message objectForKey:@"runId"];
+        [synchronizer sync];
+//        
+//        [ARLCloudSynchronizer synchronizeGeneralItemsAndVisibilityStatments:[message objectForKey:@"runId"] withManagedContext:moc];
+//
 //        [ARLCloudSynchronizer synchronizeGeneralItems:[message objectForKey:@"gameId"] withManagedContext:moc];
 //        [ARLCloudSynchronizer synchronizeGeneralItemVisiblityStatements:[message objectForKey:@"runId"] withManagedContext:moc];
     }

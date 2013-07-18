@@ -38,11 +38,6 @@
     game.hasMap = [[gameDict objectForKey:@"config"] objectForKey:@"mapAvailable"];
     if (!game.hasMap) game.hasMap = NO;
     [self setCorrespondingRuns:game];
-
-    NSError * error = nil;
-    if (![context save:&error]) {
-        NSLog(@"error %@", error);
-    }
     
     return game;
 

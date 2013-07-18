@@ -8,16 +8,16 @@
 
 #import "ARLCloudSynchronizer.h"
 
-//@interface ARLCloudSynchronizer ()
-//    @property (nonatomic) NSMutableDictionary *syncDates;
-//@end
-
 @implementation ARLCloudSynchronizer
 
-//@synthesize syncDates = _syncDates;
+@synthesize syncRuns = _syncRuns;
+@synthesize syncGames = _syncGames;
+@synthesize syncResponses = _syncResponses;
+@synthesize gameId = _gameId;
+@synthesize visibilityRunId = _visibilityRunId;
+@synthesize context = _context;
 
 static NSMutableDictionary *syncDates;
-
 
 + (NSMutableDictionary *) syncDates {
     if (syncDates == nil) {
@@ -26,206 +26,223 @@ static NSMutableDictionary *syncDates;
     return syncDates;
 }
 
-+ (void) syncronizeRuns: (NSManagedObjectContext *) context{
-    [context performBlock:^{
-        NSNumber * lastDate = [self getLastSynchronizationDate:context type:@"myRuns"];
-        NSLog(@"about to sync run from %lld", [lastDate longLongValue]);
-        dispatch_queue_t fetchQ = dispatch_queue_create("Run fetcher", NULL);
-        dispatch_async(fetchQ, ^{
-            NSDictionary * dict = [ARLNetwork runsParticipateFrom:lastDate];
-            NSNumber * serverTime = [dict objectForKey:@"serverTime"];
-            NSLog(@"allruns %@", [dict objectForKey:@"serverTime"]);
-            [context performBlock:^{
-                for (NSDictionary *run in [dict objectForKey:@"runs"]) {
-                    [Run runWithDictionary:run inManagedObjectContext:context];
-                }
-                
-                if (serverTime) {
-                    [SynchronizationBookKeeping createEntry:@"myRuns" time:serverTime inManagedObjectContext:context];
-                }
-                ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-                [appDelegate.arlearnDatabase saveToURL:appDelegate.arlearnDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success){
-                    NSLog(@"database succesfully saved %d", success);
-                }];
-            }];
-        });
-        
-    }];
++ (void) syncResponses: (NSManagedObjectContext*) context {
+    ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
+    //    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    [synchronizer createContext:context];
+    synchronizer.syncResponses = YES;
+    [synchronizer sync];
 }
 
-+ (void) syncronizeGames: (NSManagedObjectContext *) context{
-    [context performBlock:^{
-        NSNumber * lastDate = [self getLastSynchronizationDate:context type:@"myGames"];
-        NSLog(@"about to sync game from %lld", [lastDate longLongValue]);
-        dispatch_queue_t fetchQ = dispatch_queue_create("Game fetcher", NULL);
-        dispatch_async(fetchQ, ^{
-            NSDictionary * gdict = [ARLNetwork gamesParticipateFrom:lastDate];
-            NSNumber * serverTime = [gdict objectForKey:@"serverTime"];
-            
-            NSLog(@"allgames %@", [gdict objectForKey:@"serverTime"]);
-            
-           
-            [context performBlock:^{
-                for (NSDictionary *game in [gdict objectForKey:@"games"]) {
-                    [Game gameWithDictionary:game inManagedObjectContext:context];
-                }
-                if (serverTime) {
-                    [SynchronizationBookKeeping createEntry:@"myGames" time:serverTime inManagedObjectContext:context];
-                }
-            }];
-        });
-    }];
-}
-+ (void) synchronizeGeneralItemsWithGame: (Game *) game {
-    NSManagedObjectContext * context = game.managedObjectContext;
-    [context performBlock:^{
-        //        NSNumber * gameId = [NSNumber numberWithLongLong:game.gameId];
-        NSNumber * lastDate = [self getLastSynchronizationDate:context type:@"generalItems" context:game.gameId];
-        dispatch_queue_t fetchQ = dispatch_queue_create("GeneralItems fetcher", NULL);
-        dispatch_async(fetchQ, ^{
-            NSDictionary * gisDict = [ARLNetwork itemsForGameFrom:game.gameId from:lastDate];
-            NSNumber * serverTime = [gisDict objectForKey:@"serverTime"];
-            
-            NSLog(@"generalItems (gameId %@) %@", game.gameId, [gisDict objectForKey:@"serverTime"]);
-            
-            [context performBlock:^{
-                for (NSDictionary *generalItemDict in [gisDict objectForKey:@"generalItems"]) {
-                    [GeneralItem generalItemWithDictionary:generalItemDict
-                                                  withGame:game
-                                    inManagedObjectContext:context];
-                }
-                if (serverTime) {
-                    [SynchronizationBookKeeping createEntry:@"generalItems"
-                                                       time:serverTime
-                                                  idContext:game.gameId
-                                     inManagedObjectContext:context];
-                }
-            }];
-        });
+- (void) sync {
+    [self.context performBlock:^{
+        [self asyncExecution];
     }];
     
 }
 
-
-+ (void) synchronizeGeneralItemsAndVisibilityStatments: (Run *) run {
-    Game * game = run.game;
-    NSManagedObjectContext * context = game.managedObjectContext;
-    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
-    [context performBlock:^{
-        //        NSNumber * gameId = [NSNumber numberWithLongLong:game.gameId];
-        ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
-        NSNumber * lastDate = [self getLastSynchronizationDate:context type:@"generalItems" context:game.gameId];
-        dispatch_queue_t fetchQ = dispatch_queue_create("GeneralItems fetcher", NULL);
-        dispatch_async(fetchQ, ^{
-            NSDictionary * gisDict = [ARLNetwork itemsForGameFrom:game.gameId from:lastDate];
-            NSNumber * serverTime = [gisDict objectForKey:@"serverTime"];
-            NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
-            NSLog(@"generalItems (gameId %@) %@", game.gameId, [gisDict objectForKey:@"serverTime"]);
-            NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
-            [context performBlock:^{
-                for (NSDictionary *generalItemDict in [gisDict objectForKey:@"generalItems"]) {
-                    [GeneralItem generalItemWithDictionary:generalItemDict
-                                                  withGame:game
-                                    inManagedObjectContext:context];
-                }
-                if (serverTime) {
-                    [SynchronizationBookKeeping createEntry:@"generalItems"
-                                                       time:serverTime
-                                                  idContext:game.gameId
-                                     inManagedObjectContext:context];
-                }
-                NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
-                [run.managedObjectContext save:nil];
-                NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
-                ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-//                [appDelegate.arlearnDatabase saveToURL:appDelegate.arlearnDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL succes) {
-                    NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
-//                    [self useDocument:run];
-                    [self synchronizeGeneralItemVisiblityStatementsWithRun:run];
-//                }];
-            }];
-        });
-    }];
+- (void)saveContext
+{
+    NSError *error = nil;
     
+    if (self.context) {
+        if ([self.context hasChanges]){
+            if (![self.context save:&error]) {
+                NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+                abort();
+            }
+            [self.parentContext performBlock:^{
+                NSError *error = nil;
+                if (![self.parentContext save:&error]) {abort();}
+                ARLFileCloudSynchronizer* fileSync = [[ARLFileCloudSynchronizer alloc] init];
+                [fileSync createContext:self.parentContext];
+                [fileSync sync];
+            }];
+        }
+    }
 }
 
-//+ (void) useDocument: (Run *) run {
-//    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-//    
-//    if (![[NSFileManager defaultManager] fileExistsAtPath:[appDelegate.arlearnDatabase.fileURL path]]) {
-//        [appDelegate.arlearnDatabase saveToURL:appDelegate.arlearnDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL succes) {
-//            [self synchronizeGeneralItemVisiblityStatementsWithRun:run];
-//        }];
-//    } else if (appDelegate.arlearnDatabase.documentState == UIDocumentStateClosed) {
-//        [appDelegate.arlearnDatabase openWithCompletionHandler:^(BOOL succes) {
-//           [self synchronizeGeneralItemVisiblityStatementsWithRun:run];
-//        }];
-//    } else if (appDelegate.arlearnDatabase.documentState == UIDocumentStateNormal) {
-//        [self synchronizeGeneralItemVisiblityStatementsWithRun:run];
+- (void) createContext: (NSManagedObjectContext*) mainContext {
+    self.parentContext = mainContext;
+    self.context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    self.context.parentContext = mainContext;
+}
+
+//- (void)_mocDidSaveNotificationCloud:(NSNotification *)notification
+//{
+//    NSManagedObjectContext *savedContext = [notification object];
+//    if (self.context == savedContext) {
+//        return;
 //    }
+//    if (self.context.persistentStoreCoordinator != savedContext.persistentStoreCoordinator){
+//        return;
+//    }
+//        [self.context mergeChangesFromContextDidSaveNotification:notification];
+////    dispatch_sync(queue, ^{
+////         NSLog(@"ARLCloud before merging");
+////
+////        NSLog(@"ARLCloud ready with merging");
+////    });
 //}
 
-
-+ (void) synchronizeGeneralItemsAndVisibilityStatments: (NSNumber *) runId withManagedContext:(NSManagedObjectContext *) context {
-    [context performBlock:^{
-        Run * run = [Run retrieveRun:runId inManagedObjectContext:context];
-        [self synchronizeGeneralItemsAndVisibilityStatments:run];
-    }];
-}
-
-
-+ (void) synchronizeGeneralItems: (NSNumber *) gameId withManagedContext:(NSManagedObjectContext *) context {
-    [context performBlock:^{
-        Game * game = [Game retrieveGame:gameId inManagedObjectContext:context];
-        [self synchronizeGeneralItemsWithGame:game];
-    }];
-}
-
-+ (void) synchronizeGeneralItemVisiblityStatementsWithRun: (Run *) run {
-    NSManagedObjectContext * context = run.managedObjectContext;
-        [context performBlock:^{
-            ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-            NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
-    NSNumber * lastDate = [self getLastSynchronizationDate:context type:@"generalItemsVisibility" context:run.runId];
-    dispatch_queue_t fetchQ2 = dispatch_queue_create("itemsVisFetcher", NULL);
-    dispatch_async(fetchQ2, ^{
-        NSDictionary * visDict =[ARLNetwork itemVisibilityForRun:run.runId from:lastDate];
-        NSNumber * serverTime = [visDict objectForKey:@"serverTime"];
-        
-        if ([[visDict objectForKey:@"generalItemsVisibility"] count] > 0) {
-            [run.managedObjectContext performBlock:^{
-                for (NSDictionary * viStatement in [visDict objectForKey:@"generalItemsVisibility"] ) {
-                    [GeneralItemVisibility visibilityWithDictionary: viStatement withRun: run];
-                }
-            }];
-        }
-        if (serverTime) {
-            [context performBlock:^{
-                [SynchronizationBookKeeping createEntry:@"generalItemsVisibility"
-                                                   time:serverTime
-                                              idContext:run.runId
-                                 inManagedObjectContext:context];
-            }];
-            
-        }
-        ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
-    });
-        }];
-}
-
-+ (void) synchronizeGeneralItemVisiblityStatements: (NSNumber *) runId withManagedContext:(NSManagedObjectContext *) context {
-    [context performBlock:^{
-        Run * run = [Run retrieveRun:runId inManagedObjectContext:context];
-        [self synchronizeGeneralItemVisiblityStatementsWithRun:run];
-    }];
+- (void) asyncExecution {
+    if (self.syncRuns) {
+        [self syncronizeRuns];
+        [self asyncExecution];
+    } else if (self.syncGames) {
+        [self syncronizeGames];
+        [self asyncExecution];
+    } else if (self.gameId) {
+        [self synchronizeGeneralItemsWithGame];
+        [self asyncExecution];
+    } else if (self.visibilityRunId) {
+        [self synchronizeGeneralItemsAndVisibilityStatements];
+        [self asyncExecution];
+    } else if (self.syncResponses){
+        [self synchronizeResponses];
+        [self asyncExecution];
+    } else {
+        [self saveContext];
+        //        [self.context reset];
+        //        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        //        self.context = nil;
+        //        [self.context = nil];
+    }
     
 }
 
 
 
+
+- (void) syncronizeRuns{ //: (NSManagedObjectContext *) context
+    
+    //    [context performBlock:^{
+    NSNumber * lastDate = [ARLCloudSynchronizer getLastSynchronizationDate:self.context type:@"myRuns"];
+    //    dispatch_queue_t fetchQ = dispatch_queue_create("Run fetcher", NULL);
+    //    dispatch_async(fetchQ, ^{
+    NSDictionary * dict = [ARLNetwork runsParticipateFrom:lastDate];
+    NSNumber * serverTime = [dict objectForKey:@"serverTime"];
+    NSLog(@"allruns %@", [dict objectForKey:@"serverTime"]);
+    //            [context performBlock:^{
+    for (NSDictionary *run in [dict objectForKey:@"runs"]) {
+        [Run runWithDictionary:run inManagedObjectContext:self.context];
+    }
+    
+    if (serverTime) {
+        [SynchronizationBookKeeping createEntry:@"myRuns" time:serverTime inManagedObjectContext:self.context];
+    }
+    
+    //    [self saveContext];
+    self.syncRuns = NO;
+}
+
+- (void) syncronizeGames { //: (NSManagedObjectContext *) context{
+    NSNumber * lastDate = [ARLCloudSynchronizer getLastSynchronizationDate:self.context type:@"myGames"];
+    NSDictionary * gdict = [ARLNetwork gamesParticipateFrom:lastDate];
+    NSNumber * serverTime = [gdict objectForKey:@"serverTime"];
+    
+    for (NSDictionary *game in [gdict objectForKey:@"games"]) {
+        [Game gameWithDictionary:game inManagedObjectContext:self.context];
+    }
+    if (serverTime) {
+        [SynchronizationBookKeeping createEntry:@"myGames" time:serverTime inManagedObjectContext:self.context];
+    }
+    //    [self saveContext];
+    
+    self.syncGames = NO;
+}
+
+- (void) synchronizeGeneralItemsWithGame {//: (Game *) game {
+    NSNumber * lastDate = [ARLCloudSynchronizer getLastSynchronizationDate:self.context type:@"generalItems" context:self.gameId];
+    NSDictionary * gisDict = [ARLNetwork itemsForGameFrom:self.gameId from:lastDate];
+    NSNumber * serverTime = [gisDict objectForKey:@"serverTime"];
+    Game * game = [Game retrieveGame:self.gameId inManagedObjectContext:self.context];
+    
+    
+    for (NSDictionary *generalItemDict in [gisDict objectForKey:@"generalItems"]) {
+        [GeneralItem generalItemWithDictionary:generalItemDict
+                                      withGame:game
+                        inManagedObjectContext:self.context];
+    }
+    if (serverTime) {
+        [SynchronizationBookKeeping createEntry:@"generalItems"
+                                           time:serverTime
+                                      idContext:self.gameId
+                         inManagedObjectContext:self.context];
+    }
+    //    [self saveContext];
+    
+    self.gameId = nil;
+    
+    
+}
+
+
+- (void) synchronizeGeneralItemsAndVisibilityStatements {
+    Run * run = [Run retrieveRun:self.visibilityRunId inManagedObjectContext:self.context];
+    [self synchronizeGeneralItemsAndVisibilityStatements:run];
+    self.visibilityRunId = nil;
+}
+
+- (void) synchronizeGeneralItemsAndVisibilityStatements: (Run *) run {
+    NSNumber * lastDate = [ARLCloudSynchronizer getLastSynchronizationDate:self.context type:@"generalItemsVisibility" context:run.runId];
+    NSDictionary * visDict =[ARLNetwork itemVisibilityForRun:run.runId from:lastDate];
+    NSNumber * serverTime = [visDict objectForKey:@"serverTime"];
+    
+    if ([[visDict objectForKey:@"generalItemsVisibility"] count] > 0) {
+        for (NSDictionary * viStatement in [visDict objectForKey:@"generalItemsVisibility"] ) {
+            [GeneralItemVisibility visibilityWithDictionary: viStatement withRun: run];
+        }
+    }
+    if (serverTime) {
+        [SynchronizationBookKeeping createEntry:@"generalItemsVisibility"
+                                           time:serverTime
+                                      idContext:run.runId
+                         inManagedObjectContext:self.context];
+        
+    }
+}
+
+- (void) synchronizeResponses {
+    NSArray* responses =  [Response getUnsyncedReponses:self.context];
+    for (Response* resp in responses) {
+        NSLog(@"resp %@ sync %@ runId %@", resp.value, resp.synchronized, resp.run.runId);
+        if (resp.value) {
+            [ARLNetwork publishResponse:resp.run.runId responseValue:resp.value itemId:resp.generalItem.id timeStamp:resp.timeStamp];
+            resp.synchronized = [NSNumber numberWithBool:YES];
+        } else {
+            u_int32_t random = arc4random();
+            NSString* imageName = [NSString stringWithFormat:@"%d.jpg", random];
+            NSLog(@"runId %@", resp.run.runId);
+            if (resp.run.runId) {
+                NSString* uploadUrl = [ARLNetwork requestUploadUrl:imageName withRun:resp.run.runId];
+                NSLog(@"time to upload some data :) to %@", uploadUrl);
+                [ARLNetwork perfomUpload: uploadUrl withFileName:imageName contentType:@"application/jpg" withData:resp.data];
+
+                NSString * serverUrl = [NSString stringWithFormat:@"%@/uploadService/%@/%@:%@/%@", serviceUrl, resp.run.runId,
+                      [[NSUserDefaults standardUserDefaults] objectForKey:@"accountType"],
+                      [[NSUserDefaults standardUserDefaults] objectForKey:@"accountLocalId"],imageName];
+                NSLog(@"server Url: %@", serverUrl);
+                
+                NSDictionary *myDictionary= [[NSDictionary alloc] initWithObjectsAndKeys:
+                                             resp.width, @"width",
+                                             resp.height, @"height",
+                                             serverUrl, @"imageUrl", nil];
+                NSString* jsonString = [NSString jsonString:myDictionary];
+                
+                
+                [ARLNetwork publishResponse:resp.run.runId responseValue:jsonString itemId:resp.generalItem.id timeStamp:resp.timeStamp];
+                
+                //TODO publish the response
+                
+                resp.synchronized = [NSNumber numberWithBool:YES];
+            }
+            
+        }
+        
+    }
+    self.syncResponses = NO;
+}
 
 //private methods
 

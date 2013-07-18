@@ -2,7 +2,7 @@
 //  GeneralItemData.m
 //  ARLearn
 //
-//  Created by Stefaan Ternier on 7/5/13.
+//  Created by Stefaan Ternier on 7/16/13.
 //  Copyright (c) 2013 Stefaan Ternier. All rights reserved.
 //
 
@@ -14,6 +14,9 @@
 
 @dynamic data;
 @dynamic name;
+@dynamic replicated;
+@dynamic error;
+@dynamic url;
 @dynamic generalItem;
 
 @end

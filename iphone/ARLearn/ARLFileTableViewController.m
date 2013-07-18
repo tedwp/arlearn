@@ -36,6 +36,7 @@
 //    NSLog(@"doc dir %@", newString);
 //    NSLog(@"succeeded %d", [fileMrg createDirectoryAtPath:newString withIntermediateDirectories:YES attributes:nil error:nil]);
     NSArray * array = [fileMrg contentsOfDirectoryAtPath:[paths objectAtIndex:0] error:nil];
+    NSLog(@"gettting rid of warning %@",array.description);
 //    int i;
 //    for (i = 0; i < [array count]; i++) {
 //
@@ -101,8 +102,6 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 0;
 }
 

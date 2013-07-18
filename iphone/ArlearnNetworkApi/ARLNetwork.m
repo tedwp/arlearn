@@ -21,7 +21,7 @@
 }
 
 + (id) executeARLearnGetWithAuthorization: (NSString *) path {
-    NSString* urlString = [NSString stringWithFormat:@"%@%@", serviceUrl, path];
+    NSString* urlString = [NSString stringWithFormat:@"%@/rest/%@", serviceUrl, path];
     NSMutableURLRequest *request = [self prepareRequest:@"GET" requestWithUrl:urlString];
     
     NSString * authorizationString = [NSString stringWithFormat:@"GoogleLogin auth=%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"auth"]];
@@ -33,7 +33,7 @@
 }
 
 + (id) executeARLearnPostWithAuthorization: (NSString *) path postData:(NSData *) data withContentType: (NSString *) ctValue{
-    NSString* urlString = [NSString stringWithFormat:@"%@%@", serviceUrl, path];
+    NSString* urlString = [NSString stringWithFormat:@"%@/rest/%@", serviceUrl, path];
     NSMutableURLRequest *request = [self prepareRequest:@"POST" requestWithUrl:urlString];
     
     NSString * authorizationString = [NSString stringWithFormat:@"GoogleLogin auth=%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"auth"]];
@@ -48,7 +48,7 @@
 }
 
 + (id) executeARLearnGet: (NSString *) path {
-    NSString* urlString = [NSString stringWithFormat:@"%@%@", serviceUrl, path];
+    NSString* urlString = [NSString stringWithFormat:@"%@/rest/%@", serviceUrl, path];
     NSMutableURLRequest *request = [self prepareRequest:@"GET" requestWithUrl:urlString];
     NSData *jsonData = [ NSURLConnection sendSynchronousRequest:request returningResponse: nil error: nil ];
     NSError *error = nil;
@@ -59,7 +59,13 @@
                  postData:(NSData *) data
                withAccept: (NSString *) acceptValue
           withContentType: (NSString *) ctValue{
-    NSString* urlString = [NSString stringWithFormat:@"%@%@", serviceUrl, path];
+    NSString* urlString;
+    if ([path hasPrefix:@"/"]) {
+        urlString = [NSString stringWithFormat:@"%@%@", serviceUrl, path];
+    } else {
+        urlString = [NSString stringWithFormat:@"%@/rest/%@", serviceUrl, path];
+
+    }
     NSMutableURLRequest *request = [self prepareRequest:@"POST" requestWithUrl:urlString];
 
     [request setHTTPBody:data];
@@ -67,7 +73,11 @@
     if (acceptValue) [request setValue:acceptValue forHTTPHeaderField:accept];
     NSData *jsonData = [ NSURLConnection sendSynchronousRequest:request returningResponse: nil error: nil ];
     NSError *error = nil;
-    return jsonData ? [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers|NSJSONReadingMutableLeaves error:&error] : nil;
+    if ([acceptValue isEqualToString:textplain]) {
+        return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        //return [NSString stringWithUTF8String:[jsonData bytes]];
+    }
+    return jsonData ? [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers|NSJSONReadingMutableLeaves error:&error] : @"returnin gsth";
 }
 
 + (NSData *) stringToData: (NSString * ) string {
@@ -157,6 +167,95 @@
                                 nil];
     NSLog(@"publish action%@", actionDict);
     [self publishAction:actionDict];
+}
+
+//Response
+
++ (void) publishResponse: (NSDictionary *) responseDict {
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:responseDict options:0 error:nil];
+    id jsonData =[self executeARLearnPostWithAuthorization:@"response" postData:postData withContentType:applicationjson];
+//    id jsonData =     [self executeARLearnPOST:@"response"
+//                    postData:postData
+//                  withAccept:applicationjson
+//             withContentType:applicationjson];
+    NSLog(@"return server %@", jsonData);
+}
+
++ (void) publishResponse: (NSNumber *) runId
+           responseValue: (NSString *) value
+                  itemId: (NSNumber*) generalItemId
+               timeStamp: (NSNumber*) timeStamp{
+    NSString* accountType = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountType"];
+    NSString* accountLocalId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountLocalId"];
+    NSString* account = [NSString stringWithFormat:@"%@:%@", accountType, accountLocalId];
+    NSDictionary *responseDict = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                value, @"responseValue",
+                                runId, @"runId",
+                                generalItemId, @"generalItemId",
+                                timeStamp, @"timestamp",
+                                account, @"userEmail",
+                                nil];
+    NSLog(@"publish response%@", responseDict);
+[self publishResponse:responseDict];
+    
+}
+
+//File upload
+
++ (NSString*) requestUploadUrl: (NSString*) fileName withRun:(NSNumber *) runId {
+    NSString * str =[NSString stringWithFormat:@"runId=%@&account=%@:%@&fileName=%@", runId,
+                     [[NSUserDefaults standardUserDefaults] objectForKey:@"accountType"],
+                     [[NSUserDefaults standardUserDefaults] objectForKey:@"accountLocalId"],fileName];
+//    str = @"runId=3&account=2:116743449349920850150&fileName=testImage";
+    id response = [self executeARLearnPOST:[NSString stringWithFormat: @"/uploadServiceWithUrl"]
+                    postData:[str dataUsingEncoding:NSUTF8StringEncoding]
+                  withAccept:textplain
+             withContentType:xwwformurlencode];
+    NSLog(@"return response %@", response);
+    return (NSString*) response;
+}
++ (void) perfomUpload: (NSString*) uploadUrl withFileName:(NSString*) fileName
+          contentType:(NSString*) contentTypeIn withData:(NSData*) data {
+    NSString *boundary = @"0xKhTmLbOuNdArY";
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:NO];
+    [request setTimeoutInterval:30];
+    [request setHTTPMethod:@"POST"];
+    
+    // set Content-Type in HTTP header
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    
+    // post body
+    NSMutableData *body = [NSMutableData data];
+    
+    if (data) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"uploaded_file\"; filename=\"%@\"\r\n", fileName] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n", contentTypeIn] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Transfer-Encoding: binary\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        //        [body appendData:[[NSString stringWithString:@"Content-Type: %@\r\n\r\n", contentTypeIn] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:data];
+        [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // setting the body of the post to the reqeust
+    [request setHTTPBody:body];
+
+//        NSLog(@"body looks like %@ ",[NSString stringWithUTF8String:[body bytes]]);
+    uploadUrl = [uploadUrl stringByReplacingOccurrencesOfString:@"localhost:8888" withString:@"192.168.1.8:8080"];
+        NSLog(@"uploadUrl looks like*** %@ ***stop",uploadUrl);
+    // set URL
+    [request setURL:[NSURL URLWithString: uploadUrl]];
+    
+    NSData *jsonData = [ NSURLConnection sendSynchronousRequest:request returningResponse: nil error: nil ];
+
+    NSLog(@"return from server %@ ***",[NSString stringWithUTF8String:[jsonData bytes]]);
+
 }
 
 // Account

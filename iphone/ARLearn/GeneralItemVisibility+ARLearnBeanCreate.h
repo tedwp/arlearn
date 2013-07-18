@@ -15,4 +15,6 @@
 @interface GeneralItemVisibility (ARLearnBeanCreate)
 + (GeneralItemVisibility *) visibilityWithDictionary: (NSDictionary *) visDict withRun: (Run * ) run withGeneralItem: (GeneralItem *) gi;
 + (GeneralItemVisibility *) visibilityWithDictionary: (NSDictionary *) visDict withRun: (Run * ) run ;
++ (void) deleteAll: (NSManagedObjectContext * ) context;
+
 @end

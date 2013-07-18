@@ -19,15 +19,10 @@
 
 - (void)setupFetchedResultsController {
     NSNumber * currentTimeMillis = [NSNumber numberWithFloat:([[NSDate date] timeIntervalSince1970] * 1000 )];
-//    NSLog(@"current time %lld", [currentTimeMillis longLongValue]);
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GeneralItem"];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name"
                                                                                      ascending:YES
                                                                                       selector:@selector(localizedCaseInsensitiveCompare:)]];
-//    request.predicate = [NSPredicate predicateWithFormat:
-//                         @"ownerGame.gameId = %lld ",
-//                         [self.run.game.gameId longLongValue]];
-
     request.predicate = [NSPredicate predicateWithFormat:
                          @"ownerGame.gameId = %lld and SUBQUERY(visibility, $x, $x.runId = %lld and $x.status = 1 and $x.timeStamp < %lld).@count > 0 and SUBQUERY(visibility, $x, $x.runId = %lld and $x.status = 2 and $x.timeStamp < %lld).@count = 0",
                          [self.run.game.gameId longLongValue], [self.run.runId longLongValue], [currentTimeMillis longLongValue], [self.run.runId longLongValue], [currentTimeMillis longLongValue]];
@@ -44,14 +39,6 @@
     self.title = run.title;
     [self setupFetchedResultsController];
 }
-
-//- (id) init {
-//    self = [super init];
-//    if (self) {
-//        [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"list_icon.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"list_icon.png"]];
-//    }
-//    return self;
-//}
 
 - (void) viewDidLoad {
  [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"list_icon.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"list_icon.png"]];

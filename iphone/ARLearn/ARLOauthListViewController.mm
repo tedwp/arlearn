@@ -59,8 +59,11 @@
     [svc setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     [self presentViewController:svc animated:YES completion:nil];
 //    svc.oauthList = self;
-    [svc loadAuthenticateUrl:@"https://accounts.google.com/o/oauth2/auth?redirect_uri=http://ar-learn.appspot.com/oauth/google&response_type=code&client_id=594104153413-7ec2cn8jkuh7b4j27dn6ohjqst929s8h.apps.googleusercontent.com&approval_prompt=force&scope=profile+email" delegate:svc];
+//    [svc loadAuthenticateUrl:@"https://accounts.google.com/o/oauth2/auth?redirect_uri=http://ar-learn.appspot.com/oauth/google&response_type=code&client_id=594104153413-7ec2cn8jkuh7b4j27dn6ohjqst929s8h.apps.googleusercontent.com&approval_prompt=force&scope=profile+email" delegate:svc];
+    
+    [svc loadAuthenticateUrl:    @"https://accounts.google.com/o/oauth2/auth?redirect_uri=http://streetlearn.appspot.com/oauth/google&response_type=code&client_id=594104153413-8ddgvbqp0g21pid8fm8u2dau37521b16.apps.googleusercontent.com&approval_prompt=force&scope=profile+email" delegate:svc];
 
+//    [svc loadAuthenticateUrl: @"https://accounts.google.com/o/oauth2/auth?redirect_uri=http://localhost:8888/oauth/google&response_type=code&client_id=594104153413-5s36e8bn5u2o2cs5kob6rqd3k1c8fspb.apps.googleusercontent.com&approval_prompt=force&scope=profile+email" delegate:svc];
 
 }
 
@@ -125,8 +128,8 @@
             NSLog(@"auth %@", authString);
             NSDictionary *accountDetails = [ARLNetwork accountDetails];
                 ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-            [Account accountWithDictionary:accountDetails inManagedObjectContext:appDelegate.arlearnDatabase.managedObjectContext];
-            [ARLAccountDelegator resetAccount:appDelegate.arlearnDatabase.managedObjectContext];
+            [Account accountWithDictionary:accountDetails inManagedObjectContext:appDelegate.managedObjectContext];
+            [ARLAccountDelegator resetAccount:appDelegate.managedObjectContext];
             [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
         }
 

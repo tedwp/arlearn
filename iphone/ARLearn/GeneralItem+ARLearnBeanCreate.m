@@ -49,11 +49,7 @@
     gi.type = [giDict objectForKey:@"type"];
     gi.json = [NSKeyedArchiver archivedDataWithRootObject:giDict];
     [self setCorrespondingVisibilityItems:gi];
-    NSError * error;
-    
-    if (![context save:&error]) {
-        NSLog(@"error %@", error);
-    }
+
     [self downloadCorrespondingData:giDict withGeneralItem:gi inManagedObjectContext:context];
     return gi;
     
@@ -62,40 +58,41 @@
 + (void) downloadCorrespondingData: (NSDictionary *) giDict
                    withGeneralItem: (GeneralItem *) gi
             inManagedObjectContext: (NSManagedObjectContext * ) context {
+    
     if ([gi.type caseInsensitiveCompare:@"org.celstec.arlearn2.beans.generalItem.AudioObject"] == NSOrderedSame ){
         NSLog(@"about to download audio");
-        NSString * audioFeed = [giDict objectForKey:@"audioFeed"];
-        GeneralItemData * giData = [NSEntityDescription insertNewObjectForEntityForName:@"GeneralItemData" inManagedObjectContext:context];
-        giData.name = @"audio";
-        NSURL  *url = [NSURL URLWithString:audioFeed];
-        NSData *urlData = [NSData dataWithContentsOfURL:url];
-        if ( urlData ){
-            giData.data = urlData;
+        NSDictionary* dataMap = [self getDatas:gi withManagedContext:context];
+//        GeneralItemData * giData = [NSEntityDescription insertNewObjectForEntityForName:@"GeneralItemData" inManagedObjectContext:context];
+        GeneralItemData * giData = [dataMap objectForKey:@"audio"];
+        if (!giData) {
+            giData = [NSEntityDescription insertNewObjectForEntityForName:@"GeneralItemData" inManagedObjectContext:context];
+            giData.name = @"audio";
             giData.generalItem = gi;
         }
-        NSError * error;
+        if (![[giDict objectForKey:@"audioFeed"] isEqual:giData.url]) {
+            giData.url = [giDict objectForKey:@"audioFeed"];
+            giData.replicated = [NSNumber numberWithBool:NO];
+            giData.error = [NSNumber numberWithBool:NO];
+            
+        } else {
+//            NSNumber* test;
+//            [test isE]
+            
+            if (giData.data == nil && [giData.replicated isEqualToNumber:[NSNumber numberWithBool:NO]]) {
+                 giData.error = [NSNumber numberWithBool:NO];
+            }
+        }
 
-        if (![context save:&error]) {
-            NSLog(@"error %@", error);
-        }
-    } else if ([gi.type caseInsensitiveCompare:@"org.celstec.arlearn2.beans.generalItem.VideoObject"] == NSOrderedSame ){
-        NSLog(@"about to download video");
-        NSString * videoFeed = [giDict objectForKey:@"videoFeed"];
-        GeneralItemData * giData = [NSEntityDescription insertNewObjectForEntityForName:@"GeneralItemData" inManagedObjectContext:context];
-        giData.name = @"video";
-        NSURL  *url = [NSURL URLWithString:videoFeed];
-        NSData *urlData = [NSData dataWithContentsOfURL:url];
-        if ( urlData ){
-            giData.data = urlData;
-            giData.generalItem = gi;
-        }
-        NSError * error;
         
-        if (![context save:&error]) {
-            NSLog(@"error %@", error);
-        }
+//    } else if ([gi.type caseInsensitiveCompare:@"org.celstec.arlearn2.beans.generalItem.VideoObject"] == NSOrderedSame ){
+//        NSLog(@"about to download video");
+//        GeneralItemData * giData = [NSEntityDescription insertNewObjectForEntityForName:@"GeneralItemData" inManagedObjectContext:context];
+//        giData.url = [giDict objectForKey:@"videoFeed"];
+//        giData.replicated = [NSNumber numberWithBool:NO];
+//
+//        giData.name = @"video";
     } else{
-        NSLog(@"not downloading %@", gi.type);
+        NSLog(@"nothing to download for %@", gi.type);
     }
     
 }
@@ -107,6 +104,9 @@
     
     NSError *error = nil;
     NSArray *allVisibilityStatements = [context executeFetchRequest:request error:&error];
+    if (error) {
+        NSLog(@"error %@", error);
+    }
     for (GeneralItemVisibility *giv in allVisibilityStatements) {
         giv.generalItem = gi;
     }
@@ -118,7 +118,12 @@
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GeneralItem"];
     request.predicate = [NSPredicate predicateWithFormat:@"id = %ld", [itemId longValue]];
-    NSArray *generalItemsFromDb = [context executeFetchRequest:request error:nil];
+    NSError *error = nil;
+
+    NSArray *generalItemsFromDb = [context executeFetchRequest:request error:&error];
+    if (error) {
+        NSLog(@"error %@", error);
+    }
     if (!generalItemsFromDb || ([generalItemsFromDb count] != 1)) {
         return nil;
     } else {
@@ -132,13 +137,38 @@
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GeneralItem"];
     request.predicate = [NSPredicate predicateWithFormat:@"id = %ld", [[giDict objectForKey:@"id"] longValue]];
-    NSArray *generalItemsFromDb = [context executeFetchRequest:request error:nil];
+    NSError *error = nil;
+
+    NSArray *generalItemsFromDb = [context executeFetchRequest:request error:&error];
+    if (error) {
+        NSLog(@"error %@", error);
+    }
     if (!generalItemsFromDb || ([generalItemsFromDb count] != 1)) {
         return nil;
     } else {
         gi = [generalItemsFromDb lastObject];
         return gi;
     }
+}
+
++ (NSDictionary*) getDatas: (GeneralItem* ) gi withManagedContext: (NSManagedObjectContext*) context{
+    NSMutableArray *objectArray = [NSMutableArray arrayWithArray:[gi.data allObjects]];
+    NSMutableArray *keysArray = [NSMutableArray arrayWithCapacity:[objectArray count]];
+    for (GeneralItemData* data  in objectArray) {
+        [keysArray addObject:data.name];
+    }
+    return  [NSDictionary dictionaryWithObjects:objectArray forKeys:keysArray];
+}
+
++ (NSArray *) getAll: (NSManagedObjectContext*) context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GeneralItem"];
+    
+    NSError *error = nil;
+    NSArray *unsyncedData = [context executeFetchRequest:request error:&error];
+    if (error) {
+        NSLog(@"error %@", error);
+    }
+    return unsyncedData;
     
 }
 @end

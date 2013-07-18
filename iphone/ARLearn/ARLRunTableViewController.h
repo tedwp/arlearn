@@ -16,6 +16,7 @@
 #import "Game+ARLearnBeanCreate.h"
 #import "GeneralItem+ARLearnBeanCreate.h"
 #import "GeneralItemVisibility+ARLearnBeanCreate.h"
+#import "ARLFileCloudSynchronizer.h"
 
 @interface ARLRunTableViewController : CoreDataTableViewController
 

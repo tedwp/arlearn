@@ -9,6 +9,9 @@
 #import "ARLAccountDelegator.h"
 #import "SynchronizationBookKeeping+create.h"
 #import "Run+ARLearnBeanCreate.h"
+#import "GeneralItemVisibility+ARLearnBeanCreate.h"
+#import "Response+Create.h"
+
 @implementation ARLAccountDelegator
 
 + (void) resetAccount: (NSManagedObjectContext * ) context {
@@ -18,6 +21,20 @@
     [SynchronizationBookKeeping createEntry:@"generalItems" time:serverTime inManagedObjectContext:context];
     [SynchronizationBookKeeping createEntry:@"generalItemsVisibility" time:serverTime inManagedObjectContext:context];
     [Run deleteAllRuns:context];
+    [GeneralItemVisibility deleteAll:context];
+    
+    [Response deleteAll:context];    
+    NSError *error = nil;
+    
+    if (context) {
+        if ([context hasChanges]){
+            if (![context save:&error]) {
+                NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+                abort();
+            }
+        }
+    }
+
     
 }
 

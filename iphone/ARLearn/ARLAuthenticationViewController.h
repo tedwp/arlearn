@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "ARLNetwork.h"
+#import "ARLDataCollectionWidget.h"
 
 @interface ARLAuthenticationViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UITextField *email;
 @property (weak, nonatomic) IBOutlet UITextField *password;
+
 - (IBAction)login:(id)sender;
 - (IBAction)back:(id)sender;
 

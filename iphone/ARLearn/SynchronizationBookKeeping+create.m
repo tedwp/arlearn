@@ -33,10 +33,7 @@
         
     }
     bkItem.lastSynchronization = time;
-    NSError * error;
-    if (![context save:&error]) {
-        NSLog(@"error %@", error);
-    }
+   
     return bkItem;
 }
 
@@ -63,10 +60,7 @@
         bkItem = [bkItems lastObject];
     }
     bkItem.lastSynchronization = time;
-    NSError * error;
-    if (![context save:&error]) {
-        NSLog(@"error %@", error);
-    }
+   
     return bkItem;
 }
 

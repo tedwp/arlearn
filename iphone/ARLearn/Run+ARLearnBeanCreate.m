@@ -59,8 +59,6 @@
         run.deleted = [NSNumber numberWithBool:NO];
         [self setGame:run inManagedObjectContext:context];
     }
-    BOOL saved = [run.managedObjectContext save:nil];
-    NSLog(@"Run successfully save %d",saved);
     
     return run;
     
@@ -90,6 +88,9 @@
     
     NSError *error = nil;
     NSArray *runs = [context executeFetchRequest:request error:&error];
+    if (error) {
+        NSLog(@"error %@", error);
+    }
     for (id run in runs) {
         [context deleteObject:run];
     }

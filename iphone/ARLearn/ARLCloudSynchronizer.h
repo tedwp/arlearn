@@ -11,20 +11,38 @@
 #import "Game+ARLearnBeanCreate.h"
 #import "GeneralItem+ARLearnBeanCreate.h"
 #import "GeneralItemVisibility+ARLearnBeanCreate.h"
+#import "Response+Create.h"
 #import "SynchronizationBookKeeping.h"
 #import "ARLNetwork.h"
 #import "SynchronizationBookKeeping+create.h"
 #import "ARLAppDelegate.h"
+#import "ARLFileCloudSynchronizer.h"
 
-@interface ARLCloudSynchronizer : NSObject
+@interface ARLCloudSynchronizer : NSObject {
+    BOOL syncRuns;
+    BOOL syncGames;
+//    dispatch_queue_t queue;
+}
 
-+ (void) syncronizeRuns: (NSManagedObjectContext *) context;
-+ (void) syncronizeGames: (NSManagedObjectContext *) context;
-+ (void) synchronizeGeneralItemsWithGame: (Game *) game;
-+ (void) synchronizeGeneralItemsAndVisibilityStatments: (Run *) run;
-+ (void) synchronizeGeneralItemsAndVisibilityStatments: (NSNumber *) runId withManagedContext:(NSManagedObjectContext *) context ;
-+ (void) synchronizeGeneralItems: (NSNumber *) gameId withManagedContext:(NSManagedObjectContext *) context;
-+ (void) synchronizeGeneralItemVisiblityStatementsWithRun: (Run *) run;
-+ (void) synchronizeGeneralItemVisiblityStatements: (NSNumber *) runId withManagedContext:(NSManagedObjectContext *) context;
+
+@property (nonatomic, readwrite) BOOL syncRuns;
+@property (nonatomic, readwrite) BOOL syncGames;
+@property (nonatomic, readwrite) BOOL syncResponses;
+@property (strong, nonatomic)  NSNumber * gameId;
+
+@property (strong, nonatomic)  NSNumber * visibilityRunId;
+
+@property (strong, nonatomic)  NSManagedObjectContext * context;
+@property (strong, nonatomic)  NSManagedObjectContext * parentContext;
+
++ (void) syncResponses:  (NSManagedObjectContext*) context;
+
+- (void) sync;
+- (void) createContext: (NSManagedObjectContext*) mainContext;
+
+//+ (void) synchronizeGeneralItemsWithGame: (Game *) game;
+//+ (void) synchronizeGeneralItems: (NSNumber *) gameId withManagedContext:(NSManagedObjectContext *) context;
+//+ (void) synchronizeGeneralItemVisiblityStatementsWithRun: (Run *) run;
+//+ (void) synchronizeGeneralItemVisiblityStatements: (NSNumber *) runId withManagedContext:(NSManagedObjectContext *) context;
 
 @end

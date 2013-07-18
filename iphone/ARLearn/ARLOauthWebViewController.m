@@ -51,6 +51,22 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     NSString * urlAsString =request.URL.description;
+    
+//    [[NSUserDefaults standardUserDefaults] setObject:@"ya29.AHES6ZROmuJd4MXg7sJIveB_NeEmOuxRQm8564PDMMiCWBTejL65" forKey:@"auth"];
+//    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+//    NSDictionary *accountDetails = [ARLNetwork accountDetails];
+//    NSLog(@"accountDetails %@", accountDetails.description);
+//    [Account accountWithDictionary:accountDetails inManagedObjectContext:appDelegate.managedObjectContext];
+//    [[NSUserDefaults standardUserDefaults] setObject:[accountDetails objectForKey:@"localId"] forKey:@"accountLocalId"];
+//    [[NSUserDefaults standardUserDefaults] setObject:[accountDetails objectForKey:@"accountType"] forKey:@"accountType"];
+//    
+//    [ARLAccountDelegator resetAccount:appDelegate.managedObjectContext];
+////    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+//    
+//    return NO;
+
+    
+    
     if (!([urlAsString rangeOfString:@"oauth.html?accessToken="].location == NSNotFound)) {
         NSArray *listItems = [urlAsString componentsSeparatedByString:@"accessToken="];
         NSString * lastObject =[listItems lastObject];
@@ -59,16 +75,21 @@
         ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
         NSDictionary *accountDetails = [ARLNetwork accountDetails];
         NSLog(@"accountDetails %@", accountDetails.description);
-        [Account accountWithDictionary:accountDetails inManagedObjectContext:appDelegate.arlearnDatabase.managedObjectContext];
+        [Account accountWithDictionary:accountDetails inManagedObjectContext:appDelegate.managedObjectContext];
         [[NSUserDefaults standardUserDefaults] setObject:[accountDetails objectForKey:@"localId"] forKey:@"accountLocalId"];
+        [[NSUserDefaults standardUserDefaults] setObject:[accountDetails objectForKey:@"accountType"] forKey:@"accountType"];        
         
-        
-        [ARLAccountDelegator resetAccount:appDelegate.arlearnDatabase.managedObjectContext];
+        [ARLAccountDelegator resetAccount:appDelegate.managedObjectContext];
         [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 
         return NO;
         
     } else {
+//        if ([urlAsString hasPrefix:@"http://localhost:8888"]) {
+//            urlAsString = [urlAsString stringByReplacingOccurrencesOfString:@"http://localhost:8888" withString:@"http://192.168.1.8"];
+////            request.URL = [NSURL URLWithString:urlAsString];
+//            [request setURL:[NSURL URLWithString:urlAsString]];
+//        }
         NSLog(@"not found %@", urlAsString);
     }
     return YES;

@@ -7,14 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
-#define serviceUrl @"http://ar-learn.appspot.com/rest/"
-//#define serviceUrl @"http://192.168.1.6:9999/rest/"
+//#define serviceUrl @"http://ar-learn.appspot.com"
+#define serviceUrl @"http://streetlearn.appspot.com"
+//#define serviceUrl @"http://192.168.1.8:8080"
 #define textplain @"text/plain"
 
 #define accept @"Accept"
 #define contenttype @"Content-Type"
 #define applicationjson @"application/json"
 #define textplain @"text/plain"
+#define xwwformurlencode @"application/x-www-form-urlencoded"
 #define GET @"GET"
 #define POST @"POST"
 
@@ -42,6 +44,12 @@
 + (void) publishAction: (NSDictionary *) actionDict;
 + (void) publishAction: (long) runId action: (NSString *) action itemId: (long) itemId itemType:(NSString *) itemType;
 
++ (void) publishResponse: (NSDictionary *) actionDict;
++ (void) publishResponse: (NSNumber *) runId responseValue: (NSString *) value itemId: (NSNumber*) generalItemId timeStamp: (NSNumber*) timeStamp;
+
++ (NSString*) requestUploadUrl: (NSString*) fileName withRun:(NSNumber *) runId;
++ (void) perfomUpload: (NSString*) uploadUrl withFileName:(NSString*) fileName
+contentType:(NSString*) contentType withData:(NSData*) data;
 
 + (NSDictionary*) anonymousLogin: (NSString *) account ;
 + (NSDictionary*) accountDetails;

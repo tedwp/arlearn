@@ -8,19 +8,19 @@
 
 #import <UIKit/UIKit.h>
 #import "GeneralItem.h"
+#import "Run.h"
+#import "ARLMultipleChoiceAnswerView.h"
+#import "Response+Create.h"
 
-
-
-@interface ARLMultipleChoiceTestViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource>
+@interface ARLMultipleChoiceTestViewController : UIViewController 
 
 @property (strong, nonatomic) GeneralItem * generalItem;
+@property (strong, nonatomic) Run * run;
 
-//@property (nonatomic, strong) NSNumber * id;
-//@property (weak, nonatomic) NSManagedObjectContext * moc;
-//@property (weak, nonatomic) NSDictionary * jsonDict;
 @property (weak, nonatomic) IBOutlet UINavigationItem *headerText;
-@property (weak, nonatomic) IBOutlet UIWebView *webView;
-@property (weak, nonatomic) IBOutlet UIPickerView *pickerView;
-@property (nonatomic, retain) NSMutableArray *dataArray;
+@property (strong, nonatomic)  UIWebView *webView;
+@property (strong, nonatomic)  ARLMultipleChoiceAnswerView * answerView;
+@property (strong, nonatomic)  UIButton * submitButton;
+@property (strong, nonatomic)  NSDictionary* jsonDict;
 
 @end

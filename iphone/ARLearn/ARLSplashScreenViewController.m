@@ -43,33 +43,33 @@
 - (void) viewWillAppear:(BOOL)animated {
     
     NSLog(@"view will app");
-    [self useDocument];
-
+//    [self useDocument];
+    [self fetchCurrentAccount];
     
 }
 
--(void) useDocument {
-    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[appDelegate.arlearnDatabase.fileURL path]]) {
-        [appDelegate.arlearnDatabase saveToURL:appDelegate.arlearnDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL succes) {
-        [self fetchCurrentAccount];
-        }];
-    } else if (appDelegate.arlearnDatabase.documentState == UIDocumentStateClosed) {
-        [appDelegate.arlearnDatabase openWithCompletionHandler:^(BOOL succes) {
-        [self fetchCurrentAccount];
-        }];
-    } else if (appDelegate.arlearnDatabase.documentState == UIDocumentStateNormal) {
-        [self fetchCurrentAccount];
-    }
-}
+//-(void) useDocument {
+//    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+//    
+//    if (![[NSFileManager defaultManager] fileExistsAtPath:[appDelegate.arlearnDatabase.fileURL path]]) {
+//        [appDelegate.arlearnDatabase saveToURL:appDelegate.arlearnDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL succes) {
+//        [self fetchCurrentAccount];
+//        }];
+//    } else if (appDelegate.arlearnDatabase.documentState == UIDocumentStateClosed) {
+//        [appDelegate.arlearnDatabase openWithCompletionHandler:^(BOOL succes) {
+//        [self fetchCurrentAccount];
+//        }];
+//    } else if (appDelegate.arlearnDatabase.documentState == UIDocumentStateNormal) {
+//        [self fetchCurrentAccount];
+//    }
+//}
 
 - (void) fetchCurrentAccount {
     ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
 
     NSLog(@"localid %@",     [[NSUserDefaults standardUserDefaults] objectForKey:@"accountLocalId"]);
     Account * account =     [Account retrieveFromDbWithLocalId:[[NSUserDefaults standardUserDefaults] objectForKey:@"accountLocalId"]
-                                         withManagedContext:appDelegate.arlearnDatabase.managedObjectContext] ;
+                                         withManagedContext:appDelegate.managedObjectContext] ;
     NSLog(@"localid %@",    account.name );
     self.userName.text = account.name;
     UIImage * image = [UIImage imageWithData:account.picture];

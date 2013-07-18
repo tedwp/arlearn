@@ -10,16 +10,23 @@
 #import <AVFoundation/AVAudioPlayer.h>
 #import "GeneralItem.h"
 #import "GeneralItemData.h"
+#import "ARLDataCollectionWidget.h"
+#import "ARLAudioObjectPlayButtons.h"
+#import "ARLAudioObjectPlayer.h"
 
 @interface ARLAudioViewController : UIViewController
 
-@property (strong, nonatomic ) AVAudioPlayer * player;
+//@property (strong, nonatomic ) AVAudioPlayer * player;
+@property (strong, nonatomic ) ARLAudioObjectPlayer * player;
 @property (strong, nonatomic) GeneralItem * generalItem;
-@property (strong, nonatomic) UIImagePickerController * imagePickerController;
+@property (strong, nonatomic) Run * run;
 
-@property (weak, nonatomic) IBOutlet UIWebView *webView;
+@property (strong, nonatomic)  ARLDataCollectionWidget* dataCollectionWidget;
+
+@property (strong, nonatomic) IBOutlet UIView *mainView;
+@property (strong, nonatomic)  UIWebView *webView;
 @property (weak, nonatomic) IBOutlet UINavigationItem *headerText;
-- (IBAction)playAction:(id)sender;
-- (IBAction)enterValue:(id)sender;
+
+
 
 @end

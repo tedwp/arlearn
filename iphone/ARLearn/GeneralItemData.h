@@ -2,7 +2,7 @@
 //  GeneralItemData.h
 //  ARLearn
 //
-//  Created by Stefaan Ternier on 7/5/13.
+//  Created by Stefaan Ternier on 7/16/13.
 //  Copyright (c) 2013 Stefaan Ternier. All rights reserved.
 //
 
@@ -15,6 +15,9 @@
 
 @property (nonatomic, retain) NSData * data;
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSNumber * replicated;
+@property (nonatomic, retain) NSNumber * error;
+@property (nonatomic, retain) NSString * url;
 @property (nonatomic, retain) GeneralItem *generalItem;
 
 @end

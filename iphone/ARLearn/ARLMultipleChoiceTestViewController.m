@@ -15,12 +15,10 @@
 @implementation ARLMultipleChoiceTestViewController
 
 @synthesize generalItem = _generalItem;
-//@synthesize id = _id;
-//@synthesize moc = _moc;
+@synthesize run = _run;
 @synthesize headerText;
-@synthesize webView, pickerView;
-@synthesize dataArray;
-
+@synthesize answerView = _answerView;
+@synthesize jsonDict = _jsonDict;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,47 +32,116 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
-//    self.moc = [ARLDatabaseGeneralItem item:self.id];
-//    self.headerText.title = [self.moc valueForKey:@"name"];
-    NSDictionary * jsonDict = [NSKeyedUnarchiver unarchiveObjectWithData:self.generalItem.json];
-    dataArray = [[NSMutableArray alloc] init];
-    for (NSDictionary *ans in [jsonDict objectForKey:@"answers"]) {
-             [dataArray addObject:[ans objectForKey:@"answer"]];
-        }
-       
-    [self.webView loadHTMLString:self.generalItem.richText baseURL:nil];
+    self.headerText.title = self.generalItem.name;
+
+    self.jsonDict = [NSKeyedUnarchiver unarchiveObjectWithData:self.generalItem.json];
     
-    [pickerView setDataSource: self];
-    [pickerView setDelegate: self];
+    [self createSubmitButton];
+    [self createWebView];
+    [self createAnswerView];
+    [self setConstraints];
+
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void) createWebView {
+    self.webView = [[UIWebView alloc] init];
+    self.webView.translatesAutoresizingMaskIntoConstraints = NO;
+
+    [self.webView loadHTMLString:self.generalItem.richText baseURL:nil];
+    [self.view addSubview:self.webView];
+}
+
+- (void) createAnswerView {
+    self.answerView = [[ARLMultipleChoiceAnswerView alloc] initWith:self.jsonDict];
+    self.webView.translatesAutoresizingMaskIntoConstraints = NO;
+
+    [self.view addSubview:self.answerView];
+}
+
+- (void) createSubmitButton {
+    self.submitButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.submitButton setTitle:@"Submit" forState:UIControlStateNormal];
+
+    self.submitButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.submitButton addTarget:self action:@selector(submitQuestion) forControlEvents:UIControlEventTouchUpInside];
+
+    [self.view addSubview:self.submitButton];
+}
+
+- (void) setConstraints {
+    
+
+//        UIWebView* webView = self.webView;
+    NSDictionary *viewsDictionary =
+    [[NSDictionary alloc] initWithObjectsAndKeys:
+     self.submitButton, @"submitButton",
+     self.answerView, @"answerView",
+     self.webView, @"webView",
+      nil];
+
+    NSString* vConstraints = [NSString stringWithFormat:@"V:|-[webView]-[answerView(==%d)]-[submitButton]-|", [self.answerView height]];
+    NSLog(@"new constraint %@", vConstraints);
+    
+    [self.view addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:vConstraints
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:viewsDictionary]];
+
+
+    [self.view addConstraints:[NSLayoutConstraint
+                                   constraintsWithVisualFormat:@"H:|[webView]|"
+                                   options:NSLayoutFormatDirectionLeadingToTrailing
+                                   metrics:nil
+                                   views:viewsDictionary]];
+    
+    [self.view addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"H:|[answerView]|"
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"H:|-[submitButton]-|"
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:viewsDictionary]];
+}
+
+
+
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
-
-// Number of components.
--(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
-    return 1;
+- (void) submitQuestion {
+    
+    for (NSString * answerId in [self.answerView selectedIds]) {
+        
+        
+        for (NSDictionary * answerDict in [self.jsonDict objectForKey:@"answers"]) {
+            if ([answerId isEqualToString:[answerDict objectForKey:@"id"] ]) {
+                NSDictionary *myDictionary= [[NSDictionary alloc] initWithObjectsAndKeys:
+                                             [answerDict objectForKey:@"answer"], @"answer",
+                                             [answerDict objectForKey:@"id"], @"id",
+                                             [NSNumber numberWithBool:[(NSNumber*)[answerDict objectForKey:@"isCorrect"] boolValue]], @"isCorrect", nil];
+                NSError *error;
+                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:myDictionary
+                                                                   options:0
+                                                                     error:&error];
+                
+                if (!jsonData) {
+                    NSLog(@"JSON error: %@", error);
+                } else {
+                    
+                    NSString *JSONString = [[NSString alloc] initWithBytes:[jsonData bytes] length:[jsonData length] encoding:NSUTF8StringEncoding];
+                    NSLog(@"JSON ouput: %@", JSONString);
+                    
+                    [Response initResponse:self.run forGeneralItem:self.generalItem withValue:JSONString inManagedObjectContext: self.generalItem.managedObjectContext];
+                    
+                }
+            }
+        }
+    }
+    
 }
-
-// Total rows in our component.
--(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
-    return [dataArray count];
-}
-
-// Display each row's data.
--(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
-    return [dataArray objectAtIndex: row];
-}
-
-// Do something with the selected row.
--(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
-    NSLog(@"You selected this: %@", [dataArray objectAtIndex: row]);
-}
-
-
 @end

@@ -15,9 +15,10 @@
 @implementation ARLAudioViewController
 
 @synthesize generalItem = _generalItem;
+@synthesize run = _run;
 @synthesize player;
 @synthesize headerText;
-@synthesize imagePickerController;
+@synthesize dataCollectionWidget;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -32,66 +33,97 @@
 {
     [super viewDidLoad];
     self.headerText.title = self.generalItem.name;
+    self.webView = [[UIWebView alloc] init];
     [self.webView loadHTMLString:self.generalItem.richText baseURL:nil];
     NSDictionary * jsonDict = [NSKeyedUnarchiver unarchiveObjectWithData:self.generalItem.json];
     
-    NSLog(@"url %@", [jsonDict objectForKey:@"audioFeed"]);
-    NSData *fileUrl=[[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:[jsonDict objectForKey:@"audioFeed"]]];
+    NSData *mediaData;
     NSSet *dataSet = self.generalItem.data;
     for(GeneralItemData * data in dataSet) {
-        NSLog(@"nsdata %@", data.name);
-        fileUrl = data.data;
+        mediaData = data.data;
     }
-	NSError *error;
-
-    self.player =     [[AVAudioPlayer alloc] initWithData:fileUrl error:&error];
-
-    if (error) {
-        NSLog(@"error: %@", [error description]);
+    self.player =[[ARLAudioObjectPlayer alloc] init:mediaData];
+    
+    self.dataCollectionWidget = [[ARLDataCollectionWidget alloc] init:[jsonDict objectForKey:@"openQuestion"] viewController:self];
+    if (self.dataCollectionWidget.isVisible) {
+        self.dataCollectionWidget.run = self.run;
+        self.dataCollectionWidget.generalItem = self.generalItem;
     }
+    
+    [self setConstraints];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (IBAction)playAction:(id)sender {
-	self.player.numberOfLoops = 1;
-	
-	if (self.player == nil)
-		NSLog(@"error");
-	else
-		[self.player play];
-}
-
-- (IBAction)enterValue:(id)sender {
-    if (!imagePickerController) {
-        imagePickerController = [[UIImagePickerController alloc] init];
-        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-            [imagePickerController setSourceType:UIImagePickerControllerSourceTypeCamera];
-        }else
-        {
-            [imagePickerController setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-        }
+- (void) setConstraints {
+    ARLAudioObjectPlayButtons* playButtons = [[ARLAudioObjectPlayButtons alloc] init];
+    playButtons.player = self.player;
+    self.player.buttons = playButtons;
+    
+    UIWebView* webView = self.webView;
+    webView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    ARLDataCollectionWidget* widget = self.dataCollectionWidget;
+    [self.mainView addSubview:webView];
+    [self.mainView addSubview:playButtons];
+    [self.mainView addSubview:self.dataCollectionWidget];
+    
+    NSDictionary *viewsDictionary;
+    if (widget) {
+        viewsDictionary =
+        [[NSDictionary alloc] initWithObjectsAndKeys:
+         webView, @"webView",
+         playButtons, @"playButtons",
+         widget, @"widget", nil];
+    } else {
+        viewsDictionary =
+        [[NSDictionary alloc] initWithObjectsAndKeys:
+         playButtons, @"playButtons", nil];
+    }
+    
+    NSString* verticalContstraint;
+    if (widget.isVisible) {
+        NSLog(@"widget vis");
+        verticalContstraint = @"V:|-(>=100)-[playButtons(==70)][widget(==80)]|";
+        //        verticalContstraint = @"V:|[webView(>=100)]-[playButtons(==70)][widget(==80)]|";
         
-        // image picker needs a delegate so we can respond to its messages
-        [imagePickerController setDelegate:self];
+    } else {
+        NSLog(@"widget nt vis");
+        verticalContstraint = @"V:|-(>=100)-[playButtons(==70)]|";
     }
-    // Place image picker on the screen
-    [self presentModalViewController:imagePickerController animated:YES];
+    
+    [self.mainView addConstraints:[NSLayoutConstraint
+                                   constraintsWithVisualFormat:verticalContstraint
+                                   options:NSLayoutFormatDirectionLeadingToTrailing
+                                   metrics:nil
+                                   views:viewsDictionary]];
+    [self.mainView addConstraints:[NSLayoutConstraint
+                                   constraintsWithVisualFormat:@"V:|[webView(>=100)]|"
+                                   options:NSLayoutFormatDirectionLeadingToTrailing
+                                   metrics:nil
+                                   views:viewsDictionary]];
+    
+    [self.mainView addConstraints:[NSLayoutConstraint
+                                   constraintsWithVisualFormat:@"H:|[playButtons]|"
+                                   options:NSLayoutFormatDirectionLeadingToTrailing
+                                   metrics:nil
+                                   views:NSDictionaryOfVariableBindings(playButtons)]];
+    [self.mainView addConstraints:[NSLayoutConstraint
+                                   constraintsWithVisualFormat:@"H:|[webView]|"
+                                   options:NSLayoutFormatDirectionLeadingToTrailing
+                                   metrics:nil
+                                   views:NSDictionaryOfVariableBindings(webView)]];
+    
+    if (widget.isVisible) {
+        [self.mainView addConstraints:[NSLayoutConstraint
+                                       constraintsWithVisualFormat:@"H:|[widget]|"
+                                       options:NSLayoutFormatDirectionLeadingToTrailing
+                                       metrics:nil
+                                       views:NSDictionaryOfVariableBindings(widget)]];
+    }
+    
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
-    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-    
-//    image = [ImageHelpers imageWithImage:image scaledToSize:CGSizeMake(480, 640)];
-    
-   // [imageView setImage:image];
-    
-    [self dismissModalViewControllerAnimated:YES];
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
 }
 
 @end

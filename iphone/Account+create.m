@@ -29,12 +29,6 @@
     if ( urlData ){
         account.picture = urlData;
     }
-
-    NSError * error;
-    
-    if (![context save:&error]) {
-        NSLog(@"error %@", error);
-    }
     return account;
 }
 

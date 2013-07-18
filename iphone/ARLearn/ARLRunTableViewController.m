@@ -14,9 +14,6 @@
 
 @implementation ARLRunTableViewController
 
-//@synthesize arlearnDatabase = _arlearnDatabase;
-
-
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -26,31 +23,16 @@
     return self;
 }
 
--(void) useDocument {
-    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[appDelegate.arlearnDatabase.fileURL path]]) {
-        [appDelegate.arlearnDatabase saveToURL:appDelegate.arlearnDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL succes) {
-            [self fetchARLearnGamesAndRuns: appDelegate.arlearnDatabase];
-            [self setupFetchedResultsController];
-        }];
-    } else if (appDelegate.arlearnDatabase.documentState == UIDocumentStateClosed) {
-        [appDelegate.arlearnDatabase openWithCompletionHandler:^(BOOL succes) {
-            [self fetchARLearnGamesAndRuns: appDelegate.arlearnDatabase];
-            [self setupFetchedResultsController];
-        }];
-    } else if (appDelegate.arlearnDatabase.documentState == UIDocumentStateNormal) {
-        [self fetchARLearnGamesAndRuns: appDelegate.arlearnDatabase];
-        [self setupFetchedResultsController];
-    }
-}
-
-- (void) fetchARLearnGamesAndRuns: (UIManagedDocument *)document {
+- (void) fetchARLearnGamesAndRuns: (NSManagedObjectContext *)managedObjectContext {
     
     NSString *authToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"auth"];
     if (authToken) {
-        [ARLCloudSynchronizer syncronizeRuns:document.managedObjectContext];
-        [ARLCloudSynchronizer syncronizeGames:document.managedObjectContext];
+        ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
+        [synchronizer createContext:managedObjectContext];
+
+        synchronizer.syncRuns = YES;
+        synchronizer.syncGames = YES;
+        [synchronizer sync];
     }
 }
 
@@ -62,37 +44,27 @@
     request.predicate = [NSPredicate predicateWithFormat: @"deleted = %d", NO];
     
     request.sortDescriptors =[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-    if (appDelegate.arlearnDatabase.documentState == UIDocumentStateNormal) {
-        
+//    if (appDelegate.arlearnDatabase.documentState == UIDocumentStateNormal) {
+    
         self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
-                                                                            managedObjectContext:appDelegate.arlearnDatabase.managedObjectContext
+                                                                            managedObjectContext:appDelegate.managedObjectContext
                                                                               sectionNameKeyPath:nil cacheName:nil];
-    }
+//    }
 }
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-    [self useDocument];
-    NSLog(@"run view appears viewDidLoad");
+//    [self useDocument];
+     ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    [self fetchARLearnGamesAndRuns: appDelegate.managedObjectContext];
+    [self setupFetchedResultsController];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+//    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
-    if (appDelegate.arlearnDatabase.documentState == UIDocumentStateNormal) {
-        [self fetchARLearnGamesAndRuns: appDelegate.arlearnDatabase];
-    } else {
-        NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
-    }
-    //    [self setupFetchedResultsController];
 }
-
-//- (void) viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
-//    NSLog(@"run view appears viewWillAppear");
-//}
-
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -129,11 +101,19 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"runDetailSegue"]) {
         Run * selectedRun = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
-//        [ARLCloudSynchronizer synchronizeGeneralItemsWithGame:selectedRun.game ];
-//        [ARLCloudSynchronizer synchronizeGeneralItemVisiblityStatementsWithRun:selectedRun ];
-        [ARLCloudSynchronizer synchronizeGeneralItemsAndVisibilityStatments:selectedRun];
-            ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-         NSLog(@"Database state is not normal %d", appDelegate.arlearnDatabase.documentState);
+        ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
+             ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        [synchronizer createContext:appDelegate.managedObjectContext];
+        synchronizer.gameId = selectedRun.gameId;
+        synchronizer.visibilityRunId = selectedRun.runId;
+        [synchronizer sync];
+        
+//        ARLFileCloudSynchronizer* fileSync = [[ARLFileCloudSynchronizer alloc] init];
+//        [fileSync createContext:appDelegate.managedObjectContext];
+//        [fileSync sync];
+        
+//        [[ARLFileCloudSynchronizer sharedInstance] sync];
+       
         for (UIViewController *v in [segue.destinationViewController viewControllers]) {
             if ([v respondsToSelector:@selector(setRun:)]) {
                 [v performSelector:@selector(setRun:) withObject:selectedRun];

@@ -67,14 +67,14 @@
     
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)sender {
-    NSLog(@"did scroll");
-
-    // Update the page when more than 50% of the previous/next page is visible
-    CGFloat pageWidth = self.scrollView.frame.size.width;
-    int page = floor((self.scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-//    self.pageControl.currentPage = page;
-}
+//- (void)scrollViewDidScroll:(UIScrollView *)sender {
+//    NSLog(@"did scroll");
+//
+//    // Update the page when more than 50% of the previous/next page is visible
+//    CGFloat pageWidth = self.scrollView.frame.size.width;
+//    int page = floor((self.scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+////    self.pageControl.currentPage = page;
+//}
 
 - (void)didReceiveMemoryWarning
 {
