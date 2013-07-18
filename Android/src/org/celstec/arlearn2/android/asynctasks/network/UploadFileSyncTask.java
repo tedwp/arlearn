@@ -93,6 +93,7 @@ public class UploadFileSyncTask extends GenericTask implements NetworkTask {
 		@Override
 		public void execute() {
 			String uploadUrl = requestExternalUrl();
+//            uploadUrl = uploadUrl.replace("streetlearn.appspot.com", "192.168.1.8:9999");
 			if (uploadUrl == null) {
 				endWithError = true;
 				return;
