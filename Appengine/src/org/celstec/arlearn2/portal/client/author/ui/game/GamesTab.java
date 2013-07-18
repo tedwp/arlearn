@@ -3,7 +3,7 @@ package org.celstec.arlearn2.portal.client.author.ui.game;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.celstec.arlearn2.gwt.client.control.Authentication;
+//import org.celstec.arlearn2.gwt.client.control.Authentication;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthClient;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
