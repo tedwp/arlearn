@@ -46,7 +46,7 @@ public class NetworkToolbar extends ToolBar {
 						"Create Definiton",
 						"variables/definition",
 						"{  \"type\": \"org.celstec.arlearn2.beans.game.VariableDefinition\",  " +
-                                "\"name\": \"score\",  \"maxValue\": 100, \"minValue\": 0, \"scope\": 0 }"),
+                                "\"name\": \"score\",  \"maxValue\": 100, \"minValue\": 0, \"scope\": 0, \"gameId\": 0 }"),
                 createMenuItemPOST(
                         "Create Effect Definiton",
                         "variables/effectDefinition",
@@ -54,7 +54,14 @@ public class NetworkToolbar extends ToolBar {
                                 "\"name\": \"score\",  \"effectType\": \"add\", \"effectValue\": 10, \"gameId\": 0, " +
                                 "\"dependsOn\":   {  \"type\": \"org.celstec.arlearn2.beans.dependencies.ActionDependency\",    \"action\": \"answer_given\"," +
                                 "        \"generalItemId\": 0" +
-                                "      }}")
+                                "      }}"),
+                separator,
+                createMenuItemPOST(
+                        "Create Variable Instance",
+                        "variables/instance",
+                        "{  \"type\": \"org.celstec.arlearn2.beans.run.VariableInstance\",  " +
+                                "\"runId\": 0,  \"account\": \"2:123\", \"teamId\": \"a1b2c3\", \"value\": 0,\"gameId\": 0,\"name\": \"score\","  +
+                                "}")
 				
 		);
 		

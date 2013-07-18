@@ -1,14 +1,11 @@
 package org.celstec.arlearn2.api;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.game.VariableDefinition;
 import org.celstec.arlearn2.beans.game.VariableEffectDefinition;
+import org.celstec.arlearn2.beans.run.VariableInstance;
 import org.celstec.arlearn2.delegators.VariableDelegator;
 
 import com.google.gdata.util.AuthenticationException;
@@ -52,5 +49,39 @@ public class Variables extends Service {
 
         VariableDelegator rd = new VariableDelegator(this);
         return serialise(rd.createVariableEffectDefinition(variableDef), accept);
+    }
+
+    @POST
+    @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/instance")
+    public String createVariableInstance(@HeaderParam("Authorization") String token,
+                                         String messageString,
+                                         @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+                                         @HeaderParam("Accept") String accept) throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+
+        Object varInst = deserialise(messageString, VariableInstance.class, contentType);
+        if (varInst instanceof java.lang.String)
+            return serialise(getBeanDoesNotParseException((String) varInst), accept);
+        VariableInstance variableInstance = (VariableInstance) varInst;
+
+        VariableDelegator rd = new VariableDelegator(this);
+        return serialise(rd.createVariableInstance(variableInstance), accept);
+    }
+
+    @GET
+    @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/instance/gameId/{gameId}/runId/{runId}/name/{name}")
+    public String getVariable(@HeaderParam("Authorization") String token,
+                              @PathParam("gameId") Long gameId,
+                              @PathParam("runId") Long runId,
+                              @PathParam("name") String name,
+                              @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+                              @HeaderParam("Accept") String accept) throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+        VariableDelegator rd = new VariableDelegator(this);
+        return serialise(rd.getVariableInstance(gameId, runId, name), accept);
     }
 }
