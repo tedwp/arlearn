@@ -21,6 +21,7 @@ package org.celstec.arlearn2.delegators;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import org.celstec.arlearn2.api.Service;
 import org.celstec.arlearn2.beans.notification.TeamModification;
 import org.celstec.arlearn2.beans.run.Team;
 import org.celstec.arlearn2.beans.run.TeamList;
@@ -32,6 +33,8 @@ import org.celstec.arlearn2.cache.UsersCache;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 
 import com.google.gdata.util.AuthenticationException;
+import org.celstec.arlearn2.tasks.beans.UpdateVariableEffectInstancesForTeam;
+import org.celstec.arlearn2.tasks.beans.UpdateVariableEffectInstancesForUser;
 
 public class TeamsDelegator extends GoogleDelegator {
 
@@ -44,6 +47,10 @@ public class TeamsDelegator extends GoogleDelegator {
 	public TeamsDelegator(GoogleDelegator gd) {
 		super(gd);
 	}
+
+    public TeamsDelegator(Service service) {
+        super(service);
+    }
 
 	public Team createTeam(Team team) {
 		RunDelegator rd = new RunDelegator(this);
@@ -69,8 +76,11 @@ public class TeamsDelegator extends GoogleDelegator {
 		UsersDelegator ud = new UsersDelegator(this);
 		
 		ChannelNotificator.getInstance().notify(ud.getCurrentUserAccount(), tm);
-		
-		return TeamManager.addTeam(runId, teamId, name);
+
+        (new UpdateVariableEffectInstancesForTeam(authToken, this.account, teamId, runId, null, 1)).scheduleTask();
+
+
+        return TeamManager.addTeam(runId, teamId, name);
 	}
 
 	
@@ -118,7 +128,8 @@ public class TeamsDelegator extends GoogleDelegator {
 		UsersDelegator ud = new UsersDelegator(this);
 		
 		ChannelNotificator.getInstance().notify(ud.getCurrentUserAccount(), tm);
-		
+
+        (new UpdateVariableEffectInstancesForTeam(authToken, this.account, teamId, t.getRunId(), null, 2)).scheduleTask();
 		//TODO test if deleting users works...
 		return t;
 	}

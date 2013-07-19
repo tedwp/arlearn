@@ -23,7 +23,7 @@
         
       <LinearLayout 
    		android:id="@+id/scoreLinearLayout"
-			android:src="@drawable/list_icon_with_text"
+
 			android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dip"

@@ -30,7 +30,6 @@ import javax.jdo.Query;
 import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.account.AccountList;
 import org.celstec.arlearn2.jdo.PMF;
-import org.celstec.arlearn2.jdo.classes.AccountJDO;
 import org.celstec.arlearn2.jdo.classes.ContactJDO;
 import org.datanucleus.store.appengine.query.JDOCursorHelper;
 

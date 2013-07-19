@@ -1,10 +1,16 @@
 package org.celstec.arlearn2.jdo.manager;
 
 import org.celstec.arlearn2.beans.game.VariableDefinition;
+import org.celstec.arlearn2.beans.game.VariableEffectDefinition;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.VariableDefinitionJDO;
+import org.celstec.arlearn2.jdo.classes.VariableEffectDefinitionJDO;
 
 import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * ****************************************************************************
@@ -29,7 +35,10 @@ import javax.jdo.PersistenceManager;
 
 public class VariableDefinitionManager {
 
-	
+    private static final String params[] = new String[] { "gameId", "name", "scope" };
+    private static final String paramsNames[] = new String[] { "gameIdParam", "nameParam", "scopeName"};
+    private static final String types[] = new String[] { "Long", "String", "Integer"};
+
 	public static VariableDefinition createVariableDefinition(VariableDefinition variableDefinition) {
         PersistenceManager pm = PMF.get().getPersistenceManager();
         if (variableDefinition.getScope() == null) variableDefinition.setScope(0);
@@ -59,5 +68,30 @@ public class VariableDefinitionManager {
         bean.setScope(jdo.getScope());
         bean.setGameId(jdo.getGameId());
         return bean;
+    }
+    public static List<VariableDefinition> getVariableDefinitions(Long gameId,  String name, Integer scope) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        try {
+            ArrayList<VariableDefinition> returnScoreDefinitions = new ArrayList<VariableDefinition>();
+            Iterator<VariableDefinitionJDO> it = getVariableDefinitions(pm, gameId, name, scope).iterator();
+            while (it.hasNext()) {
+                returnScoreDefinitions.add(toBean(it.next()));
+            }
+            return returnScoreDefinitions;
+        } finally {
+            pm.close();
+        }
+    }
+
+    public static List<VariableDefinitionJDO> getVariableDefinitions(PersistenceManager pm, Long gameId, String name, Integer scope) {
+        Query query = pm.newQuery(VariableDefinitionJDO.class);
+        Object args[] = { gameId, name, scope };
+        if (ManagerUtil.generateFilter(args, params, paramsNames).trim().equals("")) {
+//                query.setFilter("deleted == null");
+            return (List<VariableDefinitionJDO>) query.execute();
+        }
+        query.setFilter(ManagerUtil.generateFilter(args, params, paramsNames));
+        query.declareParameters(ManagerUtil.generateDeclareParameters(args, types, params, paramsNames));
+        return ((List<VariableDefinitionJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args)));
     }
 }

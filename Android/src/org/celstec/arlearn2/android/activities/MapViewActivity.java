@@ -22,10 +22,7 @@ import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.android.delegators.ActionsDelegator;
-import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
-import org.celstec.arlearn2.android.delegators.ResponseDelegator;
-import org.celstec.arlearn2.android.delegators.RunDelegator;
+import org.celstec.arlearn2.android.delegators.*;
 import org.celstec.arlearn2.android.maps.GenericItemsOverlay;
 import org.celstec.arlearn2.android.maps.ResponsesOverlay;
 import org.celstec.arlearn2.android.maps.UsersOverlay;
@@ -50,6 +47,7 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import org.celstec.arlearn2.android.variable.VariableDisplayHandler;
 
 public class MapViewActivity extends MapActivity implements ARLearnBroadcastReceiver {
 
@@ -66,6 +64,7 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 
 	// private Handler mHandler = new Handler();
 	private ScoreHandler scoreHandler = new ScoreHandler(this);
+    private VariableDisplayHandler variableDisplayHandler = new VariableDisplayHandler(this);
 	protected MenuHandler menuHandler;
 
 	private GenericBroadcastReceiver broadcastReceiver;
@@ -193,10 +192,16 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 
 			if (broadcastReceiver != null)
 				broadcastReceiver.onResume();
-
-			if (menuHandler.getPropertiesAdapter().isScoringEnabled() && menuHandler.getPropertiesAdapter().getTotalScore() != null && menuHandler.getPropertiesAdapter().getTotalScore() != Long.MIN_VALUE) {
-				scoreHandler.setScore((int) menuHandler.getPropertiesAdapter().getTotalScore().longValue());
-			}
+            variableDisplayHandler.setGameId(gameId);
+            variableDisplayHandler.setRunId(getRunId());
+            variableDisplayHandler.sync();
+//            VariableDelegator.getInstance().syncVariable(this, getRunId(), gameId, "score");
+//			if (VariableDelegator.getInstance().varExists(getRunId(), "score")) {
+////                if (menuHandler.getPropertiesAdapter().isScoringEnabled() && menuHandler.getPropertiesAdapter().getTotalScore() != null && menuHandler.getPropertiesAdapter().getTotalScore() != Long.MIN_VALUE) {
+////				scoreHandler.setScore((int) menuHandler.getPropertiesAdapter().getTotalScore().longValue());
+//                scoreHandler.setScore(VariableDelegator.getInstance().getVariable(getRunId(), "score"));
+//			}
+//            variableDisplayHandler.sync();
 			makeGeneralItemVisible();
 		}
 

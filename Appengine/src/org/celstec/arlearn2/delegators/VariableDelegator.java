@@ -7,6 +7,11 @@ import org.celstec.arlearn2.beans.run.VariableInstance;
 import org.celstec.arlearn2.jdo.manager.VariableDefinitionManager;
 import org.celstec.arlearn2.jdo.manager.VariableEffectDefinitionManager;
 import org.celstec.arlearn2.jdo.manager.VariableInstanceManager;
+import org.celstec.arlearn2.tasks.beans.GenericBean;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 public class VariableDelegator extends GoogleDelegator {
 
@@ -14,8 +19,17 @@ public class VariableDelegator extends GoogleDelegator {
 		super(service);
 	}
 
-	public VariableDefinition createVariableDefinition(VariableDefinition variableDefinition) {
-        return VariableDefinitionManager.createVariableDefinition(variableDefinition);
+    public VariableDelegator(GenericBean bean) {
+        super(bean);
+    }
+
+    public VariableDefinition createVariableDefinition(VariableDefinition variableDefinition) {
+        if (variableDefinition.getGameId() == null) {
+            variableDefinition.setError("gameId missing");
+            return variableDefinition;
+        } else {
+            return VariableDefinitionManager.createVariableDefinition(variableDefinition);
+        }
 	}
 
     public VariableEffectDefinition createVariableEffectDefinition(VariableEffectDefinition variableDef) {
@@ -44,4 +58,41 @@ public class VariableDelegator extends GoogleDelegator {
         }
         return returnValue;
     }
+
+    public List<VariableEffectDefinition> getVariableEffectDefinitions(Long gameId){
+        return VariableEffectDefinitionManager.getVariableEffectDefinitions(gameId, null);
+    }
+
+    public HashMap<String, VariableDefinition> getVariableDefinitions(Long gameId, int scope) {
+        List<VariableDefinition> variableDefinitionList = VariableDefinitionManager.getVariableDefinitions(gameId, null, scope);
+        HashMap<String, VariableDefinition> stringVariableDefinitionMap = new HashMap<String, VariableDefinition>();
+        for (VariableDefinition variableDefinition : variableDefinitionList) {
+            stringVariableDefinitionMap.put(variableDefinition.getName(), variableDefinition);
+        }
+        return stringVariableDefinitionMap;
+    }
+
+    public List<VariableEffectDefinition> getVariableEffectDefinitions(Long gameId, int scope){
+        HashMap<String, VariableDefinition> stringVariableDefinitionMap = getVariableDefinitions(gameId, scope);
+        List<VariableEffectDefinition> variableEffectDefinitionList = getVariableEffectDefinitions(gameId);
+        Iterator<VariableEffectDefinition> iter = variableEffectDefinitionList.iterator();
+        while (iter.hasNext()) {
+            if (!stringVariableDefinitionMap.containsKey(iter.next().getName())) {
+                iter.remove();
+            }
+        }
+        return variableEffectDefinitionList;
+    }
+
+//    public List<VariableEffectDefinition> getVariableEffectDefinitionsForTeam(Long gameId){
+//        HashMap<String, VariableDefinition> stringVariableDefinitionMap = getVariableDefinitions(gameId, 1);
+//        List<VariableEffectDefinition> variableEffectDefinitionList = getVariableEffectDefinitions(gameId);
+//        Iterator<VariableEffectDefinition> iter = variableEffectDefinitionList.iterator();
+//        while (iter.hasNext()) {
+//            if (!stringVariableDefinitionMap.containsKey(iter.next().getName())) {
+//                iter.remove();
+//            }
+//        }
+//        return variableEffectDefinitionList;
+//    }
 }

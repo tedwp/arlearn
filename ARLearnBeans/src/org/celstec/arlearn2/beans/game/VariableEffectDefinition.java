@@ -35,6 +35,7 @@ public class VariableEffectDefinition extends Bean{
     private String name;
     private String effectType;
     private Long effectValue;
+    private Integer effectCount;
     private Dependency dependsOn;
 
     public Long getId() {
@@ -77,6 +78,14 @@ public class VariableEffectDefinition extends Bean{
         this.effectValue = effectValue;
     }
 
+    public Integer getEffectCount() {
+        return effectCount;
+    }
+
+    public void setEffectCount(Integer effectCount) {
+        this.effectCount = effectCount;
+    }
+
     public Dependency getDependsOn() {
         return dependsOn;
     }
@@ -105,6 +114,7 @@ public class VariableEffectDefinition extends Bean{
             if (object.has("effectType")) bean.setEffectType(object.getString("effectType"));
             if (object.has("gameId")) bean.setGameId(object.getLong("gameId"));
             if (object.has("effectValue")) bean.setEffectValue(object.getLong("effectValue"));
+            if (object.has("effectCount")) bean.setEffectCount(object.getInt("effectCount"));
             if (object.has("dependsOn")) bean.setDependsOn((Dependency) JsonBeanDeserializer.deserialize(Dependency.class, object.getJSONObject("dependsOn")));
 
 
@@ -123,6 +133,7 @@ public class VariableEffectDefinition extends Bean{
                 if (variableEffectDefinition.getEffectType() != null) returnObject.put("effectType", variableEffectDefinition.getEffectType());
                 if (variableEffectDefinition.getGameId() != null) returnObject.put("gameId", variableEffectDefinition.getGameId());
                 if (variableEffectDefinition.getEffectValue() != null) returnObject.put("effectValue", variableEffectDefinition.getEffectValue());
+                if (variableEffectDefinition.getEffectCount() != null) returnObject.put("effectCount", variableEffectDefinition.getEffectCount());
                 if (variableEffectDefinition.getDependsOn() != null) returnObject.put("dependsOn", JsonBeanSerialiser.serialiseToJson(variableEffectDefinition.getDependsOn()));
 
             } catch (JSONException e) {

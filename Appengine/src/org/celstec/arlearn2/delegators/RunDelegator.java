@@ -36,11 +36,7 @@ import org.celstec.arlearn2.jdo.classes.RunAccessJDO;
 import org.celstec.arlearn2.jdo.manager.RunAccessManager;
 import org.celstec.arlearn2.jdo.manager.RunManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
-import org.celstec.arlearn2.tasks.beans.DeleteActions;
-import org.celstec.arlearn2.tasks.beans.DeleteBlobs;
-import org.celstec.arlearn2.tasks.beans.DeleteResponses;
-import org.celstec.arlearn2.tasks.beans.DeleteTeams;
-import org.celstec.arlearn2.tasks.beans.UpdateGeneralItemsVisibility;
+import org.celstec.arlearn2.tasks.beans.*;
 import org.celstec.arlearn2.util.RunsCache;
 //import org.celstec.arlearn2.tasks.beans.DeleteInventoryRecords;
 //import org.celstec.arlearn2.tasks.beans.DeleteProgressRecord;
@@ -53,6 +49,10 @@ public class RunDelegator extends GoogleDelegator {
 	public RunDelegator(String authtoken) throws AuthenticationException {
 		super(authtoken);
 	}
+
+    public RunDelegator(GenericBean bean) {
+        super(bean);
+    }
 
 	public RunDelegator(Service service) {
 		super(service);
@@ -175,12 +175,12 @@ public class RunDelegator extends GoogleDelegator {
 			return run;
 		}
 
-		if (account != null) {
+//		if (account != null) {
 			return createRunWithAccount(run);
-		} else {
-			run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), run));		
-			return run;
-		}
+//		} else {
+//			run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), run));
+//			return run;
+//		}
 	}
 	
 	private Run createRunWithAccount(Run run) {
@@ -191,7 +191,10 @@ public class RunDelegator extends GoogleDelegator {
 		if (this.account != null) {
 			new NotificationDelegator().broadcast(run, account.getFullId());
 		}
-		return run;
+
+        (new UpdateVariableEffectInstancesForAll(authToken, this.account, run.getRunId(), run.getGameId(), 1)).scheduleTask();
+
+        return run;
 	}
 
 	public Run updateRun(Run run, long runId) {
@@ -244,16 +247,15 @@ public class RunDelegator extends GoogleDelegator {
 		RunsCache.getInstance().removeRun(r.getRunId());
 		(new UpdateGeneralItemsVisibility(authToken, this.account, r.getRunId(), null, 2)).scheduleTask();
 
+        (new UpdateVariableEffectInstancesForAll(authToken, this.account, r.getRunId(), r.getGameId(), 2)).scheduleTask();
+
+
 //		(new DeleteVisibleItems(authToken, r.getRunId())).scheduleTask();
 		(new DeleteActions(authToken, this.account, r.getRunId())).scheduleTask();
 		(new DeleteTeams(authToken, this.account,r.getRunId(), null)).scheduleTask();
 		(new DeleteBlobs(authToken, this.account,r.getRunId())).scheduleTask();
 		(new DeleteResponses(authToken, this.account,r.getRunId())).scheduleTask();
-//		(new DeleteScoreRecords(authToken, this.account,r.getRunId())).scheduleTask();
-		//TODO  switch on DeleteInventoryRecords
-//		(new DeleteInventoryRecords(authToken, r.getRunId())).scheduleTask();
-//		(new DeleteProgressRecord(authToken, r.getRunId())).scheduleTask();
-//		(new DeleteUsers(authToken, r.getRunId(), null,null)).scheduleTask(); // happens from within delete team
+
 		if (this.account != null) {
 			gad.broadcastRunUpdate(r);
 			

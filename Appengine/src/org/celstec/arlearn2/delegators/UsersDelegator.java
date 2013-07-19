@@ -37,10 +37,7 @@ import org.celstec.arlearn2.delegators.notification.NotificationEngine;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.manager.AccountManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
-import org.celstec.arlearn2.tasks.beans.DeleteActions;
-import org.celstec.arlearn2.tasks.beans.DeleteBlobs;
-import org.celstec.arlearn2.tasks.beans.DeleteResponses;
-import org.celstec.arlearn2.tasks.beans.UpdateGeneralItemsVisibility;
+import org.celstec.arlearn2.tasks.beans.*;
 
 import com.google.gdata.util.AuthenticationException;
 
@@ -85,6 +82,7 @@ public class UsersDelegator extends GoogleDelegator {
 		// ChannelNotificator.getInstance().notify(u.getEmail(), rm);
 
 		(new UpdateGeneralItemsVisibility(authToken, this.account, u.getRunId(), u.getEmail(), 1)).scheduleTask();
+        (new UpdateVariableEffectInstancesForUser(authToken, this.account, u.getEmail(), u.getRunId(), run.getGameId(), 1)).scheduleTask();
 
 		return u;
 	}
@@ -251,6 +249,8 @@ public class UsersDelegator extends GoogleDelegator {
 		(new DeleteBlobs(authToken, this.account, runId, email)).scheduleTask();
 		(new DeleteResponses(authToken,this.account,  runId, email)).scheduleTask();
 		(new UpdateGeneralItemsVisibility(authToken, this.account, runId, email, 2)).scheduleTask();
+        (new UpdateVariableEffectInstancesForUser(authToken, this.account, email, runId, null, 2)).scheduleTask();
+
 //		notifyRunDeleted(runId, email);
 		if (this.account != null) {
 			new NotificationDelegator().broadcast(user, user.getFullId());

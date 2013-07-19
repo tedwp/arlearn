@@ -48,8 +48,8 @@ public class Teams extends Service {
 			throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		TeamsDelegator td = new TeamsDelegator(verifyCredentials(token));
-		return serialise(td.getTeams(runIdentifier), accept);
+        TeamsDelegator td = new TeamsDelegator(this);
+        return serialise(td.getTeams(runIdentifier), accept);
 	}
 
 	@GET
@@ -59,8 +59,8 @@ public class Teams extends Service {
 			throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		TeamsDelegator td = new TeamsDelegator(verifyCredentials(token));
-		return serialise(td.getTeam(teamId), accept);
+        TeamsDelegator td = new TeamsDelegator(this);
+        return serialise(td.getTeam(teamId), accept);
 	}
 
 	@POST
@@ -76,7 +76,8 @@ public class Teams extends Service {
 			return serialise(getBeanDoesNotParseException((String) inTeam), accept);
 		Team team = (Team) inTeam;
 		
-		TeamsDelegator td = new TeamsDelegator(verifyCredentials(token));
+//		TeamsDelegator td = new TeamsDelegator(verifyCredentials(token));
+        TeamsDelegator td = new TeamsDelegator(this);
 		return serialise(td.createTeam(team), accept);
 
 	}
@@ -89,7 +90,7 @@ public class Teams extends Service {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 
-		TeamsDelegator td = new TeamsDelegator(verifyCredentials(token));
+		TeamsDelegator td = new TeamsDelegator(this);
 		String returnStirng =serialise(td.deleteTeam(teamId), accept);
 		return returnStirng;
 

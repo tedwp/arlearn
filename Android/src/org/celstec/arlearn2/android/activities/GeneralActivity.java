@@ -82,7 +82,7 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 	protected void onResume() {
 		super.onResume();
 //		if (pa.isAuthenticated()) ChannelAPINotificationService.startService(this);
-		if  (showStatusLed()) LedStatus.updateStatus(this); //TODO pass pa object
+//		if  (showStatusLed()) LedStatus.updateStatus(this); //TODO pass pa object
 		if (broadcastReceiver != null)
 			broadcastReceiver.onResume();
 		if (nfcReceiver != null)
@@ -155,7 +155,7 @@ public abstract class GeneralActivity extends Activity implements IGeneralActivi
 	}
 
 	public void onBroadcastMessage(Bundle bundle, boolean render) {
-		if (showStatusLed()) LedStatus.updateStatus(this);
+//		if (showStatusLed()) LedStatus.updateStatus(this);
 	}
 	
 	public boolean onOptionsItemSelected(MenuItem item) {

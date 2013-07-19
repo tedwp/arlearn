@@ -29,6 +29,7 @@ import org.celstec.arlearn2.jdo.manager.AccountManager;
 import org.celstec.arlearn2.jdo.manager.ApplicationKeyManager;
 
 import com.google.gdata.util.AuthenticationException;
+import org.celstec.arlearn2.tasks.beans.GenericBean;
 
 public class GoogleDelegator {
 	protected static final Logger logger = Logger.getLogger(GoogleDelegator.class.getName());
@@ -85,6 +86,11 @@ public class GoogleDelegator {
 
 	public GoogleDelegator() {
 	}
+
+    public GoogleDelegator(GenericBean bean) {
+        this.authToken = bean.getToken();
+        this.account = bean.getAccountBean();
+    }
 
 	public GoogleDelegator(Service service) {
 		this.authToken = service.getToken();

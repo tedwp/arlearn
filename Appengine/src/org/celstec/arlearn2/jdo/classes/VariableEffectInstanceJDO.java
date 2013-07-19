@@ -1,13 +1,9 @@
 package org.celstec.arlearn2.jdo.classes;
 
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.Text;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
 
 /**
  * ****************************************************************************
@@ -30,70 +26,54 @@ import javax.jdo.annotations.PrimaryKey;
  * ****************************************************************************
  */
 @PersistenceCapable
-public class VariableEffectDefinitionJDO {
-
-    @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    protected Key id;
+public class VariableEffectInstanceJDO extends RunClass{
 
     @Persistent
-    private Long gameId;
+    private Long variableEffectDefinitionIdentifier;
 
     @Persistent
-    private String name;
+    private String account;
 
     @Persistent
-    private String effectType;
-
-    @Persistent
-    private Long effectValue;
+    private String teamId;
 
     @Persistent
     private Integer effectCount;
 
-
-    @Persistent
-    private Text dependsOn;
-
-    public void setIdentifier(Long id) {
-        if (id != null)
-            this.id = KeyFactory.createKey(VariableEffectDefinitionJDO.class.getSimpleName(), id);
+    public void setUniqueIdAccount() {
+        this.id = KeyFactory.createKey(VariableEffectInstanceJDO.class.getSimpleName(), getRunId() + ":" + getAccount()+":" + getVariableEffectDefinitionIdentifier());
     }
 
-    public Long getIdentifier() {
-        return id.getId();
+    public void setUniqueIdTeam() {
+        this.id = KeyFactory.createKey(VariableEffectInstanceJDO.class.getSimpleName(), getRunId() + ":" + getTeamId()+":" + getVariableEffectDefinitionIdentifier());
     }
 
-    public Long getGameId() {
-        return gameId;
+    public void setUniqueIdGlobal() {
+        this.id = KeyFactory.createKey(VariableEffectInstanceJDO.class.getSimpleName(), getRunId() + ":" + getVariableEffectDefinitionIdentifier());
     }
 
-    public void setGameId(Long gameId) {
-        this.gameId = gameId;
+    public Long getVariableEffectDefinitionIdentifier() {
+        return variableEffectDefinitionIdentifier;
     }
 
-    public String getName() {
-        return name;
+    public void setVariableEffectDefinitionIdentifier(Long variableEffectDefinitionIdentifier) {
+        this.variableEffectDefinitionIdentifier = variableEffectDefinitionIdentifier;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getAccount() {
+        return account;
     }
 
-    public String getEffectType() {
-        return effectType;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
-    public void setEffectType(String effectType) {
-        this.effectType = effectType;
+    public String getTeamId() {
+        return teamId;
     }
 
-    public Long getEffectValue() {
-        return effectValue;
-    }
-
-    public void setEffectValue(Long effectValue) {
-        this.effectValue = effectValue;
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
     }
 
     public Integer getEffectCount() {
@@ -102,13 +82,5 @@ public class VariableEffectDefinitionJDO {
 
     public void setEffectCount(Integer effectCount) {
         this.effectCount = effectCount;
-    }
-
-    public Text getDependsOn() {
-        return dependsOn;
-    }
-
-    public void setDependsOn(Text dependsOn) {
-        this.dependsOn = dependsOn;
     }
 }
