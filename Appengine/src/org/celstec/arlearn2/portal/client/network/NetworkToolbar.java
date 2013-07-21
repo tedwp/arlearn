@@ -20,7 +20,8 @@ public class NetworkToolbar extends ToolBar {
 
 	protected void addButtons() {
 		addMenuButton(addGameMenuButtons());
-		addMenuButton(addRunMenuButtons());
+        addMenuButton(addGeneralItemMenuButtons());
+        addMenuButton(addRunMenuButtons());
 		addMenuButton(addUsersMenuButtons());
 		addMenuButton(addAccountsMenuButtons());
 		addMenuButton(addReponsesMenuButtons());
@@ -28,6 +29,41 @@ public class NetworkToolbar extends ToolBar {
 		addMenuButton(addMessageMenuButtons());
 		addMenuButton(addVariablesMenuButtons());
 	}
+
+    private ToolStripMenuButton addGeneralItemMenuButtons() {
+        Menu menu = new Menu();
+        menu.setShowShadow(true);
+        menu.setShadowDepth(3);
+
+        MenuItemSeparator separator = new MenuItemSeparator();
+
+        menu.setItems(
+
+                createMenuItemGET("Get generalItem", "generalItems/gameId/***/generalItem/***"),
+                createMenuItemGET("Get generalItems", "generalItems/gameId/***"),
+                separator,
+                createMenuItemPOST(
+                        "Create Narrator Item",
+                        "generalItems",
+                        "{  \"type\": \"org.celstec.arlearn2.beans..generalItem.NarratorItem\",  " +
+                                "\"gameId\": 0,  " +
+
+                                "\"name\": \"Item name\","  +
+                                "\"description\": \"Item description\","  +
+                                "\"richText\": \"<p>Item description</p>\","  +
+                                "}")
+
+        );
+
+
+
+
+        ToolStripMenuButton menuButton = new ToolStripMenuButton("General Items",
+                menu);
+        menuButton.setWidth(100);
+        // addMenuButton(menuButton);
+        return menuButton;
+    }
 
 	private ToolStripMenuButton addVariablesMenuButtons() {
 		Menu menu = new Menu();

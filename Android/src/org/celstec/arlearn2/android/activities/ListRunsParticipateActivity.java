@@ -232,7 +232,8 @@ public class ListRunsParticipateActivity extends GeneralActivity implements List
 					}
 
 				} else {
-					i = new Intent(this, ListMessagesActivity.class);
+//					i = new Intent(this, ListMessagesActivity.class);
+                    i = new Intent(this, ListSectionsMessageActivity.class);
 				}
 
 				startActivity(i);

@@ -50,7 +50,9 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	private Double lat;
 	
 	private String iconUrl;
-	
+
+    private String section;
+
 	private List<String> roles;
 	
 	private Long visibleAt;
@@ -73,6 +75,7 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 			nullSafeEquals(getDependsOn(), other.getDependsOn()) &&
 			nullSafeEquals(getDisappearOn(), other.getDisappearOn()) &&
 			nullSafeEquals(getRadius(), other.getRadius()) &&
+            nullSafeEquals(getSection(), other.getSection()) &
 //			nullSafeEquals(getShowAtTimeStamp(), other.getShowAtTimeStamp()) &&
 			nullSafeEquals(getLng(), other.getLng()) &&
 			nullSafeEquals(getLat(), other.getLat()) &&
@@ -186,8 +189,16 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	public void setIconUrl(String iconUrl) {
 		this.iconUrl = iconUrl;
 	}
-	
-	public boolean isMessage() {
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
+
+    public boolean isMessage() {
 		return (getLat() == null && getLng() == null);
 	}
 
@@ -202,8 +213,13 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 
 	@Override
 	public int compareTo(GeneralItem other) {
+        if (getSection()== null) setSection("");
+        if (other.getSection()== null) other.setSection("");
 		if (getSortKey() == null) setSortKey(0);
 		if (other.getSortKey() == null) other.setSortKey(0);
+        if (!getSection().equals(other.getSection())) {
+            return getSection().compareTo(other.getSection());
+        }
 		int returnValue = getSortKey() - other.getSortKey();
 		if (returnValue != 0) return returnValue;
 		returnValue = getName().compareTo(other.getName());

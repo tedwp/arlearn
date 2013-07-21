@@ -1,6 +1,7 @@
 package org.celstec.arlearn2.android.variable;
 
 import android.app.Activity;
+import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import org.celstec.arlearn2.android.R;
@@ -76,6 +77,7 @@ public class VariableDisplayHandler {
 
     private LinearLayout createGoldScore(Integer coins){
         LinearLayout scoreLL = new LinearLayout(activity);
+        scoreLL.setGravity(Gravity.RIGHT);
         for (int i = 0 ; i<coins; i++) {
             ImageView scoreView = new ImageView(activity);
             scoreView.setImageResource(R.drawable.var_coin_gold);
@@ -86,6 +88,7 @@ public class VariableDisplayHandler {
 
     private LinearLayout createScore(Integer newScore) {
         LinearLayout scoreLL = new LinearLayout(activity);
+        scoreLL.setGravity(Gravity.RIGHT);
         ImageView scoreView = new ImageView(activity);
         scoreView.setImageResource(R.drawable.score1);
         scoreLL.addView(scoreView);

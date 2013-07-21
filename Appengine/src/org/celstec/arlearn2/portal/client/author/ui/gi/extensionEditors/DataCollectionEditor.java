@@ -70,13 +70,13 @@ public class DataCollectionEditor extends VLayout implements ExtensionEditor{
             }
 
         });  
-		openQuestionWithImageCBItem.addChangedHandler(new ChangedHandler() {
-			
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if ((Boolean)form.getValue("openQuestionWithImage")) form.setValue("openQuestionWithVideo", false);	
-			}
-		});
+//		openQuestionWithImageCBItem.addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				if ((Boolean)form.getValue("openQuestionWithImage")) form.setValue("openQuestionWithVideo", false);
+//			}
+//		});
 		openQuestionWithImageCBItem.setStartRow(true);
 	}
 	
@@ -91,13 +91,13 @@ public class DataCollectionEditor extends VLayout implements ExtensionEditor{
             }
 
         });  
-		openQuestionWithVideoCBItem.addChangedHandler(new ChangedHandler() {
-			
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if ((Boolean)form.getValue("openQuestionWithVideo")) form.setValue("openQuestionWithImage", false);	
-			}
-		});
+//		openQuestionWithVideoCBItem.addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				if ((Boolean)form.getValue("openQuestionWithVideo")) form.setValue("openQuestionWithImage", false);
+//			}
+//		});
 		openQuestionWithVideoCBItem.setStartRow(true);
 
 	}
@@ -113,15 +113,15 @@ public class DataCollectionEditor extends VLayout implements ExtensionEditor{
             }
 
         });
-		openQuestionWithAudioCBItem.addChangedHandler(new ChangedHandler() {
-			
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (form.getValue(OPENQUESTIONWITHTEXT) == null) form.setValue(OPENQUESTIONWITHTEXT, false);	
-
-				if ((Boolean)form.getValue(OPENQUESTIONWITHTEXT)) form.setValue(OPENQUESTIONWITHTEXT, false);	
-			}
-		});
+//		openQuestionWithAudioCBItem.addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				if (form.getValue(OPENQUESTIONWITHTEXT) == null) form.setValue(OPENQUESTIONWITHTEXT, false);
+//
+//				if ((Boolean)form.getValue(OPENQUESTIONWITHTEXT)) form.setValue(OPENQUESTIONWITHTEXT, false);
+//			}
+//		});
 		openQuestionWithAudioCBItem.setStartRow(true);
 
 	}
@@ -141,14 +141,14 @@ public class DataCollectionEditor extends VLayout implements ExtensionEditor{
             }
 
         });  
-		openQuestionWithTextCBItem.addChangedHandler(new ChangedHandler() {
-			
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (form.getValue(OPENQUESTIONWITHAUTDIO) == null) form.setValue(OPENQUESTIONWITHAUTDIO, false);	
-				if ((Boolean)form.getValue(OPENQUESTIONWITHAUTDIO)) form.setValue(OPENQUESTIONWITHAUTDIO, false);	
-			}
-		});
+//		openQuestionWithTextCBItem.addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				if (form.getValue(OPENQUESTIONWITHAUTDIO) == null) form.setValue(OPENQUESTIONWITHAUTDIO, false);
+//				if ((Boolean)form.getValue(OPENQUESTIONWITHAUTDIO)) form.setValue(OPENQUESTIONWITHAUTDIO, false);
+//			}
+//		});
 		
 		openQuestionTextDescItem = new TextItem(OPENQUESTIONTEXTDESC, "Message");
 		openQuestionTextDescItem.setShowTitle(true);

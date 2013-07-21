@@ -48,6 +48,7 @@ public class GeneralItemSerializer extends GameBeanSerializer{
 			if (gi.getAutoLaunch() != null) returnObject.put("autoLaunch", gi.getAutoLaunch());
 			if (gi.getShowCountDown() != null) returnObject.put("showCountDown", gi.getShowCountDown());
 			if (gi.getIconUrl() != null) returnObject.put("iconUrl", gi.getIconUrl());
+            if (gi.getSection() != null) returnObject.put("section", gi.getSection());
 			if (gi.getRoles() != null) returnObject.put("roles", ListSerializer.toStringList(gi.getRoles()));
 
 			
