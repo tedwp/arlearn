@@ -97,8 +97,6 @@ public class ListSectionsMessageActivity extends GeneralActivity implements List
                 if (!showSection.containsKey(gi.getSection())) showSection.put(gi.getSection(), true);
             }
         }
-        System.out.println("sections "+sections);
-//        return sections.size();
     }
     private boolean hasSections() {
         if (sections.size() == 1 && sections.first().equals("")) return false;

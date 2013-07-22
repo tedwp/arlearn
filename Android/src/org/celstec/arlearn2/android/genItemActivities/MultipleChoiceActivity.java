@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import android.webkit.WebSettings;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
 import org.celstec.arlearn2.android.delegators.ResponseDelegator;
@@ -85,21 +86,20 @@ public class MultipleChoiceActivity extends GeneralItemActivity {
 		MultipleChoiceActivity.this.finish();
 	}
 
-	// private MultipleChoiceTest readMctFromDb(String id){
-	// DBAdapter db = new DBAdapter(MultipleChoiceActivity.this);
-	// db.openForRead();
-	// GeneralItem gi = (GeneralItem)
-	// db.table(DBAdapter.GENERALITEM_ADAPTER).queryById(id);
-	// mct = new MultipleChoiceTest(gi);
-	// db.close();
-	// return mct;
-	// }
-
 	private void initUi(MultipleChoiceTest mct) {
 		super.getGuiComponents();
 		super.initCountdownView();
 		textView = ((TextView) findViewById(R.id.mct_question)); // .setText(mct.getQuestion())
 		webview = (WebView) findViewById(R.id.mct_webview);
+        WebSettings ws = webview.getSettings();
+        ws.setJavaScriptEnabled(true);
+        webview.addJavascriptInterface(new Object()
+        {
+            public void performClick()
+            {
+                System.out.println("ok click");
+            }
+        }, "ok");
 
 		if (mct.getRichText() != null) {
 			String html = mct.getRichText();

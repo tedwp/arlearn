@@ -123,11 +123,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ARLearn/GeneralItem+ARLearnBeanCreate.m"
-         timestampString = "395668583.360057"
+         timestampString = "396171496.045636"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "125"
-         endingLineNumber = "125"
+         startingLineNumber = "117"
+         endingLineNumber = "117"
          landmarkName = "+retrieveFromDbWithId:withManagedContext:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -136,11 +136,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ARLearn/GeneralItem+ARLearnBeanCreate.m"
-         timestampString = "395668583.360057"
+         timestampString = "396171496.045636"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "108"
-         endingLineNumber = "108"
+         startingLineNumber = "100"
+         endingLineNumber = "100"
          landmarkName = "+setCorrespondingVisibilityItems:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -149,11 +149,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ARLearn/GeneralItemVisibility+ARLearnBeanCreate.m"
-         timestampString = "395668225.874238"
+         timestampString = "396187167.361202"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "66"
-         endingLineNumber = "66"
+         startingLineNumber = "68"
+         endingLineNumber = "68"
          landmarkName = "+retrieveFromDb:withManagedContext:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -168,6 +168,58 @@
          startingLineNumber = "92"
          endingLineNumber = "92"
          landmarkName = "+deleteAllRuns:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "ARLearn/ARLGeneralItemTableViewCell.h"
+         timestampString = "396176293.67596"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "16"
+         endingLineNumber = "16"
+         landmarkName = "@interface ARLGeneralItemTableViewCell"
+         landmarkType = "2">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "ARLearn/ARLMapViewController.m"
+         timestampString = "396185223.264465"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "116"
+         endingLineNumber = "116"
+         landmarkName = "-fetchedResultsChangeUpdate:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "ARLearn/ARLMapViewController.m"
+         timestampString = "396185223.264465"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "161"
+         endingLineNumber = "161"
+         landmarkName = "-mapView:viewForAnnotation:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "ARLearn/GeneralItemVisibility+ARLearnBeanCreate.m"
+         timestampString = "396187493.310833"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "14"
+         endingLineNumber = "14"
+         landmarkName = "+visibilityWithDictionary:withRun:withGeneralItem:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

@@ -295,7 +295,7 @@ public class GeneralItemDelegator extends GoogleDelegator {
 				gim.setGeneralItem(generalItem);
 				generalItem.setDisappearAt(disAt);
 
-				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getEmail(), GeneralItemVisibilityManager.DISAPPEARED_STATUS, disAt);
+				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getFullId(), GeneralItemVisibilityManager.DISAPPEARED_STATUS, disAt);
 //				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
 			}
 		}

@@ -29,6 +29,8 @@
     giVis.status = [visDict objectForKey:@"status"] ;
     giVis.timeStamp =[visDict objectForKey:@"timeStamp"] ;
     giVis.email =[visDict objectForKey:@"email"];
+    
+//    NSLog(@"setting visibility for %@ to %@", generalItem.name, giVis.status);
    
     
     return giVis;

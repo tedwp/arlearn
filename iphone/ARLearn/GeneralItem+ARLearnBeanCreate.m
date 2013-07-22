@@ -8,6 +8,7 @@
 
 #import "GeneralItem+ARLearnBeanCreate.h"
 
+
 @implementation GeneralItem (ARLearnBeanCreate)
 
 + (GeneralItem *) generalItemWithDictionary: (NSDictionary *) giDict
@@ -58,39 +59,30 @@
 + (void) downloadCorrespondingData: (NSDictionary *) giDict
                    withGeneralItem: (GeneralItem *) gi
             inManagedObjectContext: (NSManagedObjectContext * ) context {
-    
+    NSDictionary * jsonDict = [NSKeyedUnarchiver unarchiveObjectWithData:gi.json];
+    if ([jsonDict objectForKey:@"iconUrl"]) {
+        [GeneralItemData createDownloadTask:gi withKey:@"iconUrl" withUrl:[jsonDict objectForKey:@"iconUrl"] withManagedContext:context];
+    }
     if ([gi.type caseInsensitiveCompare:@"org.celstec.arlearn2.beans.generalItem.AudioObject"] == NSOrderedSame ){
-        NSLog(@"about to download audio");
-        NSDictionary* dataMap = [self getDatas:gi withManagedContext:context];
-//        GeneralItemData * giData = [NSEntityDescription insertNewObjectForEntityForName:@"GeneralItemData" inManagedObjectContext:context];
-        GeneralItemData * giData = [dataMap objectForKey:@"audio"];
-        if (!giData) {
-            giData = [NSEntityDescription insertNewObjectForEntityForName:@"GeneralItemData" inManagedObjectContext:context];
-            giData.name = @"audio";
-            giData.generalItem = gi;
-        }
-        if (![[giDict objectForKey:@"audioFeed"] isEqual:giData.url]) {
-            giData.url = [giDict objectForKey:@"audioFeed"];
-            giData.replicated = [NSNumber numberWithBool:NO];
-            giData.error = [NSNumber numberWithBool:NO];
-            
-        } else {
-//            NSNumber* test;
-//            [test isE]
-            
-            if (giData.data == nil && [giData.replicated isEqualToNumber:[NSNumber numberWithBool:NO]]) {
-                 giData.error = [NSNumber numberWithBool:NO];
-            }
-        }
+        [GeneralItemData createDownloadTask:gi withKey:@"audio" withUrl:[jsonDict objectForKey:@"audioFeed"] withManagedContext:context];
 
-        
-//    } else if ([gi.type caseInsensitiveCompare:@"org.celstec.arlearn2.beans.generalItem.VideoObject"] == NSOrderedSame ){
-//        NSLog(@"about to download video");
-//        GeneralItemData * giData = [NSEntityDescription insertNewObjectForEntityForName:@"GeneralItemData" inManagedObjectContext:context];
-//        giData.url = [giDict objectForKey:@"videoFeed"];
-//        giData.replicated = [NSNumber numberWithBool:NO];
-//
-//        giData.name = @"video";
+//        NSDictionary* dataMap = [self getDatas:gi withManagedContext:context];
+//        GeneralItemData * giData = [dataMap objectForKey:@"audio"];
+//        if (!giData) {
+//            giData = [NSEntityDescription insertNewObjectForEntityForName:@"GeneralItemData" inManagedObjectContext:context];
+//            giData.name = @"audio";
+//            giData.generalItem = gi;
+//        }
+//        if (![[giDict objectForKey:@"audioFeed"] isEqual:giData.url]) {
+//            giData.url = [giDict objectForKey:@"audioFeed"];
+//            giData.replicated = [NSNumber numberWithBool:NO];
+//            giData.error = [NSNumber numberWithBool:NO];
+//            
+//        } else {
+//            if (giData.data == nil && [giData.replicated isEqualToNumber:[NSNumber numberWithBool:NO]]) {
+//                 giData.error = [NSNumber numberWithBool:NO];
+//            }
+//        }
     } else{
         NSLog(@"nothing to download for %@", gi.type);
     }
@@ -151,14 +143,14 @@
     }
 }
 
-+ (NSDictionary*) getDatas: (GeneralItem* ) gi withManagedContext: (NSManagedObjectContext*) context{
-    NSMutableArray *objectArray = [NSMutableArray arrayWithArray:[gi.data allObjects]];
-    NSMutableArray *keysArray = [NSMutableArray arrayWithCapacity:[objectArray count]];
-    for (GeneralItemData* data  in objectArray) {
-        [keysArray addObject:data.name];
-    }
-    return  [NSDictionary dictionaryWithObjects:objectArray forKeys:keysArray];
-}
+//+ (NSDictionary*) getDatas: (GeneralItem* ) gi withManagedContext: (NSManagedObjectContext*) context{
+//    NSMutableArray *objectArray = [NSMutableArray arrayWithArray:[gi.data allObjects]];
+//    NSMutableArray *keysArray = [NSMutableArray arrayWithCapacity:[objectArray count]];
+//    for (GeneralItemData* data  in objectArray) {
+//        [keysArray addObject:data.name];
+//    }
+//    return  [NSDictionary dictionaryWithObjects:objectArray forKeys:keysArray];
+//}
 
 + (NSArray *) getAll: (NSManagedObjectContext*) context {
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GeneralItem"];
@@ -171,4 +163,17 @@
     return unsyncedData;
     
 }
+
+- (NSData *) icon {
+    for (GeneralItemData* data in self.data) {
+                NSLog(@"data %@", data.name);
+        if ([data.name isEqualToString:@"iconUrl"]) {
+            return data.data;
+        }
+    }
+    return nil;
+    
+}
+
+
 @end

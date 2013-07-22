@@ -21,6 +21,12 @@ package org.celstec.arlearn2.android.activities;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.widget.ImageView;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.RunCache;
@@ -28,12 +34,9 @@ import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.GeneralItemAdapter;
 import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.MyActions;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
-import org.celstec.arlearn2.beans.generalItem.AudioObject;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
-import org.celstec.arlearn2.beans.generalItem.NarratorItem;
-import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
+import org.celstec.arlearn2.beans.generalItem.*;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
@@ -106,17 +109,41 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 		}
 	}
 
+//    public static void setIcon(ImageView iv, GeneralItem gi) {
+//        if (gi.getIconUrl()!= null) {
+//
+//        }
+//    }
+
+    public static Drawable getIconAsDrawable(Context ctx,
+                                             GeneralItem gi){
+        if (gi.getIconUrl() != null) {
+            Uri localAudioUri = GeneralItemsDelegator.getInstance().getLocalMediaUriMap(gi).get(GeneralItemsDelegator.ICON_LOCAL_ID);
+            if (localAudioUri!= null) return Drawable.createFromPath(localAudioUri.getPath());
+        }
+        int icon = getIcon(gi);
+        if (icon == 0) return null;
+        return ctx.getResources().getDrawable(getIcon(gi));
+
+    }
 	//TODO move to other place
 	public static int getIcon(GeneralItem gi){
 		if (gi.getType().equals(MultipleChoiceTest.class.getName())) {
 			return R.drawable.question;
-		} else
-		if (gi.getType().equals(YoutubeObject.class.getName())) {
+		} else if (gi.getType().equals(SingleChoiceTest.class.getName())) {
+            return R.drawable.question;
+        } else if (gi.getType().equals(MultipleChoiceImageTest.class.getName())) {
+            return R.drawable.question;
+        } else if (gi.getType().equals(SingleChoiceImageTest.class.getName())) {
+            return R.drawable.question;
+        } else if (gi.getType().equals(VideoObject.class.getName())) {
+            return R.drawable.video_48x48;
+        } else if (gi.getType().equals(YoutubeObject.class.getName())) {
 			return R.drawable.youtube;
 		} else
 			if (gi.getType().equals(NarratorItem.class.getName())) {
 				if (((NarratorItem) gi).getOpenQuestion() == null) {
-					return R.drawable.info;	
+					return R.drawable.gi_narrator;
 				} else {
 					return R.drawable.question;
 				}
@@ -126,7 +153,7 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 //			return R.drawable.speechbubble_green;
 //		}
 		else 	if (gi.getType().equals(AudioObject.class.getName())) {
-			return R.drawable.speechbubble_blue;
+			return R.drawable.audio_icon;
 		}
 		return 0;
 	}

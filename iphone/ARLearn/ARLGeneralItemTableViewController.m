@@ -7,7 +7,8 @@
 //
 
 #import "ARLGeneralItemTableViewController.h"
-#import "ARLGeneralItemViewCell.h"
+#import "ARLGeneralItemTableViewCell.h"
+
 @interface ARLGeneralItemTableViewController ()
 
 
@@ -23,6 +24,8 @@
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name"
                                                                                      ascending:YES
                                                                                       selector:@selector(localizedCaseInsensitiveCompare:)]];
+    NSLog(@"ownerGame.gameId = %lld and SUBQUERY(visibility, $x, $x.runId = %lld and $x.status = 1 and $x.timeStamp < %lld).@count > 0 and SUBQUERY(visibility, $x, $x.runId = %lld and $x.status = 2 and $x.timeStamp < %lld).@count = 0",
+          [self.run.game.gameId longLongValue], [self.run.runId longLongValue], [currentTimeMillis longLongValue], [self.run.runId longLongValue], [currentTimeMillis longLongValue]);
     request.predicate = [NSPredicate predicateWithFormat:
                          @"ownerGame.gameId = %lld and SUBQUERY(visibility, $x, $x.runId = %lld and $x.status = 1 and $x.timeStamp < %lld).@count > 0 and SUBQUERY(visibility, $x, $x.runId = %lld and $x.status = 2 and $x.timeStamp < %lld).@count = 0",
                          [self.run.game.gameId longLongValue], [self.run.runId longLongValue], [currentTimeMillis longLongValue], [self.run.runId longLongValue], [currentTimeMillis longLongValue]];
@@ -32,6 +35,15 @@
                                                                         managedObjectContext:self.run.managedObjectContext
                                                                           sectionNameKeyPath:nil
                                                                                    cacheName:nil];
+    
+//    for (GeneralItem* gi in self.run.game.hasItems){
+//        NSLog(@"general item : %@", gi.name);
+//        for (GeneralItemVisibility * vis in gi.visibility) {
+//                NSLog(@"vis  %@", vis.status);
+//        }
+//        
+//    }
+//            NSLog(@"en iteratior");
 }
 
 - (void) setRun: (Run *) run {
@@ -61,20 +73,25 @@
 
     
     GeneralItem * generalItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    ARLGeneralItemViewCell *cell = [tableView dequeueReusableCellWithIdentifier:generalItem.type];
+    ARLGeneralItemTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:generalItem.type];
     if (cell == nil) {
-        cell = [[ARLGeneralItemViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:generalItem.type];
+        cell = [[ARLGeneralItemTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:generalItem.type];
     }
-    cell.itemTitle.text = generalItem.name;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"vis statements %d", [generalItem.visibility count] ];
+    cell.giTitleLabel.text = generalItem.name;
+//    cell.detailTextLabel.text = [NSString stringWithFormat:@"vis statements %d", [generalItem.visibility count] ];
    
     return cell;
 }
 
--(void) configureCell: (ARLGeneralItemViewCell *) cell atIndexPath:(NSIndexPath *)indexPath {
+-(void) configureCell: (ARLGeneralItemTableViewCell *) cell atIndexPath:(NSIndexPath *)indexPath {
     GeneralItem * generalItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.itemTitle.text = generalItem.name;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"vis statements %d", [generalItem.visibility count] ];
+    cell.giTitleLabel.text = generalItem.name;
+//    cell.detailTextLabel.text = [NSString stringWithFormat:@"vis statements %d", [generalItem.visibility count] ];
+    NSData* icon = [generalItem icon];
+    if (icon) {
+        UIImage * image = [UIImage imageWithData:icon];
+        cell.icon.image = image;
+    }
 }
 
 

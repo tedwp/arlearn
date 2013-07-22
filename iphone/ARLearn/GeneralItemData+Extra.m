@@ -7,6 +7,7 @@
 //
 
 #import "GeneralItemData+Extra.h"
+#import "GeneralItem+ARLearnBeanCreate.m"
 
 @implementation GeneralItemData (Extra)
 
@@ -22,6 +23,38 @@
         NSLog(@"error %@", error);
     }
     return unsyncedData;
-
 }
+
++ (void) createDownloadTask: (GeneralItem* ) gi
+                    withKey: (NSString*) key
+                    withUrl: (NSString*) url
+         withManagedContext: (NSManagedObjectContext*) context{
+    NSDictionary* dataMap = [self getDatas:gi withManagedContext:context];
+    GeneralItemData * giData = [dataMap objectForKey:key];
+    if (!giData) {
+        giData = [NSEntityDescription insertNewObjectForEntityForName:@"GeneralItemData" inManagedObjectContext:context];
+        giData.name = key;
+        giData.generalItem = gi;
+    }
+    if (![url isEqual:giData.url]) {
+        giData.url = url;
+        giData.replicated = [NSNumber numberWithBool:NO];
+        giData.error = [NSNumber numberWithBool:NO];
+        
+    } else {
+        if (giData.data == nil && [giData.replicated isEqualToNumber:[NSNumber numberWithBool:NO]]) {
+            giData.error = [NSNumber numberWithBool:NO];
+        }
+    }
+}
+
++ (NSDictionary*) getDatas: (GeneralItem* ) gi withManagedContext: (NSManagedObjectContext*) context{
+    NSMutableArray *objectArray = [NSMutableArray arrayWithArray:[gi.data allObjects]];
+    NSMutableArray *keysArray = [NSMutableArray arrayWithCapacity:[objectArray count]];
+    for (GeneralItemData* data  in objectArray) {
+        [keysArray addObject:data.name];
+    }
+    return  [NSDictionary dictionaryWithObjects:objectArray forKeys:keysArray];
+}
+
 @end

@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+import android.webkit.WebSettings;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
@@ -196,7 +197,29 @@ public class NarratorItemActivity extends GeneralItemActivity {
 		if (narratorBean.getRichText() != null) {
 			String html = narratorBean.getRichText();
 			if (!html.equals(richText)) {
+                WebSettings ws = webview.getSettings();
+                ws.setJavaScriptEnabled(true);
+                webview.addJavascriptInterface(new Object(){
+                    public void submitAction(String action){
+                        PropertiesAdapter pa = PropertiesAdapter.getInstance(NarratorItemActivity.this);
+                        if (narratorBean != null) {
+
+
+                        ActionsDelegator.getInstance().publishAction(NarratorItemActivity.this, action,
+                                pa.getCurrentRunId(), pa.getFullId(), narratorBean.getId(), narratorBean.getClass().getName());
+                        }
+                    }
+
+//                        public void arlearnInput(String input) {
+//                            if (input.equals("action")) {
+//                                webview.loadUrl("javascript:action('read', '123')");
+//                            }
+//                        }
+
+
+                }, "ok");
 				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+//                webview.loadUrl("javascript:reportArlearnInput()");
 				richText = html;
 			}
 		} else {

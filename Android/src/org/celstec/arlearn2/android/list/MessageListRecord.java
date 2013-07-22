@@ -20,7 +20,9 @@ package org.celstec.arlearn2.android.list;
 
 import java.text.MessageFormat;
 
+import android.graphics.drawable.Drawable;
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.android.db.MediaCacheGeneralItems;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
@@ -38,8 +40,10 @@ public class MessageListRecord extends GenericListRecord {
     private boolean read = false;
     private boolean inverted = false;
     private GeneralItem generalItem;
+    private Context ctx;
 
     public MessageListRecord(GeneralItem generalItem, long runId, Context ctx) {
+        this.ctx = ctx;
         this.generalItem = generalItem;
         setMessageHeader(generalItem.getName());
         if (generalItem.getId() != null) setRead(ActionCache.getInstance().isRead(runId, generalItem.getId()));
@@ -105,12 +109,16 @@ public class MessageListRecord extends GenericListRecord {
                 textHeader.setTextColor(Color.BLACK);
             }
         }
-        if (generalItem.getIconUrl() != null) {
-            ImageView iv = (ImageView) v.findViewById(R.id.list_icon);
-            if (!inverted) {
-                Uri localAudioUri = GeneralItemsDelegator.getInstance().getLocalMediaUriMap(generalItem).get(GeneralItemsDelegator.ICON_LOCAL_ID);
+        ImageView iv = (ImageView) v.findViewById(R.id.list_icon);
 
-                iv.setImageURI(localAudioUri);
+//        if (generalItem.getIconUrl() != null) {
+
+            if (!inverted) {
+                Drawable icon = ListMapItemsActivity.getIconAsDrawable(ctx, generalItem);
+//                Uri localAudioUri = GeneralItemsDelegator.getInstance().getLocalMediaUriMap(generalItem).get(GeneralItemsDelegator.ICON_LOCAL_ID);
+
+//                iv.setImageURI(localAudioUri);
+                iv.setImageDrawable(icon);
             } else {
                 if (Boolean.getBoolean(generalItem.getIconUrl())) {
                     iv.setImageResource(R.drawable.icon_expand);
@@ -118,7 +126,11 @@ public class MessageListRecord extends GenericListRecord {
                     iv.setImageResource(R.drawable.icon_collapse);
                 }
             }
-        }
+//        } else {
+//
+//            iv.setImageResource(ListMapItemsActivity.getIcon(generalItem));
+//
+//        }
         return v;
     }
 }

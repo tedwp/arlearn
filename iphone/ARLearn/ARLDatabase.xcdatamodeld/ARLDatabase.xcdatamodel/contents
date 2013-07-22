@@ -69,8 +69,8 @@
         <attribute name="runId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="game" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Game" inverseName="correspondingRuns" inverseEntity="Game" syncable="YES"/>
-        <relationship name="itemVisibilityRules" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GeneralItemVisibility" inverseName="correspondingRun" inverseEntity="GeneralItemVisibility" syncable="YES"/>
-        <relationship name="responses" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Response" inverseName="run" inverseEntity="Response" syncable="YES"/>
+        <relationship name="itemVisibilityRules" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="GeneralItemVisibility" inverseName="correspondingRun" inverseEntity="GeneralItemVisibility" syncable="YES"/>
+        <relationship name="responses" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="Response" inverseName="run" inverseEntity="Response" syncable="YES"/>
     </entity>
     <entity name="SynchronizationBookKeeping" representedClassName="SynchronizationBookKeeping" syncable="YES">
         <attribute name="context" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -83,8 +83,8 @@
         <element name="GeneralItem" positionX="-405" positionY="-153" width="128" height="238"/>
         <element name="GeneralItemData" positionX="-182" positionY="-148" width="128" height="133"/>
         <element name="GeneralItemVisibility" positionX="-722" positionY="135" width="128" height="150"/>
+        <element name="Response" positionX="-783" positionY="-378" width="128" height="178"/>
         <element name="Run" positionX="-972" positionY="-90" width="128" height="163"/>
         <element name="SynchronizationBookKeeping" positionX="-927" positionY="153" width="128" height="90"/>
-        <element name="Response" positionX="-783" positionY="-378" width="128" height="178"/>
     </elements>
 </model>

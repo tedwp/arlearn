@@ -90,7 +90,7 @@ public class GenericItemsOverlay extends ItemizedOverlay {
 	    public void draw(android.graphics.Canvas canvas, MapView mapView,
 	            boolean shadow)
 	    {
-	        super.draw(canvas, mapView, shadow);
+	        super.draw(canvas, mapView, false);
 
 	        // go through all OverlayItems and draw title for each of them
 	        for (GenericItemOverlayItem item: overlayItems)

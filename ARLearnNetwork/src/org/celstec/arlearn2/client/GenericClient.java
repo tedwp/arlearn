@@ -35,8 +35,8 @@ public class GenericClient {
 //		public static String urlPrefix = "http://10.0.2.2:9999";
 //		public static String urlPrefix = "http://10.0.1.2:9999";
 //		public static String urlPrefix = "http://ambientdisplay.appspot.com/";
-		public static String urlPrefix = "http://ar-learn.appspot.com/";
-//		public static String urlPrefix = "http://streetlearn.appspot.com/";
+//		public static String urlPrefix = "http://ar-learn.appspot.com/";
+		public static String urlPrefix = "http://streetlearn.appspot.com/";
 
 		protected static HttpConnection	conn = ConnectionFactory.getConnection();
 

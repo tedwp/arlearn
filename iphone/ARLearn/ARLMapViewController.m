@@ -24,6 +24,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+
         
     }
     return self;
@@ -37,13 +38,15 @@
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name"
                                                                                      ascending:YES
                                                                                       selector:@selector(localizedCaseInsensitiveCompare:)]];
-    //    request.predicate = [NSPredicate predicateWithFormat:
-    //                         @"ownerGame.gameId = %lld ",
-    //                         self.run.game.gameId];
-    //
+//    NSLog(@"ownerGame.gameId = %lld ",
+//          [self.run.game.gameId longLongValue]);
+//    request.predicate = [NSPredicate predicateWithFormat:
+//                         @"ownerGame.gameId = %lld ",
+//                         [self.run.game.gameId longLongValue]];
+
     request.predicate = [NSPredicate predicateWithFormat:
                          @"ownerGame.gameId = %lld and SUBQUERY(visibility, $x, $x.runId = %lld and $x.status = 1 and $x.timeStamp < %lld).@count > 0 and SUBQUERY(visibility, $x, $x.runId = %lld and $x.status = 2 and $x.timeStamp < %lld).@count = 0",
-                         self.run.game.gameId, self.run.runId, [currentTimeMillis longLongValue], self.run.runId, [currentTimeMillis longLongValue]];
+                         [self.run.game.gameId longLongValue], [self.run.runId longLongValue], [currentTimeMillis longLongValue], self.run.runId, [currentTimeMillis longLongValue]];
     
     
     self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
@@ -57,36 +60,32 @@
     self.title = run.title;
      [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"icon_maps.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"icon_maps.png"]];
 
+
 }
 
 -(void) viewDidAppear:(BOOL)animated {
     NSLog(@"viewDidAppear %@", self.mapView);
 
-
+    [self setupFetchedResultsController];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-            [self setupFetchedResultsController];
     NSLog(@"viewDidLoad %@", self.mapView);
     
-
-
-//    self.generalItems = [ARLDatabaseGeneralItem items:self.gameId];
-
-    //
     [self.mapView setMapType:MKMapTypeStandard];
     [self.mapView setZoomEnabled:YES];
     [self.mapView setScrollEnabled:YES];
     MKCoordinateRegion region = { {0.0, 0.0 }, { 0.0, 0.0 } };
-    region.center.latitude = 50 ;
-    region.center.longitude = 6;
+    region.center.latitude = 51.03 ;
+    region.center.longitude = 5.72;
     region.span.longitudeDelta = 0.01f;
     region.span.latitudeDelta = 0.01f;
     [self.mapView setRegion:region animated:YES];
     
-    [self.mapView setDelegate:self];
+            [self.mapView setDelegate:self];
+
 }
 
 - (void) fetchReady  {
@@ -142,9 +141,21 @@
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id < MKAnnotation >)annotation {
     static NSString *identifier = @"MyLocation";
     if ([annotation isKindOfClass:[GiMap class]]) {
+        GeneralItem * gi = [(GiMap*)annotation  generalItem];
         
-        MKPinAnnotationView *annotationView =
-        (MKPinAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+        NSLog(@"gi tilt %@", gi.name);
+        
+        MKAnnotationView * annotationView = [[MKAnnotationView alloc ] initWithAnnotation:annotation reuseIdentifier:identifier];
+        annotationView.image = [ UIImage imageNamed:@"black_stop.png" ];
+       
+        NSData * icon = [gi icon];
+        if (icon) {
+            UIImage * image = [UIImage imageWithData:icon];
+            annotationView.image = image;
+        }
+        
+//        MKPinAnnotationView *annotationView =
+//        (MKPinAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
         
         if (annotationView == nil) {
             annotationView = [[MKPinAnnotationView alloc]
@@ -156,6 +167,7 @@
         
         annotationView.enabled = YES;
         annotationView.canShowCallout = YES;
+
         
         UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
         [rightButton setTitle:annotation.title forState:UIControlStateNormal];
@@ -171,8 +183,18 @@
     if ([(UIButton*)control buttonType] == UIButtonTypeDetailDisclosure){
 
         UIStoryboard *storyboard = self.storyboard;
-        ARLGeneralItemViewController *mapDetailViewController = [storyboard instantiateViewControllerWithIdentifier:@"generalItemViewControlleridentifier"];
-        mapDetailViewController.generalItem =[(GiMap*)[view annotation] generalItem];
+        GeneralItem* generalItem = [(GiMap*)[view annotation] generalItem];
+        UITableViewController *mapDetailViewController = [storyboard instantiateViewControllerWithIdentifier:generalItem.type];
+//        ARLGeneralItemViewController *mapDetailViewController = [storyboard instantiateViewControllerWithIdentifier:@"generalItemViewControlleridentifier"];
+//        mapDetailViewController.generalItem =[(GiMap*)[view annotation] generalItem];
+        
+        if ([mapDetailViewController respondsToSelector:@selector(setGeneralItem:)]) {
+            [mapDetailViewController performSelector:@selector(setGeneralItem:) withObject:generalItem];
+        }
+        if ([mapDetailViewController respondsToSelector:@selector(setRun:)]) {
+            [mapDetailViewController performSelector:@selector(setRun:) withObject:self.run];
+        }
+        
         [[self navigationController] pushViewController:mapDetailViewController animated:YES];
         
     }

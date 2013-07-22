@@ -14,7 +14,7 @@
 #import "ARLNetwork.h"
 #import "Run.h"
 #import "Game.h"
-#import "GeneralItem.h"
+#import "GeneralItem+ARLearnBeanCreate.h"
 #import "GeneralItemVisibility.h"
 #import "CoreDataTableViewController.h"
 

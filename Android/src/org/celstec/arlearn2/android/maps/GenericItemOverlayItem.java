@@ -48,16 +48,10 @@ public class GenericItemOverlayItem extends OverlayItem {
 
 	@Override
 	public Drawable getMarker(int stateBitset) {
-		int icon =ListMapItemsActivity.getIcon(gi);
-//		int icon = gi.getIcon();
-		if (icon != 0) return GenericItemsOverlay.boundCenterBottom(ctx.getResources().getDrawable(icon)); 
-//		if (gi.getType().equals("MultipleChoiceTest")) {
-//			return R.drawable.multiple_choice));
-//		} else 	if (gi.getType().equals("OpenQuestion")) {
-//			return GenericItemsOverlay.boundCenterBottom(ctx.getResources().getDrawable(R.drawable.speechbubble_green));
-//		} else 	if (gi.getType().equals("AudioObject")) {
-//			return GenericItemsOverlay.boundCenterBottom(ctx.getResources().getDrawable(R.drawable.audio_icon));
-//		}
+		//int icon =ListMapItemsActivity.getIcon(gi);
+		//if (icon != 0) return GenericItemsOverlay.boundCenterBottom(ctx.getResources().getDrawable(icon));
+        Drawable icon = ListMapItemsActivity.getIconAsDrawable(ctx, gi);
+        if (icon != null) return GenericItemsOverlay.boundCenterBottom(icon);
 		return null;
 	}
 	

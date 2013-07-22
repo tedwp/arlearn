@@ -10,6 +10,7 @@
 #import "GeneralItemVisibility.h"
 #import "Game+ARLearnBeanCreate.h"
 #import "GeneralItemData.h"
+#import "GeneralItemData+Extra.h"
 
 @interface GeneralItem (ARLearnBeanCreate)
 
@@ -18,5 +19,5 @@
 + (GeneralItem *) retrieveFromDbWithId: (NSNumber *) itemId withManagedContext: (NSManagedObjectContext*) context;
 
 + (NSArray *) getAll: (NSManagedObjectContext*) context;
-
+-  (NSData *) icon;
 @end

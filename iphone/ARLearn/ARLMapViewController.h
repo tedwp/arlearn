@@ -11,7 +11,7 @@
 #import "ARLGeneralItemViewController.h"
 #import "Run.h"
 #import "Game.h"
-#import "GeneralItem.h"
+#import "GeneralItem+ARLearnBeanCreate.h"
 #import "ARLMapTableViewController.h"
 
 @interface ARLMapViewController : ARLMapTableViewController <MKMapViewDelegate>

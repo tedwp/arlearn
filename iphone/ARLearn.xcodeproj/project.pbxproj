@@ -113,6 +113,12 @@
 		346FB8CE1788356D00C56C53 /* ARLOauthListViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 346FB8CD1788356D00C56C53 /* ARLOauthListViewController.mm */; };
 		346FB8D0178836B500C56C53 /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 346FB8CF178836B500C56C53 /* libiconv.2.4.0.dylib */; };
 		347367FC16C3CAB30056D454 /* ARLAudioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 347367FB16C3CAB30056D454 /* ARLAudioViewController.m */; };
+		3475674A179D1A5700C56E22 /* ARLGeneralItemTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34756749179D1A5700C56E22 /* ARLGeneralItemTableViewCell.m */; };
+		3475674E179D241100C56E22 /* gi_narrator.png in Resources */ = {isa = PBXBuildFile; fileRef = 3475674D179D241100C56E22 /* gi_narrator.png */; };
+		34756751179D279400C56E22 /* audio_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3475674F179D279400C56E22 /* audio_icon.png */; };
+		34756752179D279400C56E22 /* question.png in Resources */ = {isa = PBXBuildFile; fileRef = 34756750179D279400C56E22 /* question.png */; };
+		34756755179D28CE00C56E22 /* video_48x48.png in Resources */ = {isa = PBXBuildFile; fileRef = 34756753179D28CE00C56E22 /* video_48x48.png */; };
+		34756756179D28CE00C56E22 /* youtube.png in Resources */ = {isa = PBXBuildFile; fileRef = 34756754179D28CE00C56E22 /* youtube.png */; };
 		347A6EB9178C044300992EE8 /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 347A6EB6178C043A00992EE8 /* libZXingWidget.a */; };
 		347A6EC2178C2AED00992EE8 /* ARLScanObjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 347A6EC1178C2AED00992EE8 /* ARLScanObjectViewController.m */; };
 		347FF62516BE9DBF00260642 /* ARLTestingGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 347FF62416BE9DBF00260642 /* ARLTestingGameViewController.m */; };
@@ -349,6 +355,13 @@
 		346FB8CF178836B500C56C53 /* libiconv.2.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.4.0.dylib; path = usr/lib/libiconv.2.4.0.dylib; sourceTree = SDKROOT; };
 		347367FA16C3CAB30056D454 /* ARLAudioViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARLAudioViewController.h; sourceTree = "<group>"; };
 		347367FB16C3CAB30056D454 /* ARLAudioViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARLAudioViewController.m; sourceTree = "<group>"; };
+		34756748179D1A5700C56E22 /* ARLGeneralItemTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARLGeneralItemTableViewCell.h; sourceTree = "<group>"; };
+		34756749179D1A5700C56E22 /* ARLGeneralItemTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARLGeneralItemTableViewCell.m; sourceTree = "<group>"; };
+		3475674D179D241100C56E22 /* gi_narrator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gi_narrator.png; path = images/gi_narrator.png; sourceTree = "<group>"; };
+		3475674F179D279400C56E22 /* audio_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = audio_icon.png; path = images/audio_icon.png; sourceTree = "<group>"; };
+		34756750179D279400C56E22 /* question.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = question.png; path = images/question.png; sourceTree = "<group>"; };
+		34756753179D28CE00C56E22 /* video_48x48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = video_48x48.png; path = images/video_48x48.png; sourceTree = "<group>"; };
+		34756754179D28CE00C56E22 /* youtube.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = youtube.png; path = images/youtube.png; sourceTree = "<group>"; };
 		34770B7B177852C60012AB0B /* ARLOauthListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARLOauthListViewController.h; sourceTree = "<group>"; };
 		34770B7E177853880012AB0B /* ARLOauthWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARLOauthWebViewController.h; sourceTree = "<group>"; };
 		347A6EB0178C043A00992EE8 /* ZXingWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZXingWidget.xcodeproj; path = "../../../libraries/zxing-2.2/iphone/ZXingWidget/ZXingWidget.xcodeproj"; sourceTree = "<group>"; };
@@ -498,7 +511,12 @@
 				34E0741216C262430034FA0D /* list_icon.png */,
 				34F0098C178DEC2800AF8739 /* arlearn_logo.png */,
 				34C58049178F3C5900FF7354 /* black_pause.png */,
+				3475674F179D279400C56E22 /* audio_icon.png */,
+				34756753179D28CE00C56E22 /* video_48x48.png */,
+				34756754179D28CE00C56E22 /* youtube.png */,
+				34756750179D279400C56E22 /* question.png */,
 				34C5804A178F3C5900FF7354 /* black_play.png */,
+				3475674D179D241100C56E22 /* gi_narrator.png */,
 				34C5804B178F3C5900FF7354 /* black_stop.png */,
 				34C5804C178F3C5900FF7354 /* grey_stop.png */,
 				3451FAD21786F95B0018C0BE /* facebook.png */,
@@ -575,6 +593,8 @@
 				34C58045178F1E6F00FF7354 /* audioObject */,
 				34DF3E3416A49BA900625734 /* ARLGeneralItemTableViewController.h */,
 				34DF3E3516A49BA900625734 /* ARLGeneralItemTableViewController.m */,
+				34756748179D1A5700C56E22 /* ARLGeneralItemTableViewCell.h */,
+				34756749179D1A5700C56E22 /* ARLGeneralItemTableViewCell.m */,
 				34DF3E3716A49BF100625734 /* ARLGeneralItemViewCell.h */,
 				34DF3E3816A49BF200625734 /* ARLGeneralItemViewCell.m */,
 				3414FAA516A5D643009917BB /* ARLGeneralItemViewController.h */,
@@ -1125,6 +1145,11 @@
 				3401B81C1793EB1D00F81B45 /* cb_green_off@2x.png in Resources */,
 				3401B81D1793EB1D00F81B45 /* cb_green_on.png in Resources */,
 				3401B81E1793EB1D00F81B45 /* cb_green_on@2x.png in Resources */,
+				3475674E179D241100C56E22 /* gi_narrator.png in Resources */,
+				34756751179D279400C56E22 /* audio_icon.png in Resources */,
+				34756752179D279400C56E22 /* question.png in Resources */,
+				34756755179D28CE00C56E22 /* video_48x48.png in Resources */,
+				34756756179D28CE00C56E22 /* youtube.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1244,6 +1269,7 @@
 				3401B8711796819500F81B45 /* NSString+JSON.m in Sources */,
 				3401B8741796F81000F81B45 /* Response.m in Sources */,
 				3401B8781797CFC400F81B45 /* ARLNarratorItemViewController.m in Sources */,
+				3475674A179D1A5700C56E22 /* ARLGeneralItemTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
