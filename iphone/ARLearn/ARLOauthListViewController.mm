@@ -69,41 +69,18 @@
 
 - (IBAction)qrScan:(id)sender {
     
-    NSLog(@"clicked scan");
     
     ZBarReaderViewController *reader = [ZBarReaderViewController new];
     reader.readerDelegate = self;
     reader.supportedOrientationsMask = ZBarOrientationMaskAll;
     
     ZBarImageScanner *scanner = reader.scanner;
-    // TODO: (optional) additional reader configuration here
     
-    // EXAMPLE: disable rarely used I2/5 to improve performance
     [scanner setSymbology: ZBAR_I25
                    config: ZBAR_CFG_ENABLE
                        to: 0];
     
-    // present and release the controller
-    [self presentModalViewController: reader
-                            animated: YES];
-    
-    
-//    ZXingWidgetController *widController =
-//    [[ZXingWidgetController alloc] initWithDelegate:self showCancel:YES OneDMode:NO];
-//    
-//    NSMutableSet *readers = [[NSMutableSet alloc ] init];
-//     QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
-////    MultiFormatReader* reader = [[MultiFormatReader alloc] init];
-//    [readers addObject:qRCodeReader];
-//    
-//    
-//    widController.readers = readers;
-//    
-//    NSBundle *mainBundle = [NSBundle mainBundle];
-//    widController.soundToPlay =[NSURL fileURLWithPath:[mainBundle pathForResource:@"beep-beep" ofType:@"aiff"] isDirectory:NO];
-//    
-//    [self presentViewController:widController animated:YES completion:nil];
-
+    [self presentViewController:reader animated:YES completion:nil];
 }
 
 

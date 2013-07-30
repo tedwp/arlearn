@@ -13,16 +13,13 @@
     NSMutableDictionary * notDict;
 }
 
-+ (ARLNotificationSubscriber *)sharedSingleton
-{
-    static ARLNotificationSubscriber *sharedSingleton;
-    
-    @synchronized(self)
-    {
-        if (!sharedSingleton)
-            sharedSingleton = [[ARLNotificationSubscriber alloc] init];
-        return sharedSingleton;
-    }
++ (ARLNotificationSubscriber *)sharedSingleton {
+   static ARLNotificationSubscriber *sharedSingleton;
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, ^{
+        sharedSingleton = [[ARLNotificationSubscriber alloc] init];
+    });
+    return sharedSingleton;
 }
 
 - (id) init {
@@ -31,34 +28,39 @@
     return self;
 }
 
+- (void) registerAccount: (NSString* ) fullId {
+    NSString * deviceUniqueIdentifier = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceUniqueIdentifier"];
+    NSString * deviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceToken"];
+    [ARLNetwork registerDevice:deviceToken withUID:deviceUniqueIdentifier withAccount:fullId];
+}
+
 - (void) dispatchMessage: (NSDictionary *) message {
     message = [message objectForKey:@"aps"];
+    if ([@"org.celstec.arlearn2.beans.run.User" isEqualToString:[message objectForKey:@"type"]]) {
+        ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
+        ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        [synchronizer createContext:appDelegate.managedObjectContext];
+        synchronizer.syncRuns = YES;
+        synchronizer.syncGames = YES;
+        [synchronizer sync];
+    }
     if ([@"org.celstec.arlearn2.beans.notification.RunModification" isEqualToString:[message objectForKey:@"type"]]) {
         NSLog(@"about to update runs %@", [[message objectForKey:@"run"] objectForKey:@"runId"]);
-        ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        NSManagedObjectContext *moc = [appDelegate managedObjectContext];
         ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
         synchronizer.syncRuns = YES;
         [synchronizer sync];
         
-//        [ARLCloudSynchronizer syncronizeRuns:moc];
-//        [ARLCloudSynchronizer syncronizeRuns];
-        
     }
     if ([@"org.celstec.arlearn2.beans.notification.GeneralItemModification" isEqualToString:[message objectForKey:@"type"]]) {
         NSLog(@"about to update gi %@", [message objectForKey:@"itemId"] );
-        ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        NSManagedObjectContext *moc = [appDelegate managedObjectContext];
         
         ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
-        synchronizer.gameId = [message objectForKey:@"gameId"];
-        synchronizer.visibilityRunId = [message objectForKey:@"runId"];
+        ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        [synchronizer createContext:appDelegate.managedObjectContext];
+        
+        synchronizer.gameId = [NSDecimalNumber decimalNumberWithString:[message objectForKey:@"gameId"]];
+        synchronizer.visibilityRunId = [NSDecimalNumber decimalNumberWithString:[message objectForKey:@"runId"]];
         [synchronizer sync];
-//        
-//        [ARLCloudSynchronizer synchronizeGeneralItemsAndVisibilityStatments:[message objectForKey:@"runId"] withManagedContext:moc];
-//
-//        [ARLCloudSynchronizer synchronizeGeneralItems:[message objectForKey:@"gameId"] withManagedContext:moc];
-//        [ARLCloudSynchronizer synchronizeGeneralItemVisiblityStatements:[message objectForKey:@"runId"] withManagedContext:moc];
     }
     
     NSMutableSet *set = [notDict objectForKey:[message objectForKey:@"type"]];

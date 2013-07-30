@@ -32,7 +32,6 @@ import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.cache.UserLoggedInCache;
 import org.celstec.arlearn2.cache.UsersCache;
-import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.delegators.notification.NotificationEngine;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.manager.AccountManager;
@@ -122,11 +121,11 @@ public class UsersDelegator extends GoogleDelegator {
 		rm.setRun(run);
 		UserManager.addUser(u);
 
-		rm = new RunModification();
-		rm.setModificationType(RunModification.CREATED);
-		rm.setRun(run);
-		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
-
+//		rm = new RunModification();
+//		rm.setModificationType(RunModification.CREATED);
+//		rm.setRun(run);
+//		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
+        (new NotificationDelegator()).broadcast(u, u.getFullId());
 		return u;
 	}
 
@@ -191,24 +190,10 @@ public class UsersDelegator extends GoogleDelegator {
 		return users;
 	}
 
-	/**
-	 * retrieves all users of the given run.
-	 * 
-	 * @param runId
-	 * @return
-	 */
 	public UserList getUsers(Long runId) {
 		return getUsers(runId, null);
 	}
 
-	/**
-	 * retrieves all users of the given run and teamId.
-	 * 
-	 * @param runId
-	 * @param teamId
-	 *            when teamId is null, all users within the run are returned
-	 * @return
-	 */
 	public UserList getUsers(Long runId, String teamId) {
 		List<User> users = getUserList(runId, null, null, teamId);
 		UserList returnList = new UserList();

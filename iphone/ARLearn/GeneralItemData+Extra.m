@@ -7,7 +7,7 @@
 //
 
 #import "GeneralItemData+Extra.h"
-#import "GeneralItem+ARLearnBeanCreate.m"
+#import "GeneralItem+ARLearnBeanCreate.h"
 
 @implementation GeneralItemData (Extra)
 

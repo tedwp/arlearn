@@ -31,6 +31,9 @@
                          [self.run.game.gameId longLongValue], [self.run.runId longLongValue], [currentTimeMillis longLongValue], [self.run.runId longLongValue], [currentTimeMillis longLongValue]];
 
     
+    NSSortDescriptor* sortkey = [[NSSortDescriptor alloc] initWithKey:@"sortKey" ascending:YES];
+    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortkey, nil];
+    [request setSortDescriptors:sortDescriptors];
     self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
                                                                         managedObjectContext:self.run.managedObjectContext
                                                                           sectionNameKeyPath:nil
@@ -78,16 +81,29 @@
         cell = [[ARLGeneralItemTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:generalItem.type];
     }
     cell.giTitleLabel.text = generalItem.name;
+    cell.giTitleLabel.font = [UIFont boldSystemFontOfSize:16.0f];
+    for (Action * action in generalItem.actions) {
+        if (action.run == self.run) {
+            if ([action.action isEqualToString:@"read"]) {
+                cell.giTitleLabel.font = [UIFont systemFontOfSize:16.0f];
+            }
+        }
+    }
 //    cell.detailTextLabel.text = [NSString stringWithFormat:@"vis statements %d", [generalItem.visibility count] ];
    
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    ARLGeneralItemTableViewCell *cell = (ARLGeneralItemTableViewCell*) [tableView cellForRowAtIndexPath:indexPath];
+    cell.giTitleLabel.font = [UIFont systemFontOfSize:16.0f];
 }
 
 -(void) configureCell: (ARLGeneralItemTableViewCell *) cell atIndexPath:(NSIndexPath *)indexPath {
     GeneralItem * generalItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.giTitleLabel.text = generalItem.name;
 //    cell.detailTextLabel.text = [NSString stringWithFormat:@"vis statements %d", [generalItem.visibility count] ];
-    NSData* icon = [generalItem icon];
+    NSData* icon = [generalItem customIconData];
     if (icon) {
         UIImage * image = [UIImage imageWithData:icon];
         cell.icon.image = image;
@@ -97,6 +113,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+    
     GeneralItem * generalItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
     if ([segue.destinationViewController respondsToSelector:@selector(setGeneralItem:)]) {
         [segue.destinationViewController performSelector:@selector(setGeneralItem:) withObject:generalItem];
@@ -104,7 +121,10 @@
     if ([segue.destinationViewController respondsToSelector:@selector(setRun:)]) {
         [segue.destinationViewController performSelector:@selector(setRun:) withObject:self.run];
     }
-    [ARLNetwork publishAction:self.run.runId action:@"read" itemId:generalItem.id itemType:generalItem.type];
+    [Action initAction:@"read" forRun:self.run forGeneralItem:generalItem inManagedObjectContext:generalItem.managedObjectContext];
+    [ARLCloudSynchronizer syncActions:generalItem.managedObjectContext];
+
+//    [ARLNetwork publishAction:self.run.runId action:@"read" itemId:generalItem.id itemType:generalItem.type];
 }
 
 @end

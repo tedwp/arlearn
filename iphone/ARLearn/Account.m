@@ -2,22 +2,26 @@
 //  Account.m
 //  ARLearn
 //
-//  Created by Stefaan Ternier on 7/8/13.
+//  Created by Stefaan Ternier on 7/24/13.
 //  Copyright (c) 2013 Stefaan Ternier. All rights reserved.
 //
 
 #import "Account.h"
+#import "Action.h"
+#import "Response.h"
 
 
 @implementation Account
 
-@dynamic localId;
+@dynamic accountLevel;
 @dynamic accountType;
 @dynamic email;
-@dynamic name;
-@dynamic givenName;
 @dynamic familyName;
+@dynamic givenName;
+@dynamic localId;
+@dynamic name;
 @dynamic picture;
-@dynamic accountLevel;
+@dynamic responses;
+@dynamic actions;
 
 @end

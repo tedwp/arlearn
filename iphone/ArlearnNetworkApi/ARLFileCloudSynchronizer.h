@@ -21,8 +21,6 @@
 
 - (void) createContext: (NSManagedObjectContext*) mainContext;
 
-+ (id)sharedInstance;
 - (void) sync;
-//+ (void) sync;
 
 @end

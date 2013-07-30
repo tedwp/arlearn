@@ -11,6 +11,7 @@
 #import "Run.h"
 #import "ARLMultipleChoiceAnswerView.h"
 #import "Response+Create.h"
+#import "ARLCloudSynchronizer.h"
 
 @interface ARLMultipleChoiceTestViewController : UIViewController 
 

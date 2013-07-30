@@ -14,6 +14,11 @@
 
 @implementation ARLAccountDelegator
 
++ (void) deleteCurrentAccount: (NSManagedObjectContext * ) context {
+    [Account deleteAll:context];
+    [self resetAccount:context];
+}
+
 + (void) resetAccount: (NSManagedObjectContext * ) context {
     NSNumber* serverTime = [NSNumber numberWithLong:0];
     [SynchronizationBookKeeping createEntry:@"myRuns" time:serverTime inManagedObjectContext:context];
@@ -24,8 +29,17 @@
     [GeneralItemVisibility deleteAll:context];
     
     [Response deleteAll:context];    
-    NSError *error = nil;
     
+    [self saveChanges:context];
+   
+    
+}
+
+
+
++ (void) saveChanges : (NSManagedObjectContext * ) context {
+    
+     NSError *error = nil;
     if (context) {
         if ([context hasChanges]){
             if (![context save:&error]) {
@@ -35,7 +49,6 @@
         }
     }
 
-    
 }
 
 @end

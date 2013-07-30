@@ -15,7 +15,7 @@
 @synthesize identifier = _identifier;
 @synthesize selectedButton = _selectedButton;
 @synthesize selected = _selected;
-
+@synthesize delegate;
 - (id)init{
     self = [super init];
     if (self) {
@@ -69,10 +69,12 @@
         UIImage * image = [UIImage imageNamed:@"cb_green_off.png"];
         [_selectedButton setBackgroundImage:image forState:UIControlStateNormal];
 
+
     } else {
         self.selected = YES;
         UIImage * image = [UIImage imageNamed:@"cb_green_on.png"];
         [_selectedButton setBackgroundImage:image forState:UIControlStateNormal];
+                [delegate answerClicked:self.identifier];
     }
 }
 
@@ -83,6 +85,12 @@
 
 - (BOOL) isSelected {
     return self.selected;
+}
+
+- (void) disable {
+    self.selected = NO;
+    UIImage * image = [UIImage imageNamed:@"cb_green_off.png"];
+    [_selectedButton setBackgroundImage:image forState:UIControlStateNormal];
 }
 
 @end

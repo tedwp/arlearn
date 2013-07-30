@@ -27,11 +27,11 @@
                      inManagedObjectContext: (NSManagedObjectContext * ) context {
     
     GeneralItem * gi = [self retrieveFromDb:giDict withManagedContext:context];
-    
     if ([[giDict objectForKey:@"deleted"] boolValue]) {
-        //item is deleted
-        [gi.managedObjectContext deleteObject:gi];
-        [gi.managedObjectContext save:nil];
+        if (gi) {
+            //item is deleted
+            [context deleteObject:gi];
+        }
         return nil;
     }
     if (!gi) {
@@ -65,25 +65,9 @@
     }
     if ([gi.type caseInsensitiveCompare:@"org.celstec.arlearn2.beans.generalItem.AudioObject"] == NSOrderedSame ){
         [GeneralItemData createDownloadTask:gi withKey:@"audio" withUrl:[jsonDict objectForKey:@"audioFeed"] withManagedContext:context];
-
-//        NSDictionary* dataMap = [self getDatas:gi withManagedContext:context];
-//        GeneralItemData * giData = [dataMap objectForKey:@"audio"];
-//        if (!giData) {
-//            giData = [NSEntityDescription insertNewObjectForEntityForName:@"GeneralItemData" inManagedObjectContext:context];
-//            giData.name = @"audio";
-//            giData.generalItem = gi;
-//        }
-//        if (![[giDict objectForKey:@"audioFeed"] isEqual:giData.url]) {
-//            giData.url = [giDict objectForKey:@"audioFeed"];
-//            giData.replicated = [NSNumber numberWithBool:NO];
-//            giData.error = [NSNumber numberWithBool:NO];
-//            
-//        } else {
-//            if (giData.data == nil && [giData.replicated isEqualToNumber:[NSNumber numberWithBool:NO]]) {
-//                 giData.error = [NSNumber numberWithBool:NO];
-//            }
-//        }
-    } else{
+    } else if ([gi.type caseInsensitiveCompare:@"org.celstec.arlearn2.beans.generalItem.VideoObject"] == NSOrderedSame ){
+        [GeneralItemData createDownloadTask:gi withKey:@"video" withUrl:[jsonDict objectForKey:@"videoFeed"] withManagedContext:context];
+    } else {
         NSLog(@"nothing to download for %@", gi.type);
     }
     
@@ -109,7 +93,7 @@
     GeneralItem * gi = nil;
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GeneralItem"];
-    request.predicate = [NSPredicate predicateWithFormat:@"id = %ld", [itemId longValue]];
+    request.predicate = [NSPredicate predicateWithFormat:@"id = %lld", [itemId longLongValue]];
     NSError *error = nil;
 
     NSArray *generalItemsFromDb = [context executeFetchRequest:request error:&error];
@@ -128,7 +112,7 @@
     GeneralItem * gi = nil;
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GeneralItem"];
-    request.predicate = [NSPredicate predicateWithFormat:@"id = %ld", [[giDict objectForKey:@"id"] longValue]];
+    request.predicate = [NSPredicate predicateWithFormat:@"id = %lld", [[giDict objectForKey:@"id"] longLongValue]];
     NSError *error = nil;
 
     NSArray *generalItemsFromDb = [context executeFetchRequest:request error:&error];
@@ -164,7 +148,7 @@
     
 }
 
-- (NSData *) icon {
+- (NSData *) customIconData {
     for (GeneralItemData* data in self.data) {
                 NSLog(@"data %@", data.name);
         if ([data.name isEqualToString:@"iconUrl"]) {

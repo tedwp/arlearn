@@ -1,15 +1,14 @@
 //
-//  Account+create.m
+//  Account+Create.m
 //  ARLearn
 //
-//  Created by Stefaan Ternier on 7/8/13.
+//  Created by Stefaan Ternier on 7/24/13.
 //  Copyright (c) 2013 Stefaan Ternier. All rights reserved.
 //
 
-#import "Account+create.h"
+#import "Account+Create.h"
 
-@implementation Account (create)
-
+@implementation Account (Create)
 
 + (Account *) accountWithDictionary: (NSDictionary *) acDict inManagedObjectContext: (NSManagedObjectContext * ) context {
     Account * account = [self retrieveFromDb:acDict withManagedContext:context];
@@ -63,6 +62,20 @@
     } else {
         account = [accountsFromDb lastObject];
         return account;
+    }
+    
+}
+
++ (void) deleteAll: (NSManagedObjectContext * ) context {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Account"];
+    
+    NSError *error = nil;
+    NSArray *accounts = [context executeFetchRequest:request error:&error];
+    if (error) {
+        NSLog(@"error %@", error);
+    }
+    for (id ac in accounts) {
+        [context deleteObject:ac];
     }
     
 }

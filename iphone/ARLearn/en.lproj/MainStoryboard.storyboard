@@ -827,88 +827,9 @@
                     <view key="view" contentMode="scaleToFill" id="GH7-LJ-NfJ">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="U5a-cW-5zW">
-                                <rect key="frame" x="29" y="288" width="260" height="44"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Log in">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="LqE-XL-lqT" kind="modal" id="v9F-zi-90N"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Rnr-6k-GOX">
-                                <rect key="frame" x="29" y="344" width="260" height="44"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="My Runs">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="31u-WN-3dN" kind="modal" id="fOR-fz-UFE"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="B3V-MB-YRg">
-                                <rect key="frame" x="29" y="400" width="260" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Quick Guide">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="pgD-jV-Upp" kind="modal" modalTransitionStyle="flipHorizontal" id="Z61-eU-Nbf"/>
-                                </connections>
-                            </button>
-                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="arlearn_logo.png" id="tHd-jA-kB3">
-                                <rect key="frame" x="5" y="4" width="308" height="206"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                            </imageView>
-                            <view contentMode="scaleToFill" id="K70-GE-gT6">
-                                <rect key="frame" x="29" y="190" width="260" height="79"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" id="Sph-wo-kdV">
-                                        <rect key="frame" x="35" y="5" width="56" height="67"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    </imageView>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Logged in as:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="veZ-PV-m9c">
-                                        <rect key="frame" x="107" y="5" width="103" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lri-OO-kry">
-                                        <rect key="frame" x="107" y="38" width="182" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
-                    <connections>
-                        <outlet property="imageView" destination="Sph-wo-kdV" id="g3b-YU-7cF"/>
-                        <outlet property="loggedInView" destination="K70-GE-gT6" id="vgT-jH-k3w"/>
-                        <outlet property="userName" destination="lri-OO-kry" id="wxJ-Au-YbM"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8aW-a1-w8v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -944,7 +865,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="arlearn_logo.png" width="705" height="467"/>
         <image name="audio_icon.png" width="48" height="48"/>
         <image name="facebook.png" width="200" height="200"/>
         <image name="gi_narrator.png" width="48" height="48"/>
@@ -953,6 +873,117 @@
         <image name="oauth_scanbarcodeicon.png" width="200" height="200"/>
         <image name="video_48x48.png" width="48" height="48"/>
     </resources>
+    <classes>
+        <class className="ARLAudioViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLAudioViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="headerText" candidateClass="UINavigationItem"/>
+                <relationship kind="outlet" name="mainView" candidateClass="UIView"/>
+            </relationships>
+        </class>
+        <class className="ARLAuthenticationViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLAuthenticationViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="back:"/>
+                <relationship kind="action" name="login:"/>
+                <relationship kind="outlet" name="email" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="password" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="ARLCustomViewController" superclassName="ARLPageViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLCustomViewController.h"/>
+        </class>
+        <class className="ARLGeneralItemTableViewCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLGeneralItemTableViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="giTitleLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="icon" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+        <class className="ARLGeneralItemTableViewController" superclassName="CoreDataTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLGeneralItemTableViewController.h"/>
+        </class>
+        <class className="ARLMapTableViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLMapTableViewController.h"/>
+        </class>
+        <class className="ARLMapViewController" superclassName="ARLMapTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLMapViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
+            </relationships>
+        </class>
+        <class className="ARLMultipleChoiceTestViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLMultipleChoiceTestViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="headerText" candidateClass="UINavigationItem"/>
+            </relationships>
+        </class>
+        <class className="ARLNarratorItemViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLNarratorItemViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="headerText" candidateClass="UINavigationItem"/>
+                <relationship kind="outlet" name="mainView" candidateClass="UIView"/>
+            </relationships>
+        </class>
+        <class className="ARLOauthListViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLOauthListViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="facebookButton:"/>
+                <relationship kind="action" name="googleButton:"/>
+                <relationship kind="action" name="qrScan:"/>
+            </relationships>
+        </class>
+        <class className="ARLOauthWebViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLOauthWebViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="delegate" candidateClass="NSObject"/>
+                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
+            </relationships>
+        </class>
+        <class className="ARLPageViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLPageViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="changePage:"/>
+                <relationship kind="outlet" name="pageControl" candidateClass="UIPageControl"/>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+            </relationships>
+        </class>
+        <class className="ARLRunTableViewController" superclassName="CoreDataTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLRunTableViewController.h"/>
+        </class>
+        <class className="ARLRunViewCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLRunViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="icon" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="runDetail" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="runTitleLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ARLScanObjectViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLScanObjectViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="scanTagButton:"/>
+            </relationships>
+        </class>
+        <class className="ARLScanTagViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLScanTagViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="scanTag:"/>
+            </relationships>
+        </class>
+        <class className="ARLSplashScreenViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLSplashScreenViewController.h"/>
+        </class>
+        <class className="ARLVideoViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ARLVideoViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="headerText" candidateClass="UINavigationItem"/>
+            </relationships>
+        </class>
+        <class className="CoreDataTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CoreDataTableViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

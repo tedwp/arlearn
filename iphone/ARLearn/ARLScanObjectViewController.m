@@ -55,22 +55,7 @@
                        to: 0];
     
     // present and release the controller
-    [self presentModalViewController: reader
-                            animated: YES];
-    
-//    ZXingWidgetController *widController = [[ZXingWidgetController alloc] initWithDelegate:self showCancel:YES OneDMode:NO];
-//    QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
-//
-//    NSMutableSet *readers = [[NSMutableSet alloc ] init];
-//    MultiFormatReader* reader = [[MultiFormatReader alloc] init];
-//    [readers addObject:qRCodeReader];
-//    
-//    widController.readers = readers;
-//    
-//    NSBundle *mainBundle = [NSBundle mainBundle];
-//    widController.soundToPlay = [NSURL fileURLWithPath:[mainBundle pathForResource:@"beep-beep" ofType:@"aiff"] isDirectory:NO];
-//    
-//    [self presentViewController:widController animated:YES completion:nil];
+    [self presentViewController:reader animated:YES completion:nil];
 
 }
 
@@ -84,9 +69,10 @@
     for(symbol in results)
         break;
     NSLog(@"scanned %@", symbol.data);
-    [ARLNetwork publishAction:self.run.runId action:symbol.data itemId:self.generalItem.id itemType:self.generalItem.type];
-        
-    [reader dismissModalViewControllerAnimated: YES];
+    
+    [Action initAction:symbol.data forRun:self.run forGeneralItem:self.generalItem inManagedObjectContext:self.generalItem.managedObjectContext];
+    [ARLCloudSynchronizer syncActions:self.generalItem.managedObjectContext];
+    [reader dismissViewControllerAnimated:YES completion:nil];
 }
 
 //- (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {

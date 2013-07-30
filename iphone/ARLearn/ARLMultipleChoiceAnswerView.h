@@ -9,12 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "ARLAnswerItemView.h"
 
-@interface ARLMultipleChoiceAnswerView : UIView
+@interface ARLMultipleChoiceAnswerView : UIView <AnswerClickedDelegate>{
+    BOOL _isSingleChoice;
+
+}
 
 @property (nonatomic, retain) NSMutableArray* dataArray;
 @property (nonatomic, retain) NSMutableArray * answerViews;
 
-- (id) initWith: (NSDictionary *) jsonDict;
+- (id) initWith: (NSDictionary *) jsonDict singleChoice: (BOOL) isSingleChoice;
 - (int) height;
 - (NSArray *) selectedIds;
 @end

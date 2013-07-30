@@ -31,7 +31,7 @@
     Run * run = nil;
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Run"];
-    request.predicate = [NSPredicate predicateWithFormat:@"runId = %ld", [[runDict objectForKey:@"runId"] longValue]];
+    request.predicate = [NSPredicate predicateWithFormat:@"runId = %lld", [[runDict objectForKey:@"runId"] longLongValue]];
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES];
     request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     
@@ -68,7 +68,7 @@
 + (void) setGame: (Run *) run inManagedObjectContext: (NSManagedObjectContext * ) context {
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Game"];
-    request.predicate = [NSPredicate predicateWithFormat:@"gameId = %ld", [run.gameId longLongValue]];
+    request.predicate = [NSPredicate predicateWithFormat:@"gameId = %lld", [run.gameId longLongValue]];
    
     NSError *error = nil;
     NSArray *games = [context executeFetchRequest:request error:&error];
@@ -92,6 +92,7 @@
         NSLog(@"error %@", error);
     }
     for (id run in runs) {
+                NSLog(@"these should be gone already");
         [context deleteObject:run];
     }
 

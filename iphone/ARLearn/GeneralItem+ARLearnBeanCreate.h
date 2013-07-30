@@ -19,5 +19,5 @@
 + (GeneralItem *) retrieveFromDbWithId: (NSNumber *) itemId withManagedContext: (NSManagedObjectContext*) context;
 
 + (NSArray *) getAll: (NSManagedObjectContext*) context;
--  (NSData *) icon;
+-  (NSData *) customIconData;
 @end

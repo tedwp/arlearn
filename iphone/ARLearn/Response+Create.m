@@ -74,7 +74,6 @@
             withGeneralItem: (GeneralItem*) generalItem {
     NSDictionary *myDictionary= [[NSDictionary alloc] initWithObjectsAndKeys:
                                  text, @"text", nil];
-    NSString* jsonString = [NSString jsonString:myDictionary];
     [Response initResponse:run forGeneralItem:generalItem
                  withValue:[NSString jsonString:myDictionary]
     inManagedObjectContext: generalItem.managedObjectContext];

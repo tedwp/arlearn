@@ -107,27 +107,12 @@
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    // Override point for customization after application launch.
-
-    
-    //old db
-//    if (!self.arlearnDatabase) { //create the database if one does not exist
-//        NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-//        url = [url URLByAppendingPathComponent:@"ARLearn Database"];
-//        self.arlearnDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
-//    }
-    
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self managedObjectContext];
-    
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-    
-    if (launchOptions != nil)
-	{
+    if (launchOptions != nil)	{
 		NSDictionary* dictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-		if (dictionary != nil)
-		{
+		if (dictionary != nil)		{
 			NSLog(@"Launched from push notification: %@", dictionary);
 //			[self addMessageFromRemoteNotification:dictionary updateUI:NO];
 		}
@@ -156,9 +141,12 @@
     UIDevice *device = [UIDevice currentDevice];
     NSString *uniqueIdentifier = [device uniqueIdentifier];
         NSLog(@"My device id: %@", uniqueIdentifier);
-    NSString * email = [[NSUserDefaults standardUserDefaults] objectForKey:@"username"];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:uniqueIdentifier forKey:@"deviceUniqueIdentifier"];
+    [[NSUserDefaults standardUserDefaults] setObject:newToken forKey:@"deviceToken"];
+    
 
-    [ARLNetwork registerDevice:newToken withUID:uniqueIdentifier withAccount:email];
+//    [ARLNetwork registerDevice:newToken withUID:deviceUniqueIdentifier withAccount:email];
 //    [[[ARLNetworkAPN alloc] init] registerDevice:newToken withUID:uniqueIdentifier];
 
     

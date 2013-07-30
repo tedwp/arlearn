@@ -32,7 +32,9 @@
     return jsonData ? [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers|NSJSONReadingMutableLeaves error:&error] : nil;
 }
 
-+ (id) executeARLearnPostWithAuthorization: (NSString *) path postData:(NSData *) data withContentType: (NSString *) ctValue{
++ (id) executeARLearnPostWithAuthorization: (NSString *) path
+                                  postData:(NSData *) data
+                           withContentType: (NSString *) ctValue{
     NSString* urlString = [NSString stringWithFormat:@"%@/rest/%@", serviceUrl, path];
     NSMutableURLRequest *request = [self prepareRequest:@"POST" requestWithUrl:urlString];
     
@@ -132,15 +134,17 @@
 
 //APN
 
-+ (void) registerDevice: (NSString *) token withUID: (NSString *) deviceUID withAccount: (NSString *) email {
-    if (!email) return;
-    NSDictionary *tmp = [[NSDictionary alloc] initWithObjectsAndKeys:
-                         email, @"account",
-                         deviceUID, @"deviceUniqueIdentifier",
-                         token, @"deviceToken",
++ (void) registerDevice: (NSString *) deviceToken withUID: (NSString *) deviceUniqueIdentifier withAccount: (NSString *) account {
+    if (!account) return;
+    NSDictionary *apnRegistrationBean = [[NSDictionary alloc] initWithObjectsAndKeys:
+                         @"org.celstec.arlearn2.beans.notification.APNDeviceDescription", @"type",
+                         account, @"account",
+                         deviceUniqueIdentifier, @"deviceUniqueIdentifier",
+                         deviceToken, @"deviceToken",
                          nil];
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:tmp options:0 error:nil];
-    [self executeARLearnPOST:@"apn" postData:postData withAccept:nil withContentType:applicationjson ];
+    NSLog(@"bean to write %@", apnRegistrationBean);
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:apnRegistrationBean options:0 error:nil];
+    [self executeARLearnPOST:@"notifications/apn" postData:postData withAccept:nil withContentType:applicationjson ];
     
 }
 
@@ -148,24 +152,25 @@
 
 + (void) publishAction: (NSDictionary *) actionDict {
     NSData *postData = [NSJSONSerialization dataWithJSONObject:actionDict options:0 error:nil];
-    [self executeARLearnPOST:@"actions"
-                    postData:postData
-                  withAccept:applicationjson
-             withContentType:applicationjson];
+    [self executeARLearnPostWithAuthorization:@"actions" postData:postData withContentType:applicationjson];
 }
 
-+ (void) publishAction: (long) runId
++ (void) publishAction: (NSNumber *) runId
                     action: (NSString *) action
-                    itemId: (long) itemId
+                    itemId: (NSNumber *) itemId
+                    time: (NSNumber *) time
                   itemType:(NSString *) itemType {
+    NSString* accountType = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountType"];
+    NSString* accountLocalId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountLocalId"];
+    NSString* account = [NSString stringWithFormat:@"%@:%@", accountType, accountLocalId];
     NSDictionary *actionDict = [[NSDictionary alloc] initWithObjectsAndKeys:
                                 action, @"action",
-                                [NSNumber numberWithLong:runId], @"runId",
-                                [NSNumber numberWithLong:itemId], @"generalItemId",
-                                [[NSUserDefaults standardUserDefaults] objectForKey:@"username"], @"userEmail",
+                                runId, @"runId",
+                                itemId, @"generalItemId",
+                                account, @"userEmail",
+                                time, @"time",
                                 itemType, @"generalItemType",
                                 nil];
-    NSLog(@"publish action%@", actionDict);
     [self publishAction:actionDict];
 }
 
@@ -195,8 +200,7 @@
                                 timeStamp, @"timestamp",
                                 account, @"userEmail",
                                 nil];
-    NSLog(@"publish response%@", responseDict);
-[self publishResponse:responseDict];
+    [self publishResponse:responseDict];
     
 }
 
@@ -266,6 +270,12 @@
 
 + (NSDictionary*) accountDetails {
     return [self executeARLearnGetWithAuthorization:[NSString stringWithFormat:@"account/accountDetails"]];
+}
+
+// oauth info
+
++ (NSDictionary *) oauthInfo {
+    return [self executeARLearnGet:@"oauth/getOauthInfo"];
 }
 
 @end

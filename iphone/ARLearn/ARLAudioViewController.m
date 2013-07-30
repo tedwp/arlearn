@@ -76,6 +76,7 @@
     } else {
         viewsDictionary =
         [[NSDictionary alloc] initWithObjectsAndKeys:
+         webView, @"webView",
          playButtons, @"playButtons", nil];
     }
     

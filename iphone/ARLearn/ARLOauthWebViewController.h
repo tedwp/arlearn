@@ -7,16 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "ARLNotificationSubscriber.h"
 
 @class ARLOauthListViewController;
 
-@interface ARLOauthWebViewController : UIViewController  
+@interface ARLOauthWebViewController : UIViewController  <UIWebViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UIWebView *webView;
-@property (nonatomic, assign) IBOutlet NSObject<UIWebViewDelegate> *delegate;
+@property (strong, nonatomic)  UIWebView *webView;
+//@property (nonatomic, assign) IBOutlet NSObject<UIWebViewDelegate> *delegate;
 @property (weak, nonatomic) NSString * domain;
-//@property (weak, nonatomic) ARLOauthListViewController *oauthList;
+@property (strong, nonatomic) UIViewController * selfRef;
 
 
 - (void)loadAuthenticateUrl:(NSString *)authenticateUrl delegate:(id) aDelegate;

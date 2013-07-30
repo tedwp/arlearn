@@ -8,7 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+#import "Account+Create.h"
 @interface ARLAccountDelegator : NSObject
+
++ (void) deleteCurrentAccount: (NSManagedObjectContext * ) context ;
 
 + (void) resetAccount:  (NSManagedObjectContext * ) context;
 
