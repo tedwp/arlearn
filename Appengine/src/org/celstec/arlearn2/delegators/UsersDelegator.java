@@ -77,10 +77,7 @@ public class UsersDelegator extends GoogleDelegator {
 		new NotificationDelegator().broadcast(run, u.getFullId());
 		if (this.account != null) {
 			new NotificationDelegator().broadcast(u, u.getFullId());
-
 		}
-		// ChannelNotificator.getInstance().notify(u.getEmail(), rm);
-
 		(new UpdateGeneralItemsVisibility(authToken, this.account, u.getRunId(), u.getEmail(), 1)).scheduleTask();
         (new UpdateVariableEffectInstancesForUser(authToken, this.account, u.getEmail(), u.getRunId(), run.getGameId(), 1)).scheduleTask();
 
@@ -243,17 +240,18 @@ public class UsersDelegator extends GoogleDelegator {
 		UserManager.setStatusDeleted(runId, email);
 		UsersCache.getInstance().removeUser(runId); // removing because user
 													// might be cached in a team
-		// (new NotifyUpdateRun(authToken,runId, false, true,
-		// user.getEmail())).scheduleTask();
 		(new DeleteActions(authToken, this.account, runId, email)).scheduleTask();
 		(new DeleteBlobs(authToken, this.account, runId, email)).scheduleTask();
 		(new DeleteResponses(authToken,this.account,  runId, email)).scheduleTask();
 		(new UpdateGeneralItemsVisibility(authToken, this.account, runId, email, 2)).scheduleTask();
         (new UpdateVariableEffectInstancesForUser(authToken, this.account, email, runId, null, 2)).scheduleTask();
 
-//		notifyRunDeleted(runId, email);
 		if (this.account != null) {
-			new NotificationDelegator().broadcast(user, user.getFullId());
+            // new bean is created, because apn can not handle large pieces of data
+            User notificationUser = new User();
+            notificationUser.setRunId(user.getRunId());
+            notificationUser.setFullIdentifier(user.getFullId());
+			new NotificationDelegator().broadcast(notificationUser, user.getFullId());
 		}
 		return user;
 	}

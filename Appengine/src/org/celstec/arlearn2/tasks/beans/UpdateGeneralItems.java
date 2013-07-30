@@ -117,9 +117,8 @@ public class UpdateGeneralItems extends GenericBean{
 		
 		GeneralItemDelegator gid = new GeneralItemDelegator(qu);
 		ActionRelevancyPredictor arp = ActionRelevancyPredictor.getActionRelevancyPredicator(run.getGameId(), qu);
-		System.out.println(arp);
-		
-		boolean userRelevant = arp.isRelevantForUser(a); 
+
+		boolean userRelevant = arp.isRelevantForUser(a);
 		boolean teamRelevant = arp.isRelevantForTeam(a); 
 		boolean allRelevant = arp.isRelevantForAll(a); 
 		if (userRelevant) {

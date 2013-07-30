@@ -28,6 +28,7 @@ public class VariableDelegator extends GoogleDelegator {
             variableDefinition.setError("gameId missing");
             return variableDefinition;
         } else {
+            //use gameId to empty cache
             return VariableDefinitionManager.createVariableDefinition(variableDefinition);
         }
 	}
