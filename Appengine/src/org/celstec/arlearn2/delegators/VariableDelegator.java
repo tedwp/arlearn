@@ -223,7 +223,7 @@ public class VariableDelegator extends DependencyDelegator {
                                     for (VariableEffectInstanceJDO vei: varEffectInstances) {
                                         if (vei.getAccount().equals(vi.getAccount())) {
                                             System.out.println("USER: "+user.getName()+", "+vi.getName()+", "+vei.getAccount());
-                                            applyActionEffect(vd, vi, ved, vei);
+                                            applyActionEffect(vd, vi, ved, vei, ud);
                                         }
                                     }
                                 }
@@ -242,7 +242,7 @@ public class VariableDelegator extends DependencyDelegator {
                                     for (VariableEffectInstanceJDO vei: varEffectInstances) {
                                         if (vei.getTeamId().equals(vi.getTeamId())) {
                                             System.out.println("TEAM: "+user.getName()+", "+vi.getName()+", "+vei.getTeamId());
-                                            applyActionEffect(vd, vi, ved, vei);
+                                            applyActionEffect(vd, vi, ved, vei, ud);
                                         }
                                     }
                                 }
@@ -255,7 +255,7 @@ public class VariableDelegator extends DependencyDelegator {
                                             if (vei.getVariableEffectDefinitionIdentifier().equals(ved.getId())) {
                                             //if (vei.getAccount().equals(vi.getAccount())) {
                                                 System.out.println("GLOBAL: "+u.getName()+", "+vi.getName()+", "+vei.getVariableEffectDefinitionIdentifier());
-                                                applyActionEffect(vd, vi, ved, vei);
+                                                applyActionEffect(vd, vi, ved, vei, ud);
                                             }
                                         }
                                     }
@@ -269,7 +269,7 @@ public class VariableDelegator extends DependencyDelegator {
 
     }
 
-    protected void applyActionEffect(VariableDefinition vd, VariableInstance vi, VariableEffectDefinition ved, VariableEffectInstanceJDO vei) {
+    protected void applyActionEffect(VariableDefinition vd, VariableInstance vi, VariableEffectDefinition ved, VariableEffectInstanceJDO vei, UsersDelegator ud) {
         if (vd == null || vi == null || ved == null || vei == null) {
             System.out.println("Can't apply effect to variable. vd: "+vd+", vi: "+vi+", ved: "+ved+", vei: "+vei);
             return;
@@ -302,7 +302,24 @@ public class VariableDelegator extends DependencyDelegator {
 
             // update variable instance
             vi.setValue(value);
+
+            // save the instance
             createVariableInstance(vi);
+
+            // inform all users involved with the update
+            UserList userList = null;
+            if (vd.getScope() == Dependency.USER_SCOPE) {
+                User u = ud.getUserByEmail(vi.getRunId(), vi.getAccount());
+                userList = new UserList();
+                userList.addUser(u);
+            } else if (vd.getScope() == Dependency.TEAM_SCOPE) {
+                userList = ud.getUsers(vi.getRunId(), vi.getTeamId());
+            } else if (vd.getScope() == Dependency.ALL_SCOPE) {
+                userList = ud.getUsers(vi.getRunId());
+            }
+            for (User u: userList.getUsers()) {
+                new NotificationDelegator().broadcast(vi, u.getFullId());
+            }
 
             // update effect instance
             if (vei.getEffectCount() > 0) {
