@@ -30,6 +30,11 @@
     [super didReceiveMemoryWarning];
 }
 
+- (void) viewWillDisappear:(BOOL)animated {
+    NSLog(@"I will disappear");
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -46,8 +51,43 @@
     }
     
     [self setConstraints];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDataModelChange:) name:NSManagedObjectContextObjectsDidChangeNotification object:self.generalItem.managedObjectContext];
+
 }
 
+- (void)handleDataModelChange:(NSNotification *)note
+{
+    NSSet *updatedObjects = [[note userInfo] objectForKey:NSUpdatedObjectsKey];
+    NSSet *deletedObjects = [[note userInfo] objectForKey:NSDeletedObjectsKey];
+    
+    for(NSManagedObject *obj in updatedObjects){
+        
+        if ([[obj entity].name isEqualToString:@"GeneralItem"]) {
+            GeneralItem* changedObject = (GeneralItem*) obj;
+            if (self.generalItem == changedObject) {
+                self.headerText.title = self.generalItem.name;
+                
+                [self.webView loadHTMLString:self.generalItem.richText baseURL:nil];
+            }
+        }
+        
+    }
+
+    for(NSManagedObject *obj in deletedObjects){
+        if ([[obj entity].name isEqualToString:@"GeneralItem"]) {
+            GeneralItem* changedObject = (GeneralItem*) obj;
+            if (self.generalItem == changedObject) {
+                NSLog(@"little less easy... I was deleted");
+
+                [self.navigationController popViewControllerAnimated:NO];
+                [self dismissViewControllerAnimated:TRUE completion:nil];
+
+            }
+        }
+    }
+    
+}
 
 - (void) setConstraints {
     

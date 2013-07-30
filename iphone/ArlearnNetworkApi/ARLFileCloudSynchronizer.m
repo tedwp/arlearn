@@ -26,66 +26,9 @@
     
 }
 
-//+ (id)sharedInstance
-//{
-//    static dispatch_once_t pred;
-//    static ARLFileCloudSynchronizer *synchronizer = nil;
-//    
-//    dispatch_once(&pred, ^{
-//        synchronizer = [[self alloc] init];
-//        
-//
-//    });
-//    return synchronizer;
-//}
-//
-//- (id) init {
-//    
-//    if (self = [super init]) {
-//        ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-//        NSPersistentStoreCoordinator *coordinator = [appDelegate persistentStoreCoordinator];
-//        self.context = [[NSManagedObjectContext alloc] init];
-////        [self.context setMergePolicy:NSOverwriteMergePolicy];
-//        [self.context setPersistentStoreCoordinator:coordinator];
-//        queue = dispatch_queue_create("Sync background queue", NULL);
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_mocDidSaveNotification_nes:) name:NSManagedObjectContextDidSaveNotification object:nil];
-//        
-//
-//        
-//    }
-//    return self;
-//}
-//
-//- (void)_mocDidSaveNotification_nes:(NSNotification *)notification
-//{
-//    NSManagedObjectContext *savedContext = [notification object];
-//    if (self.context == savedContext) {
-//        return;
-//    }
-//    if (self.context.persistentStoreCoordinator != savedContext.persistentStoreCoordinator){
-//        return;
-//    }
-////    dispatch_sync(queue, ^{
-//        NSLog(@"ARLFileCloud ready with merging");
-//
-//        [self.context mergeChangesFromContextDidSaveNotification:notification];
-//        NSLog(@"ARLFileCloud ready with merging");
-//
-////    });
-//}
-//
-//- (void) sync {
-//    dispatch_async(queue, ^{
-//        [self asyncExecution];
-//    });
-//    
-//}
 
 - (void) asyncExecution {
-//    NSLog(@"made it here");
-//    @synchronized(self){
-        [self downloadGeneralItems];
-//    }
+    [self downloadGeneralItems];
 }
 
 - (void)saveContext
@@ -103,10 +46,10 @@
                 NSError *error = nil;
                 if (![self.parentContext save:&error]) {abort();}
             }];
-
+            
         }
         NSLog(@"save completed");
-
+        
     }
     NSLog(@"save completed");
 }
@@ -123,7 +66,7 @@
             NSLog(@"sth went wrong");
         }
         
-    [self saveContext];
+        [self saveContext];
     }
 }
 

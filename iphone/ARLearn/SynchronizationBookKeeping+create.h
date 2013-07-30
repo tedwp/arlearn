@@ -9,6 +9,10 @@
 #import "SynchronizationBookKeeping.h"
 
 @interface SynchronizationBookKeeping (create)
+
++ (NSNumber*) getLastSynchronizationDate : (NSManagedObjectContext *) context type:(NSString *) type;
++ (NSNumber*) getLastSynchronizationDate : (NSManagedObjectContext *) managedContext type:(NSString *) type context:(NSNumber *) identifierContext;
+
 + (SynchronizationBookKeeping *) createEntry: (NSString *) type
                                         time:(NSNumber *) time
                       inManagedObjectContext: (NSManagedObjectContext * ) context ;

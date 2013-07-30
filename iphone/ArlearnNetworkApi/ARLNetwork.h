@@ -42,7 +42,7 @@
 + (void) registerDevice: (NSString *) token withUID: (NSString *) deviceUID withAccount: (NSString *) email;
 
 + (void) publishAction: (NSDictionary *) actionDict;
-+ (void) publishAction: (long) runId action: (NSString *) action itemId: (long) itemId itemType:(NSString *) itemType;
++ (void) publishAction: (NSNumber *) runId action: (NSString *) action itemId: (NSNumber*) itemId time: (NSNumber *) time itemType:(NSString *) itemType;
 
 + (void) publishResponse: (NSDictionary *) actionDict;
 + (void) publishResponse: (NSNumber *) runId responseValue: (NSString *) value itemId: (NSNumber*) generalItemId timeStamp: (NSNumber*) timeStamp;
@@ -53,6 +53,8 @@ contentType:(NSString*) contentType withData:(NSData*) data;
 
 + (NSDictionary*) anonymousLogin: (NSString *) account ;
 + (NSDictionary*) accountDetails;
+
++(NSDictionary *) oauthInfo ;
 
 @end
 

@@ -13,24 +13,31 @@
 @synthesize syncRuns = _syncRuns;
 @synthesize syncGames = _syncGames;
 @synthesize syncResponses = _syncResponses;
+@synthesize syncActions = _syncActions;
 @synthesize gameId = _gameId;
 @synthesize visibilityRunId = _visibilityRunId;
 @synthesize context = _context;
 
-static NSMutableDictionary *syncDates;
+//static NSMutableDictionary *syncDates;
 
-+ (NSMutableDictionary *) syncDates {
-    if (syncDates == nil) {
-        syncDates = [[NSMutableDictionary alloc] init];
-    }
-    return syncDates;
-}
+//+ (NSMutableDictionary *) syncDates {
+//    if (syncDates == nil) {
+//        syncDates = [[NSMutableDictionary alloc] init];
+//    }
+//    return syncDates;
+//}
 
 + (void) syncResponses: (NSManagedObjectContext*) context {
     ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
-    //    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     [synchronizer createContext:context];
     synchronizer.syncResponses = YES;
+    [synchronizer sync];
+}
+
++ (void) syncActions: (NSManagedObjectContext*) context {
+    ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
+    [synchronizer createContext:context];
+    synchronizer.syncActions = YES;
     [synchronizer sync];
 }
 
@@ -68,23 +75,6 @@ static NSMutableDictionary *syncDates;
     self.context.parentContext = mainContext;
 }
 
-//- (void)_mocDidSaveNotificationCloud:(NSNotification *)notification
-//{
-//    NSManagedObjectContext *savedContext = [notification object];
-//    if (self.context == savedContext) {
-//        return;
-//    }
-//    if (self.context.persistentStoreCoordinator != savedContext.persistentStoreCoordinator){
-//        return;
-//    }
-//        [self.context mergeChangesFromContextDidSaveNotification:notification];
-////    dispatch_sync(queue, ^{
-////         NSLog(@"ARLCloud before merging");
-////
-////        NSLog(@"ARLCloud ready with merging");
-////    });
-//}
-
 - (void) asyncExecution {
     if (self.syncRuns) {
         [self syncronizeRuns];
@@ -101,12 +91,11 @@ static NSMutableDictionary *syncDates;
     } else if (self.syncResponses){
         [self synchronizeResponses];
         [self asyncExecution];
+    } else if (self.syncActions){
+        [self synchronizeActions];
+        [self asyncExecution];
     } else {
         [self saveContext];
-        //        [self.context reset];
-        //        [[NSNotificationCenter defaultCenter] removeObserver:self];
-        //        self.context = nil;
-        //        [self.context = nil];
     }
     
 }
@@ -115,29 +104,21 @@ static NSMutableDictionary *syncDates;
 
 
 - (void) syncronizeRuns{ //: (NSManagedObjectContext *) context
-    
-    //    [context performBlock:^{
-    NSNumber * lastDate = [ARLCloudSynchronizer getLastSynchronizationDate:self.context type:@"myRuns"];
-    //    dispatch_queue_t fetchQ = dispatch_queue_create("Run fetcher", NULL);
-    //    dispatch_async(fetchQ, ^{
+    NSNumber * lastDate = [SynchronizationBookKeeping getLastSynchronizationDate:self.context type:@"myRuns"];
     NSDictionary * dict = [ARLNetwork runsParticipateFrom:lastDate];
     NSNumber * serverTime = [dict objectForKey:@"serverTime"];
     NSLog(@"allruns %@", [dict objectForKey:@"serverTime"]);
-    //            [context performBlock:^{
     for (NSDictionary *run in [dict objectForKey:@"runs"]) {
         [Run runWithDictionary:run inManagedObjectContext:self.context];
     }
-    
     if (serverTime) {
         [SynchronizationBookKeeping createEntry:@"myRuns" time:serverTime inManagedObjectContext:self.context];
     }
-    
-    //    [self saveContext];
     self.syncRuns = NO;
 }
 
 - (void) syncronizeGames { //: (NSManagedObjectContext *) context{
-    NSNumber * lastDate = [ARLCloudSynchronizer getLastSynchronizationDate:self.context type:@"myGames"];
+    NSNumber * lastDate = [SynchronizationBookKeeping getLastSynchronizationDate:self.context type:@"myGames"];
     NSDictionary * gdict = [ARLNetwork gamesParticipateFrom:lastDate];
     NSNumber * serverTime = [gdict objectForKey:@"serverTime"];
     
@@ -153,7 +134,7 @@ static NSMutableDictionary *syncDates;
 }
 
 - (void) synchronizeGeneralItemsWithGame {//: (Game *) game {
-    NSNumber * lastDate = [ARLCloudSynchronizer getLastSynchronizationDate:self.context type:@"generalItems" context:self.gameId];
+    NSNumber * lastDate = [SynchronizationBookKeeping getLastSynchronizationDate:self.context type:@"generalItems" context:self.gameId];
     NSDictionary * gisDict = [ARLNetwork itemsForGameFrom:self.gameId from:lastDate];
     NSNumber * serverTime = [gisDict objectForKey:@"serverTime"];
     Game * game = [Game retrieveGame:self.gameId inManagedObjectContext:self.context];
@@ -165,6 +146,7 @@ static NSMutableDictionary *syncDates;
                         inManagedObjectContext:self.context];
     }
     if (serverTime) {
+        NSLog(@"gameId %@  class %@", self.gameId, [[self.gameId class] description]);
         [SynchronizationBookKeeping createEntry:@"generalItems"
                                            time:serverTime
                                       idContext:self.gameId
@@ -185,7 +167,7 @@ static NSMutableDictionary *syncDates;
 }
 
 - (void) synchronizeGeneralItemsAndVisibilityStatements: (Run *) run {
-    NSNumber * lastDate = [ARLCloudSynchronizer getLastSynchronizationDate:self.context type:@"generalItemsVisibility" context:run.runId];
+    NSNumber * lastDate = [SynchronizationBookKeeping getLastSynchronizationDate:self.context type:@"generalItemsVisibility" context:run.runId];
     NSDictionary * visDict =[ARLNetwork itemVisibilityForRun:run.runId from:lastDate];
     NSNumber * serverTime = [visDict objectForKey:@"serverTime"];
     
@@ -203,6 +185,17 @@ static NSMutableDictionary *syncDates;
     }
 }
 
+- (void) synchronizeActions {
+    NSArray* actions =  [Action getUnsyncedActions:self.context];
+    for (Action* action in actions) {
+        NSLog(@"action %@ sync %@ runId %@", action.action, action.synchronized, action.run.runId);
+        
+        [ARLNetwork publishAction:action.run.runId action:action.action itemId:action.generalItem.id time:action.time itemType:action.generalItem.type];
+        action.synchronized = [NSNumber numberWithBool:YES];
+    }
+    self.syncActions = NO;
+
+}
 - (void) synchronizeResponses {
     NSArray* responses =  [Response getUnsyncedReponses:self.context];
     for (Response* resp in responses) {
@@ -233,8 +226,6 @@ static NSMutableDictionary *syncDates;
                 
                 [ARLNetwork publishResponse:resp.run.runId responseValue:jsonString itemId:resp.generalItem.id timeStamp:resp.timeStamp];
                 
-                //TODO publish the response
-                
                 resp.synchronized = [NSNumber numberWithBool:YES];
             }
             
@@ -245,36 +236,6 @@ static NSMutableDictionary *syncDates;
 }
 
 //private methods
-
-+ (NSNumber*) getLastSynchronizationDate : (NSManagedObjectContext *) context type:(NSString *) type{
-    return [self getLastSynchronizationDate:context type:type context:nil];
-}
-
-+ (NSNumber*) getLastSynchronizationDate : (NSManagedObjectContext *) managedContext type:(NSString *) type context:(NSNumber *) identifierContext {
-    NSString * key = [NSString stringWithFormat:@"%@+%@", type, identifierContext];
-    SynchronizationBookKeeping * objectFromCache = [[ARLCloudSynchronizer syncDates] objectForKey:key];
-    if (objectFromCache) {
-        return objectFromCache.lastSynchronization;
-    }
-    NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:@"SynchronizationBookKeeping"];
-    if (identifierContext) {
-        fetch.predicate = [NSPredicate predicateWithFormat: @"type = %@ and context = %@", type, identifierContext];
-    } else {
-        fetch.predicate = [NSPredicate predicateWithFormat: @"type = %@ ", type];
-    }
-    NSError *error;
-    NSArray *result = [managedContext executeFetchRequest:fetch error:&error];
-    if (!result) {
-        NSLog(@"%@", [error localizedDescription]);
-        
-    }
-    if ([result count] == 0) {
-        return [NSNumber numberWithInt:0];
-    } else {
-        SynchronizationBookKeeping * bookKeeping = [result lastObject];
-        [[ARLCloudSynchronizer syncDates] setObject:bookKeeping forKey:key];
-        return bookKeeping.lastSynchronization;
-    }
     
-}
+
 @end

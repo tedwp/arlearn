@@ -12,6 +12,7 @@
 #import "ARLMultipleChoiceTestViewController.h"
 #import "ARLScanTagViewController.h"
 #import "ARLNetwork.h"
+#import "Action+Create.h"
 #import "Run.h"
 #import "Game.h"
 #import "GeneralItem+ARLearnBeanCreate.h"

@@ -9,11 +9,20 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "ARLAppDelegate.h"
-#import "Account+create.h"
+#import "Account+Create.h"
+#import "ARLLoggedInView.h"
+#import "ARLRunTableViewController.h"
+
+#import "ARLOauthViewController.h"
+#import "ARLOauthListViewController.h"
+
 
 @interface ARLSplashScreenViewController : UIViewController
-@property (weak, nonatomic) IBOutlet UIView *loggedInView;
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
-@property (weak, nonatomic) IBOutlet UILabel *userName;
+
+@property (strong, nonatomic) Account* account;
+@property (strong, nonatomic) UIButton* loginButton;
+@property (strong, nonatomic) UIButton* myRunsButton;
+@property (strong, nonatomic) UIImageView* arlearnImage;
+@property (strong, nonatomic) ARLLoggedInView* loggedInView;
 
 @end

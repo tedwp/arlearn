@@ -58,6 +58,7 @@ public class VariableDelegator extends DependencyDelegator {
             variableDefinition.setError("gameId missing");
             return variableDefinition;
         } else {
+            //use gameId to empty cache
             VariableCache.getInstance().removeGameVariablesCollector(variableDefinition.getGameId());
             return VariableDefinitionManager.createVariableDefinition(variableDefinition);
         }

@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  ARLearn
+
+  Created by Stefaan Ternier on 7/26/13.
+  Copyright (c) 2013 Stefaan Ternier. All rights reserved.
+*/
+
+"LoggedInAs" = "Ingelogd als";
+"ScanToken" = "Scan een token";
+"Login" = "Inloggen";
+"Logout" = "Uitloggen";

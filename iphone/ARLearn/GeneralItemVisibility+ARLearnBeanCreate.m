@@ -39,10 +39,12 @@
 + (GeneralItemVisibility *) visibilityWithDictionary: (NSDictionary *) visDict withRun: (Run * ) run {
     GeneralItem * generalItem = [GeneralItem retrieveFromDbWithId:[visDict objectForKey:@"generalItemId"] withManagedContext:run.managedObjectContext];
     if (generalItem) {
-//        NSLog(@"adding a general Item to vis %@", generalItem);
+
         GeneralItemVisibility * vis = [self visibilityWithDictionary:visDict
                                       withRun:run withGeneralItem:generalItem];
-        [generalItem addVisibilityObject:vis];
+//        NSLog(@"adding a general Item to vis %@", generalItem.name);
+//        NSLog(@"adding a general Item to vis %@", ((GeneralItemVisibility*)[[generalItem.visibility allObjects] lastObject]).generalItem.name);
+                [generalItem addVisibilityObject:vis];
         return vis;
     }
     NSLog(@"no generalItem found");
@@ -85,6 +87,7 @@
         NSLog(@"error %@", error);
     }
     for (id visi in visibilities) {
+        NSLog(@"these should be gone already");
         [context deleteObject:visi];
     }
     

@@ -32,7 +32,6 @@ import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.cache.UserLoggedInCache;
 import org.celstec.arlearn2.cache.UsersCache;
-import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.delegators.notification.NotificationEngine;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.manager.AccountManager;
@@ -77,10 +76,7 @@ public class UsersDelegator extends GoogleDelegator {
 		new NotificationDelegator().broadcast(run, u.getFullId());
 		if (this.account != null) {
 			new NotificationDelegator().broadcast(u, u.getFullId());
-
 		}
-		// ChannelNotificator.getInstance().notify(u.getEmail(), rm);
-
 		(new UpdateGeneralItemsVisibility(authToken, this.account, u.getRunId(), u.getEmail(), 1)).scheduleTask();
         (new UpdateVariableInstancesForUser(authToken, this.account, u.getFullId(), u.getRunId(), run.getGameId(), 1)).scheduleTask();
         (new UpdateVariableEffectInstancesForUser(authToken, this.account, u.getFullId(), u.getRunId(), run.getGameId(), 1)).scheduleTask();
@@ -126,11 +122,11 @@ public class UsersDelegator extends GoogleDelegator {
 		rm.setRun(run);
 		UserManager.addUser(u);
 
-		rm = new RunModification();
-		rm.setModificationType(RunModification.CREATED);
-		rm.setRun(run);
-		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
-
+//		rm = new RunModification();
+//		rm.setModificationType(RunModification.CREATED);
+//		rm.setRun(run);
+//		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
+        (new NotificationDelegator()).broadcast(u, u.getFullId());
 		return u;
 	}
 
@@ -195,24 +191,10 @@ public class UsersDelegator extends GoogleDelegator {
 		return users;
 	}
 
-	/**
-	 * retrieves all users of the given run.
-	 * 
-	 * @param runId
-	 * @return
-	 */
 	public UserList getUsers(Long runId) {
 		return getUsers(runId, null);
 	}
 
-	/**
-	 * retrieves all users of the given run and teamId.
-	 * 
-	 * @param runId
-	 * @param teamId
-	 *            when teamId is null, all users within the run are returned
-	 * @return
-	 */
 	public UserList getUsers(Long runId, String teamId) {
 		List<User> users = getUserList(runId, null, null, teamId);
 		UserList returnList = new UserList();
@@ -244,8 +226,6 @@ public class UsersDelegator extends GoogleDelegator {
 		UserManager.setStatusDeleted(runId, email);
 		UsersCache.getInstance().removeUser(runId); // removing because user
 													// might be cached in a team
-		// (new NotifyUpdateRun(authToken,runId, false, true,
-		// user.getEmail())).scheduleTask();
 		(new DeleteActions(authToken, this.account, runId, email)).scheduleTask();
 		(new DeleteBlobs(authToken, this.account, runId, email)).scheduleTask();
 		(new DeleteResponses(authToken,this.account,  runId, email)).scheduleTask();
@@ -253,9 +233,12 @@ public class UsersDelegator extends GoogleDelegator {
         (new UpdateVariableInstancesForUser(authToken, this.account, email, runId, null, 2)).scheduleTask();
         (new UpdateVariableEffectInstancesForUser(authToken, this.account, email, runId, null, 2)).scheduleTask();
 
-//		notifyRunDeleted(runId, email);
 		if (this.account != null) {
-			new NotificationDelegator().broadcast(user, user.getFullId());
+            // new bean is created, because apn can not handle large pieces of data
+            User notificationUser = new User();
+            notificationUser.setRunId(user.getRunId());
+            notificationUser.setFullIdentifier(user.getFullId());
+			new NotificationDelegator().broadcast(notificationUser, user.getFullId());
 		}
 		return user;
 	}

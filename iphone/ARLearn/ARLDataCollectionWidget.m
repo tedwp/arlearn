@@ -226,11 +226,9 @@
     [self.generalItemViewController presentViewController:self.imagePickerController animated:YES completion:nil];
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
     NSData *imageData = UIImageJPEGRepresentation(image, 0.5);
-    NSLog(@"width = %@", image.size.width);
     [Response createImageResponse:imageData width:[NSNumber numberWithFloat:image.size.width] height:[NSNumber numberWithFloat:image.size.height]  withRun:self.run withGeneralItem:self.generalItem];
     //    image = [ImageHelpers imageWithImage:image scaledToSize:CGSizeMake(480, 640)];
     

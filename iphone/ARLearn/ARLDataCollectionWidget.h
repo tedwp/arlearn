@@ -9,16 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "ARLAppDelegate.h"
 #import "Response+Create.h"
-#import "GeneralItem+ARLearnBeanCreate.m"
+#import "GeneralItem+ARLearnBeanCreate.h"
 #import "Run+ARLearnBeanCreate.h"
 
 @interface ARLDataCollectionWidget : UIView<UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
-    BOOL withAudio;
-    BOOL withPicture;
-    BOOL withText;
-    BOOL withValue;
-    BOOL withVideo;
-    BOOL isVisible;
+//    BOOL withAudio;
+//    BOOL withPicture;
+//    BOOL withText;
+//    BOOL withValue;
+//    BOOL withVideo;
+//    BOOL isVisible;
 }
 
 @property (nonatomic, readwrite) BOOL withAudio;

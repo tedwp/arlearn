@@ -148,7 +148,7 @@
         MKAnnotationView * annotationView = [[MKAnnotationView alloc ] initWithAnnotation:annotation reuseIdentifier:identifier];
         annotationView.image = [ UIImage imageNamed:@"black_stop.png" ];
        
-        NSData * icon = [gi icon];
+        NSData * icon = [gi customIconData];
         if (icon) {
             UIImage * image = [UIImage imageWithData:icon];
             annotationView.image = image;

@@ -102,7 +102,7 @@
     if ([segue.identifier isEqualToString:@"runDetailSegue"]) {
         Run * selectedRun = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
         ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
-             ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
         [synchronizer createContext:appDelegate.managedObjectContext];
         synchronizer.gameId = selectedRun.gameId;
         synchronizer.visibilityRunId = selectedRun.runId;

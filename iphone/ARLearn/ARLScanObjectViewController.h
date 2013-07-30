@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "GeneralItem+ARLearnBeanCreate.h"
 #import "Run.h"
+#import "Action+Create.h"
 #import "ZBarSDK.h"
+#import "ARLCloudSynchronizer.h"
 
 @interface ARLScanObjectViewController : UIViewController  < ZBarReaderDelegate >
 

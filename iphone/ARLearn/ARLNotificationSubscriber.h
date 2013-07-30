@@ -16,6 +16,8 @@
 
 @interface ARLNotificationSubscriber : NSObject
 
+- (void) registerAccount: (NSString* ) fullId;
+
 - (void) dispatchMessage: (NSDictionary *) message;
 
 - (void) addNotificationHandler: (NSString *) notificationType handler:(id <NotificationHandler>) notificationHandler;

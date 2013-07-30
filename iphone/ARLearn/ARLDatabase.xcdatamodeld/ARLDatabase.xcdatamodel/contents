@@ -9,6 +9,16 @@
         <attribute name="localId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="picture" optional="YES" attributeType="Binary" syncable="YES"/>
+        <relationship name="actions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Action" inverseName="account" inverseEntity="Action" syncable="YES"/>
+        <relationship name="responses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Response" inverseName="account" inverseEntity="Response" syncable="YES"/>
+    </entity>
+    <entity name="Action" representedClassName="Action" syncable="YES">
+        <attribute name="action" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="synchronized" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="time" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="account" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="actions" inverseEntity="Account" syncable="YES"/>
+        <relationship name="generalItem" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GeneralItem" inverseName="actions" inverseEntity="GeneralItem" syncable="YES"/>
+        <relationship name="run" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Run" inverseName="actions" inverseEntity="Run" syncable="YES"/>
     </entity>
     <entity name="Game" representedClassName="Game" syncable="YES">
         <attribute name="creator" optional="YES" attributeType="String" syncable="YES"/>
@@ -30,8 +40,10 @@
         <attribute name="richText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sortKey" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="actions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Action" inverseName="generalItem" inverseEntity="Action" syncable="YES"/>
         <relationship name="data" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GeneralItemData" inverseName="generalItem" inverseEntity="GeneralItemData" syncable="YES"/>
         <relationship name="ownerGame" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Game" inverseName="hasItems" inverseEntity="Game" syncable="YES"/>
+        <relationship name="responses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Response" inverseName="generalItem" inverseEntity="Response" syncable="YES"/>
         <relationship name="visibility" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GeneralItemVisibility" inverseName="generalItem" inverseEntity="GeneralItemVisibility" syncable="YES"/>
     </entity>
     <entity name="GeneralItemData" representedClassName="GeneralItemData" syncable="YES">
@@ -58,8 +70,8 @@
         <attribute name="timeStamp" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="width" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <relationship name="account" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Account" syncable="YES"/>
-        <relationship name="generalItem" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GeneralItem" syncable="YES"/>
+        <relationship name="account" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="responses" inverseEntity="Account" syncable="YES"/>
+        <relationship name="generalItem" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GeneralItem" inverseName="responses" inverseEntity="GeneralItem" syncable="YES"/>
         <relationship name="run" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Run" inverseName="responses" inverseEntity="Run" syncable="YES"/>
     </entity>
     <entity name="Run" representedClassName="Run" syncable="YES">
@@ -68,9 +80,10 @@
         <attribute name="owner" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="runId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="actions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Action" inverseName="run" inverseEntity="Action" syncable="YES"/>
         <relationship name="game" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Game" inverseName="correspondingRuns" inverseEntity="Game" syncable="YES"/>
-        <relationship name="itemVisibilityRules" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="GeneralItemVisibility" inverseName="correspondingRun" inverseEntity="GeneralItemVisibility" syncable="YES"/>
-        <relationship name="responses" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="Response" inverseName="run" inverseEntity="Response" syncable="YES"/>
+        <relationship name="itemVisibilityRules" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GeneralItemVisibility" inverseName="correspondingRun" inverseEntity="GeneralItemVisibility" syncable="YES"/>
+        <relationship name="responses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Response" inverseName="run" inverseEntity="Response" syncable="YES"/>
     </entity>
     <entity name="SynchronizationBookKeeping" representedClassName="SynchronizationBookKeeping" syncable="YES">
         <attribute name="context" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -78,13 +91,14 @@
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Account" positionX="-387" positionY="162" width="128" height="163"/>
-        <element name="Game" positionX="-684" positionY="-171" width="128" height="150"/>
-        <element name="GeneralItem" positionX="-405" positionY="-153" width="128" height="238"/>
+        <element name="Account" positionX="-387" positionY="162" width="128" height="193"/>
+        <element name="Action" positionX="-218" positionY="-396" width="128" height="133"/>
+        <element name="Game" positionX="-684" positionY="-135" width="128" height="150"/>
+        <element name="GeneralItem" positionX="-405" positionY="-153" width="128" height="268"/>
         <element name="GeneralItemData" positionX="-182" positionY="-148" width="128" height="133"/>
-        <element name="GeneralItemVisibility" positionX="-722" positionY="135" width="128" height="150"/>
+        <element name="GeneralItemVisibility" positionX="-722" positionY="135" width="128" height="148"/>
         <element name="Response" positionX="-783" positionY="-378" width="128" height="178"/>
-        <element name="Run" positionX="-972" positionY="-90" width="128" height="163"/>
-        <element name="SynchronizationBookKeeping" positionX="-927" positionY="153" width="128" height="90"/>
+        <element name="Run" positionX="-1152" positionY="-144" width="128" height="178"/>
+        <element name="SynchronizationBookKeeping" positionX="-1089" positionY="135" width="128" height="90"/>
     </elements>
 </model>

@@ -8,14 +8,16 @@
 
 #import "ARLMultipleChoiceAnswerView.h"
 
-@implementation ARLMultipleChoiceAnswerView
+@implementation ARLMultipleChoiceAnswerView 
+
 
 @synthesize dataArray = _dataArray;
 @synthesize answerViews =_answerViews;
 
 
-- (id) initWith: (NSDictionary *) jsonDict{
+- (id) initWith: (NSDictionary *) jsonDict singleChoice: (BOOL) isSingleChoice{
     if (self = [super init]) {
+        _isSingleChoice = isSingleChoice;
         self.backgroundColor = [UIColor clearColor]; //clearColor
         self.translatesAutoresizingMaskIntoConstraints = NO;
         
@@ -31,6 +33,7 @@
             
             
             ARLAnswerItemView* ansItem = [[ARLAnswerItemView alloc] init];
+            ansItem.delegate = self;
             ansItem.identifier = [ans objectForKey:@"id"];
             [_answerViews addObject:ansItem];
             
@@ -63,6 +66,16 @@
 
 - (int) height {
     return [_dataArray count]*29;
+}
+
+- (void) answerClicked: (NSString *) identifier{
+    NSLog(@"clicked on %@", identifier);
+    if (!_isSingleChoice) return;
+    for (ARLAnswerItemView* ansItemView in self.answerViews) {
+        if (![identifier isEqualToString:ansItemView.identifier]){
+            [ansItemView disable];
+        }
+    }
 }
 
 - (NSArray *) selectedIds {
