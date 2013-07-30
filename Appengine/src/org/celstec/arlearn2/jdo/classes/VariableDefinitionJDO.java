@@ -19,6 +19,9 @@ public class VariableDefinitionJDO extends GameClass {
     private Long maxValue;
 
     @Persistent
+    private Long startValue;
+
+    @Persistent
     private Integer scope;
 
 	public void setUniqueId() {
@@ -47,6 +50,14 @@ public class VariableDefinitionJDO extends GameClass {
 
     public void setMaxValue(Long maxValue) {
         this.maxValue = maxValue;
+    }
+
+    public Long getStartValue() {
+        return startValue;
+    }
+
+    public void setStartValue(Long startValue) {
+        this.startValue = startValue;
     }
 
     public Integer getScope() {

@@ -4,7 +4,6 @@ import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.game.VariableEffectDefinition;
 import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.VariableDelegator;
-import org.celstec.arlearn2.jdo.manager.GeneralItemVisibilityManager;
 import org.celstec.arlearn2.jdo.manager.VariableEffectInstanceManager;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class UpdateVariableEffectInstancesForUser extends GenericBean{
 
     private Long runId;
     private Long gameId;
-    private String account;
+    private String userAccount;
     private Integer updateType;
 
     public UpdateVariableEffectInstancesForUser() {
@@ -45,7 +44,7 @@ public class UpdateVariableEffectInstancesForUser extends GenericBean{
         this.runId = runId;
         this.gameId = gameId;
         this.updateType = updateType;
-        this.account = account;
+        this.userAccount = account;
     }
 
     public Long getRunId() {
@@ -64,12 +63,12 @@ public class UpdateVariableEffectInstancesForUser extends GenericBean{
         this.gameId = gameId;
     }
 
-    public String getAccount() {
-        return account;
+    public String getUserAccount() {
+        return userAccount;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setUserAccount(String userAccount) {
+        this.userAccount = userAccount;
     }
 
     public Integer getUpdateType() {
@@ -95,7 +94,7 @@ public class UpdateVariableEffectInstancesForUser extends GenericBean{
     }
 
     private void delete() {
-        VariableEffectInstanceManager.delete(getRunId(), getAccount(), null);
+        VariableEffectInstanceManager.delete(getRunId(), getUserAccount(), null, null);
     }
 
     private void create() {
@@ -107,7 +106,7 @@ public class UpdateVariableEffectInstancesForUser extends GenericBean{
         List<VariableEffectDefinition> list = vad.getVariableEffectDefinitions(getGameId(), 0);
         for (VariableEffectDefinition variableEffectDefinition : list) {
             System.out.println("variable Effect "+variableEffectDefinition);
-            VariableEffectInstanceManager.createVariableEffectInstanceForAccount(account, 1, getRunId(), variableEffectDefinition.getId());
+            VariableEffectInstanceManager.createVariableEffectInstanceForAccount(userAccount, variableEffectDefinition.getEffectCount(), getRunId(), variableEffectDefinition.getId());
         }
     }
 }

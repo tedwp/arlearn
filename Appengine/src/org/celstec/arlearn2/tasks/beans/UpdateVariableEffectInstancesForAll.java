@@ -84,7 +84,7 @@ public class UpdateVariableEffectInstancesForAll extends GenericBean{
     }
 
     private void delete() {
-            VariableEffectInstanceManager.delete(getRunId(), null, null);
+            VariableEffectInstanceManager.delete(getRunId(), null, null, null);
     }
 
     private void create() {
@@ -95,7 +95,8 @@ public class UpdateVariableEffectInstancesForAll extends GenericBean{
         VariableDelegator vad = new VariableDelegator(this);
         List<VariableEffectDefinition> list = vad.getVariableEffectDefinitions(getGameId(), 2);
         for (VariableEffectDefinition variableEffectDefinition : list) {
-            VariableEffectInstanceManager.createVariableEffectInstanceForAll( 1, getRunId(), variableEffectDefinition.getId());
+            System.out.println("variable Effect "+variableEffectDefinition);
+            VariableEffectInstanceManager.createVariableEffectInstanceForAll( variableEffectDefinition.getEffectCount(), getRunId(), variableEffectDefinition.getId());
         }
     }
 }

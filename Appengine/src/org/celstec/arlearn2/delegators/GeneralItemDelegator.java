@@ -60,7 +60,7 @@ import com.google.appengine.api.search.SearchServiceFactory;
 import com.google.appengine.api.search.StatusCode;
 import com.google.gdata.util.AuthenticationException;
 
-public class GeneralItemDelegator extends GoogleDelegator {
+public class GeneralItemDelegator extends DependencyDelegator {
 
 	public GeneralItemDelegator(String authToken) throws AuthenticationException {
 		super(authToken);
@@ -337,28 +337,7 @@ public class GeneralItemDelegator extends GoogleDelegator {
 		return result;
 	}
 
-	private boolean influencedBy(Dependency dependsOn, Action action) {
-		if (dependsOn == null)
-			return false;
-		if (dependsOn instanceof ActionDependency) {
-			if (((ActionDependency) dependsOn).getAction() == null && action.getAction() != null)
-				return false;
-			return ((ActionDependency) dependsOn).getAction().equals(action.getAction());
-		}
-		if (dependsOn instanceof TimeDependency)
-			return influencedBy(((TimeDependency) dependsOn).getOffset(), action);
-		if (dependsOn instanceof BooleanDependency) {
-			BooleanDependency bd = (BooleanDependency) dependsOn;
-			boolean result = false;
-			for (Dependency d : bd.getDependencies()) {
-				result = result || influencedBy(d, action);
-			}
-			return result;
-		}
-		return false;
-	}
-
-	public long isVisible(GeneralItem gi, ActionList al, User u) {
+    public long isVisible(GeneralItem gi, ActionList al, User u) {
 		if (gi.getDependsOn() == null)
 			return 0l;
 		UsersDelegator ud = new UsersDelegator(this);
@@ -378,128 +357,7 @@ public class GeneralItemDelegator extends GoogleDelegator {
 
 	}
 
-	private boolean hasRole(User u, String role) {
-		if (u.getRoles() == null)
-			return false;
-		for (String r : u.getRoles()) {
-			if (role.equals(r))
-				return true;
-		}
-		return false;
-	}
-
-	public long checkActions(Dependency dep, ActionList al, User u, HashMap<String, User> uMap) {
-		if (dep instanceof ActionDependency) {
-			return checkActions(((ActionDependency) dep), al, u, uMap);
-		}
-		if (dep instanceof AndDependency) {
-			return checkActions(((AndDependency) dep), al, u, uMap);
-		}
-		if (dep instanceof OrDependency) {
-			return checkActions(((OrDependency) dep), al, u, uMap);
-		}
-		if (dep instanceof TimeDependency) {
-			return checkActions(((TimeDependency) dep), al, u, uMap);
-		}
-		return -1;
-	}
-
-	public long checkActions(ActionDependency dOn, ActionList al, User u, HashMap<String, User> uMap) {
-		Iterator<Action> it = al.getActions().iterator();
-		long minTime = -1;
-		while (it.hasNext()) {
-			long actionCheck = checkAction(dOn, (Action) it.next(), u, uMap);
-			if (actionCheck != -1) {
-				if (minTime == -1) {
-					minTime = actionCheck;
-				} else {
-					minTime = Math.min(minTime, actionCheck);
-				}
-			}
-		}
-		return minTime;
-	}
-
-	public long checkActions(TimeDependency dOn, ActionList al, User u, HashMap<String, User> uMap) {
-		if (dOn.getOffset() == null || dOn.getTimeDelta() == null)
-			return -1;
-		long time = checkActions(((ActionDependency) dOn.getOffset()), al, u, uMap);
-		if (time == -1)
-			return -1;
-		return checkActions(((ActionDependency) dOn.getOffset()), al, u, uMap) + dOn.getTimeDelta();
-	}
-
-	public long checkActions(AndDependency andDep, ActionList al, User u, HashMap<String, User> uMap) {
-		boolean result = true;
-		long maxTime = -1;
-		for (Dependency dOn : andDep.getDependencies()) {
-			long time = checkActions(dOn, al, u, uMap);
-			result = result && (time != -1);
-			if (!result)
-				return -1;
-			if (maxTime == -1) {
-				maxTime = time;
-			} else {
-				maxTime = Math.max(maxTime, time);
-			}
-		}
-		return maxTime;
-	}
-
-	public long checkActions(OrDependency orDep, ActionList al, User u, HashMap<String, User> uMap) {
-		boolean result = false;
-		long minTime = -1;
-		for (Dependency dOn : orDep.getDependencies()) {
-			long time = checkActions(dOn, al, u, uMap);
-			if (time != -1) {
-				result = true;
-				if (minTime == -1) {
-					minTime = time;
-				} else {
-					minTime = Math.min(minTime, time);
-				}
-			}
-		}
-		return minTime;
-	}
-
-	public long checkAction(ActionDependency dOn, Action a, User u, HashMap<String, User> uMap) {
-		if (a == null)
-			return -1;
-		// UsersDelegator ud = new UsersDelegator(this);
-		// User actionUser = ud.getUserByEmail(u.getRunId(), a.getUserEmail());
-		Integer scope = dOn.getScope();
-		if (scope == null)
-			scope = Dependency.USER_SCOPE;
-		switch (scope) {
-		case Dependency.USER_SCOPE:
-			if (!a.getUserEmail().equals(u.getFullId()))
-				return -1;
-			break;
-		case Dependency.TEAM_SCOPE:
-			if (!uMap.get(a.getUserEmail()).getTeamId().equals(u.getTeamId()))
-				return -1;
-			break;
-
-		default:
-			break;
-		}
-		String role = dOn.getRole();
-		if (role != null && !hasRole(uMap.get(a.getUserEmail()), role))
-			return -1;
-
-		if (dOn.getAction() != null && !dOn.getAction().equals(a.getAction()))
-			return -1;
-		if (dOn.getGeneralItemId() != null && !dOn.getGeneralItemId().equals(a.getGeneralItemId()))
-			return -1;
-		if (dOn.getGeneralItemType() != null && !dOn.getGeneralItemType().equals(a.getGeneralItemType()))
-			return -1;
-		if (a.getTime() == null)
-			return 0;
-		return a.getTime();
-	}
-
-	public List<GeneralItem> getNonVisibleItems(GeneralItemList allItems, GeneralItemList filterAway) {
+    public List<GeneralItem> getNonVisibleItems(GeneralItemList allItems, GeneralItemList filterAway) {
 		List<GeneralItem> returnItems = new ArrayList();
 		long currentTime = System.currentTimeMillis();
 		HashSet<Long> idsToRemove = new HashSet<Long>();

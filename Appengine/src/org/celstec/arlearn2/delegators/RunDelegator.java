@@ -192,6 +192,7 @@ public class RunDelegator extends GoogleDelegator {
 			new NotificationDelegator().broadcast(run, account.getFullId());
 		}
 
+        (new UpdateVariableInstancesForAll(authToken, this.account, run.getRunId(), run.getGameId(), 1)).scheduleTask();
         (new UpdateVariableEffectInstancesForAll(authToken, this.account, run.getRunId(), run.getGameId(), 1)).scheduleTask();
 
         return run;
@@ -247,6 +248,7 @@ public class RunDelegator extends GoogleDelegator {
 		RunsCache.getInstance().removeRun(r.getRunId());
 		(new UpdateGeneralItemsVisibility(authToken, this.account, r.getRunId(), null, 2)).scheduleTask();
 
+        (new UpdateVariableInstancesForAll(authToken, this.account, r.getRunId(), r.getGameId(), 2)).scheduleTask();
         (new UpdateVariableEffectInstancesForAll(authToken, this.account, r.getRunId(), r.getGameId(), 2)).scheduleTask();
 
 

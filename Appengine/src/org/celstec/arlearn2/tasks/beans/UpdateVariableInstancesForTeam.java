@@ -1,10 +1,10 @@
 package org.celstec.arlearn2.tasks.beans;
 
 import org.celstec.arlearn2.beans.account.Account;
-import org.celstec.arlearn2.beans.game.VariableEffectDefinition;
+import org.celstec.arlearn2.beans.game.VariableDefinition;
 import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.VariableDelegator;
-import org.celstec.arlearn2.jdo.manager.VariableEffectInstanceManager;
+import org.celstec.arlearn2.jdo.manager.VariableInstanceManager;
 
 import java.util.List;
 
@@ -25,21 +25,21 @@ import java.util.List;
  * You should have received a copy of the GNU Lesser General Public License
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  * <p/>
- * Contributors: Stefaan Ternier
+ * Contributors: Roland Klemke
  * ****************************************************************************
  */
-public class UpdateVariableEffectInstancesForTeam extends GenericBean{
+public class UpdateVariableInstancesForTeam extends GenericBean {
 
     private Long runId;
     private Long gameId;
     private String teamId;
     private Integer updateType;
 
-    public UpdateVariableEffectInstancesForTeam() {
+    public UpdateVariableInstancesForTeam() {
 
     }
 
-    public UpdateVariableEffectInstancesForTeam(String token, Account accountAuth, String teamId, Long runId, Long gameId, Integer updateType) {
+    public UpdateVariableInstancesForTeam(String token, Account accountAuth, String teamId, Long runId, Long gameId, Integer updateType) {
         super(token, accountAuth);
         this.runId = runId;
         this.gameId = gameId;
@@ -94,7 +94,7 @@ public class UpdateVariableEffectInstancesForTeam extends GenericBean{
     }
 
     private void delete() {
-        VariableEffectInstanceManager.delete(getRunId(), null, getTeamId(), null);
+        VariableInstanceManager.delete(getGameId(), getRunId(), null, null, getTeamId());
     }
 
     private void create() {
@@ -103,11 +103,9 @@ public class UpdateVariableEffectInstancesForTeam extends GenericBean{
             setGameId(rd.getRun(getRunId()).getGameId());
         }
         VariableDelegator vad = new VariableDelegator(this);
-        List<VariableEffectDefinition> list = vad.getVariableEffectDefinitions(getGameId(), 1);
-        for (VariableEffectDefinition variableEffectDefinition : list) {
-            System.out.println("variable Effect "+variableEffectDefinition);
-            VariableEffectInstanceManager.createVariableEffectInstanceForTeam(getTeamId(), variableEffectDefinition.getEffectCount(), getRunId(), variableEffectDefinition.getId());
+        List<VariableDefinition> list = vad.getVariableDefinitionsList(getGameId(), 1);
+        for (VariableDefinition variableDefinition : list) {
+            VariableInstanceManager.createVariableInstanceForTeam(getTeamId(), getGameId(), getRunId(), variableDefinition.getName(), variableDefinition.getStartValue());
         }
     }
 }
-

@@ -43,7 +43,7 @@ public class CreateGeneralItems extends GoogleDelegator {
 	}
 
 //	public GeneralItem createGeneralItem(GeneralItem gi) {
-//		GeneralitemsCache.getInstance().removeGeneralItemList(gi.getGameId());
+//		GeneralitemsCache.getInstance().removeGameVariablesCollector(gi.getGameId());
 //		GeneralItemManager.addGeneralItem(gi);
 //		(new NotifyRunsFromGame(authToken, gi.getGameId(), gi, GeneralItemModification.CREATED)).scheduleTask();
 //
@@ -52,7 +52,7 @@ public class CreateGeneralItems extends GoogleDelegator {
 
 //	public void deleteGeneralItems(long gameId) {
 //		GeneralItemManager.deleteGeneralItem(gameId);
-//		GeneralitemsCache.getInstance().removeGeneralItemList(gameId);
+//		GeneralitemsCache.getInstance().removeGameVariablesCollector(gameId);
 //	}
 //	
 //	public GeneralItem deleteGeneralItem(long gameId, String itemId) {
@@ -68,7 +68,7 @@ public class CreateGeneralItems extends GoogleDelegator {
 //			return gi;
 //		}
 //		GeneralItemManager.deleteGeneralItem(gameId, itemId);
-//		GeneralitemsCache.getInstance().removeGeneralItemList(gameId);
+//		GeneralitemsCache.getInstance().removeGameVariablesCollector(gameId);
 //		(new NotifyRunsFromGame(authToken, gi.getGameId(), gi, GeneralItemModification.DELETED)).scheduleTask();
 //
 //		return gi;

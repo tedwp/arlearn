@@ -82,7 +82,8 @@ public class UsersDelegator extends GoogleDelegator {
 		// ChannelNotificator.getInstance().notify(u.getEmail(), rm);
 
 		(new UpdateGeneralItemsVisibility(authToken, this.account, u.getRunId(), u.getEmail(), 1)).scheduleTask();
-        (new UpdateVariableEffectInstancesForUser(authToken, this.account, u.getEmail(), u.getRunId(), run.getGameId(), 1)).scheduleTask();
+        (new UpdateVariableInstancesForUser(authToken, this.account, u.getFullId(), u.getRunId(), run.getGameId(), 1)).scheduleTask();
+        (new UpdateVariableEffectInstancesForUser(authToken, this.account, u.getFullId(), u.getRunId(), run.getGameId(), 1)).scheduleTask();
 
 		return u;
 	}
@@ -249,6 +250,7 @@ public class UsersDelegator extends GoogleDelegator {
 		(new DeleteBlobs(authToken, this.account, runId, email)).scheduleTask();
 		(new DeleteResponses(authToken,this.account,  runId, email)).scheduleTask();
 		(new UpdateGeneralItemsVisibility(authToken, this.account, runId, email, 2)).scheduleTask();
+        (new UpdateVariableInstancesForUser(authToken, this.account, email, runId, null, 2)).scheduleTask();
         (new UpdateVariableEffectInstancesForUser(authToken, this.account, email, runId, null, 2)).scheduleTask();
 
 //		notifyRunDeleted(runId, email);

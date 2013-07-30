@@ -44,6 +44,24 @@ public class VariableInstanceJDO extends RunClass {
     private String name;
 
     public void setUniqueId() {
+        if (getAccount() != null && !("".equals(getAccount()))) {
+            setUniqueIdAccount();
+        } else if (getTeamId() != null && !("".equals(getTeamId()))) {
+            setUniqueIdTeam();
+        } else {
+            setUniqueIdGlobal();
+        }
+    }
+
+    public void setUniqueIdAccount() {
+        this.id = KeyFactory.createKey(VariableInstanceJDO.class.getSimpleName(), getGameId() + ":" + getRunId()+":"+ getName() + ":" + getAccount());
+    }
+
+    public void setUniqueIdTeam() {
+        this.id = KeyFactory.createKey(VariableInstanceJDO.class.getSimpleName(), getGameId() + ":" + getRunId()+":"+ getName() + ":" + getTeamId());
+    }
+
+    public void setUniqueIdGlobal() {
         this.id = KeyFactory.createKey(VariableInstanceJDO.class.getSimpleName(), getGameId() + ":" + getRunId()+":"+ getName());
     }
 

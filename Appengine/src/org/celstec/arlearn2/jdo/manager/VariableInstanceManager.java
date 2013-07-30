@@ -8,6 +8,8 @@ import org.celstec.arlearn2.jdo.classes.VariableInstanceJDO;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -57,6 +59,66 @@ public class VariableInstanceManager {
         }
     }
 
+    public static VariableInstance createVariableInstanceForAccount(String account, long gameId, long runId, String name, long value) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        VariableInstanceJDO jdo = new VariableInstanceJDO();
+        jdo.setAccount(account);
+        jdo.setGameId(gameId);
+        jdo.setRunId(runId);
+        jdo.setName(name);
+        jdo.setValue(value);
+        jdo.setUniqueIdAccount();
+        try {
+            pm.makePersistent(jdo);
+            return toBean(jdo);
+        } finally {
+            pm.close();
+        }
+    }
+
+    public static VariableInstance createVariableInstanceForTeam(String teamId, long gameId, long runId, String name, long value) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        VariableInstanceJDO jdo = new VariableInstanceJDO();
+        jdo.setTeamId(teamId);
+        jdo.setGameId(gameId);
+        jdo.setRunId(runId);
+        jdo.setName(name);
+        jdo.setValue(value);
+        jdo.setUniqueIdTeam();
+        try {
+            pm.makePersistent(jdo);
+            return toBean(jdo);
+        } finally {
+            pm.close();
+        }
+    }
+
+    public static VariableInstance createVariableInstanceForAll(long gameId, long runId, String name, long value) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        VariableInstanceJDO jdo = new VariableInstanceJDO();
+        jdo.setGameId(gameId);
+        jdo.setRunId(runId);
+        jdo.setName(name);
+        jdo.setValue(value);
+        jdo.setUniqueIdGlobal();
+        try {
+            pm.makePersistent(jdo);
+            return toBean(jdo);
+        } finally {
+            pm.close();
+        }
+    }
+
+    public static void delete(Long gameId, Long runId, String name, String account, String teamId) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        try {
+            List<VariableInstanceJDO> deleteList = getVariableInstancesJDO(pm, gameId, runId, name, account, teamId);
+            pm.deletePersistentAll(deleteList);
+        } finally {
+            pm.close();
+        }
+    }
+
     private static VariableInstance toBean(VariableInstanceJDO jdo) {
         if (jdo == null)
             return null;
@@ -76,6 +138,32 @@ public class VariableInstanceManager {
             List<VariableInstanceJDO> list = getVariables(pm, gameId, runId, name, null, null);
             if (list.isEmpty()) return null;
             return toBean(list.get(0));
+        } finally {
+            pm.close();
+        }
+    }
+
+    public static List<VariableInstanceJDO> getVariableInstancesJDO(PersistenceManager pm, Long gameId,  Long runId, String name, String account, String teamId) {
+        if (pm == null) {
+            pm = PMF.get().getPersistenceManager();
+        }
+        try {
+            List<VariableInstanceJDO> returnInstances = getVariables(pm, gameId, runId, name, account, teamId);
+            return returnInstances;
+        } finally {
+            pm.close();
+        }
+    }
+
+    public static List<VariableInstance> getVariableInstances(Long gameId,  Long runId, String name, String account, String teamId) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        try {
+            ArrayList<VariableInstance> returnInstances = new ArrayList<VariableInstance>();
+            Iterator<VariableInstanceJDO> it = getVariables(pm, gameId, runId, name, account, teamId).iterator();
+            while (it.hasNext()) {
+                returnInstances.add(toBean(it.next()));
+            }
+            return returnInstances;
         } finally {
             pm.close();
         }

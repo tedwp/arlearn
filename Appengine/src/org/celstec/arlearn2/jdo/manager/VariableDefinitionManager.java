@@ -47,6 +47,7 @@ public class VariableDefinitionManager {
         variableDefinitionJDO.setGameId(variableDefinition.getGameId());
         variableDefinitionJDO.setMinValue(variableDefinition.getMinValue());
         variableDefinitionJDO.setMaxValue(variableDefinition.getMaxValue());
+        variableDefinitionJDO.setStartValue(variableDefinition.getStartValue());
         variableDefinitionJDO.setScope(variableDefinition.getScope());
 
         variableDefinitionJDO.setUniqueId();
@@ -64,7 +65,8 @@ public class VariableDefinitionManager {
         VariableDefinition bean = new VariableDefinition();
         bean.setName(jdo.getName());
         if (jdo.getMinValue() != null) bean.setMinValue(jdo.getMinValue());
-        if (jdo.getMaxValue() != null)bean.setMaxValue(jdo.getMaxValue());
+        if (jdo.getMaxValue() != null) bean.setMaxValue(jdo.getMaxValue());
+        if (jdo.getStartValue() != null) bean.setStartValue(jdo.getStartValue());
         bean.setScope(jdo.getScope());
         bean.setGameId(jdo.getGameId());
         return bean;

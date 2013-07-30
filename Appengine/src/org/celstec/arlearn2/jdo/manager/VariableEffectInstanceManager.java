@@ -29,9 +29,9 @@ import java.util.List;
  */
 public class VariableEffectInstanceManager {
 
-    private static final String params[] = new String[] { "runId", "account", "teamId"};
-    private static final String paramsNames[] = new String[] { "runIdParam", "accountParam", "teamIdParam"};
-    private static final String types[] = new String[] { "Long", "String", "String"};
+    private static final String params[] = new String[] { "runId", "account", "teamId", "variableEffectDefinitionIdentifier"};
+    private static final String paramsNames[] = new String[] { "runIdParam", "accountParam", "teamIdParam", "variableEffectDefinitionIdentifierParam"};
+    private static final String types[] = new String[] { "Long", "String", "String", "Long"};
 
     public static VariableEffectInstanceJDO createVariableEffectInstanceForAccount(String account, int amount, long runId, long variableEffectDefinitionId) {
         PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -80,9 +80,22 @@ public class VariableEffectInstanceManager {
         }
     }
 
-    public static List<VariableEffectInstanceJDO> getVariableEffectDefinitions(PersistenceManager pm, Long runId, String account, String teamId) {
+    public static VariableEffectInstanceJDO updateVariableEffectInstance(VariableEffectInstanceJDO jdo) {
+        if (jdo.getAccount() != null && !"".equals(jdo.getAccount())) {
+            return createVariableEffectInstanceForAccount(jdo.getAccount(), jdo.getEffectCount(), jdo.getRunId(), jdo.getVariableEffectDefinitionIdentifier());
+        } else if (jdo.getTeamId() != null && !"".equals(jdo.getTeamId())) {
+            return createVariableEffectInstanceForTeam(jdo.getTeamId(), jdo.getEffectCount(), jdo.getRunId(), jdo.getVariableEffectDefinitionIdentifier());
+        } else {
+            return createVariableEffectInstanceForAll(jdo.getEffectCount(), jdo.getRunId(), jdo.getVariableEffectDefinitionIdentifier());
+        }
+    }
+
+    public static List<VariableEffectInstanceJDO> getVariableEffectInstances(PersistenceManager pm, Long runId, String account, String teamId, Long variableEffectDefinitionId) {
+        if (pm == null) {
+            pm = PMF.get().getPersistenceManager();
+        }
         Query query = pm.newQuery(VariableEffectInstanceJDO.class);
-        Object args[] = { runId, account, teamId};
+        Object args[] = { runId, account, teamId, variableEffectDefinitionId};
         if (ManagerUtil.generateFilter(args, params, paramsNames).trim().equals("")) {
                 query.setFilter("deleted == null");
             return (List) query.execute();
@@ -92,10 +105,10 @@ public class VariableEffectInstanceManager {
         return ((List<VariableEffectInstanceJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args)));
     }
 
-    public static void delete(Long runId, String account, String teamId) {
+    public static void delete(Long runId, String account, String teamId, Long variableEffectDefinitionId) {
         PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            List<VariableEffectInstanceJDO> deleteList = getVariableEffectDefinitions(pm, runId, account, teamId);
+            List<VariableEffectInstanceJDO> deleteList = getVariableEffectInstances(pm, runId, account, teamId, variableEffectDefinitionId);
             pm.deletePersistentAll(deleteList);
         } finally {
             pm.close();
