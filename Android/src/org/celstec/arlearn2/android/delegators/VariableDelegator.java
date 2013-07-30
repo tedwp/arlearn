@@ -63,6 +63,7 @@ public class VariableDelegator {
     }
 
     public void saveInstance(VariableInstance varInst) {
+        if (varInst.getRunId() == null) return;
         variableMap.put(getKey(varInst.getRunId(),varInst.getName()), varInst.getValue().intValue());
 
     }

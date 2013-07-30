@@ -24,8 +24,7 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
 	protected CheckboxItem drawOnMap;
 	protected CheckboxItem automaticallyLaunch;
 	protected CheckboxItem toggleRichtText;
-	protected TextItem titleText;
-	protected TextItem orderText;
+
 	protected TextItem latText;
 	protected TextItem lngText;
 
@@ -36,7 +35,7 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
 	protected void createForm() {
 		titleText = new TextItem(GeneralItemModel.NAME_FIELD, constants.title());
 		titleText.setStartRow(true);
-		orderText = new TextItem(GeneralItemModel.SORTKEY_FIELD, constants.order());
+        orderText = new TextItem(GeneralItemModel.SORTKEY_FIELD, constants.order());
 
 		drawOnMap = new CheckboxItem("drawOnMap", constants.drawOnMap());
 		drawOnMap.setStartRow(true);
