@@ -11,6 +11,7 @@ public class VariableDefinition extends Bean{
 	private String name;
     private Long minValue;
     private Long maxValue;
+    private Long startValue;
     private Integer scope;
 
     private Long gameId;
@@ -37,6 +38,14 @@ public class VariableDefinition extends Bean{
 
     public void setMaxValue(Long maxValue) {
         this.maxValue = maxValue;
+    }
+
+    public Long getStartValue() {
+        return startValue;
+    }
+
+    public void setStartValue(Long startValue) {
+        this.startValue = startValue;
     }
 
     public Integer getScope() {
@@ -74,6 +83,7 @@ public class VariableDefinition extends Bean{
 			if (object.has("name")) bean.setName(object.getString("name"));
             if (object.has("minValue")) bean.setMinValue(object.getLong("minValue"));
             if (object.has("maxValue")) bean.setMaxValue(object.getLong("maxValue"));
+            if (object.has("startValue")) bean.setStartValue(object.getLong("startValue"));
             if (object.has("scope")) bean.setScope(object.getInt("scope"));
             if (object.has("gameId")) bean.setGameId(object.getLong("gameId"));
 			
@@ -90,6 +100,7 @@ public class VariableDefinition extends Bean{
 				if (teamBean.getName() != null) returnObject.put("name", teamBean.getName());
                 if (teamBean.getMaxValue() != null) returnObject.put("maxValue", teamBean.getMaxValue());
                 if (teamBean.getMinValue() != null) returnObject.put("minValue", teamBean.getMinValue());
+                if (teamBean.getStartValue() != null) returnObject.put("startValue", teamBean.getStartValue());
                 if (teamBean.getScope() != null) returnObject.put("scope", teamBean.getScope());
                 if (teamBean.getGameId() != null) returnObject.put("gameId", teamBean.getGameId());
 			} catch (JSONException e) {

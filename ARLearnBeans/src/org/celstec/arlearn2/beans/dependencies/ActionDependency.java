@@ -113,5 +113,20 @@ public class ActionDependency extends Dependency {
 			nullSafeEquals(getGeneralItemType(), other.getGeneralItemType()) ; 
 
 	}
+
+    /**
+     * hashCode is necessary to be able to use ActionDependencies as keys in HashMaps.
+     *
+     * @return
+     */
+    public int hashCode() {
+        int hash = 0;
+        if (getAction() != null) hash += getAction().hashCode();
+        if (getGeneralItemId() != null) hash += getGeneralItemId().hashCode();
+        if (getScope() != null) hash += getScope().hashCode();
+        if (getRole() != null) hash += getRole().hashCode();
+        if (getGeneralItemType() != null) hash += getGeneralItemType().hashCode();
+        return hash;
+    }
 	
 }
