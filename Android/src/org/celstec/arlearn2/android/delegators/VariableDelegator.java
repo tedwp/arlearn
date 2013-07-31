@@ -71,4 +71,8 @@ public class VariableDelegator {
     private String getKey(Long runId, String varName) {
         return runId +":"+varName;
     }
+
+    public void saveInstance(long runId, String name, int value) {
+        variableMap.put(getKey(runId, name), value);
+    }
 }

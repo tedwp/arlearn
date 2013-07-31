@@ -19,7 +19,6 @@
 package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.broadcast.GeneralItemReceiver;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.*;
@@ -35,7 +34,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View.OnClickListener;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,10 +58,7 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 
 	private double lat = -1;
 	private double lng = -1;
-	// private long runId;
 
-	// private Handler mHandler = new Handler();
-	private ScoreHandler scoreHandler = new ScoreHandler(this);
     private VariableDisplayHandler variableDisplayHandler = new VariableDisplayHandler(this);
 	protected MenuHandler menuHandler;
 
@@ -71,8 +66,10 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 
 	@Override
 	public void onBroadcastMessage(Bundle bundle, boolean render) {
-		if (render)
+		if (render) {
 			makeGeneralItemVisible();
+           if (variableDisplayHandler != null) variableDisplayHandler.sync();
+        }
 	}
 
 	protected boolean isRouteDisplayed() {
@@ -96,8 +93,8 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 		myLocation = new MyLocationOverlay(this, mv) {
 			public synchronized void onLocationChanged(Location location) {
 				super.onLocationChanged(location);
-				lat = (double) (location.getLatitude() * 1E6);
-				lng = (double) (location.getLongitude() * 1E6);
+				lat = (location.getLatitude() * 1E6);
+				lng = (location.getLongitude() * 1E6);
 			}
 
 			@Override
@@ -174,7 +171,7 @@ public class MapViewActivity extends MapActivity implements ARLearnBroadcastRece
 	protected void onResume() {
 		super.onResume();
 		Long runId = PropertiesAdapter.getInstance(this).getCurrentRunId();
-		if (runId == null || RunCache.getInstance().getRun(runId) == null) {
+		if (runId == -1 || RunCache.getInstance().getRun(runId) == null) {
 			this.finish();
 		}
 		Long gameId = RunCache.getInstance().getGameId(runId);

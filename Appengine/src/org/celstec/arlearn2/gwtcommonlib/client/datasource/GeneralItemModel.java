@@ -20,6 +20,9 @@ public class GeneralItemModel extends DataSourceModel {
 	public static final String RICH_TEXT_FIELD = "richText";
 	public static final String SIMPLE_NAME_FIELD = "simpleName";
 	public static final String AUTO_LAUNCH = "autoLaunch";
+    public static final String ICON_URL = "iconUrl";
+    public static final String SECTION = "section";
+    public static final String TAGS = "tags";
 
 	public final static int CREATED = 1;
 	public final static int DELETED = 2;
@@ -39,6 +42,10 @@ public class GeneralItemModel extends DataSourceModel {
 		addField(DOUBLE_DATA_TYPE, LAT_FIELD, false, true);
 		addField(DOUBLE_DATA_TYPE, LNG_FIELD, false, true);
 		addField(STRING_DATA_TYPE, NAME_FIELD, false, false);
+        addField(STRING_DATA_TYPE, ICON_URL, false, false);
+        addField(STRING_DATA_TYPE, SECTION, false, false);
+        addField(STRING_DATA_TYPE, TAGS, false, false);
+
 		addField(INTEGER_DATA_TYPE, GameModel.GAMEID_FIELD, false, true); 
 		addField(STRING_DATA_TYPE, "description", false, false);
 		addField(STRING_DATA_TYPE, "richText", false, false);

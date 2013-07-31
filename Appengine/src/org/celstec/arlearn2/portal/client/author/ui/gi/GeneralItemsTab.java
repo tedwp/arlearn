@@ -10,6 +10,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.generalItem.GeneralItemsClient;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
+import org.celstec.arlearn2.portal.client.account.AccountManager;
 import org.celstec.arlearn2.portal.client.author.ui.VerticalMasterDetailTab;
 import org.celstec.arlearn2.portal.client.author.ui.gi.i18.GeneralItemConstants;
 
@@ -171,7 +172,7 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 
 			@Override
 			public void execute(Boolean value) {
-				if (value.booleanValue()) {
+				if (value) {
 					GeneralItemsClient.getInstance().deleteGeneralItem(record.getAttributeAsLong(GameModel.GAMEID_FIELD), record.getAttributeAsLong(GeneralItemModel.GENERALITEMID_FIELD), new JsonCallback() {
 						public void onJsonReceived(JSONValue jsonValue) {
 							GeneralItemDataSource.getInstance().removeRecordWithKey(record.getAttributeAsLong(GeneralItemModel.GENERALITEMID_FIELD));
@@ -211,6 +212,11 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 		generalItemsGrid.setHeight100();
 		generalItemsGrid.setAutoFetchData(true);
 		generalItemsGrid.setCanEdit(false);
+        if (AccountManager.getInstance().isAdvancedUser()) {
+            generalItemsGrid.setShowFilterEditor(true);
+            generalItemsGrid.setAllowFilterExpressions(true);
+        }
+
 		initGrid();
 
 		generalItemsGrid.addRecordDropHandler(new RecordDropHandler() {
@@ -309,8 +315,13 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 
 		ListGridField deleteField = new ListGridField("deleteField", " ");
 		deleteField.setWidth(20);
-
-		generalItemsGrid.setFields(new ListGridField[] { idField, orderField, giTitleField, simpleNameField, deleteField });
+        if (AccountManager.getInstance().isAdvancedUser()) {
+            ListGridField tagsField = new ListGridField(GeneralItemModel.TAGS, constants.tags());
+            ListGridField sectionField = new ListGridField(GeneralItemModel.SECTION, constants.section());
+            generalItemsGrid.setFields( idField, orderField, giTitleField, simpleNameField, tagsField, sectionField, deleteField );
+        } else {
+		    generalItemsGrid.setFields(idField, orderField, giTitleField, simpleNameField, deleteField );
+        }
 
 	}
 

@@ -53,6 +53,8 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 
     private String section;
 
+    private String tags;
+
 	private List<String> roles;
 	
 	private Long visibleAt;
@@ -80,7 +82,9 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 			nullSafeEquals(getLng(), other.getLng()) &&
 			nullSafeEquals(getLat(), other.getLat()) &&
 			nullSafeEquals(getIconUrl(), other.getIconUrl()) &&
-			nullSafeEquals(getShowCountDown(), other.getShowCountDown()) &&
+            nullSafeEquals(getSection(), other.getSection()) &&
+            nullSafeEquals(getTags(), other.getTags()) &&
+            nullSafeEquals(getShowCountDown(), other.getShowCountDown()) &&
 			nullSafeEquals(getRoles(), other.getRoles()) ; 
 	}
 
@@ -198,6 +202,14 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
         this.section = section;
     }
 
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
     public boolean isMessage() {
 		return (getLat() == null && getLng() == null);
 	}
@@ -220,6 +232,8 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
         if (!getSection().equals(other.getSection())) {
             return getSection().compareTo(other.getSection());
         }
+        if (getSortKey() == null) setSortKey(0)
+        if (other.getSortKey() == null) other.setSortKey(0);
 		int returnValue = getSortKey() - other.getSortKey();
 		if (returnValue != 0) return returnValue;
 		returnValue = getName().compareTo(other.getName());

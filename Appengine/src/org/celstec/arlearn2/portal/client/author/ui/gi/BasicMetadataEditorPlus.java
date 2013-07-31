@@ -2,11 +2,11 @@ package org.celstec.arlearn2.portal.client.author.ui.gi;
 
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
+import org.celstec.arlearn2.portal.client.account.AccountManager;
 import org.celstec.arlearn2.portal.client.author.ui.gi.i18.GeneralItemConstants;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONString;
 import com.google.maps.gwt.client.LatLng;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -27,6 +27,9 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
 
 	protected TextItem latText;
 	protected TextItem lngText;
+    protected TextItem customIcon;
+    protected TextItem section;
+    protected TextItem tags;
 
 	public BasicMetadataEditorPlus(boolean showTitle, boolean showDescription) {
 		super(showTitle, showDescription);
@@ -53,8 +56,7 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				boolean richTextBool = (Boolean) event.getValue();
-				BasicMetadataEditorPlus.this.showRichtText = richTextBool;
+				BasicMetadataEditorPlus.this.showRichtText = (Boolean) event.getValue();
 				if (showRichtText) {
 					richTextEditor.setVisibility(Visibility.INHERIT);
 					richTextEditor.setValue(textAreaItem.getValueAsString());
@@ -68,17 +70,31 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
 			}
 		});
 
+        customIcon = new TextItem(GeneralItemModel.ICON_URL, constants.customIcon());
+        customIcon.setStartRow(true);
+        customIcon.setColSpan(4);
+
+        section = new TextItem(GeneralItemModel.SECTION, constants.section());
+        section.setStartRow(true);
+        section.setColSpan(3);
+
+        tags = new TextItem(GeneralItemModel.TAGS, constants.tags());
+        tags.setStartRow(true);
+        tags.setColSpan(2);
+
 		FormItemIfFunction drawOnMapFunction = new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				if (form.getValue("drawOnMap") == null)
-					return false;
-				return form.getValue("drawOnMap").equals(Boolean.TRUE);
+				return (form.getValue("drawOnMap") != null)
+					&& form.getValue("drawOnMap").equals(Boolean.TRUE);
 			}
 		};
 		latText.setShowIfCondition(drawOnMapFunction);
 		lngText.setShowIfCondition(drawOnMapFunction);
-
-		form.setFields(titleText, orderText, drawOnMap, automaticallyLaunch, latText, toggleRichtText, lngText, textAreaItem);
+        if (AccountManager.getInstance().isAdvancedUser()) {
+		    form.setFields(titleText, orderText, drawOnMap, automaticallyLaunch, latText, toggleRichtText, lngText, customIcon, section,tags, textAreaItem);
+        }   else {
+            form.setFields(titleText, orderText, drawOnMap, automaticallyLaunch, latText, toggleRichtText, lngText, textAreaItem);
+        }
 		form.setNumCols(4);
 		form.setWidth100();
 
@@ -99,6 +115,15 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
 		} else {
 			gi.setBoolean(GeneralItemModel.AUTO_LAUNCH, false);
 		}
+        if (form.getValue(GeneralItemModel.ICON_URL) != null &&  !form.getValueAsString(GeneralItemModel.ICON_URL).equals("")) {
+            gi.setString(GeneralItemModel.ICON_URL, form.getValueAsString(GeneralItemModel.ICON_URL));
+        }
+        if (form.getValue(GeneralItemModel.SECTION) != null &&  !form.getValueAsString(GeneralItemModel.SECTION).equals("")) {
+            gi.setString(GeneralItemModel.SECTION, form.getValueAsString(GeneralItemModel.SECTION));
+        }
+        if (form.getValue(GeneralItemModel.TAGS) != null &&  !form.getValueAsString(GeneralItemModel.TAGS).equals("")) {
+            gi.setString(GeneralItemModel.TAGS, form.getValueAsString(GeneralItemModel.TAGS));
+        }
 		super.saveToBean(gi);
 	}
 
@@ -111,6 +136,9 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
 			form.setValue(GeneralItemModel.LNG_FIELD, gi.getDouble(GeneralItemModel.LNG_FIELD));
 		form.setValue("drawOnMap", gi.getDouble(GeneralItemModel.LNG_FIELD) != null);
 		form.setValue(GeneralItemModel.AUTO_LAUNCH, gi.getBoolean(GeneralItemModel.AUTO_LAUNCH));
+        form.setValue(GeneralItemModel.ICON_URL, gi.getString(GeneralItemModel.ICON_URL));
+        form.setValue(GeneralItemModel.SECTION, gi.getString(GeneralItemModel.SECTION));
+        form.setValue(GeneralItemModel.TAGS, gi.getString(GeneralItemModel.TAGS));
 	}
 
 	public void coordinatesChanged(LatLng newCoordinates) {
