@@ -144,14 +144,18 @@ public class VariableInstanceManager {
     }
 
     public static List<VariableInstanceJDO> getVariableInstancesJDO(PersistenceManager pm, Long gameId,  Long runId, String name, String account, String teamId) {
+        boolean closePM = false;
         if (pm == null) {
             pm = PMF.get().getPersistenceManager();
+            closePM = true; // makes sure, that pm will only be closed, if not passed from outside.
         }
         try {
             List<VariableInstanceJDO> returnInstances = getVariables(pm, gameId, runId, name, account, teamId);
             return returnInstances;
         } finally {
-            pm.close();
+            if (closePM) {
+                pm.close();
+            }
         }
     }
 
