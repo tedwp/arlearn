@@ -142,36 +142,16 @@ public class NarratorItemActivity extends GeneralItemActivity {
 		final long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
 		final String account = menuHandler.getPropertiesAdapter().getFullId();
 		webview = (WebView) findViewById(R.id.giNarratorWebView);
-//		provideAnswerButton = (Button) findViewById(R.id.provideAnswerButton);
-//		provideAnswerButton.setText(getString(R.string.ao_answer_menu));
 		LinearLayout dcLayout = (LinearLayout) findViewById(R.id.datacollectionbar);
-		ImageView pictureView = (ImageView) findViewById(R.id.picture_button);
 		ImageView audioView = (ImageView) findViewById(R.id.speech_button);
 		OpenQuestion oq = narratorBean.getOpenQuestion();
 		if (oq != null) {
-//			provideAnswerButton.setVisibility(View.VISIBLE);
-//
-//			provideAnswerButton.setOnClickListener(new View.OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					Intent intent = new Intent(NarratorItemActivity.this, AnswerQuestionActivity.class);
-//					intent.putExtra("runId", runId);
-//					intent.putExtra("bean", ((NarratorItemActivity) NarratorItemActivity.this).getNarratorBean());
-//					intent.putExtra("generalItemId", ((NarratorItemActivity) NarratorItemActivity.this).getItemId());
-//					NarratorItemActivity.this.startActivity(intent);
-//
-//				}
-//			});
-//			if (PropertiesAdapter.getInstance(this).getAccountLevel() == Account.ADMINISTRATOR) {
 				dcLayout.setVisibility(View.VISIBLE);
 				dataCollectorManager = new DataCollectorDelegateManager(oq, this, runId, account);
 				if (oq.isWithAudio()) {
 					(audioView).setImageDrawable(getResources().getDrawable(R.drawable.dc_voice_search_128));
 				}
-//			}
 		} else {
-//			provideAnswerButton.setVisibility(View.GONE);
 			dcLayout.setVisibility(View.GONE);
 		}
 	}
@@ -217,7 +197,7 @@ public class NarratorItemActivity extends GeneralItemActivity {
 //                        }
 
 
-                }, "ok");
+                }, "arlearn");
 				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
 //                webview.loadUrl("javascript:reportArlearnInput()");
 				richText = html;
@@ -286,7 +266,7 @@ public class NarratorItemActivity extends GeneralItemActivity {
 				@Override
 				public void onClick(View v) {
 					Intent i = new Intent(NarratorItemActivity.this, ViewAnswerActivity.class);
-					i.putExtra("response", resp.toArray(new Response[] {})[(int) id]);
+					i.putExtra("response", resp.toArray(new Response[] {})[id]);
 					startActivity(i);
 
 				}
@@ -306,9 +286,7 @@ public class NarratorItemActivity extends GeneralItemActivity {
 	}
 
 	public boolean isMessage() {
-		if (narratorBean == null)
-			return false;
-		return narratorBean.isMessage();
+		return (narratorBean != null) && narratorBean.isMessage();
 	}
 
 	public boolean showStatusLed() {

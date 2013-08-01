@@ -51,6 +51,19 @@ public class Variables extends Service {
         return serialise(rd.createVariableEffectDefinition(variableDef), accept);
     }
 
+    @GET
+    @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/effectDefinition/id/{id}")
+    public String getEffectDefinition(@HeaderParam("Authorization") String token,
+                              @PathParam("id") Long id,
+                              @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+                              @HeaderParam("Accept") String accept) throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+        VariableDelegator rd = new VariableDelegator(this);
+        return serialise(rd.getVariableEffectDefinition(id), accept);
+    }
+
     @POST
     @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     @Path("/instance")

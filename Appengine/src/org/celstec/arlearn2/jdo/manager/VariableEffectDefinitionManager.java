@@ -1,5 +1,7 @@
 package org.celstec.arlearn2.jdo.manager;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Text;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
@@ -9,10 +11,7 @@ import org.celstec.arlearn2.beans.game.VariableEffectDefinition;
 import org.celstec.arlearn2.beans.run.VariableInstance;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
 import org.celstec.arlearn2.jdo.PMF;
-import org.celstec.arlearn2.jdo.classes.ScoreDefinitionJDO;
-import org.celstec.arlearn2.jdo.classes.VariableDefinitionJDO;
-import org.celstec.arlearn2.jdo.classes.VariableEffectDefinitionJDO;
-import org.celstec.arlearn2.jdo.classes.VariableInstanceJDO;
+import org.celstec.arlearn2.jdo.classes.*;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -66,6 +65,13 @@ public class VariableEffectDefinitionManager {
         } finally {
             pm.close();
         }
+    }
+
+    public static VariableEffectDefinition getEffectDefinition(Long id) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        Key key = KeyFactory.createKey(VariableEffectDefinitionJDO.class.getSimpleName(), id);
+        return toBean(pm.getObjectById(VariableEffectDefinitionJDO.class, key));
+
     }
 
     private static VariableEffectDefinition toBean(VariableEffectDefinitionJDO jdo) {

@@ -1,7 +1,6 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi.i18;
 
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 
 public interface GeneralItemConstants  extends Constants {
 
@@ -11,7 +10,16 @@ public interface GeneralItemConstants  extends Constants {
 	
 	@DefaultStringValue("Title")
 	String title();
-	
+
+    @DefaultStringValue("Custom Icon")
+    String customIcon();
+
+    @DefaultStringValue("Section")
+    String section();
+
+    @DefaultStringValue("Tags")
+    String tags();
+
 	@DefaultStringValue("Message Type")
 	String simpleName();
 	

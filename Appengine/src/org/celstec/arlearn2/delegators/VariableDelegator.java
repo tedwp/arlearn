@@ -101,6 +101,10 @@ public class VariableDelegator extends DependencyDelegator {
         //return VariableEffectDefinitionManager.getVariableEffectDefinitions(gameId, null);
     }
 
+    public VariableEffectDefinition getVariableEffectDefinition(Long id){
+        return  VariableEffectDefinitionManager.getEffectDefinition(id);
+    }
+
     public HashMap<String, VariableDefinition> getVariableDefinitions(Long gameId, int scope) {
         GameVariablesCollector gameVariablesCollector = VariableCache.getInstance().getGameVariablesCollector(gameId);
         if (gameVariablesCollector == null) {
