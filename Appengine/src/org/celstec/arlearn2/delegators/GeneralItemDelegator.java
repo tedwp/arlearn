@@ -275,8 +275,10 @@ public class GeneralItemDelegator extends DependencyDelegator {
 				generalItem.setVisibleAt(visAt);
 				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getFullId(), GeneralItemVisibilityManager.VISIBLE_STATUS, visAt);
 
-//				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
-				new NotificationDelegator().broadcast(generalItem, u.getFullId());
+                GeneralItem giBroadcast = new GeneralItem();
+                giBroadcast.setId(generalItem.getId());
+                giBroadcast.setGameId(generalItem.getGameId());
+				new NotificationDelegator().broadcast(giBroadcast, u.getFullId());
 
 			}
 
@@ -296,7 +298,11 @@ public class GeneralItemDelegator extends DependencyDelegator {
 				generalItem.setDisappearAt(disAt);
 
 				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getFullId(), GeneralItemVisibilityManager.DISAPPEARED_STATUS, disAt);
-//				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
+
+                GeneralItem giBroadcast = new GeneralItem();
+                giBroadcast.setId(generalItem.getId());
+                giBroadcast.setGameId(generalItem.getGameId());
+                new NotificationDelegator().broadcast(giBroadcast, u.getFullId());
 			}
 		}
 	}
