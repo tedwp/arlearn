@@ -19,6 +19,7 @@
 package org.celstec.arlearn2.delegators;
 
 import com.google.gdata.util.AuthenticationException;
+import org.celstec.arlearn2.api.Service;
 import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.run.Action;
@@ -38,6 +39,10 @@ import java.util.logging.Logger;
 public class ActionDelegator extends GoogleDelegator{
 	
 	private static final Logger logger = Logger.getLogger(ActionDelegator.class.getName());
+
+    public ActionDelegator(Service service) {
+        super(service);
+    }
 
 	public ActionDelegator(String authtoken) throws AuthenticationException {
 		super(authtoken);
@@ -138,6 +143,9 @@ public class ActionDelegator extends GoogleDelegator{
 		ActionManager.deleteActions(runId, email);
 		ActionCache.getInstance().removeRunAction(runId);
 	}
-	
-	
+
+
+    public Object getActionsFromUntil(Long runIdentifier, Long from, Long until, String cursor) {
+        return ActionManager.getActions(runIdentifier, from, until, cursor);
+    }
 }

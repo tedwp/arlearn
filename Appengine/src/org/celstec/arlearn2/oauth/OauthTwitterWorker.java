@@ -82,18 +82,13 @@ public class OauthTwitterWorker {
         try {
              AccessToken accessToken = twitter.getOAuthAccessToken(token, verifier);
             User user = twitter.verifyCredentials();
-            log.log(Level.SEVERE, "accesstoken "+accessToken.getToken());
-            log.log(Level.SEVERE, "user "+user.getName());
-            log.log(Level.SEVERE, "user "+user.getScreenName());
-            log.log(Level.SEVERE, "user "+user.getId());
-            log.log(Level.SEVERE, "user "+user.getProfileImageURL());
             AccountJDO account = AccountManager.addAccount(""+user.getId(), AccountJDO.TWITTERCLIENT, "",
                     "", "", user.getName(),
                     user.getProfileImageURL());
             UserLoggedInManager.submitOauthUser(account.getUniqueId(), accessToken.getToken());
             return accessToken.getToken();
         } catch (TwitterException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, e.getMessage(), e);
         }
         return null;
     }

@@ -1,9 +1,11 @@
 package org.celstec.arlearn2.android.variable;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.delegators.VariableDelegator;
 
@@ -78,11 +80,19 @@ public class VariableDisplayHandler {
     private LinearLayout createGoldScore(Integer coins){
         LinearLayout scoreLL = new LinearLayout(activity);
         scoreLL.setGravity(Gravity.RIGHT);
-        for (int i = 0 ; i<coins; i++) {
+        TextView scoreAsText = new TextView(activity);
+        scoreAsText.setText(coins+"x ");
+        scoreAsText.setTextColor(activity.getResources().getColor(R.color.black));
+        scoreAsText.setTypeface(null, Typeface.BOLD);
+        scoreAsText.setTextSize(16);
+        scoreLL.addView(scoreAsText);
+//        for (int i = 0 ; i<coins; i++) {
             ImageView scoreView = new ImageView(activity);
             scoreView.setImageResource(R.drawable.var_coin_gold);
             scoreLL.addView(scoreView);
-        }
+//        }
+
+
         return scoreLL;
     }
 

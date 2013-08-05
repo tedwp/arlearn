@@ -36,7 +36,6 @@ public class OauthGoogleWorker extends OauthWorker {
 	private static String client_secret; 
 	private static String client_id; 
 	private static String redirect_uri;
-    private static final Logger log = Logger.getLogger(OauthGoogleWorker.class.getName());
 
 	static {
 		OauthConfigurationJDO jdo = OauthKeyManager.getConfigurationObject(AccountJDO.GOOGLECLIENT);
@@ -48,19 +47,12 @@ public class OauthGoogleWorker extends OauthWorker {
 	@Override
 	protected String getAuthUrl(String authCode) {
 		return "https://accounts.google.com/o/oauth2/token?code=" + authCode + "&redirect_uri=" + redirect_uri + "&client_id=" + client_id + "&client_secret=" + client_secret + "&grant_type=authorization_code";
-	  //return "https://accounts.google.com/o/oauth2/token?code=" + authCode + "&redirect_uri=" + redirect_uri + "&client_id=" + client_id + "&client_secret=" + client_secret + "&grant_type=authorization_code";
 	}
 
 	public void exchangeCodeForAccessToken() {
 		RequestAccessToken request = new RequestAccessToken();
 		request.postUrl(getAuthUrl(code), "code=" + code + "&" + "client_id=" + client_id + "&" + "client_secret=" + client_secret + "&" + "redirect_uri=" + redirect_uri + "&" + "grant_type=authorization_code");
-//        request.postUrl(getAuthUrl(code), "code=" + code + "&" + "client_id=" + client_id + "&" + "client_secret=" + client_secret + "&" + "redirect_uri=" + redirect_uri + "&" + "grant_type=authorization_code");
 
-		log.log(Level.SEVERE, "code "+code); 
-		log.log(Level.SEVERE, "client_id "+client_id); 
-		log.log(Level.SEVERE, "client_secret "+client_secret); 
-		log.log(Level.SEVERE, "redirect_uri "+redirect_uri); 
-		log.log(Level.SEVERE, "returning accessToken "+request.getAccessToken()); 
 		if (request.getAccessToken() !=  null) {
 			saveAccount(request.getAccessToken());
 			sendRedirect(request.getAccessToken(), ""+request.getExpires_in(), AccountJDO.GOOGLECLIENT);
@@ -73,7 +65,6 @@ public class OauthGoogleWorker extends OauthWorker {
 
 	public void saveAccount(String accessToken) {
 		try {
-			log.log(Level.SEVERE, "url: https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken);
 			JSONObject profileJson = new JSONObject(readURL(new URL("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken)));
 			String id = "";
 			String picture = "";

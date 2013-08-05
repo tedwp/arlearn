@@ -20,6 +20,8 @@ package org.celstec.arlearn2.oauth;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.celstec.arlearn2.jdo.classes.AccountJDO;
 import org.celstec.arlearn2.jdo.classes.OauthConfigurationJDO;
@@ -32,9 +34,10 @@ public class OauthFbWorker extends OauthWorker {
 	private static  String client_id; 
 	private static  String redirect_uri;
 	private static  String client_secret;
-	
-	
-	static {
+    private static final Logger log = Logger.getLogger(OauthFbWorker.class.getName());
+
+
+    static {
 		OauthConfigurationJDO jdo = OauthKeyManager.getConfigurationObject(AccountJDO.FBCLIENT);
 		client_id = jdo.getClient_id();
 		redirect_uri = jdo.getRedirect_uri();
@@ -91,9 +94,7 @@ public class OauthFbWorker extends OauthWorker {
 						 "http://graph.facebook.com/"+profileJson.getString("username")+"/picture");
 				 saveAccessToken(account.getUniqueId(), accessToken);
 			} catch (Exception e) {
-				e.printStackTrace();
+                log.log(Level.SEVERE, e.getMessage(), e);
 			}
 	    }
-	
-	
 }

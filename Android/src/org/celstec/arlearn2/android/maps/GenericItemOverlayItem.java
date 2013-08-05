@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.maps;
 
+import android.graphics.Rect;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.MapViewActivity;
@@ -51,6 +52,7 @@ public class GenericItemOverlayItem extends OverlayItem {
 		//int icon =ListMapItemsActivity.getIcon(gi);
 		//if (icon != 0) return GenericItemsOverlay.boundCenterBottom(ctx.getResources().getDrawable(icon));
         Drawable icon = ListMapItemsActivity.getIconAsDrawable(ctx, gi);
+
         if (icon != null) return GenericItemsOverlay.boundCenterBottom(icon);
 		return null;
 	}

@@ -19,6 +19,7 @@
 package org.celstec.arlearn2.android.activities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
@@ -42,112 +43,175 @@ import android.widget.ListView;
 
 public class ListMessagesActivity extends GeneralActivity implements ListitemClickInterface {
 
-	private GeneralItem[] gis = null;
-	private GenericMessageListAdapter adapter;
-	private long runId = -1;
-	private Long gameId = null;
+    private GeneralItem[] gis = null;
+    private GenericMessageListAdapter adapter;
+    private long runId = -1;
+    private Long gameId = null;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.listexcursionscreen);
-		
-		ActionsDelegator.getInstance().synchronizeActionsWithServer(this);
-		runId = PropertiesAdapter.getInstance(this).getCurrentRunId();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.listexcursionscreen);
 
-		RunDelegator.getInstance().loadRun(this, runId);
-		ResponseDelegator.getInstance().synchronizeResponsesWithServer(this, runId);
-	}
-	
-	@Override
-	protected void onSaveInstanceState (Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putLong("runId", runId);
-		outState.putLong("gameId", gameId);
-	}
+        ActionsDelegator.getInstance().synchronizeActionsWithServer(this);
+        runId = PropertiesAdapter.getInstance(this).getCurrentRunId();
 
-	protected void unpackBundle(Bundle inState) {
-		super.unpackBundle(inState);
-		runId = inState.getLong("runId");
-		gameId = inState.getLong("gameId");		
-	}
-	
+        RunDelegator.getInstance().loadRun(this, runId);
+        ResponseDelegator.getInstance().synchronizeResponsesWithServer(this, runId);
+    }
 
-	@Override
-	protected void onResume() {
+    @Override
+    protected void onSaveInstanceState (Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("runId", runId);
+        outState.putLong("gameId", gameId);
+    }
+
+    protected void unpackBundle(Bundle inState) {
+        super.unpackBundle(inState);
+        runId = inState.getLong("runId");
+        gameId = inState.getLong("gameId");
+    }
+
+
+    @Override
+    protected void onResume() {
         super.onResume();
-		gameId = RunCache.getInstance().getGameId(runId);
-		if (gameId != null) {
-			GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, runId, gameId);
-			loadMessagesFromCache();
-			super.onResume();
-		} else {
-			finish();
-		}
-	}
+        gameId = RunCache.getInstance().getGameId(runId);
+        if (gameId != null) {
+            GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, runId, gameId);
+            loadMessagesFromCache();
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
+            super.onResume();
+        } else {
+            finish();
+        }
+    }
 
-	@Override
-	public void onBroadcastMessage(Bundle bundle, boolean render) {
-		super.onBroadcastMessage(bundle, render);
-		if (render)
-			loadMessagesFromCache();
-	}
+    private TreeSet<String> sections;
+    private HashMap<String, Boolean> showSection = new HashMap<String, Boolean>();
 
-	private void loadMessagesFromCache() {
-		if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
-			this.finish();
-		} else {
-			if (RunCache.getInstance().getRun(runId) == null) {
-				this.finish();
-			} else 	{
-				TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleMessages(runId);
-				if (gil != null) {
-					gis = new GeneralItem[gil.size()];
-					int i = 0;
-					for (Iterator<GeneralItem> iterator = gil.iterator(); iterator.hasNext();) {
-						gis[i++] = (GeneralItem) iterator.next();
-					}
-					renderMessagesList();
-				}
-			}
-		}
-	}
+    private void loadSections(TreeSet<GeneralItem> gil) {
+        sections = new TreeSet<String>();
+        for (GeneralItem gi: gil) {
+            if (gi.getSection() != null) {
+                sections.add(gi.getSection());
+                if (!showSection.containsKey(gi.getSection())) showSection.put(gi.getSection(), true);
+            }
+        }
+    }
+    private boolean hasSections() {
+        if (sections.size() == 1 && sections.first().equals("")) return false;
+        return true;
+    }
 
-	private void renderMessagesList() {
-		ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
-		Long runId = getMenuHandler().getPropertiesAdapter().getCurrentRunId();
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
-		ListView listView = (ListView) findViewById(R.id.listRuns);
-		adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, runsList);
-		adapter.setOnListItemClickCallback(this);
-		listView.setAdapter(adapter);
-		for (int j = 0; j < gis.length; j++) {
-			MessageListRecord r = new MessageListRecord(gis[j], runId, this);
-			adapter.add(r);
-		}
-	}
+    @Override
+    public void onBroadcastMessage(Bundle bundle, boolean render) {
+        super.onBroadcastMessage(bundle, render);
+        if (render)
+            loadMessagesFromCache();
+    }
 
-	@Override
-	public void onListItemClick(View v, int position, GenericListRecord messageListRecord) {
-		GIActivitySelector.startActivity(this, gis[position]);
-	}
-	
-	@Override
-	public boolean setOnLongClickListener(View v, int position, GenericListRecord messageListRecord) {
-		return false;
-	}
+    private void loadMessagesFromCache() {
+        if (!menuHandler.getPropertiesAdapter().isAuthenticated()) {
+            this.finish();
+        } else {
+            if (RunCache.getInstance().getRun(runId) == null) {
+                this.finish();
+            } else 	{
+                TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleMessages(runId);
 
-	public boolean isGenItemActivity() {
-		return false;
-	}
+                if (gil != null) {
+                    loadSections(gil);
+                    if (hasSections()) {
+                        loadMessagesWithSections(gil);
+                    }   else {
+                        loadMessagesNoSections(gil);
+                    }
 
-	public boolean showStatusLed() {
-		return true;
-	}
-	
+                    renderMessagesList();
+                }
+            }
+        }
+    }
+
+    private void loadMessagesNoSections(TreeSet<GeneralItem> gil) {
+        gis = new GeneralItem[gil.size()];
+        int i = 0;
+        for (Iterator<GeneralItem> iterator = gil.iterator(); iterator.hasNext();) {
+            gis[i++] = iterator.next();;
+        }
+    }
+
+    private void loadMessagesWithSections(TreeSet<GeneralItem> gil) {
+        ArrayList<GeneralItem> gisList = new ArrayList<GeneralItem>(gil.size()+sections.size());
+        gis = new GeneralItem[gil.size()+sections.size()];
+        int i = 0;
+
+        for (String section: sections) {
+            GeneralItem sectionItem = new GeneralItem();
+            sectionItem.setName(section);
+            sectionItem.setGameId(getGameId());
+            sectionItem.setIconUrl(""+showSection.get(section));
+            gisList.add(sectionItem);
+
+            for (Iterator<GeneralItem> iterator = gil.iterator(); iterator.hasNext();) {
+
+                GeneralItem item = iterator.next();
+                if (section.equals(item.getSection())&&showSection.get(section)) {
+                    gisList.add(item);
+                }
+            }
+
+        }
+        gis = gisList.toArray(new GeneralItem[]{});
+    }
+
+    private void renderMessagesList() {
+        ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
+        Long runId = getMenuHandler().getPropertiesAdapter().getCurrentRunId();
+
+        ListView listView = (ListView) findViewById(R.id.listRuns);
+        adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, runsList);
+        adapter.setOnListItemClickCallback(this);
+        listView.setAdapter(adapter);
+
+        for (int j = 0; j < gis.length; j++) {
+
+            MessageListRecord r = new MessageListRecord(gis[j], runId, this);
+
+
+            adapter.add(r);
+        }
+    }
+
+    @Override
+    public void onListItemClick(View v, int position, GenericListRecord messageListRecord) {
+        if (gis[position].getId() != null) {
+            GIActivitySelector.startActivity(this, gis[position]);
+        } else {
+            String section = gis[position].getName();
+            showSection.put(section, !showSection.get(section   ));
+            loadMessagesFromCache();
+        }
+    }
+
+    @Override
+    public boolean setOnLongClickListener(View v, int position, GenericListRecord messageListRecord) {
+        return false;
+    }
+
+    public boolean isGenItemActivity() {
+        return false;
+    }
+
+    public boolean showStatusLed() {
+        return true;
+    }
+
 }

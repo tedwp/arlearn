@@ -178,12 +178,10 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 		ListGridField idField = new ListGridField(GameModel.GAMEID_FIELD, "id");
 		idField.setWidth(30);
 		idField.setHidden(true);
-		idField.setCanEdit(false);
 
 		ListGridField titleGameField = new ListGridField(GameModel.GAME_TITLE_FIELD, constants.title());
 
 		ListGridField accessGameField = new ListGridField(GameModel.GAME_ACCESS_STRING, constants.gameAccess());
-		accessGameField.setCanEdit(false);
 		accessGameField.setWidth(100);
 		
 		ListGridField runField = new ListGridField("runField", " ");  
@@ -205,8 +203,12 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 		ListGridField deleteField = new ListGridField("deleteField", "");  
 		deleteField.setWidth(20);
 		deleteField.setPrompt(constants.deleteGame());
-		
+        if (AccountManager.getInstance().isAdministrator()) {
+            getMasterListGrid().setCanEdit(true);
+        }
+
 		if (AccountManager.getInstance().isAdvancedUser()) { //
+            getMasterListGrid().setShowFilterEditor(true);
 			getMasterListGrid().setFields(new ListGridField[] {mapStatusField, giField,  idField, runField, downloadField, titleGameField,    ccField, accessGameField, deleteField });
 		} else {
 			getMasterListGrid().setFields(new ListGridField[] {mapStatusField, giField, idField, runField, titleGameField,    ccField, accessGameField, deleteField });

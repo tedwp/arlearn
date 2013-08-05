@@ -35,4 +35,15 @@
     <property name="lastModificationDate" direction="asc"/>
     </datastore-index>
 
+    <datastore-index kind="ActionJDO" ancestor="false" source="manual">
+        <property name="runId" direction="asc"/>
+        <property name="time" direction="asc"/>
+    </datastore-index>
+
+    <datastore-index kind="ActionJDO" ancestor="false" source="manual">
+        <property name="runId" direction="asc"/>
+        <property name="userEmail" direction="asc"/>
+        <property name="time" direction="asc"/>
+    </datastore-index>
+
 </datastore-indexes>

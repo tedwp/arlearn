@@ -62,9 +62,13 @@ public class VariableDelegator {
         return variableMap.containsKey(getKey(runId, name));
     }
 
-    public void saveInstance(VariableInstance varInst) {
-        if (varInst.getRunId() == null) return;
-        variableMap.put(getKey(varInst.getRunId(),varInst.getName()), varInst.getValue().intValue());
+    public boolean saveInstance(VariableInstance varInst) {
+        if (varInst.getRunId() == null) return false;
+        String key = getKey(varInst.getRunId(),varInst.getName());
+        int newValue = varInst.getValue().intValue();
+        Integer oldValue = variableMap.get(key);
+        variableMap.put(key, newValue);
+        return oldValue == null || !oldValue.equals(newValue);
 
     }
 

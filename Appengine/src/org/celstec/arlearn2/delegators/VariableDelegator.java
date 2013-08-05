@@ -84,7 +84,18 @@ public class VariableDelegator extends DependencyDelegator {
     }
 
     public VariableInstance getVariableInstance(Long gameId, Long runId, String name) {
-        VariableInstance returnValue = VariableInstanceManager.getVariableInstance(gameId, runId, name);
+        VariableInstance returnValue = VariableInstanceManager.getVariableInstance(gameId, runId, name, account.getFullId(), null);
+        if (returnValue == null) {
+            UsersDelegator td = new UsersDelegator(this);
+            User u = td.getUserByEmail(runId, account.getFullId());
+            if (u != null) {
+                returnValue = VariableInstanceManager.getVariableInstance(gameId, runId, name, null, u.getTeamId());
+            }
+
+        }
+        if (returnValue == null) {
+            returnValue = VariableInstanceManager.getVariableInstance(gameId, runId, name, null, null);
+        }
         if (returnValue == null) {
             returnValue = new VariableInstance();
             returnValue.setError("no such variable instance");

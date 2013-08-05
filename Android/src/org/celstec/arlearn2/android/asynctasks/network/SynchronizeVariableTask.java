@@ -2,6 +2,8 @@ package org.celstec.arlearn2.android.asynctasks.network;
 
 import android.content.Context;
 import android.os.Message;
+import org.celstec.arlearn2.android.activities.MapViewActivity;
+import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.broadcast.GenericReceiver;
@@ -73,11 +75,14 @@ public class SynchronizeVariableTask extends GenericTask implements NetworkTask 
             return;
         } else {
             try {
+                boolean aVariableWasUpdated = false;
                 for (String name : names) {
                     VariableInstance varInst = VariableClient.getVariableClient().getVariable(PropertiesAdapter.getInstance(ctx).getAuthToken(), gameId, runId, name);
-                    VariableDelegator.getInstance().saveInstance(varInst);
+                    aVariableWasUpdated |= VariableDelegator.getInstance().saveInstance(varInst);
                 }
-
+                if (aVariableWasUpdated) {
+                    ActivityUpdater.updateActivities(ctx, MapViewActivity.class.getCanonicalName());
+                }
             } catch (ARLearnException ae) {
                 if (ae.invalidCredentials()) {
                     GenericReceiver.setStatusToLogout(ctx);

@@ -125,6 +125,9 @@ public class GeneralItemVisibilityCache {
 			if (gi.getLat() == null) {
 				iterator.remove();
 			}
+            if (gi.getShowOnMap() != null && !gi.getShowOnMap()) {
+                iterator.remove();
+            }
 		}
 		return resultList;
 	}

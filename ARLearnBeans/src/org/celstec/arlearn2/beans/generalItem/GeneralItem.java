@@ -62,8 +62,11 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	private Long disappearAt;
 	
 	private Boolean showCountDown;
-	
-	
+
+    private Boolean showOnMap;
+
+    private Boolean showInList;
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!super.equals(obj)) return false;
@@ -85,6 +88,8 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
             nullSafeEquals(getSection(), other.getSection()) &&
             nullSafeEquals(getTags(), other.getTags()) &&
             nullSafeEquals(getShowCountDown(), other.getShowCountDown()) &&
+            nullSafeEquals(getShowInList(), other.getShowInList()) &&
+            nullSafeEquals(getShowOnMap(), other.getShowOnMap()) &&
 			nullSafeEquals(getRoles(), other.getRoles()) ; 
 	}
 
@@ -223,7 +228,8 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 		this.roles = roles;
 	}
 
-	@Override
+	@SuppressWarnings("ConstantConditions")
+    @Override
 	public int compareTo(GeneralItem other) {
         if (getSection()== null) setSection("");
         if (other.getSection()== null) other.setSection("");
@@ -232,7 +238,7 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
         if (!getSection().equals(other.getSection())) {
             return getSection().compareTo(other.getSection());
         }
-        if (getSortKey() == null) setSortKey(0)
+        if (getSortKey() == null) setSortKey(0);
         if (other.getSortKey() == null) other.setSortKey(0);
 		int returnValue = getSortKey() - other.getSortKey();
 		if (returnValue != 0) return returnValue;
@@ -264,7 +270,21 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	public void setShowCountDown(Boolean showCountDown) {
 		this.showCountDown = showCountDown;
 	}
-	
-	
-	
+
+
+    public Boolean getShowOnMap() {
+        return showOnMap;
+    }
+
+    public void setShowOnMap(Boolean showOnMap) {
+        this.showOnMap = showOnMap;
+    }
+
+    public Boolean getShowInList() {
+        return showInList;
+    }
+
+    public void setShowInList(Boolean showInList) {
+        this.showInList = showInList;
+    }
 }

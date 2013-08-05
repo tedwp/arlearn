@@ -19,6 +19,8 @@
 package org.celstec.arlearn2.oauth;
 
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.celstec.arlearn2.jdo.classes.AccountJDO;
 import org.celstec.arlearn2.jdo.classes.OauthConfigurationJDO;
@@ -31,8 +33,9 @@ public class OauthLinkedInWorker extends OauthWorker {
 	private static String client_id;
 	private static String redirect_uri;
 	private static String client_secret;
+    private static final Logger log = Logger.getLogger(OauthLinkedInWorker.class.getName());
 
-	static {
+    static {
 		OauthConfigurationJDO jdo = OauthKeyManager.getConfigurationObject(AccountJDO.LINKEDINCLIENT);
 		client_id = jdo.getClient_id();
 		redirect_uri = jdo.getRedirect_uri();
@@ -43,9 +46,6 @@ public class OauthLinkedInWorker extends OauthWorker {
 	public void exchangeCodeForAccessToken() {
 		RequestAccessToken request = new RequestAccessToken();
 		request.postUrl(getAuthUrl(code), "");
-		System.out.println("token " + request.getAccessToken());
-		System.out.println("ex " + request.getExpires_in());
-		// https://api.linkedin.com/v1/people/~?oauth2_access_token=AQXdSP_W41_UPs5ioT_t8HESyODB4FqbkJ8LrV_5mff4gPODzOYR
 		saveAccount(request.getAccessToken());
 		sendRedirect(request.getAccessToken(), "" + request.getExpires_in(), AccountJDO.LINKEDINCLIENT);
 
@@ -59,13 +59,11 @@ public class OauthLinkedInWorker extends OauthWorker {
 	public void saveAccount(String accessToken) {		JSONObject profileJson;
 		try {
 			profileJson = new JSONObject(readURL(new URL("https://api.linkedin.com/v1/people/~:(id,firstName,lastName,pictureUrl,emailAddress)?format=json&oauth2_access_token=" + accessToken)));
-			System.out.println(profileJson);
 			AccountJDO account = AccountManager.addAccount(profileJson.getString("id"), AccountJDO.LINKEDINCLIENT, profileJson.getString("emailAddress"), profileJson.getString("firstName"), profileJson.getString("lastName"), profileJson.getString("firstName") + " " + profileJson.getString("lastName"),
 					profileJson.getString("pictureUrl"));
-			 saveAccessToken(account.getUniqueId(), accessToken);
-
+    		 saveAccessToken(account.getUniqueId(), accessToken);
 		} catch (Exception e) {
-			e.printStackTrace();
+            log.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 

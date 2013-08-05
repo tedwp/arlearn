@@ -105,7 +105,9 @@ public class RunIterator extends GenericBean {
 	private void processrun(PersistenceManager pm, RunJDO runJDO) {
 		String authToken = null;
 		GameDelegator gd = new GameDelegator();
-		if (gd.getGameWithoutAccount(runJDO.getGameId()) == null) {
+//		if (gd.getGameWithoutAccount(runJDO.getGameId()) == null) {
+        //switched this one off - > dangerous
+        if (false) {
 			RunManager.setStatusDeleted(runJDO.getRunId());
 			RunsCache.getInstance().removeRun(runJDO.getRunId());
 			(new UpdateGeneralItemsVisibility(authToken, null, runJDO.getRunId(), null, 2)).scheduleTask();

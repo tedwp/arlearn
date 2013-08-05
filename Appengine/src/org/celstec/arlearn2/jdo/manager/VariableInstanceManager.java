@@ -132,10 +132,10 @@ public class VariableInstanceManager {
         return bean;
     }
 
-    public static VariableInstance getVariableInstance(Long gameId, Long runId, String name) {
+    public static VariableInstance getVariableInstance(Long gameId, Long runId, String name, String account, String team) {
         PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            List<VariableInstanceJDO> list = getVariables(pm, gameId, runId, name, null, null);
+            List<VariableInstanceJDO> list = getVariables(pm, gameId, runId, name, account, team);
             if (list.isEmpty()) return null;
             return toBean(list.get(0));
         } finally {

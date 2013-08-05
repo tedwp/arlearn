@@ -37,7 +37,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 public abstract class OauthWorker {
 
-	
+    private static final Logger log = Logger.getLogger(OauthWorker.class.getName());
 	
 	protected String code;
 	private HttpServletResponse resp;
@@ -117,7 +117,7 @@ public abstract class OauthWorker {
 		this.resp = resp;
 
 	}
-	private static final Logger log = Logger.getLogger(OauthWorker.class.getName());
+
 	public class RequestAccessToken {
 
 		private String accessToken;
@@ -138,7 +138,7 @@ public abstract class OauthWorker {
 
 		public void postUrl(String url, String data) {
 			try {
-				log.log(Level.SEVERE, "about to open url for code "+url + " *** "+data);
+				log.log(Level.INFO, "about to open url for code "+url + " *** "+data);
 				URLConnection conn = new URL(url).openConnection();
 //				conn.setConnectTimeout(30);
 				conn.setDoOutput(true);
@@ -152,7 +152,7 @@ public abstract class OauthWorker {
 				while ((line = rd.readLine()) != null) {
 					result += line;
 				}
-				log.log(Level.SEVERE, "oauth result"+result);
+				log.log(Level.INFO, "oauth result"+result);
 				wr.close();
 				rd.close();
 				parseResult(result);
@@ -162,7 +162,7 @@ public abstract class OauthWorker {
 		}
 
 		private void parseResult(String result) throws JSONException {
-			log.log(Level.WARNING, "parseResult " + result);
+			log.log(Level.INFO, "parseResult " + result);
 			JSONObject resultJson = new JSONObject(result);
 			accessToken = resultJson.getString("access_token");
 			expires_in = resultJson.getLong("expires_in");

@@ -27,6 +27,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.datasource.JsonObjectListCallbac
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.OauthNetworkClient;
 import org.celstec.arlearn2.portal.client.author.AuthorPage;
+import org.celstec.arlearn2.portal.client.debug.DebugPage;
 import org.celstec.arlearn2.portal.client.game.GamePage;
 import org.celstec.arlearn2.portal.client.network.NetworkPage;
 import org.celstec.arlearn2.portal.client.resultDisplay.ResultDisplayPage;
@@ -107,6 +108,7 @@ public class Entry implements EntryPoint {
 				if (RootPanel.get("network") != null) (new NetworkPage()).loadPage();
 				if (RootPanel.get("search") != null) (new SearchPage()).loadPage();
 				if (RootPanel.get("game") != null) (new GamePage()).loadPage();
+                if (RootPanel.get("debug") != null) (new DebugPage()).loadPage();
 			}
 		} else {
 			String href = Window.Location.getHref();

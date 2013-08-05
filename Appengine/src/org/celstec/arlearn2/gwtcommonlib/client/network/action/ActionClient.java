@@ -36,4 +36,12 @@ public class ActionClient extends GenericClient {
 		object.put("action", new JSONString(action));
 		invokeJsonPOST(null, object, jcb);
 	}
+
+    public void getActions(long runId, long from, String resumptionToken, final JsonCallback jcb) {
+        if (resumptionToken == null) {
+            invokeJsonGET("/runId/"+runId+"?from="+from, jcb);
+        } else {
+            invokeJsonGET("/runId/"+runId+"?from="+from +"&resumptionToken="+resumptionToken, jcb);
+        }
+    }
 }

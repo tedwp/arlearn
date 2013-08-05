@@ -49,6 +49,7 @@ public class MessageListRecord extends GenericListRecord {
         if (generalItem.getId() != null) setRead(ActionCache.getInstance().isRead(runId, generalItem.getId()));
         String description = "";
         if (generalItem.getId() != null) {
+            inverted = false;
             double percentage = GeneralItemsDelegator.getInstance().getDownloadPercentage(generalItem);
             double averageStatus = GeneralItemsDelegator.getInstance().getAverageDownloadStatus(generalItem);
             if (percentage < 1 && percentage != -1) {
@@ -107,6 +108,14 @@ public class MessageListRecord extends GenericListRecord {
                 textError.setVisibility(View.GONE);
             } else {
                 textHeader.setTextColor(Color.BLACK);
+                textHeader.setBackgroundColor(Color.WHITE);
+                v.setBackgroundColor(Color.WHITE);
+                TextView textDetail = (TextView) v.findViewById(R.id.textDetail);
+                TextView textRightDetail = (TextView) v.findViewById(R.id.textRightDetail);
+                TextView textError = (TextView) v.findViewById(R.id.textError);
+                textDetail.setVisibility(View.VISIBLE);
+                textRightDetail.setVisibility(View.VISIBLE);
+                textError.setVisibility(View.VISIBLE);
             }
         }
         ImageView iv = (ImageView) v.findViewById(R.id.list_icon);

@@ -19,11 +19,16 @@
 package org.celstec.arlearn2.android.activities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.ImageView;
@@ -51,7 +56,10 @@ import android.widget.ListView;
 
 public class ListMapItemsActivity extends GeneralActivity implements ListitemClickInterface{
 
-	private GenericMessageListAdapter adapter;
+    private TreeSet<String> sections;
+    private HashMap<String, Boolean> showSection = new HashMap<String, Boolean>();
+
+    private GenericMessageListAdapter adapter;
 	private GeneralItem[] gis = new GeneralItem[0]; 
 	private long[] read = new long[0]; 
 
@@ -71,7 +79,21 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 
 		RunDelegator.getInstance().loadRun(this, getPropertiesAdapter().getCurrentRunId());
 	}
-	
+
+    private void loadSections(TreeSet<GeneralItem> gil) {
+        sections = new TreeSet<String>();
+        for (GeneralItem gi: gil) {
+            if (gi.getSection() != null) {
+                sections.add(gi.getSection());
+                if (!showSection.containsKey(gi.getSection())) showSection.put(gi.getSection(), true);
+            }
+        }
+    }
+    private boolean hasSections() {
+        if (sections.size() == 1 && sections.first().equals("")) return false;
+        return true;
+    }
+
 	private void renderList(){
 		Location loc = LocationService.getBestLocation(this);
 		if (loc != null) {
@@ -89,25 +111,91 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 		TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleItems(runId);
 		if (gil == null) {
 			return;
-		} 
-		gis = gil.toArray(new GeneralItem[] {});
-		ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
-		ListView listView = (ListView) findViewById(R.id.listRuns); 
-
-		adapter = new GenericMessageListAdapter(this,R.layout.listexcursionscreen, runsList);
-		adapter.setOnListItemClickCallback(this);
-		listView.setAdapter(adapter);
-		
-		for (int j = 0; j < gis.length; j++) {
-			String distance = "";
-			if (!( gis[j].getLng() == null && gis[j].getLat() == null)) {
-				distance =distanceToString(GPSUtil.distance(gis[j].getLat(), gis[j].getLng(), lat, lng, GPSUtil.METERS));
-			}
-			MessageListRecord r = new MessageListRecord(gis[j], runId, this);
-			r.setDistance(distance);
-			adapter.add(r);
 		}
+
+        if (gil != null) {
+            loadSections(gil);
+            if (hasSections()) {
+                loadMessagesWithSections(gil);
+            }   else {
+                loadMessagesNoSections(gil);
+            }
+
+            renderMessagesList();
+        }
+
+//		gis = gil.toArray(new GeneralItem[] {});
+//		ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
+//		ListView listView = (ListView) findViewById(R.id.listRuns);
+//
+//		adapter = new GenericMessageListAdapter(this,R.layout.listexcursionscreen, runsList);
+//		adapter.setOnListItemClickCallback(this);
+//		listView.setAdapter(adapter);
+//
+//		for (int j = 0; j < gis.length; j++) {
+//			String distance = "";
+//			if (!( gis[j].getLng() == null && gis[j].getLat() == null)) {
+//				distance =distanceToString(GPSUtil.distance(gis[j].getLat(), gis[j].getLng(), lat, lng, GPSUtil.METERS));
+//			}
+//			MessageListRecord r = new MessageListRecord(gis[j], runId, this);
+//			r.setDistance(distance);
+//			adapter.add(r);
+//		}
 	}
+
+    private void loadMessagesNoSections(TreeSet<GeneralItem> gil) {
+        gis = new GeneralItem[gil.size()];
+        int i = 0;
+        for (Iterator<GeneralItem> iterator = gil.iterator(); iterator.hasNext();) {
+            gis[i++] = iterator.next();;
+        }
+    }
+
+    private void loadMessagesWithSections(TreeSet<GeneralItem> gil) {
+        ArrayList<GeneralItem> gisList = new ArrayList<GeneralItem>(gil.size()+sections.size());
+        gis = new GeneralItem[gil.size()+sections.size()];
+        int i = 0;
+
+        for (String section: sections) {
+            GeneralItem sectionItem = new GeneralItem();
+            sectionItem.setName(section);
+            sectionItem.setGameId(getGameId());
+            sectionItem.setIconUrl(""+showSection.get(section));
+            gisList.add(sectionItem);
+
+            for (Iterator<GeneralItem> iterator = gil.iterator(); iterator.hasNext();) {
+
+                GeneralItem item = iterator.next();
+                if (section.equals(item.getSection())&&showSection.get(section)) {
+                    gisList.add(item);
+                }
+            }
+
+        }
+        gis = gisList.toArray(new GeneralItem[]{});
+    }
+
+    private void renderMessagesList() {
+        ArrayList<GenericListRecord> runsList = new ArrayList<GenericListRecord>();
+        Long runId = getMenuHandler().getPropertiesAdapter().getCurrentRunId();
+
+        ListView listView = (ListView) findViewById(R.id.listRuns);
+        adapter = new GenericMessageListAdapter(this, R.layout.listexcursionscreen, runsList);
+        adapter.setOnListItemClickCallback(this);
+        listView.setAdapter(adapter);
+
+        for (int j = 0; j < gis.length; j++) {
+
+            MessageListRecord r = new MessageListRecord(gis[j], runId, this);
+            String distance = "";
+            if (!( gis[j].getLng() == null && gis[j].getLat() == null)) {
+                distance =distanceToString(GPSUtil.distance(gis[j].getLat(), gis[j].getLng(), lat, lng, GPSUtil.METERS));
+            }
+            r.setDistance(distance);
+
+            adapter.add(r);
+        }
+    }
 
 //    public static void setIcon(ImageView iv, GeneralItem gi) {
 //        if (gi.getIconUrl()!= null) {
@@ -117,13 +205,31 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 
     public static Drawable getIconAsDrawable(Context ctx,
                                              GeneralItem gi){
+        Drawable returnDrawable = null;
         if (gi.getIconUrl() != null) {
             Uri localAudioUri = GeneralItemsDelegator.getInstance().getLocalMediaUriMap(gi).get(GeneralItemsDelegator.ICON_LOCAL_ID);
-            if (localAudioUri!= null) return Drawable.createFromPath(localAudioUri.getPath());
+            if (localAudioUri!= null) {
+                returnDrawable = Drawable.createFromPath(localAudioUri.getPath());
+//                return Drawable.createFromPath(localAudioUri.getPath());
+            }
         }
-        int icon = getIcon(gi);
-        if (icon == 0) return null;
-        return ctx.getResources().getDrawable(getIcon(gi));
+        if (returnDrawable == null) {
+            int icon = getIcon(gi);
+            if (icon == 0) return null;
+            returnDrawable = ctx.getResources().getDrawable(getIcon(gi));
+//            return ctx.getResources().getDrawable(getIcon(gi));
+        }
+        if (returnDrawable != null) {
+            final float scale = ctx.getResources().getDisplayMetrics().density;
+//        Rect bounds = icon.getBounds();
+//            Rect newBounds = new Rect(0,0, (int) (48 * scale + 0.5f), (int) (48 * scale + 0.5f));
+//            returnDrawable.setBounds(newBounds);
+            Bitmap bitmap = ((BitmapDrawable) returnDrawable).getBitmap();
+
+            Drawable d = new BitmapDrawable(ctx.getResources(), Bitmap.createScaledBitmap(bitmap, (int) (48 * scale + 0.5f), (int) (48 * scale + 0.5f), true));
+            return d;
+        }
+        return returnDrawable;
 
     }
 	//TODO move to other place
@@ -195,7 +301,14 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 
 	@Override
 	public void onListItemClick(View v, int position, GenericListRecord messageListRecord) {
-		GIActivitySelector.startActivity(this, gis[position]);
+
+        if (gis[position].getId() != null) {
+            GIActivitySelector.startActivity(this, gis[position]);
+        } else {
+            String section = gis[position].getName();
+            showSection.put(section, !showSection.get(section   ));
+            renderList();
+        }
 		
 	}
 	@Override

@@ -41,6 +41,8 @@ public class ActionListDeserializer extends RunBeanDeserializer{
 		super.initBean(object, genericBean);
 		ActionList actionList = (ActionList) genericBean;
 		if (object.has("actions")) actionList.setActions(ListDeserializer.toBean(object.getJSONArray("actions"), Action.class));
+        if (object.has("serverTime")) actionList.setServerTime(object.getLong("serverTime"));
+        if (object.has("resumptionToken")) actionList.setResumptionToken(object.getString("resumptionToken"));
 	}
 
 }

@@ -7,6 +7,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.RunDataSource
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.run.RunClient;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.Run;
+import org.celstec.arlearn2.portal.client.account.AccountManager;
 import org.celstec.arlearn2.portal.client.author.ui.ListMasterSectionSectionStackDetailTab;
 import org.celstec.arlearn2.portal.client.author.ui.run.i18.RunConstants;
 
@@ -44,11 +45,9 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 		
 		ListGridField idField = new ListGridField(RunModel.RUNID_FIELD, "id");
 		idField.setWidth(30);
-		idField.setCanEdit(false);
 		idField.setHidden(true);
 		
 		ListGridField gameIdField = new ListGridField(RunModel.GAMEID_FIELD, "gameId ");
-		gameIdField.setCanEdit(false);
 		gameIdField.setHidden(true);
 		
 		ListGridField titleRunField = new ListGridField(RunModel.RUNTITLE_FIELD, constants.runTitle());
@@ -61,6 +60,10 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 		
 		ListGridField deleteField = new ListGridField("deleteField", " ");  
 		 deleteField.setWidth(20);
+        if (AccountManager.getInstance().isAdministrator()) {
+            getMasterListGrid().setCanEdit(true);
+            getMasterListGrid().setShowFilterEditor(true);
+        }
 		getMasterListGrid().setFields(new ListGridField[] { idField, gameIdField, titleRunField,  titleGameField, accessRunField, deleteField });
 		Criteria criteria = new Criteria();
 		criteria.addCriteria(GameModel.DELETED_FIELD, false);

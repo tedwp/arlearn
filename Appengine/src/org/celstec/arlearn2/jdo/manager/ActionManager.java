@@ -18,24 +18,27 @@
  ******************************************************************************/
 package org.celstec.arlearn2.jdo.manager;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import com.google.appengine.api.datastore.Cursor;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.ActionList;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.ActionJDO;
+import org.datanucleus.store.appengine.query.JDOCursorHelper;
 
 public class ActionManager {
 
 	private static final String params[] = new String[]{"runId", "action", "userEmail", "generalItemId", "generalItemType"};
 	private static final String paramsNames[] = new String[]{"runIdParam", "actionParam", "userEmailParam", "generalItemIdParam", "generalItemTypeParam"};
 	private static final String types[] = new String[]{"Long", "String", "String", "String", "String"};
-	
+
+
+    private static final int ACTIONS_IN_LIST = 20;
+
 	public static List<Action> getActions(Long runId, String action, String userEmail, String generalItemId, String generalItemType) {
 		ArrayList<Action> returnProgressDefinitions = new ArrayList<Action>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -127,4 +130,61 @@ public class ActionManager {
 			pm.close();
 		}
 	}
+
+
+    public static ActionList getActions(Long runId, Long from, Long until, String cursorString) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        ActionList returnList = new ActionList();
+        try {
+            Query query = pm.newQuery(ActionJDO.class);
+            if (cursorString != null) {
+
+                Cursor c = Cursor.fromWebSafeString(cursorString);
+                Map<String, Object> extensionMap = new HashMap<String, Object>();
+                extensionMap.put(JDOCursorHelper.CURSOR_EXTENSION, c);
+                query.setExtensions(extensionMap);
+            }
+            query.setRange(0, ACTIONS_IN_LIST);
+            String filter = null;
+            String params = null;
+            Object args[] = null;
+            if (from == null) {
+                filter = "runId == runIdParam & time <= untilParam";
+                params = "Long runIdParam, Long untilParam";
+                args = new Object[] { runId, until };
+            } else if (until == null) {
+                filter = "runId == runIdParam & time >= fromParam";
+                params = "Long runIdParam, Long fromParam";
+                args = new Object[] { runId, from };
+            } else {
+                filter = "runId == runIdParam & time >= fromParam & time <= untilParam";
+                params = "Long runIdParam, Long fromParam, Long untilParam";
+                args = new Object[] { runId, from, until };
+            }
+
+            query.setFilter(filter);
+            query.declareParameters(params);
+            List<ActionJDO> results = (List<ActionJDO>) query.executeWithArray(args);
+            Iterator<ActionJDO> it = (results).iterator();
+            int i = 0;
+            while (it.hasNext()) {
+                i++;
+                ActionJDO object = it.next();
+                returnList.addAction(toBean(object));
+
+            }
+            Cursor c = JDOCursorHelper.getCursor(results);
+            cursorString = c.toWebSafeString();
+            if (returnList.getActions().size() == ACTIONS_IN_LIST) {
+                returnList.setResumptionToken(cursorString);
+            }
+            returnList.setServerTime(System.currentTimeMillis());
+
+
+        }finally {
+            pm.close();
+        }
+        return returnList;
+
+    }
 }
