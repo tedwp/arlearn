@@ -19,6 +19,7 @@
 package org.celstec.arlearn2.api;
 
 import org.celstec.arlearn2.beans.Bean;
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
@@ -28,6 +29,9 @@ import org.codehaus.jettison.json.JSONException;
 import com.google.gdata.util.AuthenticationException;
 
 public class Service {
+	
+	protected Account account;
+	protected String token;
 
 	protected UsersDelegator verifyCredentials(String authToken) throws AuthenticationException {
 		UsersDelegator qu = new UsersDelegator(authToken);
@@ -52,6 +56,9 @@ public class Service {
 		UsersDelegator qu;
 		try {
 			qu = new UsersDelegator(authToken);
+			account = qu.getCurrentAccount();
+			token = qu.getAuthToken();
+			if (account != null) return true;
 			return (qu.getCurrentUserAccount() != null);
 		} catch (AuthenticationException e) {
 			return false;
@@ -90,4 +97,22 @@ public class Service {
 			return e.getMessage();
 		}
 	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
+	
 }

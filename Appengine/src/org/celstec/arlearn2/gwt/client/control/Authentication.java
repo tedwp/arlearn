@@ -28,6 +28,8 @@ public class Authentication implements LoginCallback {
 
 	public static final String USERNAME_COOKIE = "org.celstec.arlearn.const.username";
 	public static final String AUTH_COOKIE = "org.celstec.arlearn.const.auth";
+	public static final String OAUTH_ACCESTOKEN_COOKIE = "arlearn.AccessToken";
+	public static final String OAUTH_TYPE_COOKIE = "arlearn.OauthType";
 	static Authentication instance;
 	
 	private Authentication() {
@@ -72,10 +74,15 @@ public class Authentication implements LoginCallback {
 	}
 	
 	public boolean isAuthenticated() {
-		return Cookies.getCookie(AUTH_COOKIE) != null;
+		return Cookies.getCookie(AUTH_COOKIE) != null || Cookies.getCookie(OAUTH_ACCESTOKEN_COOKIE) != null ;
 	}
 	
 	public String getAuthenticationToken() {
+		if (Cookies.getCookie(OAUTH_ACCESTOKEN_COOKIE) != null) {
+			Cookies.removeCookie(AUTH_COOKIE);		
+
+			return  Cookies.getCookie(OAUTH_ACCESTOKEN_COOKIE);
+		}
 		return Cookies.getCookie(AUTH_COOKIE);
 	}
 	

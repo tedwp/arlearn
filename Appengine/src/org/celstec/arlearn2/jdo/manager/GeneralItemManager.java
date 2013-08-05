@@ -170,17 +170,19 @@ public class GeneralItemManager {
 		delete(gameId, null, null);
 	}
 	
-	public static void setStatusDeleted(long gameId, String itemId) {
+	public static GeneralItem setStatusDeleted(long gameId, String itemId) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			List<GeneralItemJDO> deleteList = getGeneralitems(pm, gameId, itemId, null);
 			for (GeneralItemJDO jdo: deleteList) {
 				jdo.setDeleted(true);
 				jdo.setLastModificationDate(System.currentTimeMillis());
+				return toBean(jdo);
 			}
 		} finally {
 			pm.close();
 		}
+		return null;
 	}
 	
 	public static void deleteGeneralItem(long gameId, String itemId) {

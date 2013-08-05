@@ -49,7 +49,7 @@ public class GameClient extends GenericClient {
 	public void createGame(String title, String creator, boolean withMap, final JsonCallback jcb) {
 		JSONObject object = new JSONObject();
 		object.put("title", new JSONString(title));
-		object.put("creator", new JSONString(creator));
+		if (creator != null) object.put("creator", new JSONString(creator));
 		JSONObject config = new JSONObject();
 		object.put("config", config);
 		config.put("mapAvailable", JSONBoolean.getInstance(withMap));

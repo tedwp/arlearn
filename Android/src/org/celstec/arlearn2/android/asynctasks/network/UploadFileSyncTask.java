@@ -36,15 +36,21 @@ import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
+import org.celstec.arlearn2.android.activities.ListMessagesActivity;
+import org.celstec.arlearn2.android.activities.ListRunsParticipateActivity;
+import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.DatabaseTask;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.asynctasks.download.DownloadQueue;
 import org.celstec.arlearn2.android.asynctasks.download.DownloadTaskHandler;
 
+import org.celstec.arlearn2.android.cache.MediaUploadCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCacheUpload;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.client.GenericClient;
 
 import android.content.Context;
@@ -74,24 +80,66 @@ public class UploadFileSyncTask extends GenericTask implements NetworkTask {
 		loadItem.run(ctx);
 	}
 	
-	private void startUpload() {
-		String uploadUrl = requestExternalUrl();
-		System.out.println("uploading "+uploadItem.getLocalId());	
-		if (uploadUrl == null) {
-			endWithError = true;
-			return;
-		}
-		publishData(uploadUrl);
-		WriteStatusToDatabase statusWrite = new WriteStatusToDatabase();
+	private class UploadItem extends GenericTask implements NetworkTask {
 		
-		if (!endWithError) {
-			statusWrite.setStatus(MediaCacheUpload.REP_STATUS_DONE);
-			statusWrite.taskToRunAfterExecute(new UploadFileSyncTask());
-		} else {
-			statusWrite.setStatus(MediaCacheUpload.REP_STATUS_TODO);
+		@Override
+		public void run(Context ctx) {
+			Message m = Message.obtain(DownloadQueue.getNetworkTaskHandler());
+			m.what = DownloadTaskHandler.SYNC_USER_MEDIA;
+			m.obj = UploadItem.this;
+			m.sendToTarget();
 		}
-		statusWrite.run(ctx);
+		
+		@Override
+		public void execute() {
+			String uploadUrl = requestExternalUrl();
+//            uploadUrl = uploadUrl.replace("streetlearn.appspot.com", "192.168.1.8:9999");
+			if (uploadUrl == null) {
+				endWithError = true;
+				return;
+			}
+			publishData(uploadUrl);
+			MediaUploadCache.getInstance(uploadItem.getRunId()).put(uploadItem.buildRemotePath(), MediaCacheUpload.REP_STATUS_SYNCING);
+			ActivityUpdater.updateActivities(ctx, NarratorItemActivity.class.getCanonicalName());
+
+			WriteStatusToDatabase statusWrite = new WriteStatusToDatabase();
+			
+			if (!endWithError) {
+				uploadItem.setReplicated(MediaCacheUpload.REP_STATUS_DONE);
+				statusWrite.setStatus(MediaCacheUpload.REP_STATUS_DONE);
+				statusWrite.taskToRunAfterExecute(new UploadFileSyncTask());
+			} else {
+				uploadItem.setReplicated(MediaCacheUpload.REP_STATUS_TODO);
+				statusWrite.setStatus(MediaCacheUpload.REP_STATUS_TODO);
+			}
+			statusWrite.run(ctx);
+			UploadFileSyncTask.this.runAfterTasks(ctx);
+		}
 	}
+	
+//	private void startUpload() {
+//		String uploadUrl = requestExternalUrl();
+//		if (uploadUrl == null) {
+//			endWithError = true;
+//			return;
+//		}
+//		publishData(uploadUrl);
+//		MediaUploadCache.getInstance(uploadItem.getRunId()).put(uploadItem.buildRemotePath(), MediaCacheUpload.REP_STATUS_SYNCING);
+//		ActivityUpdater.updateActivities(ctx, NarratorItemActivity.class.getCanonicalName());
+//
+//		WriteStatusToDatabase statusWrite = new WriteStatusToDatabase();
+//		
+//		if (!endWithError) {
+//			uploadItem.setReplicated(MediaCacheUpload.REP_STATUS_DONE);
+//			statusWrite.setStatus(MediaCacheUpload.REP_STATUS_DONE);
+//			statusWrite.taskToRunAfterExecute(new UploadFileSyncTask());
+//		} else {
+//			uploadItem.setReplicated(MediaCacheUpload.REP_STATUS_TODO);
+//			statusWrite.setStatus(MediaCacheUpload.REP_STATUS_TODO);
+//		}
+//		statusWrite.run(ctx);
+//		runAfterTasks(ctx);
+//	}
 	
 	private class LoadItemFromDatabase extends GenericTask implements DatabaseTask {
 
@@ -99,7 +147,8 @@ public class UploadFileSyncTask extends GenericTask implements NetworkTask {
 		public void execute(DBAdapter db) {
 			uploadItem = db.getMediaCacheUpload().getNextItemToUpload();
 			if (uploadItem != null) {
-				startUpload();
+//				startUpload();
+				new UploadItem().run(ctx);
 			}
 		}
 
@@ -140,7 +189,7 @@ public class UploadFileSyncTask extends GenericTask implements NetworkTask {
 	
 	
 	private String getToken() {
-		return PropertiesAdapter.getInstance(ctx).getFusionAuthToken();
+		return PropertiesAdapter.getInstance(ctx).getAuthToken();
 	}
 	
 	private String addToParameters(String parameters, String key, String value) {

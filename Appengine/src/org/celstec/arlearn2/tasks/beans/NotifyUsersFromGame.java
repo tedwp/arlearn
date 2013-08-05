@@ -31,6 +31,7 @@ import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.cache.VisibleGeneralItemsCache;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
+import org.celstec.arlearn2.delegators.NotificationDelegator;
 import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
@@ -101,33 +102,30 @@ public class NotifyUsersFromGame extends GenericBean {
 					TeamModification tm = new TeamModification();
 					tm.setModificationType(TeamModification.ALTERED);
 					tm.setRunId(runId);
-					ChannelNotificator.getInstance().notify(u.getEmail(), tm);
+					new NotificationDelegator().broadcast(tm, u.getFullId());
+
 				}
 				if (u.getDeleted() == null || !u.getDeleted()) {
-				VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, u.getEmail());
+				VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, u.getFullId());
 				if (modificationType == GeneralItemModification.CREATED) {
 					if (gim.getGeneralItem().getDependsOn() == null && GeneralItemDelegator.itemMatchesUserRoles(gim.getGeneralItem(), u.getRoles()) && (gim.getGeneralItem().getDeleted() == null || !gim.getGeneralItem().getDeleted())) {
-						GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), getRunId(), u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS, System.currentTimeMillis());
+						GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), getRunId(), u.getFullId(), GeneralItemVisibilityManager.VISIBLE_STATUS, System.currentTimeMillis());
 					}
-					NotificationEngine.getInstance().notify(u.getEmail(), gim);
+					new NotificationDelegator().broadcast(gim, u.getFullId());
 				}
 				if (modificationType == GeneralItemModification.VISIBLE) {
 					if (gim.getGeneralItem().getDeleted() == null || !gim.getGeneralItem().getDeleted()) {
-						GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), getRunId(), u.getEmail(), GeneralItemVisibilityManager.VISIBLE_STATUS, System.currentTimeMillis());
+						GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), getRunId(), u.getFullId(), GeneralItemVisibilityManager.VISIBLE_STATUS, System.currentTimeMillis());
 					}
-					NotificationEngine.getInstance().notify(u.getEmail(), gim);
+					new NotificationDelegator().broadcast(gim, u.getFullId());
 				}
 				if (modificationType == GeneralItemModification.DELETED) {
-					GeneralItemVisibilityManager.delete(getRunId(), gim.getGeneralItem().getId(), u.getEmail(), null);
-					NotificationEngine.getInstance().notify(u.getEmail(), gim);
+					GeneralItemVisibilityManager.delete(getRunId(), gim.getGeneralItem().getId(), u.getFullId(), null);
+					new NotificationDelegator().broadcast(gim, u.getFullId());
 				}
-				if (modificationType == GameModification.ALTERED ||modificationType == GameModification.DELETED) {
+				if (modificationType == GameModification.ALTERED ||modificationType == GameModification.DELETED ||modificationType == GameModification.CREATED) {
 					UserManager.gameChanged(u);
 				}
-				
-				
-
-//				ChannelNotificator.getInstance().notify(u.getEmail(), gim);
 				}
 			}
 		} catch (AuthenticationException e) {

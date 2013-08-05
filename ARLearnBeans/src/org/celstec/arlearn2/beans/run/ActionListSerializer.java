@@ -31,6 +31,8 @@ public class ActionListSerializer  extends RunBeanSerialiser{
 		JSONObject returnObject = super.toJSON(bean);
 		try {
 			if (al.getActions() != null) returnObject.put("actions", ListSerializer.toJSON(al.getActions()));
+            if (al.getServerTime() != null) returnObject.put("serverTime", al.getServerTime());
+            if (al.getResumptionToken() != null) returnObject.put("resumptionToken", al.getResumptionToken());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

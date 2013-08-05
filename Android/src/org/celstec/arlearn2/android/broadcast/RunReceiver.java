@@ -10,16 +10,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class RunReceiver extends GenericReceiver {
+public class RunReceiver {
 
 	public static String action = "org.celstec.arlearn2.beans.notification.RunModification";
 	
-//	public static long lastSyncWithCloud = 0 ;
-//	public static final long timeBetweenTwoCloudSyncs = 300000;
 
-	// private Semaphore semaphore;
-
-	@Override
+	
 	public void onReceive(final Context context, final Intent intent) {
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
@@ -35,20 +31,6 @@ public class RunReceiver extends GenericReceiver {
 
 	}
 	
-//	private void buildCache(final Context ctx) {
-//		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
-//		m.obj = new DBAdapter.DatabaseTask() {
-//
-//			@Override
-//			public void execute(DBAdapter db) {
-//				
-//				db.getGameAdapter().queryAll();
-//				
-//			}
-//		};
-//		m.sendToTarget();
-//
-//	}
 
 	private void databaseOperations(Context ctx, RunModification rm) {
 		boolean updateGeneralItems = false;

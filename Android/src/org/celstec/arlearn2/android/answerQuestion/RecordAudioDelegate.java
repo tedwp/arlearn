@@ -18,13 +18,6 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.answerQuestion;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.activities.AnnotateActivity;
-import org.celstec.arlearn2.android.util.MediaFolders;
-
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -35,17 +28,24 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.activities.AnnotateActivity;
+import org.celstec.arlearn2.android.util.MediaFolders;
+
+import java.io.File;
+import java.io.IOException;
 
 public class RecordAudioDelegate {
 	
 	private int status = STOPPED_NO_AUDIO;
-	private static final int STOPPED_NO_AUDIO = 1;
+	public static final int STOPPED_NO_AUDIO = 1;
 	private static final int STOPPED_WITH_AUDIO = 2;
 	private static final int RECORDING_STATUS = 3;
 	private static final int PLAYBACK_AUDIO = 4;
 	private static final int PAUSE_WITH_AUDIO = 5;
 	
-	AnnotateActivity ctx;
+//	AnnotateActivity ctx;
+    RecordAudioActivity ctx;
 	
 	private MediaRecorder mRecorder;
 	private MediaPlayer mPlayer;
@@ -65,16 +65,25 @@ public class RecordAudioDelegate {
 
 	
 	public RecordAudioDelegate(AnnotateActivity answerQuestionActivity) {
-		this.ctx = answerQuestionActivity;
-		
-		if (mRecorder == null) mRecorder = new MediaRecorder();
-		
-		audioButtons = (LinearLayout) ctx.findViewById(R.id.audioButtons);
-		audioButtons.setVisibility(audioButtons.GONE);
-		initSoundCapture();
+//		this.ctx = answerQuestionActivity;
+//
+//		if (mRecorder == null) mRecorder = new MediaRecorder();
+//
+//		audioButtons = (LinearLayout) ctx.findViewById(R.id.audioButtons);
+//		audioButtons.setVisibility(audioButtons.GONE);
+//		initSoundCapture();
 	}
-	
-	private void initSoundCapture() {
+
+    public RecordAudioDelegate(RecordAudioActivity recordAudioActivity) {
+        this.ctx = recordAudioActivity;
+        if (mRecorder == null) mRecorder = new MediaRecorder();
+
+        audioButtons = (LinearLayout) ctx.findViewById(R.id.audioButtons);
+        audioButtons.setVisibility(audioButtons.GONE);
+        initSoundCapture();
+    }
+
+    private void initSoundCapture() {
 		counter = (TextView) ctx.findViewById(R.id.timeRecording);
 		counter.setText(ctx.getString(R.string.annotateCounterReset));
 		
@@ -247,6 +256,7 @@ public class RecordAudioDelegate {
 	}
 	
 	public void stopRecording() {
+		Log.e("RECORDING", "in stop recording");
 		startRecordButton.setImageResource(R.drawable.verwijderopname1en);
 		audioButtons.setVisibility(audioButtons.VISIBLE);
 

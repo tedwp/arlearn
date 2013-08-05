@@ -22,7 +22,7 @@ public class UnregisterRunTask extends GenericTask implements NetworkTask {
 	@Override
 	public void execute() {
 		try {
-			UserClient.getUserClient().deleteUser(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), runId);
+			UserClient.getUserClient().deleteUser(PropertiesAdapter.getInstance(ctx).getAuthToken(), runId);
 		} catch (ARLearnException ae) {
 			ae.printStackTrace();
 		}

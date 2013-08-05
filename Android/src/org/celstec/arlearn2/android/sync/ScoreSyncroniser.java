@@ -48,7 +48,7 @@ public class ScoreSyncroniser extends GenericSyncroniser {
 	}
 	
 	private boolean syncScore(Context ctx) {
-		UserScore userScore = ScoreClient.getScoreClient().getScore(pa.getFusionAuthToken(), pa.getCurrentRunId());
+		UserScore userScore = ScoreClient.getScoreClient().getScore(pa.getAuthToken(), pa.getCurrentRunId());
 		//TODO reimplement scoring
 		//		UpdateScore us = new UpdateScore();
 //		us.setTotalScore(userScore.getTotalScore());

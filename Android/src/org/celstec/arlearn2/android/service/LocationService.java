@@ -89,7 +89,7 @@ public class LocationService extends IntentService {
 						LocationUpdate locUpdate = new LocationUpdate();
 						locUpdate.setLat(location.getLatitude());
 						locUpdate.setLng(location.getLongitude());
-						LocationClient.getLocationClient().postLocation(PropertiesAdapter.getInstance(this).getFusionAuthToken(),PropertiesAdapter.getInstance(this).getCurrentRunId(), locUpdate);
+						LocationClient.getLocationClient().postLocation(PropertiesAdapter.getInstance(this).getAuthToken(),PropertiesAdapter.getInstance(this).getCurrentRunId(), locUpdate);
 					}
 					try {
 						wait(2000);

@@ -25,6 +25,9 @@ public class ActionList extends RunBean {
 
 	private List<Action> actions = new ArrayList<Action>();
 
+    private Long serverTime;
+    private String resumptionToken;
+
 	public ActionList() {
 
 	}
@@ -44,5 +47,20 @@ public class ActionList extends RunBean {
 	public void addActions(List<Action> actions) {
 		this.actions.addAll(actions);
 	}
+
+    public Long getServerTime() {
+        return serverTime;
+    }
+    public void setServerTime(Long serverTime) {
+        this.serverTime = serverTime;
+    }
+
+    public String getResumptionToken() {
+        return resumptionToken;
+    }
+
+    public void setResumptionToken(String resumptionToken) {
+        this.resumptionToken = resumptionToken;
+    }
 	
 }

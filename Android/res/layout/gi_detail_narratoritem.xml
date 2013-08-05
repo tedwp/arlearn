@@ -2,7 +2,6 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ni_linearLayout"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
@@ -59,13 +58,67 @@
            
         </ScrollView>
 
- 	
-          <Button
-              android:id="@+id/provideAnswerButton"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:layout_gravity="bottom"
-              android:text="Button" />
+
+          <LinearLayout
+              android:id="@+id/datacollectionbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" 
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/picture_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dip"
+                android:layout_marginTop="2dip"
+                android:gravity="left"
+                android:layout_weight="1"
+                android:src="@drawable/dc_camera_128_grey" />
+
+            <ImageView
+                android:id="@+id/video_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dip"
+                android:layout_marginTop="2dip"
+                android:gravity="left"
+                android:layout_weight="1"
+                android:src="@drawable/dc_video_128_grey" />
+
+            <ImageView
+                android:id="@+id/speech_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dip"
+                android:layout_marginTop="2dip"
+                android:gravity="left"
+                android:layout_weight="1"
+                android:src="@drawable/dc_voice_search_128_grey" />
+            
+              <ImageView
+                android:id="@+id/note_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dip"
+                android:layout_marginTop="2dip"
+                android:gravity="left"
+                android:layout_weight="1"
+                android:src="@drawable/dc_note_128_grey" />
+              
+              <ImageView
+                android:id="@+id/value_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dip"
+                android:layout_marginTop="2dip"
+                android:gravity="left"
+                android:layout_weight="1"
+                android:src="@drawable/dc_calculator_128_grey" />
+        </LinearLayout>
+          
           <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

@@ -88,8 +88,9 @@ public class GeneralItemVisibilityCache {
 	public TreeSet<GeneralItem> getAllVisibleItems(long runId) {
 		long now = System.currentTimeMillis();
 		TreeSet<GeneralItem> resultList = new TreeSet<GeneralItem>();
-
-		for (Map.Entry<Long, GeneralItem> entry :GeneralItemsCache.getInstance().getGeneralItemsWithGameId(RunCache.getInstance().getGameId(runId)).entrySet()){
+        HashMap<Long, GeneralItem> giMap = GeneralItemsCache.getInstance().getGeneralItemsWithGameId(RunCache.getInstance().getGameId(runId));
+        synchronized (giMap) {
+		for (Map.Entry<Long, GeneralItem> entry :giMap.entrySet()){
 			Long appearAt = visibleItems.get(getKey(runId, entry.getValue().getId()));
 			Long disappearAt = disappearedItems.get(getKey(runId, entry.getValue().getId()));
 			if (appearAt != null) {
@@ -100,6 +101,7 @@ public class GeneralItemVisibilityCache {
 				}
 			}
 		}
+        }
 		return resultList;
 	}
 	
@@ -123,6 +125,9 @@ public class GeneralItemVisibilityCache {
 			if (gi.getLat() == null) {
 				iterator.remove();
 			}
+            if (gi.getShowOnMap() != null && !gi.getShowOnMap()) {
+                iterator.remove();
+            }
 		}
 		return resultList;
 	}

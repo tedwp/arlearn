@@ -44,6 +44,29 @@ public class MailDelegator extends GoogleDelegator {
 		super(gd);
 	}
 
+	public void sendMail(String from, String fromName, String toMail, String subject, String msgBody) {
+		Properties props = new Properties();
+		Session session = Session.getDefaultInstance(props, null);
+		try {
+			Message msg = new MimeMessage(session);
+			msg.setFrom(new InternetAddress(from, fromName));
+			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(toMail));
+//			msg.addRecipient(Message.RecipientType.BCC, new InternetAddress(from));
+			msg.setSubject(subject);
+			
+	        final MimeBodyPart htmlPart = new MimeBodyPart();
+	        htmlPart.setContent(msgBody, "text/html");
+	        final Multipart mp = new MimeMultipart();
+	        mp.addBodyPart(htmlPart);
+	        
+			msg.setContent(mp);
+			Transport.send(msg);
+
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		} 
+	}
+
 	public void sendInstructionMail(String from, String fromName, String toMail) {
 		if (!toMail.contains("@")) toMail +="@gmail.com";
 		Properties props = new Properties();
@@ -55,10 +78,10 @@ public class MailDelegator extends GoogleDelegator {
 		msgBody += "Welcome to ARLearn. We hope you'll find this a useful tool.";
 		msgBody += "</p>";
 		msgBody += "<p>";
-		msgBody += "ARLearn content is organized in games and runs. Both can be created and managed with the <a href=\"http://streetlearn.appspot.com/Authoring.html\">ARLearn authoring tool</a>.";
+		msgBody += "ARLearn content is organized in games and runs. Both can be created and managed with the <a href=\"http://streetlearn.appspot.com/\">ARLearn authoring tool</a>.";
 		msgBody += "</p>";
 		msgBody += "<p>";
-		msgBody += "For more information on using ARLearn, visit our <a href=\"http://portal.ou.nl/web/topic-mobile-learning/home/-/wiki/Main/Get%20Started\">get started page</a>.";
+		msgBody += "For more information on using ARLearn, visit our <a href=\"http://ou.nl/arlearn\">get started page</a>.";
 		msgBody += "</p>";
 		msgBody += "<p>";
 		msgBody += "Have fun<br>"; 

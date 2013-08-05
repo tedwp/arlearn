@@ -2,7 +2,6 @@ package org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop;
 
 import java.util.Map;
 
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.JsonObjectListCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.TeamModel;
 import org.celstec.arlearn2.gwtcommonlib.client.network.GenericClient;

@@ -2,6 +2,7 @@ package org.celstec.arlearn2.gwtcommonlib.client.network.generalItem;
 
 import org.celstec.arlearn2.gwtcommonlib.client.network.GenericClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 
 import com.google.gwt.json.client.JSONObject;
 
@@ -39,8 +40,16 @@ public class GeneralItemsClient extends GenericClient {
 		invokeJsonPOST(null, object, jcb);
 	}
 	
+	public void createGeneralItem(GeneralItem gi, JsonCallback jcb) {
+		createGeneralItem(gi.getJsonRep(), jcb);
+	}
+	
 	public void deleteGeneralItem(long gameId, long itemId, final JsonCallback jcb) {
 		invokeJsonDELETE("/gameId/"+gameId+"/generalItem/"+itemId+"/", jcb);
+	}
+	
+	public void search(String query, JsonCallback jsonCallback) {
+		invokeJsonPOST("/search", query, jsonCallback);
 	}
 	
 	public String getUrl() {

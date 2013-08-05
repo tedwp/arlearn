@@ -71,7 +71,7 @@ public class AuthenticationTask extends RestInvocation {
 			callingActivity.getMenuHandler().getPropertiesAdapter().disAuthenticate();
 			publishProgress(((Activity) callingActivity).getString(R.string.loginFailed).replace("***", email));
 		} else {
-			callingActivity.getMenuHandler().getPropertiesAdapter().setFusionAuthToken(resp.getAuth());
+			callingActivity.getMenuHandler().getPropertiesAdapter().setAuthToken(resp.getAuth());
 			callingActivity.getMenuHandler().getPropertiesAdapter().setIsAuthenticated();
 			if (instructions != null && instructions) LoginClient.getLoginClient().instructions(resp.getAuth(), email);
 		}

@@ -19,11 +19,15 @@
 package org.celstec.arlearn2.tasks.beans;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.delegators.GameDelegator;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
+import org.celstec.arlearn2.delegators.NotificationDelegator;
+import org.celstec.arlearn2.jdo.manager.ConfigurationManager;
 
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
@@ -83,12 +87,15 @@ public class GameSearchIndex extends GenericBean {
 	public void setGameId(Long gameId) {
 		this.gameId = gameId;
 	}
-
+	private static final Logger log = Logger.getLogger(NotificationDelegator.class.getName());
 	@Override
 	public void run() {
+		log.log(Level.WARNING, "GameSearchIndex run ");
+
 		try {
 
 			if (sharingType != null && sharingType.equals(Game.PUBLIC)) {
+				log.log(Level.WARNING, "adding to index  ");
 				addToIndex();
 			} else {
 				removeFromIndex();
@@ -100,6 +107,7 @@ public class GameSearchIndex extends GenericBean {
 				throw e;
 			}
 		} catch (Exception e) {
+			log.log(Level.SEVERE, "error", e);
 			e.printStackTrace();
 		}
 	}
@@ -121,10 +129,12 @@ public class GameSearchIndex extends GenericBean {
 	private void addToIndex() throws PutException {
 		Document doc = Document.newBuilder()
 				.setId("game:" + gameId)
-				.addField(Field.newBuilder().setName("gameId").setNumber(getGameId()))
-				.addField(Field.newBuilder().setName("title").setText(getGameTitle()))
-				.addField(Field.newBuilder().setName("author").setText(getGameAuthor())).build();
+				.addField(Field.newBuilder().setName("gameId").setText(""+getGameId()))
+				.addField(Field.newBuilder().setName("title").setText(getGameTitle())).build();
+//				.addField(Field.newBuilder().setName("author").setText(getGameAuthor()))
+		log.log(Level.WARNING, "doc is "+doc);
 		getIndex().put(doc);
+		log.log(Level.WARNING, "index is  "+getIndex());
 	}
 
 	public Index getIndex() {

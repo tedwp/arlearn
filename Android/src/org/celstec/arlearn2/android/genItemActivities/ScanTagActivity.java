@@ -118,7 +118,7 @@ public class ScanTagActivity extends GeneralItemActivity {
 	@Override
 	protected void newNfcAction(String action) {
 		PropertiesAdapter pa = getMenuHandler().getPropertiesAdapter();
-		ActionsDelegator.getInstance().publishAction(this, action, pa.getCurrentRunId(), pa.getUsername(), scanTag.getId(), scanTag.getClass().getName());
+		ActionsDelegator.getInstance().publishAction(this, action, pa.getCurrentRunId(), pa.getFullId(), scanTag.getId(), scanTag.getClass().getName());
 		this.finish();
 	}
 

@@ -18,31 +18,17 @@
  ******************************************************************************/
 package org.celstec.arlearn2.api;
 
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import org.celstec.arlearn2.beans.run.Location;
+import com.google.gdata.util.AuthenticationException;
 import org.celstec.arlearn2.beans.run.LocationList;
-import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.beans.run.User;
-
+import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.delegators.ActionDelegator;
 import org.celstec.arlearn2.delegators.ResponseDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.location.QueryLocations;
-import org.celstec.arlearn2.delegators.location.SubmitLocations;
 
-import com.google.gdata.util.AuthenticationException;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
 @Path("/users")
 public class Users extends Service {
@@ -72,8 +58,8 @@ public class Users extends Service {
 			return serialise(getBeanDoesNotParseException((String) inUser), accept);
 		User user = (User) inUser;
 		 
-		UsersDelegator qu = verifyCredentials(token);
-		user.setFullEmail(user.getEmail());
+		UsersDelegator qu = new UsersDelegator(this.account, token);
+//		user.setFullEmail(user.getEmail());
 		if (user.getEmail() == null) {
 			user.setEmail(qu.getCurrentUserAccount());
 		} 
@@ -84,11 +70,13 @@ public class Users extends Service {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/runId/{runId}/email/{email}")
-	public String deleteUser(@HeaderParam("Authorization") String token, @PathParam("runId") Long runId, @PathParam("email") String email,
+	public String deleteUser(@HeaderParam("Authorization") String token, 
+			@PathParam("runId") Long runId, 
+			@PathParam("email") String email,
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		UsersDelegator cu = new UsersDelegator(verifyCredentials(token));
+		UsersDelegator cu = new UsersDelegator(this.account, token);
 		if (email == null){
 			email = cu.getCurrentUserAccount();
 		}
@@ -122,21 +110,6 @@ public class Users extends Service {
 
 		UsersDelegator qu = new UsersDelegator(token);
 		UserList ul = qu.getUsers(runIdentifier, null);
-		List<User> ulist = ul.getUsers();
-//		for (int i = 0; i < ulist.size(); i++) {
-//			User u = ulist.get(i);
-//			if (u != null) {
-//				QueryLocations ql = new QueryLocations(qu);
-//				Location loc = ql.getLastLocation(u.getEmail(), runIdentifier);
-//				// return ql.getLastLocation(u.getEmail(), runIdentifier);
-//				// Location loc = this.getLocation(token, u.getEmail(),
-//				// runIdentifier, accept);
-//				if (loc != null) {
-//					u.setLat(loc.getLat());
-//					u.setLng(loc.getLng());
-//				}
-//			}
-//		}
 		return serialise(ul, accept);
 	}
 
@@ -170,12 +143,12 @@ public class Users extends Service {
 		 User user = (User) inUser;
 		
 		// TODO store coordinates
-		SubmitLocations sl = new SubmitLocations(token);
-		Location l = new Location();
-		l.setLng(user.getLng());
-		l.setLat(user.getLat());
-		l.setTimestamp(System.currentTimeMillis());
-		sl.submitLocation(0l, l, runIdentifier);
+//		SubmitLocations sl = new SubmitLocations(token);
+//		Location l = new Location();
+//		l.setLng(user.getLng());
+//		l.setLat(user.getLat());
+//		l.setTimestamp(System.currentTimeMillis());
+//		sl.submitLocation(0l, l, runIdentifier);
 
 		return serialise(user, accept);
 		// return uu.updateUser(runIdentifier, email, user);
@@ -204,8 +177,6 @@ public class Users extends Service {
 
 		}
 		long delta = System.currentTimeMillis() - locations.getTimestamp();
-		SubmitLocations sl = new SubmitLocations(token);
-		sl.submitLocations(delta, locations, runIdentifier);
 		return serialise(locations, accept);
 
 	}
@@ -225,12 +196,24 @@ public class Users extends Service {
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Path("/loggedInUser/{runIdentifier}/email/{email}")
+	@Deprecated
 	public String getLoggedInUser(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @PathParam("email") String email,
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
 		UsersDelegator qu = new UsersDelegator(token);
 		return serialise(qu.getUserByEmail(runIdentifier, email), accept);
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/runId/{runIdentifier}/account/{accountId}")
+	public String getLoggedInUserViaAccount(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @PathParam("accountId") String accountId,
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		UsersDelegator qu = new UsersDelegator(token);
+		return serialise(qu.getUserByEmail(runIdentifier, accountId), accept);
 	}
 
 }

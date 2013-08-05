@@ -68,7 +68,7 @@ public class SynchronizeUserTask implements NetworkTask {
 	public void execute() {
 		try {
 			PropertiesAdapter pa  = PropertiesAdapter.getInstance(ctx);
-			User u = UserClient.getUserClient().getUser(pa.getFusionAuthToken(), runId, username);
+			User u = UserClient.getUserClient().getUser(pa.getAuthToken(), runId, username);
 			UserDelegator.getInstance().saveUser(ctx, u);
 		} catch (ARLearnException ae) {
 			if (ae.invalidCredentials()) {

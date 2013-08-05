@@ -20,6 +20,7 @@ package org.celstec.arlearn2.beans.dependencies;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.Action;
@@ -72,7 +73,7 @@ public class ActionDependency extends Dependency {
 	}
 	
 	@Override
-	public long satisfiedAt(List<Action> actionList) {
+	public long satisfiedAt(List<Action> actionList, Map<String, String[]> accountRoleMap) {
 		long minSatisfiedAt = Long.MAX_VALUE;
 		for (Iterator iterator = actionList.iterator(); iterator.hasNext();) {
 			Action action = (Action) iterator.next();
@@ -80,13 +81,27 @@ public class ActionDependency extends Dependency {
 			if (!nullSafeEquals(action.getAction(), getAction())) tempBool = false;
 			if (!nullSafeEquals(action.getGeneralItemType(), getGeneralItemType())) tempBool = false;
 			if (!nullSafeEquals(action.getGeneralItemId(), getGeneralItemId())) tempBool = false;
+			if (getRole() != null && action.getUserEmail() != null) {
+				String[] roles = accountRoleMap.get(action.getUserEmail());
+				if (roles == null) {
+					tempBool = false;
+				} else {
+					if (!containsRole(roles, action.getUserEmail())) tempBool = false;
+				}
+				
+			}
 			if (tempBool) minSatisfiedAt = Math.min(minSatisfiedAt, (action.getTime()==null)?0:action.getTime());
 		}
 		if (minSatisfiedAt == Long.MAX_VALUE) minSatisfiedAt = -1;
 		return minSatisfiedAt;
 	}
 	
-
+	private boolean containsRole(String roles[], String userRole) {
+		for (String role: roles) {
+			if (role.equals(userRole)) return true;
+		}
+		return false;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		ActionDependency other = (ActionDependency ) obj;
@@ -98,5 +113,20 @@ public class ActionDependency extends Dependency {
 			nullSafeEquals(getGeneralItemType(), other.getGeneralItemType()) ; 
 
 	}
+
+    /**
+     * hashCode is necessary to be able to use ActionDependencies as keys in HashMaps.
+     *
+     * @return
+     */
+    public int hashCode() {
+        int hash = 0;
+        if (getAction() != null) hash += getAction().hashCode();
+        if (getGeneralItemId() != null) hash += getGeneralItemId().hashCode();
+        if (getScope() != null) hash += getScope().hashCode();
+        if (getRole() != null) hash += getRole().hashCode();
+        if (getGeneralItemType() != null) hash += getGeneralItemType().hashCode();
+        return hash;
+    }
 	
 }

@@ -23,6 +23,7 @@ import java.util.Iterator;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.delegators.ResponseDelegator;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
@@ -52,6 +53,16 @@ public class SingleChoiceActivity extends GeneralItemActivity {
 	private MultipleChoiceAnswerItem selected = null;
 
 
+    public void onBroadcastMessage(Bundle bundle, boolean render) {
+        super.onBroadcastMessage(bundle, render);
+        if (render) {
+            Long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
+            if (runId == null || RunCache.getInstance().getRun(runId) == null) {
+                this.finish();
+            }
+            super.initCountdownView();
+        }
+    }
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gi_detail_multiplechoice);

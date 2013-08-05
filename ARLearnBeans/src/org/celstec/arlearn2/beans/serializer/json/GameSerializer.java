@@ -31,9 +31,11 @@ public class GameSerializer extends GameBeanSerializer{
 		try {
 			if (game.getTitle() != null) returnObject.put("title", game.getTitle());
 			if (game.getCreator() != null) returnObject.put("creator", game.getCreator());
+			if (game.getDescription() != null) returnObject.put("description", game.getDescription());
 			if (game.getOwner() != null) returnObject.put("owner", game.getOwner());
 			if (game.getFeedUrl() != null) returnObject.put("feedUrl", game.getFeedUrl());
 			if (game.getSharing() != null) returnObject.put("sharing", game.getSharing());
+			if (game.getLicenseCode() != null) returnObject.put("licenseCode", game.getLicenseCode());
 			if (game.getConfig() != null) returnObject.put("config", JsonBeanSerialiser.serialiseToJson(game.getConfig()));
 		} catch (JSONException e) {
 			e.printStackTrace();

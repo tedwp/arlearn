@@ -37,21 +37,28 @@ import org.datanucleus.store.appengine.query.JDOCursorHelper;
 import com.google.appengine.api.datastore.Cursor;
 
 public class GeneralItemVisibilityManager {
-	protected static final Logger logger = Logger.getLogger(GeneralItemVisibilityManager.class.getName());
+	protected static final Logger logger = Logger
+			.getLogger(GeneralItemVisibilityManager.class.getName());
 
 	public static final int VISIBLE_STATUS = 1;
 	public static final int DISAPPEARED_STATUS = 2;
 
-	private static final String params[] = new String[] { "runId", "generalItemId", "email", "status" };
-	private static final String paramsNames[] = new String[] { "runIdParam", "generalItemIdParam", "emailParam", "statusParam" };
-	private static final String types[] = new String[] { "Long", "Long", "String", "Integer" };
+	private static final String params[] = new String[] { "runId",
+			"generalItemId", "email", "status" };
+	private static final String paramsNames[] = new String[] { "runIdParam",
+			"generalItemIdParam", "emailParam", "statusParam" };
+	private static final String types[] = new String[] { "Long", "Long",
+			"String", "Integer" };
 
-	public static void setItemVisible(Long generalItemId, Long runId, String email, Integer status, long timeStamp) {
+	public static void setItemVisible(Long generalItemId, Long runId,
+			String email, Integer status, long timeStamp) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		List<GeneralItemVisibilityJDO> listVisiblity = getGeneralitemVisibility(pm, runId, generalItemId, email, status);
+		List<GeneralItemVisibilityJDO> listVisiblity = getGeneralitemVisibility(
+				pm, runId, generalItemId, email, status);
 		try {
 			if (listVisiblity.isEmpty()) {
-				VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, email, status);
+				VisibleGeneralItemsCache.getInstance().removeGeneralItemList(
+						runId, email, status);
 				GeneralItemVisibilityJDO visJdo = new GeneralItemVisibilityJDO();
 				visJdo.setEmail(email);
 				visJdo.setGeneralItemId(generalItemId);
@@ -62,11 +69,38 @@ public class GeneralItemVisibilityManager {
 				pm.makePersistent(visJdo);
 			} else {
 				for (GeneralItemVisibilityJDO vis : listVisiblity) {
-					if (vis.getTimeStamp()== null || !vis.getTimeStamp().equals(timeStamp))  {
+					if (vis.getTimeStamp() == null
+							|| !vis.getTimeStamp().equals(timeStamp)) {
 						vis.setTimeStamp(timeStamp);
-						VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, email, status);
+						VisibleGeneralItemsCache.getInstance()
+								.removeGeneralItemList(runId, email, status);
 					}
 				}
+			}
+		} finally {
+			pm.close();
+		}
+
+	}
+
+	public static void updateAccount(String fromAccount, String toAccount,
+			Long runId) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			Query query = pm.newQuery(GeneralItemVisibilityJDO.class);
+			String filter = null;
+			String params = null;
+			Object args[] = null;
+			filter = "runId == runIdParam & email == emailParam";
+			params = "Long runIdParam, String emailParam";
+			args = new Object[] { runId, fromAccount };
+
+			query.setFilter(filter);
+			query.declareParameters(params);
+			Iterator<GeneralItemVisibilityJDO> it = ((List<GeneralItemVisibilityJDO>) query
+					.executeWithArray(args)).iterator();
+			while (it.hasNext()) {
+				it.next().setEmail(toAccount);
 			}
 		} finally {
 			pm.close();
@@ -77,48 +111,51 @@ public class GeneralItemVisibilityManager {
 	public static HashMap<Long, Long> getVisibleItems(Long runId, String email) {
 		return getItems(runId, email, VISIBLE_STATUS);
 	}
-	
+
 	private static String cursorString = null;
 
 	public static void updateAll() {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
-		Query query = pm.newQuery(GeneralItemVisibilityJDO.class);
-		if (cursorString != null) {
-			logger.severe("starting from " + cursorString);
+			Query query = pm.newQuery(GeneralItemVisibilityJDO.class);
+			if (cursorString != null) {
+				logger.severe("starting from " + cursorString);
 
-			Cursor c = Cursor.fromWebSafeString(cursorString);
-			Map<String, Object> extendsionMap = new HashMap<String, Object>();
-			extendsionMap.put(JDOCursorHelper.CURSOR_EXTENSION, c);
-			query.setExtensions(extendsionMap);
-		}
-		query.setRange(0, 100);
-//		query.setFilter("lastModificationDate == null");
-//		query.setOrdering("lastModificationDate desc");
-		List<GeneralItemVisibilityJDO>  results = (List<GeneralItemVisibilityJDO>) query.execute();
-		Iterator<GeneralItemVisibilityJDO> it = (results).iterator();
-		int i = 0;
-		logger.severe("hasNext" + it.hasNext());
-		while (it.hasNext()) {
-			i++;
-			
-			GeneralItemVisibilityJDO object = it.next();
-			if (object != null && object.getLastModificationDate() == null) {
-				object.setLastModificationDate(System.currentTimeMillis());
+				Cursor c = Cursor.fromWebSafeString(cursorString);
+				Map<String, Object> extendsionMap = new HashMap<String, Object>();
+				extendsionMap.put(JDOCursorHelper.CURSOR_EXTENSION, c);
+				query.setExtensions(extendsionMap);
 			}
-		}
-		Cursor c = JDOCursorHelper.getCursor(results);
-		cursorString = c.toWebSafeString();
-		logger.severe("cursorString" + cursorString);
+			query.setRange(0, 100);
+			// query.setFilter("lastModificationDate == null");
+			// query.setOrdering("lastModificationDate desc");
+			List<GeneralItemVisibilityJDO> results = (List<GeneralItemVisibilityJDO>) query
+					.execute();
+			Iterator<GeneralItemVisibilityJDO> it = (results).iterator();
+			int i = 0;
+			logger.severe("hasNext" + it.hasNext());
+			while (it.hasNext()) {
+				i++;
+
+				GeneralItemVisibilityJDO object = it.next();
+				if (object != null && object.getLastModificationDate() == null) {
+					object.setLastModificationDate(System.currentTimeMillis());
+				}
+			}
+			Cursor c = JDOCursorHelper.getCursor(results);
+			cursorString = c.toWebSafeString();
+			logger.severe("cursorString" + cursorString);
 
 		} finally {
 			pm.close();
 		}
 	}
-	
-	public static List<GeneralItemVisibility> getGeneralitemsFromUntil(Long runId, String email, Long from, Long until) {
+
+	public static List<GeneralItemVisibility> getGeneralitemsFromUntil(
+			Long runId, String email, Long from, Long until) {
 		ArrayList<GeneralItemVisibility> returnProgressDefinitions = new ArrayList<GeneralItemVisibility>();
-		if (runId == null || email == null) return returnProgressDefinitions;
+		if (runId == null || email == null)
+			return returnProgressDefinitions;
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query query = pm.newQuery(GeneralItemVisibilityJDO.class);
 		String filter = null;
@@ -127,29 +164,31 @@ public class GeneralItemVisibilityManager {
 		if (from == null) {
 			filter = "runId == runIdParam & email == emailParam & lastModificationDate <= untilParam";
 			params = "Long runIdParam, String emailParam, Long untilParam";
-			args = new Object[]{runId, email, until};
+			args = new Object[] { runId, email, until };
 		} else if (until == null) {
 			filter = "runId == runIdParam & email == emailParam & lastModificationDate >= fromParam";
 			params = "Long runIdParam, String emailParam, Long fromParam";
-			args = new Object[]{runId, email, from};
+			args = new Object[] { runId, email, from };
 		} else {
 			filter = "runId == runIdParam & email == emailParam & lastModificationDate >= fromParam & lastModificationDate <= untilParam";
 			params = "Long runIdParam, String emailParam, Long fromParam, Long untilParam";
-			args = new Object[]{runId, email, from, until};
+			args = new Object[] { runId, email, from, until };
 		}
-		
+
 		query.setFilter(filter);
 		query.declareParameters(params);
-		Iterator<GeneralItemVisibilityJDO> it = ((List<GeneralItemVisibilityJDO>) query.executeWithArray(args)).iterator();
+		Iterator<GeneralItemVisibilityJDO> it = ((List<GeneralItemVisibilityJDO>) query
+				.executeWithArray(args)).iterator();
 		while (it.hasNext()) {
-			returnProgressDefinitions.add(toBean((GeneralItemVisibilityJDO) it.next()));
+			returnProgressDefinitions.add(toBean((GeneralItemVisibilityJDO) it
+					.next()));
 		}
 		return returnProgressDefinitions;
-	}	
-	
-	
+	}
+
 	private static GeneralItemVisibility toBean(GeneralItemVisibilityJDO jdo) {
-		if (jdo == null) return null;
+		if (jdo == null)
+			return null;
 		GeneralItemVisibility giv = new GeneralItemVisibility();
 		giv.setEmail(jdo.getEmail());
 		giv.setGeneralItemId(jdo.getGeneralItemId());
@@ -160,38 +199,49 @@ public class GeneralItemVisibilityManager {
 		return giv;
 	}
 
-	public static HashMap<Long,Long> getItems(Long runId, String email, int status) {
+	public static HashMap<Long, Long> getItems(Long runId, String email,
+			int status) {
 		HashMap<Long, Long> returnProgressDefinitions = new HashMap<Long, Long>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Iterator<GeneralItemVisibilityJDO> it = getGeneralitemVisibility(pm, runId, null, email, status).iterator();
+		Iterator<GeneralItemVisibilityJDO> it = getGeneralitemVisibility(pm,
+				runId, null, email, status).iterator();
 		while (it.hasNext()) {
 			GeneralItemVisibilityJDO gi = ((GeneralItemVisibilityJDO) it.next());
-			if (gi.getTimeStamp() == null) gi.setTimeStamp(0l);
-			returnProgressDefinitions.put(gi.getGeneralItemId(), gi.getTimeStamp());
+			if (gi.getTimeStamp() == null)
+				gi.setTimeStamp(0l);
+			returnProgressDefinitions.put(gi.getGeneralItemId(),
+					gi.getTimeStamp());
 		}
 		return returnProgressDefinitions;
 	}
 
-	private static List<GeneralItemVisibilityJDO> getGeneralitemVisibility(PersistenceManager pm, Long runId, Long generalItemId, String email, Integer status) {
+	private static List<GeneralItemVisibilityJDO> getGeneralitemVisibility(
+			PersistenceManager pm, Long runId, Long generalItemId,
+			String email, Integer status) {
 		Query query = pm.newQuery(GeneralItemVisibilityJDO.class);
 		Object args[] = { runId, generalItemId, email, status };
 		query.setFilter(ManagerUtil.generateFilter(args, params, paramsNames));
-		query.declareParameters(ManagerUtil.generateDeclareParameters(args, types, params, paramsNames));
-		return (List<GeneralItemVisibilityJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args));
+		query.declareParameters(ManagerUtil.generateDeclareParameters(args,
+				types, params, paramsNames));
+		return (List<GeneralItemVisibilityJDO>) query
+				.executeWithArray(ManagerUtil.filterOutNulls(args));
 	}
 
 	public static void delete(Long runId, String email) {
-		VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, email, GeneralItemVisibilityManager.VISIBLE_STATUS);
-		VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId, email, GeneralItemVisibilityManager.DISAPPEARED_STATUS);
+		VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId,
+				email, GeneralItemVisibilityManager.VISIBLE_STATUS);
+		VisibleGeneralItemsCache.getInstance().removeGeneralItemList(runId,
+				email, GeneralItemVisibilityManager.DISAPPEARED_STATUS);
 		delete(runId, null, email, null);
 	}
 
+	public static void delete(Long runId, Long generalItemId, String email,
+			Integer status) {
 
-	public static void delete(Long runId, Long generalItemId, String email, Integer status) {
-		
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
-			List<GeneralItemVisibilityJDO> deleteList = getGeneralitemVisibility(pm, runId, generalItemId, email, status);
+			List<GeneralItemVisibilityJDO> deleteList = getGeneralitemVisibility(
+					pm, runId, generalItemId, email, status);
 			pm.deletePersistentAll(deleteList);
 		} finally {
 			pm.close();

@@ -19,6 +19,7 @@
 package org.celstec.arlearn2.beans.dependencies;
 
 import java.util.List;
+import java.util.Map;
 
 import org.celstec.arlearn2.beans.run.Action;
 
@@ -45,9 +46,9 @@ public class TimeDependency extends Dependency{
 	}
 	
 	@Override
-	public long satisfiedAt(List<Action> actionList) {
+	public long satisfiedAt(List<Action> actionList, Map<String, String[]> accountRoleMap) {
 		if (offset == null) return -1;
-		long satisfiedAt = offset.satisfiedAt(actionList);
+		long satisfiedAt = offset.satisfiedAt(actionList, accountRoleMap);
 		System.out.println("satisf at "+satisfiedAt);
 		System.out.println("timede at "+timeDelta);
 		System.out.println("+ at "+(satisfiedAt + timeDelta));
@@ -56,9 +57,9 @@ public class TimeDependency extends Dependency{
 		return  satisfiedAt + timeDelta;
 	}
 	
-	public long satisfiedAtNoD(List<Action> actionList) {
+	private long satisfiedAtNoD(List<Action> actionList) {
 		if (offset == null) return -1;
-		long satisfiedAt = offset.satisfiedAt(actionList);
+		long satisfiedAt = offset.satisfiedAt(actionList, null);
 		if (satisfiedAt == -1) return -1;
 		return  satisfiedAt;
 	}

@@ -1,7 +1,9 @@
 package org.celstec.arlearn2.gwtcommonlib.client.network;
 
 
+import org.celstec.arlearn2.gwtcommonlib.client.LocalSettings;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.Authentication;
+import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthClient;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -28,12 +30,31 @@ public class GenericClient {
 	public RequestBuilder getRequestBuilder(String urlPostfix) {
 		return getRequestBuilder(urlPostfix, RequestBuilder.GET);
 	}
+	
+	public RequestBuilder getRequestBuilderEvenIfNotAuthenticated(String urlPostfix) {
+		return getRequestBuilderEvenIfNotAuthenticated(urlPostfix, RequestBuilder.GET);
+	}
 
 	public RequestBuilder getRequestBuilder(String urlPostfix, RequestBuilder.Method m) {
 		String url = urlPostfix == null ? getUrl() : getUrl() + urlPostfix;
 		RequestBuilder builder = new RequestBuilder(m, url);
-		if (Authentication.getInstance().getAuthenticationToken() == null) return null;
+		if (OauthClient.checkAuthentication() == null) return null;
+		String authorization = "GoogleLogin auth=" + OauthClient.checkAuthentication().getAccessToken();
+		if (LocalSettings.getInstance().getOnBehalfOf() != null) {
+			authorization = LocalSettings.getInstance().getOnBehalfOf();
+		}
+		builder.setHeader("Authorization", authorization);
+		builder.setHeader("Accept", "application/json");
+		return builder;
+	}
+	
+	public RequestBuilder getRequestBuilderEvenIfNotAuthenticated(String urlPostfix, RequestBuilder.Method m) {
+		String url = urlPostfix == null ? getUrl() : getUrl() + urlPostfix;
+		RequestBuilder builder = new RequestBuilder(m, url);
 		String authorization = "GoogleLogin auth=" + Authentication.getInstance().getAuthenticationToken();
+		if (LocalSettings.getInstance().getOnBehalfOf() != null) {
+			authorization = LocalSettings.getInstance().getOnBehalfOf();
+		}
 		builder.setHeader("Authorization", authorization);
 		builder.setHeader("Accept", "application/json");
 		return builder;
@@ -48,8 +69,14 @@ public class GenericClient {
 	}
 
 	protected void invokeJsonPOST(String urlPostfix, String object, final JsonCallback jcb) {
+		invokeJsonPOST(urlPostfix, object, null, jcb);
+	}
+
+	protected void invokeJsonPOST(String urlPostfix, String object, String onBehalfOf, final JsonCallback jcb) {
 		RequestBuilder builder = getRequestBuilder(urlPostfix, RequestBuilder.POST);
 		builder.setHeader("Content-Type", "application/json");
+		if (onBehalfOf != null) builder.setHeader("Authorization", onBehalfOf);
+
 		try {
 			Request request = builder.sendRequest(object, new RequestCallback() {
 
@@ -78,7 +105,7 @@ public class GenericClient {
 			jcb.onError();
 		}
 	}
-
+	
 	protected void invokeJsonPUT(String urlPostfix, String object, final JsonCallback jcb) {
 		RequestBuilder builder = getRequestBuilder(urlPostfix, RequestBuilder.PUT);
 		builder.setHeader("Content-Type", "application/json");
@@ -147,9 +174,44 @@ public class GenericClient {
 		}
 	}
 
+	protected void invokeJsonGETEvenIfNotAuthenticated(String urlPostfix, final JsonCallback jcb) {
+		RequestBuilder builder = getRequestBuilderEvenIfNotAuthenticated(urlPostfix);
+		if (builder == null) return;
+		try {
+			Request request = builder.sendRequest(null, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					if (200 == response.getStatusCode()) {
+						try {
+							JSONValue jsonValue = JSONParser.parseLenient(response.getText());
+								jcb.onJsonReceived(jsonValue);
+
+						} catch (JSONException e) {
+							jcb.onError();
+						}
+					}
+
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					exception.printStackTrace();
+				}
+			});
+		} catch (RequestException e) {
+			jcb.onError();
+		}
+	}
+	
 	protected void invokeJsonGET(String urlPostfix, final JsonCallback jcb) {
+		invokeJsonGET(urlPostfix, null, jcb);
+	}
+	
+	protected void invokeJsonGET(String urlPostfix, String onBehalfOf, final JsonCallback jcb) {
 		RequestBuilder builder = getRequestBuilder(urlPostfix);
 		if (builder == null) return;
+		if (onBehalfOf != null) builder.setHeader("Authorization", onBehalfOf);
+
 		try {
 			Request request = builder.sendRequest(null, new RequestCallback() {
 				@Override

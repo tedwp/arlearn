@@ -1,0 +1,110 @@
+body{
+	background: #F1F1F1  !important;
+/*	background: rgb(136, 177, 49) !important; */
+	margin: 0;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	overflow: hidden;
+}
+
+#container {
+
+}
+
+
+
+.form-signin, .menu{
+	max-width: 300px;
+	padding: 19px 29px 29px;
+	margin: 10% auto 20px;
+	background-color: #5DA5D7;
+	/*background-color: #fff;*/
+	border: 1px solid #e5e5e5;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+	box-shadow: 0 1px 2px rgba(0,0,0,.05);
+	display: block;
+}
+
+.menu{
+	margin: 20% auto 20px;
+	max-width: 850px;
+	overflow:hidden;
+}
+
+.menu > div{
+	float:left;
+}
+
+.btn, .gwt-Button{
+	width: 275px;
+	display: inline-block;
+	color: #000;
+/*	color: #ffffff;*/
+	padding: 11px 19px !important;
+	font-size: 17.5px !important;
+	-webkit-border-radius: 6px !important;
+	-moz-border-radius: 6px !important;
+	border-radius: 6px !important;
+	background-color: #0044cc !important;
+	border: 1px solid #cccccc !important;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+	/*background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc)) !important;*/
+	border-color: #0044cc #0044cc #002a80 !important;
+	margin: 3px !important;
+}
+.btn img, .gwt-Button img{
+	width: 40px;
+	vertical-align: middle;
+}
+
+h2{
+	font-size: 31.5px;
+	color: #fff;
+}
+
+a.back_to_old_version{
+	display: block;
+	float: left;
+	padding: 15px 20px;
+	color: white !important;
+}
+
+
+#header, #footer{
+	background: #5DA5D7;
+/*	background: rgb(75, 78, 73);*/
+	color: white;
+	height: 50px;
+}
+
+#footer{
+	bottom: 0;
+	position: absolute;
+	width: 100%;
+}
+
+#footer p{
+	display: inline;
+}
+#footer img{
+	vertical-align: middle;
+}
+
+#header h1, #footer h1, #header p{
+	margin: 0;
+	padding: 15px 20px;
+	float: right;
+} 
+
+#menu {
+	width:500px;
+}
+#menu > div{
+	float:left; 
+	width:200px; 
+	padding-right:15px; 
+	line-height:150px;
+}

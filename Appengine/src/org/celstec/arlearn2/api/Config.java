@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.jdo.PMF;
+import org.celstec.arlearn2.jdo.classes.GameJDO;
 import org.celstec.arlearn2.jdo.classes.GeneralItemJDO;
 import org.celstec.arlearn2.jdo.classes.GeneralItemVisibilityJDO;
 import org.celstec.arlearn2.jdo.classes.UserJDO;
@@ -62,6 +63,13 @@ public class Config {
 		query.declareParameters(params);
 		it = ((List<UserJDO>) query.executeWithArray(args)).iterator();
 
+		query = pm.newQuery(GameJDO.class);
+		args = new Object[] { email, from, until };
+		params = "String emailParam, Long fromParam, Long untilParam";
+		filter = "owner == emailParam &lastModificationDate >= fromParam & lastModificationDate <= untilParam";
+		query.setFilter(filter);
+		query.declareParameters(params);
+		it = ((List<UserJDO>) query.executeWithArray(args)).iterator();
 		return "{}";
 	}
 }

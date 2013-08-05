@@ -24,10 +24,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.game.GameAccess;
 import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
@@ -39,6 +41,8 @@ import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.cache.MyGamesCache;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
+import org.celstec.arlearn2.jdo.classes.GameAccessJDO;
+import org.celstec.arlearn2.jdo.manager.GameAccessManager;
 import org.celstec.arlearn2.jdo.manager.GameManager;
 import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
@@ -71,29 +75,39 @@ public class GameDelegator extends GoogleDelegator {
 	public GameDelegator(GoogleDelegator gd) {
 		super(gd);
 	}
-	
+
 	public GameDelegator() {
 		super();
 	}
 
+	public GameDelegator(Account account, String token) throws AuthenticationException {
+		super(account, token);
+	}
+
 	public GamesList getGames(Long from, Long until) {
 		GamesList gl = new GamesList();
-		String myAccount = UserLoggedInManager.getUser(authToken);
+		String myAccount = null;
+		if (account != null) {
+			myAccount = account.getFullId();
+		} else
+			myAccount = UserLoggedInManager.getUser(authToken);
 		if (myAccount == null) {
 			gl.setError("login to retrieve your list of games");
 			return gl;
 		}
-//		List<Game> list = MyGamesCache.getInstance().getGameList(null, null, myAccount, null, null);
-//		List<Game> list = GameManager.getGames(myAccount, from, until);
-//		if (list == null) {
-//			list = GameManager.getGames(null, null, myAccount, null, null);
-//			MyGamesCache.getInstance().putGameList(list, null, null, myAccount, null, null);
-//		}
+		// List<Game> list = MyGamesCache.getInstance().getGameList(null, null,
+		// myAccount, null, null);
+		// List<Game> list = GameManager.getGames(myAccount, from, until);
+		// if (list == null) {
+		// list = GameManager.getGames(null, null, myAccount, null, null);
+		// MyGamesCache.getInstance().putGameList(list, null, null, myAccount,
+		// null, null);
+		// }
 		gl.setGames(GameManager.getGames(myAccount, from, until));
 		gl.setServerTime(System.currentTimeMillis());
 		return gl;
 	}
-	
+
 	public GamesList getParticipateGames() {
 		GamesList gl = new GamesList();
 		UsersDelegator qu = new UsersDelegator(this);
@@ -120,9 +134,9 @@ public class GameDelegator extends GoogleDelegator {
 		gl.setServerTime(System.currentTimeMillis());
 		return gl;
 	}
-	
+
 	public GamesList getParticipateGames(Long from, Long until) {
-		if (from !=null && until !=null &&from.longValue() >= until.longValue()) {
+		if (from != null && until != null && from.longValue() >= until.longValue()) {
 			return new GamesList();
 		}
 		UsersDelegator qu = new UsersDelegator(this);
@@ -131,22 +145,25 @@ public class GameDelegator extends GoogleDelegator {
 		GamesList gl = new GamesList();
 		while (it.hasNext()) {
 			User user = (User) it.next();
-			if (user.getGameId() != null ) {
+			if (user.getGameId() != null) {
 				Game g = getGameWithoutAccount(user.getGameId());
-				if (g!= null) {
+				if (g != null) {
 					gl.addGame(g);
 				} else {
-					logger.severe("following game does not exist"+user.getGameId());	
+					logger.severe("following game does not exist" + user.getGameId());
 				}
 			}
 		}
 		gl.setServerTime(System.currentTimeMillis());
-		
+
 		return gl;
-		
+
 	}
 
 	public Game getGame(Long gameId) {
+		if (account != null) {
+			return getGameNew(gameId);
+		}
 		String myAccount = UserLoggedInManager.getUser(authToken);
 		if (myAccount == null) {
 			Game game = new Game();
@@ -154,6 +171,10 @@ public class GameDelegator extends GoogleDelegator {
 			game.setError("login to retrieve game");
 			return game;
 		}
+//		if (myAccount.contains(":")) {
+//			//TODO check if this user can access the game
+//			return getGame(myAccount, gameId);
+//		}
 		List<Game> list = MyGamesCache.getInstance().getGameList(gameId, null, myAccount, null, null);
 		if (list == null) {
 			list = GameManager.getGames(gameId, null, myAccount, null, null);
@@ -167,12 +188,30 @@ public class GameDelegator extends GoogleDelegator {
 		}
 		return list.get(0);
 	}
-	
+
+	public Game getGameNew(Long gameId) {
+		Game gameCache = MyGamesCache.getInstance().getGame(gameId);
+		if (gameCache == null) {
+			List<Game> list = GameManager.getGames(gameId, null, null, null, null);
+			if (list.isEmpty()) {
+				Game game = new Game();
+				game.setGameId(gameId);
+				game.setError("game does not exist");
+				return game;
+			}
+			gameCache = list.get(0);
+			MyGamesCache.getInstance().putGame(gameCache, gameId);
+		}
+		return gameCache;
+
+	}
+
 	public Game getGameWithoutAccount(Long gameId) {
 		List<Game> list = MyGamesCache.getInstance().getGameList(gameId, null, null, null, null);
 		if (list == null) {
 			list = GameManager.getGames(gameId, null, null, null, null);
-			if (!list.isEmpty()) MyGamesCache.getInstance().putGameList(list, gameId, null, null, null, null);
+			if (!list.isEmpty())
+				MyGamesCache.getInstance().putGameList(list, gameId, null, null, null, null);
 		}
 		if (list.isEmpty()) {
 			return null;
@@ -205,31 +244,64 @@ public class GameDelegator extends GoogleDelegator {
 		}
 		return list.get(0);
 	}
-	
+
 	public Game createGame(Game game, int modificationType) {
 		return createGame(game, modificationType, true);
 	}
-	
+
 	public Game createGame(Game game, int modificationType, boolean notify) {
 		UsersDelegator qu = new UsersDelegator(this);
+		if (this.account != null) {
+			return createGame(game, account, modificationType, notify);
+		}
 		String myAccount = qu.getCurrentUserAccount();
 		if (myAccount == null) {
 			game.setError("login to create a game");
 			return game;
 		}
-//		game.setGameId(GameManager.addGame(game.getTitle(), myAccount, game.getCreator(), game.getFeedUrl(), game.getGameId(), game.getConfig()));
-		game.setGameId(GameManager.addGame(game, myAccount));
-		MyGamesCache.getInstance().removeGameList(null, null, myAccount, null, null);
-		MyGamesCache.getInstance().removeGameList(game.getGameId(), null, myAccount, null, null);
-		MyGamesCache.getInstance().removeGameList(game.getGameId(), null, null, null, null);
-		
-		GameModification gm = new GameModification();
-		gm.setModificationType(modificationType);
-		gm.setGame(game);
-		if (notify) ChannelNotificator.getInstance().notify(myAccount, gm);
-		
-		(new NotifyRunsFromGame(authToken, game.getGameId(), null, modificationType)).scheduleTask();
+//		if (myAccount.contains(":")) {
+//			return createGame(game, myAccount, modificationType, notify);
+//		} else {
+			// game.setGameId(GameManager.addGame(game.getTitle(), myAccount,
+			// game.getCreator(), game.getFeedUrl(), game.getGameId(),
+			// game.getConfig()));
+			game.setGameId(GameManager.addGame(game, myAccount));
+			MyGamesCache.getInstance().removeGameList(null, null, myAccount, null, null);
+			MyGamesCache.getInstance().removeGameList(game.getGameId(), null, myAccount, null, null);
+			MyGamesCache.getInstance().removeGameList(game.getGameId(), null, null, null, null);
 
+			GameModification gm = new GameModification();
+			gm.setModificationType(modificationType);
+			gm.setGame(game);
+			if (notify)
+				ChannelNotificator.getInstance().notify(myAccount, gm);
+
+			(new NotifyRunsFromGame(authToken, game.getGameId(), null, modificationType)).scheduleTask();
+
+			return game;
+//		}
+
+	}
+
+	public Game createGame(Game game, Account account, int modificationType, boolean notify) {
+		Game oldGame = null;
+		if (game.getGameId() != null) {
+			oldGame = getGame(game.getGameId());
+		}
+		game.setGameId(GameManager.addGame(game));
+		MyGamesCache.getInstance().removeGame(game.getGameId());
+		MyGamesCache.getInstance().removeGameList(game.getGameId(), null, null, null, null);
+
+		GameAccessDelegator gad = new GameAccessDelegator(this);
+		gad.provideAccess(game.getGameId(), account, GameAccessJDO.OWNER);
+		GameAccessManager.resetGameAccessLastModificationDate(game.getGameId());
+		if (notify){
+			gad.broadcastGameUpdate(game);
+		}
+		(new NotifyRunsFromGame(authToken, game.getGameId(), null, modificationType)).scheduleTask();
+		if (oldGame != null) {
+			checkSharing(oldGame, game);
+		}
 		return game;
 	}
 
@@ -239,24 +311,37 @@ public class GameDelegator extends GoogleDelegator {
 		Game g = getGame(gameIdentifier);
 		if (g.getError() != null)
 			return g;
-		if (!g.getOwner().equals(myAccount)) {
+		if (myAccount.contains(":")) {
+			GameAccessDelegator gad = new GameAccessDelegator(this);
+			if (!gad.isOwner(myAccount, g.getGameId())) {
+				Game game = new Game();
+				game.setError("You are not the owner of this game");
+				return game;
+			}
+		} else if (!g.getOwner().equals(myAccount)) {
 			Game game = new Game();
 			game.setError("You are not the owner of this game");
 			return game;
 		}
-		GameManager.deleteGame(gameIdentifier);
+		g.setDeleted(true);
+//		GameManager.deleteGame(gameIdentifier);
+		GameManager.addGame(g);
+		GameAccessManager.resetGameAccessLastModificationDate(g.getGameId());
 		MyGamesCache.getInstance().removeGameList(null, null, myAccount, null, null);
 		MyGamesCache.getInstance().removeGameList(gameIdentifier, null, myAccount, null, null);
-		(new DeleteRuns(authToken, gameIdentifier, myAccount)).scheduleTask();
-		(new DeleteProgressDefinitions(authToken, gameIdentifier)).scheduleTask();
-		(new DeleteScoreDefinitions(authToken, gameIdentifier)).scheduleTask();
-		(new DeleteGeneralItems(authToken, gameIdentifier)).scheduleTask();
+		(new DeleteRuns(authToken, this.account, gameIdentifier, myAccount)).scheduleTask();
+//		(new DeleteProgressDefinitions(authToken, gameIdentifier)).scheduleTask();
+//		(new DeleteScoreDefinitions(authToken, gameIdentifier)).scheduleTask();
+		(new DeleteGeneralItems(authToken, this.account, gameIdentifier)).scheduleTask();
 
 		GameModification gm = new GameModification();
 		gm.setModificationType(GameModification.DELETED);
 		gm.setGame(g);
+		if (this.account != null) {
+			new NotificationDelegator().broadcast(g, account.getFullId());
+		}
 		ChannelNotificator.getInstance().notify(myAccount, gm);
-		
+
 		return g;
 	}
 
@@ -274,7 +359,7 @@ public class GameDelegator extends GoogleDelegator {
 		return g;
 
 	}
-	
+
 	public Game setWithMap(Long gameIdentifier, boolean value) {
 		Game g = getGame(gameIdentifier);
 		if (g.getError() != null)
@@ -284,14 +369,14 @@ public class GameDelegator extends GoogleDelegator {
 		Config c = g.getConfig();
 		if (c.getRoles() == null)
 			c.setRoles(new ArrayList<String>());
-		
+
 		c.setMapAvailable(value);
-		
+
 		createGame(g, GameModification.ALTERED);
 		return g;
 
 	}
-	
+
 	public Game setMapType(Long gameIdentifier, int type) {
 		Game g = getGame(gameIdentifier);
 		if (g.getError() != null)
@@ -301,14 +386,14 @@ public class GameDelegator extends GoogleDelegator {
 		Config c = g.getConfig();
 		if (c.getRoles() == null)
 			c.setRoles(new ArrayList<String>());
-		
+
 		c.setMapType(type);
-		
+
 		createGame(g, GameModification.ALTERED);
 		return g;
 
 	}
-	
+
 	public Game setSharing(Long gameIdentifier, Integer sharingType) {
 		Game g = getGame(gameIdentifier);
 		if (g.getError() != null)
@@ -321,6 +406,15 @@ public class GameDelegator extends GoogleDelegator {
 		return g;
 	}
 	
+	public void checkSharing(Game oldGame, Game newGame) {
+		 Integer newSharingType = newGame.getSharing();
+		if (oldGame.getError() != null)
+			return ;
+		if (!oldGame.getSharing().equals(newSharingType)) {
+			new GameSearchIndex(newGame.getTitle(), newGame.getCreator(), newSharingType, newGame.getGameId()).scheduleTask();	
+		}
+	}
+
 	public Game setRegions(Long gameIdentifier, List<MapRegion> regions) {
 		Game g = getGame(gameIdentifier);
 		if (g.getError() != null)
@@ -330,9 +424,9 @@ public class GameDelegator extends GoogleDelegator {
 		Config c = g.getConfig();
 		if (c.getRoles() == null)
 			c.setRoles(new ArrayList<String>());
-		
+
 		c.setMapRegions(regions);
-		
+
 		createGame(g, GameModification.ALTERED);
 		return g;
 
@@ -354,15 +448,15 @@ public class GameDelegator extends GoogleDelegator {
 		Config c = g.getConfig();
 		if (c.getManualItems() == null)
 			c.setManualItems(new ArrayList<GeneralItem>());
-		
-			c.getManualItems().add(gi);
-		
+
+		c.getManualItems().add(gi);
+
 		createGame(g, GameModification.ALTERED);
 		GeneralItemDelegator gd = new GeneralItemDelegator(this);
 		GeneralItem itemFromDb = gd.getGeneralItemForGame(gameIdentifier, gi.getId());
 		if (itemFromDb.getDependsOn() == null) {
 			ActionDependency ad = new ActionDependency();
-			ad.setAction("manual-"+gi.getId());
+			ad.setAction("manual-" + gi.getId());
 			itemFromDb.setDependsOn(ad);
 			gd.createGeneralItem(itemFromDb);
 		}
@@ -390,43 +484,46 @@ public class GameDelegator extends GoogleDelegator {
 		return g;
 
 	}
-	
-	public  void updateAllGames() {
+
+	public void updateAllGames() {
 		int i = 0;
-//		for (Game game: GameManager.getGames(null, null, null, null, null)) {
-//			if (game.getLastModificationDate() == null) {
-//				GameManager.addGame(game.getTitle(), game.getOwner(), game.getCreator(), game.getFeedUrl(), game.getGameId(), game.getConfig());
-//				i++;
-//				if (i> 10) return;
-//			}
-//		}
-//		GeneralItemVisibilityManager.updateAll();
-//		GeneralItemManager.updateAll();
+		// for (Game game: GameManager.getGames(null, null, null, null, null)) {
+		// if (game.getLastModificationDate() == null) {
+		// GameManager.addGame(game.getTitle(), game.getOwner(),
+		// game.getCreator(), game.getFeedUrl(), game.getGameId(),
+		// game.getConfig());
+		// i++;
+		// if (i> 10) return;
+		// }
+		// }
+		// GeneralItemVisibilityManager.updateAll();
+		// GeneralItemManager.updateAll();
 		UserManager.updateAll(this);
-//		RunManager.updateAll();
-//		for (GeneralItemVisibility vis: GeneralItemVisibilityManager.getVisibleItems(null, null)) {
-//			
-//		}
-		
+		// RunManager.updateAll();
+		// for (GeneralItemVisibility vis:
+		// GeneralItemVisibilityManager.getVisibleItems(null, null)) {
+		//
+		// }
+
 	}
 
 	public GamesList search(String searchQuery) {
 		try {
-		    Results<ScoredDocument> results = getIndex().search(searchQuery);
-		    GamesList resultsList = new GamesList();
-		    for (ScoredDocument document : results) {
-		    	Game g =new Game();
-		    	g.setTitle(document.getFields("title").iterator().next().getText());
-		    	g.setCreator(document.getFields("author").iterator().next().getText());
-		    	g.setGameId(document.getFields("gameId").iterator().next().getNumber().longValue());
-		        // Use the document for display.
-		    	resultsList.addGame(g);
-		    }
-		    return resultsList;
+			Results<ScoredDocument> results = getIndex().search(searchQuery);
+			GamesList resultsList = new GamesList();
+			for (ScoredDocument document : results) {
+				Game g = new Game();
+				g.setTitle(document.getFields("title").iterator().next().getText());
+//				g.setCreator(document.getFields("author").iterator().next().getText());
+				g.setGameId(Long.parseLong(document.getFields("gameId").iterator().next().getText()));
+				// Use the document for display.
+				resultsList.addGame(g);
+			}
+			return resultsList;
 		} catch (SearchException e) {
-		    if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult().getCode())) {
-		        // retry
-		    }
+			if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult().getCode())) {
+				// retry
+			}
 		}
 		return null;
 	}

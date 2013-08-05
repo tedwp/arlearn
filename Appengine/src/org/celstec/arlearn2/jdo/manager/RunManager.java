@@ -63,6 +63,27 @@ public class RunManager {
 			pm.close();
 		}
 	}
+	
+	public static Long addRun(Run run) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		RunJDO runJdo = new RunJDO();
+		runJdo.setGameId(run.getGameId());
+		runJdo.setRunId(run.getRunId());
+		runJdo.setTitle(run.getTitle());
+		runJdo.setOwner(run.getOwner());
+		runJdo.setStartTime(run.getStartTime());
+		runJdo.setServerCreationTime(run.getServerCreationTime());
+		runJdo.setLastModificationDate(run.getServerCreationTime());
+		runJdo.setPayload(new Text(run.toString()));
+		if (run.getRunConfig() != null) {
+			runJdo.setTagId(run.getRunConfig().getNfcTag());
+		}
+		try {
+			return pm.makePersistent(runJdo).getRunId();
+		} finally {
+			pm.close();
+		}
+	}
 
 	public static List<RunJDO> getRuns(PersistenceManager pm, Long runId, Long gameId, String owner, String title, String tagId) {
 		Query query = pm.newQuery(RunJDO.class);
@@ -229,6 +250,8 @@ public class RunManager {
 			pm.close();
 		}
 	}
+
+	
 
 	
 

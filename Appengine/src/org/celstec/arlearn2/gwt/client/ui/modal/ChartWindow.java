@@ -45,8 +45,8 @@ import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.events.DragResizeStopEvent;
 import com.smartgwt.client.widgets.events.DragResizeStopHandler;
 
@@ -86,11 +86,12 @@ public class ChartWindow extends Window implements DatasourceUpdateHandler {
 		initMultipleChoiceItem();
 		addCloseClickHandler(new CloseClickHandler() {
 
+
 			@Override
-			public void onCloseClick(CloseClientEvent event) {
+			public void onCloseClick(CloseClickEvent event) {
 				ResponseDataSource.getInstance().removeUpdateHandeler(ChartWindow.this);
 				ChartWindow.this.destroy();
-
+				
 			}
 		});
 	}

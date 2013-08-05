@@ -37,7 +37,7 @@ public class AudioObjectActivity extends NarratorItemActivity {
 		Action completeAction = new Action();
 		completeAction.setAction("complete");
 		completeAction.setRunId(getMenuHandler().getPropertiesAdapter().getCurrentRunId());
-		completeAction.setUserEmail(getMenuHandler().getPropertiesAdapter().getUsername());
+		completeAction.setUserEmail(getMenuHandler().getPropertiesAdapter().getFullId());
 		completeAction.setGeneralItemId(getGeneralItem().getId());
 		completeAction.setGeneralItemType(getGeneralItem().getType());
 		

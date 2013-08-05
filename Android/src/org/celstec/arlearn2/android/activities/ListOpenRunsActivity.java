@@ -126,7 +126,7 @@ public class ListOpenRunsActivity extends GeneralActivity implements ListitemCli
 		protected Void doInBackground(Object... arg0) {
 			try {
 				if (NetworkSwitcher.isOnline(ListOpenRunsActivity.this)) {
-					RunList rl = RunClient.getRunClient().getRunsByTag(getMenuHandler().getPropertiesAdapter().getFusionAuthToken(), tagId);
+					RunList rl = RunClient.getRunClient().getRunsByTag(getMenuHandler().getPropertiesAdapter().getAuthToken(), tagId);
 					publishProgress(rl);
 				} else {
 					publishProgress();
@@ -160,7 +160,7 @@ public class ListOpenRunsActivity extends GeneralActivity implements ListitemCli
 		protected Void doInBackground(Long... params) {
 			try {
 				if (NetworkSwitcher.isOnline(ListOpenRunsActivity.this)) {
-					RunClient.getRunClient().selfRegister(getPropertiesAdapter().getFusionAuthToken(), params[0]);
+					RunClient.getRunClient().selfRegister(getPropertiesAdapter().getAuthToken(), params[0]);
 				} else {
 					publishProgress();
 				}

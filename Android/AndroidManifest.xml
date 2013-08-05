@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.celstec.arlearn2.android"
-    android:versionCode="23"
-    android:versionName="1.2 (code 22)" >
+    android:versionCode="30"
+    android:versionName="1.2 (code 30)" >
 
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="10" />
 
+    
     <application
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
@@ -48,6 +49,7 @@
 			</intent-filter>
 		</activity>
 
+<<<<<<< HEAD
 		 -->
 
 
@@ -113,6 +115,129 @@
 		
         <service android:name=".service.ChannelAPINotificationService" />
 
+=======
+        <activity
+            android:name=".activities.OauthActivity"
+            android:label="@string/loginHeader" />
+        <activity
+            android:name=".activities.OauthProvidersList"
+            android:label="@string/loginHeader" />
+        <activity
+            android:name=".activities.NfcScanOnDemandActivity"
+            android:label="@string/loginHeader" />
+        <activity
+            android:name="org.celstec.arlearn2.android.activities.ListRunsParticipateActivity"
+            android:label="@string/listExcursionsHeader" />
+        <activity
+            android:name=".activities.ListOpenRunsActivity"
+            android:label="@string/listExcursionsHeader" />
+        <activity
+            android:name=".activities.ListMessagesActivity"
+            android:label="@string/listMessagesHeader" />
+        <activity
+                android:name=".activities.ListSectionsMessageActivity"
+                android:label="@string/listMessagesHeader" />
+        <activity
+            android:name=".activities.MapViewActivity"
+            android:label="@string/mapViewHeader" />
+        <activity
+            android:name=".activities.OsmMapViewActivity"
+            android:label="@string/mapViewHeader" />
+        <activity
+            android:name=".activities.ListMapItemsActivity"
+            android:label="@string/mapViewHeader" />
+        <activity
+            android:name=".activities.AnswerQuestionActivity"
+            android:label="@string/answerQuestionHeader" />
+        <activity
+            android:name=".activities.AnnotateActivity"
+            android:label="@string/answerQuestionHeader" />
+        <activity
+            android:name=".activities.ViewAnswerActivity"
+            android:label="@string/viewAnswerHeader" />
+        <activity
+                android:name=".answerQuestion.RecordAudioActivity"
+                android:label="@string/answerQuestionHeader" />
+        <activity
+            android:name=".activities.DownloadOSMMapTilesActivity"
+            android:alwaysRetainTaskState="true"
+            android:label="@string/downloadMap"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".genItemActivities.MultipleChoiceActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/mct_header" />
+        <activity
+            android:name=".genItemActivities.SingleChoiceActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/mct_header" />
+        <activity
+            android:name=".genItemActivities.SingleChoiceImageActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/mct_header" />
+        <activity
+            android:name=".genItemActivities.MultipleChoiceImageActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/mct_header" />
+       <!--  <activity
+            android:name=".genItemActivities.OpenQuestionActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/mapViewHeader" />
+        <activity
+            android:name=".genItemActivities.DisplayMessageActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/messageHeader" /> -->
+        <activity
+            android:name=".genItemActivities.AudioObjectActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/messageHeader" />
+        <activity
+            android:name=".genItemActivities.VideoObjectActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/messageHeader" />
+        <activity
+            android:name=".genItemActivities.YoutubeObjectActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/messageHeader" />
+        <activity
+            android:name=".genItemActivities.OpenBadgeActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/messageHeader" />
+        <activity
+            android:name=".genItemActivities.ScanTagActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/messageHeader" />
+        <activity
+            android:name=".genItemActivities.NarratorItemActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/messageHeader" />
+       <!--  <activity
+            android:name=".genItemActivities.NarratorItemSandboxActivity"
+            android:label="@string/messageHeader" />
+
+        <service android:name=".service.BackgroundService" /> -->
+        <service android:name=".broadcast.MediaService" />
+        <!-- <service android:name=".broadcast.ResponseService" /> -->
+        <service android:name=".service.LocationService" />
+        <!-- <service android:name=".service.NotificationService" />
+        <service android:name=".service.AudioPlayerService" />
+        <service android:name=".service.AlarmService" /> -->
+        <!-- <service android:name=".service.ChannelAPINotificationService" /> -->
+        <service android:name=".GCMIntentService" />
+        
+>>>>>>> refs/remotes/origin/master
         <receiver android:name=".broadcast.BeanReceiver" >
             <intent-filter>
                 <action android:name="org.celstec.arlearn.beanbroadcast" />
@@ -128,11 +253,11 @@
                 <action android:name="org.celstec.arlearn2.beans.notification.Ping" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".broadcast.ActionReceiver" >
+       <!--  <receiver android:name=".broadcast.ActionReceiver" >
             <intent-filter>
                 <action android:name="org.celstec.arlearn2.beans.notification.Action" />
             </intent-filter>
-        </receiver>
+        </receiver> -->
         <receiver android:name=".broadcast.NetworkSwitcher" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -148,9 +273,24 @@
             <intent-filter>
                 <action android:name="org.celstec.arlearn.proximityAction" />
             </intent-filter>
+        </receiver>    
+        <receiver
+            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="org.celstec.arlearn.android" />
+            </intent-filter>
         </receiver>
+        
     </application>
 
+     <permission
+        android:name="org.celstec.arlearn2.android.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -164,6 +304,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="org.celstec.arlearn2.android.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature
         android:name="android.hardware.camera"

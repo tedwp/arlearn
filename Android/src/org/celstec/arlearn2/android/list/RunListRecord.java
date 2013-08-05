@@ -53,7 +53,7 @@ public class RunListRecord extends GenericListRecord {
 			int amount = GameDelegator.getInstance().getAmountOfUncachedItems(game.getGameId());
 			String message = null;
 			if (amount == 0) {
-				message = game.getTitle()+" ("+game.getCreator()+")";
+				message = game.getTitle(); //+" ("+game.getCreator()+")";
 			} else {
 				message = game.getTitle()+" ("+amount+ " uncached)";
 			}

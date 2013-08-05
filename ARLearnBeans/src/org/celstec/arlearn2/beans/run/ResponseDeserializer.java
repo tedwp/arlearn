@@ -39,6 +39,7 @@ public class ResponseDeserializer extends RunBeanDeserializer{
 	public void initBean(JSONObject object, Bean genericBean) throws JSONException {
 		super.initBean(object, genericBean);
 		Response bean = (Response) genericBean;
+        if (object.has("responseId")) bean.setResponseId(object.getLong("responseId"));
 		if (object.has("generalItemId")) bean.setGeneralItemId(object.getLong("generalItemId"));
 		if (object.has("userEmail")) bean.setUserEmail(object.getString("userEmail"));
 		if (object.has("responseValue")) bean.setResponseValue(object.getString("responseValue"));

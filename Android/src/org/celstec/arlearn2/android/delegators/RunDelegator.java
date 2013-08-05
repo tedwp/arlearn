@@ -112,7 +112,7 @@ public class RunDelegator {
 						}
 						db.getRunAdapter().insertBeta(run);
 						if (!runDeleted) {
-							UserDelegator.getInstance().synchronizeUserWithServer(db.getContext(), run.getRunId(), PropertiesAdapter.getInstance(db.getContext()).getUsername());
+							UserDelegator.getInstance().synchronizeUserWithServer(db.getContext(), run.getRunId(), PropertiesAdapter.getInstance(db.getContext()).getFullId());
 							GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(db.getContext(), run.getRunId(), run.getGameId());
 							GeneralItemsDelegator.getInstance().initializeGeneralItemsVisibility(db, run.getRunId(), run.getGameId());
 						}

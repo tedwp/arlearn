@@ -50,7 +50,11 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	private Double lat;
 	
 	private String iconUrl;
-	
+
+    private String section;
+
+    private String tags;
+
 	private List<String> roles;
 	
 	private Long visibleAt;
@@ -58,7 +62,11 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	private Long disappearAt;
 	
 	private Boolean showCountDown;
-	
+
+    private Boolean showOnMap;
+
+    private Boolean showInList;
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!super.equals(obj)) return false;
@@ -72,11 +80,16 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 			nullSafeEquals(getDependsOn(), other.getDependsOn()) &&
 			nullSafeEquals(getDisappearOn(), other.getDisappearOn()) &&
 			nullSafeEquals(getRadius(), other.getRadius()) &&
+            nullSafeEquals(getSection(), other.getSection()) &
 //			nullSafeEquals(getShowAtTimeStamp(), other.getShowAtTimeStamp()) &&
 			nullSafeEquals(getLng(), other.getLng()) &&
 			nullSafeEquals(getLat(), other.getLat()) &&
 			nullSafeEquals(getIconUrl(), other.getIconUrl()) &&
-			nullSafeEquals(getShowCountDown(), other.getShowCountDown()) &&
+            nullSafeEquals(getSection(), other.getSection()) &&
+            nullSafeEquals(getTags(), other.getTags()) &&
+            nullSafeEquals(getShowCountDown(), other.getShowCountDown()) &&
+            nullSafeEquals(getShowInList(), other.getShowInList()) &&
+            nullSafeEquals(getShowOnMap(), other.getShowOnMap()) &&
 			nullSafeEquals(getRoles(), other.getRoles()) ; 
 	}
 
@@ -185,8 +198,24 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	public void setIconUrl(String iconUrl) {
 		this.iconUrl = iconUrl;
 	}
-	
-	public boolean isMessage() {
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public boolean isMessage() {
 		return (getLat() == null && getLng() == null);
 	}
 
@@ -199,10 +228,18 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 		this.roles = roles;
 	}
 
-	@Override
+	@SuppressWarnings("ConstantConditions")
+    @Override
 	public int compareTo(GeneralItem other) {
+        if (getSection()== null) setSection("");
+        if (other.getSection()== null) other.setSection("");
 		if (getSortKey() == null) setSortKey(0);
 		if (other.getSortKey() == null) other.setSortKey(0);
+        if (!getSection().equals(other.getSection())) {
+            return getSection().compareTo(other.getSection());
+        }
+        if (getSortKey() == null) setSortKey(0);
+        if (other.getSortKey() == null) other.setSortKey(0);
 		int returnValue = getSortKey() - other.getSortKey();
 		if (returnValue != 0) return returnValue;
 		returnValue = getName().compareTo(other.getName());
@@ -233,7 +270,21 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	public void setShowCountDown(Boolean showCountDown) {
 		this.showCountDown = showCountDown;
 	}
-	
-	
-	
+
+
+    public Boolean getShowOnMap() {
+        return showOnMap;
+    }
+
+    public void setShowOnMap(Boolean showOnMap) {
+        this.showOnMap = showOnMap;
+    }
+
+    public Boolean getShowInList() {
+        return showInList;
+    }
+
+    public void setShowInList(Boolean showInList) {
+        this.showInList = showInList;
+    }
 }

@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.User;
+import org.celstec.arlearn2.beans.run.UserList;
 import org.celstec.arlearn2.delegators.ActionRelevancyPredictor;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.RunDelegator;
@@ -117,21 +118,21 @@ public class UpdateGeneralItems extends GenericBean{
 		
 		GeneralItemDelegator gid = new GeneralItemDelegator(qu);
 		ActionRelevancyPredictor arp = ActionRelevancyPredictor.getActionRelevancyPredicator(run.getGameId(), qu);
-		System.out.println(arp);
-		
-		boolean userRelevant = arp.isRelevantForUser(a); 
+
+		boolean userRelevant = arp.isRelevantForUser(a);
 		boolean teamRelevant = arp.isRelevantForTeam(a); 
 		boolean allRelevant = arp.isRelevantForAll(a); 
 		if (userRelevant) {
-			System.out.println("checking effect for " + u.getEmail());
 
 			gid.checkActionEffect(a, runId, u);	
 		} 
 			
 
-			if (teamRelevant ||allRelevant) {
-				for (User otherUser :qu.getUsers(runId).getUsers()) {
-					if (!(userRelevant && u.getEmail().equals(otherUser.getEmail())))
+			if ((teamRelevant ||allRelevant)&&  qu != null) {
+                UserList ul = qu.getUsers(runId);
+                if (ul != null)
+				for (User otherUser :ul.getUsers()) {
+					if (!(userRelevant && u.getFullId().equals(otherUser.getFullId())))
 					if (teamRelevant && u.getTeamId().equals(otherUser.getTeamId())) {
 						gid.checkActionEffect(a, runId, otherUser);
 					} else if (allRelevant) {

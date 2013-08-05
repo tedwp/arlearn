@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.tasks.beans;
 
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.delegators.TeamsDelegator;
 
 import com.google.gdata.util.AuthenticationException;
@@ -31,8 +32,8 @@ public class DeleteTeams extends GenericBean {
 		super();
 	}
 
-	public DeleteTeams(String token, Long runId, String teamId) {
-		super(token);
+	public DeleteTeams(String token, Account account,Long runId, String teamId) {
+		super(token, account);
 		this.runId = runId;
 		this.teamId = teamId;
 	}

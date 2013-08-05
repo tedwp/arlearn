@@ -53,8 +53,22 @@ public class MyGamesCache extends GenericCache{
 	}
 	
 	public void removeGameList(Long gameId, Object... args) {
+		removeGame(gameId);
 		String cachekey = generateCacheKey(MYGAMES_PREFIX, gameId, args); 
 		getCache().remove(cachekey);
+	}
+	
+	public Game getGame(Long gameId) {
+		return (Game) getCache().get(generateCacheKey(MYGAMES_PREFIX, gameId));
+	}
+	
+	public void putGame(Game game, Long gameId) {
+		String cachekey = generateCacheKey(MYGAMES_PREFIX, gameId); 
+		getCache().put(cachekey, game);
+	}
+	
+	public void removeGame(Long gameId) {
+		getCache().remove(generateCacheKey(MYGAMES_PREFIX, gameId));
 	}
 	
 }

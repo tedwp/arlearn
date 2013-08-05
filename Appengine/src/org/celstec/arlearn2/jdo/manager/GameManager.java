@@ -46,6 +46,7 @@ public class GameManager {
 		gameJdo.setOwner(owner);
 		gameJdo.setFeedUrl(feedUrl);
 		gameJdo.setTitle(title);
+		
 		gameJdo.setLastModificationDate(System.currentTimeMillis());
 		if (config != null)  {
 			gameJdo.setConfig(config.toString());
@@ -68,6 +69,8 @@ public class GameManager {
 		gameJdo.setFeedUrl(game.getFeedUrl());
 		gameJdo.setTitle(game.getTitle());
 		gameJdo.setSharing(game.getSharing());
+		gameJdo.setDescription(game.getDescription());
+		if (game.getLicenseCode() !=null) gameJdo.setLicenseCode(game.getLicenseCode());
 		gameJdo.setLastModificationDate(System.currentTimeMillis());
 		if (game.getConfig() != null)  {
 			gameJdo.setConfig(game.getConfig().toString());
@@ -81,6 +84,30 @@ public class GameManager {
 		}
 	}
 
+	
+	public static Long addGame(Game game) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		GameJDO gameJdo = new GameJDO();
+		gameJdo.setGameId(game.getGameId());
+		gameJdo.setTitle(game.getTitle());
+		gameJdo.setSharing(game.getSharing());
+		gameJdo.setDescription(game.getDescription());
+		if (game.getDeleted() != null) gameJdo.setDeleted(game.getDeleted());
+		if (game.getLicenseCode() !=null) gameJdo.setLicenseCode(game.getLicenseCode());
+
+		gameJdo.setLastModificationDate(System.currentTimeMillis());
+		if (game.getConfig() != null)  {
+			gameJdo.setConfig(game.getConfig().toString());
+		}
+		try {
+			GameJDO persistentGame = pm.makePersistent(gameJdo);
+			return persistentGame.getGameId();
+
+		} finally {
+			pm.close();
+		}
+	}
+	
 	public static List<Game> getGames(Long gameId, String creatorEmail, String owner, String feedUrl, String title) {
 		ArrayList<Game> returnGames = new ArrayList<Game>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -160,7 +187,9 @@ public class GameManager {
 		game.setFeedUrl(jdo.getFeedUrl());
 		game.setGameId(jdo.getGameId());
 		game.setOwner(jdo.getOwner());
+		game.setDescription(jdo.getDescription());
 		game.setSharing(jdo.getSharing());
+		if (jdo.getLicenseCode() !=null) game.setLicenseCode(jdo.getLicenseCode());
 		if (jdo.getLastModificationDate() != null) {
 			game.setLastModificationDate(jdo.getLastModificationDate());
 		}
@@ -173,6 +202,11 @@ public class GameManager {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		if (jdo.getDeleted() == null) {
+			game.setDeleted(false);
+		} else {
+			game.setDeleted(jdo.getDeleted());
 		}
 		return game;
 	}

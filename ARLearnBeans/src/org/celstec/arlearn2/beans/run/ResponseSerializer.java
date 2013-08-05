@@ -29,7 +29,8 @@ public class ResponseSerializer extends RunBeanSerialiser {
 		Response runBean = (Response) bean;
 		JSONObject returnObject = super.toJSON(bean);
 		try {
-			if (runBean.getGeneralItemId() != null) returnObject.put("generalItemId", runBean.getGeneralItemId());
+            if (runBean.getResponseId() != null) returnObject.put("responseId", runBean.getResponseId());
+            if (runBean.getGeneralItemId() != null) returnObject.put("generalItemId", runBean.getGeneralItemId());
 			if (runBean.getUserEmail() != null) returnObject.put("userEmail", runBean.getUserEmail());
 			if (runBean.getResponseValue() != null) returnObject.put("responseValue", runBean.getResponseValue());
 			if (runBean.getResponseItemId() != null) returnObject.put("responseItemId", runBean.getResponseItemId());

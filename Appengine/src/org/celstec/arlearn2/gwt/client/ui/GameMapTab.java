@@ -28,124 +28,130 @@ import org.celstec.arlearn2.gwt.client.ui.modal.SelectTypeWindow;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.maps.client.geom.LatLng;
+//import com.google.gwt.maps.client.geom.LatLng;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 public class GameMapTab extends MapTab implements NotificationHandler {
 
-	private long gameId;
-	private GeneralItemControlCanvas controlItem;
-	private boolean mapLoaded = false;
-	
-	public GameMapTab(String title, final long gameId) {
-		super(title);
-		this.gameId = gameId;
-		
-//		SelectTypeWindow stw = new SelectTypeWindow(gameId, controlItem, 50.0d, 10.0d);
-//		stw.show();
-		
-		controlItem.setGameId(gameId);
-		addTabSelectedHandler(new TabSelectedHandler() {
-
-			@Override
-			public void onTabSelected(TabSelectedEvent event) {
-				 loadExistingItems();
-			}
-		});
-	}
-	
 	@Override
 	public void onNotification(JSONObject bean) {
+		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	protected Canvas getControlPart() {
-		controlItem = new GeneralItemControlCanvas(gameId);
-		controlItem.setModificationHandler(new GeneralItemControlCanvas.ItemModification() {
-			
-			@Override
-			public void modified() {
-				loadExistingItems();
-				
-			}
-		});
-		return controlItem;
-	}
-	
-	private void loadExistingItems() {
-		if (mapLoaded) GeneralItemsClient.getInstance().getGeneralItemsGame(gameId, new JsonCallback() {
-			
-			public void onJsonReceived(JSONValue jsonValue) {
-				if (jsonValue.isObject().containsKey("generalItems")) {
-					super.jsonValue = jsonValue.isObject().get("generalItems").isArray();
-				}
-				onReceived();
-			}
-			public void onReceived(){
-				removeAllMarkers();
-				for (int i = 0; i < size(); i++) {
-					Double lat = getAttributeDouble(i, "lat");
-					Double lng = getAttributeDouble(i, "lng");
-					int id = getAttributeInteger(i, "id");
- 
-					String type = getAttributeString(i, "type");
-					String name = getAttributeString(i, "name");
-					Boolean deleted = getAttributeBoolean(i, "deleted");
-					if (deleted == null) deleted = false; 
-					if (!deleted & (lat != null || lng != null)) addMarker(id, type, name, lat, lng);
-				}
-			}
-			
-		});
-		
-		GameTeamDataSource.getInstance().loadDataGame(gameId);
-		
-		GameClient.getInstance().getGameConfig(gameId, new JsonCallback() {
+//	private long gameId;
+//	private GeneralItemControlCanvas controlItem;
+//	private boolean mapLoaded = false;
+//	
+//	public GameMapTab(String title, final long gameId) {
+//		super(title);
+//		this.gameId = gameId;
+//		
+////		SelectTypeWindow stw = new SelectTypeWindow(gameId, controlItem, 50.0d, 10.0d);
+////		stw.show();
+//		
+//		controlItem.setGameId(gameId);
+//		addTabSelectedHandler(new TabSelectedHandler() {
+//
+//			@Override
+//			public void onTabSelected(TabSelectedEvent event) {
+//				 loadExistingItems();
+//			}
+//		});
+//	}
+//	
+//	@Override
+//	public void onNotification(JSONObject bean) {
+//		
+//	}
+//
+//	@Override
+//	protected Canvas getControlPart() {
+//		controlItem = new GeneralItemControlCanvas(gameId);
+//		controlItem.setModificationHandler(new GeneralItemControlCanvas.ItemModification() {
+//			
+//			@Override
+//			public void modified() {
+//				loadExistingItems();
+//				
+//			}
+//		});
+//		return controlItem;
+//	}
+//	
+//	private void loadExistingItems() {
+//		if (mapLoaded) GeneralItemsClient.getInstance().getGeneralItemsGame(gameId, new JsonCallback() {
+//			
+//			public void onJsonReceived(JSONValue jsonValue) {
+//				if (jsonValue.isObject().containsKey("generalItems")) {
+//					super.jsonValue = jsonValue.isObject().get("generalItems").isArray();
+//				}
+//				onReceived();
+//			}
+//			public void onReceived(){
+//				removeAllMarkers();
+//				for (int i = 0; i < size(); i++) {
+//					Double lat = getAttributeDouble(i, "lat");
+//					Double lng = getAttributeDouble(i, "lng");
+//					int id = getAttributeInteger(i, "id");
+// 
+//					String type = getAttributeString(i, "type");
+//					String name = getAttributeString(i, "name");
+//					Boolean deleted = getAttributeBoolean(i, "deleted");
+//					if (deleted == null) deleted = false; 
+//					if (!deleted & (lat != null || lng != null)) addMarker(id, type, name, lat, lng);
+//				}
+//			}
+//			
+//		});
+//		
+//		GameTeamDataSource.getInstance().loadDataGame(gameId);
+//		
+//		GameClient.getInstance().getGameConfig(gameId, new JsonCallback() {
+//
+//			public void onJsonReceived(JSONValue jsonValue) {
+//
+////				updateConfig(jsonValue.isObject());
+//				GeneralItemGameDataSource.getInstance().loadDataGame(gameId);
+//
+//			}
+//
+//		});
+//	}
+//
+//	@Override
+//	public void relocate(int id, final double lat, final double lng) {
+//		GeneralItemsClient.getInstance().getGeneralItem(gameId, id,
+//				new JsonCallback() {
+//					public void onJsonReceived(JSONValue jsonValue) {
+//						controlItem.updateLocation(jsonValue.isObject(), lat, lng);
+//					}
+//		});
+//	}
+//
+//	@Override
+//	public void edit(int id) {
+//		GeneralItemsClient.getInstance().getGeneralItem(gameId, id,
+//				new JsonCallback() {
+//					public void onJsonReceived(JSONValue jsonValue) {
+//						controlItem.edit(jsonValue);
+//					}
+//		});
+//		
+//	}
+//
+//	@Override
+//	public void mapLoaded() {
+//		mapLoaded = true;
+//		loadExistingItems();
+//	}
 
-			public void onJsonReceived(JSONValue jsonValue) {
-
-//				updateConfig(jsonValue.isObject());
-				GeneralItemGameDataSource.getInstance().loadDataGame(gameId);
-
-			}
-
-		});
-	}
-
-	@Override
-	public void relocate(int id, final double lat, final double lng) {
-		GeneralItemsClient.getInstance().getGeneralItem(gameId, id,
-				new JsonCallback() {
-					public void onJsonReceived(JSONValue jsonValue) {
-						controlItem.updateLocation(jsonValue.isObject(), lat, lng);
-					}
-		});
-	}
-
-	@Override
-	public void edit(int id) {
-		GeneralItemsClient.getInstance().getGeneralItem(gameId, id,
-				new JsonCallback() {
-					public void onJsonReceived(JSONValue jsonValue) {
-						controlItem.edit(jsonValue);
-					}
-		});
-		
-	}
-
-	@Override
-	public void mapLoaded() {
-		mapLoaded = true;
-		loadExistingItems();
-	}
-
-	@Override
-	protected void doubleClick(LatLng latLng) {
-		SelectTypeWindow stw = new SelectTypeWindow(gameId, controlItem, latLng.getLatitude(), latLng.getLongitude());
-		stw.show();
-	}
+//	@Override
+//	protected void doubleClick(LatLng latLng) {
+//		SelectTypeWindow stw = new SelectTypeWindow(gameId, controlItem, latLng.getLatitude(), latLng.getLongitude());
+//		stw.show();
+//	}
 
 }

@@ -21,6 +21,7 @@ package org.celstec.arlearn2.beans.dependencies;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.celstec.arlearn2.beans.run.Action;
 
@@ -42,11 +43,11 @@ public class OrDependency extends BooleanDependency {
 	}
 
 	@Override
-	public long satisfiedAt(List<Action> actionList) {
+	public long satisfiedAt(List<Action> actionList, Map<String, String[]> accountRoleMap) {
 		long minTime = Long.MAX_VALUE;
 		for (Iterator iterator = dependencies.iterator(); iterator.hasNext();) {
 			Dependency dep = (Dependency) iterator.next();
-			long localMin = dep.satisfiedAt(actionList);
+			long localMin = dep.satisfiedAt(actionList, accountRoleMap);
 			if (localMin != -1) minTime = Math.min(minTime, localMin);
 		}
 		if (minTime == Long.MAX_VALUE) return -1;

@@ -21,7 +21,7 @@ public class ProcessProximityAlert extends GenericTask implements DatabaseTask {
 		System.out.println("recording this as an action" + pe.id);
 		if (pe != null) {
 			PropertiesAdapter pa = new PropertiesAdapter(ctx);
-			ActionsDelegator.getInstance().publishAction(ctx, "geo:" + pe.lat + ":" + pe.lng + ":" + pe.radius, pe.runId, pa.getUsername());
+			ActionsDelegator.getInstance().publishAction(ctx, "geo:" + pe.lat + ":" + pe.lng + ":" + pe.radius, pe.runId, pa.getFullId());
 		}
 	}
 

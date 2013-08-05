@@ -51,10 +51,10 @@ public class SynchronizeGeneralItemsTask extends GenericTask implements NetworkT
 			try {
 				GeneralItemList gl = null;
 				if (lastDate <= 0) {
-					gl = GeneralItemClient.getGeneralItemClient().getGameGeneralItems(pa.getFusionAuthToken(), gameId);
+					gl = GeneralItemClient.getGeneralItemClient().getGameGeneralItems(pa.getAuthToken(), gameId);
 
 				} else {
-					gl = GeneralItemClient.getGeneralItemClient().getGameGeneralItems(pa.getFusionAuthToken(), gameId, lastDate);
+					gl = GeneralItemClient.getGeneralItemClient().getGameGeneralItems(pa.getAuthToken(), gameId, lastDate);
 				}
 				final GeneralItemList finalGl = gl;
 				if (gl.getError() != null || gl.getErrorCode() != null) {

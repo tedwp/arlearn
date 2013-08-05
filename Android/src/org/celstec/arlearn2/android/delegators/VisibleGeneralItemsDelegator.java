@@ -26,51 +26,51 @@ import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 @Deprecated // does not seem to be used
 public class VisibleGeneralItemsDelegator {
 	
-	private static VisibleGeneralItemsDelegator instance;
-	
-	private VisibleGeneralItemsDelegator() {
-		
-	}
-	
-	public static VisibleGeneralItemsDelegator getInstance() {
-		if (instance == null) {
-			instance = new VisibleGeneralItemsDelegator();
-		}
-		return instance;
-	}
-	
-	public void checkRoleAndMakeItemVisible(DBAdapter db, long runId, GeneralItem gi) {
-		if (GeneralItemDependencyHandler.itemMatchesPlayersRole(db, runId, gi)) {
-			makeItemVisible(db, runId, gi);
-		}
-	}
-	
-	public void makeItemVisible(DBAdapter db, long runId, GeneralItem gi) {
-		Long appearAt = gi.getVisibleAt();
-		if (appearAt == null || appearAt == -1) {
-			appearAt = System.currentTimeMillis();
-		}
-		makeItemVisible(db, runId, gi, appearAt);
-
-	}
-	
-	public void makeItemVisible(DBAdapter db, long runId, GeneralItem gi, long appearAt) {
-//		if (!GeneralItemVisibilityCache.getInstance().isVisible(runId, gi.getId())) {
-		//if ("323001*309001".equals(getKey(runId, itemId))) {
-//		if (runId == 323001l && gi.getId().equals(319001l) ) {
-//			System.out.println("break");
+//	private static VisibleGeneralItemsDelegator instance;
+//	
+//	private VisibleGeneralItemsDelegator() {
+//		
+//	}
+//	
+//	public static VisibleGeneralItemsDelegator getInstance() {
+//		if (instance == null) {
+//			instance = new VisibleGeneralItemsDelegator();
 //		}
-		if (!db.getGeneralItemVisibility().isVisible(gi.getId(), runId)) {
-			db.getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, appearAt, GeneralItemVisibility.VISIBLE);
-			
-			long satisfiedAtDelta = System.currentTimeMillis() - appearAt;
-			if (satisfiedAtDelta > 0 && satisfiedAtDelta < 30000) {
-//				Gene	ralItemDependencyHandler.broadcastTroughIntent(gi, db.getContext(), runId);
-			} else if (satisfiedAtDelta < 0) {
-//				ForceUpdateTask.scheduleEvent(db.getContext(), runId, false, null);
-			}
-		}
-	}
+//		return instance;
+//	}
+//	
+//	public void checkRoleAndMakeItemVisible(DBAdapter db, long runId, GeneralItem gi) {
+//		if (GeneralItemDependencyHandler.itemMatchesPlayersRole(db, runId, gi)) {
+//			makeItemVisible(db, runId, gi);
+//		}
+//	}
+//	
+//	public void makeItemVisible(DBAdapter db, long runId, GeneralItem gi) {
+//		Long appearAt = gi.getVisibleAt();
+//		if (appearAt == null || appearAt == -1) {
+//			appearAt = System.currentTimeMillis();
+//		}
+//		makeItemVisible(db, runId, gi, appearAt);
+//
+//	}
+//	
+//	public void makeItemVisible(DBAdapter db, long runId, GeneralItem gi, long appearAt) {
+////		if (!GeneralItemVisibilityCache.getInstance().isVisible(runId, gi.getId())) {
+//		//if ("323001*309001".equals(getKey(runId, itemId))) {
+////		if (runId == 323001l && gi.getId().equals(319001l) ) {
+////			System.out.println("break");
+////		}
+//		if (!db.getGeneralItemVisibility().isVisible(gi.getId(), runId)) {
+//			db.getGeneralItemVisibility().setVisibilityStatus(gi.getId(), runId, appearAt, GeneralItemVisibility.VISIBLE);
+//			
+//			long satisfiedAtDelta = System.currentTimeMillis() - appearAt;
+//			if (satisfiedAtDelta > 0 && satisfiedAtDelta < 30000) {
+////				Gene	ralItemDependencyHandler.broadcastTroughIntent(gi, db.getContext(), runId);
+//			} else if (satisfiedAtDelta < 0) {
+////				ForceUpdateTask.scheduleEvent(db.getContext(), runId, false, null);
+//			}
+//		}
+//	}
 	
 	
 	

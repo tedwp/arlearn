@@ -42,8 +42,7 @@ public class GenericBroadcastReceiver {
 				Boolean forMe = intent.getExtras().getBoolean(activity.getClass().getCanonicalName(), false);
 				Boolean render = intent.getExtras().getBoolean(RENDER, true);
 				if (forMe) {
-					if (((ARLearnBroadcastReceiver) activity).showStatusLed())
-						LedStatus.updateStatus(activity);
+//					if (((ARLearnBroadcastReceiver) activity).showStatusLed()) LedStatus.updateStatus(activity);
 					((ARLearnBroadcastReceiver) activity).onBroadcastMessage(intent.getExtras(), render);
 				}
 			}
@@ -62,8 +61,8 @@ public class GenericBroadcastReceiver {
 	public void onResume() {
 		if (broadcastReceiver != null)
 			activity.registerReceiver(broadcastReceiver, new IntentFilter(ACTION));
-		if (((ARLearnBroadcastReceiver) activity).showStatusLed())
-			LedStatus.updateStatus(activity);
+//		if (((ARLearnBroadcastReceiver) activity).showStatusLed())
+//			LedStatus.updateStatus(activity);
 		Intent intent = new Intent(activity, MediaService.class);
 		activity.startService(intent);
 	}

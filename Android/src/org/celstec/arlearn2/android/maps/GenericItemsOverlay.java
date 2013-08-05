@@ -90,9 +90,11 @@ public class GenericItemsOverlay extends ItemizedOverlay {
 	    public void draw(android.graphics.Canvas canvas, MapView mapView,
 	            boolean shadow)
 	    {
-	        super.draw(canvas, mapView, shadow);
+	        super.draw(canvas, mapView, false);
 
 	        // go through all OverlayItems and draw title for each of them
+            final float scale = ctx.getResources().getDisplayMetrics().density;
+            int height = (int) (24 * scale + 0.5f);
 	        for (GenericItemOverlayItem item: overlayItems)
 	        {
 	            /* Converts latitude & longitude of this overlay item to coordinates on screen.
@@ -119,7 +121,8 @@ public class GenericItemsOverlay extends ItemizedOverlay {
 	            rect.inset(-TITLE_MARGIN, -TITLE_MARGIN);
 	            int markerHeight = item.getMarkerHeight() /2;
 //	            rect.offsetTo(markerBottomCenterCoords.x - rect.width()/2, markerBottomCenterCoords.y + markerHeight ); //- rect.height()
-	            rect.offsetTo(markerBottomCenterCoords.x - rect.width()/2, markerBottomCenterCoords.y + rect.height() ); //- rect.height()
+//	            rect.offsetTo(markerBottomCenterCoords.x - rect.width()/2, markerBottomCenterCoords.y + rect.height() );
+                rect.offsetTo(markerBottomCenterCoords.x - rect.width()/2, markerBottomCenterCoords.y + height );
 
 	            paintText.setTextAlign(Paint.Align.CENTER);
 	            paintText.setTextSize(FONT_SIZE);

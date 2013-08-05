@@ -27,10 +27,8 @@ import org.celstec.arlearn2.gwt.client.network.run.RunDataSource;
 import org.celstec.arlearn2.gwt.client.network.team.TeamsDataSource;
 import org.celstec.arlearn2.gwt.client.network.user.UsersDataSource;
 import org.celstec.arlearn2.gwt.client.notification.NotificationSubscriber;
-import org.celstec.arlearn2.gwt.client.ui.DatabaseTab;
-import org.celstec.arlearn2.gwt.client.ui.GameTab.RoleDataSource;
 import org.celstec.arlearn2.gwt.client.ui.ChannelDisplay;
-import org.celstec.arlearn2.gwt.client.ui.GamesMapTab;
+import org.celstec.arlearn2.gwt.client.ui.DatabaseTab;
 import org.celstec.arlearn2.gwt.client.ui.GamesTab;
 import org.celstec.arlearn2.gwt.client.ui.GeneralItemVisiblityTab;
 import org.celstec.arlearn2.gwt.client.ui.LoginWindow;
@@ -39,37 +37,18 @@ import org.celstec.arlearn2.gwt.client.ui.WebServicesTab;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.maps.client.InfoWindowContent;
-import com.google.gwt.maps.client.MapWidget;
-import com.google.gwt.maps.client.Maps;
-import com.google.gwt.maps.client.control.LargeMapControl;
-import com.google.gwt.maps.client.event.MapDragEndHandler;
-import com.google.gwt.maps.client.event.MarkerDragEndHandler;
-import com.google.gwt.maps.client.event.MarkerDragEndHandler.MarkerDragEndEvent;
-import com.google.gwt.maps.client.geom.LatLng;
-import com.google.gwt.maps.client.overlay.Marker;
-import com.google.gwt.maps.client.overlay.MarkerOptions;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.TabBarControls;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.CloseClickHandler;
 import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
-import com.smartgwt.client.widgets.toolbar.ToolStrip;
-import com.smartgwt.client.widgets.toolbar.ToolStripButton;
-import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -92,7 +71,18 @@ public class Authoring implements EntryPoint {
 		
 	}
 	
+	
 	public void onModuleLoad() {
+		SC.say("Deprecated", "Dear ARLearn author,<br><br> " +
+				"This part of the authoring environment is no longer supported. " +
+				"Although you can still apply modifications here to your games we urge " +
+				"you to login at http://streetlearn.appspot.com/<br> <br>" +
+				"After you login here, you will find here the beta version of the new authoring tool. " +
+				"Some of the new features you will find here are:" +
+				"<ol><li>	Collaborative authoring of games. Share your games with contacts." +
+				"<li>	License public games with a creative commons license." +
+				"<li>	Login with facebook, linkedin or google.</ol>" +
+				"<br> After a google login with the new account system, this tool will no longer show your games and runs as they will be automatically migrated .");
 		GeoPositioner.getInstance();
 		RootPanel rootPanel = RootPanel.get("container");
 		hidden = "true".equals(com.google.gwt.user.client.Window.Location.getParameter("hidden"));

@@ -3,10 +3,14 @@
 	<application>ar-learn</application>
 	<version>2</version>
 	<threadsafe>true</threadsafe>
+	<inbound-services>
+		<service>mail</service>
+	</inbound-services>
+	<precompilation-enabled>false</precompilation-enabled>
 	
 	<!-- Configure java.util.logging -->
 	<system-properties>
-		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
+		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
 	</system-properties>
-	
+
 </appengine-web-app>

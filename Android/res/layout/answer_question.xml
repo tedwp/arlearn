@@ -81,7 +81,6 @@
                     android:typeface="monospace" />
                 
                 <RelativeLayout
-                    xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/videoIconRelativeLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
@@ -202,7 +201,6 @@
     </LinearLayout>
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"

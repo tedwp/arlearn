@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ARLearn</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+    
+    <string name="networkUnavailable">Nie ma łączności z siecią.\nSpróbuj ponownie później</string>
+    <string name="networkUnavailable2">Nie można się połaczyć z serwerem synchronizacji</string>
+    
+     <!--Menu Strings-->
+    <string name="login">LOGIN</string>
+    <string name="logout">LOGOUT</string>
+    <string name="exit">WYJŚCIE</string>
+    
+     <!--Login Activity Strings-->
+    <string name="loginHeader">Zaloguj się za pomocą konta Google</string>
+    <string name="uNameHint">E-mail</string>
+    <string name="passwordHint">Hasło</string>
+    <string name="emailMissing">Nie udało się zalogować:\n brakuje e-maila</string>
+    <string name="pwMissing">Błędny login:\n brakuje hasła</string>
+    <string name="serviceMissing">Nie udało sie zalogować:\n błąd wewnętrzny, brak dostępu do usługi</string>
+    <string name="loginFailed">Login dla ***  zakończony błędem</string>
+    <string name="checkCredentials">Weryfikacja danych</string>
+    <string name="sendInstructions">Prześlij instrukcje</string>
+    <string name="correctDateSettings">Czas i data w telefonie są błędne. \nCorrect in order to proceed.</string>
+    
+     <!--NfcScanOnDemand Activity Strings-->
+     <string name="scanTag">Zeskanuj tag NFC lub kod QR</string>
+     <string name="scanTagMenu">Zeskanuj kod QR</string>
+     <string name="cancel">Anuluj</string>
+     
+     <!--List Runs Participate Activity Strings-->
+    <string name="listExcursionsHeader">Wybierz trasę</string>
+    <string name="loadingExcursions">Ładowanie trasy</string>
+    <string name="registerRun">Czy chcesz się zarejestrować do tej trasy?</string>
+    <string name="cacheGame">Czy chcesz pobrać grę do użytku offline?</string>
+    <string name="delete">Usuń</string>
+    <string name="scanRun">Zeskanuj etykietę trasy</string>
+    
+     <!--List Open Runs Strings-->
+    <string name="noMatchingRuns">Żadna trasa nie pasuje do etykiety</string>
+    <string name="noMoreMatchingRuns">Nie ma więcej pasujących tras.</string>
+    <string name="addOpenRunTitle">Którą chcesz dodać trasę?</string>
+    
+    <!--Map View Activity Strings-->
+    <string name="mapViewHeader">Trasa</string>
+    <string name="messagesMenu">Wiadomości</string>
+    <string name="myLocationMenu">Moja lokalizacja</string>
+    
+     <!--Multiple Choice Detail Activity Strings-->
+    <string name="mct_header">Pytanie wielokrotnego wyboru</string>
+    <string name="mct_submit">Prześlij odpowiedź</string>
+    
+    <!--Audio Object Activity Strings-->
+    <string name="ao_answer_menu">Podaj odpowiedź</string>
+    
+    <!--Answer Activity Strings-->
+    <string name="answerQuestionHeader">Odpowiedz na pytanie</string>
+    <string name="annotateCounterReset">00:00.0</string>
+    <string name="removePicture">Usuń zdjęcie</string>
+    <string name="gpsOff">GPS jest wyłączony. Włacz GPS i spróbuj ponownie.</string>
+    <string name="nothingToPublish">Brak plików do publikacji</string>
+    <string name="addVideo">Dodaj video</string>
+    <string name="addPicture">Zrób zdjęcie</string>
+      
+    <!--Display Message Activity Strings-->
+    <string name="messageHeader">Wiadomość</string>
+    
+     <!-- View Answer Activity Strings-->
+    <string name="viewAnswerHeader">twoja odpowiedź</string>
+    <string name="deleteAnswer">usuń odpowiedź</string>
+    <string name="listMessagesHeader">Lista wiadomości</string>
+    
+    <!-- OSM Downloader -->
+    <string name="startDownloading">Zacznij pobieranie mapy</string>
+    <string name="offlineDownloadExplanation">Gra pozwala na pobranie mapy, na wypadek braku dostępu do sieci. Kliknij guzik poniżej, aby zacząć pobieranie mapy. Mapa będzie się ładowała offline. Uwaga! Może zająć dużo miejsca na dysku.</string>    
+    <string name="downloadMap">Pobierz mapę</string>
+    <string name="deleteMap">Usuń mapę</string>
+    
+     <!--Todo-->
+     <string name="makeAnnotation">Czy chcesz w tym miejscu umieścić napis?</string>
+     <string name="reset">RESETUJ</string>
+     <string name="refresh">ODŚWIEŻ</string>
+     <string name="resetQuestion">Czy na pewno chcesz usunąć dotychczasową pracę?</string>
+     
+     <string name="downloadBusy">Cierpliwości. Plik jeszcze się nie pobrał</string>
+     <string name="warningDownloadBusy">UWAGA! Nie wszystkie media zostały pobrane.</string>
+     <string name="errorDownloadFailed">BŁĄD! Nie da się pobrać co najmniej jednego pliku.</string>
+</resources>

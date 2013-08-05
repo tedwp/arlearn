@@ -24,12 +24,19 @@ import org.celstec.arlearn2.beans.serializer.json.BeanSerializer;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class APNDeviceDescription extends Bean {
+public class APNDeviceDescription extends DeviceDescription {
 
 	private String account;
 	private String deviceUniqueIdentifier;
 	private String deviceToken;
 	
+	
+//	{
+//		
+//		"account":"arlearn1",
+//		"deviceUniqueIdentifier":"deviceUniqueIdentifier",
+//		"deviceToken","deviceToken"
+//	}
 	public String getAccount() {
 		return account;
 	}

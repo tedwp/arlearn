@@ -39,6 +39,18 @@ public class UserLoggedInManager {
 		}
 	}
 	
+	public static void submitOauthUser(String id, String authToken) {
+		PersistenceManager	 pm = PMF.get().getPersistenceManager();
+		UsersLoggedIn uli = new UsersLoggedIn();
+		uli.setKey(authToken.hashCode());
+		uli.setUsername(id);
+		try {
+			pm.makePersistent(uli);
+		} finally {
+			pm.close();
+		}
+	}
+	
 	public static String getUser(String authToken) {
 		if (authToken == null || authToken.equals("")) return null;
 		PersistenceManager pm = PMF.get().getPersistenceManager();

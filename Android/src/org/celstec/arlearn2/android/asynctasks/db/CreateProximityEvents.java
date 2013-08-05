@@ -7,8 +7,11 @@ import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.ProximityEventRegistry;
 import org.celstec.arlearn2.android.db.ProximityEventRegistry.ProximityEvent;
+import org.celstec.arlearn2.beans.dependencies.AndDependency;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
+import org.celstec.arlearn2.beans.dependencies.OrDependency;
 import org.celstec.arlearn2.beans.dependencies.ProximityDependency;
+import org.celstec.arlearn2.beans.dependencies.TimeDependency;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
 import android.app.PendingIntent;
@@ -33,14 +36,54 @@ public class CreateProximityEvents extends GenericTask implements  DatabaseTask 
 	
 	@Override
 	public void execute(DBAdapter db) {
+		ProximityFilter filter = new ProximityFilter();
+		filter.db = db;
 		for (GeneralItem item :GeneralItemsCache.getInstance().getGeneralItemsWithGameId(gameId).values()) {
 			if (item.getDependsOn() != null) {
-				Dependency dep = item.getDependsOn();
-				if (dep instanceof ProximityDependency) {
-					System.out.println("todo deal with "+dep);
-					ProximityDependency proxDep = (ProximityDependency) dep;
-					addProximityAlert(db, proxDep.getLat(), proxDep.getLng(), proxDep.getRadius());
-				}
+				
+				iterateDependencyStructure(item.getDependsOn(), filter);
+//				Dependency dep = item.getDependsOn();
+//				if (dep instanceof ProximityDependency) {
+//					System.out.println("todo deal with "+dep);
+//					ProximityDependency proxDep = (ProximityDependency) dep;
+//					addProximityAlert(db, proxDep.getLat(), proxDep.getLng(), proxDep.getRadius());
+//				}
+			}
+			if (item.getDisappearOn() != null) {
+				iterateDependencyStructure(item.getDisappearOn(), filter);
+
+			}
+		}
+		
+	}
+	private interface DepFilter {
+		public void filter(Dependency dep);
+	}
+	private class ProximityFilter implements DepFilter {
+		
+		public DBAdapter db;
+		
+		public void filter(Dependency dep) {
+			if (dep instanceof ProximityDependency) {
+				ProximityDependency proxDep = (ProximityDependency) dep;
+				addProximityAlert(db, proxDep.getLat(), proxDep.getLng(), proxDep.getRadius());
+			}
+		}
+	};
+	
+	private void iterateDependencyStructure(Dependency dep, DepFilter filter) {
+		filter.filter(dep);
+		if (dep instanceof TimeDependency) {
+			iterateDependencyStructure(((TimeDependency) dep).getOffset(), filter);
+		}
+		if (dep instanceof AndDependency) {
+			for (Dependency d: ((AndDependency) dep).getDependencies()){
+				iterateDependencyStructure(d, filter);	
+			}
+		}
+		if (dep instanceof OrDependency) {
+			for (Dependency d: ((OrDependency) dep).getDependencies()){
+				iterateDependencyStructure(d, filter);	
 			}
 		}
 		

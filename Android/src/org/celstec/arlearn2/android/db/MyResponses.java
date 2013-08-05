@@ -235,7 +235,7 @@ public class MyResponses extends GenericDbTable {
 		Response responses[] = (Response[]) queryRevoked();
 		for (Response r : responses) {
 			try {
-				Response result = ResponseClient.getResponseClient().publishAction(PropertiesAdapter.getInstance(db.getContext()).getFusionAuthToken(), r);
+				Response result = ResponseClient.getResponseClient().publishAction(PropertiesAdapter.getInstance(db.getContext()).getAuthToken(), r);
 				if (result.getError() == null) {
 					confirmReplicated(result);
 				}

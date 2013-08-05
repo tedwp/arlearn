@@ -268,7 +268,7 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 			generalItemId = item.getId();
 			generalItemType = item.getClass().getName();
 		}
-		ActionsDelegator.getInstance().publishAction(this, "read", pa.getCurrentRunId(), pa.getUsername(), generalItemId, generalItemType);
+		ActionsDelegator.getInstance().publishAction(this, "read", pa.getCurrentRunId(), pa.getFullId(), generalItemId, generalItemType);
 	}
 
 	public class PlayAudioTask extends AsyncTask<String, Void, Void> {

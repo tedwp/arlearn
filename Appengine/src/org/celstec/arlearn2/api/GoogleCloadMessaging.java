@@ -26,10 +26,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import org.celstec.arlearn2.delegators.ApplePushNotificationDelegator;
-
 import com.google.android.gcm.server.Message;
-import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import com.google.gdata.util.AuthenticationException;
@@ -47,8 +44,7 @@ public class GoogleCloadMessaging extends Service{
 			return serialise(getInvalidCredentialsBean(), accept);
 //		(new ApplePushNotificationDelegator(token)).sendNotification(account, text);
 		Sender sender = new Sender("AIzaSyBBHzixGmnJnu8YhZS44zCObl85JTspo_Q");
-		Message message = new Message.Builder().addData("runId", "1234")
-		.build();
+		Message message = new Message.Builder().addData("runId", "1234").build();
 		
 		try {
 			Result result = sender.send(message, "APA91bFDiScakJJnxA9LfFNknB965TdghV5ep7w5ZGwOG51JJF_X3MBy3_set6mPPaYRK_ceWcK00JF9x6vW-vuDGB4dYqgevukafBYq8VgovwG8dyLK4QtbT123N_8_hmACIJ185JztOBvVLb-8AlDLJPG_I3gldQ", 5);

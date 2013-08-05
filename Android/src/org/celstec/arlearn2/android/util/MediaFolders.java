@@ -57,6 +57,7 @@ public class MediaFolders {
 		}
 	}
 	
+	
 	public static File createOutgoingAmrFile(){
 		File outFolder = getOutgoingFilesDir();
 		try {

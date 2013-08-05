@@ -46,7 +46,13 @@ public class GameJDO extends GameClass {
 	private Text config;
 	
 	@Persistent
+	private Text description;
+	
+	@Persistent
 	private Integer sharing;
+	
+	@Persistent
+	private String licenseCode;
 
 	public Long getGameId() {
 		return id.getId();
@@ -101,6 +107,15 @@ public class GameJDO extends GameClass {
 	public void setConfig(String config) {
 		this.config = new Text(config);
 	}
+	
+	public String getDescription() {
+		if (description == null) return null;
+		return description.getValue();
+	}
+
+	public void setDescription(String description) {
+		if (description != null) this.description = new Text(description);
+	}
 
 	public Integer getSharing() {
 		if (sharing == null) return Game.PRIVATE;
@@ -110,5 +125,14 @@ public class GameJDO extends GameClass {
 	public void setSharing(Integer sharing) {
 		this.sharing = sharing;
 	}
+
+	public String getLicenseCode() {
+		return licenseCode;
+	}
+
+	public void setLicenseCode(String licenseCode) {
+		this.licenseCode = licenseCode;
+	}
+
 	
 }

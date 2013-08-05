@@ -43,6 +43,11 @@ public class GameBean extends Bean{
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
+	
+	public boolean isDeleted() {
+		if (deleted == null) return false;
+		return deleted;
+	}
 
 	public Long getLastModificationDate() {
 		return lastModificationDate;

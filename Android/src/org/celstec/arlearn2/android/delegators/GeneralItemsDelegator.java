@@ -101,6 +101,7 @@ public class GeneralItemsDelegator {
 	private GeneralItemList giSearchList;
 	public static String AUDIO_LOCAL_ID = "audio";
 	public static String VIDEO_LOCAL_ID = "video";
+	public static String ICON_LOCAL_ID = "icon";
 
 	private GeneralItemsDelegator() {
 
@@ -148,7 +149,7 @@ public class GeneralItemsDelegator {
 	}
 	
 	public GeneralItem getGeneralItemFromNetwork(Context ctx, Long gameId, Long generalItemId) {
-		return GeneralItemClient.getGeneralItemClient().getGeneralItem(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), gameId, generalItemId);
+		return GeneralItemClient.getGeneralItemClient().getGeneralItem(PropertiesAdapter.getInstance(ctx).getAuthToken(), gameId, generalItemId);
 		
 	}
 	
@@ -186,11 +187,15 @@ public class GeneralItemsDelegator {
 	}
 
 	public DownloadItem[] getDownloadItems(GeneralItem gi) {
+		ArrayList<DownloadItem> downloadArray = new ArrayList<MediaCacheGeneralItems.DownloadItem>();
+		if (gi.getIconUrl() != null) {
+			downloadArray.add(getIconDownloadObject(gi));
+		}
 		if (gi instanceof AudioObject) {
-			return getDownloadItemsAudioObject((AudioObject) gi);
+			downloadArray.add(getDownloadItemsAudioObject((AudioObject) gi));
 		}
 		if (gi instanceof VideoObject) {
-			return getDownloadItemsVideoObject((VideoObject) gi);
+			downloadArray.add(getDownloadItemsVideoObject((VideoObject) gi));
 		}
 		if (gi instanceof SingleChoiceImageTest) {
 			return getDownloadItemsSingleChoiceImageTest((SingleChoiceImageTest) gi);
@@ -198,22 +203,30 @@ public class GeneralItemsDelegator {
 		if (gi instanceof MultipleChoiceImageTest) {
 			return getDownloadItemsMultipleChoiceImageTest((MultipleChoiceImageTest) gi);
 		}
-		return null;
+		return downloadArray.toArray(new DownloadItem[]{});
 	}
-
-	private DownloadItem[] getDownloadItemsAudioObject(AudioObject oa) {
-		DownloadItem[] returnObject = new DownloadItem[1];
-		returnObject[0] = getBaseItem(oa);
-		returnObject[0].setLocalId(AUDIO_LOCAL_ID);
-		returnObject[0].setRemoteUrl(oa.getAudioFeed());
+	
+	private DownloadItem getIconDownloadObject(GeneralItem gi) {
+		DownloadItem returnObject = new DownloadItem();
+		returnObject = getBaseItem(gi);
+		returnObject.setLocalId(ICON_LOCAL_ID);
+		returnObject.setRemoteUrl(gi.getIconUrl());
+		return returnObject;
+	}
+	
+	private DownloadItem getDownloadItemsAudioObject(AudioObject oa) {
+		DownloadItem returnObject = new DownloadItem();
+		returnObject = getBaseItem(oa);
+		returnObject.setLocalId(AUDIO_LOCAL_ID);
+		returnObject.setRemoteUrl(oa.getAudioFeed());
 		return returnObject;
 	}
 
-	private DownloadItem[] getDownloadItemsVideoObject(VideoObject gi) {
-		DownloadItem[] returnObject = new DownloadItem[1];
-		returnObject[0] = getBaseItem(gi);
-		returnObject[0].setLocalId(VIDEO_LOCAL_ID);
-		returnObject[0].setRemoteUrl(gi.getVideoFeed());
+	private DownloadItem getDownloadItemsVideoObject(VideoObject gi) {
+		DownloadItem returnObject = new DownloadItem();
+		returnObject = getBaseItem(gi);
+		returnObject.setLocalId(VIDEO_LOCAL_ID);
+		returnObject.setRemoteUrl(gi.getVideoFeed());
 		return returnObject;
 	}
 

@@ -50,7 +50,7 @@ public class SynchronizeGeneralItemVisiblityTask extends GenericTask implements 
 			PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
 			Long lastDate = PropertiesAdapter.getInstance(ctx).getGeneralItemsVisibilityLastSynchronizationDate(runId);
 			try {
-				GeneralItemVisibilityList viList = GeneralItemVisibilityClient.getGeneralItemClient().getGeneralItemVisibilities(pa.getFusionAuthToken(), runId, lastDate);
+				GeneralItemVisibilityList viList = GeneralItemVisibilityClient.getGeneralItemClient().getGeneralItemVisibilities(pa.getAuthToken(), runId, lastDate);
 				final GeneralItemVisibilityList finalViList = viList;
 				if (viList.getErrorCode() != null) {
 					return;

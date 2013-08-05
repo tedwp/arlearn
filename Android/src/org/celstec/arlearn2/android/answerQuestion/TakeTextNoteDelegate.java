@@ -18,12 +18,11 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.answerQuestion;
 
-import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.activities.AnnotateActivity;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.activities.AnnotateActivity;
 
 public class TakeTextNoteDelegate {
 

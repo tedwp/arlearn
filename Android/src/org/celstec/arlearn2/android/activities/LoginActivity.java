@@ -18,34 +18,25 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.activities;
 
-import java.net.ResponseCache;
-
 import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.asynctasks.AuthenticationTask;
-import org.celstec.arlearn2.android.cache.ActionCache;
-import org.celstec.arlearn2.android.cache.GameCache;
-import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.GenericCache;
-import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.beans.notification.Ping;
 import org.celstec.arlearn2.beans.run.User;
-import org.celstec.arlearn2.client.ChannelClient;
-import org.codehaus.jettison.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
-import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+@Deprecated
 public class LoginActivity extends GeneralActivity {
 	ProgressDialog dialog;
 
@@ -89,11 +80,11 @@ public class LoginActivity extends GeneralActivity {
 		PropertiesAdapter.getInstance(this).databaseReset();
 		storeUsername(username);
 		menuHandler.getPropertiesAdapter().setPassword(password);
-		new AuthenticationTask(LoginActivity.this).execute(new Object[] { username, password, Constants.FUSION_SERVICE, sendInstructions });
+		new AuthenticationTask(LoginActivity.this).execute(new Object[] { username, password, Constants.AUTH_TOKEN, sendInstructions });
 	}
 
 	private void storeUsername(String username) {
-		String oldAddress = User.normalizeEmail(menuHandler.getPropertiesAdapter().getUsername());
+		String oldAddress = User.normalizeEmail(menuHandler.getPropertiesAdapter().getFullId());
 		String newAddress = User.normalizeEmail(username);
 		if (oldAddress != null && !oldAddress.equals(newAddress)) {
 			Message m = Message.obtain(DBAdapter.getDatabaseThread(menuHandler.getContext()));
@@ -106,7 +97,7 @@ public class LoginActivity extends GeneralActivity {
 			};
 			m.sendToTarget();
 		}
-		menuHandler.getPropertiesAdapter().setUsername(newAddress);
+		menuHandler.getPropertiesAdapter().setFullId(newAddress);
 	}
 
 	public boolean isGenItemActivity() {

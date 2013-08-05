@@ -26,8 +26,6 @@ public abstract class GenericDataSource extends DataSource implements
 
 
 	protected GenericDataSource() {
-		// initFields();
-		// setFields(fieldList.toArray(new DataSourceField[0]));
 		setClientOnly(true);
 	}
 
@@ -88,6 +86,7 @@ public abstract class GenericDataSource extends DataSource implements
 		addData((MyAbstractRecord) record);
 		Object key = model.getPrimaryKey(record);
 		if (key != null) recordMap.put(key, (MyAbstractRecord) record);
+		
 	}
 
 	public void setServerTime(long serverTime) {
@@ -121,8 +120,11 @@ public abstract class GenericDataSource extends DataSource implements
 		if (toRemove != null) removeData(toRemove);
 	}
 	
-	protected Record getRecord(Object id) {
+	public Record getRecord(Object id) {
 		return (Record) recordMap.get(id);
 	}
 
+	public void removeRecordWithKey(Object id) {
+		removeRecord((AbstractRecord)getRecord(id));
+	}
 }

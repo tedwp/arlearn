@@ -53,7 +53,7 @@ public class PublishActionTask implements NetworkTask {
 			ActionsDelegator.getInstance().replicationFailed(ctx, action);
 		} else {
 			ActionClient ac = ActionClient.getActionClient();
-			Action result = ac.publishAction(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), action);
+			Action result = ac.publishAction(PropertiesAdapter.getInstance(ctx).getAuthToken(), action);
 			result.setTime(action.getTime());
 			if (result.getError() == null) {
 				ActionsDelegator.getInstance().confirmReplicated(ctx, result);

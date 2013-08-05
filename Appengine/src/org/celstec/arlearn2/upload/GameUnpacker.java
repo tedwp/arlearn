@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.celstec.arlearn2.beans.GamePackage;
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.dependencies.BooleanDependency;
 import org.celstec.arlearn2.beans.dependencies.Dependency;
@@ -34,6 +35,7 @@ import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.beans.notification.authoring.GameCreationStatus;
 import org.celstec.arlearn2.delegators.GameDelegator;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
+import org.celstec.arlearn2.delegators.NotificationDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 import org.celstec.arlearn2.delegators.generalitems.CreateGeneralItems;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
@@ -48,6 +50,7 @@ public class GameUnpacker {
 	private List<GeneralItem> generalItems;
 	private HashMap<Long, Long> identifierMapping = new HashMap<Long, Long>();
 	private List<GeneralItem> manualItems; 
+	private Account accountBean;
 
 	public GameUnpacker(GamePackage arlPackage, String auth) {
 		this.gamePackage = arlPackage;
@@ -59,25 +62,33 @@ public class GameUnpacker {
 			GameCreationStatus status = new GameCreationStatus();
 			UsersDelegator qu = new UsersDelegator(auth);
 			String myAccount = qu.getCurrentUserAccount();
-			
+			accountBean = new Account();
+			accountBean.setFullid(myAccount);
 			createGame(true, false);
 			status.setGameId(createdGame.getGameId());
 			status.setStatus(GameCreationStatus.GAME_CREATED);
-			ChannelNotificator.getInstance().notify(myAccount, status);
+			NotificationDelegator not = new NotificationDelegator();
+			
+			not.broadcast(status, myAccount);	
+
+//			ChannelNotificator.getInstance().notify(myAccount, status);
 			if (createdGame == null)
 				return;
 			updateGameId();
 			insertGeneralItems(true);
 			updateIdentifiers();
 			status.setStatus(GameCreationStatus.IDENTIFIERS_UPDATED);
-			ChannelNotificator.getInstance().notify(myAccount, status);
+//			ChannelNotificator.getInstance().notify(myAccount, status);
+			not.broadcast(status, myAccount);	
 			insertGeneralItems(false);
 			updateManualItems();
 			status.setStatus(GameCreationStatus.PROCESSED_MANUAL_ITEMS);
-			ChannelNotificator.getInstance().notify(myAccount, status);
+//			ChannelNotificator.getInstance().notify(myAccount, status);
+			not.broadcast(status, myAccount);	
 			createGame(false, true);
 			status.setStatus(100);
-			ChannelNotificator.getInstance().notify(myAccount, status);
+//			ChannelNotificator.getInstance().notify(myAccount, status);
+			not.broadcast(status, myAccount);	
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
 		}
@@ -96,7 +107,7 @@ public class GameUnpacker {
 	private void createGame(boolean resetId, boolean notify) throws AuthenticationException {
 		Game game = gamePackage.getGame();
 		if (game != null) {
-			GameDelegator gd = new GameDelegator(auth);
+			GameDelegator gd = new GameDelegator(accountBean, auth);
 			if (resetId) {
 				game.setGameId(null);
 				if (game.getConfig() != null && game.getConfig().getManualItems() != null) {
@@ -117,7 +128,7 @@ public class GameUnpacker {
 
 	private void insertGeneralItems(boolean resetId)
 			throws AuthenticationException {
-		GeneralItemDelegator gid = new GeneralItemDelegator(auth);
+		GeneralItemDelegator gid = new GeneralItemDelegator(accountBean, auth);
 
 //		CreateGeneralItems cr = new CreateGeneralItems(auth);
 		for (GeneralItem generalItem : generalItems) {
@@ -135,6 +146,7 @@ public class GameUnpacker {
 	private void updateIdentifiers() {
 		for (GeneralItem generalItem : generalItems) {
 			updateIdentifiers(generalItem.getDependsOn());
+			updateIdentifiers(generalItem.getDisappearOn());
 		}
 	}
 

@@ -23,6 +23,7 @@ public class Constants {
 	public static String SHARED_PREFERENCES = "prefs";
 	public static String AUTHENTICATED = "authenticated";
 	public static String USER_EMAIL = "userEmail";
+	public static String ACCOUNT_Level = "accountLevel";
 	public static final String PASSWORD = "password";
 	public static final String PLAYING = "isPlaying";
 	public static String RECORDING = "isRecording";
@@ -37,8 +38,9 @@ public class Constants {
 	public static final String RUN_LAST_SYNC_DATE = "runLastSyncDate";
 	public static final String GI_LAST_SYNC_DATE = "giLastSyncDate";
 	public static final String GIVIS_LAST_SYNC_DATE = "giVisLastSyncDate";
-	public static String FUSION_SERVICE = "fusiontables";
-	public static String TOKEN = "Token";
+	public static final String GIVEN_NAME = "givenName";
+	public static final String PICTUREL_URL = "pictureUrl";
+	public static String AUTH_TOKEN = "authToken";
 	public static String CURRENT_RUN = "CurrentRun";
 	public static String TOTAL_SCORE = "TotalScore";
 	public static String STATUS = "status";

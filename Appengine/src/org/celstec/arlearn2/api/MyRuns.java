@@ -34,6 +34,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
@@ -43,6 +44,8 @@ import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.RunList;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.cache.GeneralitemsCache;
+import org.celstec.arlearn2.delegators.AccountDelegator;
+import org.celstec.arlearn2.delegators.RunAccessDelegator;
 import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
 import org.celstec.arlearn2.jdo.manager.RunManager;
@@ -59,8 +62,25 @@ public class MyRuns extends Service {
 	public String getRuns(@HeaderParam("Authorization") String token, @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		RunDelegator rd = new RunDelegator(token);
+		RunDelegator rd = new RunDelegator(this);
 		return serialise(rd.getRuns(), accept);
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@CacheControlHeader("no-cache")
+	@Path("/runAccess")
+	public String getGameAccess(@HeaderParam("Authorization") String token, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept,
+			@QueryParam("from") Long from,
+			@QueryParam("until") Long until) throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		if (from == null) {
+			from = 0l;
+		}
+		RunAccessDelegator qg = new RunAccessDelegator(this);
+		return serialise(qg.getRunsAccess(from, until), accept);
 	}
 
 	@GET
@@ -74,7 +94,7 @@ public class MyRuns extends Service {
 			) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		RunDelegator rd = new RunDelegator(token);
+		RunDelegator rd = new RunDelegator(this);
 		if (from == null && until == null) {
 			return serialise(rd.getParticipateRuns(), accept);	
 		}
@@ -91,10 +111,26 @@ public class MyRuns extends Service {
 			) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		RunDelegator rd = new RunDelegator(token);
+		RunDelegator rd = new RunDelegator(this);
 		
 		
 		return serialise(rd.getTaggedRuns(tagId), accept);
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Path("/access/runId/{runIdentifier}/account/{account}/accessRight/{accessRight}")
+	public String access(@HeaderParam("Authorization") String token, 
+			@PathParam("runIdentifier") Long runIdentifier, 
+			@PathParam("account") String account, 
+			@PathParam("accessRight") Integer accessRight, 
+			@DefaultValue("application/json") @HeaderParam("Accept") String accept)
+			throws AuthenticationException {
+		if (!validCredentials(token))
+			return serialise(getInvalidCredentialsBean(), accept);
+		RunAccessDelegator rd = new RunAccessDelegator(this);
+		rd.provideAccessWithCheck(runIdentifier, account, accessRight);
+		return "{}";
 	}
 	
 	@GET
@@ -105,9 +141,11 @@ public class MyRuns extends Service {
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		RunDelegator rd = new RunDelegator(token);
+		RunDelegator rd = new RunDelegator(this);
 		return serialise(rd.getRun(runIdentifier), accept);
 	}
+	
+	
 	
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -116,7 +154,7 @@ public class MyRuns extends Service {
 
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		RunDelegator rd = new RunDelegator(token);
+		RunDelegator rd = new RunDelegator(this);
 		Config c = rd.getConfig(runIdentifier);
 		return serialise(c, accept);
 	}
@@ -130,7 +168,7 @@ public class MyRuns extends Service {
 
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		RunDelegator rd = new RunDelegator(token);
+		RunDelegator rd = new RunDelegator(this);
 		return serialise(rd.selfRegister(tagId), accept);
 	}
 	
@@ -143,7 +181,7 @@ public class MyRuns extends Service {
 
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		RunDelegator rd = new RunDelegator(token);
+		RunDelegator rd = new RunDelegator(this);
 		return serialise(rd.selfRegister(runId), accept);
 	}
 
@@ -168,7 +206,7 @@ public class MyRuns extends Service {
 			return serialise(getBeanDoesNotParseException((String) inRun), accept);
 		Run run = (Run) inRun;
 		run.setDeleted(false);
-		RunDelegator rd = new RunDelegator(token);
+		RunDelegator rd = new RunDelegator(this);
 		return serialise(rd.createRun(run), accept);
 	}
 	
@@ -186,7 +224,7 @@ public class MyRuns extends Service {
 			return serialise(getBeanDoesNotParseException((String) inRun), accept);
 		Run run = (Run) inRun;
 		run.setDeleted(false);
-		RunDelegator rd = new RunDelegator(token);
+		RunDelegator rd = new RunDelegator(this);
 		return serialise(rd.updateRun(run, runIdentifier), accept);
 	}
 
@@ -196,7 +234,7 @@ public class MyRuns extends Service {
 			@HeaderParam("Accept") String accept) throws AuthenticationException {
 		if (!validCredentials(token))
 			return serialise(getInvalidCredentialsBean(), accept);
-		RunDelegator rd = new RunDelegator(token);
+		RunDelegator rd = new RunDelegator(this);
 		return serialise(rd.deleteRun(runIdentifier), accept);
 	}
 	
@@ -208,9 +246,11 @@ public class MyRuns extends Service {
 		if (runList.isEmpty())
 			return null;
 		Run r = runList.get(0);
-		List<User> users = UserManager.getUserList(null, email, null, runId);
-		if (users.isEmpty())
-			return null;
+		AccountDelegator ad = new AccountDelegator(this);
+		Account account = ad.getContactDetails(email);
+//		List<User> users = UserManager.getUserList(null, email, null, runId);
+//		if (users.isEmpty())
+//			return null;
 		GeneralItemList gil = new GeneralItemList();
 			gil.setGeneralItems(GeneralItemManager.getGeneralitems(r.getGameId(), itemId, null));
 			GeneralitemsCache.getInstance().putGeneralItemList(gil, r.getGameId(), itemId, null);
@@ -220,7 +260,7 @@ public class MyRuns extends Service {
 		GeneralItem gi = gil.getGeneralItems().get(0);
 		OpenBadge ob = (OpenBadge) gi;
 		OpenBadgeAssertion ou = new OpenBadgeAssertion();
-		ou.setRecipient(users.get(0).getFullEmail());
+		ou.setRecipient(account.getEmail());
 		ou.setEvidence(ob.getEvidence());
 //		ou.setExpires("2013-06-01");
 //		ou.setIssued_on("2012-10-11");

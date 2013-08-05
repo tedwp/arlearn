@@ -40,6 +40,7 @@ import android.content.Intent;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -70,7 +71,6 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO read recordingMedia + save this in onStop
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
 			recordingMedia = savedInstanceState.getBoolean(RECORDING, false);
@@ -107,7 +107,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		super.onResume();
 		if (!recordingMedia) {
 			// todo reset...
-
+			rad.setStatus(RecordAudioDelegate.STOPPED_NO_AUDIO);
 			displayPublishButton();
 		}
 	}
@@ -149,7 +149,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		// startService(intent);
 
 		if (rad != null && (rad.getRecordingPath() != null)) {
-			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, "audio:" + currentTime, pa.getUsername(), rad.getUri(), "audio/AMR");
+			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, "audio:" + currentTime, pa.getFullId(), rad.getUri(), "audio/AMR");
 			task.taskToRunAfterExecute(new UploadFileSyncTask());
 			task.run(this);
 
@@ -158,7 +158,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		if (tpd != null && tpd.getUri() != null) {
 
 			System.out.println("ok " + this.getContentResolver().getType(tpd.getUri()));
-			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, "picture:" + currentTime, pa.getUsername(), tpd.getUri(), "application/jpg");
+			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, "picture:" + currentTime, pa.getFullId(), tpd.getUri(), "application/jpg");
 			task.taskToRunAfterExecute(new UploadFileSyncTask());
 			task.run(this);
 			r = createResponse(currentTime, rad.getUri(), tpd.getUri(), tvd.getUri(), tntd.getText(), tpd.getWidth(), tpd.getHeight());
@@ -168,7 +168,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		if (tvd != null && tvd.getUri() != null) {
 
 			System.out.println("ok " + this.getContentResolver().getType(tvd.getUri()));
-			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, "video:" + currentTime, pa.getUsername(), tvd.getUri(), "video/mp4");
+			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, "video:" + currentTime, pa.getFullId(), tvd.getUri(), "video/mp4");
 			task.taskToRunAfterExecute(new UploadFileSyncTask());
 			task.run(this);
 			r = createResponse(currentTime, rad.getUri(), tpd.getUri(), tvd.getUri(), tntd.getText(), tvd.getWidth(), tvd.getHeight());
@@ -211,13 +211,13 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		JSONObject jsonResponse = new JSONObject();
 		try {
 			if (recordingUri != null) {
-				jsonResponse.put("audioUrl", buildRemotePath(recordingUri, runId, pa.getUsername()));
+				jsonResponse.put("audioUrl", buildRemotePath(recordingUri, runId, pa.getFullId()));
 			}
 			if (imageUri != null) {
-				jsonResponse.put("imageUrl", buildRemotePath(imageUri, runId, pa.getUsername()));
+				jsonResponse.put("imageUrl", buildRemotePath(imageUri, runId, pa.getFullId()));
 			}
 			if (videoUri != null) {
-				jsonResponse.put("videoUrl", buildRemotePath(videoUri, runId, pa.getUsername()));
+				jsonResponse.put("videoUrl", buildRemotePath(videoUri, runId, pa.getFullId()));
 			}
 			if (text != null) {
 				jsonResponse.put("text", text);
@@ -251,13 +251,13 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 		JSONObject jsonResponse = new JSONObject();
 
 		if (recordingUri != null) {
-			jsonResponse.put("audioUrl", buildRemotePath(recordingUri, runId, pa.getUsername()));
+			jsonResponse.put("audioUrl", buildRemotePath(recordingUri, runId, pa.getFullId()));
 		}
 		if (imageUri != null) {
-			jsonResponse.put("imageUrl", buildRemotePath(imageUri, runId, pa.getUsername()));
+			jsonResponse.put("imageUrl", buildRemotePath(imageUri, runId, pa.getFullId()));
 		}
 		if (videoUri != null) {
-			jsonResponse.put("videoUrl", buildRemotePath(videoUri, runId, pa.getUsername()));
+			jsonResponse.put("videoUrl", buildRemotePath(videoUri, runId, pa.getFullId()));
 		}
 		if (text != null) {
 			jsonResponse.put("text", text);
@@ -272,7 +272,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 
 	public Response createResponse(long currentTime) {
 		Response r = new Response();
-		r.setUserEmail(pa.getUsername());
+		r.setUserEmail(pa.getFullId());
 		r.setRunId(pa.getCurrentRunId());
 		r.setTimestamp(currentTime);
 		return r;
@@ -282,6 +282,7 @@ public class AnnotateActivity extends Activity implements IGeneralActivity {
 	public void onPause() {
 		super.onPause();
 		if (!recordingMedia) {
+			Log.e("RECORDING", "in onPause");
 			tpd.reset();
 			rad.stop();
 			tvd.reset();

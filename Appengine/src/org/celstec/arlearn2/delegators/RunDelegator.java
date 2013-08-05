@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.logging.Log;
-import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
+import org.celstec.arlearn2.api.Service;
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.run.Run;
@@ -32,20 +32,14 @@ import org.celstec.arlearn2.beans.run.RunList;
 import org.celstec.arlearn2.beans.run.Team;
 import org.celstec.arlearn2.beans.run.TeamList;
 import org.celstec.arlearn2.beans.run.User;
-import org.celstec.arlearn2.beans.serializer.json.JsonBeanSerialiser;
+import org.celstec.arlearn2.jdo.classes.RunAccessJDO;
+import org.celstec.arlearn2.jdo.manager.RunAccessManager;
 import org.celstec.arlearn2.jdo.manager.RunManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
-import org.celstec.arlearn2.tasks.beans.DeleteActions;
+import org.celstec.arlearn2.tasks.beans.*;
+import org.celstec.arlearn2.util.RunsCache;
 //import org.celstec.arlearn2.tasks.beans.DeleteInventoryRecords;
 //import org.celstec.arlearn2.tasks.beans.DeleteProgressRecord;
-import org.celstec.arlearn2.tasks.beans.DeleteBlobs;
-import org.celstec.arlearn2.tasks.beans.DeleteResponses;
-import org.celstec.arlearn2.tasks.beans.DeleteScoreRecords;
-import org.celstec.arlearn2.tasks.beans.DeleteTeams;
-import org.celstec.arlearn2.tasks.beans.DeleteUsers;
-import org.celstec.arlearn2.tasks.beans.UpdateGeneralItemsVisibility;
-import org.celstec.arlearn2.util.RunsCache;
-
 import com.google.gdata.util.AuthenticationException;
 
 //TODO migrate and adapt cache
@@ -56,8 +50,20 @@ public class RunDelegator extends GoogleDelegator {
 		super(authtoken);
 	}
 
+    public RunDelegator(GenericBean bean) {
+        super(bean);
+    }
+
+	public RunDelegator(Service service) {
+		super(service);
+	}
+	
 	public RunDelegator(GoogleDelegator gd) {
 		super(gd);
+	}
+	
+	public RunDelegator(Account account, String authToken) {
+		super(account, authToken);
 	}
 
 	public Run getRun(Long runId) {
@@ -111,7 +117,7 @@ public class RunDelegator extends GoogleDelegator {
 			User user = (User) it.next();
 			Run r = getRun(user.getRunId());
 			if (r != null) {
-			r.setDeleted(user.getDeleted());
+			if (r.getDeleted() == null || r.getDeleted() == false)r.setDeleted(user.getDeleted());
 			rl.addRun(r);
 			} else {
 				logger.severe("following run does not exist"+user.getRunId());
@@ -135,7 +141,7 @@ public class RunDelegator extends GoogleDelegator {
 			User user = (User) it.next();
 			Run r = getRun(user.getRunId());
 			if (r != null) {
-			r.setDeleted(user.getDeleted());
+			if (user.getDeleted() != null && user.getDeleted()) r.setDeleted(user.getDeleted());
 			rl.addRun(r);
 			} else {
 				logger.severe("following run does not exist"+user.getRunId());
@@ -147,16 +153,20 @@ public class RunDelegator extends GoogleDelegator {
 	}
 
 	public Run createRun(Run run) {
+		if (run.getRunId() != null) RunsCache.getInstance().removeRun(run.getRunId());
 		if (run.getStartTime() == null) {
 			run.setStartTime(System.currentTimeMillis());
 			run.setServerCreationTime(run.getStartTime());
 		}
-		UsersDelegator qu = new UsersDelegator(this);
-		String myAccount = qu.getCurrentUserAccount();
-
-		if (myAccount == null) {
-			run.setError("login to create a game");
-			return run;
+		String myAccount = "";
+		if (account != null) {
+			UsersDelegator qu = new UsersDelegator(this);
+			myAccount = qu.getCurrentUserAccount();
+	
+			if (myAccount == null) {
+				run.setError("login to create a game");
+				return run;
+			}
 		}
 		GameDelegator cg = new GameDelegator(this);
 		Game game = cg.getGame(run.getGameId());
@@ -164,12 +174,30 @@ public class RunDelegator extends GoogleDelegator {
 			run.setError("Game with id '" + run.getGameId() + "' does not exist");
 			return run;
 		}
-//		JsonBeanSerialiser jbs = new JsonBeanSerialiser(run.getGameOverDependsOn());
-//		run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), jbs.serialiseToJson().toString()));
-		run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), run));
-		return run;
+
+//		if (account != null) {
+			return createRunWithAccount(run);
+//		} else {
+//			run.setRunId(RunManager.addRun(run.getTitle(), myAccount, game.getGameId(), run.getRunId(), run.getStartTime(), run.getServerCreationTime(), run));
+//			return run;
+//		}
 	}
 	
+	private Run createRunWithAccount(Run run) {
+		run.setRunId(RunManager.addRun(run));
+		
+		RunAccessDelegator rd = new RunAccessDelegator(this);
+		rd.provideAccess(run.getRunId(), account, RunAccessJDO.OWNER);
+		if (this.account != null) {
+			new NotificationDelegator().broadcast(run, account.getFullId());
+		}
+
+        (new UpdateVariableInstancesForAll(authToken, this.account, run.getRunId(), run.getGameId(), 1)).scheduleTask();
+        (new UpdateVariableEffectInstancesForAll(authToken, this.account, run.getRunId(), run.getGameId(), 1)).scheduleTask();
+
+        return run;
+	}
+
 	public Run updateRun(Run run, long runId) {
 		UsersDelegator qu = new UsersDelegator(this);
 		String myAccount = qu.getCurrentUserAccount();
@@ -201,31 +229,44 @@ public class RunDelegator extends GoogleDelegator {
 	}
 
 	private Run deleteRun(Run r, String myAccount) {
-		if (!r.getOwner().equals(myAccount)) {
+		RunAccessDelegator gad =  null;
+		if (account != null) {
+			gad = new RunAccessDelegator(this);
+			if (!gad.isOwner(r.getRunId())) {
+				Run run = new Run();
+				run.setError("You are not the owner of this run");
+				return run;
+			}
+		} else if (!r.getOwner().equals(myAccount)) {
 			Run run = new Run();
 			run.setError("You are not the owner of this run");
 			return run;
 		}
 //		RunManager.deleteRun(r.getRunId());
 		RunManager.setStatusDeleted(r.getRunId());
+		RunAccessManager.resetGameAccessLastModificationDate(r.getRunId());
 		RunsCache.getInstance().removeRun(r.getRunId());
-		(new UpdateGeneralItemsVisibility(authToken, r.getRunId(), null, 2)).scheduleTask();
+		(new UpdateGeneralItemsVisibility(authToken, this.account, r.getRunId(), null, 2)).scheduleTask();
+
+        (new UpdateVariableInstancesForAll(authToken, this.account, r.getRunId(), r.getGameId(), 2)).scheduleTask();
+        (new UpdateVariableEffectInstancesForAll(authToken, this.account, r.getRunId(), r.getGameId(), 2)).scheduleTask();
+
 
 //		(new DeleteVisibleItems(authToken, r.getRunId())).scheduleTask();
-		(new DeleteActions(authToken, r.getRunId())).scheduleTask();
-		(new DeleteTeams(authToken, r.getRunId(), null)).scheduleTask();
-		(new DeleteBlobs(authToken, r.getRunId())).scheduleTask();
-		(new DeleteResponses(authToken, r.getRunId())).scheduleTask();
-		(new DeleteScoreRecords(authToken, r.getRunId())).scheduleTask();
-		//TODO  switch on DeleteInventoryRecords
-//		(new DeleteInventoryRecords(authToken, r.getRunId())).scheduleTask();
-//		(new DeleteProgressRecord(authToken, r.getRunId())).scheduleTask();
-//		(new DeleteUsers(authToken, r.getRunId(), null,null)).scheduleTask(); // happens from within delete team
+		(new DeleteActions(authToken, this.account, r.getRunId())).scheduleTask();
+		(new DeleteTeams(authToken, this.account,r.getRunId(), null)).scheduleTask();
+		(new DeleteBlobs(authToken, this.account,r.getRunId())).scheduleTask();
+		(new DeleteResponses(authToken, this.account,r.getRunId())).scheduleTask();
+
+		if (this.account != null) {
+			gad.broadcastRunUpdate(r);
+			
+		}
 		return r;
 	}
 
 	public void deleteRuns(long gameId, String email) {
-		List<Run> runList = RunManager.getRuns(null, gameId, email, null, null);
+		List<Run> runList = RunManager.getRuns(null, gameId, null, null, null);
 		for (Run r : runList) {
 			deleteRun(r, email);
 		}
@@ -304,4 +345,6 @@ public class RunDelegator extends GoogleDelegator {
 			return run;
 		}
 	}
+
+	
 }

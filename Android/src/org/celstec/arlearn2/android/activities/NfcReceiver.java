@@ -80,7 +80,7 @@ public class NfcReceiver {
 				String ttagUrl = new String(msgs[i].getRecords()[0].getPayload());
 				if (ttagUrl.contains("ttag.be")) {
 					ttagUrl = ttagUrl.substring(ttagUrl.indexOf("tag.be") + 9);
-					if (pa.getCurrentRunId() != -1 && pa.getUsername() != null)
+					if (pa.getCurrentRunId() != -1 && pa.getFullId() != null)
 						activity.newNfcAction(ttagUrl);
 				}
 			}

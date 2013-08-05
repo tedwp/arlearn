@@ -18,9 +18,9 @@
  ******************************************************************************/
 package org.celstec.arlearn2.delegators;
 
-import java.util.List;
-import java.util.logging.Logger;
-
+import com.google.gdata.util.AuthenticationException;
+import org.celstec.arlearn2.api.Service;
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.run.Action;
 import org.celstec.arlearn2.beans.run.ActionList;
@@ -28,16 +28,21 @@ import org.celstec.arlearn2.beans.run.Run;
 import org.celstec.arlearn2.beans.run.User;
 import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.delegators.progressRecord.CreateProgressRecord;
-import org.celstec.arlearn2.delegators.scoreRecord.CreateScoreRecord;
 import org.celstec.arlearn2.jdo.manager.ActionManager;
 import org.celstec.arlearn2.tasks.beans.UpdateGeneralItems;
+import org.celstec.arlearn2.tasks.beans.UpdateVariables;
 import org.celstec.arlearn2.util.ActionCache;
 
-import com.google.gdata.util.AuthenticationException;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class ActionDelegator extends GoogleDelegator{
 	
 	private static final Logger logger = Logger.getLogger(ActionDelegator.class.getName());
+
+    public ActionDelegator(Service service) {
+        super(service);
+    }
 
 	public ActionDelegator(String authtoken) throws AuthenticationException {
 		super(authtoken);
@@ -46,6 +51,10 @@ public class ActionDelegator extends GoogleDelegator{
 	public ActionDelegator(GoogleDelegator gd) {
 		super(gd);
 	}
+
+    public ActionDelegator(Account account, String authToken) {
+        super(account, authToken);
+    }
 	
 	
 	public ActionList getActionList(Long runId) {
@@ -82,9 +91,6 @@ public class ActionDelegator extends GoogleDelegator{
 		cpr.updateProgress(action, u.getTeamId());
 		
 		// check if this action needs to be recorded as score
-		CreateScoreRecord csr = new CreateScoreRecord(this);
-//		csr.updateScore(action.getRunId(), action.getAction(), action.getUserEmail(), u.getTeamId());
-		csr.updateScore(action, u.getTeamId());
 		RunDelegator qr = new RunDelegator(this);
 		Run run = qr.getRun(action.getRunId());
 		ActionRelevancyPredictor arp = ActionRelevancyPredictor.getActionRelevancyPredicator(run.getGameId(), this);
@@ -97,6 +103,8 @@ public class ActionDelegator extends GoogleDelegator{
 		if (relevancy) {
 			(new UpdateGeneralItems(authToken, action.getRunId(), action.getAction(), action.getUserEmail(), action.getGeneralItemId(), action.getGeneralItemType())).scheduleTask();
 		}
+        System.out.println("Now also schedule the variable update!");
+        (new UpdateVariables(authToken, action.getRunId(), action.getAction(), action.getUserEmail(), action.getGeneralItemId(), action.getGeneralItemType())).scheduleTask();
 		return action;
 	}
 	
@@ -135,6 +143,9 @@ public class ActionDelegator extends GoogleDelegator{
 		ActionManager.deleteActions(runId, email);
 		ActionCache.getInstance().removeRunAction(runId);
 	}
-	
-	
+
+
+    public Object getActionsFromUntil(Long runIdentifier, Long from, Long until, String cursor) {
+        return ActionManager.getActions(runIdentifier, from, until, cursor);
+    }
 }

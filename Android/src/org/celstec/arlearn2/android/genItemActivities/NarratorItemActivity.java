@@ -18,32 +18,51 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.genItemActivities;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+import android.webkit.WebSettings;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
+import org.celstec.arlearn2.android.answerQuestion.DataCollectorDelegate;
+import org.celstec.arlearn2.android.answerQuestion.DataCollectorDelegateManager;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
+import org.celstec.arlearn2.android.asynctasks.db.RegisterUploadInDbTask;
+import org.celstec.arlearn2.android.asynctasks.network.UploadFileSyncTask;
 import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.ActionsDelegator;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
+import org.celstec.arlearn2.android.delegators.ResponseDelegator;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ItemResponseListRecord;
 import org.celstec.arlearn2.android.menu.MenuHandler;
+import org.celstec.arlearn2.android.util.MediaFolders;
+import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.NarratorItem;
+import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.celstec.arlearn2.beans.run.Response;
+import org.celstec.arlearn2.client.GenericClient;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 public class NarratorItemActivity extends GeneralItemActivity {
@@ -51,7 +70,7 @@ public class NarratorItemActivity extends GeneralItemActivity {
 	protected WebView webview;
 	protected NarratorItem narratorBean;
 	protected String richText;
-	protected Button provideAnswerButton;
+//	protected Button provideAnswerButton;
 
 	protected GenericMessageListAdapter adapter;
 
@@ -85,8 +104,6 @@ public class NarratorItemActivity extends GeneralItemActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(getContentView());
-
-//		checkIfNotification();
 		getGuiComponents();
 		loadDataToGui();
 		fireAction();
@@ -112,15 +129,9 @@ public class NarratorItemActivity extends GeneralItemActivity {
 			generalItemId = narratorBean.getId();
 			generalItemType = narratorBean.getClass().getName();
 		}
-		ActionsDelegator.getInstance().publishAction(this, "read", pa.getCurrentRunId(), pa.getUsername(), generalItemId, generalItemType);
+		ActionsDelegator.getInstance().publishAction(this, "read", pa.getCurrentRunId(), pa.getFullId(), generalItemId, generalItemType);
 
 	}
-
-//	protected void checkIfNotification() {
-//		String ns = Context.NOTIFICATION_SERVICE;
-//		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-//		mNotificationManager.cancel((int) narratorBean.getId().longValue());
-//	}
 
 	protected int getContentView() {
 		return R.layout.gi_detail_narratoritem;
@@ -128,29 +139,32 @@ public class NarratorItemActivity extends GeneralItemActivity {
 
 	protected void getGuiComponents() {
 		super.getGuiComponents();
+		final long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
+		final String account = menuHandler.getPropertiesAdapter().getFullId();
 		webview = (WebView) findViewById(R.id.giNarratorWebView);
-		provideAnswerButton = (Button) findViewById(R.id.provideAnswerButton);
-		provideAnswerButton.setText(getString(R.string.ao_answer_menu));
-		if (narratorBean.getOpenQuestion() != null) {
-			provideAnswerButton.setVisibility(View.VISIBLE);
-
-			provideAnswerButton.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(NarratorItemActivity.this, AnswerQuestionActivity.class);
-					intent.putExtra("runId", menuHandler.getPropertiesAdapter().getCurrentRunId());
-					intent.putExtra("bean", ((NarratorItemActivity) NarratorItemActivity.this).getNarratorBean());
-					intent.putExtra("generalItemId", ((NarratorItemActivity) NarratorItemActivity.this).getItemId());
-					NarratorItemActivity.this.startActivity(intent);
-
+		LinearLayout dcLayout = (LinearLayout) findViewById(R.id.datacollectionbar);
+		ImageView audioView = (ImageView) findViewById(R.id.speech_button);
+		OpenQuestion oq = narratorBean.getOpenQuestion();
+		if (oq != null) {
+				dcLayout.setVisibility(View.VISIBLE);
+				dataCollectorManager = new DataCollectorDelegateManager(oq, this, runId, account);
+				if (oq.isWithAudio()) {
+					(audioView).setImageDrawable(getResources().getDrawable(R.drawable.dc_voice_search_128));
 				}
-			});
-
 		} else {
-			provideAnswerButton.setVisibility(View.GONE);
+			dcLayout.setVisibility(View.GONE);
 		}
 	}
+	
+	
+	private DataCollectorDelegateManager dataCollectorManager;
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != 0) dataCollectorManager.processResult(requestCode, data);
+	}
+
+	
+	
 
 	private void reloadBeanFromDb() {
 		NarratorItem ni = (NarratorItem) GeneralItemsCache.getInstance().getGeneralItems(narratorBean.getId());
@@ -163,7 +177,29 @@ public class NarratorItemActivity extends GeneralItemActivity {
 		if (narratorBean.getRichText() != null) {
 			String html = narratorBean.getRichText();
 			if (!html.equals(richText)) {
+                WebSettings ws = webview.getSettings();
+                ws.setJavaScriptEnabled(true);
+                webview.addJavascriptInterface(new Object(){
+                    public void submitAction(String action){
+                        PropertiesAdapter pa = PropertiesAdapter.getInstance(NarratorItemActivity.this);
+                        if (narratorBean != null) {
+
+
+                        ActionsDelegator.getInstance().publishAction(NarratorItemActivity.this, action,
+                                pa.getCurrentRunId(), pa.getFullId(), narratorBean.getId(), narratorBean.getClass().getName());
+                        }
+                    }
+
+//                        public void arlearnInput(String input) {
+//                            if (input.equals("action")) {
+//                                webview.loadUrl("javascript:action('read', '123')");
+//                            }
+//                        }
+
+
+                }, "arlearn");
 				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+//                webview.loadUrl("javascript:reportArlearnInput()");
 				richText = html;
 			}
 		} else {
@@ -211,15 +247,15 @@ public class NarratorItemActivity extends GeneralItemActivity {
 		if (resp == null) {
 			return;
 		}
-		ArrayList<GenericListRecord> users = new ArrayList<GenericListRecord>();
+		ArrayList<GenericListRecord> recordArrayList = new ArrayList<GenericListRecord>();
 
 		for (Response response : resp) {
 			GenericListRecord r = new ItemResponseListRecord(getMenuHandler().getPropertiesAdapter().getCurrentRunId(), response);
-			users.add(r);
+			recordArrayList.add(r);
 		}
 
 		LinearLayout listView = (LinearLayout) findViewById(R.id.narratoranswerlist);
-		adapter = new GenericMessageListAdapter(this, getContentView(), users);
+		adapter = new GenericMessageListAdapter(this, getContentView(), recordArrayList);
 		listView.removeAllViews();
 		for (int i = 0; i < adapter.getCount(); i++) {
 			View v = adapter.getView(i, null, listView);
@@ -230,7 +266,7 @@ public class NarratorItemActivity extends GeneralItemActivity {
 				@Override
 				public void onClick(View v) {
 					Intent i = new Intent(NarratorItemActivity.this, ViewAnswerActivity.class);
-					i.putExtra("response", resp.toArray(new Response[] {})[(int) id]);
+					i.putExtra("response", resp.toArray(new Response[] {})[id]);
 					startActivity(i);
 
 				}
@@ -250,9 +286,7 @@ public class NarratorItemActivity extends GeneralItemActivity {
 	}
 
 	public boolean isMessage() {
-		if (narratorBean == null)
-			return false;
-		return narratorBean.isMessage();
+		return (narratorBean != null) && narratorBean.isMessage();
 	}
 
 	public boolean showStatusLed() {

@@ -18,27 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.gwt.client.control;
 
-import org.celstec.arlearn2.gwt.client.network.ActionClient;
-import org.celstec.arlearn2.gwt.client.network.ActionsCallback;
-import org.celstec.arlearn2.gwt.client.network.GeneralItemsCallback;
-import org.celstec.arlearn2.gwt.client.network.GeneralItemsClient;
-import org.celstec.arlearn2.gwt.client.network.ResponseCallback;
-import org.celstec.arlearn2.gwt.client.network.ResponseClient;
-
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
-import com.smartgwt.client.data.Criteria;
-import com.smartgwt.client.data.DSCallback;
-import com.smartgwt.client.data.DSRequest;
-import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
-import com.smartgwt.client.data.DataSourceField;
-import com.smartgwt.client.data.Record;
-import com.smartgwt.client.data.fields.DataSourceBooleanField;
-import com.smartgwt.client.data.fields.DataSourceIntegerField;
-import com.smartgwt.client.data.fields.DataSourceTextField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class GeneralItemsDataSource_Old extends DataSource {
 //

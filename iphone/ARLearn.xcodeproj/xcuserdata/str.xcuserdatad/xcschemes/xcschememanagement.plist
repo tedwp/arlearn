@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>ARLearn.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>ARLearnBeans.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
+		<key>ARLearnTestingApp.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>ArlearnNetworkApi.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>NetworkUnitTesting.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>344A0B0F16B2FF9A0015FD85</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>344A0B3116B309550015FD85</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>344A0B4916B3FE4C0015FD85</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>344A0B7816B41AC20015FD85</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>344AFE4B16A01EFC00089752</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>

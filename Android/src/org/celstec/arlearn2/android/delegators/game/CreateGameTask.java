@@ -33,7 +33,12 @@ public class CreateGameTask implements NetworkTask {
 	
 	@Override
 	public void execute() {
+<<<<<<< HEAD
 		Game g = GameClient.getGameClient().createGame(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), game);
+=======
+
+		Game g = GameClient.getGameClient().createGame(PropertiesAdapter.getInstance(ctx).getAuthToken(), game);
+>>>>>>> refs/remotes/origin/master
 		if (g.getErrorCode() != null) {
 				Toast.makeText(ctx, "update/creation of this game failed", Toast.LENGTH_LONG).show(); //TODO i18n
 		} 

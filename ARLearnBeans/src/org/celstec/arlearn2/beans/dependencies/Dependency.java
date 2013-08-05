@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.beans.dependencies;
 
+import java.util.Map;
 import java.util.List;
 
 import org.celstec.arlearn2.beans.Bean;
@@ -31,7 +32,7 @@ public abstract class Dependency extends Bean{
 	
 	private String type;
 	
-	public abstract long satisfiedAt(List<Action> actionList);
+	public abstract long satisfiedAt(List<Action> actionList, Map<String, String[]> accountRoleMap);
 
 	public String getType() {
 		return type;

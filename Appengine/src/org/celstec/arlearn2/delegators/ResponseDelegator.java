@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.delegators;
 
+import org.celstec.arlearn2.api.Service;
 import org.celstec.arlearn2.beans.run.Response;
 import org.celstec.arlearn2.beans.run.ResponseList;
 import org.celstec.arlearn2.beans.run.Run;
@@ -28,6 +29,10 @@ import com.google.gdata.util.AuthenticationException;
 
 public class ResponseDelegator extends GoogleDelegator {
 
+	public ResponseDelegator(Service service) {
+		super(service);
+	}
+	
 	public ResponseDelegator(String authtoken) throws AuthenticationException {
 		super(authtoken);
 	}
@@ -57,7 +62,15 @@ public class ResponseDelegator extends GoogleDelegator {
 		rl.setResponses(ResponseManager.getResponse(runId, itemId, account, null, false));
 		return rl;
 	}
-	
+
+    public ResponseList getResponsesFromUntil(Long runId, Long itemId, String fullId, Long from, Long until, String cursor) {
+        return ResponseManager.getResponse(runId, itemId, fullId, from, until, cursor);
+    }
+
+    public ResponseList getResponsesFromUntil(Long runId, Long itemId, Long from, Long until, String cursor) {
+        return ResponseManager.getResponse(runId, itemId, from, until, cursor);
+    }
+
 	public ResponseList getResponsesFromUntil(Long runId, Long from, Long until, String cursor) {
 		return ResponseManager.getResponse(runId, from, until, cursor);
 	}

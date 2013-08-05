@@ -74,4 +74,8 @@
      
         <string name="downloadBusy">Paciencia. El archivo aun no se ha descargado</string>
     
+<<<<<<< HEAD
 </resources>
+=======
+</resources>
+>>>>>>> refs/remotes/origin/master

@@ -56,8 +56,5 @@ public class VersionJDO {
 	public void setPayLoad(String payLoad) {
 		this.payLoad = new Text(payLoad);
 	}
-
-	
-	
 	
 }
