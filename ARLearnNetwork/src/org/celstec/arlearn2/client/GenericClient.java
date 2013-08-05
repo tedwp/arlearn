@@ -31,7 +31,7 @@ import org.codehaus.jettison.json.JSONException;
 public class GenericClient {
 //		public static String urlPrefix = "http://localhost:9999";
 //		public static String urlPrefix = "http://192.168.1.83:9999";
-		public static String urlPrefix = "http://192.168.1.108:9999";
+		public static String urlPrefix = "http://145.20.82.43:9999";
 //		public static String urlPrefix = "http://145.20.132.154:9999";
 //		public static String urlPrefix = "http://10.0.2.2:9999";
 //		public static String urlPrefix = "http://10.0.1.2:9999";
