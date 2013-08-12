@@ -41,6 +41,7 @@ public class UpdateVariables extends GenericBean {
     private String userEmail;
     private Long generalItemId;
     private String generalItemType;
+    private Long timestamp;
 
     private static final Logger log = Logger.getLogger(UpdateGeneralItems.class.getName());
 
@@ -48,13 +49,15 @@ public class UpdateVariables extends GenericBean {
 
     }
 
-    public UpdateVariables(String token, Long runId, String action, String userEmail, Long generalItemId, String generalItemType) {
+    public UpdateVariables(String token, Long runId, String action, String userEmail, Long generalItemId, String generalItemType, Long timestamp) {
         super(token);
         this.runId = runId;
         this.action = action;
         this.userEmail = userEmail;
         this.generalItemId = generalItemId;
         this.generalItemType = generalItemType;
+        this.timestamp = timestamp;
+
     }
 
     public Long getRunId() {
@@ -97,6 +100,15 @@ public class UpdateVariables extends GenericBean {
         this.userEmail = userEmail;
     }
 
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+
 
 
     @Override
@@ -112,11 +124,15 @@ public class UpdateVariables extends GenericBean {
             e.printStackTrace();
             log.severe("exception "+e.getMessage());
         }
+
         Action a = new Action();
         a.setRunId(runId);
         a.setAction(getAction());
         a.setGeneralItemId(getGeneralItemId());
         a.setGeneralItemType(getGeneralItemType());
+        a.setUserEmail(getUserEmail());
+        a.setTimestamp(getTimestamp());
+        a.setTime(getTimestamp());
         RunDelegator qr = new RunDelegator(qu);
         Run run = qr.getRun(a.getRunId());
 
