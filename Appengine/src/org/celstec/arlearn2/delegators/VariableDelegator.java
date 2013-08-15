@@ -204,12 +204,15 @@ public class VariableDelegator extends DependencyDelegator {
         HashMap<String, User> uMap = ud.getUserMap(u.getRunId());
 
         ActionDelegator qa = new ActionDelegator(this);
-        ActionList al = qa.getActionList(runId);
+        ActionList al1 = qa.getActionList(runId);
+        ActionList al = new ActionList();
+        al.setRunId(runId);
 
         ActionRelevancyPredictorForVariables arp = ActionRelevancyPredictorForVariables.getActionRelevancyPredictorForVariables(run.getGameId(), this);
-        System.out.println(arp);
 
         List<VariableEffectDefinition> vedList = arp.getRelevantVariableEffectDefinitions(action);
+        System.out.println("relevant: "+vedList);
+
         VariableDefinition vd = null;
         //VariableInstance vi = null;
         //VariableEffectInstanceJDO vei = null;
@@ -218,20 +221,44 @@ public class VariableDelegator extends DependencyDelegator {
 
         User user = null;
 
+        Iterator<Action> iterator = al1.getActions().iterator();
+        if (iterator != null) {
+            //System.out.println("AC:  "+action);
+            while (iterator.hasNext()) {
+                Action ac = iterator.next();
+                if (ac.getAction().equals(action.getAction()) && ac.getGeneralItemId().equals(action.getGeneralItemId())) {
+                    if (ac.getUserEmail().equals(action.getUserEmail()) && ac.getTime().equals(action.getTime())) {
+                        al.addAction(ac);
+                        //System.out.println("IN1: "+ac);
+                    } else {
+                        //System.out.println("OUT: "+ac);
+                    }
+                } else {
+                    al.addAction(ac);
+                    //System.out.println("IN2: "+ac);
+                }
+            }
+        }
+
+
         if (vedList != null) {
             for (VariableEffectDefinition ved: vedList) {
                 if (influencedBy(ved.getDependsOn(), action)) {
+                    //System.out.println("check ved: "+ved);
                     // first find the relevant variable definition belonging to ved
                     vd = getVariableDefinition(ved.getGameId(), ved.getName());
                     if (vd != null) {
+                        //System.out.println("check vd: "+vd.getName());
                         varEffectInstances = VariableEffectInstanceManager.getVariableEffectInstances(null, runId, null, null, ved.getId());
                         varInstances = VariableInstanceManager.getVariableInstances(ved.getGameId(), runId, vd.getName(), null, null);
 
                         if (vd.getScope() == Dependency.USER_SCOPE) {
                             for (VariableInstance vi: varInstances) {
                                 user = uMap.get(vi.getAccount());
+                                //System.out.println("USER-SCOPE: check user: "+user.getName());
                                 if (checkActions(ved.getDependsOn(), al, user, uMap) != -1) {
                                     for (VariableEffectInstanceJDO vei: varEffectInstances) {
+                                        //System.out.println("check action vei: "+vei);
                                         if (vei.getAccount().equals(vi.getAccount())) {
                                             System.out.println("USER: "+user.getName()+", "+vi.getName()+", "+vei.getAccount());
                                             applyActionEffect(vd, vi, ved, vei, ud);
@@ -241,19 +268,19 @@ public class VariableDelegator extends DependencyDelegator {
                             }
                         } else if (vd.getScope() == Dependency.TEAM_SCOPE) {
                             for (VariableInstance vi: varInstances) {
+                                //System.out.println("TEAM-SCOPE: check user: "+vi.getTeamId());
                                 user = null;
                                 UserList userList = ud.getUsers(runId, vi.getTeamId());
                                 for (User us: userList.getUsers()) {
                                     if  (vi.getTeamId().equals(us.getTeamId())) {
                                         user = us;
-                                        break;
-                                    }
-                                }
-                                if (user != null && checkActions(ved.getDependsOn(), al, user, uMap) != -1) {
-                                    for (VariableEffectInstanceJDO vei: varEffectInstances) {
-                                        if (vei.getTeamId().equals(vi.getTeamId())) {
-                                            System.out.println("TEAM: "+user.getName()+", "+vi.getName()+", "+vei.getTeamId());
-                                            applyActionEffect(vd, vi, ved, vei, ud);
+                                        if (user != null && checkActions(ved.getDependsOn(), al, user, uMap) != -1) {
+                                            for (VariableEffectInstanceJDO vei: varEffectInstances) {
+                                                if (vei.getTeamId().equals(vi.getTeamId())) {
+                                                    System.out.println("TEAM: "+user.getName()+", "+vi.getName()+", "+vei.getTeamId());
+                                                    applyActionEffect(vd, vi, ved, vei, ud);
+                                                }
+                                            }
                                         }
                                     }
                                 }
