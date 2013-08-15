@@ -166,8 +166,17 @@
     return self;
 }
 
-- (void) collectNumber{
+- (void) collectAudio {
+    ARLAudioRecorderViewController *controller = [[ARLAudioRecorderViewController alloc] init];
+    controller.run = self.run;
+    controller.generalItem = self.generalItem;
+    [[self.generalItemViewController navigationController] pushViewController:controller animated:TRUE];
+    //    [self.generalItemViewController presentViewController:controller animated:TRUE completion:nil];
+    
+}
 
+- (void) collectNumber{
+    
     UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:self.valueDescription message:@"this gets covered" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     self.valueTextField = [[UITextField alloc] initWithFrame:CGRectMake(12.0, 45.0, 260.0, 25.0)];
     [self.valueTextField setBackgroundColor:[UIColor whiteColor]];
@@ -193,6 +202,7 @@
     if ([title isEqualToString:@"OK"]) {
         
         [Response createTextResponse: self.valueTextField.text withRun:self.run withGeneralItem:self.generalItem ];
+        [Action initAction:@"answer_given" forRun:self.run forGeneralItem:self.generalItem inManagedObjectContext:self.generalItem.managedObjectContext];
         
         NSError *error = nil;
         if (self.generalItem.managedObjectContext) {
@@ -208,8 +218,43 @@
     
 }
 
-- (void) collectImage{
+- (void) collectVideo {
+    
+    if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        
+        self.imagePickerController = [[UIImagePickerController alloc] init];
+        self.imagePickerController.delegate = self;
+        self.imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+        self.imagePickerController.mediaTypes = [[NSArray alloc] initWithObjects: (NSString *) kUTTypeMovie, nil];
+        if([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear]) {
+            self.imagePickerController.cameraDevice = UIImagePickerControllerCameraDeviceRear;
+        } else {
+            self.imagePickerController.cameraDevice =  UIImagePickerControllerCameraDeviceFront;
+        }
+        
+        //        [self presentModalViewController:self.imagePickerController animated:YES];
+        [self.generalItemViewController presentViewController:self.imagePickerController animated:YES completion:nil];
+        
+    }
+    //    if (!self.imagePickerController) {
+    //        self.imagePickerController = [[UIImagePickerController alloc] init];
+    //        if ([UIImagePickerController isCameraDeviceAvailable:[self.imagePickerController cameraDevice]]) {
+    //            [self.imagePickerController takePicture];
+    //
+    //        }else
+    //        {
+    //            [self.imagePickerController setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+    //        }
+    //
+    //        // image picker needs a delegate so we can respond to its messages
+    //        [self.imagePickerController setDelegate:self];
+    //    }
+    //    // Place image picker on the screen
+    //    [self.generalItemViewController presentViewController:self.imagePickerController animated:YES completion:nil];
+}
 
+- (void) collectImage{
+    
     if (!self.imagePickerController) {
         self.imagePickerController = [[UIImagePickerController alloc] init];
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -228,11 +273,20 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-    NSData *imageData = UIImageJPEGRepresentation(image, 0.5);
-    [Response createImageResponse:imageData width:[NSNumber numberWithFloat:image.size.width] height:[NSNumber numberWithFloat:image.size.height]  withRun:self.run withGeneralItem:self.generalItem];
-    //    image = [ImageHelpers imageWithImage:image scaledToSize:CGSizeMake(480, 640)];
+    if (image) {
+        NSData *imageData = UIImageJPEGRepresentation(image, 0.5);
+        [Response createImageResponse:imageData width:[NSNumber numberWithFloat:image.size.width] height:[NSNumber numberWithFloat:image.size.height]  withRun:self.run withGeneralItem:self.generalItem];
+    } else {
+        id object = [info objectForKey:UIImagePickerControllerMediaURL];
+        NSLog(@"dict %@", info);
+        NSLog(@"object %@", [object class ]);
+        NSData* videoData = [NSData dataWithContentsOfURL:object];
+        [Response createVideoResponse:videoData withRun:self.run withGeneralItem:self.generalItem];
+        
+//        [picker dismissViewControllerAnimated:YES completion:NULL];
+    }
     
-    // [imageView setImage:image];
+    [Action initAction:@"answer_given" forRun:self.run forGeneralItem:self.generalItem inManagedObjectContext:self.generalItem.managedObjectContext];
     
     [self.generalItemViewController dismissViewControllerAnimated:YES completion:nil];
     NSError *error = nil;
@@ -244,8 +298,9 @@
             }
             [ ARLCloudSynchronizer syncResponses: self.generalItem.managedObjectContext];
         }
-
+        
     }
+
 }
 
 @end

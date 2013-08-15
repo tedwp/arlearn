@@ -7,10 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MediaPlayer/MediaPlayer.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+
 #import "ARLAppDelegate.h"
 #import "Response+Create.h"
 #import "GeneralItem+ARLearnBeanCreate.h"
 #import "Run+ARLearnBeanCreate.h"
+#import "ARLAudioRecorder.h"
+#import "ARLAudioRecorderViewController.h"
 
 @interface ARLDataCollectionWidget : UIView<UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
 //    BOOL withAudio;

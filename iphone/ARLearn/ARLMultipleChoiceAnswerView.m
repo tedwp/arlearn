@@ -28,7 +28,6 @@
         NSMutableDictionary *viewsDictionary = [[NSMutableDictionary alloc] init];
         for (NSDictionary *ans in [jsonDict objectForKey:@"answers"]) {
             [_dataArray addObject:[ans objectForKey:@"answer"]];
-            NSLog(@"ans %@", ans);
             vConstraint = [vConstraint stringByAppendingString:[NSString stringWithFormat:@"[_%@(==29)]", [ans objectForKey:@"id"]]];
             
             
@@ -41,7 +40,6 @@
             [self addSubview:ansItem];
             [viewsDictionary setObject:ansItem forKey:[NSString stringWithFormat:@"_%@",[ans objectForKey:@"id"]]];
             NSString* hConstraint = [NSString stringWithFormat:@"H:|[_%@]|", [ans objectForKey:@"id"]];
-//            NSLog(@"hConstraint: %@", hConstraint);
 
             [self addConstraints:[NSLayoutConstraint
                                   constraintsWithVisualFormat:hConstraint
@@ -50,8 +48,6 @@
                                   views:viewsDictionary]];
         }
         vConstraint = [vConstraint stringByAppendingFormat:@"|"];
-        NSLog(@"constraint: %@", vConstraint);
-//        
         [self addConstraints:[NSLayoutConstraint
                               constraintsWithVisualFormat:vConstraint
                               options:0
@@ -69,7 +65,6 @@
 }
 
 - (void) answerClicked: (NSString *) identifier{
-    NSLog(@"clicked on %@", identifier);
     if (!_isSingleChoice) return;
     for (ARLAnswerItemView* ansItemView in self.answerViews) {
         if (![identifier isEqualToString:ansItemView.identifier]){
@@ -81,7 +76,6 @@
 - (NSArray *) selectedIds {
     NSMutableArray* result = [[NSMutableArray alloc] init];
     for (ARLAnswerItemView* answerView in self.answerViews) {
-//        NSLog(@"key %@ selected %d", key, );
         if ([answerView isSelected]) {
             [result addObject:answerView.identifier];
 

@@ -5,10 +5,12 @@
 //  Created by Stefaan Ternier on 7/11/13.
 //  Copyright (c) 2013 Stefaan Ternier. All rights reserved.
 //
-
 #import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
+
 #import <AVFoundation/AVAudioPlayer.h>
 #import "ARLAudioObjectPlayButtons.h"
+
 @class ARLAudioObjectPlayButtons;
 
 typedef NS_ENUM(NSInteger, PlayingState) {

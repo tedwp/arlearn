@@ -46,19 +46,13 @@ public class PictureDataCollectorDelegate extends DataCollectorDelegate {
 		BitmapFactory.Options options=new BitmapFactory.Options();
 		options.inSampleSize = 8;
 		options.inPurgeable = true;
-		Bitmap preview_bitmap;
+		Bitmap preview_bitmap = null;
 		try {
-			preview_bitmap = BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(pictureUri),null,options);
-//			long currentTime = System.currentTimeMillis();
-//			RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(runId, 
-//					"picture:" + currentTime,  fullAccount, pictureUri, "application/jpg");
-//			task.taskToRunAfterExecute(new UploadFileSyncTask());
-//			task.run(ctx);
-//			Response r = createResponse( null, pictureUri, null, null, preview_bitmap.getWidth(), preview_bitmap.getHeight());
-//			
-//			r.setGeneralItemId(ctx.getNarratorBean().getId());
-//			ResponseDelegator.getInstance().publishResponse(ctx, r);
-
+            try {
+			    preview_bitmap = BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(pictureUri),null,options);
+            } catch (NullPointerException e) {
+                // eat it...
+            }
             int width =200;
             int height = 600;
             if (preview_bitmap != null) {

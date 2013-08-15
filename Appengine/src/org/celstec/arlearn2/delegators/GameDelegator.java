@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.google.appengine.api.search.*;
+import org.celstec.arlearn2.api.Service;
 import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
@@ -54,13 +56,6 @@ import org.celstec.arlearn2.tasks.beans.GameSearchIndex;
 import org.celstec.arlearn2.tasks.beans.NotifyRunsFromGame;
 import org.codehaus.jettison.json.JSONException;
 
-import com.google.appengine.api.search.Index;
-import com.google.appengine.api.search.IndexSpec;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.google.appengine.api.search.SearchException;
-import com.google.appengine.api.search.SearchServiceFactory;
-import com.google.appengine.api.search.StatusCode;
 import com.google.gdata.util.AuthenticationException;
 import com.sun.jersey.server.impl.monitoring.GlassFishMonitoringInitializer;
 
@@ -75,6 +70,10 @@ public class GameDelegator extends GoogleDelegator {
 	public GameDelegator(GoogleDelegator gd) {
 		super(gd);
 	}
+
+    public GameDelegator(Service service) {
+        super(service);
+    }
 
 	public GameDelegator() {
 		super();
@@ -402,7 +401,7 @@ public class GameDelegator extends GoogleDelegator {
 			g.setSharing(sharingType);
 			createGame(g, GameModification.ALTERED);
 		}
-		new GameSearchIndex(g.getTitle(), g.getCreator(), sharingType, g.getGameId()).scheduleTask();
+		new GameSearchIndex(g.getTitle(), g.getCreator(), sharingType, g.getGameId(), g.getLat(), g.getLng()).scheduleTask();
 		return g;
 	}
 	
@@ -411,7 +410,7 @@ public class GameDelegator extends GoogleDelegator {
 		if (oldGame.getError() != null)
 			return ;
 		if (!oldGame.getSharing().equals(newSharingType)) {
-			new GameSearchIndex(newGame.getTitle(), newGame.getCreator(), newSharingType, newGame.getGameId()).scheduleTask();	
+			new GameSearchIndex(newGame.getTitle(), newGame.getCreator(), newSharingType, newGame.getGameId(), newGame.getLat(), newGame.getLng()).scheduleTask();
 		}
 	}
 
@@ -514,9 +513,15 @@ public class GameDelegator extends GoogleDelegator {
 			for (ScoredDocument document : results) {
 				Game g = new Game();
 				g.setTitle(document.getFields("title").iterator().next().getText());
-//				g.setCreator(document.getFields("author").iterator().next().getText());
 				g.setGameId(Long.parseLong(document.getFields("gameId").iterator().next().getText()));
-				// Use the document for display.
+                if (document.getFieldCount("location") != 0)      {
+                Iterator<Field>it = document.getFields("location").iterator();
+                if (it.hasNext()) {
+                    Field location = it.next();
+                    g.setLat(location.getGeoPoint().getLatitude());
+                    g.setLng(location.getGeoPoint().getLongitude());
+                }
+                }
 				resultsList.addGame(g);
 			}
 			return resultsList;
@@ -528,8 +533,50 @@ public class GameDelegator extends GoogleDelegator {
 		return null;
 	}
 
+    public GamesList search(Double lat, Double lng, Long meters) {
+        try {
+            String query = "distance(location, geopoint("+lat+", "+lng+")) < "+meters;
+            Results<ScoredDocument> results = getIndex().search(query);
+            GamesList resultsList = new GamesList();
+            for (ScoredDocument document : results) {
+                Game g = new Game();
+                g.setTitle(document.getFields("title").iterator().next().getText());
+                g.setGameId(Long.parseLong(document.getFields("gameId").iterator().next().getText()));
+                Iterator<Field>it = document.getFields("location").iterator();
+                if (it.hasNext()) {
+                    Field location = it.next();
+                    g.setLat(location.getGeoPoint().getLatitude());
+                    g.setLng(location.getGeoPoint().getLongitude());
+                }
+                resultsList.addGame(g);
+            }
+            return resultsList;
+        } catch (SearchException e) {
+            if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult().getCode())) {
+                // retry
+            }
+        }
+        return null;
+    }
+
 	public Index getIndex() {
 		IndexSpec indexSpec = IndexSpec.newBuilder().setName("game_index").build();
 		return SearchServiceFactory.getSearchService().getIndex(indexSpec);
 	}
+
+    public void makeGameFeatured(Long gameId) {
+        GameManager.makeGameFeatured(gameId, true);
+    }
+
+    public GamesList getFeaturedGames() {
+        GamesList resultsList = new GamesList();
+        List<Game> list = MyGamesCache.getInstance().getFeaturedGameList();
+        if (list == null) {
+            list = GameManager.getFeaturedGames();
+            if (!list.isEmpty())
+                MyGamesCache.getInstance().putFeaturedGameList(list);
+        }
+        resultsList.setGames(list);
+        return resultsList;
+    }
 }

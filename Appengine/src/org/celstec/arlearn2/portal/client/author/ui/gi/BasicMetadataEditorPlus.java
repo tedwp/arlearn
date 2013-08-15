@@ -28,7 +28,7 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
 	protected TextItem latText;
 	protected TextItem lngText;
     protected TextItem customIcon;
-    protected TextItem section;
+//    protected TextItem section;
     protected TextItem tags;
 
 	public BasicMetadataEditorPlus(boolean showTitle, boolean showDescription) {

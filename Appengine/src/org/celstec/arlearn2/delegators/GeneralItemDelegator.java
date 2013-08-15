@@ -270,15 +270,16 @@ public class GeneralItemDelegator extends DependencyDelegator {
 				gim.setModificationType(GeneralItemModification.VISIBLE);
 				gim.setRunId(runId);
 				gim.setGameId(generalItem.getGameId());
-				gim.setGeneralItem(generalItem);
+//				gim.setGeneralItem(generalItem);
 				gim.setItemId(generalItem.getId());
 				generalItem.setVisibleAt(visAt);
-				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getFullId(), GeneralItemVisibilityManager.VISIBLE_STATUS, visAt);
+				GeneralItemVisibilityManager.setItemVisible(generalItem.getId(), runId, u.getFullId(), GeneralItemVisibilityManager.VISIBLE_STATUS, visAt);
 
-                GeneralItem giBroadcast = new GeneralItem();
-                giBroadcast.setId(generalItem.getId());
-                giBroadcast.setGameId(generalItem.getGameId());
-				new NotificationDelegator().broadcast(giBroadcast, u.getFullId());
+//                GeneralItem giBroadcast = new GeneralItem();
+//                giBroadcast.setId(generalItem.getId());
+//                giBroadcast.setGameId(generalItem.getGameId());
+//                giBroadcast.se
+				new NotificationDelegator().broadcast(gim, u.getFullId());
 
 			}
 
@@ -294,15 +295,15 @@ public class GeneralItemDelegator extends DependencyDelegator {
 				gim.setRunId(runId);
 				gim.setGameId(generalItem.getGameId());
 				gim.setItemId(generalItem.getId());
-				gim.setGeneralItem(generalItem);
+//				gim.setGeneralItem(generalItem);
 				generalItem.setDisappearAt(disAt);
 
-				GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), runId, u.getFullId(), GeneralItemVisibilityManager.DISAPPEARED_STATUS, disAt);
+				GeneralItemVisibilityManager.setItemVisible(generalItem.getId(), runId, u.getFullId(), GeneralItemVisibilityManager.DISAPPEARED_STATUS, disAt);
 
-                GeneralItem giBroadcast = new GeneralItem();
-                giBroadcast.setId(generalItem.getId());
-                giBroadcast.setGameId(generalItem.getGameId());
-                new NotificationDelegator().broadcast(giBroadcast, u.getFullId());
+//                GeneralItem giBroadcast = new GeneralItem();
+//                giBroadcast.setId(generalItem.getId());
+//                giBroadcast.setGameId(generalItem.getGameId());
+                new NotificationDelegator().broadcast(gim, u.getFullId());
 			}
 		}
 	}

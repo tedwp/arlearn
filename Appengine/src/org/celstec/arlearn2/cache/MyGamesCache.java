@@ -42,7 +42,15 @@ public class MyGamesCache extends GenericCache{
 		return instance;
 
 	}
-	
+
+    public void putFeaturedGameList(List<Game> gameList) {
+        getCache().put(MYGAMES_PREFIX+"_featured", gameList);
+    }
+
+    public List<Game> getFeaturedGameList() {
+        return (List<Game>) getCache().get(MYGAMES_PREFIX+"_featured");
+    }
+
 	public List<Game> getGameList(Long gameId, Object... args) {
 		return (List<Game>) getCache().get(generateCacheKey(MYGAMES_PREFIX, gameId, args));
 	}

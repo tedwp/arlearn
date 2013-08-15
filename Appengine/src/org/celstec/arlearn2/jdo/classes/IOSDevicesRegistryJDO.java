@@ -43,6 +43,9 @@ public class IOSDevicesRegistryJDO {
 	@Persistent
 	private String deviceToken;
 
+    @Persistent
+    private String bundleIdentifier;
+
 	public String getAccount() {
 		return account;
 	}
@@ -57,7 +60,7 @@ public class IOSDevicesRegistryJDO {
 
 	public void setDeviceUniqueIdentifier(String deviceUniqueIdentifier) {
 		if (deviceUniqueIdentifier != null) 
-			this.id = KeyFactory.createKey(IOSDevicesRegistryJDO.class.getSimpleName(), deviceUniqueIdentifier);
+			this.id = KeyFactory.createKey(IOSDevicesRegistryJDO.class.getSimpleName(), deviceUniqueIdentifier+":"+getBundleIdentifier());
 		this.deviceUniqueIdentifier = deviceUniqueIdentifier;
 	}
 
@@ -68,5 +71,12 @@ public class IOSDevicesRegistryJDO {
 	public void setDeviceToken(String deviceToken) {
 		this.deviceToken = deviceToken;
 	}
-	
+
+    public String getBundleIdentifier() {
+        return bundleIdentifier;
+    }
+
+    public void setBundleIdentifier(String bundleIdentifier) {
+        this.bundleIdentifier = bundleIdentifier;
+    }
 }

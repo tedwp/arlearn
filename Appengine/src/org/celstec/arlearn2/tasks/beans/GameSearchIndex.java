@@ -22,20 +22,12 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.appengine.api.search.*;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.delegators.GameDelegator;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.NotificationDelegator;
-import org.celstec.arlearn2.jdo.manager.ConfigurationManager;
-
-import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.Field;
-import com.google.appengine.api.search.Index;
-import com.google.appengine.api.search.IndexSpec;
-import com.google.appengine.api.search.PutException;
-import com.google.appengine.api.search.SearchServiceFactory;
-import com.google.appengine.api.search.StatusCode;
 
 public class GameSearchIndex extends GenericBean {
 
@@ -43,17 +35,21 @@ public class GameSearchIndex extends GenericBean {
 	private String gameAuthor;
 	private Integer sharingType;
 	private Long gameId;
+    private Double lng;
+    private Double lat;
 
 	public GameSearchIndex() {
 		super();
 	}
 
-	public GameSearchIndex(String gameTitle, String gameAuthor, Integer sharingType, Long gameId) {
+	public GameSearchIndex(String gameTitle, String gameAuthor, Integer sharingType, Long gameId, Double lat, Double lng) {
 		super();
 		this.gameTitle = gameTitle;
 		this.gameAuthor = gameAuthor;
 		this.sharingType = sharingType;
 		this.gameId = gameId;
+        this.lat = lat;
+        this.lng = lng;
 	}
 
 	public String getGameTitle() {
@@ -87,6 +83,24 @@ public class GameSearchIndex extends GenericBean {
 	public void setGameId(Long gameId) {
 		this.gameId = gameId;
 	}
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+
 	private static final Logger log = Logger.getLogger(NotificationDelegator.class.getName());
 	@Override
 	public void run() {
@@ -127,11 +141,15 @@ public class GameSearchIndex extends GenericBean {
 	}
 
 	private void addToIndex() throws PutException {
-		Document doc = Document.newBuilder()
-				.setId("game:" + gameId)
-				.addField(Field.newBuilder().setName("gameId").setText(""+getGameId()))
-				.addField(Field.newBuilder().setName("title").setText(getGameTitle())).build();
-//				.addField(Field.newBuilder().setName("author").setText(getGameAuthor()))
+		Document.Builder builder = Document.newBuilder()
+                .setId("game:" + gameId)
+                .addField(Field.newBuilder().setName("gameId").setText(""+getGameId()))
+                .addField(Field.newBuilder().setName("title").setText(getGameTitle()));
+
+        if (getLat() != null && getLng() != null) {
+            builder.addField(Field.newBuilder().setName("location").setGeoPoint(new GeoPoint(getLat(), getLng())));
+        }
+        Document doc = builder.build();
 		log.log(Level.WARNING, "doc is "+doc);
 		getIndex().put(doc);
 		log.log(Level.WARNING, "index is  "+getIndex());

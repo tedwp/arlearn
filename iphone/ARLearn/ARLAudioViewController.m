@@ -82,12 +82,9 @@
     
     NSString* verticalContstraint;
     if (widget.isVisible) {
-        NSLog(@"widget vis");
         verticalContstraint = @"V:|-(>=100)-[playButtons(==70)][widget(==80)]|";
-        //        verticalContstraint = @"V:|[webView(>=100)]-[playButtons(==70)][widget(==80)]|";
         
     } else {
-        NSLog(@"widget nt vis");
         verticalContstraint = @"V:|-(>=100)-[playButtons(==70)]|";
     }
     

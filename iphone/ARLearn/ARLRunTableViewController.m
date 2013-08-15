@@ -14,13 +14,19 @@
 
 @implementation ARLRunTableViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
+@synthesize backButton;
+-(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return (interfaceOrientation == UIInterfaceOrientationPortrait) || (interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
+    //     return (interfaceOrientation == UIInterfaceOrientationPortrait) ;
+}
+
+-(NSUInteger)supportedInterfaceOrientations
 {
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL)shouldAutorotate {
+    return NO;
 }
 
 - (void) fetchARLearnGamesAndRuns: (NSManagedObjectContext *)managedObjectContext {
@@ -44,27 +50,22 @@
     request.predicate = [NSPredicate predicateWithFormat: @"deleted = %d", NO];
     
     request.sortDescriptors =[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-//    if (appDelegate.arlearnDatabase.documentState == UIDocumentStateNormal) {
     
-        self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
                                                                             managedObjectContext:appDelegate.managedObjectContext
                                                                               sectionNameKeyPath:nil cacheName:nil];
-//    }
 }
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-//    [self useDocument];
      ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     [self fetchARLearnGamesAndRuns: appDelegate.managedObjectContext];
     [self setupFetchedResultsController];
+    self.backButton.title = NSLocalizedString(@"back", nil);
+
 }
 
-- (void) viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-//    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    
-}
+
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -89,7 +90,7 @@
 
 - (void) setRunCellValues: (Run *) run withCell:(ARLRunViewCell *) cell {
     cell.runTitleLabel.text = [NSString stringWithFormat:@"%@",run.title];
-    cell.runDetail.text = [NSString stringWithFormat:@"owner run: %@", run.owner];
+    cell.runDetail.text = @"";//[NSString stringWithFormat:@"owner run: %@", run.owner];
     if ([run.game.hasMap boolValue]) {
         [cell.icon setImage:[UIImage imageNamed: @"icon_maps.png"]];
     } else {
@@ -101,19 +102,14 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"runDetailSegue"]) {
         Run * selectedRun = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
+        [[NSUserDefaults standardUserDefaults] setObject:selectedRun.runId forKey:@"currentRun"];
+
         ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
         ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
         [synchronizer createContext:appDelegate.managedObjectContext];
         synchronizer.gameId = selectedRun.gameId;
         synchronizer.visibilityRunId = selectedRun.runId;
         [synchronizer sync];
-        
-//        ARLFileCloudSynchronizer* fileSync = [[ARLFileCloudSynchronizer alloc] init];
-//        [fileSync createContext:appDelegate.managedObjectContext];
-//        [fileSync sync];
-        
-//        [[ARLFileCloudSynchronizer sharedInstance] sync];
-       
         for (UIViewController *v in [segue.destinationViewController viewControllers]) {
             if ([v respondsToSelector:@selector(setRun:)]) {
                 [v performSelector:@selector(setRun:) withObject:selectedRun];

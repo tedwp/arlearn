@@ -8,5 +8,12 @@
 
 "LoggedInAs" = "Logged in as";
 "ScanToken" = "Scan a token";
-"Login" = "Login (en)";
-"Logout" = "Logout (en)";
+"Login" = "Login";
+"Logout" = "Logout";
+"MyGames" = "Game Library";
+"MyRuns" = "My Runs";
+
+"AuthExistingAccount" = "Login with existing account";
+"back" = "back";
+"My Games" = "My Games";
+"Map" = "Map";

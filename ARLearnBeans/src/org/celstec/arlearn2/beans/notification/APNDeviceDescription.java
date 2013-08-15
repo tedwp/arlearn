@@ -29,6 +29,7 @@ public class APNDeviceDescription extends DeviceDescription {
 	private String account;
 	private String deviceUniqueIdentifier;
 	private String deviceToken;
+    private String bundleIdentifier;
 	
 	
 //	{
@@ -55,15 +56,24 @@ public class APNDeviceDescription extends DeviceDescription {
 	public void setDeviceToken(String deviceToken) {
 		this.deviceToken = deviceToken;
 	}
-	
-	@Override
+
+    public String getBundleIdentifier() {
+        return bundleIdentifier;
+    }
+
+    public void setBundleIdentifier(String bundleIdentifier) {
+        this.bundleIdentifier = bundleIdentifier;
+    }
+
+    @Override
 	public boolean equals(Object obj) {
 		APNDeviceDescription other = (APNDeviceDescription ) obj;
 		return super.equals(obj) && 
 		nullSafeEquals(getAccount(), other.getAccount()) && 
 		nullSafeEquals(getDeviceUniqueIdentifier(), other.getDeviceUniqueIdentifier()) && 
-		nullSafeEquals(getDeviceToken(), other.getDeviceToken()); 
-	}
+		nullSafeEquals(getDeviceToken(), other.getDeviceToken())&&
+        nullSafeEquals(getBundleIdentifier(), other.getBundleIdentifier());
+    }
 	
 	public static class Deserializer extends BeanDeserializer{
 
@@ -84,6 +94,7 @@ public class APNDeviceDescription extends DeviceDescription {
 			if (object.has("account")) bean.setAccount(object.getString("account"));
 			if (object.has("deviceUniqueIdentifier")) bean.setDeviceUniqueIdentifier(object.getString("deviceUniqueIdentifier"));
 			if (object.has("deviceToken")) bean.setDeviceToken(object.getString("deviceToken"));
+            if (object.has("bundleIdentifier")) bean.setBundleIdentifier(object.getString("bundleIdentifier"));
 		}
 
 	}
@@ -98,6 +109,7 @@ public class APNDeviceDescription extends DeviceDescription {
 				if (statusBean.getAccount() != null) returnObject.put("account", statusBean.getAccount());
 				if (statusBean.getDeviceUniqueIdentifier() != null) returnObject.put("deviceUniqueIdentifier", statusBean.getDeviceUniqueIdentifier());
 				if (statusBean.getDeviceToken() != null) returnObject.put("deviceToken", statusBean.getDeviceToken());
+                if (statusBean.getBundleIdentifier() != null) returnObject.put("bundleIdentifier", statusBean.getBundleIdentifier());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

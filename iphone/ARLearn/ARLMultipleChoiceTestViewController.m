@@ -35,11 +35,9 @@
     self.headerText.title = self.generalItem.name;
 
     self.jsonDict = [NSKeyedUnarchiver unarchiveObjectWithData:self.generalItem.json];
-    NSLog(@"type is %@", [self.jsonDict objectForKey:@"type"]);
     [self createSubmitButton];
     [self createWebView];
     BOOL isSingleChoice = [@"org.celstec.arlearn2.beans.generalItem.SingleChoiceTest" isEqualToString:[self.jsonDict objectForKey:@"type"]];
-    NSLog(@"type is single %d", isSingleChoice);
     [self createAnswerView:isSingleChoice];
     [self setConstraints];
 
@@ -73,7 +71,6 @@
 - (void) setConstraints {
     
 
-//        UIWebView* webView = self.webView;
     NSDictionary *viewsDictionary =
     [[NSDictionary alloc] initWithObjectsAndKeys:
      self.submitButton, @"submitButton",
@@ -82,7 +79,6 @@
       nil];
 
     NSString* vConstraints = [NSString stringWithFormat:@"V:|-[webView]-[answerView(==%d)]-[submitButton]-|", [self.answerView height]];
-    NSLog(@"new constraint %@", vConstraints);
     
     [self.view addConstraints:[NSLayoutConstraint
                                constraintsWithVisualFormat:vConstraints
@@ -116,6 +112,7 @@
 }
 
 - (void) submitQuestion {
+    BOOL answerGiven = false;
     
     for (NSString * answerId in [self.answerView selectedIds]) {
         
@@ -136,22 +133,29 @@
                 } else {
                     
                     NSString *JSONString = [[NSString alloc] initWithBytes:[jsonData bytes] length:[jsonData length] encoding:NSUTF8StringEncoding];
-                    NSLog(@"JSON ouput: %@", JSONString);
-                    
+                   
                     [Response initResponse:self.run forGeneralItem:self.generalItem withValue:JSONString inManagedObjectContext: self.generalItem.managedObjectContext];
                     
-                    NSString* action = [NSString stringWithFormat:@"answer_%@", answerId];
-                    [Action initAction:action forRun:self.run forGeneralItem:self.generalItem inManagedObjectContext:self.generalItem.managedObjectContext];
-                    ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
-                    ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-                    [synchronizer createContext:appDelegate.managedObjectContext];
-                    synchronizer.syncResponses = true;
-                    synchronizer.syncActions = true;
-                    [synchronizer sync];
+                    [Action initAction:[NSString stringWithFormat:@"answer_%@", answerId] forRun:self.run forGeneralItem:self.generalItem inManagedObjectContext:self.generalItem.managedObjectContext];
+
+                    answerGiven = true;
+                    
                 }
             }
         }
+        
     }
-    
+    if (answerGiven) {
+        [Action initAction:@"answer_given" forRun:self.run forGeneralItem:self.generalItem inManagedObjectContext:self.generalItem.managedObjectContext];
+        ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
+        ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        [synchronizer createContext:appDelegate.managedObjectContext];
+        synchronizer.syncResponses = true;
+        synchronizer.syncActions = true;
+        [synchronizer sync];
+        [self.navigationController popViewControllerAnimated:NO];
+
+//        [self dismissViewControllerAnimated:TRUE completion:nil];
+    }
 }
 @end

@@ -30,8 +30,52 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    self.headerText.title = self.generalItem.name;
+    
+    self.webView = [[UIWebView alloc] init];
+    [self.webView loadHTMLString:self.generalItem.richText baseURL:nil];
+    self.webView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:self.webView];
+    
+    [self createPlayButton];
+    
+    [self setConstraints];
+
 }
+
+- (void) createPlayButton {
+    
+    self.scannerButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.scannerButton addTarget:self action:@selector(scanTagButton) forControlEvents:UIControlEventTouchUpInside];
+    self.scannerButton.translatesAutoresizingMaskIntoConstraints = NO;
+    UIImage * image = [UIImage imageNamed:@"qrscanner.png"];
+    [self.scannerButton setBackgroundImage:image forState:UIControlStateNormal];
+    [self.view addSubview:self.scannerButton];
+}
+
+- (void) setConstraints {
+    NSDictionary *viewsDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                     self.webView, @"webView",
+                                     self.scannerButton, @"scannerButton", nil];
+    
+    [self.view addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"V:|-[webView(>=100)]-[scannerButton]-|"
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"H:|[webView]|"
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:viewsDictionary]];
+    
+    [self.view addConstraint:[NSLayoutConstraint
+                              constraintWithItem:self.scannerButton attribute:NSLayoutAttributeCenterX
+                              relatedBy:NSLayoutRelationEqual
+                              toItem:self.view attribute:NSLayoutAttributeCenterX
+                              multiplier:1 constant:0]];
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -39,8 +83,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)scanTagButton:(id)sender {
-    NSLog(@"Pressed button");
+- (IBAction)scanTagButton {
     
     ZBarReaderViewController *reader = [ZBarReaderViewController new];
     reader.readerDelegate = self;
@@ -68,22 +111,11 @@
     ZBarSymbol *symbol = nil;
     for(symbol in results)
         break;
-    NSLog(@"scanned %@", symbol.data);
     
     [Action initAction:symbol.data forRun:self.run forGeneralItem:self.generalItem inManagedObjectContext:self.generalItem.managedObjectContext];
     [ARLCloudSynchronizer syncActions:self.generalItem.managedObjectContext];
     [reader dismissViewControllerAnimated:YES completion:nil];
 }
 
-//- (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
-//    NSLog(@"code %@", result);
-//           [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-//   
-//    
-//}
-//
-//- (void)zxingControllerDidCancel:(ZXingWidgetController*)controller {
-//    [self dismissModalViewControllerAnimated:NO];
-//}
 
 @end

@@ -54,6 +54,15 @@ public class GameJDO extends GameClass {
 	@Persistent
 	private String licenseCode;
 
+    @Persistent
+    private Double lat;
+
+    @Persistent
+    private Double lng;
+
+    @Persistent
+    private Boolean featured;
+
 	public Long getGameId() {
 		return id.getId();
 	}
@@ -134,5 +143,27 @@ public class GameJDO extends GameClass {
 		this.licenseCode = licenseCode;
 	}
 
-	
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
+
+    public Boolean getFeatured() {
+        return featured;
+    }
+
+    public void setFeatured(Boolean featured) {
+        this.featured = featured;
+    }
 }

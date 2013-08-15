@@ -16,6 +16,7 @@ import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.LayoutSpacer;
 import com.smartgwt.client.widgets.layout.VLayout;
+import org.celstec.arlearn2.portal.client.account.AccountManager;
 import org.celstec.arlearn2.portal.client.author.ui.gi.i18.GeneralItemConstants;
 
 public class BasicMetadataEditor extends VLayout {
@@ -28,7 +29,8 @@ public class BasicMetadataEditor extends VLayout {
     protected TextItem titleText;
 
     protected TextItem orderText;
-	
+    protected TextItem section;
+
 	public BasicMetadataEditor(boolean showTitle, boolean showDescription) {
 		createTextArea();
 		createRichTextArea();
@@ -45,8 +47,14 @@ public class BasicMetadataEditor extends VLayout {
         titleText = new TextItem(GeneralItemModel.NAME_FIELD, constants.title());
         titleText.setStartRow(true);
         orderText = new TextItem(GeneralItemModel.SORTKEY_FIELD, constants.order());
-
-		form.setFields(titleText, orderText, textAreaItem);
+        if (AccountManager.getInstance().isAdvancedUser()) {
+            section = new TextItem(GeneralItemModel.SECTION, constants.section());
+        }
+        if (AccountManager.getInstance().isAdvancedUser()) {
+            form.setFields(titleText, orderText, section, textAreaItem);
+        }   else {
+		    form.setFields(titleText, orderText, textAreaItem);
+        }
         form.setNumCols(4);
 		form.setWidth100();
 		
@@ -106,12 +114,18 @@ public class BasicMetadataEditor extends VLayout {
 		} else {
 			richText = form.getValueAsString(GeneralItemModel.RICH_TEXT_FIELD); 
 		}
+        if (form.getValue(GeneralItemModel.SECTION) != null &&  !form.getValueAsString(GeneralItemModel.SECTION).equals("")) {
+            ni.setString(GeneralItemModel.SECTION, form.getValueAsString(GeneralItemModel.SECTION));
+        }
 		ni.getJsonRep().put(GeneralItemModel.RICH_TEXT_FIELD, new JSONString(richText));
 		ni.getJsonRep().put("description", new JSONString(StringUtil.unescapeHTML(richText)));
 
 	}
 
 	public void loadGeneralItem(GeneralItem gi) {
+        if (AccountManager.getInstance().isAdvancedUser()) {
+            form.setValue(GeneralItemModel.SECTION, gi.getString(GeneralItemModel.SECTION));
+        }
         form.setValue(GeneralItemModel.SORTKEY_FIELD, gi.getInteger(GeneralItemModel.SORTKEY_FIELD));
         form.setValue(GeneralItemModel.NAME_FIELD, gi.getString(GeneralItemModel.NAME_FIELD));
 		form.setValue(GeneralItemModel.RICH_TEXT_FIELD, gi.getString(GeneralItemModel.RICH_TEXT_FIELD));

@@ -83,8 +83,7 @@
 }
 
 
-- (void)saveContext
-{
+- (void)saveContext {
     NSError *error = nil;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext != nil) {
@@ -96,12 +95,6 @@
         }
     }
 }
-
-//- (void) setArlearnDatabase:(UIManagedDocument *)arlearnDatabase {
-//    if (_arlearnDatabase != arlearnDatabase) {
-//        _arlearnDatabase = arlearnDatabase;
-//    }
-//}
 
 - (NSURL *)applicationDocumentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
@@ -121,40 +114,28 @@
     return YES;
 }
 
-- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)message
-{
-	NSLog(@"Received notification: %@", message);
+- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)message {
     [[ARLNotificationSubscriber sharedSingleton] dispatchMessage:message];
-//	[self addMessageFromRemoteNotification:userInfo updateUI:YES];
 }
 
 
 
-- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
-{
-	NSLog(@"My token is: %@", deviceToken);
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
     
     NSString* newToken = [deviceToken description];
 	newToken = [newToken stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
 	newToken = [newToken stringByReplacingOccurrencesOfString:@" " withString:@""];
-    NSLog(@"My token is: %@", newToken);
     UIDevice *device = [UIDevice currentDevice];
-    NSString *uniqueIdentifier = [device uniqueIdentifier];
-        NSLog(@"My device id: %@", uniqueIdentifier);
+    NSUUID * uuid = [device identifierForVendor];
+//    [uuid UUIDString];
+//    NSString *uniqueIdentifier = [device uniqueIdentifier];
     
-    [[NSUserDefaults standardUserDefaults] setObject:uniqueIdentifier forKey:@"deviceUniqueIdentifier"];
+    [[NSUserDefaults standardUserDefaults] setObject:[uuid UUIDString] forKey:@"deviceUniqueIdentifier"];
     [[NSUserDefaults standardUserDefaults] setObject:newToken forKey:@"deviceToken"];
-    
-
-//    [ARLNetwork registerDevice:newToken withUID:deviceUniqueIdentifier withAccount:email];
-//    [[[ARLNetworkAPN alloc] init] registerDevice:newToken withUID:uniqueIdentifier];
-
     
 }
 
-- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
-{
-	NSLog(@"Failed to get token, error: %@", error);
+- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error {
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application {

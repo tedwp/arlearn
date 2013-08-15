@@ -20,5 +20,7 @@
 
 @interface ARLRunTableViewController : CoreDataTableViewController
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *backButton;
+
 
 @end

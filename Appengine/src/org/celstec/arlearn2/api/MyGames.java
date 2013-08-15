@@ -40,6 +40,7 @@ import org.celstec.arlearn2.beans.game.MapRegion;
 import org.celstec.arlearn2.beans.notification.GameModification;
 import org.celstec.arlearn2.delegators.GameAccessDelegator;
 import org.celstec.arlearn2.delegators.GameDelegator;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.Account;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
@@ -117,7 +118,39 @@ public class MyGames extends Service {
 		GameDelegator cg = new GameDelegator(this.account, token);
 		return serialise(cg.createGame((Game) inGame, GameModification.CREATED), accept);
 	}
-	
+
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @CacheControlHeader("no-cache")
+    @Path("/featured")
+    public String featured(@HeaderParam("Authorization") String token,
+                               @DefaultValue("application/json") @HeaderParam("Accept") String accept,
+                               @PathParam("gameId") Long gameId) throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+        GameDelegator gd = new GameDelegator(this);
+        return serialise(gd.getFeaturedGames(), accept);
+    }
+
+
+    @GET
+      @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+      @CacheControlHeader("no-cache")
+      @Path("/featured/make/gameId/{gameId}")
+      public String makeFeatured(@HeaderParam("Authorization") String token,
+                                 @DefaultValue("application/json") @HeaderParam("Accept") String accept,
+                                 @PathParam("gameId") Long gameId) throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+//        if (this.account.getAccountLevel() == Account.ADMINISTRATOR) {
+            GameDelegator gd = new GameDelegator(this);
+            gd.makeGameFeatured(gameId);
+            return "{}";
+//        }
+
+//        return serialise(getInvalidCredentialsBean(), accept);
+    }
+
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@CacheControlHeader("no-cache")
@@ -387,5 +420,21 @@ public class MyGames extends Service {
 		GameDelegator qg = new GameDelegator(token);
 			return serialise(qg.search(searchQuery), accept);
 	}
+
+    @GET
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Path("/search/lat/{lat}/lng/{lng}/distance/{distance}")
+    public String geoSearch(@HeaderParam("Authorization") String token,
+                         String searchQuery,
+                         @PathParam("lat") Double lat,
+                         @PathParam("lng") Double lng,
+                         @PathParam("distance") Long distance,
+                         @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+                         @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+        GameDelegator qg = new GameDelegator(token);
+        return serialise(qg.search(lat, lng, distance), accept);
+    }
 	
 }

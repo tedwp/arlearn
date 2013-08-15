@@ -38,7 +38,9 @@ public class IOSDevicesRegistryManager {
 		IOSDevicesRegistryJDO jdo = new IOSDevicesRegistryJDO();
 		jdo.setAccount(deviceDes.getAccount());
 		jdo.setDeviceToken(deviceDes.getDeviceToken());
-		jdo.setDeviceUniqueIdentifier(deviceDes.getDeviceUniqueIdentifier());
+        jdo.setBundleIdentifier(deviceDes.getBundleIdentifier());
+        jdo.setDeviceUniqueIdentifier(deviceDes.getDeviceUniqueIdentifier());
+
 		try {
 			pm.makePersistent(jdo);
 		} finally {
@@ -71,6 +73,7 @@ public class IOSDevicesRegistryManager {
 		apnReturn.setAccount(jdo.getAccount());
 		apnReturn.setDeviceToken(jdo.getDeviceToken());
 		apnReturn.setDeviceUniqueIdentifier(jdo.getDeviceUniqueIdentifier());
+        apnReturn.setBundleIdentifier(jdo.getBundleIdentifier());
 		return apnReturn;
 	}
 	

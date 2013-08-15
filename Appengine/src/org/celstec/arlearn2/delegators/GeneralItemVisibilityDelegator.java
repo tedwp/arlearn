@@ -41,8 +41,8 @@ public class GeneralItemVisibilityDelegator  extends GoogleDelegator {
 			from = 0l;
 		}
 		GeneralItemVisibilityList list = new GeneralItemVisibilityList();
-		list.setGeneralItemsVisibility( GeneralItemVisibilityManager.getGeneralitemsFromUntil(runId, email, from, until));
-		list.setServerTime(System.currentTimeMillis());
+        list.setServerTime(System.currentTimeMillis());
+        list.setGeneralItemsVisibility( GeneralItemVisibilityManager.getGeneralitemsFromUntil(runId, email, from, until));
 		return list;
 	}
 	

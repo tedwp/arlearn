@@ -99,6 +99,7 @@ public class ListSectionsMessageActivity extends GeneralActivity implements List
         }
     }
     private boolean hasSections() {
+        if (sections.size() == 0) return false;
         if (sections.size() == 1 && sections.first().equals("")) return false;
         return true;
     }

@@ -19,45 +19,46 @@
 @synthesize run = _run;
 
 - (void)setupFetchedResultsController {
-    NSNumber * currentTimeMillis = [NSNumber numberWithFloat:([[NSDate date] timeIntervalSince1970] * 1000 )];
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GeneralItem"];
+
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"CurrentItemVisibility"];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name"
                                                                                      ascending:YES
                                                                                       selector:@selector(localizedCaseInsensitiveCompare:)]];
-    NSLog(@"ownerGame.gameId = %lld and SUBQUERY(visibility, $x, $x.runId = %lld and $x.status = 1 and $x.timeStamp < %lld).@count > 0 and SUBQUERY(visibility, $x, $x.runId = %lld and $x.status = 2 and $x.timeStamp < %lld).@count = 0",
-          [self.run.game.gameId longLongValue], [self.run.runId longLongValue], [currentTimeMillis longLongValue], [self.run.runId longLongValue], [currentTimeMillis longLongValue]);
     request.predicate = [NSPredicate predicateWithFormat:
-                         @"ownerGame.gameId = %lld and SUBQUERY(visibility, $x, $x.runId = %lld and $x.status = 1 and $x.timeStamp < %lld).@count > 0 and SUBQUERY(visibility, $x, $x.runId = %lld and $x.status = 2 and $x.timeStamp < %lld).@count = 0",
-                         [self.run.game.gameId longLongValue], [self.run.runId longLongValue], [currentTimeMillis longLongValue], [self.run.runId longLongValue], [currentTimeMillis longLongValue]];
-
+                         @"visible = 1 and run.runId = %lld",
+                         [self.run.runId longLongValue]];
     
-    NSSortDescriptor* sortkey = [[NSSortDescriptor alloc] initWithKey:@"sortKey" ascending:YES];
+    NSSortDescriptor* sortkey = [[NSSortDescriptor alloc] initWithKey:@"item.sortKey" ascending:YES];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortkey, nil];
     [request setSortDescriptors:sortDescriptors];
     self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
                                                                         managedObjectContext:self.run.managedObjectContext
                                                                           sectionNameKeyPath:nil
                                                                                    cacheName:nil];
-    
-//    for (GeneralItem* gi in self.run.game.hasItems){
-//        NSLog(@"general item : %@", gi.name);
-//        for (GeneralItemVisibility * vis in gi.visibility) {
-//                NSLog(@"vis  %@", vis.status);
-//        }
-//        
-//    }
-//            NSLog(@"en iteratior");
+
 }
 
 - (void) setRun: (Run *) run {
     _run = run;
-    self.title = run.title;
+//    self.title = run.title;
     [self setupFetchedResultsController];
 }
 
 - (void) viewDidLoad {
- [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"list_icon.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"list_icon.png"]];
+// [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"list_icon.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"list_icon.png"]];
 //    [[[self tabBarController] tabBar] setBackgroundImage:[UIImage imageNamed:@"list_icon.png"]];
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        ARLCloudSynchronizer* synchronizer = [[ARLCloudSynchronizer alloc] init];
+        ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        [synchronizer createContext:appDelegate.managedObjectContext];
+        synchronizer.gameId = self.run.gameId;
+        synchronizer.visibilityRunId = self.run.runId;
+        [synchronizer sync];
+    });
+   
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -75,7 +76,7 @@
 {
 
     
-    GeneralItem * generalItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    GeneralItem * generalItem = ((CurrentItemVisibility*)[self.fetchedResultsController objectAtIndexPath:indexPath]).item;
     ARLGeneralItemTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:generalItem.type];
     if (cell == nil) {
         cell = [[ARLGeneralItemTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:generalItem.type];
@@ -100,7 +101,8 @@
 }
 
 -(void) configureCell: (ARLGeneralItemTableViewCell *) cell atIndexPath:(NSIndexPath *)indexPath {
-    GeneralItem * generalItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    GeneralItem * generalItem = ((CurrentItemVisibility*)[self.fetchedResultsController objectAtIndexPath:indexPath]).item;
+
     cell.giTitleLabel.text = generalItem.name;
 //    cell.detailTextLabel.text = [NSString stringWithFormat:@"vis statements %d", [generalItem.visibility count] ];
     NSData* icon = [generalItem customIconData];
@@ -114,7 +116,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
     
-    GeneralItem * generalItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    GeneralItem * generalItem = ((CurrentItemVisibility*)[self.fetchedResultsController objectAtIndexPath:indexPath]).item;
     if ([segue.destinationViewController respondsToSelector:@selector(setGeneralItem:)]) {
         [segue.destinationViewController performSelector:@selector(setGeneralItem:) withObject:generalItem];
     }

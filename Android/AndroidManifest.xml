@@ -68,9 +68,9 @@
         <activity
             android:name=".activities.ListMessagesActivity"
             android:label="@string/listMessagesHeader" />
-        <activity
-                android:name=".activities.ListSectionsMessageActivity"
-                android:label="@string/listMessagesHeader" />
+        <!--<activity-->
+                <!--android:name=".activities.ListSectionsMessageActivity"-->
+                <!--android:label="@string/listMessagesHeader" />-->
         <activity
             android:name=".activities.MapViewActivity"
             android:label="@string/mapViewHeader" />

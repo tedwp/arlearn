@@ -35,6 +35,8 @@ public class Game extends GameBean implements Serializable, Comparable<Game>{
 	private Config config;
 	private Integer sharing;
 	private String licenseCode;
+    private Double lng;
+    private Double lat;
 	
 	public Game() {
 		
@@ -106,6 +108,22 @@ public class Game extends GameBean implements Serializable, Comparable<Game>{
 	public void setLicenseCode(String licenseCode) {
 		this.licenseCode = licenseCode;
 	}
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
 
 	@Override
 	public boolean equals(Object obj) {

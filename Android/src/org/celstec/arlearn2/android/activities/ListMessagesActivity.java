@@ -101,6 +101,7 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
         }
     }
     private boolean hasSections() {
+        if (sections.size() == 0) return false;
         if (sections.size() == 1 && sections.first().equals("")) return false;
         return true;
     }

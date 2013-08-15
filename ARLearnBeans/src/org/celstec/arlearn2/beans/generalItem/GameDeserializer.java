@@ -50,6 +50,8 @@ public class GameDeserializer extends GameBeanDeserializer {
 		if (object.has("sharing")) g.setSharing(object.getInt("sharing"));
 		if (object.has("licenseCode")) g.setLicenseCode(object.getString("licenseCode"));
 		if (object.has("config")) g.setConfig((Config) JsonBeanDeserializer.deserialize(Config.class, object.getJSONObject("config")));
+        if (object.has("lng")) g.setLng(object.getDouble("lng"));
+        if (object.has("lat")) g.setLat(object.getDouble("lat"));
 
 	}
 }

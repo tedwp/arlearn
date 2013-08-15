@@ -25,10 +25,12 @@ import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import com.google.appengine.api.datastore.KeyFactory;
 import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.jdo.PMF;
+import org.celstec.arlearn2.jdo.classes.AccountJDO;
 import org.celstec.arlearn2.jdo.classes.GameJDO;
 
 public class GameManager {
@@ -38,7 +40,7 @@ public class GameManager {
 	private static final String types[] = new String[] { "Long", "String", "String", "String", "String" };
 
 	@Deprecated
-	public static Long addGame(String title, String owner, String creatorEmail, String feedUrl, Long gameId, Config config) {
+	public static Long addGame(String title, String owner, String creatorEmail, String feedUrl, Long gameId, Config config, Double lat, Double lng) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		GameJDO gameJdo = new GameJDO();
 		gameJdo.setGameId(gameId);
@@ -46,6 +48,8 @@ public class GameManager {
 		gameJdo.setOwner(owner);
 		gameJdo.setFeedUrl(feedUrl);
 		gameJdo.setTitle(title);
+        gameJdo.setLat(lat);
+        gameJdo.setLng(lng);
 		
 		gameJdo.setLastModificationDate(System.currentTimeMillis());
 		if (config != null)  {
@@ -70,6 +74,8 @@ public class GameManager {
 		gameJdo.setTitle(game.getTitle());
 		gameJdo.setSharing(game.getSharing());
 		gameJdo.setDescription(game.getDescription());
+        gameJdo.setLat(game.getLat());
+        gameJdo.setLng(game.getLng());
 		if (game.getLicenseCode() !=null) gameJdo.setLicenseCode(game.getLicenseCode());
 		gameJdo.setLastModificationDate(System.currentTimeMillis());
 		if (game.getConfig() != null)  {
@@ -92,6 +98,8 @@ public class GameManager {
 		gameJdo.setTitle(game.getTitle());
 		gameJdo.setSharing(game.getSharing());
 		gameJdo.setDescription(game.getDescription());
+        gameJdo.setLat(game.getLat());
+        gameJdo.setLng(game.getLng());
 		if (game.getDeleted() != null) gameJdo.setDeleted(game.getDeleted());
 		if (game.getLicenseCode() !=null) gameJdo.setLicenseCode(game.getLicenseCode());
 
@@ -189,6 +197,8 @@ public class GameManager {
 		game.setOwner(jdo.getOwner());
 		game.setDescription(jdo.getDescription());
 		game.setSharing(jdo.getSharing());
+        game.setLng(jdo.getLng());
+        game.setLat(jdo.getLat());
 		if (jdo.getLicenseCode() !=null) game.setLicenseCode(jdo.getLicenseCode());
 		if (jdo.getLastModificationDate() != null) {
 			game.setLastModificationDate(jdo.getLastModificationDate());
@@ -210,4 +220,31 @@ public class GameManager {
 		}
 		return game;
 	}
+
+    public static void makeGameFeatured(Long gameId, boolean featured) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        try {
+            GameJDO game = pm.getObjectById(GameJDO.class, KeyFactory.createKey(GameJDO.class.getSimpleName(), gameId));
+            game.setFeatured(featured);
+        } finally {
+             pm.close();;
+        }
+    }
+
+    public static List<Game> getFeaturedGames() {
+        ArrayList<Game> returnProgressDefinitions = new ArrayList<Game>();
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        Query query = pm.newQuery(GameJDO.class);
+        String filter = "featured == true & sharing == 3";
+
+        query.setFilter(filter);
+        @SuppressWarnings("unchecked")
+        Iterator<GameJDO> it = ((List<GameJDO>) query.execute()).iterator();
+        while (it.hasNext()) {
+            returnProgressDefinitions.add(toBean((GameJDO) it.next()));
+        }
+        return returnProgressDefinitions;
+    }
+
+
 }

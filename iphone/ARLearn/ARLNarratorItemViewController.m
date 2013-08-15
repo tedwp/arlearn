@@ -31,7 +31,6 @@
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
-    NSLog(@"I will disappear");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

@@ -106,7 +106,27 @@
 + (NSDictionary*) runsWithId: (NSNumber *) id{
     return [self executeARLearnGetWithAuthorization:[NSString stringWithFormat:@"myRuns/runId/%lld", [id longLongValue]]];
 }
++ (NSDictionary*) createRun: (NSNumber*) gameId withTitle: (NSString *) runTitle {
+    NSDictionary *runDict = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                gameId, @"gameId",
+                                runTitle, @"title",
+                                nil];
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:runDict options:0 error:nil];
+    return [self executeARLearnPostWithAuthorization:@"myRuns" postData:postData withContentType:applicationjson];
+}
 
+//Users
++ (NSDictionary*) createUser: (NSNumber*) runId
+                 accountType: (NSNumber *) accountType
+                 withLocalId:(NSString*) localId {
+    NSDictionary *userDict = [[NSDictionary alloc] initWithObjectsAndKeys:
+                             runId, @"runId",
+                             accountType, @"accountType",
+                             localId, @"localId",
+                             nil];
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:userDict options:0 error:nil];
+    return [self executeARLearnPostWithAuthorization:@"users" postData:postData withContentType:applicationjson];
+}
 //Games
 + (NSDictionary*) gamesParticipate {
     return [self executeARLearnGetWithAuthorization:@"myGames/participate"];
@@ -114,6 +134,9 @@
 
 + (NSDictionary*) gamesParticipateFrom: (NSNumber *) from{
     return [self executeARLearnGetWithAuthorization:[NSString stringWithFormat:@"myGames/participate?from=%lld", [from longLongValue]]];
+}
++ (NSDictionary*) game: (NSNumber *) gameId {
+   return [self executeARLearnGetWithAuthorization:[NSString stringWithFormat:@"myGames/gameId/%lld", [gameId longLongValue]]];
 }
 //GeneralItems
 + (NSDictionary*) itemsForRun: (int64_t) runId{
@@ -134,15 +157,15 @@
 
 //APN
 
-+ (void) registerDevice: (NSString *) deviceToken withUID: (NSString *) deviceUniqueIdentifier withAccount: (NSString *) account {
++ (void) registerDevice: (NSString *) deviceToken withUID: (NSString *) deviceUniqueIdentifier withAccount: (NSString *) account withBundleId: (NSString*) bundleIdentifier{
     if (!account) return;
     NSDictionary *apnRegistrationBean = [[NSDictionary alloc] initWithObjectsAndKeys:
-                         @"org.celstec.arlearn2.beans.notification.APNDeviceDescription", @"type",
-                         account, @"account",
-                         deviceUniqueIdentifier, @"deviceUniqueIdentifier",
-                         deviceToken, @"deviceToken",
-                         nil];
-    NSLog(@"bean to write %@", apnRegistrationBean);
+                                         @"org.celstec.arlearn2.beans.notification.APNDeviceDescription", @"type",
+                                         account, @"account",
+                                         deviceUniqueIdentifier, @"deviceUniqueIdentifier",
+                                         deviceToken, @"deviceToken",
+                                         bundleIdentifier, @"bundleIdentifier",
+                                         nil];
     NSData *postData = [NSJSONSerialization dataWithJSONObject:apnRegistrationBean options:0 error:nil];
     [self executeARLearnPOST:@"notifications/apn" postData:postData withAccept:nil withContentType:applicationjson ];
     
@@ -178,12 +201,7 @@
 
 + (void) publishResponse: (NSDictionary *) responseDict {
     NSData *postData = [NSJSONSerialization dataWithJSONObject:responseDict options:0 error:nil];
-    id jsonData =[self executeARLearnPostWithAuthorization:@"response" postData:postData withContentType:applicationjson];
-//    id jsonData =     [self executeARLearnPOST:@"response"
-//                    postData:postData
-//                  withAccept:applicationjson
-//             withContentType:applicationjson];
-    NSLog(@"return server %@", jsonData);
+    [self executeARLearnPostWithAuthorization:@"response" postData:postData withContentType:applicationjson];
 }
 
 + (void) publishResponse: (NSNumber *) runId
@@ -210,12 +228,10 @@
     NSString * str =[NSString stringWithFormat:@"runId=%@&account=%@:%@&fileName=%@", runId,
                      [[NSUserDefaults standardUserDefaults] objectForKey:@"accountType"],
                      [[NSUserDefaults standardUserDefaults] objectForKey:@"accountLocalId"],fileName];
-//    str = @"runId=3&account=2:116743449349920850150&fileName=testImage";
     id response = [self executeARLearnPOST:[NSString stringWithFormat: @"/uploadServiceWithUrl"]
                     postData:[str dataUsingEncoding:NSUTF8StringEncoding]
                   withAccept:textplain
              withContentType:xwwformurlencode];
-    NSLog(@"return response %@", response);
     return (NSString*) response;
 }
 + (void) perfomUpload: (NSString*) uploadUrl withFileName:(NSString*) fileName
@@ -228,11 +244,9 @@
     [request setTimeoutInterval:30];
     [request setHTTPMethod:@"POST"];
     
-    // set Content-Type in HTTP header
     NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
     [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
     
-    // post body
     NSMutableData *body = [NSMutableData data];
     
     if (data) {
@@ -250,15 +264,11 @@
     // setting the body of the post to the reqeust
     [request setHTTPBody:body];
 
-//        NSLog(@"body looks like %@ ",[NSString stringWithUTF8String:[body bytes]]);
     uploadUrl = [uploadUrl stringByReplacingOccurrencesOfString:@"localhost:8888" withString:@"192.168.1.8:8080"];
-        NSLog(@"uploadUrl looks like*** %@ ***stop",uploadUrl);
-    // set URL
     [request setURL:[NSURL URLWithString: uploadUrl]];
     
-    NSData *jsonData = [ NSURLConnection sendSynchronousRequest:request returningResponse: nil error: nil ];
+    [ NSURLConnection sendSynchronousRequest:request returningResponse: nil error: nil ];
 
-    NSLog(@"return from server %@ ***",[NSString stringWithUTF8String:[jsonData bytes]]);
 
 }
 
@@ -276,6 +286,18 @@
 
 + (NSDictionary *) oauthInfo {
     return [self executeARLearnGet:@"oauth/getOauthInfo"];
+}
+
++(NSDictionary *) search: (NSString*) query {
+    return [self executeARLearnPostWithAuthorization:@"myGames/search" postData:[self stringToData:query] withContentType:applicationjson];
+}
+
++(NSDictionary *) featured {
+    return [self executeARLearnGetWithAuthorization:@"myGames/featured"];
+}
+
++(NSDictionary *) geoSearch: (NSNumber*) distance withLat:(NSNumber *) lat withLng: (NSNumber*) lng {
+    return [self executeARLearnGetWithAuthorization:[NSString stringWithFormat:@"myGames/search/lat/%f/lng/%f/distance/%ld", lat.doubleValue, lng.doubleValue, distance.longValue  ]];
 }
 
 @end

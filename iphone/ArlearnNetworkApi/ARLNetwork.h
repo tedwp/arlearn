@@ -26,20 +26,30 @@
 
 + (NSString*) requestAuthToken: (NSString *) username password: (NSString *) password ;
 
+//Runs
 + (NSDictionary*) runsParticipate ;
 + (NSDictionary*) runsParticipateFrom: (NSNumber *) from;
 + (NSDictionary*) runsWithId: (NSNumber *) id;
++ (NSDictionary*) createRun: (NSNumber*) gameId withTitle: (NSString *) runTitle;
 
+//Users
++ (NSDictionary*) createUser: (NSNumber*) runId
+                   accountType: (NSNumber *) accountType
+                 withLocalId:(NSString*) localId;
+
+//Games
 + (NSDictionary*) gamesParticipate;
 + (NSDictionary*) gamesParticipateFrom: (NSNumber *) from;
++ (NSDictionary*) game: (NSNumber *) gameId;
 
 + (NSDictionary*) itemsForRun: (int64_t) runId;
 + (NSDictionary*) itemsForGameFrom: (NSNumber *) gameId from:(NSNumber *) from;
 
+
 + (NSDictionary *) itemVisibilityForRun: (NSNumber *) runId;
 + (NSDictionary*) itemVisibilityForRun: (NSNumber *) runId from: (NSNumber *) from ;
 
-+ (void) registerDevice: (NSString *) token withUID: (NSString *) deviceUID withAccount: (NSString *) email;
++ (void) registerDevice: (NSString *) deviceToken withUID: (NSString *) deviceUniqueIdentifier withAccount: (NSString *) account withBundleId: (NSString*) bundleIdentifier;
 
 + (void) publishAction: (NSDictionary *) actionDict;
 + (void) publishAction: (NSNumber *) runId action: (NSString *) action itemId: (NSNumber*) itemId time: (NSNumber *) time itemType:(NSString *) itemType;
@@ -56,6 +66,9 @@ contentType:(NSString*) contentType withData:(NSData*) data;
 
 +(NSDictionary *) oauthInfo ;
 
++(NSDictionary *) search: (NSString*) query ;
++(NSDictionary *) featured ;
++(NSDictionary *) geoSearch: (NSNumber*) distance withLat:(NSNumber *) lat withLng: (NSNumber*) lng ;
 @end
 
 

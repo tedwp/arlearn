@@ -52,11 +52,17 @@ public class GeneralItemVisibilityManager {
 
 	public static void setItemVisible(Long generalItemId, Long runId,
 			String email, Integer status, long timeStamp) {
+        if (email.equals("2:109002798505335212351")) {
+            logger.severe("GeneralItemVisibilityManager "+runId + "g "+generalItemId+" email "+email +" status");
+        }
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		List<GeneralItemVisibilityJDO> listVisiblity = getGeneralitemVisibility(
 				pm, runId, generalItemId, email, status);
 		try {
 			if (listVisiblity.isEmpty()) {
+                if (email.equals("2:109002798505335212351")) {
+                    logger.severe("listVisiblity.isEmpty() ");
+                }
 				VisibleGeneralItemsCache.getInstance().removeGeneralItemList(
 						runId, email, status);
 				GeneralItemVisibilityJDO visJdo = new GeneralItemVisibilityJDO();

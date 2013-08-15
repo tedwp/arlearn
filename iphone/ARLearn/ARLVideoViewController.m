@@ -31,13 +31,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-     self.headerText.title = self.generalItem.name;
     self.headerText.title = self.generalItem.name;
     self.webView = [[UIWebView alloc] init];
     [self.webView loadHTMLString:self.generalItem.richText baseURL:nil];
     self.webView.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.view addSubview:self.webView];
-
+    [self.view addSubview:self.webView];
+    
     NSDictionary * jsonDict = [NSKeyedUnarchiver unarchiveObjectWithData:self.generalItem.json];
     
     self.dataCollectionWidget = [[ARLDataCollectionWidget alloc] init:[jsonDict objectForKey:@"openQuestion"] viewController:self];
@@ -51,7 +50,7 @@
 }
 
 - (void) createPlayButton {
-
+    
     self.playButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.playButton addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     self.playButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -77,7 +76,7 @@
          self.webView, @"webView",
          self.playButton, @"playButton", nil];
     }
-
+    
     NSString* verticalContstraint;
     if (widget.isVisible) {
         verticalContstraint = @"V:|-(>=100)-[playButton(==70)][widget(==80)]|";
@@ -85,28 +84,28 @@
         NSLog(@"widget nt vis");
         verticalContstraint = @"V:|-(>=100)-[playButton(==70)]|";
     }
-
-    [self.view addConstraints:[NSLayoutConstraint
-                                   constraintsWithVisualFormat:verticalContstraint
-                                   options:NSLayoutFormatDirectionLeadingToTrailing
-                                   metrics:nil
-                                   views:viewsDictionary]];
-    [self.view addConstraints:[NSLayoutConstraint
-                                   constraintsWithVisualFormat:@"V:|[webView(>=100)]|"
-                                   options:NSLayoutFormatDirectionLeadingToTrailing
-                                   metrics:nil
-                                   views:viewsDictionary]];
     
     [self.view addConstraints:[NSLayoutConstraint
-                                   constraintsWithVisualFormat:@"H:|-(>=50)-[playButton(==50)]-(>=50)-|"
-                                   options:NSLayoutFormatDirectionLeadingToTrailing
-                                   metrics:nil
-                                   views:viewsDictionary]];
+                               constraintsWithVisualFormat:verticalContstraint
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:viewsDictionary]];
     [self.view addConstraints:[NSLayoutConstraint
-                                   constraintsWithVisualFormat:@"H:|[webView]|"
-                                   options:NSLayoutFormatDirectionLeadingToTrailing
-                                   metrics:nil
-                                   views:viewsDictionary]];
+                               constraintsWithVisualFormat:@"V:|[webView(>=100)]|"
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:viewsDictionary]];
+    
+    [self.view addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"H:|-(>=50)-[playButton(==50)]-(>=50)-|"
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"H:|[webView]|"
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:viewsDictionary]];
     
     NSLayoutConstraint *center = [NSLayoutConstraint
                                   constraintWithItem:self.playButton attribute:NSLayoutAttributeCenterX
@@ -117,12 +116,12 @@
     
     if (widget.isVisible) {
         [self.view addConstraints:[NSLayoutConstraint
-                                       constraintsWithVisualFormat:@"H:|[widget]|"
-                                       options:NSLayoutFormatDirectionLeadingToTrailing
-                                       metrics:nil
-                                       views:NSDictionaryOfVariableBindings(widget)]];
+                                   constraintsWithVisualFormat:@"H:|[widget]|"
+                                   options:NSLayoutFormatDirectionLeadingToTrailing
+                                   metrics:nil
+                                   views:NSDictionaryOfVariableBindings(widget)]];
     }
-
+    
     
 }
 
@@ -143,7 +142,7 @@
     //    NSString *movePath=[[NSBundle mainBundle] pathForResource:tmpFile ofType:@"mp4"];
     [mediaData writeToFile:tmpFile atomically:YES];
     self.tempVideoUrl = [NSURL fileURLWithPath:tmpFile];
-
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -153,12 +152,6 @@
 }
 
 - (void)playVideo{
-    //    MPMoviePlayerController *movePlayer=[[MPMoviePlayerController alloc]init];
-//    [movePlayer setContentURL:moveUrl];
-//    [movePlayer play];
-//
-//    NSString *filepath   =   @"http://dl.dropboxusercontent.com/u/1571790/Najib%20Amhali%20-%20Freefight%20-%20Broodje%20Shoarma-1.mp4";
-//    NSURL    *fileURL    =   [NSURL fileURLWithPath:filepath];
     self.moviePlayerController = [[MPMoviePlayerController alloc] initWithContentURL:self.tempVideoUrl];
     [self.view addSubview:self.moviePlayerController.view];
     
@@ -167,12 +160,14 @@
                                                  name:MPMoviePlayerPlaybackDidFinishNotification
                                                object:self.moviePlayerController];
     self.moviePlayerController.fullscreen = YES;
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:NULL];
+    
     self.moviePlayerController.movieSourceType = MPMovieSourceTypeFile;
-//    moviePlayerController.initialPlaybackTime = -1.0;
     self.moviePlayerController.controlStyle = MPMovieControlStyleDefault;
     self.moviePlayerController.shouldAutoplay = YES;
     [self.moviePlayerController prepareToPlay];
-
+    
     if ([self.moviePlayerController respondsToSelector:@selector(loadState)]){
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(moviePlayerLoadStateChanged:)
@@ -180,20 +175,20 @@
                                                    object:self.moviePlayerController];
     }
     
-
+    
     [self.moviePlayerController play];
-
+    
 }
 
-- (void) moviePlayerLoadStateChanged:(NSNotification*)notification
-{
-    NSLog(@"my path %@", [notification description]);
-
+- (void) moviePlayerLoadStateChanged:(NSNotification*)notification{
+    
 }
 
 
 
 - (void) moviePlayBackDidFinish:(NSNotification*)notification {
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setActive:NO error:nil];
     
     MPMoviePlayerController *player = [notification object];
     
@@ -207,5 +202,6 @@
         [player.view removeFromSuperview];
     }
 }
+
 
 @end

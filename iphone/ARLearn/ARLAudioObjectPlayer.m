@@ -20,6 +20,7 @@
     if (self = [super init]) {
         _audioData = audioData;
         _player =  [[AVAudioPlayer alloc] initWithData:audioData error:nil];
+
         
     }
     return self;
@@ -68,6 +69,9 @@
 }
 
 -(void) startPlayingAfterStop {
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:NULL];
+    
     self.player.numberOfLoops = 1;
     self.player.delegate = self;
 	if (self.player == nil)

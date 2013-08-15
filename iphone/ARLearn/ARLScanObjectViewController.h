@@ -13,11 +13,19 @@
 #import "ZBarSDK.h"
 #import "ARLCloudSynchronizer.h"
 
+#import "GeneralItem.h"
+#import "GeneralItemData.h"
+#import "Run.h"
+
 @interface ARLScanObjectViewController : UIViewController  < ZBarReaderDelegate >
 
 @property (strong, nonatomic) GeneralItem * generalItem;
 @property (strong, nonatomic) Run * run;
 
-- (IBAction)scanTagButton:(id)sender;
+
+@property (weak, nonatomic) IBOutlet UINavigationItem *headerText;
+
+@property (strong, nonatomic)  UIWebView *webView;
+@property (strong, nonatomic) UIButton * scannerButton;
 
 @end

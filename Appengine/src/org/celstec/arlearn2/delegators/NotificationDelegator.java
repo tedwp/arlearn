@@ -98,20 +98,20 @@ public class NotificationDelegator extends GoogleDelegator {
 
 	public void sendNotification(String account, String text) {
 		for (DeviceDescription deviceDesc : IOSDevicesRegistryManager.getDeviceTokens(account)) {
-			sendNotification(account, ((APNDeviceDescription) deviceDesc).getDeviceToken(), text);
+			sendNotification(account, ((APNDeviceDescription) deviceDesc).getDeviceToken(), text, ((APNDeviceDescription) deviceDesc).getBundleIdentifier());
 		}
 
 	}
 
 	public void sendiOSNotificationAsJson(String account, String text) {
 		for (DeviceDescription deviceDesc : IOSDevicesRegistryManager.getDeviceTokens(account)) {
-			sendiOSNotificationAsJson(account, ((APNDeviceDescription) deviceDesc).getDeviceToken(), text);
+			sendiOSNotificationAsJson(account, ((APNDeviceDescription) deviceDesc).getDeviceToken(), text, ((APNDeviceDescription) deviceDesc).getBundleIdentifier());
 		}
 	}
 
 	public void sendiOSNotificationAsJson(String account, HashMap<String, Object> valueMap) {
 		for (DeviceDescription deviceDesc : IOSDevicesRegistryManager.getDeviceTokens(account)) {
-			sendiOSNotificationAsJson(account, ((APNDeviceDescription) deviceDesc).getDeviceToken(), valueMap);
+			sendiOSNotificationAsJson(account, ((APNDeviceDescription) deviceDesc).getDeviceToken(), valueMap, ((APNDeviceDescription) deviceDesc).getBundleIdentifier());
 		}
 	}
 
@@ -130,9 +130,9 @@ public class NotificationDelegator extends GoogleDelegator {
 
 	}
 
-	public void sendNotification(String account, String deviceToken, String text) {
+	public void sendNotification(String account, String deviceToken, String text, String bundleIdentifier) {
 		String json = "{\"aps\":{\"alert\":\"" + text + "\", \"requestType\":1, \"sound\":\"default\"}}";
-		sendiOSNotificationAsJson(account, deviceToken, json);
+		sendiOSNotificationAsJson(account, deviceToken, json, bundleIdentifier);
 	}
     private static final Logger log = Logger.getLogger(NotificationDelegator.class.getName());
 
@@ -161,19 +161,16 @@ public class NotificationDelegator extends GoogleDelegator {
 
 		try {
 			Result result = sender.send(message, registrationId, 5);
-//			log.log(Level.WARNING, "sent "+message.toString());
-//			log.log(Level.WARNING, "result "+result);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			log.log(Level.SEVERE, "errr",e);
 			e.printStackTrace();
 		}
 	}
 
-	public void sendiOSNotificationAsJson(String account, String deviceToken, String json) {
+	public void sendiOSNotificationAsJson(String account, String deviceToken, String json, String bundleIdentifier) {
 
 		try {
-			URL url = new URL("http://sharetec.celstec.org/APN/not.php?deviceToken=" + deviceToken);
+			URL url = new URL("http://sharetec.celstec.org/APN/"+bundleIdentifier+".php?deviceToken=" + deviceToken);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
@@ -194,10 +191,10 @@ public class NotificationDelegator extends GoogleDelegator {
 		}
 	}
 
-	public void sendiOSNotificationAsJson(String account, String deviceToken, HashMap<String, Object> valueMap) {
+	public void sendiOSNotificationAsJson(String account, String deviceToken, HashMap<String, Object> valueMap, String bundleIdentifier) {
 
 		try {
-			URL url = new URL("http://sharetec.celstec.org/APN/not.php?deviceToken=" + deviceToken);
+			URL url = new URL("http://sharetec.celstec.org/APN/"+bundleIdentifier+".php?deviceToken=" + deviceToken);
 			System.out.println("url "+url);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
