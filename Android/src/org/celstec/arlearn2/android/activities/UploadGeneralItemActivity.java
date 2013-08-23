@@ -189,14 +189,14 @@ public class UploadGeneralItemActivity extends GeneralActivity {
 			conn.setRequestProperty("Connection", "Keep-Alive");
 			conn.setRequestProperty("Charset", "UTF-8");
 			conn.setRequestProperty("GData-Version", "1.2");
-			conn.setRequestProperty("Authorization", "GoogleLogin auth=" + pa.getFusionAuthToken());
+			conn.setRequestProperty("Authorization", "GoogleLogin auth=" + pa.getAuthToken());
 
 			OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
 
 			// // TODO
 			// writer.write("gameId=86030&account=arlearn5&fileName=" +
 			// fileName);
-			writer.write("runId="+pa.getCurrentRunId()+"&account="+pa.getUsername()+"&fileName=" + fileName);
+			writer.write("runId="+pa.getCurrentRunId()+"&account="+pa.getFullId()+"&fileName=" + fileName);
 			// This is for userConten writer.write("&name="+uriFile.toString());
 			// writer.write("runId=" + runId + "&account=" + account +
 			// "&fileName=" + fileName);

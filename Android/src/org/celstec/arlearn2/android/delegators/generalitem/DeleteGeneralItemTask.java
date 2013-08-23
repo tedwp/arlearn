@@ -52,7 +52,7 @@ public class DeleteGeneralItemTask implements NetworkTask {
 	@Override
 	public void execute() {
 		try {
-			GeneralItemClient.getGeneralItemClient().delete(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), generalItemId, gameId);
+			GeneralItemClient.getGeneralItemClient().delete(PropertiesAdapter.getInstance(ctx).getAuthToken(), generalItemId, gameId);
 		} catch (Exception e) {
 			Log.e("exception", "in databasehandler", e);		
 		}

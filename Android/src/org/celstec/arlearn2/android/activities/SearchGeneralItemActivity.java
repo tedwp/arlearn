@@ -181,7 +181,7 @@ public class SearchGeneralItemActivity extends GeneralActivity {
 			try {
 				if (NetworkSwitcher.isOnline(SearchGeneralItemActivity.this)) {
 					// TODO pending to create this method from Stefaan
-					GeneralItem g = GeneralItemClient.getGeneralItemClient().getGeneralItem(getMenuHandler().getPropertiesAdapter().getFusionAuthToken(), (Long)arg0[0]);
+					GeneralItem g = GeneralItemClient.getGeneralItemClient().getGeneralItem(getMenuHandler().getPropertiesAdapter().getAuthToken(), (Long)arg0[0]);
 					publishProgress(g);
 				} else {
 					publishProgress();

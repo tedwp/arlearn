@@ -258,7 +258,7 @@ public class VideorecorderActivity extends Activity implements Callback {
 		Toast.makeText(this, "Publishing recording " + videoFile.getName() + " - "+videoFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
 		
 		// Upload file into Blob store
-		GeneralItemsDelegator.getInstance().uploadGeneralItem(this, videoObject, pa.getUsername(), Uri.parse(videoFile.getAbsolutePath()));
+		GeneralItemsDelegator.getInstance().uploadGeneralItem(this, videoObject, pa.getFullId(), Uri.parse(videoFile.getAbsolutePath()));
 		
 		// Create item in GenealItemJDO
 		GeneralItemsDelegator.getInstance().createGeneralItem(this, videoObject);

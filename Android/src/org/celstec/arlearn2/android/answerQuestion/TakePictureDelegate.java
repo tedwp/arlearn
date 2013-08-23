@@ -19,18 +19,11 @@
 package org.celstec.arlearn2.android.answerQuestion;
 
 
-<<<<<<< HEAD
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
-
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnnotateActivity;
 import org.celstec.arlearn2.android.util.MediaFolders;
-
-
-=======
->>>>>>> refs/remotes/origin/master
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,9 +34,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.activities.AnnotateActivity;
-import org.celstec.arlearn2.android.util.MediaFolders;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -39,7 +39,7 @@ public class CreateGeneralItemTask implements NetworkTask {
 	public void execute() {	
 		
 		try {
-			GeneralItemClient.getGeneralItemClient().postGeneralItem(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), generalItem.toString());
+			GeneralItemClient.getGeneralItemClient().postGeneralItem(PropertiesAdapter.getInstance(ctx).getAuthToken(), generalItem.toString());
 			GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(ctx, generalItem.getGameId());
 
 		} catch (Exception e) {

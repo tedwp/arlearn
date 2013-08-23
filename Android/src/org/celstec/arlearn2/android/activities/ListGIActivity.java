@@ -27,6 +27,7 @@ import org.celstec.arlearn2.android.cache.GeneralItemsCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.android.genItemActivities.AudiorecorderActivity;
+import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.genItemActivities.PictureItemActivity;
 import org.celstec.arlearn2.android.genItemActivities.VideorecorderActivity;
 import org.celstec.arlearn2.android.list.GameListAdapter;
@@ -43,15 +44,21 @@ import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.VideoObject;
 
 import android.app.AlertDialog;
+import android.app.LocalActivityManager;
+import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.TabHost;
+import android.widget.TabHost.TabSpec;
 
-public class ListGIActivity extends GeneralActivity implements ListitemClickInterface {
+//public class ListGIActivity extends GeneralActivity implements ListitemClickInterface {
+public class ListGIActivity extends TabActivity implements ListitemClickInterface {
 
 	private String CLASSNAME = this.getClass().getName();
 
@@ -69,7 +76,37 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 			selectedGame = (Game) extras.get("selectedGame");
 		}
 
-		setContentView(R.layout.listgeneralitemscreen);
+		//setContentView(R.layout.listgeneralitemscreen);
+		setContentView(R.layout.gametabs);
+
+		
+	    
+	    
+		Resources res = getResources();
+	
+		TabHost th = getTabHost();
+		
+
+		Intent intentAndroid = new Intent().setClass(this, GameRunsActivity.class);
+		TabSpec tsItems = th
+		  .newTabSpec("Items")
+		  .setIndicator("", res.getDrawable(R.drawable.gi_add_48x))
+		  .setContent(intentAndroid);
+ 
+
+		Intent intentApple = new Intent().setClass(this, GameRunsActivity.class);
+		TabSpec tsRuns = th
+		  .newTabSpec("Runs")
+		  .setIndicator("", res.getDrawable(R.drawable.add_user_48x))
+		  .setContent(intentApple);		
+		
+		th.addTab(tsItems);
+		th.addTab(tsRuns);
+ 
+
+		th.setCurrentTab(1);		
+		
+		
 	}
 
 	@Override
@@ -82,13 +119,13 @@ public class ListGIActivity extends GeneralActivity implements ListitemClickInte
 		
 	}
 
-	@Override
-	public void onBroadcastMessage(Bundle bundle, boolean render) {
-		super.onBroadcastMessage(bundle, render);
-		if (render) {
-			renderGeneralItemsList();
-		}
-	}	
+//	@Override
+//	public void onBroadcastMessage(Bundle bundle, boolean render) {
+//		super.onBroadcastMessage(bundle, render);
+//		if (render) {
+//			renderGeneralItemsList();
+//		}
+//	}	
 
 
 	private void renderGeneralItemsList() {

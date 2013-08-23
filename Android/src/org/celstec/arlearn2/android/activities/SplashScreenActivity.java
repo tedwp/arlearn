@@ -118,6 +118,7 @@ public class SplashScreenActivity extends GeneralActivity {
 			menu.add(0, MenuHandler.GAME_AUTHOR, 0, getString(R.string.creategame));
 		} else {
 			menu.add(0, MenuHandler.OAUTH_LOGIN, 0, "LOGIN");
+			menu.add(0, MenuHandler.GAME_AUTHOR, 0, getString(R.string.creategame));
 //			menu.add(0, MenuHandler.LOGIN, 0, getString(R.string.login) + " old");
 
 		}

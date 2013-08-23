@@ -246,7 +246,7 @@ public class AudiorecorderActivity extends Activity {
 		Toast.makeText(this, "Publishing audio recording ..." + audiofile.getName() , Toast.LENGTH_LONG).show();
 		
 		// Upload file into Blob store
-		GeneralItemsDelegator.getInstance().uploadGeneralItem(this, audioObject, pa.getUsername(), newUri);
+		GeneralItemsDelegator.getInstance().uploadGeneralItem(this, audioObject, pa.getFullId(), newUri);
 		
 		// Create item in GenealItemJDO
 		GeneralItemsDelegator.getInstance().createGeneralItem(this, audioObject);

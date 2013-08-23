@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/white">
+   
+  
+  <TextView
+      android:id="@+id/tvTitle"
+      android:textColor="@color/black"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="This is the title of the game [GameId]"
+      android:textAppearance="?android:attr/textAppearanceLarge" />   
+  
+
+  <ImageView
+      android:id="@+id/ivCC"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:onClick="handlePush"
+      android:src="@drawable/by" />
+
+  <Spinner
+      android:id="@+id/spinAccess"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content" />
+
+  <Spinner
+      android:id="@+id/spinChange"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content" />
+  
+
+  <TextView
+      android:id="@+id/tvShare"
+      android:textColor="@color/black"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="Share"
+      android:textAppearance="?android:attr/textAppearanceMedium" />
+
+  <TextView
+      android:id="@+id/tvRoles"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="Roles"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:textColor="@color/black" />
+
+  <WebView
+      android:id="@+id/wvDesc"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
+     
+</LinearLayout>

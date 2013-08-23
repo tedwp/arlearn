@@ -87,7 +87,7 @@ public class NewGameActivity extends GeneralActivity {
 	
 	
 	private boolean checkGameSameTitle(String gameName) {
-		for (Game g : GameCache.getInstance().getGames(PropertiesAdapter.getInstance(this).getUsername())) {
+		for (Game g : GameCache.getInstance().getGames(PropertiesAdapter.getInstance(this).getFullId())) {
 			if (gameName.equals(g.getTitle())) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setMessage("There is already an existing game with this title").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() { //TODO add string to i18n

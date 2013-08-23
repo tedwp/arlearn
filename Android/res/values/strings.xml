@@ -110,7 +110,26 @@
     <string name="tvGISabd">Simple action based dependency</string>
     <string name="tvGIAl">Automatically launch</string>
     <string name="tvGIOq">Open question</string>
-    <string name="tvGIUrl">URL</string>         
+    <string name="tvGIUrl">URL</string>
+    
+    <string name="licenseby">BY</string>
+    <string name="licensebysa">BY-SA</string>
+    <string name="licensebynd">BY-ND</string>
+    <string name="licensebync">BY-NC</string>
+    <string name="licensebyncsa">BY-NC-SA</string>
+    <string name="licensebyncnd">BY-NC-ND</string>
+    <string name="licensebypd">BY-PD</string>
+    <string name="licensebynpd">BY-NPD</string>
+    
+    <string-array name="access_array">
+        <item>Private</item>
+        <item>Anyone with link</item>
+        <item>Public on the web</item>
+    </string-array>
+    <string-array name="change_array">
+        <item>Is owner</item>
+        <item>Can view</item>
+    </string-array>
     
      <!--Todo-->
      <string name="makeAnnotation">Wil je hier een aantekening maken?</string>

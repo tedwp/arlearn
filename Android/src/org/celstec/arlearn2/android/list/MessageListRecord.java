@@ -27,10 +27,6 @@ import org.celstec.arlearn2.android.cache.ActionCache;
 import org.celstec.arlearn2.android.db.MediaCacheGeneralItems;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-<<<<<<< HEAD
-
-=======
->>>>>>> refs/remotes/origin/master
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;

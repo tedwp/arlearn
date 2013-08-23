@@ -44,7 +44,7 @@ public class DeleteGameTask implements NetworkTask {
 	@Override
 	public void execute() {
 		try {
-			Game g = GameClient.getGameClient().delete(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), getGameId());
+			Game g = GameClient.getGameClient().delete(PropertiesAdapter.getInstance(ctx).getAuthToken(), getGameId());
 			if (g.getError() == null) {
 				GameCache.getInstance().deleteGame(gameId);
 				ActivityUpdater.updateActivities(ctx, ListGamesActivity.class.getCanonicalName());

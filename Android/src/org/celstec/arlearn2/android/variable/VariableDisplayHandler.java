@@ -1,17 +1,3 @@
-package org.celstec.arlearn2.android.variable;
-
-import android.app.Activity;
-import android.graphics.Typeface;
-import android.view.Gravity;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.delegators.VariableDelegator;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-
 /**
  * ****************************************************************************
  * Copyright (C) 2013 Open Universiteit Nederland
@@ -32,6 +18,21 @@ import java.util.Iterator;
  * Contributors: Stefaan Ternier
  * ****************************************************************************
  */
+package org.celstec.arlearn2.android.variable;
+
+import android.app.Activity;
+import android.graphics.Typeface;
+import android.view.Gravity;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.delegators.VariableDelegator;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+
 public class VariableDisplayHandler {
 
     private Activity activity;

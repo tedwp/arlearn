@@ -8,6 +8,68 @@
         android:background="@android:color/white"
         android:orientation="vertical" >
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left" >
+
+                <ImageButton
+                    android:id="@+id/ibHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:src="@drawable/home_48x" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right" >
+
+                <ImageButton
+                    android:id="@+id/ibReload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:src="@drawable/reload_48x" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+
+                <EditText
+                    android:id="@+id/etSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="9"
+                    android:hint="Search game ..."
+                    android:lines="1"
+                    android:layout_gravity="left"
+                    android:singleLine="true" >
+
+                    <requestFocus />
+                </EditText>
+
+
+                <ImageButton
+                    android:id="@+id/ibReload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="right"
+                    android:src="@drawable/search_48x" />
+
+        </LinearLayout>
+
         <ListView
             android:id="@+id/listGames"
             android:layout_width="fill_parent"
@@ -21,25 +83,8 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="fill_parent"
             android:layout_height="38dp"
-            android:text="@string/buttonNewGameText"
-            android:onClick="onButtonNewGameClick" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/scoreLinearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|top"
-        android:layout_marginBottom="20dip"
-        android:padding="12dip"
-        android:src="@drawable/list_icon_with_text" >
-
-        <ImageView
-            android:id="@+id/statusLed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dip"
-            android:src="@drawable/status_icon_red" />
+            android:onClick="onButtonNewGameClick"
+            android:text="@string/buttonNewGameText" />
     </LinearLayout>
 
 </merge>

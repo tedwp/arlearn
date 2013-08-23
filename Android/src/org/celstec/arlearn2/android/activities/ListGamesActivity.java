@@ -28,6 +28,7 @@ import org.celstec.arlearn2.android.list.GameListAdapter;
 import org.celstec.arlearn2.android.list.GameListRecord;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
+import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 
 import android.app.AlertDialog;
@@ -54,7 +55,8 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 	@Override
 	protected void onResume() {
 		super.onResume();
-		GameDelegator.getInstance().synchronizeMyGamesWithServer(this);
+		//GameDelegator.getInstance().synchronizeMyGamesWithServer(this);
+		GameDelegator.getInstance().synchronizeParticipateGamesWithServer(this);
 		renderGamesList();
 		
 	}
@@ -75,8 +77,39 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 		adapter = new GameListAdapter(this, R.layout.listgamescreen, alGenericListRecord);
 		adapter.setOnListItemClickCallback(this);
 		
-		vGames = GameCache.getInstance().getGames(PropertiesAdapter.getInstance(this).getUsername()).toArray(new Game[]{});
 		
+		// TOFIX
+		vGames = GameCache.getInstance().getGames(PropertiesAdapter.getInstance(this).getFullId()).toArray(new Game[]{});
+		
+		Config c = new Config();
+		c.setMapAvailable(false);
+		
+		Game g1 = new Game();
+		g1.setDescription("Game 1 desc");
+		g1.setGameId(00001l);
+		g1.setTitle("Game 1 title");
+		g1.setConfig(c);
+			
+		Game g2 = new Game();
+		g2.setDescription("Game 2 desc");
+		g2.setGameId(00002l);
+		g2.setTitle("Game 2 title");
+		g2.setConfig(c);
+			
+		Game g3 = new Game();
+		g3.setDescription("Game 3 desc");
+		g3.setGameId(00003l);
+		g3.setTitle("Game 3 title");
+		g3.setConfig(c);
+		
+		vGames = new Game[3];
+		vGames[0] = g1;
+		vGames[1] = g2;
+		vGames[2] = g3;
+		
+		
+				
+				
 		if (vGames != null) {
 			if (vGames.length != 0){
 				for (Game game: vGames) {
@@ -131,7 +164,7 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 			break;
 		case 3:
 			// Show General Items
-			intent = new Intent(ListGamesActivity.this, ListGIActivity.class);
+			intent = new Intent(ListGamesActivity.this, GameTabActivity.class);
 			intent.putExtra("selectedGame", vGames[position]);
 			ListGamesActivity.this.startActivity(intent);			
 			break;

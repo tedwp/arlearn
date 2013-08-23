@@ -41,7 +41,7 @@ public class QueryGeneralItemsTask implements NetworkTask {
 	public void execute() {
 
 		try {
-			final GeneralItemList rgl = GeneralItemClient.getGeneralItemClient().search(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), sMatchingString);
+			final GeneralItemList rgl = GeneralItemClient.getGeneralItemClient().search(PropertiesAdapter.getInstance(ctx).getAuthToken(), sMatchingString);
 //			List<GeneralItem>l = rgl.getGeneralItems();
 //			for (int i = 0; i < l.size(); i++) {
 //				System.out.println("QueryGeneralItem.execute:"+l.get(i).getName());

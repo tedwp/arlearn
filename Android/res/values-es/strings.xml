@@ -71,11 +71,6 @@
      <string name="reset">RESETEAR</string>
      <string name="refresh">REFRESCAR</string>
      <string name="resetQuestion">¿Estás seguro de que quieres borrar el historial de progreso?</string>
-     
-        <string name="downloadBusy">Paciencia. El archivo aun no se ha descargado</string>
+     <string name="downloadBusy">Paciencia. El archivo aun no se ha descargado</string>
     
-<<<<<<< HEAD
 </resources>
-=======
-</resources>
->>>>>>> refs/remotes/origin/master

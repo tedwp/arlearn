@@ -116,22 +116,12 @@ public class GenericListRecord {
 		if (textRightDetail != null) {
 			textRightDetail.setText(getRightDetail());
 		}
-<<<<<<< HEAD
-		if (textError != null){
-			if (getError() != null) {
-				textError.setText(getError());
-				textError.setVisibility(View.VISIBLE);
-			} else {
-				textError.setVisibility(View.GONE);
-			}
-=======
         if (textError != null)
 		if (getError() != null) {
 			textError.setText(getError());
 			textError.setVisibility(View.VISIBLE);
 		} else {
 			textError.setVisibility(View.GONE);
->>>>>>> refs/remotes/origin/master
 		}
 		if (iv != null && getImageResourceId()!=0) {
 			iv.setImageResource(getImageResourceId());
