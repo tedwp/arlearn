@@ -57,8 +57,7 @@ import android.widget.Toast;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
-//public class ListGIActivity extends GeneralActivity implements ListitemClickInterface {
-public class ListGIActivity extends TabActivity implements ListitemClickInterface {
+public class ListGIActivity extends GeneralActivity implements ListitemClickInterface {
 
 	private String CLASSNAME = this.getClass().getName();
 
@@ -76,35 +75,7 @@ public class ListGIActivity extends TabActivity implements ListitemClickInterfac
 			selectedGame = (Game) extras.get("selectedGame");
 		}
 
-		//setContentView(R.layout.listgeneralitemscreen);
-		setContentView(R.layout.gametabs);
-
-		
-	    
-	    
-		Resources res = getResources();
-	
-		TabHost th = getTabHost();
-		
-
-		Intent intentAndroid = new Intent().setClass(this, GameRunsActivity.class);
-		TabSpec tsItems = th
-		  .newTabSpec("Items")
-		  .setIndicator("", res.getDrawable(R.drawable.gi_add_48x))
-		  .setContent(intentAndroid);
- 
-
-		Intent intentApple = new Intent().setClass(this, GameRunsActivity.class);
-		TabSpec tsRuns = th
-		  .newTabSpec("Runs")
-		  .setIndicator("", res.getDrawable(R.drawable.add_user_48x))
-		  .setContent(intentApple);		
-		
-		th.addTab(tsItems);
-		th.addTab(tsRuns);
- 
-
-		th.setCurrentTab(1);		
+		setContentView(R.layout.listgeneralitemscreen);	
 		
 		
 	}

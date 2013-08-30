@@ -52,7 +52,7 @@
 
 
 		<!-- Mobile game authoring activities -->
-		<activity android:name=".activities.GameTabActivity" android:label="@string/app_name" />
+		<activity android:name=".activities.GameTabActivity" android:label="grijaaaaaaaaaaaaaaander" />
 		<activity android:name=".activities.GameItemsActivity" android:label="@string/app_name" />
 		<activity android:name=".activities.GameRunsActivity" android:label="@string/app_name" />
 		<activity android:name=".activities.GameDescActivity" android:label="@string/app_name" />	

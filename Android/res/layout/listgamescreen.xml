@@ -36,39 +36,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
+                    android:onClick="onReload"
                     android:src="@drawable/reload_48x" />
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-
-                <EditText
-                    android:id="@+id/etSearch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="9"
-                    android:hint="Search game ..."
-                    android:lines="1"
-                    android:layout_gravity="left"
-                    android:singleLine="true" >
-
-                    <requestFocus />
-                </EditText>
-
-
-                <ImageButton
-                    android:id="@+id/ibReload"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="right"
-                    android:src="@drawable/search_48x" />
-
-        </LinearLayout>
 
         <ListView
             android:id="@+id/listGames"

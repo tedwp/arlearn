@@ -50,7 +50,9 @@ public class GameTabActivity extends TabActivity implements
 
 		if (extras != null) {
 			selectedGame = (Game) extras.get("selectedGame");
+			this.setTitle(selectedGame.getTitle());
 		}
+		
 
 		// setContentView(R.layout.listgeneralitemscreen);
 		setContentView(R.layout.gametabs);
@@ -61,16 +63,20 @@ public class GameTabActivity extends TabActivity implements
 
 		Intent intentI = new Intent().setClass(this,
 				GameItemsActivity.class);
+		intentI.putExtra("selectedGame", selectedGame);
+		
 		TabSpec tsItems = th.newTabSpec("Items")
 				.setIndicator("", res.getDrawable(R.drawable.gi_add_48x))
 				.setContent(intentI);
 
 		Intent intentR = new Intent().setClass(this, GameRunsActivity.class);
+		intentR.putExtra("selectedGame", selectedGame);
 		TabSpec tsRuns = th.newTabSpec("Runs")
 				.setIndicator("", res.getDrawable(R.drawable.add_user_48x))
 				.setContent(intentR);
 		
 		Intent intentG = new Intent().setClass(this, GameDescActivity.class);
+		intentG.putExtra("selectedGame", selectedGame);
 		TabSpec tsGameDesc = th.newTabSpec("Game")
 				.setIndicator("", res.getDrawable(R.drawable.list_icon))
 				.setContent(intentG);

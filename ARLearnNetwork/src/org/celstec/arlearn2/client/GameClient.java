@@ -21,6 +21,7 @@ package org.celstec.arlearn2.client;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.game.GameAccessList;
 import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
@@ -45,7 +46,7 @@ public class GameClient extends GenericClient{
 	public GamesList getGames(String token) {
 		return (GamesList)  executeGet(getUrlPrefix(), token, GamesList.class);
 	}
-	
+		
 	public GamesList getGames(String token,Long from) {
 		return (GamesList)  executeGet(getUrlPrefix()+"?from="+from, token, GamesList.class);
 	}
@@ -57,6 +58,14 @@ public class GameClient extends GenericClient{
 	public GamesList getGamesParticipate(String token, Long from) {
 		return (GamesList)  executeGet(getUrlPrefix()+"/participate?from="+from, token, GamesList.class);
 	}
+	
+	public GameAccessList getGamesAccess(String token) {
+		return (GameAccessList)  executeGet(getUrlPrefix()+"/gameAccess", token, GameAccessList.class);
+	}	
+	
+	public GameAccessList getGamesAccess(String token,Long from) {
+		return (GameAccessList)  executeGet(getUrlPrefix()+"/gameAccess?from="+from, token, GameAccessList.class);
+	}	
 	
 	public Game getGame(String token, Long gameId) {
 		return (Game)  executeGet(getUrlPrefix()+"/gameId/"+gameId, token, Game.class);

@@ -1,58 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="@color/white">
-   
-  
-  <TextView
-      android:id="@+id/tvTitle"
-      android:textColor="@color/black"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:text="This is the title of the game [GameId]"
-      android:textAppearance="?android:attr/textAppearanceLarge" />   
-  
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
 
-  <ImageView
-      android:id="@+id/ivCC"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:onClick="handlePush"
-      android:src="@drawable/by" />
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
-  <Spinner
-      android:id="@+id/spinAccess"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tvTitleLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Title:"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black" />
 
-  <Spinner
-      android:id="@+id/spinChange"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content" />
-  
+        <TextView
+            android:id="@+id/tvTitleText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black" />
+    </LinearLayout>
 
-  <TextView
-      android:id="@+id/tvShare"
-      android:textColor="@color/black"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:text="Share"
-      android:textAppearance="?android:attr/textAppearanceMedium" />
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
-  <TextView
-      android:id="@+id/tvRoles"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:text="Roles"
-      android:textAppearance="?android:attr/textAppearanceMedium"
-      android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/tvGameIdLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="ID:"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black" />
 
-  <WebView
-      android:id="@+id/wvDesc"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent" />
-     
+        <TextView
+            android:id="@+id/tvGameIdText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tvGameDescLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Description:"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tvGameDescText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tvGameLicenceLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Licence:"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/ivCC"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="left"
+            android:scaleType="fitStart"
+            android:onClick="handleClickCC"
+            android:src="@drawable/by" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tvGameAccessLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Access:"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black" />
+
+        <Spinner
+            android:id="@+id/spinAccess"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tvGamePermissionsLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Permissions:"
+            android:textAppearance="?android:attr/textAppearanceMedium"            
+            android:textColor="@color/black" />
+
+        <Spinner
+            android:id="@+id/spinChange"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tvGamePermissionsLabel"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Share:"
+            android:textAppearance="?android:attr/textAppearanceMedium"            
+            android:textColor="@color/black" />
+                
+        <ImageView
+            android:id="@+id/ivShare"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="left"
+            android:onClick="handleClickShare"
+            android:scaleType="fitStart"
+            android:src="@drawable/share_48x" />
+        
+        <ImageView
+            android:id="@+id/ivUserx"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scaleType="fitEnd"
+            android:layout_gravity="right"
+            android:src="@drawable/user" />
+        
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvGamePreviewLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Preview"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/black" />
+
+    <WebView
+        android:id="@+id/wvDesc"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        
+         />
+
 </LinearLayout>

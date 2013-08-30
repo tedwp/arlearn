@@ -1,9 +1,6 @@
 package org.celstec.arlearn2.android.asynctasks.network;
 
 import org.celstec.arlearn2.android.activities.ListGamesActivity;
-import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
-import org.celstec.arlearn2.android.activities.ListMessagesActivity;
-import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
@@ -11,7 +8,8 @@ import org.celstec.arlearn2.android.broadcast.GenericReceiver;
 import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.GameDelegator;
-import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
+import org.celstec.arlearn2.beans.game.GameAccess;
+import org.celstec.arlearn2.beans.game.GameAccessList;
 import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.client.GameClient;
 import org.celstec.arlearn2.client.exception.ARLearnException;
@@ -49,18 +47,32 @@ public class SynchronizeMyGamesTask extends GenericTask implements NetworkTask {
 			return;
 		} else {
 			try {
-				GamesList gl = null;
-				Long lastDate = PropertiesAdapter.getInstance(ctx).getMyGameLastSynchronizationDate() - 120000;
-				gl = GameClient.getGameClient().getGames(PropertiesAdapter.getInstance(ctx).getAuthToken(), lastDate);
-				if (gl.getError() == null) {
-					GameDelegator.getInstance().saveServerGamesToAndroidDb(ctx, gl);
-					PropertiesAdapter.getInstance(ctx).setMyGameLastSynchronizationDate(gl.getServerTime());
-					if (!gl.getGames().isEmpty()) {
-						ActivityUpdater.updateActivities(ctx,
-								ListGamesActivity.class.getCanonicalName());
+
+				GamesList gl = new GamesList();
+				GameAccessList gal = null;
+
+				gal = GameClient.getGameClient().getGamesAccess(PropertiesAdapter.getInstance(ctx).getAuthToken(), 0l);
+				//Log.e("nums games", "[" + gal.getGameAccess().size() + "]");
+
+				if (gal.getError() == null) {
+
+					if (gal.getGameAccess().size() > 0) {
+
+						for (GameAccess ga : gal.getGameAccess()) {
+							System.out.println(ga.getGameId());
+
+							gl.addGame(GameClient.getGameClient().getGame(PropertiesAdapter.getInstance(ctx).getAuthToken(), ga.getGameId()));
+
+						}
+
+						GameDelegator.getInstance().saveServerGamesToAndroidDb(ctx, gl);
+						PropertiesAdapter.getInstance(ctx).setMyGameLastSynchronizationDate(gl.getServerTime());
+						ActivityUpdater.updateActivities(ctx, ListGamesActivity.class.getCanonicalName());
+
 					}
+
 				}
-				
+
 			} catch (ARLearnException ae) {
 				if (ae.invalidCredentials()) {
 					GenericReceiver.setStatusToLogout(ctx);

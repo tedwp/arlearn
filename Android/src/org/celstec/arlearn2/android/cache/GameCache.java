@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -79,6 +80,19 @@ public class GameCache extends GenericCache {
 		}
 		return result;
 	}
+	
+	public Set<Game> getGames() {
+		
+		TreeSet<Game> result =  new TreeSet<Game>();
+		Iterator<Entry<Long, Game>> it = gameMap.entrySet().iterator();
+		while (it.hasNext()) {
+			result.add(it.next().getValue());
+		}
+		return result;
+		
+	} 
+	
+
 
 	public void deleteGame(Long gameId) {
 		synchronized (gameMap) {
