@@ -18,21 +18,20 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.cache;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.game.GameAccess;
 
 public class GameCache extends GenericCache {
 
 	private static GameCache instance;
 
+	private HashMap<Long, GameAccess> gameAccessMap = new HashMap<Long, GameAccess>();
 	private HashMap<Long, Game> gameMap = new HashMap<Long, Game>();
 	private HashMap<String, HashMap<Long, Game>> myGames = new HashMap<String, HashMap<Long, Game>>();
 
@@ -42,7 +41,6 @@ public class GameCache extends GenericCache {
 	public void empty() {
 		gameMap = new HashMap<Long, Game>();
 	}
-
 		
 	public static GameCache getInstance() {
 		if (instance == null) {
@@ -71,6 +69,12 @@ public class GameCache extends GenericCache {
 		}
 	}
 	
+	public void putGameAccess(GameAccess g) {
+		synchronized (gameAccessMap) {
+			gameAccessMap.put(g.getGameId(),g);
+		}
+	}	
+	
 	public Set<Game> getGames(String account) {
 		if (myGames.get(account) == null) return new TreeSet<Game>();
 		TreeSet<Game> result =  new TreeSet<Game>();
@@ -92,11 +96,16 @@ public class GameCache extends GenericCache {
 		
 	} 
 	
+	public GameAccess getGameAccess(Long gameId){
+		return gameAccessMap.get(gameId);
+	}
+	
 
 
 	public void deleteGame(Long gameId) {
 		synchronized (gameMap) {
 			gameMap.remove(gameId);
+			gameAccessMap.remove(gameId);
 		}
 		synchronized (myGames) {
 			for (String account: myGames.keySet()) {

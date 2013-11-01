@@ -52,21 +52,21 @@ public class SynchronizeMyGamesTask extends GenericTask implements NetworkTask {
 				GameAccessList gal = null;
 
 				gal = GameClient.getGameClient().getGamesAccess(PropertiesAdapter.getInstance(ctx).getAuthToken(), 0l);
-				//Log.e("nums games", "[" + gal.getGameAccess().size() + "]");
+				System.out.println("Num of games: ["+ gal.getGameAccess().size() + "]");
 
 				if (gal.getError() == null) {
 
 					if (gal.getGameAccess().size() > 0) {
 
 						for (GameAccess ga : gal.getGameAccess()) {
-							System.out.println(ga.getGameId());
+							System.out.println("Gameid: "+ga.getGameId());
 
 							gl.addGame(GameClient.getGameClient().getGame(PropertiesAdapter.getInstance(ctx).getAuthToken(), ga.getGameId()));
 
 						}
 
-						GameDelegator.getInstance().saveServerGamesToAndroidDb(ctx, gl);
-						PropertiesAdapter.getInstance(ctx).setMyGameLastSynchronizationDate(gl.getServerTime());
+						GameDelegator.getInstance().saveServerGamesToAndroidDb(ctx, gl, gal);
+						//PropertiesAdapter.getInstance(ctx).setMyGameLastSynchronizationDate(gl.getServerTime());
 						ActivityUpdater.updateActivities(ctx, ListGamesActivity.class.getCanonicalName());
 
 					}

@@ -112,14 +112,14 @@
     <string name="tvGIOq">Open question</string>
     <string name="tvGIUrl">URL</string>
     
-    <string name="licenseby">BY</string>
-    <string name="licensebysa">BY-SA</string>
-    <string name="licensebynd">BY-ND</string>
-    <string name="licensebync">BY-NC</string>
-    <string name="licensebyncsa">BY-NC-SA</string>
-    <string name="licensebyncnd">BY-NC-ND</string>
-    <string name="licensebypd">BY-PD</string>
-    <string name="licensebynpd">BY-NPD</string>
+    <string name="licenseby">CC-BY</string>
+    <string name="licensebysa">CC-BY-SA</string>
+    <string name="licensebynd">CC-BY-ND</string>
+    <string name="licensebync">CC-BY-NC</string>
+    <string name="licensebyncsa">CC-BY-NC-SA</string>
+    <string name="licensebyncnd">CC-BY-NC-ND</string>
+    <string name="licensebypd">CC-BY-PD</string>
+    <string name="licensebynpd">CC-BY-NPD</string>
     
     <string-array name="access_array">
         <item>Private</item>

@@ -20,19 +20,16 @@ package org.celstec.arlearn2.android.activities;
 
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.game.GameAccess;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -44,8 +41,11 @@ import android.widget.TextView;
 public class GameDescActivity extends Activity {
 
 	private Game selectedGame = null;
+	private GameAccess selectedGameAccess = null;
 	CCLicence[] aLicenses;
-	Contact[] aContacts;
+	int iLicense = -1;
+
+	// Contact[] aContacts;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,9 +55,17 @@ public class GameDescActivity extends Activity {
 
 		if (extras != null) {
 			selectedGame = (Game) extras.get("selectedGame");
+			selectedGameAccess = (GameAccess) extras.get("selectedGameAccess");
 		}
 
+		// System.out.println("Access rights:" +
+		// selectedGameAccess.getAccessRights());
+
 		loadGameData();
+		loadLicence();
+		// loadContacts();
+		loadSpinnerAccess();
+		loadSpinnerChange();
 
 	}
 
@@ -66,57 +74,48 @@ public class GameDescActivity extends Activity {
 		TextView tv_1 = (TextView) findViewById(R.id.tvTitleText);
 		if (selectedGame.getTitle() != null) {
 			tv_1.setText(selectedGame.getTitle());
-		} else {
-			tv_1.setText("Sample game");
 		}
 
 		TextView tv_2 = (TextView) findViewById(R.id.tvGameDescText);
 		if (selectedGame.getDescription() != null) {
 			tv_2.setText(selectedGame.getDescription());
-		} else {
-			tv_2.setText("This is a game for JTELSS 2014 and consist in sampling experiences.");
 		}
 
 		TextView tv_3 = (TextView) findViewById(R.id.tvGameIdText);
-		if (selectedGame.getGameId() != null) {
-			tv_3.setText(selectedGame.getGameId().toString());
-		} else {
-			tv_3.setText("Sample game");
-		}
-
-		loadLicence();
-		loadContacts();
-		loadSpinnerAccess();
-		loadSpinnerChange();
-		loadWebView();
+		tv_3.setText(selectedGame.getGameId().toString());
 
 	}
 
 	private void loadSpinnerAccess() {
-		Spinner spinner = (Spinner) findViewById(R.id.spinAccess);
 
+		Spinner spinner = (Spinner) findViewById(R.id.spinAccess);
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
 				Log.d("", "chosen " + arg2);
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
 				Log.d("", "Nothing selected ");
 			}
 
 		});
+
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 				this, R.array.access_array,
 				android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
+
+		int iSel = 0;
+		if (selectedGame != null) {
+			iSel = selectedGame.getSharing().intValue() - 1;
+		}
+		spinner.setSelection(iSel);
+
 	}
 
 	private void loadSpinnerChange() {
@@ -144,22 +143,23 @@ public class GameDescActivity extends Activity {
 				android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
-	}
 
-	private void loadWebView() {
-		WebView webView = (WebView) findViewById(R.id.wvDesc);
-		String summary = "<html><body>You scored <b>192</b> points.</body></html>";
-		webView.loadData(summary, "text/html", "utf-8");
+		int iSel = 0;
+		if (selectedGameAccess != null) {
+			iSel = selectedGameAccess.getAccessRights().intValue() - 1;
+		}
+		spinner.setSelection(iSel);
 	}
 
 	private void loadLicence() {
+
 		aLicenses = new CCLicence[8];
 
 		// define the display string, the image, and the value to use
 		// when the choice is selected
 		aLicenses[0] = new CCLicence(getString(R.string.licenseby),
 				getImg(R.drawable.by), getString(R.string.licenseby));
-		aLicenses[1] = new CCLicence(getString(R.string.licensebyncsa),
+		aLicenses[1] = new CCLicence(getString(R.string.licensebysa),
 				getImg(R.drawable.by_sa), getString(R.string.licensebysa));
 		aLicenses[2] = new CCLicence(getString(R.string.licensebync),
 				getImg(R.drawable.by_nc), getString(R.string.licensebync));
@@ -174,65 +174,86 @@ public class GameDescActivity extends Activity {
 		aLicenses[7] = new CCLicence(getString(R.string.licensebypd),
 				getImg(R.drawable.by_pd), getString(R.string.licensebypd));
 
-	}
-	
-	private void loadContacts() {
-		aContacts = new Contact[6];
-
-		// define the display string, the image, and the value to use
-		// when the choice is selected
-		aContacts[0] = new Contact("Bernardo Tabuenca 1",
-				getImg(R.drawable.user), true);
-		aContacts[1] = new Contact("Bernardo Tabuenca 2",
-				getImg(R.drawable.user), false);
-		aContacts[2] = new Contact("Bernardo Tabuenca 3",
-				getImg(R.drawable.user), true);
-		aContacts[3] = new Contact("Bernardo Tabuenca 4",
-				getImg(R.drawable.user), false);
-		aContacts[4] = new Contact("Bernardo Tabuenca 5",
-				getImg(R.drawable.user), false);
-		aContacts[5] = new Contact("Bernardo Tabuenca 6",
-				getImg(R.drawable.user), true);
-
+		if (selectedGame.getLicenseCode() == getString(R.string.licenseby)) {
+			iLicense = 0;
+		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebysa)) {
+			iLicense = 1;
+		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebync)) {
+			iLicense = 2;
+		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebyncnd)) {
+			iLicense = 3;
+		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebyncsa)) {
+			iLicense = 4;
+		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebynd)) {
+			iLicense = 5;
+		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebynpd)) {
+			iLicense = 6;
+		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebypd)) {
+			iLicense = 7;
+		}
 
 	}
+
+	// private void loadContacts() {
+	// aContacts = new Contact[6];
+	//
+	// // define the display string, the image, and the value to use
+	// // when the choice is selected
+	// aContacts[0] = new Contact("Bernardo Tabuenca 1",
+	// getImg(R.drawable.user), true);
+	// aContacts[1] = new Contact("Bernardo Tabuenca 2",
+	// getImg(R.drawable.user), false);
+	// aContacts[2] = new Contact("Bernardo Tabuenca 3",
+	// getImg(R.drawable.user), true);
+	// aContacts[3] = new Contact("Bernardo Tabuenca 4",
+	// getImg(R.drawable.user), false);
+	// aContacts[4] = new Contact("Bernardo Tabuenca 5",
+	// getImg(R.drawable.user), false);
+	// aContacts[5] = new Contact("Bernardo Tabuenca 6",
+	// getImg(R.drawable.user), true);
+	//
+	//
+	// }
 
 	private Drawable getImg(int res) {
 		Drawable img = getResources().getDrawable(res);
 		img.setBounds(2, 2, 267, 50);
 		return img;
 	}
-	
-	
-	/**
-	 * Handle the event to display the AlertDialog with the list
-	 */
-	public void handleClickShare(View target) {
 
+	public void onClickSave(View target) {
 
-		ListAdapter adapter = new ContactAdapter(this, aContacts);
-		final AlertDialog.Builder ad = new AlertDialog.Builder(this);
-
-		ad.setSingleChoiceItems(adapter, -1, new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// a choice has been made!
-				boolean selectedVal = aContacts[which].getVal();
-				Log.d("", aContacts[which].getName()+" chosen " + selectedVal);
-
-
-				// ADD images of users here
-				ImageView ivcc = (ImageView) findViewById(R.id.ivShare);
-				ivcc.setImageResource(R.drawable.add_user_48x);
-				dialog.dismiss();
-			}
-		});
-
-		ad.show();
 	}
-	
-	
-	
+
+	// /**
+	// * Handle the event to display the AlertDialog with the list
+	// */
+	// public void handleClickShare(View target) {
+	//
+	//
+	// ListAdapter adapter = new ContactAdapter(this, aContacts);
+	// final AlertDialog.Builder ad = new AlertDialog.Builder(this);
+	//
+	// ad.setSingleChoiceItems(adapter, -1, new OnClickListener() {
+	// @Override
+	// public void onClick(DialogInterface dialog, int which) {
+	// // a choice has been made!
+	// boolean selectedVal = aContacts[which].getVal();
+	// Log.d("", aContacts[which].getName()+" chosen " + selectedVal);
+	//
+	//
+	// // ADD images of users here
+	// ImageView ivcc = (ImageView) findViewById(R.id.ivShare);
+	// ivcc.setImageResource(R.drawable.add_user_48x);
+	// dialog.dismiss();
+	// }
+	// });
+	//
+	// ad.show();
+	// }
+	//
+	//
+	//
 
 	/**
 	 * Handle the event to display the AlertDialog with the list
@@ -251,7 +272,36 @@ public class GameDescActivity extends Activity {
 				Log.d("", "chosen " + selectedVal);
 
 				ImageView ivcc = (ImageView) findViewById(R.id.ivCC);
-				ivcc.setImageResource(R.drawable.by_npd);
+
+				switch (which) {
+				case 0:
+					ivcc.setImageResource(R.drawable.by);
+					break;
+				case 1:
+					ivcc.setImageResource(R.drawable.by_sa);
+					break;
+				case 2:
+					ivcc.setImageResource(R.drawable.by_nc);
+					break;
+				case 3:
+					ivcc.setImageResource(R.drawable.by_nc_nd);
+					break;
+				case 4:
+					ivcc.setImageResource(R.drawable.by_nc_sa);
+					break;
+				case 5:
+					ivcc.setImageResource(R.drawable.by_nd);
+					break;
+				case 6:
+					ivcc.setImageResource(R.drawable.by_npd);
+					break;
+				case 7:
+					ivcc.setImageResource(R.drawable.by_pd);
+					break;
+
+				default:
+					break;
+				}
 				dialog.dismiss();
 			}
 		});
@@ -259,184 +309,109 @@ public class GameDescActivity extends Activity {
 		ad.show();
 	}
 
-	/**
-	 * Definition of the list adapter...uses the View Holder pattern to optimize
-	 * performance.
-	 */
-	static class CCLicenceAdapter extends ArrayAdapter {
-
-		private static final int RESOURCE = R.layout.license_row;
-		private LayoutInflater inflater;
-
-		static class ViewHolder {
-			TextView nameTxVw;
-		}
-
-		@SuppressWarnings("unchecked")
-		public CCLicenceAdapter(Context context, CCLicence[] objects) {
-			super(context, RESOURCE, objects);
-			inflater = LayoutInflater.from(context);
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			ViewHolder holder;
-
-			if (convertView == null) {
-				// inflate a new view and setup the view holder for future use
-				convertView = inflater.inflate(RESOURCE, null);
-
-				holder = new ViewHolder();
-				holder.nameTxVw = (TextView) convertView.findViewById(R.id.tvLicenseRow);
-				convertView.setTag(holder);
-			} else {
-				// view already defined, retrieve view holder
-				holder = (ViewHolder) convertView.getTag();
-			}
-
-			CCLicence cat = (CCLicence) getItem(position);
-			if (cat == null) {
-				Log.e("pete", "Invalid category for position: " + position);
-			}
-			holder.nameTxVw.setText(cat.getName());
-			holder.nameTxVw
-					.setCompoundDrawables(cat.getImg(), null, null, null);
-
-			return convertView;
-		}
-	}
-
-	class CCLicence {
-		private String _name;
-		private Drawable _img;
-		private String _val;
-
-		public CCLicence(String name, Drawable img, String val) {
-			_name = name;
-			_img = img;
-			_val = val;
-		}
-
-		public String getName() {
-			return _name;
-		}
-
-		public Drawable getImg() {
-			return _img;
-		}
-
-		public String getVal() {
-			return _val;
-		}
-	}
-
-	
-	/**
-	 * Handle the event to display the AlertDialog with the list
-	 */
-	public void handleClickCntct(View target) {
-		// define the list adapter with the choices
-		ListAdapter adapter = new ContactAdapter(this, aContacts);
-
-		final AlertDialog.Builder ad = new AlertDialog.Builder(this);
-
-		ad.setSingleChoiceItems(adapter, -1, new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// a choice has been made!
-				String selectedVal = aLicenses[which].getVal();
-				Log.d("", "chosen " + selectedVal);
-
-				//Image View ivcc = (ImageView) findViewById(R.id.ivShare);
-				//dialog.set
-
-				dialog.dismiss();
-			}
-		});
-
-		ad.show();
-	}
-
-	/**
-	 * Definition of the list adapter...uses the View Holder pattern to optimize
-	 * performance.
-	 */
-	static class ContactAdapter extends ArrayAdapter {
-
-		private static final int RESOURCE = R.layout.license_row;
-		private LayoutInflater inflater;
-
-		static class ViewHolder {
-			TextView nameTxVw;
-		}
-
-		@SuppressWarnings("unchecked")
-		public ContactAdapter(Context context, Contact[] objects) {
-			super(context, RESOURCE, objects);
-			inflater = LayoutInflater.from(context);
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			ViewHolder holder;
-
-			if (convertView == null) {
-				// inflate a new view and setup the view holder for future use
-				convertView = inflater.inflate(RESOURCE, null);
-
-				holder = new ViewHolder();
-				holder.nameTxVw = (TextView) convertView
-						.findViewById(R.id.tvLicenseRow);
-				convertView.setTag(holder);
-			} else {
-				// view already defined, retrieve view holder
-				holder = (ViewHolder) convertView.getTag();
-			}
-		
-			
-			//holder.nameTxVw.setBackgroundColor(color.background_light);
-
-			
-			Contact cat = (Contact) getItem(position);
-			if (cat == null) {
-				Log.e("pete", "Invalid category for position: " + position);
-			}
-			holder.nameTxVw.setText(cat.getName());
-			holder.nameTxVw.setCompoundDrawables(cat.getImg(), null, null, null);
-
-			return convertView;
-		}
-	}
-
-	class Contact {
-	
-		private String _name;
-		private Drawable _img;
-		private boolean _val;
-
-		public Contact(String name, Drawable img, boolean val) {
-			_name = name;
-			_img = img;
-			_val = val;
-		}
-
-		public String getName() {
-			return _name;
-		}
-
-		public Drawable getImg() {
-			return _img;
-		}
-
-		public boolean getVal() {
-			return _val;
-		}
-	}
 
 
-	
-	
-	
-	
-	
+	// /**
+	// * Handle the event to display the AlertDialog with the list
+	// */
+	// public void handleClickCntct(View target) {
+	// // define the list adapter with the choices
+	// ListAdapter adapter = new ContactAdapter(this, aContacts);
+	//
+	// final AlertDialog.Builder ad = new AlertDialog.Builder(this);
+	//
+	// ad.setSingleChoiceItems(adapter, -1, new OnClickListener() {
+	// @Override
+	// public void onClick(DialogInterface dialog, int which) {
+	// // a choice has been made!
+	// String selectedVal = aLicenses[which].getVal();
+	// Log.d("", "chosen " + selectedVal);
+	//
+	// //Image View ivcc = (ImageView) findViewById(R.id.ivShare);
+	// //dialog.set
+	//
+	// dialog.dismiss();
+	// }
+	// });
+	//
+	// ad.show();
+	// }
+	//
+	// /**
+	// * Definition of the list adapter...uses the View Holder pattern to
+	// optimize
+	// * performance.
+	// */
+	// static class ContactAdapter extends ArrayAdapter {
+	//
+	// private static final int RESOURCE = R.layout.license_row;
+	// private LayoutInflater inflater;
+	//
+	// static class ViewHolder {
+	// TextView nameTxVw;
+	// }
+	//
+	// @SuppressWarnings("unchecked")
+	// public ContactAdapter(Context context, Contact[] objects) {
+	// super(context, RESOURCE, objects);
+	// inflater = LayoutInflater.from(context);
+	// }
+	//
+	// @Override
+	// public View getView(int position, View convertView, ViewGroup parent) {
+	// ViewHolder holder;
+	//
+	// if (convertView == null) {
+	// // inflate a new view and setup the view holder for future use
+	// convertView = inflater.inflate(RESOURCE, null);
+	//
+	// holder = new ViewHolder();
+	// holder.nameTxVw = (TextView) convertView
+	// .findViewById(R.id.tvLicenseRow);
+	// convertView.setTag(holder);
+	// } else {
+	// // view already defined, retrieve view holder
+	// holder = (ViewHolder) convertView.getTag();
+	// }
+	//
+	//
+	// //holder.nameTxVw.setBackgroundColor(color.background_light);
+	//
+	//
+	// Contact cat = (Contact) getItem(position);
+	// if (cat == null) {
+	// Log.e("pete", "Invalid category for position: " + position);
+	// }
+	// holder.nameTxVw.setText(cat.getName());
+	// holder.nameTxVw.setCompoundDrawables(cat.getImg(), null, null, null);
+	//
+	// return convertView;
+	// }
+	// }
+	//
+	// class Contact {
+	//
+	// private String _name;
+	// private Drawable _img;
+	// private boolean _val;
+	//
+	// public Contact(String name, Drawable img, boolean val) {
+	// _name = name;
+	// _img = img;
+	// _val = val;
+	// }
+	//
+	// public String getName() {
+	// return _name;
+	// }
+	//
+	// public Drawable getImg() {
+	// return _img;
+	// }
+	//
+	// public boolean getVal() {
+	// return _val;
+	// }
+	// }
+
 }

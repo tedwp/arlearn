@@ -31,6 +31,8 @@ import org.celstec.arlearn2.android.delegators.game.CreateGameTask;
 import org.celstec.arlearn2.android.delegators.game.DeleteGameTask;
 import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.game.GameAccess;
+import org.celstec.arlearn2.beans.game.GameAccessList;
 import org.celstec.arlearn2.beans.game.GamesList;
 
 import android.content.Context;
@@ -65,11 +67,12 @@ public class GameDelegator {
 		(new SynchronizeMyGamesTask(ctx)).run(ctx);
 	}
 	
-	public void saveServerGamesToAndroidDb(final Context ctx, final GamesList gl) {
+	public void saveServerGamesToAndroidDb(final Context ctx, final GamesList gl, final GameAccessList gal) {
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
 		m.obj = new DBAdapter.DatabaseTask() {
 			@Override
 			public void execute(DBAdapter db) {
+				
 				Iterator<Game> it = gl.getGames().iterator();
 				boolean updateOccured = false;
 				while (it.hasNext()) {
@@ -80,6 +83,16 @@ public class GameDelegator {
 						updateOccured =  db.getGameAdapter().insertGame(game)||updateOccured;
 					} 
 				}
+				
+				Iterator<GameAccess> itAccess = gal.getGameAccess().iterator();
+				while (itAccess.hasNext()) {
+					GameAccess gameAccess = itAccess.next();
+					Log.i("GAMEPROBLEM", "iterating over game access "+gameAccess);
+					if (gameAccess.getError() == null) {
+						GameCache.getInstance().putGameAccess(gameAccess);
+					} 
+				}				
+				
 				if (updateOccured) {
 					ActivityUpdater.updateActivities(ctx, ListRunsParticipateActivity.class.getCanonicalName());
 				}
@@ -88,6 +101,32 @@ public class GameDelegator {
 		};
 		m.sendToTarget();
 	}
+	
+	public void saveServerGamesToAndroidDb(final Context ctx, final GamesList gl) {
+		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));
+		m.obj = new DBAdapter.DatabaseTask() {
+			@Override
+			public void execute(DBAdapter db) {				
+				Iterator<Game> it = gl.getGames().iterator();
+				boolean updateOccured = false;
+				while (it.hasNext()) {
+					Game game = it.next();
+					Log.i("GAMEPROBLEM", "iterating over game "+game);
+					if (game.getError() == null) {
+						GameCache.getInstance().putGame(game);
+						updateOccured =  db.getGameAdapter().insertGame(game)||updateOccured;
+					} 
+				}
+
+				if (updateOccured) {
+					ActivityUpdater.updateActivities(ctx, ListRunsParticipateActivity.class.getCanonicalName());
+				}
+
+			}
+		};
+		m.sendToTarget();
+	}
+	
 	
 	public void saveServerGameToAndroidDb(final Context ctx, final Game game) {
 		Message m = Message.obtain(DBAdapter.getDatabaseThread(ctx));

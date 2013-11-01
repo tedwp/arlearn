@@ -18,12 +18,12 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.activities;
 
+import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.list.GeneralItemListAdapter;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
 import org.celstec.arlearn2.beans.game.Game;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.beans.game.GameAccess;
 
 import android.app.TabActivity;
 import android.content.Intent;
@@ -38,9 +38,8 @@ public class GameTabActivity extends TabActivity implements
 
 	private String CLASSNAME = this.getClass().getName();
 
-
 	private Game selectedGame = null;
-	
+	private GameAccess selectedGameAccess = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,39 +47,50 @@ public class GameTabActivity extends TabActivity implements
 
 		final Bundle extras = getIntent().getExtras();
 
+		Integer oiAction = Constants.AUTHORING_ACTION_NONE;
 		if (extras != null) {
+			oiAction = (Integer) extras.get("selectedAction");
 			selectedGame = (Game) extras.get("selectedGame");
-			this.setTitle(selectedGame.getTitle());
+			selectedGameAccess = (GameAccess) extras.get("selectedGameAccess");
 		}
-		
 
-		// setContentView(R.layout.listgeneralitemscreen);
 		setContentView(R.layout.gametabs);
 
 		Resources res = getResources();
 
 		TabHost th = getTabHost();
 
-		Intent intentI = new Intent().setClass(this,
-				GameItemsActivity.class);
-		intentI.putExtra("selectedGame", selectedGame);
-		
+		Intent intentI = new Intent().setClass(this, GameItemsActivity.class);
+		Intent intentR = new Intent().setClass(this, GameRunsActivity.class);
+		Intent intentG = null;
+
+		if (oiAction.equals(Constants.AUTHORING_ACTION_EDIT)) {
+			this.setTitle(selectedGame.getTitle());
+			// Tab general items
+			intentI.putExtra("selectedGame", selectedGame);
+			intentI.putExtra("selectedGameAccess", selectedGameAccess);
+			// Tab runs
+			intentR.putExtra("selectedGame", selectedGame);
+			intentR.putExtra("selectedGameAccess", selectedGameAccess);
+			// Tab games
+			intentG = new Intent().setClass(this, GameDescActivity.class);
+			intentG.putExtra("selectedGame", selectedGame);
+			intentG.putExtra("selectedGameAccess", selectedGameAccess);
+		} else {
+			// Tab games
+			intentG = new Intent().setClass(this, NewGameActivity.class);
+		}
+
 		TabSpec tsItems = th.newTabSpec("Items")
 				.setIndicator("", res.getDrawable(R.drawable.gi_add_48x))
 				.setContent(intentI);
-
-		Intent intentR = new Intent().setClass(this, GameRunsActivity.class);
-		intentR.putExtra("selectedGame", selectedGame);
 		TabSpec tsRuns = th.newTabSpec("Runs")
 				.setIndicator("", res.getDrawable(R.drawable.add_user_48x))
 				.setContent(intentR);
-		
-		Intent intentG = new Intent().setClass(this, GameDescActivity.class);
-		intentG.putExtra("selectedGame", selectedGame);
+
 		TabSpec tsGameDesc = th.newTabSpec("Game")
 				.setIndicator("", res.getDrawable(R.drawable.list_icon))
 				.setContent(intentG);
-		
 
 		th.addTab(tsGameDesc);
 		th.addTab(tsItems);

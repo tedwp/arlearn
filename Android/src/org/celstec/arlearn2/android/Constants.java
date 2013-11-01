@@ -58,5 +58,10 @@ public class Constants {
 	public static final String GI_TYPE_YOUTUBE_MOVIE = "org.celstec.arlearn2.beans.generalItem.YoutubeObject";
 	public static final String GI_TYPE_AUDIO_OBJECT = "org.celstec.arlearn2.beans.generalItem.AudioObject";
 	public static final String GI_TYPE_PICTURE = "org.celstec.arlearn2.beans.generalItem.Picture";
+	
+	public static final Integer AUTHORING_ACTION_NONE = 0;
+	public static final Integer AUTHORING_ACTION_CREATE = 1;
+	public static final Integer AUTHORING_ACTION_EDIT = 2;
+	
 
 }

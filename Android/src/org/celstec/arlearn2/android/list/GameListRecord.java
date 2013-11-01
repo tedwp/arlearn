@@ -23,7 +23,8 @@ public class GameListRecord extends GenericListRecord {
 		setMessageHeader(game.getTitle());
 
 		String description = "";
-		description = game.getTitle()+" "+game.getGameId();
+		//description = game.getTitle()+" "+game.getGameId();
+		description = game.getDescription();
 		setMessageDetail(description);
 		setRightDetail("");
 		

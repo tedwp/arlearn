@@ -5,6 +5,7 @@ import org.celstec.arlearn2.android.asynctasks.network.NetworkTask;
 import org.celstec.arlearn2.android.asynctasks.network.NetworkTaskHandler;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.beans.game.Game;
+import org.celstec.arlearn2.beans.game.GameAccess;
 import org.celstec.arlearn2.client.GameClient;
 
 import android.content.Context;
@@ -16,11 +17,19 @@ public class CreateGameTask implements NetworkTask {
 	private Context ctx;
 	
 	private Game game;
+	private GameAccess gameAccess = null;
 	
 	public CreateGameTask(Context ctx, Game game) {
 		this.ctx = ctx;
 		this.game = game;
 	}
+	
+	public CreateGameTask(Context ctx, Game game, GameAccess gameAccess) {
+		this.ctx = ctx;
+		this.game = game;
+		this.gameAccess = gameAccess;
+	}
+	
 
 	public void addTaskToQueue(Context ctx) {
 		NetworkTaskHandler nwHandler = NetworkQueue.getNetworkTaskHandler();
@@ -33,12 +42,23 @@ public class CreateGameTask implements NetworkTask {
 	
 	@Override
 	public void execute() {
-		// Merge into origin/master 05.08.2013
-		//Game g = GameClient.getGameClient().createGame(PropertiesAdapter.getInstance(ctx).getFusionAuthToken(), game);
-		Game g = GameClient.getGameClient().createGame(PropertiesAdapter.getInstance(ctx).getAuthToken(), game);
-		if (g.getErrorCode() != null) {
-				Toast.makeText(ctx, "update/creation of this game failed", Toast.LENGTH_LONG).show(); //TODO i18n
-		} 
+
+		if(gameAccess != null){
+			// TOFIX Game g = GameClient.getGameClient().createGame(PropertiesAdapter.getInstance(ctx).getAuthToken(), game, gameAccess);
+			Game g = GameClient.getGameClient().createGame(PropertiesAdapter.getInstance(ctx).getAuthToken(), game);
+			if (g.getErrorCode() != null) {
+					Toast.makeText(ctx, "update/creation of this game failed", Toast.LENGTH_LONG).show(); //TODO i18n
+			}			
+		}else{
+			Game g = GameClient.getGameClient().createGame(PropertiesAdapter.getInstance(ctx).getAuthToken(), game);
+			if (g.getErrorCode() != null) {
+					Toast.makeText(ctx, "update/creation of this game failed", Toast.LENGTH_LONG).show(); //TODO i18n
+			}			
+		}
+
+
+		
+		
 	}
 
 

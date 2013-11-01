@@ -30,26 +30,20 @@ import org.codehaus.jettison.json.JSONException;
 
 public class GenericClient {
 //		public static String urlPrefix = "http://localhost:9999";
-<<<<<<< HEAD
 //		public static String urlPrefix = "http://192.168.1.83:9999";
-		public static String urlPrefix = "http://145.20.82.43:9999";
-=======
+		public static String urlPrefix = "http://192.168.0.16:9999";
 //		public static String urlPrefix = "http://192.168.1.8:9999";
->>>>>>> refs/remotes/origin/master
 //		public static String urlPrefix = "http://145.20.132.154:9999";
 //		public static String urlPrefix = "http://10.0.2.2:9999";
 //		public static String urlPrefix = "http://10.0.1.2:9999";
 //		public static String urlPrefix = "http://ambientdisplay.appspot.com/";
-<<<<<<< HEAD
-
 //		public static String urlPrefix = "http://ar-learn.appspot.com/";
 //		public static String urlPrefix = "http://ar-learn.appspot.com/";
 //		public static String urlPrefix = "http://streetlearn.appspot.com/";
-=======
 //		public static String urlPrefix = "http://ar-learn.appspot.com/";
-		public static String urlPrefix = "http://1.streetlearn.appspot.com/";
+//		public static String urlPrefix = "http://1.streetlearn.appspot.com/";
 
->>>>>>> refs/remotes/origin/master
+
 
 		protected static HttpConnection	conn = ConnectionFactory.getConnection();
 
