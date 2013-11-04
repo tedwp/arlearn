@@ -128,7 +128,7 @@ public class GenericMapViewActivity extends Activity implements ARLearnBroadcast
 		} else {
 			menu.add(0, MenuHandler.LOGIN, 0, getString(R.string.login));
 		}
-		menu.add(0, MenuHandler.EXIT, 0, getString(R.string.exit));
+		menu.add(0, MenuHandler.SYNC, 0, getString(R.string.sync));
 		return true;
 	}
 	

@@ -100,7 +100,7 @@ public abstract class DataCollectorDelegate {
 	}
 	
 	public String buildRemotePath(Uri uri, long runId, String account) {
-		return GenericClient.urlPrefix + "/uploadService/" + runId + "/" + account + "/" + uri.getLastPathSegment();
+		return GenericClient.urlPrefix + "uploadService/" + runId + "/" + account + "/" + uri.getLastPathSegment();
 	}
 	
 	public Response createResponse() {

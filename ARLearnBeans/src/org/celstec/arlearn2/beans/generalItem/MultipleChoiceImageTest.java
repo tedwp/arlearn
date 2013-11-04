@@ -26,14 +26,25 @@ import org.codehaus.jettison.json.JSONObject;
 public class MultipleChoiceImageTest  extends MultipleChoiceTest {
 	
 private String audioQuestion;
-	
-	public String getAudioQuestion() {
+    private Integer columns;
+
+
+    public String getAudioQuestion() {
 		return audioQuestion;
 	}
 
 	public void setAudioQuestion(String audioQuestion) {
 		this.audioQuestion = audioQuestion;
 	}
+
+    public Integer getColumns() {
+        if (columns == null) return 3;
+        return columns;
+    }
+
+    public void setColumns(Integer columns) {
+        this.columns = columns;
+    }
 
 	public static GeneralItemDeserializer deserializer = new GeneralItemDeserializer(){
 
@@ -52,7 +63,9 @@ private String audioQuestion;
 			super.initBean(object, genericBean);
 			MultipleChoiceImageTest mctItem = (MultipleChoiceImageTest) genericBean;
 			if (object.has("richText")) mctItem.setRichText(object.getString("richText"));
-			if (object.has("text")) mctItem.setText(object.getString("text"));
+            if (object.has("columns")) mctItem.setColumns(object.getInt("columns"));
+
+            if (object.has("text")) mctItem.setText(object.getString("text"));
 			if (object.has("audioQuestion")) mctItem.setAudioQuestion(object.getString("audioQuestion"));
 			if (object.has("answers")) mctItem.setAnswers(ListDeserializer.toBean(object.getJSONArray("answers"), MultipleChoiceImageAnswerItem.class));
 		}
@@ -66,7 +79,9 @@ private String audioQuestion;
 			JSONObject returnObject = MultipleChoiceTest.serializer.toJSON(bean);
 			try {
 				if (mct.getAudioQuestion() != null) returnObject.put("audioQuestion", mct.getAudioQuestion());
-			} catch (JSONException e) {
+                if (mct.getColumns() != null) returnObject.put("columns", mct.getColumns());
+
+            } catch (JSONException e) {
 				e.printStackTrace();
 			}
 			return returnObject;

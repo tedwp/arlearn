@@ -1,6 +1,11 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi;
 
+import com.smartgwt.client.types.MultipleAppearance;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameRoleModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GameRolesDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 import org.celstec.arlearn2.portal.client.account.AccountManager;
 import org.celstec.arlearn2.portal.client.author.ui.gi.i18.GeneralItemConstants;
@@ -16,6 +21,7 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.data.Criteria;
 
 public class BasicMetadataEditorPlus extends BasicMetadataEditor {
 
@@ -31,8 +37,13 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
 //    protected TextItem section;
     protected TextItem tags;
 
+    protected SelectItem rolesSelectItem;
+
+    private long gameId;
+
 	public BasicMetadataEditorPlus(boolean showTitle, boolean showDescription) {
 		super(showTitle, showDescription);
+//        this.gameId = gameId;
 	}
 
 	protected void createForm() {
@@ -60,10 +71,12 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
 				if (showRichtText) {
 					richTextEditor.setVisibility(Visibility.INHERIT);
 					richTextEditor.setValue(textAreaItem.getValueAsString());
+                    form.setHeight(40);
 
 				} else {
 					richTextEditor.setVisibility(Visibility.HIDDEN);
 					textAreaItem.setValue(richTextEditor.getValue());
+                    form.setHeight100();
 
 				}
 				form.redraw();
@@ -82,7 +95,15 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
         tags.setStartRow(true);
         tags.setColSpan(2);
 
-		FormItemIfFunction drawOnMapFunction = new FormItemIfFunction() {
+        rolesSelectItem = new SelectItem(GeneralItemModel.ROLES, constants.roles());
+        rolesSelectItem.setMultiple(true);
+        rolesSelectItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
+        rolesSelectItem.setDisplayField(GameRoleModel.ROLE_FIELD);
+        rolesSelectItem.setValueField(GameRoleModel.ROLE_FIELD);
+
+//        GameRolesDataSource.getInstance().loadRoles(gameId);
+
+        FormItemIfFunction drawOnMapFunction = new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
 				return (form.getValue("drawOnMap") != null)
 					&& form.getValue("drawOnMap").equals(Boolean.TRUE);
@@ -90,13 +111,16 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
 		};
 		latText.setShowIfCondition(drawOnMapFunction);
 		lngText.setShowIfCondition(drawOnMapFunction);
+
+
         if (AccountManager.getInstance().isAdvancedUser()) {
-		    form.setFields(titleText, orderText, drawOnMap, automaticallyLaunch, latText, toggleRichtText, lngText, customIcon, section,tags, textAreaItem);
+		    form.setFields(titleText, orderText, drawOnMap, automaticallyLaunch, latText, toggleRichtText, lngText, rolesSelectItem, customIcon, section,tags, textAreaItem);
         }   else {
-            form.setFields(titleText, orderText, drawOnMap, automaticallyLaunch, latText, toggleRichtText, lngText, textAreaItem);
+            form.setFields(titleText, orderText, drawOnMap, automaticallyLaunch, latText, toggleRichtText, lngText, rolesSelectItem, textAreaItem);
         }
 		form.setNumCols(4);
 		form.setWidth100();
+        form.setHeight(40);
 
 		addMember(form);
 	}
@@ -124,11 +148,18 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
         if (form.getValue(GeneralItemModel.TAGS) != null &&  !form.getValueAsString(GeneralItemModel.TAGS).equals("")) {
             gi.setString(GeneralItemModel.TAGS, form.getValueAsString(GeneralItemModel.TAGS));
         }
+        gi.setArray(GeneralItemModel.ROLES, rolesSelectItem.getValues());
 		super.saveToBean(gi);
 	}
 
 	public void loadGeneralItem(GeneralItem gi) {
 		super.loadGeneralItem(gi);
+        GameRolesDataSource ds = new GameRolesDataSource();
+        ds.loadRoles(gi.getLong(GameModel.GAMEID_FIELD));
+
+        rolesSelectItem.setOptionDataSource(ds);
+
+
 		form.setValue(GeneralItemModel.SORTKEY_FIELD, gi.getInteger(GeneralItemModel.SORTKEY_FIELD));
 		if (gi.getDouble(GeneralItemModel.LAT_FIELD) != null)
 			form.setValue(GeneralItemModel.LAT_FIELD, gi.getDouble(GeneralItemModel.LAT_FIELD));
@@ -139,6 +170,8 @@ public class BasicMetadataEditorPlus extends BasicMetadataEditor {
         form.setValue(GeneralItemModel.ICON_URL, gi.getString(GeneralItemModel.ICON_URL));
         form.setValue(GeneralItemModel.SECTION, gi.getString(GeneralItemModel.SECTION));
         form.setValue(GeneralItemModel.TAGS, gi.getString(GeneralItemModel.TAGS));
+
+        rolesSelectItem.setValues(gi.getValues(GeneralItemModel.ROLES));
 	}
 
 	public void coordinatesChanged(LatLng newCoordinates) {

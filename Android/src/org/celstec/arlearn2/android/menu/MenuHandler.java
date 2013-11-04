@@ -30,8 +30,14 @@ import org.celstec.arlearn2.android.activities.MapViewActivity;
 import org.celstec.arlearn2.android.activities.OauthProvidersList;
 import org.celstec.arlearn2.android.activities.SplashScreenActivity;
 import org.celstec.arlearn2.android.activities.ViewAnswerActivity;
+import org.celstec.arlearn2.android.asynctasks.network.UploadFileSyncTask;
 import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.ActionsDelegator;
+import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
+import org.celstec.arlearn2.android.delegators.ResponseDelegator;
+import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
 
@@ -52,7 +58,7 @@ public class MenuHandler {
 
 	public static final int LOGIN = 0;
 	public static final int LOGOUT = 1;
-	public static final int EXIT = 2;
+	public static final int SYNC = 2;
 	public static final int MESSAGES = 3;
 	public static final int PROVIDE_ANSWER = 4;
 	public static final int MY_LOCATION = 5;
@@ -85,11 +91,23 @@ public class MenuHandler {
 			context.finish();
 			context.startActivity(new Intent(context, SplashScreenActivity.class));
 			break;
-		case EXIT:
-//			intent = new Intent(context, BackgroundService.class);
-//			intent.putExtra("exit", true);
-//			context.startService(intent);
-			context.finish();
+		case SYNC:
+            ActionsDelegator.getInstance().synchronizeActionsWithServer(context);
+            long runId = PropertiesAdapter.getInstance(context).getCurrentRunId();
+
+            RunDelegator.getInstance().loadRun(context, runId);
+            ResponseDelegator.getInstance().synchronizeResponsesWithServer(context, runId);
+
+            Long gameId = RunCache.getInstance().getGameId(runId);
+            if (gameId == null)   {
+                Toast.makeText(context, "unable to retrieve gameId", Toast.LENGTH_LONG).show();
+            } else {
+                GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(context, runId, gameId, true);
+            }
+
+            UploadFileSyncTask fileSyncTask = new UploadFileSyncTask();
+            fileSyncTask.run(context);
+
 			break;
 		case MESSAGES:
 			context.startActivity(new Intent(context, ListMessagesActivity.class));

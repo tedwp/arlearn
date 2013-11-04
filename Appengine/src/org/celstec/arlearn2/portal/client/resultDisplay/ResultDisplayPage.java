@@ -41,43 +41,19 @@ public class ResultDisplayPage {
 	
 	private static int NUMBER_VERSION = 1;  // Set this parameter to 1 to use first Layout 
 											// Set this parameter to 2 to use second Layout
-	
 
-//	public void loadPage() {
-//		AccountManager accountManager = AccountManager.getInstance();
-//		accountManager.setAccountNotification(new NotifyAccountLoaded() {
-//			
-//			@Override
-//			public void accountLoaded() {
-//				buildUi();
-//			}
-//		});
-//	}
-	
 	public void loadPage() {
-
-		runId = Long.parseLong(com.google.gwt.user.client.Window.Location.getParameter("runId"));
+        String runIdAsString = com.google.gwt.user.client.Window.Location.getParameter("runId");
+        if (runIdAsString == null) runIdAsString = "0";
+		runId = Long.parseLong(runIdAsString);
 		NUMBER_VERSION = (int) Long.parseLong(com.google.gwt.user.client.Window.Location.getParameter("version"));
 		
-		GWT.log("runId: "+runId );
-		GWT.log("version: "+NUMBER_VERSION );
-
 		TeamDataSource.getInstance().loadDataFromWeb(runId);
-//		UserDataSource.getInstance().loadDataFromWeb(runId);
 		final UserDataSource userDataSource = UserDataSource.getInstance();
 		userDataSource.setOnFinished(new OnFinishedInterface() {
 			@Override
 			public void finishedLoadingResults() {
 				OwnerResponseDataSource.getInstance().loadDataFromWeb(runId);			
-//				Timer t = new Timer() {
-//				      public void run() {
-//							OwnerResponseDataSource.getInstance().loadDataFromWeb(runId);				
-//
-//				      }
-//				    };
-//
-//				    // Schedule the timer to run once in 5 seconds.
-//				    t.schedule(2000);
 			}
 		});
 		

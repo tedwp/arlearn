@@ -25,6 +25,7 @@ import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.delegators.ResponseDelegator;
+import org.celstec.arlearn2.android.util.MediaFolders;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
 import org.celstec.arlearn2.beans.generalItem.SingleChoiceTest;
@@ -88,6 +89,7 @@ public class SingleChoiceActivity extends GeneralItemActivity {
 
 	private void castResponse() {
 		ResponseDelegator.getInstance().publishMultipleChoiceResponse(SingleChoiceActivity.this, mct, selected);
+        ResponseDelegator.getInstance().publishMultipleChoiceResponse(SingleChoiceActivity.this, mct, selected.getIsCorrect());
 		SingleChoiceActivity.this.finish();
 	}
 
@@ -101,7 +103,15 @@ public class SingleChoiceActivity extends GeneralItemActivity {
 		if (mct.getRichText() != null) {
 			String html = mct.getRichText();
 			if (!html.equals(richText)) {
-				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+                String incommingFile = MediaFolders.getIncommingFilesDir().getAbsolutePath();
+                Long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
+                if (runId != null) {
+                    Long gameId = RunCache.getInstance().getGameId(runId);
+                    incommingFile = "file:///"+incommingFile+"/"+gameId+"/";
+
+                }
+                webview.loadDataWithBaseURL(incommingFile, html, "text/html", "utf-8", null);
+//				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
 				richText = html;
 			}
 		} else {

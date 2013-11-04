@@ -1,5 +1,7 @@
 package org.celstec.arlearn2.portal.client.author;
 
+import com.smartgwt.client.data.Record;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GameDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.RunDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.network.CollaborationClient;
@@ -8,7 +10,8 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.game.GameClient;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
 import org.celstec.arlearn2.portal.client.account.AccountManager;
 import org.celstec.arlearn2.portal.client.author.ui.game.ImportGame;
-import org.celstec.arlearn2.portal.client.author.ui.game.i18.GameConstants;
+import org.celstec.arlearn2.portal.client.author.ui.game.ManageGameFiles;
+import org.celstec.arlearn2.portal.client.author.ui.run.ExportUsers;
 import org.celstec.arlearn2.portal.client.toolbar.ToolBar;
 
 import com.google.gwt.core.client.GWT;
@@ -37,8 +40,32 @@ public class AuthorToolBar extends ToolBar {
 			addMenuButton(addAdminOptions());
 		}
 		addMenuButton(addGameMenuButtons());
+        if (AccountManager.getInstance().isAdministrator()) {
+            addMenuButton(addRunMenuButtons());
+        }
 		addMenuButton(addContactMenuButtons());
 	}
+
+    private ToolStripMenuButton addRunMenuButtons() {
+        Menu menu = new Menu();
+        menu.setShowShadow(true);
+        menu.setShadowDepth(3);
+        MenuItem importGame = new MenuItem("Export users");
+        importGame.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(MenuItemClickEvent event) {
+                (new ExportUsers()).show();
+            }
+        });
+        menu.setItems(importGame);
+        ToolStripMenuButton menuButton = new ToolStripMenuButton("Run", menu);
+        menuButton.setWidth(100);
+
+        menuButton.hideContextMenu();
+        return menuButton;
+
+    }
 
 	private ToolStripMenuButton addGameMenuButtons() {
 		Menu menu = new Menu();
@@ -79,13 +106,41 @@ public class AuthorToolBar extends ToolBar {
 			}
 		});
 
-		if (AccountManager.getInstance().isAdvancedUser()) {
-			menu.setItems(gameAccess, importGame);
-		} else {
-			menu.setItems(gameAccess);
-		}		
+        final MenuItem manageFiles = new MenuItem("Manage Files");
+        manageFiles.addClickHandler(new ClickHandler() {
 
-		ToolStripMenuButton menuButton = new ToolStripMenuButton(constants.game(), menu);
+            @Override
+            public void onClick(MenuItemClickEvent event) {
+                new ManageGameFiles().show();
+            }
+        });
+
+        final MenuItem viewSections = new MenuItem("View") ;
+        final Menu viewSubMenu = new Menu();
+        final MenuItem aboutMenuItem = new MenuItem("Show about menu");
+
+        aboutMenuItem.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(MenuItemClickEvent event) {
+                System.out.println("checked "+aboutMenuItem.getChecked());
+                aboutMenuItem.setChecked(true);
+
+            }
+        });
+
+        viewSubMenu.setItems(aboutMenuItem);
+
+        viewSections.setSubmenu(viewSubMenu);
+
+        if (AccountManager.getInstance().isAdvancedUser()) {
+            menu.setItems(gameAccess, importGame, manageFiles, viewSections);
+        } else {
+            menu.setItems(gameAccess);
+        }
+
+
+        ToolStripMenuButton menuButton = new ToolStripMenuButton(constants.game(), menu);
 		menuButton.setWidth(100);
 		// addMenuButton(menuButton);
 		menuButton.hideContextMenu();

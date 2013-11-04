@@ -25,7 +25,7 @@ public class PortalPage {
 	
 	public void loadPage() {
 //		createToolstrip();
-		toolStrip = new ToolBar();
+		toolStrip = new ToolBar(false);
 
 		
 		VLayout vertical = new VLayout();

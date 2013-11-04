@@ -115,6 +115,7 @@ public class MediaCacheUpload extends GenericDbTable {
 		if (uri != null && !"".equals(uri))
 			mci.setUri(Uri.parse(uri));
 		mci.setRemoteUrl(mCursor.getString(6));
+        if (mci.getRemoteUrl()!= null) mci.setRemoteUrl(mci.getRemoteUrl().replace("//uploadService", "/uploadService"));
 		mci.setReplicated(mCursor.getInt(7));
 		mci.setMimetype(mCursor.getString(8));
 		return mci;
@@ -277,7 +278,7 @@ public class MediaCacheUpload extends GenericDbTable {
 		}
 		public String buildRemotePath() {
 			if (getRunId() != null && getUserId() != null) {
-				return  GenericClient.urlPrefix + "/uploadService/"+getRunId()+"/"+getUserId()+"/"+getUri().getLastPathSegment();
+				return  GenericClient.urlPrefix + "uploadService/"+getRunId()+"/"+getUserId()+"/"+getUri().getLastPathSegment();
 			}
 			return  null;
 		}

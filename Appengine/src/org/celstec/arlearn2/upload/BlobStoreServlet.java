@@ -53,16 +53,16 @@ public class BlobStoreServlet extends HttpServlet {
 		resp.setHeader("Cache-Control", "max-age=2592000");
 
 		String path = req.getPathInfo();
-		System.out.println(path);
+//		System.out.println(path);
 		String runIdString = getFirstPath(path);
 		path = getReminder(path);
 		String account = getFirstPath(path);
 		path = getReminder(path);
 		String fileName = path;
 		path = getReminder(path);
-		System.out.println(runIdString);
-		System.out.println(account);
-		System.out.println(fileName);
+//		System.out.println(runIdString);
+//		System.out.println(account);
+//		System.out.println(fileName);
 		BlobKey bk = FilePathManager.getBlobKey(account, Long.parseLong(runIdString), fileName);
 		if (bk != null) {
 			blobstoreService.serve(bk, resp);
@@ -99,24 +99,19 @@ public class BlobStoreServlet extends HttpServlet {
 			res.setContentType("text/plain");
 
 			FileItemIterator iterator = upload.getItemIterator(req);
-			System.out.println("before while");
+
 			while (iterator.hasNext()) {
-				System.out.println("in while");
 				FileItemStream item = iterator.next();
 				InputStream stream = item.openStream();
 
 				if (item.isFormField()) {
-					log.warning("Got a form field: " + item.getFieldName());
 					if ("runId".equals(item.getFieldName())) {
 						runId = Long.parseLong(Streams.asString(stream));
-						System.out.println("runid is " + runId);
 					}
-
 					if ("account".equals(item.getFieldName())) {
 						account = Streams.asString(stream);
-						System.out.println("account is " + account);
 					}
-				} else {					log.warning("Got an uploaded file: " + item.getFieldName() + ", name = " + item.getName());
+				} else {
 					BlobKey blobkey = storeBlob(item.getContentType(), item.getName(), stream);
 					if (blobkey != null) {
 						System.out.println(blobkey);
@@ -127,7 +122,7 @@ public class BlobStoreServlet extends HttpServlet {
 							blobstoreService.delete(oldkey);
 						}
 						FilePathManager.addFile(runId, account, item.getName(), blobkey);
-						System.out.println(blobkey.toString());
+
 					} else {
 						blobkey.toString();
 					}

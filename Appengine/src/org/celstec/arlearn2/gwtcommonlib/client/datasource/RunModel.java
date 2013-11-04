@@ -21,6 +21,7 @@ public class RunModel extends DataSourceModel {
 	public static final String RUN_DELETED_FIELD = "deleted";
 	public static final String RUN_OWNER_FIELD = "owner";
 	public static final String GAMEID_FIELD = "gameId";
+    public static final String DELETED_ICON = "deleteIcon";
 
 	
 	public RunModel(DataSourceAdapter dataSourceAdapter) {
@@ -71,6 +72,30 @@ public class RunModel extends DataSourceModel {
 				return RUN_ACCESS_STRING;
 			}
 		}, false, false);
+
+        addDerivedField(new DerivedFieldTask() {
+            JSONObject jsonObject;
+
+            @Override
+            public void setJsonSource(JSONObject jsonObject) {
+                this.jsonObject = jsonObject;
+            }
+
+            @Override
+            public Object process() {
+                return "icon_delete";
+            }
+
+            @Override
+            public int getType() {
+                return STRING_DATA_TYPE;
+            }
+
+            @Override
+            public String getTargetFieldName() {
+                return DELETED_ICON;
+            }
+        }, false, false);
 	}
 
 	@Override

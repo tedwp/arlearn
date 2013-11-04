@@ -21,6 +21,7 @@ package org.celstec.arlearn2.android.list;
 import java.text.MessageFormat;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.cache.ActionCache;
@@ -93,7 +94,16 @@ public class MessageListRecord extends GenericListRecord {
         v = super.getView(v);
         TextView textHeader = (TextView) v.findViewById(R.id.textHeader);
         if (isRead()) {
+            textHeader.setTypeface(null, Typeface.NORMAL);
             textHeader.setTextColor(Color.GRAY);
+            textHeader.setBackgroundColor(Color.WHITE);
+            v.setBackgroundColor(Color.WHITE);
+            TextView textDetail = (TextView) v.findViewById(R.id.textDetail);
+            TextView textRightDetail = (TextView) v.findViewById(R.id.textRightDetail);
+            TextView textError = (TextView) v.findViewById(R.id.textError);
+            textDetail.setVisibility(View.VISIBLE);
+            textRightDetail.setVisibility(View.VISIBLE);
+            textError.setVisibility(View.VISIBLE);
         } else {
             textHeader.setTypeface(null, Typeface.BOLD);
             if (inverted) {
@@ -119,14 +129,9 @@ public class MessageListRecord extends GenericListRecord {
             }
         }
         ImageView iv = (ImageView) v.findViewById(R.id.list_icon);
-
-//        if (generalItem.getIconUrl() != null) {
-
-            if (!inverted) {
+        if (iv != null)
+            if ( !inverted) {
                 Drawable icon = ListMapItemsActivity.getIconAsDrawable(ctx, generalItem);
-//                Uri localAudioUri = GeneralItemsDelegator.getInstance().getLocalMediaUriMap(generalItem).get(GeneralItemsDelegator.ICON_LOCAL_ID);
-
-//                iv.setImageURI(localAudioUri);
                 iv.setImageDrawable(icon);
             } else {
                 if (Boolean.getBoolean(generalItem.getIconUrl())) {
@@ -135,11 +140,6 @@ public class MessageListRecord extends GenericListRecord {
                     iv.setImageResource(R.drawable.icon_collapse);
                 }
             }
-//        } else {
-//
-//            iv.setImageResource(ListMapItemsActivity.getIcon(generalItem));
-//
-//        }
         return v;
     }
 }

@@ -91,7 +91,7 @@ public class LoginActivity extends GeneralActivity {
 			m.obj = new DBAdapter.DatabaseTask() {
 				@Override
 				public void execute(DBAdapter db) {
-					db.eraseAllData();		
+					db.eraseAllData();
 					GenericCache.emptyAllCaches();
 				}
 			};

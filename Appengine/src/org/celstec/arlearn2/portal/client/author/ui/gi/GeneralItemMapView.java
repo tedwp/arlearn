@@ -3,6 +3,10 @@ package org.celstec.arlearn2.portal.client.author.ui.gi;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.Callback;
+import com.google.gwt.geolocation.client.Geolocation;
+import com.google.gwt.geolocation.client.Position;
+import com.google.gwt.geolocation.client.PositionError;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
@@ -30,7 +34,6 @@ public class GeneralItemMapView extends VLayout {
 	private Game game;
 	MapWidget mapWidget;
 	private HashMap<Long, Marker> markerMap = new HashMap<Long, Marker>();
-
 	public GeneralItemMapView(Game game) {
 		this.game = game;
 		setBorder("1px solid gray");
@@ -40,15 +43,30 @@ public class GeneralItemMapView extends VLayout {
 
 	public void createMap(LatLng mapCenter, Double zoom) {
 		// Canvas layout = new Canvas();
+
+
 		boolean makeFitBounds = false;
 		mapWidget = MapWidget.getInstance();
 		mapWidget.setSize("100%", "100%");
-		if (mapCenter != null) {
+		if (mapCenter != null ) {
+
 			mapWidget.getMap().setCenter(mapCenter);
 			mapWidget.getMap().setZoom(zoom);
 		} else {
-			//TODO
-//			mapWidget.getMap().fitBounds(arg0)
+            Geolocation geolocation = Geolocation.getIfSupported();
+            if (geolocation != null) {
+                Geolocation.getIfSupported().getCurrentPosition(new Callback<Position, PositionError>() {
+                    @Override
+                    public void onFailure(PositionError reason) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Position result) {
+                        mapWidget.getMap().setCenter(LatLng.create(result.getCoordinates().getLatitude(),result.getCoordinates().getLongitude()));
+                    }
+                });
+            }
 			makeFitBounds = true;
 		}
 		addMember(mapWidget);

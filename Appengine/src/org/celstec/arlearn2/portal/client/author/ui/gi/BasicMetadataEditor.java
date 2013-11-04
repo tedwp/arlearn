@@ -41,6 +41,8 @@ public class BasicMetadataEditor extends VLayout {
 		addMember(vSpacer);
 		
 		addMember(richTextEditor);
+        setHeight("*");
+//        setBorder("1px dashed blue");
 	}
 	
 	protected void createForm() {
@@ -57,15 +59,16 @@ public class BasicMetadataEditor extends VLayout {
         }
         form.setNumCols(4);
 		form.setWidth100();
-		
+        form.setHeight(40);
 		addMember(form);
 	}
 
 	protected void createTextArea() {
 		textAreaItem = new TextAreaItem(GeneralItemModel.RICH_TEXT_FIELD, "TextArea");  
         textAreaItem.setShowTitle(false);
-        textAreaItem.setColSpan(3);
+        textAreaItem.setColSpan(6);
         textAreaItem.setWidth("100%");
+        textAreaItem.setHeight("*");
         textAreaItem.setShowIfCondition(formIf);
 	}
 	
@@ -75,21 +78,28 @@ public class BasicMetadataEditor extends VLayout {
 
 		richTextEditor.setWidth100();
 		richTextEditor.setBorder("1px  grey");
-//		richTextEditor.setBorder("1px dashed blue");  
-		richTextEditor.setControlGroups(new String[] { "fontControls",
-				"formatControls", "styleControls" });
+		richTextEditor.setControlGroups(new String[] {
+                "fontControls",
+				"formatControls",
+                "styleControls" });
 	}
 	
 	public void toggleHtml() {
 		showRichtText = !showRichtText;
 		if (showRichtText) {
 			richTextEditor.setVisibility(Visibility.INHERIT);
+            richTextEditor.setHeight100();
 			richTextEditor.setValue(textAreaItem.getValueAsString());
+            form.setHeight(40);
 
-		} else {
+
+        } else {
 			richTextEditor.setVisibility(Visibility.HIDDEN);
+            richTextEditor.setHeight(0);
 			textAreaItem.setValue(richTextEditor.getValue());
-		}
+            form.setHeight100();
+
+        }
 		form.redraw();
 	}
 	

@@ -22,6 +22,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class NetworkPage {
 	NetworkToolbar toolStrip;
+//    NetworkToolbar toolStrip;
 	TextItem pathTextItem;
 	TextItem onBehalfOfTextItem;
 

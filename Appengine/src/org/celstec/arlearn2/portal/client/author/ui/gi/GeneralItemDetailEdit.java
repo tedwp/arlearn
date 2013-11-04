@@ -1,11 +1,13 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi;
 
+import com.google.gwt.json.client.JSONArray;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GeneralItemDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.generalItem.GeneralItemsClient;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 import org.celstec.arlearn2.portal.client.account.AccountManager;
+import org.celstec.arlearn2.portal.client.author.ui.FileReferencesEditor;
 import org.celstec.arlearn2.portal.client.author.ui.gi.dependency.forms.DependencyEditor;
 import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.DataCollectionEditor;
 import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.ExtensionEditor;
@@ -41,6 +43,7 @@ public class GeneralItemDetailEdit extends VLayout {
 	protected DependencyEditor appearEdit;
 	protected DependencyEditor disappearEdit;
 	protected DataCollectionEditor dataCollectionEditor;
+    protected FileReferencesEditor  fileReferencesEditor;
 	protected Tab mapTab;
 
 	public GeneralItemDetailEdit(Tab mapTab) {
@@ -91,6 +94,11 @@ public class GeneralItemDetailEdit extends VLayout {
 			if (showCountDown != null) gi.getJsonRep().put("showCountDown", showCountDown);
 			 gi.getJsonRep().put("disappearOn", disappearDep);
 		}
+        if (fileReferencesEditor != null) {
+            JSONArray fileRefJson = fileReferencesEditor.getJson();
+            gi.getJsonRep().put("fileReferences", fileRefJson);
+        }
+
 		GeneralItemsClient.getInstance().createGeneralItem(gi, new JsonCallback(){
 			public void onJsonReceived(JSONValue jsonValue) {
 				GeneralItemDataSource.getInstance().loadDataFromWeb(gi.getValueAsLong(GameModel.GAMEID_FIELD));
@@ -155,6 +163,12 @@ public class GeneralItemDetailEdit extends VLayout {
 		}
 		stack.setAppearStack(appearEdit);
 		stack.setDisappearStack(disappearEdit);
+        if (AccountManager.getInstance().isAdvancedUser()) {
+            fileReferencesEditor = new FileReferencesEditor();
+            fileReferencesEditor.loadDataFromRecord(gi);
+            stack.setFileReferenceEditor(fileReferencesEditor);
+        }
+
 		if (AccountManager.getInstance().isAdministrator()) {
 			JsonEditor jsonEditor = new JsonEditor();
 			jsonEditor.loadDataFromRecord(gi);

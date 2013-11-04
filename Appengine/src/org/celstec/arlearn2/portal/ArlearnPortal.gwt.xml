@@ -5,10 +5,13 @@
 	<inherits name="org.celstec.arlearn2.gwtcommonlib.Library" />
 	<inherits name="com.smartgwt.SmartGwt" />
 	<inherits name="com.google.maps.gwt.GoogleMaps" />
-	
-	<source path="client" />
+    <inherits name="com.google.gwt.json.JSON" /> "
+    <!--<inherits name="com.google.gwt.logging.Logging"/>-->
+
+
+    <source path="client" />
 	<entry-point class="org.celstec.arlearn2.portal.client.Entry" />
 	
 	<extend-property name="locale" values="nl"/>
-	<!-- <set-property name="user.agent" value="safari"/> --> 
+	 <!--<set-property name="user.agent" value="safari"/>-->
 </module>

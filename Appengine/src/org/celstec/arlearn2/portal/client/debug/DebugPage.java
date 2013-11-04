@@ -54,7 +54,7 @@ public class DebugPage {
     }
 
     private void buildUi() {
-        toolbar = new ToolBar();
+        toolbar = new ToolBar(false);
         String type  = com.google.gwt.user.client.Window.Location.getParameter("type");
 
         if ("actions".equals(type)) {

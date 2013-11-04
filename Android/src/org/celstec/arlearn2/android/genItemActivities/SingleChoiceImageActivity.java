@@ -66,7 +66,7 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 	protected ImageView selectedView;
 	protected HashMap<MultipleChoiceAnswerItem, ImageView> answerViewMapping = new HashMap<MultipleChoiceAnswerItem, ImageView>();
 
-	private static final int COLUMNS = 3;
+	protected int COLUMNS = 3;
 
 	protected GradientDrawable drawable;
 	@Override
@@ -79,14 +79,21 @@ public class SingleChoiceImageActivity extends GeneralActivity {
 
 		setContentView(R.layout.gi_detail_imagechoice);
 //		setGeneralItemBean();
+
 		mediaObjects = GeneralItemsDelegator.getInstance().getLocalMediaUriMap(getBean());
+        setColumns();
 		initSoundPool();
 		initMediaMaps();
 		initWebView();
 		initUi();
-		initTableView();
+
+        initTableView();
 		fireReadAction(getBean());
 	}
+
+    public void setColumns() {
+        if (mct.getColumns() !=null) COLUMNS = mct.getColumns();
+    }
 
 	protected GeneralItem getBean() {
 		return mct;

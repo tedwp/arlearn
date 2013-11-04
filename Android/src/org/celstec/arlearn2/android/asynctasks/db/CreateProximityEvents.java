@@ -22,7 +22,7 @@ import android.os.Message;
 
 public class CreateProximityEvents extends GenericTask implements  DatabaseTask {
 
-	private static final long defaultExpireTime = 7200000l;
+	private static final long defaultExpireTime = 7200000l; //2 hours
 	
 	private Context ctx;
 	private long runId;

@@ -107,7 +107,7 @@ public class SplashScreenActivity extends GeneralActivity {
 //			menu.add(0, MenuHandler.LOGIN, 0, getString(R.string.login) + " old");
 
 		}
-		menu.add(0, MenuHandler.EXIT, 0, getString(R.string.exit));
+//		menu.add(0, MenuHandler.EXIT, 0, getString(R.string.exit));
 		return true;
 	}
 

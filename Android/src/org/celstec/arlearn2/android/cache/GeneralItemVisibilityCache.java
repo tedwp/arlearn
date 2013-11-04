@@ -90,7 +90,7 @@ public class GeneralItemVisibilityCache {
 		TreeSet<GeneralItem> resultList = new TreeSet<GeneralItem>();
         HashMap<Long, GeneralItem> giMap = GeneralItemsCache.getInstance().getGeneralItemsWithGameId(RunCache.getInstance().getGameId(runId));
         synchronized (giMap) {
-		for (Map.Entry<Long, GeneralItem> entry :giMap.entrySet()){
+		for (Map.Entry<Long, GeneralItem> entry :giMap.entrySet()){            //TODO  java.util.ConcurrentModificationException
 			Long appearAt = visibleItems.get(getKey(runId, entry.getValue().getId()));
 			Long disappearAt = disappearedItems.get(getKey(runId, entry.getValue().getId()));
 			if (appearAt != null) {

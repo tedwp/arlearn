@@ -73,6 +73,7 @@ public class GenericItemsOverlay extends ItemizedOverlay {
 			gis = gil.toArray(new GeneralItem[] {});
 		} 
 		overlayItems = new GenericItemOverlayItem[gis.length];
+        setLastFocusedIndex(-1);
 		populate();
 	}
 	

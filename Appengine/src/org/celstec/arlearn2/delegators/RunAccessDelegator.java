@@ -83,6 +83,12 @@ public class RunAccessDelegator extends GoogleDelegator {
 		rl.setServerTime(System.currentTimeMillis());
 		return rl;
 	}
+
+    public RunAccessList getRunAccess(Long runId) {
+        RunAccessList ral = new RunAccessList();
+        ral.setRunAccess(RunAccessManager.getRunAccessList(runId));
+        return ral;
+    }
 	
 	public boolean isOwner(Long runId) {
 		try {

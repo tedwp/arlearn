@@ -18,19 +18,12 @@
  ******************************************************************************/
 package org.celstec.arlearn2.delegators.inventory;
 
-import org.celstec.arlearn2.beans.generalItem.DropZone;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.run.InventoryRecord;
-import org.celstec.arlearn2.beans.generalItem.PickupItem;
 import org.celstec.arlearn2.delegators.GoogleDelegator;
-import org.celstec.arlearn2.delegators.generalitems.QueryGeneralItems;
-import org.celstec.arlearn2.fusion.CSV;
-import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.celstec.arlearn2.jdo.manager.InventoryRecordManager;
 import org.celstec.arlearn2.cache.InventoryRecordCache;
 
 import com.google.gdata.util.AuthenticationException;
-import com.google.gdata.util.ServiceException;
 
 public class UpdateInventoryRecord extends GoogleDelegator {
 

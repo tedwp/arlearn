@@ -15,6 +15,7 @@ public class NetworkToolbar extends ToolBar {
 	private NetworkPage networkPage;
 
 	public NetworkToolbar(NetworkPage nwPage) {
+        super(false);
 		this.networkPage = nwPage;
 	}
 
@@ -51,7 +52,12 @@ public class NetworkToolbar extends ToolBar {
                                 "\"name\": \"Item name\","  +
                                 "\"description\": \"Item description\","  +
                                 "\"richText\": \"<p>Item description</p>\","  +
-                                "}")
+                                "}"),
+                separator,
+                createMenuItemPOST(
+                        "Submit md5Hashes",
+                        "generalItems/md5Hashes",
+                        "{ }")
 
         );
 

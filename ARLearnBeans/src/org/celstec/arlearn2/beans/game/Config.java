@@ -30,10 +30,17 @@ public class Config extends Bean {
 
 	public static final int MAP_TYPE_GOOGLE_MAPS = 0;
 	public static final int MAP_TYPE_OSM = 1;
+
+    public final static int MESSAGE_LIST = 1;
+    public final static int MESSAGE_MAP = 2;
+    public final static int MAP_VIEW = 3;
+    public final static int CUSTOM_HTML = 4;
 	
 	private Boolean scoring;
+    private Integer messageViews;
 	private Boolean mapAvailable;
 	private Integer mapType;
+    private String htmlMessageList;
 	
 	private List<MapRegion> mapRegions;
 	
@@ -46,13 +53,15 @@ public class Config extends Bean {
 	public boolean equals(Object obj) {
 		Config other = (Config ) obj;
 		return super.equals(obj) && 
-			nullSafeEquals(getManualItems(), other.getManualItems()) && 	
-			nullSafeEquals(getLocationUpdates(), other.getLocationUpdates()) && 	
+			nullSafeEquals(getManualItems(), other.getManualItems()) &&
+                nullSafeEquals(getMessageViews(), other.getMessageViews()) &&
+                nullSafeEquals(getLocationUpdates(), other.getLocationUpdates()) &&
 			nullSafeEquals(getScoring(), other.getScoring()) && 
 			nullSafeEquals(getRoles(), other.getRoles()) && 
 			nullSafeEquals(getMapType(), other.getMapType()) && 
-			nullSafeEquals(getMapRegions(), other.getMapRegions()) && 
-			nullSafeEquals(getMapAvailable(), other.getMapAvailable()); 
+			nullSafeEquals(getMapRegions(), other.getMapRegions()) &&
+                nullSafeEquals(getHtmlMessageList(), other.getHtmlMessageList()) &&
+                nullSafeEquals(getMapAvailable(), other.getMapAvailable());
 
 	}
 	
@@ -64,7 +73,15 @@ public class Config extends Bean {
 		this.scoring = scoring;
 	}
 
-	public Boolean getMapAvailable() {
+    public Integer getMessageViews() {
+        return messageViews;
+    }
+
+    public void setMessageViews(Integer messageViews) {
+        this.messageViews = messageViews;
+    }
+
+    public Boolean getMapAvailable() {
 		return mapAvailable;
 	}
 
@@ -111,5 +128,13 @@ public class Config extends Bean {
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
-	
+
+    public String getHtmlMessageList() {
+        return htmlMessageList;
+    }
+
+    public void setHtmlMessageList(String htmlMessageList) {
+        this.htmlMessageList = htmlMessageList;
+    }
+
 }

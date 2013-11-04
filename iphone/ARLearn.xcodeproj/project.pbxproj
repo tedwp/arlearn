@@ -76,7 +76,7 @@
 		3450605C178AF9730001DA57 /* ARLAccountDelegator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3450605B178AF9730001DA57 /* ARLAccountDelegator.m */; };
 		3451FABB1786DA7E0018C0BE /* ARLVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3451FABA1786DA7E0018C0BE /* ARLVideoViewController.m */; };
 		3451FABD1786DFA30018C0BE /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3451FABC1786DFA30018C0BE /* MediaPlayer.framework */; };
-		3454CC3817B38BF700C0DFFC /* Inquiry.m in Sources */ = {isa = PBXBuildFile; fileRef = 3454CC3717B38BF700C0DFFC /* Inquiry.m */; };
+		345FA0FB17D8C16B00FEA63D /* Inquiry.m in Sources */ = {isa = PBXBuildFile; fileRef = 345FA0FA17D8C16B00FEA63D /* Inquiry.m */; };
 		346ABC8816BBC6920046E3FE /* ARLTestingActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 346ABC8716BBC6920046E3FE /* ARLTestingActionViewController.m */; };
 		346B7B9E17894E6400E20A6D /* beep-beep.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 346B7B9D17894E6400E20A6D /* beep-beep.aiff */; };
 		346CAB9617B27BCB00239B9F /* Account+Create.m in Sources */ = {isa = PBXBuildFile; fileRef = 346CAB6D17B27BCB00239B9F /* Account+Create.m */; };
@@ -322,8 +322,8 @@
 		3451FAB91786DA7E0018C0BE /* ARLVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARLVideoViewController.h; sourceTree = "<group>"; };
 		3451FABA1786DA7E0018C0BE /* ARLVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARLVideoViewController.m; sourceTree = "<group>"; };
 		3451FABC1786DFA30018C0BE /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		3454CC3617B38BF700C0DFFC /* Inquiry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Inquiry.h; sourceTree = "<group>"; };
-		3454CC3717B38BF700C0DFFC /* Inquiry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Inquiry.m; sourceTree = "<group>"; };
+		345FA0F917D8C16B00FEA63D /* Inquiry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Inquiry.h; sourceTree = "<group>"; };
+		345FA0FA17D8C16B00FEA63D /* Inquiry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Inquiry.m; sourceTree = "<group>"; };
 		346ABC8616BBC6920046E3FE /* ARLTestingActionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARLTestingActionViewController.h; sourceTree = "<group>"; };
 		346ABC8716BBC6920046E3FE /* ARLTestingActionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARLTestingActionViewController.m; sourceTree = "<group>"; };
 		346B7B9D17894E6400E20A6D /* beep-beep.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "beep-beep.aiff"; sourceTree = "<group>"; };
@@ -1008,10 +1008,10 @@
 				34D4220817B4D02A0051E84C /* CoreDataTableViewController.h */,
 				34D4220917B4D02A0051E84C /* CoreDataTableViewController.m */,
 				346CAB7417B27BCB00239B9F /* ARLDatabase.xcdatamodeld */,
+				345FA0F917D8C16B00FEA63D /* Inquiry.h */,
+				345FA0FA17D8C16B00FEA63D /* Inquiry.m */,
 				34F41E9917BAA0E50002752E /* Game.h */,
 				34F41E9A17BAA0E50002752E /* Game.m */,
-				3454CC3617B38BF700C0DFFC /* Inquiry.h */,
-				3454CC3717B38BF700C0DFFC /* Inquiry.m */,
 				34D4221217B4D0830051E84C /* Run.h */,
 				34D4221317B4D0830051E84C /* Run.m */,
 				346CAB6C17B27BCB00239B9F /* Account+Create.h */,
@@ -1733,7 +1733,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3454CC3817B38BF700C0DFFC /* Inquiry.m in Sources */,
 				34D6F1C817B7604800BE1516 /* ARLAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1840,6 +1839,7 @@
 				34F41EAC17BB880C0002752E /* ARLFeaturedGamesViewController.m in Sources */,
 				34F41EB617BBB5C60002752E /* ARLPortaitViewController.m in Sources */,
 				34F41EB917BBC1E30002752E /* ARLTabBarViewController.m in Sources */,
+				345FA0FB17D8C16B00FEA63D /* Inquiry.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1993,7 +1993,8 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Stefaan Ternier (LCG6376CH6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stefaan Ternier (LCG6376CH6)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2006,9 +2007,11 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				GENERATE_PROFILING_CODE = YES;
+				GENERATE_PROFILING_CODE = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "2019716A-0EB9-423C-A9FC-E8373349E850";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2019716A-0EB9-423C-A9FC-E8373349E850";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2023,15 +2026,18 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Open Universiteit (GND5FJCB67)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Open Universiteit (GND5FJCB67)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				GENERATE_PROFILING_CODE = YES;
+				GENERATE_PROFILING_CODE = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "DA27F380-9632-4681-962E-F45450FCAE7E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DA27F380-9632-4681-962E-F45450FCAE7E";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -2068,6 +2074,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Open Universiteit (GND5FJCB67)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Open Universiteit (GND5FJCB67)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ARLearn/ARLearn-Prefix.pch";
@@ -2082,7 +2089,6 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3F7643A8-3C0C-4B12-9F4F-1C56A7EDFA82";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -43,12 +43,14 @@ public class ConfigDeserializer extends BeanDeserializer{
 		super.initBean(object, genericBean);
 		Config oq = (Config) genericBean;
 		if (object.has("scoring")) oq.setScoring(object.getBoolean("scoring"));
+        if (object.has("messageViews")) oq.setMessageViews(object.getInt("messageViews"));
 		if (object.has("mapAvailable")) oq.setMapAvailable(object.getBoolean("mapAvailable"));
 		if (object.has("mapType")) oq.setMapType(object.getInt("mapType"));
 		if (object.has("manualItems")) oq.setManualItems(ListDeserializer.toBean(object.getJSONArray("manualItems"), GeneralItem.class));
 		if (object.has("locationUpdates")) oq.setLocationUpdates(ListDeserializer.toBean(object.getJSONArray("locationUpdates"), LocationUpdateConfig.class));
 		if (object.has("roles")) oq.setRoles(ListDeserializer.toStringList(object.getJSONArray("roles")));
 		if (object.has("mapRegions")) oq.setMapRegions(ListDeserializer.toBean(object.getJSONArray("mapRegions"), MapRegion.class));
+        if (object.has("htmlMessageList")) oq.setHtmlMessageList(object.getString("htmlMessageList"));
 	}
 	
 }

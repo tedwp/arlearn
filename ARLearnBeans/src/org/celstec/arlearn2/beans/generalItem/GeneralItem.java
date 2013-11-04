@@ -18,9 +18,12 @@
  ******************************************************************************/
 package org.celstec.arlearn2.beans.generalItem;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.celstec.arlearn2.beans.dependencies.Dependency;
+import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
 import org.celstec.arlearn2.beans.game.GameBean;
 
 public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
@@ -51,6 +54,8 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	
 	private String iconUrl;
 
+    private String iconUrlMd5Hash;
+
     private String section;
 
     private String tags;
@@ -66,6 +71,8 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
     private Boolean showOnMap;
 
     private Boolean showInList;
+
+    private List<FileReference> fileReferences = new Vector();
 
 	@Override
 	public boolean equals(Object obj) {
@@ -85,6 +92,7 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 			nullSafeEquals(getLng(), other.getLng()) &&
 			nullSafeEquals(getLat(), other.getLat()) &&
 			nullSafeEquals(getIconUrl(), other.getIconUrl()) &&
+            nullSafeEquals(getIconUrlMd5Hash(), other.getIconUrlMd5Hash()) &&
             nullSafeEquals(getSection(), other.getSection()) &&
             nullSafeEquals(getTags(), other.getTags()) &&
             nullSafeEquals(getShowCountDown(), other.getShowCountDown()) &&
@@ -98,6 +106,14 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 	public GeneralItem() {
 		setType(getClass().getName());
 	}
+
+    public List<FileReference> getFileReferences(){
+        return fileReferences;
+    }
+
+    public void setFileReferences(List<FileReference> fileReferences){
+        this.fileReferences = fileReferences;
+    }
 
 	public Long getId() {
 		return id;
@@ -199,6 +215,14 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
 		this.iconUrl = iconUrl;
 	}
 
+    public String getIconUrlMd5Hash() {
+        return iconUrlMd5Hash;
+    }
+
+    public void setIconUrlMd5Hash(String iconUrlMd5Hash) {
+        this.iconUrlMd5Hash = iconUrlMd5Hash;
+    }
+
     public String getSection() {
         return section;
     }
@@ -287,4 +311,17 @@ public class GeneralItem extends GameBean implements Comparable<GeneralItem>{
     public void setShowInList(Boolean showInList) {
         this.showInList = showInList;
     }
+
+//    public static void main(String[] args) throws Exception {
+//        GeneralItem gi = new GeneralItem();
+//        FileReference fr = new FileReference();
+//        fr.setKey("filip");
+//        List<FileReference> arrayList = new Vector<FileReference>();
+//        arrayList.add(fr);
+//        gi.setFileReferences(arrayList);
+//
+//        System.out.println(gi);
+//        Object o = JsonBeanDeserializer.deserialize(gi.toString());
+//        System.out.println(o);
+//    }
 }

@@ -431,37 +431,37 @@ public class GameDelegator extends GoogleDelegator {
 
 	}
 
-	public Game addManualTrigger(Long gameIdentifier, String generalItem) {
-		Game g = getGame(gameIdentifier);
-		GeneralItem gi;
-		try {
-			gi = (GeneralItem) JsonBeanDeserializer.deserialize(generalItem);
-		} catch (JSONException e) {
-			g.setError(e.getMessage());
-			return g;
-		}
-		if (g.getError() != null)
-			return g;
-		if (g.getConfig() == null)
-			g.setConfig(new Config());
-		Config c = g.getConfig();
-		if (c.getManualItems() == null)
-			c.setManualItems(new ArrayList<GeneralItem>());
-
-		c.getManualItems().add(gi);
-
-		createGame(g, GameModification.ALTERED);
-		GeneralItemDelegator gd = new GeneralItemDelegator(this);
-		GeneralItem itemFromDb = gd.getGeneralItemForGame(gameIdentifier, gi.getId());
-		if (itemFromDb.getDependsOn() == null) {
-			ActionDependency ad = new ActionDependency();
-			ad.setAction("manual-" + gi.getId());
-			itemFromDb.setDependsOn(ad);
-			gd.createGeneralItem(itemFromDb);
-		}
-		return g;
-
-	}
+//	public Game addManualTrigger(Long gameIdentifier, String generalItem) {
+//		Game g = getGame(gameIdentifier);
+//		GeneralItem gi;
+//		try {
+//			gi = (GeneralItem) JsonBeanDeserializer.deserialize(generalItem);
+//		} catch (JSONException e) {
+//			g.setError(e.getMessage());
+//			return g;
+//		}
+//		if (g.getError() != null)
+//			return g;
+//		if (g.getConfig() == null)
+//			g.setConfig(new Config());
+//		Config c = g.getConfig();
+//		if (c.getManualItems() == null)
+//			c.setManualItems(new ArrayList<GeneralItem>());
+//
+//		c.getManualItems().add(gi);
+//
+//		createGame(g, GameModification.ALTERED);
+//		GeneralItemDelegator gd = new GeneralItemDelegator(this);
+//		GeneralItem itemFromDb = gd.getGeneralItemForGame(gameIdentifier, gi.getId());
+//		if (itemFromDb.getDependsOn() == null) {
+//			ActionDependency ad = new ActionDependency();
+//			ad.setAction("manual-" + gi.getId());
+//			itemFromDb.setDependsOn(ad);
+//			gd.createGeneralItem(itemFromDb);
+//		}
+//		return g;
+//
+//	}
 
 	public Game removeTrigger(Long gameIdentifier, long itemIdentifier) {
 		Game g = getGame(gameIdentifier);

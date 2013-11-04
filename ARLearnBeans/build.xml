@@ -1,4 +1,4 @@
-<project default="jar">
+<project name="Beans" default="jar">
 
 	<path id="classpath">
 		<fileset dir="../lib" includes="**/*.jar" />

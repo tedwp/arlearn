@@ -26,21 +26,24 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 public class ToolBar extends ToolStrip{
 	private static PortalConstants constants = GWT.create(PortalConstants.class);
 
+    protected ToolStripButton homeButton;
 	protected ToolStripButton profileButton;
 	protected SelectItem languageSelectItem;
 	
 	
 	protected boolean i18 = false;
-	public ToolBar(){
-		
-		createProfileButton();
-		createLanguageButton();
-		
-	}
+//	public ToolBar(){
+//
+//		createProfileButton();
+//        createHomeButton();
+//		createLanguageButton();
+//
+//	}
 	
 	public ToolBar(boolean i18){
 		this.i18 = i18;
 		if (i18) createLanguageButton();
+        createHomeButton();
 		createProfileButton();
 	}
 	
@@ -86,6 +89,23 @@ public class ToolBar extends ToolStrip{
 		
 	}
 
+    private void createHomeButton() {
+        homeButton = new ToolStripButton();
+        if (AccountManager.getInstance().getAccount()!= null) {
+            homeButton.setIcon("home.png");
+//            profileButton.setTitle(AccountManager.getInstance().getAccount().getName());
+        }
+        homeButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                            Window.open("/index.html", "_self", "");
+
+
+            }
+        });
+    }
+
 	private void createProfileButton() {
 		profileButton = new ToolStripButton();  
 		if (AccountManager.getInstance().getAccount()!= null) {
@@ -117,8 +137,13 @@ public class ToolBar extends ToolStrip{
 		addButtons();
 		setWidth100();
 		addFill();
-		if (i18)  addFormItem(languageSelectItem); 
-		addButton(profileButton);
+
+        if (homeButton != null) {
+            addButton(homeButton);
+        }
+		if (i18)  addFormItem(languageSelectItem);
+
+        addButton(profileButton);
 	}
 	
 	protected void addButtons() {

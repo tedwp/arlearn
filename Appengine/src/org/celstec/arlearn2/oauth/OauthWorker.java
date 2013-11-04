@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.urlfetch.FetchOptions;
 import org.celstec.arlearn2.jdo.UserLoggedInManager;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;

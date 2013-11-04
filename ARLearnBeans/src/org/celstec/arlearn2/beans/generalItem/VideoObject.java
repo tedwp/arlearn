@@ -21,8 +21,11 @@ package org.celstec.arlearn2.beans.generalItem;
 public class VideoObject extends NarratorItem {
 
 	private String videoFeed;
-	
-	public VideoObject () {
+    private Boolean autoPlay;
+    private String md5Hash;
+
+
+    public VideoObject () {
 		
 	}
 
@@ -33,11 +36,27 @@ public class VideoObject extends NarratorItem {
 	public void setVideoFeed(String videoFeed) {
 		this.videoFeed = videoFeed;
 	}
-	
+
+    public Boolean getAutoPlay() {
+        return autoPlay;
+    }
+
+    public void setAutoPlay(Boolean autoPlay) {
+        this.autoPlay = autoPlay;
+    }
+    public String getMd5Hash() {
+        return md5Hash;
+    }
+
+    public void setMd5Hash(String md5Hash) {
+        this.md5Hash = md5Hash;
+    }
+
 	public boolean equals(Object obj) {
 		if (!super.equals(obj)) return false;
 		VideoObject other = (VideoObject ) obj;
-		return 
+		return  nullSafeEquals(getMd5Hash(), other.getMd5Hash())&&
+            nullSafeEquals(getAutoPlay(), other.getAutoPlay()) &&
 			nullSafeEquals(getVideoFeed(), other.getVideoFeed()) ; 
 
 	}

@@ -37,7 +37,7 @@ public class SearchPage {
 	}
 	
 	public void buildUi() {
-		toolStrip = new ToolBar();
+		toolStrip = new ToolBar(false);
 		final QueryGameDataSource qgds = new QueryGameDataSource();
 
 		final ListSearch listGrid = new ListSearch();

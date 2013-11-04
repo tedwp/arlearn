@@ -68,6 +68,7 @@ public class UsersOverlay extends ItemizedOverlay {
 			keys[i++] = (String) it.next();
 			
 		}
+        setLastFocusedIndex(-1);
 		populate();
 	}
 

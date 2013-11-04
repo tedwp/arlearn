@@ -1,5 +1,7 @@
 package org.celstec.arlearn2.portal.client;
 
+import com.smartgwt.client.data.DataSourceField;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthFbClient;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthGoogleClient;
 import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthLinkedIn;
@@ -35,7 +37,7 @@ public class OauthPage {
 //				"<br> As you will see, most of the functionality is already implemented in this new environment... but in a slightly different manner<br>" +
 //				"<br><br> Logging with google will automatically migrate your games and will render them unavailable in the <a href=\"Authoring.html\">old environment</a>. Logging in with Facebook or LinkedIn will not affect your old games and runs."+
 //				"<br><br>If things are not clear, don't hesitate to contact me via <a href=\"skype:stefaanternier2?call\">Skype</a> or contact me via email: stefaan.ternier@ou.nl ");
-		toolStrip = new ToolBar();
+		toolStrip = new ToolBar(false);
 
 		
 		VLayout vertical = new VLayout();
@@ -122,6 +124,14 @@ public class OauthPage {
 
 	        DataSource ds =new DataSource();
 	        ds.setClientOnly(true);
+
+            DataSourceField field = new DataSourceField();
+            field.setName("rec");
+            field.setHidden(true);
+            field.setPrimaryKey(true);
+            ds.addField(field);
+
+
 	        ds.addData(facebook);
 	        ds.addData(google);
 	        ds.addData(linkedIn);

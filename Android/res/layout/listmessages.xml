@@ -26,6 +26,7 @@
         android:padding="12dip"> 
         <ImageView 
    			android:id="@+id/statusLed"
+            android:visibility="gone"
 			android:src="@drawable/status_icon_red"
 			android:layout_width="wrap_content" 
         	android:layout_height="wrap_content"

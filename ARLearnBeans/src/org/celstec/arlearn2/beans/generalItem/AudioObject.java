@@ -21,6 +21,8 @@ package org.celstec.arlearn2.beans.generalItem;
 public class AudioObject extends NarratorItem {
 	
 	private String audioFeed;
+    private Boolean autoPlay;
+    private String md5Hash;
 
 	public AudioObject() {
 		super();
@@ -33,13 +35,31 @@ public class AudioObject extends NarratorItem {
 	public void setAudioFeed(String audioFeed) {
 		this.audioFeed = audioFeed;
 	}
-	
-	public boolean equals(Object obj) {
+
+    public Boolean getAutoPlay() {
+        return autoPlay;
+    }
+
+    public void setAutoPlay(Boolean autoPlay) {
+        this.autoPlay = autoPlay;
+    }
+
+    public boolean equals(Object obj) {
 		if (!super.equals(obj)) return false;
 		AudioObject other = (AudioObject ) obj;
-		return 
-			nullSafeEquals(getAudioFeed(), other.getAudioFeed()) ; 
+		return
+            nullSafeEquals(getMd5Hash(), other.getMd5Hash())&&
+			nullSafeEquals(getAudioFeed(), other.getAudioFeed())&&
+            nullSafeEquals(getAutoPlay(), other.getAutoPlay()) ;
 
 	}
+
+    public String getMd5Hash() {
+        return md5Hash;
+    }
+
+    public void setMd5Hash(String md5Hash) {
+        this.md5Hash = md5Hash;
+    }
 }
 

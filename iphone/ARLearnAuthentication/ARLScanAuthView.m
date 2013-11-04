@@ -86,7 +86,7 @@
     [scanner setSymbology: ZBAR_I25
                    config: ZBAR_CFG_ENABLE
                        to: 0];
-    
+//    NSLog(@"scanned ", symbol)
     [self.viewController presentViewController:reader animated:YES completion:nil];
 }
 

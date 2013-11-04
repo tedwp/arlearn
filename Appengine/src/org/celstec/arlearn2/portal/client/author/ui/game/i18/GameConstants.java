@@ -109,5 +109,37 @@ public interface GameConstants extends Constants {
 	@DefaultStringValue("Submit")
 	String submit();
 
+    //Map, message lists
+
+    @DefaultStringValue("Message views")
+    String messageViews();
+
+    @DefaultStringValue("Select message view")
+    String selectMessageView();
+
+
+    @DefaultStringValue("Show only messages list")
+    String messagesOnly();
+
+    @DefaultStringValue("Show both messages and map")
+    String messagesAndMap();
+
+    @DefaultStringValue("Show only map view")
+    String mapViewOnly();
+
+    @DefaultStringValue("Custom HTML")
+    String customHtml();
+
+    @DefaultStringValue("Select Map Type")
+    String selectMapType();
+
+    @DefaultStringValue("Map types")
+    String mapTypes();
+
+    @DefaultStringValue("Google Maps")
+    String googleMaps();
+
+    @DefaultStringValue("Open Street Maps")
+    String osm();
 
 }

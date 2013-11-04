@@ -48,7 +48,9 @@ import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 import org.celstec.arlearn2.jdo.manager.GeneralItemManager;
 import org.celstec.arlearn2.jdo.manager.GeneralItemVisibilityManager;
 import org.celstec.arlearn2.tasks.beans.GeneralItemSearchIndex;
+import org.celstec.arlearn2.tasks.beans.GenericBean;
 import org.celstec.arlearn2.tasks.beans.NotifyRunsFromGame;
+import org.celstec.arlearn2.tasks.beans.RemoveDeleteGiFromDependencies;
 import org.htmlparser.util.Translate;
 
 import com.google.appengine.api.search.Index;
@@ -61,6 +63,11 @@ import com.google.appengine.api.search.StatusCode;
 import com.google.gdata.util.AuthenticationException;
 
 public class GeneralItemDelegator extends DependencyDelegator {
+
+
+    public GeneralItemDelegator(GenericBean bean) {
+        super(bean);
+    }
 
 	public GeneralItemDelegator(String authToken) throws AuthenticationException {
 		super(authToken);
@@ -107,6 +114,7 @@ public class GeneralItemDelegator extends DependencyDelegator {
 				return gi;
 			}
 		} else {
+            //TODO this part is deprecated
 			GameDelegator gd = new GameDelegator(this);
 			Game g = gd.getGame(gi.getGameId());
 			if (!g.getOwner().equals(myAccount)) {
@@ -118,6 +126,7 @@ public class GeneralItemDelegator extends DependencyDelegator {
 		gi = GeneralItemManager.setStatusDeleted(gameId, itemId);
 		GeneralitemsCache.getInstance().removeGeneralItemList(gameId);
 		(new NotifyRunsFromGame(authToken, gi.getGameId(), gi, GeneralItemModification.DELETED)).scheduleTask();
+//        (new RemoveDeleteGiFromDependencies(authToken, gi.getGameId(), gi.getId())).scheduleTask();
 		return gi;
 	}
 
@@ -168,12 +177,20 @@ public class GeneralItemDelegator extends DependencyDelegator {
 		return returnItemList;
 	}
 
-	public GeneralItem getGeneralItem(Long runIdentifier, Long generalItemId) {
-		// TODO:better do a DB query by id
-		RunDelegator rd = new RunDelegator(this);
-		Run run = rd.getRun(runIdentifier);
-		return getGeneralItemForGame(run.getGameId(), generalItemId);
-	}
+    public GeneralItem getGeneralItem(Long runIdentifier, Long generalItemId) {
+        // TODO:better do a DB query by id
+        RunDelegator rd = new RunDelegator(this);
+        Run run = rd.getRun(runIdentifier);
+        return getGeneralItemForGame(run.getGameId(), generalItemId);
+    }
+
+    public GeneralItem getGeneralItem(Long generalItemId) {
+        // TODO:better do a DB query by id
+        RunDelegator rd = new RunDelegator(this);
+        List<GeneralItem> list =  GeneralItemManager.getGeneralitems(null, ""+generalItemId, null);
+        if (list == null || list .isEmpty()) return null;
+        return list.get(0);
+    }
 
 	public GeneralItem getGeneralItemForGame(Long gameId, Long generalItemId) {
 		// TODO:better do a DB query by id

@@ -21,8 +21,10 @@ package org.celstec.arlearn2.android.delegators;
 import org.celstec.arlearn2.android.cache.MediaUploadCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.genItemActivities.MultipleChoiceActivity;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
+import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.run.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,8 +54,6 @@ public class ResponseDelegator {
 
 	public void publishMultipleChoiceResponse(Context ctx,GeneralItem generalItem, MultipleChoiceAnswerItem answer) {
 		PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
-		Log.i("VIS", "inside publish multiplechoice reesp");
-
 		ActionsDelegator.getInstance().publishAction(ctx, "answer_" + answer.getId(), pa.getCurrentRunId(), pa.getFullId(), generalItem.getId(), generalItem.getType());
 		try {
 			JSONObject responseValueJson = new JSONObject();
@@ -64,6 +64,12 @@ public class ResponseDelegator {
 			Log.e("exception", e.getMessage(), e);
 		}
 	}
+
+    public void publishMultipleChoiceResponse(Context ctx, GeneralItem generalItem, boolean correct) {
+        PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
+
+        ActionsDelegator.getInstance().publishAction(ctx, "answer_"+(correct?"correct":"wrong") , pa.getCurrentRunId(), pa.getFullId(), generalItem.getId(), generalItem.getType());
+    }
 
 	public void publishResponse(Context ctx,GeneralItem generalItem, String responseValue) {
 		PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
@@ -112,5 +118,6 @@ public class ResponseDelegator {
 		}
 		return null;
 	}
+
 
 }

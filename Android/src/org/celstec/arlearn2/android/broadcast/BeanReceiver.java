@@ -51,7 +51,7 @@ public class BeanReceiver extends BroadcastReceiver {
 					long currentRunId = PropertiesAdapter.getInstance(context).getCurrentRunId();
 					GeneralItemModification gim = (GeneralItemModification) bean;
 					if (gim.getRunId() == currentRunId) {
-						GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(context, gim.getRunId(), gim.getGameId());	
+						GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(context, gim.getRunId(), gim.getGameId(), true);
 					}
 //					reCast("org.celstec.arlearn2.beans.notification.GeneralItemModification", bean, context);
 					break;

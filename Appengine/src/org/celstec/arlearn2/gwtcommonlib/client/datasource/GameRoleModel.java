@@ -7,7 +7,7 @@ public class GameRoleModel extends DataSourceModel{
 	public static final String ROLE_PK_FIELD = "rolePk";
 	public static final String ROLE_FIELD = "role";
 
-	public GameRoleModel(DataSourceAdapter dataSourceAdapter) {
+	public  GameRoleModel(DataSourceAdapter dataSourceAdapter) {
 		super(dataSourceAdapter);
 	}
 

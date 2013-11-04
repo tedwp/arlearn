@@ -20,7 +20,7 @@ package org.celstec.arlearn2.tasks.beans;
 
 import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
-import org.celstec.arlearn2.delegators.generalitems.CreateGeneralItems;
+
 
 import com.google.gdata.util.AuthenticationException;
 

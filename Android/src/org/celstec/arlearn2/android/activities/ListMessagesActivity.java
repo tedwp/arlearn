@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import android.util.Log;
+import android.view.Menu;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.RunCache;
@@ -35,6 +37,7 @@ import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
 import org.celstec.arlearn2.android.list.ListitemClickInterface;
 import org.celstec.arlearn2.android.list.MessageListRecord;
+import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 
 import android.os.Bundle;
@@ -47,6 +50,8 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
     private GenericMessageListAdapter adapter;
     private long runId = -1;
     private Long gameId = null;
+    TreeSet<GeneralItem> gil;
+//    private static long lastReloadDate = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,11 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
         gameId = inState.getLong("gameId");
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean ret = super.onCreateOptionsMenu(menu);
+        menu.add(0, MenuHandler.SYNC, 0, getString(R.string.sync));
+        return ret;
+    }
 
     @Override
     protected void onResume() {
@@ -114,8 +124,14 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
     @Override
     public void onBroadcastMessage(Bundle bundle, boolean render) {
         super.onBroadcastMessage(bundle, render);
-        if (render)
-            loadMessagesFromCache();
+        long currentTime = System.currentTimeMillis();
+        if (gil != null) {
+            if (!gil.equals(GeneralItemVisibilityCache.getInstance().getAllVisibleMessages(runId))) {
+                loadMessagesFromCache();
+            } else {
+                System.out.println("not equal");
+            }
+        }
     }
 
     private void loadMessagesFromCache() {
@@ -125,7 +141,7 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
             if (RunCache.getInstance().getRun(runId) == null) {
                 this.finish();
             } else 	{
-                TreeSet<GeneralItem> gil = GeneralItemVisibilityCache.getInstance().getAllVisibleMessages(runId);
+                gil = GeneralItemVisibilityCache.getInstance().getAllVisibleMessages(runId);
 
                 if (gil != null) {
                     loadSections(gil);

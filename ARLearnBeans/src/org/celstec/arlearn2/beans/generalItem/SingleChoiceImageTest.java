@@ -27,7 +27,8 @@ import org.codehaus.jettison.json.JSONObject;
 public class SingleChoiceImageTest extends SingleChoiceTest {
 
 	private String audioQuestion;
-	
+    private Integer columns;
+
 	public String getAudioQuestion() {
 		return audioQuestion;
 	}
@@ -36,7 +37,16 @@ public class SingleChoiceImageTest extends SingleChoiceTest {
 		this.audioQuestion = audioQuestion;
 	}
 
-	public static GeneralItemDeserializer deserializer = new GeneralItemDeserializer(){
+    public Integer getColumns() {
+        if (columns == null) return 3;
+        return columns;
+    }
+
+    public void setColumns(Integer columns) {
+        this.columns = columns;
+    }
+
+    public static GeneralItemDeserializer deserializer = new GeneralItemDeserializer(){
 
 		@Override
 		public SingleChoiceImageTest toBean(JSONObject object) {
@@ -53,6 +63,7 @@ public class SingleChoiceImageTest extends SingleChoiceTest {
 			super.initBean(object, genericBean);
 			SingleChoiceImageTest mctItem = (SingleChoiceImageTest) genericBean;
 			if (object.has("richText")) mctItem.setRichText(object.getString("richText"));
+            if (object.has("columns")) mctItem.setColumns(object.getInt("columns"));
 			if (object.has("text")) mctItem.setText(object.getString("text"));
 			if (object.has("audioQuestion")) mctItem.setAudioQuestion(object.getString("audioQuestion"));
 			if (object.has("answers")) mctItem.setAnswers(ListDeserializer.toBean(object.getJSONArray("answers"), MultipleChoiceImageAnswerItem.class));
@@ -67,6 +78,7 @@ public class SingleChoiceImageTest extends SingleChoiceTest {
 			JSONObject returnObject = SingleChoiceTest.serializer.toJSON(bean);
 			try {
 				if (mct.getAudioQuestion() != null) returnObject.put("audioQuestion", mct.getAudioQuestion());
+                if (mct.getColumns() != null) returnObject.put("columns", mct.getColumns());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

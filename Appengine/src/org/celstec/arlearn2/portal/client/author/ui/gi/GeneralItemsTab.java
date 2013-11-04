@@ -1,5 +1,7 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi;
 
+import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.widgets.grid.events.*;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
@@ -303,18 +305,24 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
 	protected void initGrid() {
 		generalItemsGrid.setDataSource(GeneralItemDataSource.getInstance());
 		ListGridField idField = new ListGridField(GeneralItemModel.ID_FIELD, "id ");
-		idField.setWidth(30);
+		idField.setWidth(60);
 		idField.setCanEdit(false);
 		idField.setHidden(true);
 
 		ListGridField orderField = new ListGridField(GeneralItemModel.SORTKEY_FIELD, constants.order());
-		orderField.setWidth(30);
+		orderField.setWidth(40);
 
 		ListGridField giTitleField = new ListGridField(GeneralItemModel.NAME_FIELD, constants.title());
 		ListGridField simpleNameField = new ListGridField(GeneralItemModel.SIMPLE_NAME_FIELD, constants.simpleName());
 
-		ListGridField deleteField = new ListGridField("deleteField", " ");
-		deleteField.setWidth(20);
+		ListGridField deleteField = new ListGridField(GeneralItemModel.DELETE_ICON, " ");
+        deleteField.setWidth(20);
+        deleteField.setAlign(Alignment.CENTER);
+        deleteField.setType(ListGridFieldType.IMAGE);
+        deleteField.setImageURLSuffix(".png");
+
+
+
         if (AccountManager.getInstance().isAdvancedUser()) {
             ListGridField tagsField = new ListGridField(GeneralItemModel.TAGS, constants.tags());
             ListGridField sectionField = new ListGridField(GeneralItemModel.SECTION, constants.section());
@@ -322,6 +330,15 @@ public class GeneralItemsTab extends VerticalMasterDetailTab {
         } else {
 		    generalItemsGrid.setFields(idField, orderField, giTitleField, simpleNameField, deleteField );
         }
+        generalItemsGrid.addCellClickHandler(new CellClickHandler() {
+
+            @Override
+            public void onCellClick(CellClickEvent event) {
+                if (GeneralItemModel.DELETE_ICON.equals(generalItemsGrid.getFieldName(event.getColNum()))) {
+                    GeneralItemsTab.this.deleteRecord(event.getRecord());
+                }
+            }
+        });
 
 	}
 

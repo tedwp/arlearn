@@ -210,37 +210,74 @@ public class ListRunsParticipateActivity extends GeneralActivity implements List
 			boolean mapView = true;
 			if (g != null && g.getConfig() != null) {
 				mapView = g.getConfig().getMapAvailable();
-				if (g.getConfig().getLocationUpdates() != null && !g.getConfig().getLocationUpdates().isEmpty()) {
-					Intent intent = new Intent(this, LocationService.class);
-					intent.putExtra("bean", g.getConfig());
-					startService(intent);
-				}
+                Integer messageViewType = g.getConfig().getMessageViews();
+                if (messageViewType == null) {
+                    if (g.getConfig().getMapAvailable()) {
+                        messageViewType =    Config.MAP_VIEW;
+                    } else {
+                        messageViewType = Config.MESSAGE_LIST    ;
+                    }
+                }
 
-				if (mapView) {
-					int view = Config.MAP_TYPE_GOOGLE_MAPS;
-					if (g.getConfig() != null && g.getConfig().getMapType() != null) {
-						view = g.getConfig().getMapType();
-					}
-					switch (view) {
-					case Config.MAP_TYPE_GOOGLE_MAPS:
-						i = new Intent(this, MapViewActivity.class);
-						break;
-					case Config.MAP_TYPE_OSM:
-						i = new Intent(this, OsmMapViewActivity.class);
-					default:
-						break;
-					}
+//				if (g.getConfig().getLocationUpdates() != null && !g.getConfig().getLocationUpdates().isEmpty()) {
+//					Intent intent = new Intent(this, LocationService.class);
+//					intent.putExtra("bean", g.getConfig());
+//					startService(intent);
+//				}
+//
+//				if (mapView) {
+//					int view = Config.MAP_TYPE_GOOGLE_MAPS;
+//					if (g.getConfig() != null && g.getConfig().getMapType() != null) {
+//						view = g.getConfig().getMapType();
+//					}
+//					switch (view) {
+//					case Config.MAP_TYPE_GOOGLE_MAPS:
+//						i = new Intent(this, MapViewActivity.class);
+//						break;
+//					case Config.MAP_TYPE_OSM:
+//						i = new Intent(this, OsmMapViewActivity.class);
+//					default:
+//						break;
+//					}
+//
+//				} else {
+//					i = new Intent(this, ListMessagesActivity.class);
+//				}
 
-				} else {
-					i = new Intent(this, ListMessagesActivity.class);
-//                    i = new Intent(this, ListSectionsMessageActivity.class);
-				}
 
-				startActivity(i);
+				startActivity(loadMessageViewIntent(messageViewType, g.getConfig()));
 				ActionsDelegator.getInstance().publishStartRunActon(this, runId, pa.getFullId());
 			}
 		}
 	}
+
+    private Intent loadMessageViewIntent(int messageViewType, Config config) {
+        Intent i = null;
+        switch (messageViewType) {
+            case Config.MESSAGE_LIST:
+                i = new Intent(this, ListMessagesActivity.class);
+                break;
+            case Config.MAP_VIEW :
+                int view = config.getMapType() == null? Config.MAP_TYPE_GOOGLE_MAPS: config.getMapType();
+                switch (view) {
+                    case Config.MAP_TYPE_GOOGLE_MAPS:
+                        i = new Intent(this, MapViewActivity.class);
+                        break;
+                    case Config.MAP_TYPE_OSM:
+                        i = new Intent(this, OsmMapViewActivity.class);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case Config.CUSTOM_HTML:
+                i = new Intent(this, HtmlListActivity.class);
+                break;
+
+        }
+        return i;
+
+    }
 
 	public boolean isGenItemActivity() {
 		return false;

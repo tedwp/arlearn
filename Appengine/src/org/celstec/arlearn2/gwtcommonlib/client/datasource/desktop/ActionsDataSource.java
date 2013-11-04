@@ -44,7 +44,6 @@ public class ActionsDataSource extends GenericDataSource {
     }
 
     private ActionsDataSource() {
-        super();
         setDataSourceModel(new ActionModel(this));
     }
     @Override

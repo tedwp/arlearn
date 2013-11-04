@@ -53,7 +53,7 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 
 	private GameConfigSection gameConfigSection ;
 	private RoleConfigSection roleConfigSection;
-//	private MapConfigSection mapConfigSection ;
+	private MapConfigSection mapConfigSection ;
 	private SharingConfigSection sharingConfigSection;
 	private CollaboratorsConfig collabConfigSection ;
 	private ShowDescriptionSection descriptionSection ;
@@ -68,40 +68,7 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 		hideDetail();
 	}
 
-	protected Canvas createRecordComponent2(final ListGridRecord record, Integer colNum, String fieldName) {
-		if (fieldName.equals("runField")) {
-			ImgButton runImg = createRunImg() ;
-			runImg.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					createRun(record.getAttributeAsLong(GameModel.GAMEID_FIELD), record.getAttribute(GameModel.GAME_TITLE_FIELD));	
-				}
-			});
 
-			return runImg;
-		} else if (fieldName.equals("giField")) {
-				ImgButton itemsImg = createItemsImg();
-				itemsImg.addClickHandler(new ClickHandler() {
-					public void onClick(ClickEvent event) {
-						Game game = recordToGame(record);
-						GeneralItemsTab giTab = new GeneralItemsTab(game);
-						tabManager.addTab(giTab);
-					}
-				});
-
-				return itemsImg;
-		} else if (fieldName.equals("downloadField")) {
-			ImgButton itemsImg = createDownloadImg();
-			itemsImg.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					download(record);
-				}
-			});
-
-			return itemsImg;
-	}
-		
-		return super.createRecordComponent2(record, colNum, fieldName);
-	}
 
 
 	private void createRun(final long gameId, String gameTitle){
@@ -118,42 +85,6 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 				}
 			}
 		});
-	}
-	
-	private ImgButton createRunImg() {
-		ImgButton runImg = new ImgButton();
-		runImg.setShowDown(false);
-		runImg.setShowRollOver(false);
-		runImg.setAlign(Alignment.CENTER);
-		runImg.setSrc("/images/add_user.png");
-		runImg.setPrompt(constants.createRunMessageHoover());
-		runImg.setHeight(16);
-		runImg.setWidth(16);
-		return runImg;
-	}
-	
-	private ImgButton createItemsImg() {
-		ImgButton itemsImg = new ImgButton();
-		itemsImg.setShowDown(false);
-		itemsImg.setShowRollOver(false);
-		itemsImg.setAlign(Alignment.CENTER);
-		itemsImg.setSrc("/images/gi_add.png");
-		itemsImg.setPrompt(constants.openGeneralItemsHoover());
-		itemsImg.setHeight(16);
-		itemsImg.setWidth(16);
-		return itemsImg;
-	}
-	
-	private ImgButton createDownloadImg() {
-		ImgButton itemsImg = new ImgButton();
-		itemsImg.setShowDown(false);
-		itemsImg.setShowRollOver(false);
-		itemsImg.setAlign(Alignment.CENTER);
-		itemsImg.setSrc("/images/icon_down.png");
-		itemsImg.setPrompt("download game");
-		itemsImg.setHeight(16);
-		itemsImg.setWidth(16);
-		return itemsImg;
 	}
 
 	protected void tabSelect() {
@@ -176,22 +107,38 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 		mapStatusField.setImageURLSuffix(".png");
 		 
 		ListGridField idField = new ListGridField(GameModel.GAMEID_FIELD, "id");
-		idField.setWidth(30);
+		idField.setWidth(60);
 		idField.setHidden(true);
 
 		ListGridField titleGameField = new ListGridField(GameModel.GAME_TITLE_FIELD, constants.title());
 
 		ListGridField accessGameField = new ListGridField(GameModel.GAME_ACCESS_STRING, constants.gameAccess());
 		accessGameField.setWidth(100);
-		
-		ListGridField runField = new ListGridField("runField", " ");  
-		 runField.setWidth(20);
+
+
+        ListGridField giField = new ListGridField(GameModel.GI_EDIT_ICON, " ");
+        giField.setWidth(20);
+        giField.setAlign(Alignment.CENTER);
+        giField.setType(ListGridFieldType.IMAGE);
+        giField.setImageURLSuffix(".png");
+//        giField.setDefaultValue("gi_add");
+
+		ListGridField runField = new ListGridField(GameModel.CREATE_RUN_ICON, " ");
+        runField.setWidth(20);
+        runField.setAlign(Alignment.CENTER);
+        runField.setType(ListGridFieldType.IMAGE);
+        runField.setImageURLSuffix(".png");
+//        runField.setDefaultValue("add_user");
 	
-		ListGridField giField = new ListGridField("giField", " ");  
-		giField.setWidth(20);
+
 		
-		ListGridField downloadField = new ListGridField("downloadField", " ");  
-		downloadField.setWidth(20);
+		ListGridField downloadField = new ListGridField(GameModel.DOWNLOAD_ICON, " ");
+        downloadField.setWidth(20);
+//        downloadField.setDefaultValue("icon_down");
+
+        downloadField.setAlign(Alignment.CENTER);
+        downloadField.setType(ListGridFieldType.IMAGE);
+        downloadField.setImageURLSuffix(".png");
 		
 		ListGridField ccField = new ListGridField(GameModel.LICENSE_CODE, constants.license(), 80);
 		ccField.setAlign(Alignment.CENTER);
@@ -200,8 +147,12 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 		ccField.setImageHeight(15);
 		ccField.setImageWidth(80);
 		
-		ListGridField deleteField = new ListGridField("deleteField", "");  
-		deleteField.setWidth(20);
+		ListGridField deleteField = new ListGridField(GameModel.DELETE_GAME_ICON, "");
+        deleteField.setWidth(20);
+//        deleteField.setDefaultValue("icon_delete");
+        deleteField.setAlign(Alignment.CENTER);
+        deleteField.setType(ListGridFieldType.IMAGE);
+        deleteField.setImageURLSuffix(".png");
 		deleteField.setPrompt(constants.deleteGame());
         if (AccountManager.getInstance().isAdministrator()) {
             getMasterListGrid().setCanEdit(true);
@@ -223,7 +174,19 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 					 Game existingGame = new Game(((AbstractRecord)GameDataSource.getInstance().getRecord(event.getRecord().getAttributeAsLong(GameModel.GAMEID_FIELD))).getCorrespondingJsonObject());
 					 existingGame.setMapAvailable(!event.getRecord().getAttribute(GameModel.MAP_ICON).equals("icon_maps"));
 					 GameClient.getInstance().createGame(existingGame, new JsonCallback(){});
-				 }
+				 } else if (GameModel.GI_EDIT_ICON.equals(getMasterListGrid().getFieldName(event.getColNum()))) {
+						Game game = recordToGame(event.getRecord());
+						GeneralItemsTab giTab = new GeneralItemsTab(game);
+						tabManager.addTab(giTab);
+
+                 } else if (GameModel.CREATE_RUN_ICON.equals(getMasterListGrid().getFieldName(event.getColNum()))) {
+                     createRun(event.getRecord().getAttributeAsLong(GameModel.GAMEID_FIELD),
+                             event.getRecord().getAttribute(GameModel.GAME_TITLE_FIELD));
+                 } else if (GameModel.DOWNLOAD_ICON.equals(getMasterListGrid().getFieldName(event.getColNum()))) {
+                     download(event.getRecord());
+                 } else if (GameModel.DELETE_GAME_ICON.equals(getMasterListGrid().getFieldName(event.getColNum()))) {
+                     GamesTab.this.deleteItem(event.getRecord());
+                 }
 			}
 		});
 		getMasterListGrid().setSort(new SortSpecifier[]{
@@ -240,7 +203,7 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 	protected void initConfigSections() {
 		gameConfigSection = new GameConfigSection();
 		roleConfigSection = new RoleConfigSection();
-//		private MapConfigSection mapConfigSection = new MapConfigSection();
+		mapConfigSection = new MapConfigSection();
 		sharingConfigSection = new SharingConfigSection();
 		collabConfigSection = new CollaboratorsConfig();
 		descriptionSection = new ShowDescriptionSection();
@@ -252,6 +215,7 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 		addSectionDetail(collabConfigSection);
 		addSectionDetail(descriptionSection);
 		addSectionDetail(gameJsonEditSection);
+        addSectionDetail(mapConfigSection);
 	}
 
 	@Override
@@ -270,14 +234,16 @@ public class GamesTab extends ListMasterSectionSectionStackDetailTab {
 		gameConfigSection.loadDataFromRecord(game);
 		roleConfigSection.loadDataFromRecord(game);
 		sharingConfigSection.loadDataFromRecord(game);
-//		mapConfigSection.loadDataFromRecord(game);
+		mapConfigSection.loadDataFromRecord(game);
 		collabConfigSection.loadDataFromRecord(game);
 		descriptionSection.loadDataFromRecord(game);
 		if (gameJsonEditSection != null) gameJsonEditSection.loadDataFromRecord(game);
 		if (AccountManager.getInstance().isAdministrator()) {
 			getSectionConfiguration().showSection(5);
+            getSectionConfiguration().showSection(6);
 		} else {
 			getSectionConfiguration().hideSection(5);
+            getSectionConfiguration().hideSection(6);
 		}
 		switch (record.getAttributeAsInt(GameModel.GAME_ACCESS)) {
 		case 1: //owner

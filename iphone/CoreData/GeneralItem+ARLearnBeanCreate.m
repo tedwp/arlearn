@@ -67,9 +67,10 @@
         [GeneralItemData createDownloadTask:gi withKey:@"audio" withUrl:[jsonDict objectForKey:@"audioFeed"] withManagedContext:context];
     } else if ([gi.type caseInsensitiveCompare:@"org.celstec.arlearn2.beans.generalItem.VideoObject"] == NSOrderedSame ){
         [GeneralItemData createDownloadTask:gi withKey:@"video" withUrl:[jsonDict objectForKey:@"videoFeed"] withManagedContext:context];
-    } else {
-        NSLog(@"nothing to download for %@", gi.type);
     }
+//    else {
+//        NSLog(@"nothing to download for %@", gi.type);
+//    }
     
 }
 

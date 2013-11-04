@@ -29,28 +29,29 @@ public abstract class ListMasterSectionSectionStackDetailTab extends VerticalMas
 
 	protected abstract void deleteItem(ListGridRecord rollOverRecord);
 
-	protected Canvas createRecordComponent2(final ListGridRecord record, Integer colNum, String fieldName) {
-		if (fieldName.equals("deleteField")) {
-			ImgButton deleteImg = createDeleteImg();
-			deleteImg.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					ListMasterSectionSectionStackDetailTab.this
-							.deleteItem(record);
-				}
-			});
-			return deleteImg;
-		} 
-		return null;
-	}
+//	protected Canvas createRecordComponent2(final ListGridRecord record, Integer colNum, String fieldName) {
+//		if (fieldName.equals("deleteField")) {
+//			ImgButton deleteImg = createDeleteImg();
+//			deleteImg.addClickHandler(new ClickHandler() {
+//				public void onClick(ClickEvent event) {
+//					ListMasterSectionSectionStackDetailTab.this
+//							.deleteItem(record);
+//				}
+//			});
+//			return deleteImg;
+//		}
+//		return null;
+//	}
 	
 	@Override
 	public Canvas getMaster() {
-		masterList = new GenericListGrid(false, false, false, false, false) {
-			@Override
-			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
-				return createRecordComponent2(record, colNum,  this.getFieldName(colNum));
-			}
-		};
+		masterList = new GenericListGrid(false, false, false, false, false);
+//        {
+//			@Override
+//			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
+//				return createRecordComponent2(record, colNum,  this.getFieldName(colNum));
+//			}
+//		};
 		masterList.setShowRecordComponentsByCell(true);
 		masterList.setShowRollOverCanvas(false);
 

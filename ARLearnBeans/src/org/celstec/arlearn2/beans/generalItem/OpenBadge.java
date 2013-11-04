@@ -110,14 +110,14 @@ public class OpenBadge extends GeneralItem {
 
 	};
 	
-	public static void main(String[] args) throws JSONException {
-		GamePackage gp = new GamePackage();
-		OpenBadge ou = new OpenBadge();
-		ou.setBadgeUrl("supporter badge");
-		gp.addGeneralItem(ou);
-		
-		System.out.println(gp.toString());
-		System.out.println(JsonBeanDeserializer.deserialize(gp.toString()).toString());
-		
-	}
+//	public static void main(String[] args) throws JSONException {
+//		GamePackage gp = new GamePackage();
+//		OpenBadge ou = new OpenBadge();
+//		ou.setBadgeUrl("supporter badge");
+//		gp.addGeneralItem(ou);
+//
+//		System.out.println(gp.toString());
+//		System.out.println(JsonBeanDeserializer.deserialize(gp.toString()).toString());
+//
+//	}
 }

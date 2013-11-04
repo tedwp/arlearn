@@ -1,6 +1,8 @@
 package org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.DataSourceAdapter;
@@ -27,6 +29,7 @@ public abstract class GenericDataSource extends DataSource implements
 
 	protected GenericDataSource() {
 		setClientOnly(true);
+//        setID(this.getClassName());
 	}
 
 	@Override
@@ -123,6 +126,10 @@ public abstract class GenericDataSource extends DataSource implements
 	public Record getRecord(Object id) {
 		return (Record) recordMap.get(id);
 	}
+
+    public Record[] allRecords() {
+        return recordMap.values().toArray(new Record[]{});
+    }
 
 	public void removeRecordWithKey(Object id) {
 		removeRecord((AbstractRecord)getRecord(id));

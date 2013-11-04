@@ -100,7 +100,12 @@ public class UploadFileSyncTask extends GenericTask implements NetworkTask {
 			}
 			publishData(uploadUrl);
 			MediaUploadCache.getInstance(uploadItem.getRunId()).put(uploadItem.buildRemotePath(), MediaCacheUpload.REP_STATUS_SYNCING);
-			ActivityUpdater.updateActivities(ctx, NarratorItemActivity.class.getCanonicalName());
+			if (ctx == null) {
+                System.out.println("problem");
+            }   else {
+                ActivityUpdater.updateActivities(ctx, NarratorItemActivity.class.getCanonicalName());
+            }
+
 
 			WriteStatusToDatabase statusWrite = new WriteStatusToDatabase();
 			

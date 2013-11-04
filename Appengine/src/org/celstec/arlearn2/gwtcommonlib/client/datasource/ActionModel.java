@@ -75,6 +75,9 @@ public class ActionModel extends DataSourceModel {
                 return TIMESTAMP_PRETTY_FIELD;
             }
         }, false, true);
+
+
+
     }
 
     protected String getNotificationType() {

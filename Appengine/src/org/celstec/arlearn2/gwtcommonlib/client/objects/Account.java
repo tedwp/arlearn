@@ -49,6 +49,10 @@ public class Account extends Bean{
 	public void setLocalId(String localId) {
 		setString(LOCAL_ID, localId);
 	}
+
+    public String getFullId() {
+        return getAccountType()+":"+getLocalId();
+    }
 	
 	public Integer getAccountLevel() {
 		return getInteger(ACCOUNT_LEVEL);

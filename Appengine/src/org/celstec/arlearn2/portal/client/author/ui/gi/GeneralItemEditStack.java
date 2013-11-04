@@ -1,6 +1,7 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi;
 
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
+import org.celstec.arlearn2.portal.client.author.ui.FileReferencesEditor;
 import org.celstec.arlearn2.portal.client.author.ui.gi.dependency.AdvancedDependenciesEditor;
 import org.celstec.arlearn2.portal.client.author.ui.gi.dependency.forms.DependencyEditor;
 import org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors.DataCollectionEditor;
@@ -69,4 +70,8 @@ public class GeneralItemEditStack extends SectionStack {
 	public void setJsonEditor(JsonEditor jsonEditor) {
 		addSection(jsonEditor);		
 	}
+
+    public void setFileReferenceEditor(FileReferencesEditor fileReferencesEditor) {
+        addSection(fileReferencesEditor);
+    }
 }

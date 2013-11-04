@@ -1,8 +1,11 @@
 package org.celstec.arlearn2.portal.client;
 
+import com.smartgwt.client.util.SC;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.RunModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.RunDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.ui.grid.GenericListGrid;
+import org.celstec.arlearn2.portal.client.account.AccountManager;
+import org.celstec.arlearn2.portal.client.resultDisplay.ResultsDisplayToolbar;
 import org.celstec.arlearn2.portal.client.toolbar.ToolBar;
 
 import com.google.gwt.user.client.Window;
@@ -15,14 +18,30 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class ResultDisplayRuns {
 
-	ToolBar toolStrip;
+    ResultsDisplayToolbar toolStrip;
 	GenericListGrid masterList;
-	
-	public void loadPage() {
+
+    public void loadPage() {
+        AccountManager accountManager = AccountManager.getInstance();
+        accountManager.setAccountNotification(new AccountManager.NotifyAccountLoaded() {
+
+            @Override
+            public void accountLoaded(boolean success) {
+                if (success) {
+                    buildUi();
+                } else {
+                    SC.say("Credentials are invalid. Log in again.");
+                }
+            }
+        });
+    }
+
+	public void buildUi() {
 		RunDataSource.getInstance().loadDataFromWeb();
 
 //		createToolstrip();
-		toolStrip = new ToolBar();
+//		toolStrip = new ToolBar();
+        toolStrip = new ResultsDisplayToolbar();
 
 		
 		VLayout vertical = new VLayout();
@@ -32,10 +51,10 @@ public class ResultDisplayRuns {
 		createRunsDataSource();
 		
 		VLayout verticalGrid = new VLayout();
-		
+
 		verticalGrid.setLayoutAlign(Alignment.CENTER);
-		verticalGrid.setAlign(Alignment.CENTER);  
-		verticalGrid.setDefaultLayoutAlign(Alignment.CENTER); 
+		verticalGrid.setAlign(Alignment.CENTER);
+		verticalGrid.setDefaultLayoutAlign(Alignment.CENTER);
 
 		verticalGrid.setWidth100();
 		verticalGrid.setHeight("*");

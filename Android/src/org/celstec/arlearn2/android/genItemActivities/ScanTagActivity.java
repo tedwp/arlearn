@@ -24,6 +24,7 @@ import org.celstec.arlearn2.android.activities.IntentIntegrator;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.ActionsDelegator;
+import org.celstec.arlearn2.android.util.MediaFolders;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.ScanTag;
 
@@ -102,7 +103,16 @@ public class ScanTagActivity extends GeneralItemActivity {
 		if (scanTag.getRichText() != null) {
 			String html = scanTag.getRichText();
 			if (!html.equals(richText)) {
-				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+                String incommingFile = MediaFolders.getIncommingFilesDir().getAbsolutePath();
+                Long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
+                if (runId != null) {
+                    Long gameId = RunCache.getInstance().getGameId(runId);
+                    incommingFile = "file:///"+incommingFile+"/"+gameId+"/";
+
+                }
+                webview.loadDataWithBaseURL(incommingFile, html, "text/html", "utf-8", null);
+
+//                webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
 				richText = html;
 			}
 		} else {

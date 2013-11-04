@@ -81,7 +81,8 @@ public class GeneralItemDetailView extends VLayout {
                 new DetailViewerField(GeneralItemModel.NAME_FIELD, "Title"),
                 new DetailViewerField(GeneralItemModel.SORTKEY_FIELD, "Order")  ,
                 new DetailViewerField(GeneralItemModel.AUTO_LAUNCH, "Automatic Launch"),
-                new DetailViewerField(GeneralItemModel.RICH_TEXT_FIELD, "Description")
+                new DetailViewerField(GeneralItemModel.RICH_TEXT_FIELD, "Description"),
+                new DetailViewerField("dependsOn", "Depends On")
 
         );
 
@@ -125,6 +126,7 @@ public class GeneralItemDetailView extends VLayout {
         rec[0].setAttribute(GeneralItemModel.RICH_TEXT_FIELD, gi.getRichText());
         rec[0].setAttribute(GeneralItemModel.AUTO_LAUNCH, gi.getBoolean(GeneralItemModel.AUTO_LAUNCH));
         rec[0].setAttribute(GeneralItemModel.SORTKEY_FIELD, gi.getInteger(GeneralItemModel.SORTKEY_FIELD));
+        rec[0].setAttribute("dependsOn", gi.getDependsOn());
         basicMetadataDetailViewer.setData(rec);
 
         LinkedHashMap<String, String> sortedMap= gi.getMetadataFields();
@@ -136,7 +138,7 @@ public class GeneralItemDetailView extends VLayout {
         DetailViewerField[] result = new DetailViewerField[sortedMap.size()];
         int i = 0;
         for (String s : sortedMap.keySet()) {
-            result[i++] = new DetailViewerField(s,s);
+            result[i++] = new DetailViewerField(toValidJavaId(s),s);
         }
         return result;
     }
@@ -144,8 +146,12 @@ public class GeneralItemDetailView extends VLayout {
     private DetailViewerRecord[] getDetailViewerRecord(LinkedHashMap<String, String> sortedMap) {
         DetailViewerRecord result = new DetailViewerRecord();
         for (String s : sortedMap.keySet()) {
-            result.setAttribute(s,sortedMap.get(s));
+            result.setAttribute(toValidJavaId(s),sortedMap.get(s));
         }
         return new DetailViewerRecord[]{result};
+    }
+
+    private String toValidJavaId(String s) {
+        return s.replace(" ", "_");
     }
 }

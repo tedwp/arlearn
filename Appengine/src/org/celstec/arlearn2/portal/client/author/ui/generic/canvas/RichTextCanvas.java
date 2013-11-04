@@ -23,12 +23,16 @@ public class RichTextCanvas extends VLayout{
 	private boolean htmlEditingmode = false;
 	private TextAreaItem textAreaItem;
 	private RichTextEditor richTextEditor;
+    private final DynamicForm form = new DynamicForm();
 	
 	private IButton submitButton;
-	
-	public RichTextCanvas(String html, String title, HtmlSaver sa) {
+
+    public RichTextCanvas(String html, String title, HtmlSaver sa) {
+        this(html, title, sa, null);
+    }
+	public RichTextCanvas(String html, String title, HtmlSaver sa, Integer formWidth) {
 		this.saver = sa;
-		final DynamicForm form = new DynamicForm();
+//		final DynamicForm form = new DynamicForm();
 		
 		textAreaItem = new TextAreaItem();  
         textAreaItem.setTitle("TextArea"); 
@@ -37,8 +41,13 @@ public class RichTextCanvas extends VLayout{
         textAreaItem.setWidth("100%");
         textAreaItem.setValue(html);
 
-        form.setFields( textAreaItem);  
-        form.setWidth100();
+        form.setFields( textAreaItem);
+        if (formWidth == null) {
+            form.setWidth100();
+        } else {
+            form.setWidth(formWidth);
+        }
+//        form.setWidth100();
         form.setVisibility(Visibility.HIDDEN);
         
 		richTextEditor = new RichTextEditor();
@@ -104,9 +113,12 @@ public class RichTextCanvas extends VLayout{
 	}
 	
 	public void updateHtml(String html) {
-		System.out.println("about to update "+html);
         textAreaItem.setValue(html);
 		richTextEditor.setValue(html);
 
 	}
+
+    public DynamicForm getForm() {
+        return form;
+    }
 }

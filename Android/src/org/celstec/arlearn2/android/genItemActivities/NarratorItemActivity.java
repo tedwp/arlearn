@@ -198,7 +198,17 @@ public class NarratorItemActivity extends GeneralItemActivity {
 
 
                 }, "arlearn");
-				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+
+                String incommingFile = MediaFolders.getIncommingFilesDir().getAbsolutePath();
+                Long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
+                if (runId != null) {
+                    Long gameId = RunCache.getInstance().getGameId(runId);
+                    incommingFile = "file:///"+incommingFile+"/"+gameId+"/";
+
+                }
+//                incommingFile = "file:///"+incommingFile+"/"+RunCache.getInstance().getGameId(menuHandler.getPropertiesAdapter().getCurrentRunId())+"/";
+
+                webview.loadDataWithBaseURL(incommingFile, html, "text/html", "utf-8", null);
 //                webview.loadUrl("javascript:reportArlearnInput()");
 				richText = html;
 			}

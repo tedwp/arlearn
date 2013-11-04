@@ -29,7 +29,9 @@ public class AudioObjectSerializer extends NarratorItemSerializer {
 		AudioObject gi = (AudioObject) bean;
 		JSONObject returnObject = super.toJSON(bean);
 		try {
-			if (gi.getAudioFeed() != null) returnObject.put("audioFeed", gi.getAudioFeed());			
+			if (gi.getAudioFeed() != null) returnObject.put("audioFeed", gi.getAudioFeed());
+            if (gi.getAutoPlay() != null) returnObject.put("autoPlay", gi.getAutoPlay());
+            if (gi.getMd5Hash() != null) returnObject.put("md5Hash", gi.getMd5Hash());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

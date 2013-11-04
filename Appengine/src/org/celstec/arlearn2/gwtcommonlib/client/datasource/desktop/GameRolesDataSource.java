@@ -22,7 +22,7 @@ public class GameRolesDataSource extends GenericDataSource {
 		return instance;
 	}
 
-	private GameRolesDataSource() {
+	public GameRolesDataSource() {
 		super();
 		setDataSourceModel(new GameRoleModel(this));
 	}

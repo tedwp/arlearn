@@ -46,4 +46,5 @@ public abstract class GenericDbTable {
 		return "DELETE FROM "+getTableName();
 	}
 
+
 }

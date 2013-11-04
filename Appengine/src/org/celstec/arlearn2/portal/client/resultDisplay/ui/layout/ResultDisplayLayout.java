@@ -3,6 +3,7 @@ package org.celstec.arlearn2.portal.client.resultDisplay.ui.layout;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.google.gwt.user.client.Window;
 import org.celstec.arlearn2.portal.client.resultDisplay.ui.view.Grid;
 import org.celstec.arlearn2.portal.client.resultDisplay.ui.view.List;
 import org.celstec.arlearn2.portal.client.resultDisplay.ui.view.Mixed;
@@ -63,7 +64,18 @@ public class ResultDisplayLayout extends VLayout {
 		breadcrumb.setWidth("80%");
 		breadcrumb.setHeight("30px");
 		refreshBreadcrumbs(filter);
-        
+
+//        IButton homeButton = createClearButton("Home");
+//        homeButton.setIcon("home.png");
+//
+//        homeButton.addClickHandler(new ClickHandler() {
+//            public void onClick(ClickEvent event) {
+//                Window.open("/index.html", "_self", "");
+//            }
+//        });
+//
+//        toolbar.addMember(homeButton);
+
         toolbar.addMember(createVisualizationToolbar());
         
         IButton clearButton = createClearButton("Reset filter");
@@ -112,8 +124,23 @@ public class ResultDisplayLayout extends VLayout {
         toolStrip.setHeight(22);
         toolStrip.setTop(17);
         toolStrip.setPadding(2);
-        
-  
+
+        ImgButton homeButton = new ImgButton();
+        homeButton.setSize(24);
+        homeButton.setShowRollOver(false);
+        homeButton.setSrc("home.png");
+
+        homeButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.open("/index.html", "_self", "");
+            }
+        });
+        toolStrip.addMember(homeButton);
+
+        toolStrip.addSpacer(15);
+
         ImgButton gridButton = new ImgButton();  
         gridButton.setSize(24);  
         gridButton.setShowRollOver(false);  

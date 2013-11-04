@@ -40,6 +40,8 @@ public class AudioObjectDeserializer extends NarratorItemDeserializer {
 		super.initBean(object, genericBean);
 		AudioObject nItem = (AudioObject) genericBean;
 		if (object.has("audioFeed")) nItem.setAudioFeed(object.getString("audioFeed"));
+        if (object.has("autoPlay")) nItem.setAutoPlay(object.getBoolean("autoPlay"));
+        if (object.has("md5Hash")) nItem.setMd5Hash(object.getString("md5Hash"));
 	}
 
 }

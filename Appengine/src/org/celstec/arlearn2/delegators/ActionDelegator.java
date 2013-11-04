@@ -22,11 +22,7 @@ import com.google.gdata.util.AuthenticationException;
 import org.celstec.arlearn2.api.Service;
 import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.dependencies.ActionDependency;
-import org.celstec.arlearn2.beans.run.Action;
-import org.celstec.arlearn2.beans.run.ActionList;
-import org.celstec.arlearn2.beans.run.Run;
-import org.celstec.arlearn2.beans.run.User;
-import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
+import org.celstec.arlearn2.beans.run.*;
 import org.celstec.arlearn2.delegators.progressRecord.CreateProgressRecord;
 import org.celstec.arlearn2.jdo.manager.ActionManager;
 import org.celstec.arlearn2.tasks.beans.UpdateGeneralItems;
@@ -99,7 +95,13 @@ public class ActionDelegator extends GoogleDelegator{
 		boolean relevancy = arp.isRelevant(action);
 		ActionManager.addAction(action.getRunId(), action.getAction(), action.getUserEmail(), action.getGeneralItemId(), action.getGeneralItemType(), action.getTimestamp());
 		ActionCache.getInstance().removeRunAction(action.getRunId());
-		ChannelNotificator.getInstance().notify(r.getOwner(), action);
+
+        RunAccessDelegator rad = new RunAccessDelegator(this);
+        NotificationDelegator nd = new NotificationDelegator();
+        for (RunAccess ra :rad.getRunAccess(r.getRunId()).getRunAccess()){
+            nd.broadcast(action, ra.getAccount());
+        }
+//		ChannelNotificator.getInstance().notify(r.getOwner(), action);
 		if (relevancy) {
 			(new UpdateGeneralItems(authToken, action.getRunId(), action.getAction(), action.getUserEmail(), action.getGeneralItemId(), action.getGeneralItemType())).scheduleTask();
 		}

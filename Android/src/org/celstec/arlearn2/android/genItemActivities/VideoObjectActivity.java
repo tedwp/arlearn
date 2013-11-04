@@ -37,7 +37,7 @@ public class VideoObjectActivity extends NarratorItemActivity {
 		super.onCreate(savedInstanceState);
 		if (!firststart) {
 			firststart = true;
-//			startVideo();
+			startVideo();
 		}
 		startVideoImage.setOnClickListener(new View.OnClickListener() {
 			

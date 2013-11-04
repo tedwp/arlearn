@@ -1,5 +1,7 @@
 package org.celstec.arlearn2.gwtcommonlib.client.network.generalItem;
 
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
 import org.celstec.arlearn2.gwtcommonlib.client.network.GenericClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
@@ -39,9 +41,17 @@ public class GeneralItemsClient extends GenericClient {
 	public void createGeneralItem(JSONObject object, JsonCallback jcb) {
 		invokeJsonPOST(null, object, jcb);
 	}
+
+    public void createGeneralItem(JSONObject object, long gameId, long itemId, JsonCallback jcb) {
+        invokeJsonPOST("/gameId/"+gameId+"/generalItem/"+itemId+"/", object, jcb);
+    }
 	
 	public void createGeneralItem(GeneralItem gi, JsonCallback jcb) {
-		createGeneralItem(gi.getJsonRep(), jcb);
+        if (gi.getJsonRep().containsKey(GameModel.GAMEID_FIELD) && gi.getJsonRep().containsKey(GeneralItemModel.ID_FIELD)) {
+            createGeneralItem(gi.getJsonRep(), gi.getLong(GameModel.GAMEID_FIELD), gi.getLong(GeneralItemModel.ID_FIELD), jcb);
+        } else {
+            createGeneralItem(gi.getJsonRep(), jcb);
+        }
 	}
 	
 	public void deleteGeneralItem(long gameId, long itemId, final JsonCallback jcb) {

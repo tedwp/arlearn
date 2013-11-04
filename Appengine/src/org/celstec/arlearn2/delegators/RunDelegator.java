@@ -255,7 +255,10 @@ public class RunDelegator extends GoogleDelegator {
 //		(new DeleteVisibleItems(authToken, r.getRunId())).scheduleTask();
 		(new DeleteActions(authToken, this.account, r.getRunId())).scheduleTask();
 		(new DeleteTeams(authToken, this.account,r.getRunId(), null)).scheduleTask();
-		(new DeleteBlobs(authToken, this.account,r.getRunId())).scheduleTask();
+
+        (new DeleteUserAfterDeleteRun(getAuthToken(),r.getRunId())).scheduleTask();
+
+        (new DeleteBlobs(authToken, this.account,r.getRunId())).scheduleTask();
 		(new DeleteResponses(authToken, this.account,r.getRunId())).scheduleTask();
 
 		if (this.account != null) {

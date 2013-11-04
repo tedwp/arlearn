@@ -32,19 +32,15 @@ import javax.ws.rs.core.MediaType;
 
 //import org.celstec.arlearn2.beans.BeanDeserialiser;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.generalItem.NarratorItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
-import org.celstec.arlearn2.beans.run.Inventory;
-import org.celstec.arlearn2.beans.run.User;
-import org.celstec.arlearn2.beans.deserializer.json.JsonBeanDeserializer;
-import org.celstec.arlearn2.delegators.GameDelegator;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
-import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
 //import org.celstec.arlearn2.delegators.generalitems.CreateGeneralItems;
 //import org.celstec.arlearn2.delegators.generalitems.QueryGeneralItems;
-import org.celstec.arlearn2.delegators.inventory.UpdateInventoryRecord;
 import org.celstec.arlearn2.jdo.manager.GeneralItemVisibilityManager;
+import org.celstec.arlearn2.tasks.beans.UpdateMdHash;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import com.google.gdata.util.AuthenticationException;
@@ -195,119 +191,6 @@ public class GeneralItems extends Service {
 		return serialise(gil, accept);
 	}
 
-	// TODO : switch the following code to new beans infrastructure/
-	// serialisers/deserialisers
-//	@GET
-//	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-//	@Path("/inventory/{runIdentifier}/team/{teamId}")
-//	public String getInventory(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @PathParam("teamId") String teamId,
-//			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
-//		if (!validCredentials(token))
-//			return serialise(getInvalidCredentialsBean(), accept);
-//		// TODO teamId must be deleted... should be extracted from table
-//		// structure...
-//		GeneralItemDelegator gid = new GeneralItemDelegator(token);
-//		UsersDelegator qu = new UsersDelegator(gid);
-//		Inventory inventory = new Inventory();
-//		inventory.setRunId(runIdentifier);
-//		String user = qu.getCurrentUserAccount();
-//		teamId = qu.getUserByEmail(runIdentifier, user).getTeamId();
-//		// TODO switch on inventory
-//		// TODO optimize... each invocation results in a get general items
-//		// that issues a database request.
-//		inventory.setMapInventoryItems(qa.getMapInventoryItems(runIdentifier, user, teamId));
-//		inventory.setUserInventoryItems(qa.getUserInventoryItems(runIdentifier, user, teamId));
-//		inventory.setTeamInventoryItems(qa.getTeamInventoryItems(runIdentifier, user, teamId));
-//
-//		return serialise(inventory, accept);
-//	}
-
-//	@GET
-//	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-//	@Path("/pickableItems/{runIdentifier}/team/{teamId}")
-//	public String getPickableMapItems(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @PathParam("teamId") String teamId,
-//			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
-//		if (!validCredentials(token))
-//			return serialise(getInvalidCredentialsBean(), accept);
-//		GeneralItemDelegator gid = new GeneralItemDelegator(token);
-//		UsersDelegator qu = new UsersDelegator(gid);
-//		String email = qu.getCurrentUserAccount();
-//		return serialise(gid.getMapInventoryItems(runIdentifier, email, teamId), accept);
-//
-//	}
-
-//	@GET
-//	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-//	@Path("/userInventory/{runIdentifier}/team/{teamId}")
-//	public String getUserInventoryItems(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @PathParam("teamId") String teamId,
-//			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
-//		if (!validCredentials(token))
-//			return serialise(getInvalidCredentialsBean(), accept);
-//		GeneralItemDelegator gid = new GeneralItemDelegator(token);
-//		UsersDelegator qu = new UsersDelegator(gid);
-//		String email = qu.getCurrentUserAccount();
-//
-//		return serialise(gid.getUserInventoryItems(runIdentifier, email, teamId), accept);
-//	}
-
-//	@GET
-//	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-//	@Path("/teamInventory/{runIdentifier}/team/{teamId}")
-//	public String getTeamInventoryItems(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @PathParam("teamId") String teamId,
-//			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
-//		if (!validCredentials(token))
-//			return serialise(getInvalidCredentialsBean(), accept);
-//		QueryGeneralItems qa = new QueryGeneralItems(token);
-//		UsersDelegator qu = new UsersDelegator(qa);
-//		String email = qu.getCurrentUserAccount();
-//
-//		return serialise(qa.getTeamInventoryItems(runIdentifier, email, teamId), accept);
-//	}
-//
-//	@GET
-//	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-//	@Path("/pickupItem/{runIdentifier}/team/{teamId}/item/{generalItemId}/")
-//	public String pickupItem(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @PathParam("teamId") String teamId,
-//			@PathParam("generalItemId") Long generalItemId, @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
-//		if (!validCredentials(token))
-//			return serialise(getInvalidCredentialsBean(), accept);
-//		UpdateInventoryRecord uir = new UpdateInventoryRecord(token);
-//		UsersDelegator qu = new UsersDelegator(uir);
-//		String email = qu.getCurrentUserAccount();
-//		uir.pickupItem(runIdentifier, email, teamId, generalItemId);
-//		return getInventory(token, runIdentifier, teamId, accept);
-//	}
-
-//	@GET
-//	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-//	@Path("/dropItem/{runIdentifier}/team/{teamId}/item/{generalItemId}/lat/{lat}/lng/{lng}")
-//	public String dropItem(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @PathParam("teamId") String teamId,
-//			@PathParam("generalItemId") Long generalItemId, @PathParam("lat") Double lat, @PathParam("lng") Double lng, @DefaultValue("application/json") @HeaderParam("Accept") String accept)
-//			throws AuthenticationException {
-//		if (!validCredentials(token))
-//			return serialise(getInvalidCredentialsBean(), accept);
-//		UpdateInventoryRecord uir = new UpdateInventoryRecord(token);
-//		UsersDelegator qu = new UsersDelegator(uir);
-//		String email = qu.getCurrentUserAccount();
-//		uir.dropItem(runIdentifier, email, teamId, generalItemId, lat, lng);
-//		return getInventory(token, runIdentifier, teamId, accept);
-//	}
-//
-//	@GET
-//	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-//	@Path("/dropAtDropzone/{runIdentifier}/team/{teamId}/item/{generalItemId}/dropZone/{dropZoneId}")
-//	public String dropAtDropzone(@HeaderParam("Authorization") String token, @PathParam("runIdentifier") Long runIdentifier, @PathParam("teamId") String teamId,
-//			@PathParam("generalItemId") Long generalItemId, @PathParam("dropZoneId") Long dropZoneId, @DefaultValue("application/json") @HeaderParam("Accept") String accept)
-//			throws AuthenticationException {
-//		if (!validCredentials(token))
-//			return serialise(getInvalidCredentialsBean(), accept);
-//		UpdateInventoryRecord uir = new UpdateInventoryRecord(token);
-//		UsersDelegator qu = new UsersDelegator(uir);
-//		String email = qu.getCurrentUserAccount();
-//		uir.dropAtDropZone(runIdentifier, email, teamId, generalItemId, dropZoneId);
-//		return getInventory(token, runIdentifier, teamId, accept);
-//	}
-
 	@POST
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public String put(@HeaderParam("Authorization") String token, String gi, @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
@@ -324,10 +207,32 @@ public class GeneralItems extends Service {
 			e1.printStackTrace();
 		}
 		GeneralItemDelegator gid = new GeneralItemDelegator(token);
-
 		return serialise(gid.createGeneralItem((GeneralItem) inItem), accept);
-
 	}
+
+    @POST
+    @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/gameId/{gameIdentifier}/generalItem/{itemId}")
+    public String postWithDetails(@HeaderParam("Authorization") String token, String gi,
+                                  @PathParam("gameIdentifier") Long gameIdentifier,
+                                  @PathParam("itemId") String itemId,
+                                  @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+                      @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+
+        Object inItem = deserialise(gi, GeneralItem.class, contentType);
+        if (inItem instanceof java.lang.String)
+            return serialise(getBeanDoesNotParseException((String) inItem), accept);
+        try {
+            inItem = deserialise(gi, Class.forName(((GeneralItem) inItem).getType()), contentType);
+        } catch (ClassNotFoundException e1) {
+            e1.printStackTrace();
+        }
+        GeneralItemDelegator gid = new GeneralItemDelegator(token);
+        return serialise(gid.createGeneralItem((GeneralItem) inItem), accept);
+    }
+
 	
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -341,8 +246,30 @@ public class GeneralItems extends Service {
 		GeneralItemDelegator gid = new GeneralItemDelegator(token);
 			return serialise(gid.search(searchQuery), accept);
 	}
-	
-	
+
+    @POST
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Path("/md5Hashes")
+    public String md5Hashes(@HeaderParam("Authorization") String token,
+                         String md5Hashes,
+                         @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+                         @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+//        try {
+//            JSONArray array = new JSONArray(md5Hashes);
+//            for (int i = 0;i < array.length(); i++) {
+//                JSONObject object =array.getJSONObject(i);
+//                System.out.println("object to parse "+object);
+//                new UpdateMdHash(getToken(), getAccount(), object.getLong("itemId"), object.getString("md5Hash"), object.getString("localId")).scheduleTask();
+                new UpdateMdHash(getToken(), getAccount(), md5Hashes).scheduleTask();
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//        }
+
+        return "{}";
+    }
 	
 
 }

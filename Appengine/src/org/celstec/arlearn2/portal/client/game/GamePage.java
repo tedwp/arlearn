@@ -31,7 +31,7 @@ public class GamePage {
 	}
 	
 	private void buildUi() {
-		toolbar = new ToolBar();
+		toolbar = new ToolBar(false);
 		long gameId = Long.parseLong(com.google.gwt.user.client.Window.Location.getParameter("gameId"));
 		GameClient.getInstance().getGame(gameId, new JsonCallback(){
 			@Override

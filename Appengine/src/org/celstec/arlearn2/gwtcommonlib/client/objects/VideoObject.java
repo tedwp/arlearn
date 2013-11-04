@@ -10,6 +10,9 @@ import java.util.LinkedHashMap;
 public class VideoObject extends NarratorItem {
 
 	public  final static String VIDEO_FEED = "videoFeed";
+    public  final static String MD5_HASH = "md5Hash";
+
+    public  final static String AUTO_PLAY = "autoPlay";
 	public  final static String TYPE = "org.celstec.arlearn2.beans.generalItem.VideoObject";
 	public  final static String HUMAN_READABLE_NAME = "Video Object";
 	public VideoObject() {
@@ -41,6 +44,7 @@ public class VideoObject extends NarratorItem {
     public LinkedHashMap<String, String> getMetadataFields() {
         LinkedHashMap<String, String> sortList = new LinkedHashMap<String, String>();
         sortList.put(VIDEO_FEED, getString(VIDEO_FEED));
+        sortList.put(AUTO_PLAY, ""+ getBoolean(AUTO_PLAY));
         sortList.putAll(super.getMetadataFields());
         return sortList;
     }

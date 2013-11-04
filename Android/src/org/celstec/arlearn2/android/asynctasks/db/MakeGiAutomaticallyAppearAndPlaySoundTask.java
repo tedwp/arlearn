@@ -3,10 +3,7 @@ package org.celstec.arlearn2.android.asynctasks.db;
 import java.util.HashMap;
 
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.activities.GIActivitySelector;
-import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
-import org.celstec.arlearn2.android.activities.ListMessagesActivity;
-import org.celstec.arlearn2.android.activities.MapViewActivity;
+import org.celstec.arlearn2.android.activities.*;
 import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
 import org.celstec.arlearn2.android.asynctasks.DatabaseTask;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
@@ -62,7 +59,7 @@ public class MakeGiAutomaticallyAppearAndPlaySoundTask extends GenericTask imple
 				if (disappearCondition()) {
 					vibrateShort(db.getContext());
 				}
-				ActivityUpdater.updateActivities(db.getContext(), ListMessagesActivity.class.getCanonicalName(), MapViewActivity.class.getCanonicalName(), ListMapItemsActivity.class.getCanonicalName(), NarratorItemActivity.class.getCanonicalName());
+				ActivityUpdater.updateActivities(db.getContext(), HtmlListActivity.class.getCanonicalName(), ListMessagesActivity.class.getCanonicalName(), MapViewActivity.class.getCanonicalName(), ListMapItemsActivity.class.getCanonicalName(), NarratorItemActivity.class.getCanonicalName());
 			}
 		}
 		runAfterTasks(db.getContext());

@@ -132,7 +132,7 @@ public class DBAdapter {
 	}
 	
 	public class DbOpenHelper extends SQLiteOpenHelper {
-	    private static final int DATABASE_VERSION = 142;
+	    private static final int DATABASE_VERSION = 144 ;
 	    private static final String DATABASE_NAME = "arlearn2";
 	   
 	    DbOpenHelper(Context context) {
@@ -182,6 +182,21 @@ public class DBAdapter {
     		String statement =allTables[i].eraseAllStatement();
 			if (statement != null) db.execSQL(statement);
 		}  
+    }
+
+    public void eraseAllRunData() {
+
+        db.execSQL(allTables[RUN_ADAPTER].eraseAllStatement());
+        db.execSQL(allTables[MYRESPONSES_ADAPTER].eraseAllStatement());
+        db.execSQL(allTables[MYACTIONS_ADAPTER].eraseAllStatement());
+        db.execSQL(allTables[MYLOCATIONS_ADAPTER].eraseAllStatement());
+        db.execSQL(allTables[MEDIA_CACHE_UPLOAD].eraseAllStatement());
+        db.execSQL(allTables[RUN_ADAPTER].eraseAllStatement());
+        db.execSQL(allTables[GENERALTITEM_VISIBILITY_ADAPTER].eraseAllStatement());
+        db.execSQL(allTables[PROXIMITY_EVENTS_ADAPTER].eraseAllStatement());
+
+
+
     }
     
     public GenericDbTable table(int i) {

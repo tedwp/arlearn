@@ -7,11 +7,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameRoleModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GameRolesDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GeneralItemDataSource;
-import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
-import org.celstec.arlearn2.gwtcommonlib.client.objects.MultipleChoiceAnswer;
-import org.celstec.arlearn2.gwtcommonlib.client.objects.MultipleChoiceTest;
-import org.celstec.arlearn2.gwtcommonlib.client.objects.ScanTagObject;
-import org.celstec.arlearn2.gwtcommonlib.client.objects.SingleChoiceTest;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.*;
 import org.celstec.arlearn2.portal.client.author.ui.gi.GeneralItemsTab;
 import org.celstec.arlearn2.portal.client.author.ui.gi.dependency.nodes.ActionDependencyNode;
 import org.celstec.arlearn2.portal.client.author.ui.gi.i18.GeneralItemConstants;
@@ -263,20 +259,29 @@ public class ActionForm extends DynamicForm {
 	
 	private void loadGeneralItemOptions(long recId) {
 		com.smartgwt.client.data.Record rec = GeneralItemDataSource.getInstance().getRecord((long)recId);
+        if (rec != null) {
 		GeneralItem gi = GeneralItemsTab.recordToGeneralItem(rec);
 		scantagStringAppear = false;	
 		if (gi instanceof SingleChoiceTest || gi instanceof MultipleChoiceTest) {
 			LinkedHashMap<String, String> map = createSimpleDependencyValues();
 			for (MultipleChoiceAnswer answer :((SingleChoiceTest) gi).getAnswers()) {
 				map.put("answer_"+answer.getString(MultipleChoiceAnswer.ID), answer.getString(MultipleChoiceAnswer.ANSWER));
+                map.put("answer_correct", constants.correctAnswer());
+                map.put("answer_wrong", constants.wrongAnswer());
 			}
 			selectAction.setValueMap(map);
 		}
+        if (gi instanceof AudioObject) {
+            LinkedHashMap<String, String> map = createSimpleDependencyValues();
+            map.put("complete", constants.completePlaying());
+            selectAction.setValueMap(map);
+        }
 		if (gi instanceof ScanTagObject) {
 			scantagStringAppear = true;	
 			
 		}
 		redraw();
+        }
 	}
 
 	public void showActionForm() {
@@ -320,6 +325,9 @@ public class ActionForm extends DynamicForm {
 			setValue(GENITEM_DEP, (long) object.get("generalItemId").isNumber().doubleValue());
 
 		}
+        if (object.containsKey("scope")) {
+            setValue(SCOPE_DEP, ""+(int)object.get("scope").isNumber().doubleValue());
+        }
 	}
 	
 	public JSONObject getJsonObject(){
@@ -334,7 +342,8 @@ public class ActionForm extends DynamicForm {
 		
 		if (getValue(GENITEM_DEP)!=null) dep.put("generalItemId", new JSONNumber(Long.parseLong(getValueAsString(GENITEM_DEP))));
 //		if (getValue(GENITEM_DEP)!=null) dep.put("generalItemId", new JSONNumber((Long)getValue(GENITEM_DEP)));
-		if (getValue(SCOPE_DEP)!=null) dep.put("scope", new JSONNumber((Integer)getValue(SCOPE_DEP)));
+
+		if (getValue(SCOPE_DEP)!=null) dep.put("scope", new JSONNumber(Integer.parseInt(getValueAsString(SCOPE_DEP))));
 		if (getValue(ROLE_DEP)!=null) dep.put("role", new JSONString(getValueAsString(ROLE_DEP)));
 		return dep;
 	}

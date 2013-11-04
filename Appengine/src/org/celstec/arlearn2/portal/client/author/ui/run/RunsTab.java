@@ -1,14 +1,22 @@
 package org.celstec.arlearn2.portal.client.author.ui.run;
 
+import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.ListGridFieldType;
+import com.smartgwt.client.widgets.grid.events.CellClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellClickHandler;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.AbstractRecord;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.RunModel;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GameDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.RunDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
+import org.celstec.arlearn2.gwtcommonlib.client.network.game.GameClient;
 import org.celstec.arlearn2.gwtcommonlib.client.network.run.RunClient;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.Run;
 import org.celstec.arlearn2.portal.client.account.AccountManager;
 import org.celstec.arlearn2.portal.client.author.ui.ListMasterSectionSectionStackDetailTab;
+import org.celstec.arlearn2.portal.client.author.ui.gi.GeneralItemsTab;
 import org.celstec.arlearn2.portal.client.author.ui.run.i18.RunConstants;
 
 import com.google.gwt.core.client.GWT;
@@ -44,12 +52,13 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 		getMasterListGrid().setCanEdit(false);
 		
 		ListGridField idField = new ListGridField(RunModel.RUNID_FIELD, "id");
-		idField.setWidth(30);
+		idField.setWidth(60);
 		idField.setHidden(true);
 		
 		ListGridField gameIdField = new ListGridField(RunModel.GAMEID_FIELD, "gameId ");
 		gameIdField.setHidden(true);
-		
+        gameIdField.setWidth(60);
+
 		ListGridField titleRunField = new ListGridField(RunModel.RUNTITLE_FIELD, constants.runTitle());
 		ListGridField titleGameField = new ListGridField(RunModel.GAME_TITLE_FIELD, "Game Title ");
 		titleGameField.setCanEdit(false);
@@ -58,8 +67,13 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 		accessRunField.setCanEdit(false);
 		accessRunField.setWidth(100);
 		
-		ListGridField deleteField = new ListGridField("deleteField", " ");  
-		 deleteField.setWidth(20);
+		ListGridField deleteField = new ListGridField(RunModel.DELETED_ICON, " ");
+        deleteField.setWidth(20);
+        deleteField.setAlign(Alignment.CENTER);
+        deleteField.setType(ListGridFieldType.IMAGE);
+        deleteField.setImageURLSuffix(".png");
+        deleteField.setPrompt(constants.delete());
+
         if (AccountManager.getInstance().isAdministrator()) {
             getMasterListGrid().setCanEdit(true);
             getMasterListGrid().setShowFilterEditor(true);
@@ -68,6 +82,16 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 		Criteria criteria = new Criteria();
 		criteria.addCriteria(GameModel.DELETED_FIELD, false);
 		getMasterListGrid().setCriteria(criteria);
+
+        getMasterListGrid().addCellClickHandler(new CellClickHandler() {
+
+            @Override
+            public void onCellClick(CellClickEvent event) {
+              if (RunModel.DELETED_ICON.equals(getMasterListGrid().getFieldName(event.getColNum()))) {
+                    RunsTab.this.deleteItem(event.getRecord());
+                }
+            }
+        });
 	}
 	
 	@Override

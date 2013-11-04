@@ -1,13 +1,10 @@
 package org.celstec.arlearn2.gwtcommonlib.client.objects;
 
+import com.google.gwt.json.client.*;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.game.GameClient;
-
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONBoolean;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
+import org.celstec.arlearn2.portal.client.author.ui.game.MapConfigSection;
 
 public class Game extends Bean{
 
@@ -113,8 +110,15 @@ public class Game extends Bean{
 		}
 		JSONObject config = jsonRep.get("config").isObject();
 		config.put(GameModel.MAP_AVAILABLE, JSONBoolean.getInstance(b));
-		
 	}
+
+    public void setMessageView(int messageView) {
+        if (!jsonRep.containsKey("config")) {
+            jsonRep.put("config", new JSONObject());
+        }
+        JSONObject config = jsonRep.get("config").isObject();
+        config.put(GameModel.MESSAGE_VIEWS, new JSONNumber(messageView));
+    }
 	
 	public boolean getMapAvailable() {
 		if (!jsonRep.containsKey("config")) {
@@ -126,12 +130,37 @@ public class Game extends Bean{
 		return jsonRep.get("config").isObject().get(GameModel.MAP_AVAILABLE).isBoolean().booleanValue();
 	}
 
-	
+    public final static int MESSAGE_LIST = 1;
+    public final static int MESSAGE_MAP = 2;
+    public final static int MAP_VIEW = 3;
+    public final static int CUSTOM_HTML = 4;
 
+    public int getMessageViews() {
+        if (!jsonRep.containsKey("config")) {
+            return MESSAGE_LIST;
+        }
+        if (!jsonRep.get("config").isObject().containsKey(GameModel.MESSAGE_VIEWS)) {
+            return MESSAGE_LIST;
+        }
+        return (int) jsonRep.get("config").isObject().get(GameModel.MESSAGE_VIEWS).isNumber().doubleValue();
+    }
+
+
+    public void setHtmlMessageList(String html) {
+        if (!jsonRep.containsKey("config")) {
+            jsonRep.put("config", new JSONObject());
+        }
+        JSONObject config = jsonRep.get("config").isObject();
+        config.put(GameModel.HTML_MESSAGE_LIST, new JSONString(html));
+    }
+
+    public String getHtmlMessageList() {
+        if (!jsonRep.containsKey("config")) {
+            return "";
+        }
+        if (!jsonRep.get("config").isObject().containsKey(GameModel.HTML_MESSAGE_LIST)) {
+            return "";
+        }
+        return jsonRep.get("config").isObject().get(GameModel.HTML_MESSAGE_LIST).isString().stringValue();
+    }
 }
-
-//role: {"type":"org.celstec.arlearn2.beans.game.Game", "gameId":3, 
-//"lastModificationDate":1366111358755, "title":"ectel", "sharing":1, 
-//"config":{"type":"org.celstec.arlearn2.beans.game.Config", "mapAvailable":false,
-//	"manualItems":[], "locationUpdates":[], 
-//	"roles":["gamemaster","other role"]}, "accessRights":1}

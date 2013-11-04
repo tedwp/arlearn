@@ -21,8 +21,14 @@ public class GameModel extends DataSourceModel {
 	public static final String SHARING_FIELD = "sharing";
 	public static final String LICENSE_CODE = "licenseCode";
 	public static final String MAP_AVAILABLE = "mapAvailable";
+    public static final String MESSAGE_VIEWS= "messageViews";
+    public static final String HTML_MESSAGE_LIST= "htmlMessageList";
 	public static final String MAP_ICON = "mapIcon";
-	
+    public static final String GI_EDIT_ICON = "giEditIcon";
+    public static final String CREATE_RUN_ICON = "createRunIcon";
+    public static final String DOWNLOAD_ICON = "downloadIcon";
+    public static final String DELETE_GAME_ICON = "deleteGameIcon";
+
 	private DataSourceConstants constants = GWT.create(DataSourceConstants.class);
 
 
@@ -66,6 +72,102 @@ public class GameModel extends DataSourceModel {
 				return MAP_ICON;
 			}
 		}, false, false);
+
+        addDerivedField(new DerivedFieldTask() {
+            JSONObject jsonObject;
+
+            @Override
+            public void setJsonSource(JSONObject jsonObject) {
+                this.jsonObject = jsonObject;
+            }
+
+            @Override
+            public Object process() {
+                return "gi_add";
+            }
+
+            @Override
+            public int getType() {
+                return STRING_DATA_TYPE;
+            }
+
+            @Override
+            public String getTargetFieldName() {
+                return GI_EDIT_ICON;
+            }
+        }, false, false);
+
+        addDerivedField(new DerivedFieldTask() {
+            JSONObject jsonObject;
+
+            @Override
+            public void setJsonSource(JSONObject jsonObject) {
+                this.jsonObject = jsonObject;
+            }
+
+            @Override
+            public Object process() {
+                return "add_user";
+            }
+
+            @Override
+            public int getType() {
+                return STRING_DATA_TYPE;
+            }
+
+            @Override
+            public String getTargetFieldName() {
+                return CREATE_RUN_ICON;
+            }
+        }, false, false);
+        addDerivedField(new DerivedFieldTask() {
+            JSONObject jsonObject;
+
+            @Override
+            public void setJsonSource(JSONObject jsonObject) {
+                this.jsonObject = jsonObject;
+            }
+
+            @Override
+            public Object process() {
+                return "icon_down";
+            }
+
+            @Override
+            public int getType() {
+                return STRING_DATA_TYPE;
+            }
+
+            @Override
+            public String getTargetFieldName() {
+                return DOWNLOAD_ICON;
+            }
+        }, false, false);
+
+        addDerivedField(new DerivedFieldTask() {
+            JSONObject jsonObject;
+
+            @Override
+            public void setJsonSource(JSONObject jsonObject) {
+                this.jsonObject = jsonObject;
+            }
+
+            @Override
+            public Object process() {
+                return "icon_delete";
+            }
+
+            @Override
+            public int getType() {
+                return STRING_DATA_TYPE;
+            }
+
+            @Override
+            public String getTargetFieldName() {
+                return DELETE_GAME_ICON;
+            }
+        }, false, false);
+
 		addDerivedField(new DerivedFieldTask() {
 			JSONObject jsonObject;
 			

@@ -11,7 +11,8 @@
     <string name="login">LOGIN</string>
     <string name="logout">LOGOUT</string>
     <string name="exit">EXIT</string>
-    
+    <string name="sync">SYNC</string>
+
      <!--Login Activity Strings-->
     <string name="loginHeader">Aanmelden met uw Google account</string>
     <string name="uNameHint">E-mail</string>

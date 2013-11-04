@@ -49,24 +49,7 @@ import org.celstec.arlearn2.beans.dependencies.TimeDependency;
 import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
 import org.celstec.arlearn2.beans.deserializer.json.OpenQuestionDeserializer;
 import org.celstec.arlearn2.beans.game.*;
-import org.celstec.arlearn2.beans.generalItem.AudioObject;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
-import org.celstec.arlearn2.beans.generalItem.GeneralItemSerializer;
-import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
-import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem;
-import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageTest;
-import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
-import org.celstec.arlearn2.beans.generalItem.NarratorItem;
-import org.celstec.arlearn2.beans.generalItem.OpenBadge;
-import org.celstec.arlearn2.beans.generalItem.OpenBadgeAssertion;
-import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
-import org.celstec.arlearn2.beans.generalItem.OpenUrl;
-import org.celstec.arlearn2.beans.generalItem.ScanTag;
-import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
-import org.celstec.arlearn2.beans.generalItem.SingleChoiceTest;
-import org.celstec.arlearn2.beans.generalItem.VideoObject;
-import org.celstec.arlearn2.beans.generalItem.YoutubeObject;
+import org.celstec.arlearn2.beans.generalItem.*;
 import org.celstec.arlearn2.beans.notification.APNDeviceDescription;
 import org.celstec.arlearn2.beans.notification.DeviceDescriptionList;
 import org.celstec.arlearn2.beans.notification.GCMDeviceDescription;
@@ -166,7 +149,14 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(MultipleChoiceImageAnswerItem.class.getCanonicalName(), MultipleChoiceImageAnswerItem.serializer);
 		customSerializerMap.put(OpenUrl.class.getCanonicalName(), OpenUrl.serializer);
 		customSerializerMap.put(ScanTag.class.getCanonicalName(), ScanTag.serializer);
-		customSerializerMap.put(YoutubeObject.class.getCanonicalName(), YoutubeObject.serializer);
+        customSerializerMap.put(FileReference.class.getCanonicalName(), FileReference.serializer);
+
+        customSerializerMap.put(ObjectCollectionDisplay.class.getCanonicalName(), ObjectCollectionDisplay.objectCollectionDisplaySerializer);
+        customSerializerMap.put(ObjectCollectionDisplay.DisplayObject.class.getCanonicalName(), ObjectCollectionDisplay.displayObjectSerializer);
+        customSerializerMap.put(ObjectCollectionDisplay.DisplayZone.class.getCanonicalName(), ObjectCollectionDisplay.displayZoneSerializer);
+
+
+        customSerializerMap.put(YoutubeObject.class.getCanonicalName(), YoutubeObject.serializer);
 		customSerializerMap.put(OpenBadge.class.getCanonicalName(), OpenBadge.serializer);
 		customSerializerMap.put(OpenBadgeAssertion.class.getCanonicalName(), OpenBadgeAssertion.serializer);
 		customSerializerMap.put(User.class.getCanonicalName(), User.serializer);

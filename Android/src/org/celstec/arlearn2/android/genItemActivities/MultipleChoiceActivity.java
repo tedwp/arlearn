@@ -26,6 +26,7 @@ import java.util.List;
 import android.webkit.WebSettings;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.GeneralActivity;
+import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.delegators.ResponseDelegator;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.celstec.arlearn2.android.util.MediaFolders;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceTest;
 import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
@@ -83,6 +85,16 @@ public class MultipleChoiceActivity extends GeneralItemActivity {
 		for (MultipleChoiceAnswerItem sel : selected) {
 			ResponseDelegator.getInstance().publishMultipleChoiceResponse(MultipleChoiceActivity.this, mct, sel);
 		}
+        boolean correct = true;
+        for (MultipleChoiceAnswerItem answer : mct.getAnswers()){
+            if (answer.getIsCorrect()) {
+                if (!selected.contains(answer)) correct = false;
+            } else {
+                if (selected.contains(answer)) correct = false;
+            }
+        }
+        ResponseDelegator.getInstance().publishMultipleChoiceResponse(MultipleChoiceActivity.this, mct, correct);
+
 		MultipleChoiceActivity.this.finish();
 	}
 
@@ -95,8 +107,7 @@ public class MultipleChoiceActivity extends GeneralItemActivity {
         ws.setJavaScriptEnabled(true);
         webview.addJavascriptInterface(new Object()
         {
-            public void performClick()
-            {
+            public void performClick() {
                 System.out.println("ok click");
             }
         }, "ok");
@@ -104,7 +115,15 @@ public class MultipleChoiceActivity extends GeneralItemActivity {
 		if (mct.getRichText() != null) {
 			String html = mct.getRichText();
 			if (!html.equals(richText)) {
-				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
+                String incommingFile = MediaFolders.getIncommingFilesDir().getAbsolutePath();
+                Long runId = menuHandler.getPropertiesAdapter().getCurrentRunId();
+                if (runId != null) {
+                    Long gameId = RunCache.getInstance().getGameId(runId);
+                    incommingFile = "file:///"+incommingFile+"/"+gameId+"/";
+
+                }
+                webview.loadDataWithBaseURL(incommingFile, html, "text/html", "utf-8", null);
+//				webview.loadDataWithBaseURL("file:///android_res/drawable/", html, "text/html", "utf-8", null);
 				richText = html;
 			}
 		} else {

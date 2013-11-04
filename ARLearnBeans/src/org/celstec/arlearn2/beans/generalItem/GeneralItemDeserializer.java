@@ -48,6 +48,7 @@ public class GeneralItemDeserializer extends GameBeanDeserializer {
 		if (object.has("name")) gi.setName(object.getString("name"));
 		if (object.has("description")) gi.setDescription(object.getString("description"));
 		if (object.has("iconUrl")) gi.setIconUrl(object.getString("iconUrl"));
+        if (object.has("iconUrlMd5Hash")) gi.setIconUrlMd5Hash(object.getString("iconUrlMd5Hash"));
         if (object.has("section")) gi.setSection(object.getString("section"));
         if (object.has("tags")) gi.setTags(object.getString("tags"));
 		if (object.has("radius")) gi.setRadius(object.getInt("radius"));
@@ -63,7 +64,9 @@ public class GeneralItemDeserializer extends GameBeanDeserializer {
 		if (object.has("dependsOn")) gi.setDependsOn((Dependency) JsonBeanDeserializer.deserialize(Dependency.class, object.getJSONObject("dependsOn")));
 		if (object.has("disappearOn")) gi.setDisappearOn((Dependency) JsonBeanDeserializer.deserialize(Dependency.class, object.getJSONObject("disappearOn")));
 		if (object.has("roles")) gi.setRoles(ListDeserializer.toStringList(object.getJSONArray("roles")));
+        if (object.has("fileReferences")) gi.setFileReferences(ListDeserializer.toBean(object.getJSONArray("fileReferences"), FileReference.class));
 
-	}
+
+    }
 
 }

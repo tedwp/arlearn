@@ -29,6 +29,8 @@ import org.celstec.arlearn2.gwtcommonlib.client.network.OauthNetworkClient;
 import org.celstec.arlearn2.portal.client.author.AuthorPage;
 import org.celstec.arlearn2.portal.client.debug.DebugPage;
 import org.celstec.arlearn2.portal.client.game.GamePage;
+import org.celstec.arlearn2.portal.client.htmlDisplay.CrsDisplay;
+import org.celstec.arlearn2.portal.client.htmlDisplay.HtmlDisplayPage;
 import org.celstec.arlearn2.portal.client.network.NetworkPage;
 import org.celstec.arlearn2.portal.client.resultDisplay.ResultDisplayPage;
 
@@ -41,6 +43,9 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.layout.VLayout;
+
+import java.util.List;
+import java.util.Map;
 
 public class Entry implements EntryPoint {
 
@@ -60,7 +65,17 @@ public class Entry implements EntryPoint {
 		String localeExtension = LocalSettings.getInstance().getLocateExtension();
 
 		if (!"".equals(localeExtension) && Window.Location.getParameter("locale") == null) {
-			Window.open(Window.Location.getPath()+localeExtension, "_self", ""); 
+
+            Map<String, List<String>> paramMap = Window.Location.getParameterMap();
+            if (paramMap.size() != 0) {
+                String params = "";
+                for (java.util.Map.Entry<String, List<String>> entry :paramMap.entrySet()) {
+                    params += "&"+entry.getKey() +"="+Window.Location.getParameter(entry.getKey());
+                }
+                Window.open(Window.Location.getPath()+localeExtension +params, "_self", "");
+            } else {
+                Window.open(Window.Location.getPath()+localeExtension, "_self", "");
+            }
 		} else
 			OauthNetworkClient.getInstance().getOauthClientPackage(new JsonObjectListCallback("oauthInfoList", null) {
 			public void onJsonArrayReceived(JSONObject jsonObject) {
@@ -100,11 +115,15 @@ public class Entry implements EntryPoint {
 				if (RootPanel.get("author") != null) (new AuthorPage()).loadPage();
 				if (RootPanel.get("test") != null) (new TestPage()).loadPage();
 				if (RootPanel.get("contact") != null) (new AddContactPage()).loadPage();
-                if (RootPanel.get("register") != null) (new RegisterForGame()).loadPage();
+                if (RootPanel.get("register") != null && Window.Location.getParameter("gameId") !=null) (new RegisterForGame()).loadPage();
+                if (RootPanel.get("register") != null && Window.Location.getParameter("runId") !=null) (new RegisterForRun()).loadPage();
 				if (RootPanel.get("result") != null) (new ResultDisplayPage()).loadPage();
 				if (RootPanel.get("portal") != null) (new org.celstec.arlearn2.portal.client.portal.PortalPage()).loadPage();
 				if (RootPanel.get("oauth_new") != null) (new OauthPage()).loadPage();
 				if (RootPanel.get("resultDisplayRuns") != null) (new ResultDisplayRuns()).loadPage();
+                if (RootPanel.get("htmlDisplay") != null) (new CrsDisplay()).loadPage();
+                if (RootPanel.get("resultDisplayRunsParticipate") != null) (new ResultDisplayRunsParticipate()).loadPage();
+
 				if (RootPanel.get("network") != null) (new NetworkPage()).loadPage();
 				if (RootPanel.get("search") != null) (new SearchPage()).loadPage();
 				if (RootPanel.get("game") != null) (new GamePage()).loadPage();

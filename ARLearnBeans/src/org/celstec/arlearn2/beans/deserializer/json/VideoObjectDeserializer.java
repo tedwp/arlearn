@@ -40,6 +40,8 @@ public class VideoObjectDeserializer extends NarratorItemDeserializer {
 		super.initBean(object, genericBean);
 		VideoObject nItem = (VideoObject) genericBean;
 		if (object.has("videoFeed")) nItem.setVideoFeed(object.getString("videoFeed"));
+        if (object.has("autoPlay")) nItem.setAutoPlay(object.getBoolean("autoPlay"));
+        if (object.has("md5Hash")) nItem.setMd5Hash(object.getString("md5Hash"));
 	}
 
 

@@ -3,6 +3,8 @@ package org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import com.smartgwt.client.types.Overflow;
+import com.smartgwt.client.widgets.layout.VStack;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.MultipleChoiceAnswer;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.SingleChoiceTest;
@@ -18,7 +20,7 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class SingleChoiceExtensionEditor  extends VLayout implements ExtensionEditor{
+public class SingleChoiceExtensionEditor  extends VStack implements ExtensionEditor{
 	private static GeneralItemConstants constants = GWT.create(GeneralItemConstants.class);
 
 	protected  ArrayList<AnswerForm> forms = new ArrayList<AnswerForm>();
@@ -26,7 +28,9 @@ public class SingleChoiceExtensionEditor  extends VLayout implements ExtensionEd
 
 	
 	public SingleChoiceExtensionEditor() {
-
+        setOverflow(Overflow.AUTO);
+        setWidth100();
+        setHeight100();
 	}
 	
 	public SingleChoiceExtensionEditor(GeneralItem gi) {

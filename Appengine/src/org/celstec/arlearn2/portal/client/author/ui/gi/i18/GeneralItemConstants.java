@@ -14,6 +14,9 @@ public interface GeneralItemConstants  extends Constants {
     @DefaultStringValue("Custom Icon")
     String customIcon();
 
+    @DefaultStringValue("Roles")
+    String roles();
+
     @DefaultStringValue("Section")
     String section();
 
@@ -106,10 +109,19 @@ public interface GeneralItemConstants  extends Constants {
 	
 	@DefaultStringValue("When message is opened")
 	String read();
-	
+
 	@DefaultStringValue("When an answer is given")
 	String answerGiven();
-	
+
+    @DefaultStringValue("When correct answer is given")
+    String correctAnswer();
+
+    @DefaultStringValue("When wrong answer is given")
+    String wrongAnswer();
+
+    @DefaultStringValue("When audio completed playing")
+    String completePlaying();
+
 	@DefaultStringValue("Data collection")
 	String dataCollection();
 	
@@ -123,11 +135,18 @@ public interface GeneralItemConstants  extends Constants {
 	
 	@DefaultStringValue("URL Audio file")
 	String audioURL();
+
+    @DefaultStringValue("Start audio when message is opened")
+    String autoPlayAudio();
 	
 	@DefaultStringValue("URL Video file")
 	String videoURL();
-	
-	@DefaultStringValue("Youtube URL")
+
+    @DefaultStringValue("Start video when message is opened")
+    String autoPlayVideo();
+
+
+    @DefaultStringValue("Youtube URL")
 	String youtubeURL();
 	
 	@DefaultStringValue("Enable data collection")

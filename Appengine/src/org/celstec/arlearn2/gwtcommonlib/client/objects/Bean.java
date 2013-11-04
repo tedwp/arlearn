@@ -1,9 +1,6 @@
 package org.celstec.arlearn2.gwtcommonlib.client.objects;
 
-import com.google.gwt.json.client.JSONBoolean;
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.*;
 
 public abstract class Bean {
 
@@ -79,6 +76,26 @@ public abstract class Bean {
 		}
 		return null;
 	}
+
+    public String[] getValues(String key) {
+        if (jsonRep.containsKey(key)) {
+            JSONArray array = jsonRep.get(key).isArray();
+            String[] returnString = new String[array.size()];
+            for (int i = 0 ; i<array.size(); i++) {
+                returnString[i] = array.get(i).isString().stringValue();
+            }
+             return returnString;
+        }
+        return new String[0];
+    }
+
+    public void setArray(String field, String[] values ) {
+        JSONArray array = new JSONArray();
+        for (String value : values) {
+            array.set(array.size(), new JSONString(value));
+        }
+        jsonRep.put(field, array);
+    }
 	
 	public long getValueAsLong(String key) {
 		if (jsonRep.containsKey(key)) {

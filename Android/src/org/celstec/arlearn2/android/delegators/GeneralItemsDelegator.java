@@ -18,10 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.delegators;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.celstec.arlearn2.android.asynctasks.db.CreateDownloadGeneralItems;
 import org.celstec.arlearn2.android.asynctasks.db.CreateProximityEvents;
@@ -40,13 +37,7 @@ import org.celstec.arlearn2.android.db.DBAdapter;
 import org.celstec.arlearn2.android.db.MediaCacheGeneralItems;
 import org.celstec.arlearn2.android.db.MediaCacheGeneralItems.DownloadItem;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
-import org.celstec.arlearn2.beans.generalItem.AudioObject;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
-import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem;
-import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageTest;
-import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
-import org.celstec.arlearn2.beans.generalItem.VideoObject;
+import org.celstec.arlearn2.beans.generalItem.*;
 import org.celstec.arlearn2.beans.run.Response;
 import org.celstec.arlearn2.client.GeneralItemClient;
 
@@ -59,6 +50,7 @@ public class GeneralItemsDelegator {
 	public static String AUDIO_LOCAL_ID = "audio";
 	public static String VIDEO_LOCAL_ID = "video";
 	public static String ICON_LOCAL_ID = "icon";
+    private static long lastSyncDate = 0l;
 
 	private GeneralItemsDelegator() {
 
@@ -71,7 +63,17 @@ public class GeneralItemsDelegator {
 		return instance;
 	}
 
-	public void synchronizeGeneralItemsWithServer(Context ctx, Long runId, Long gameId) {
+    public void synchronizeGeneralItemsWithServer(Context ctx, Long runId, Long gameId) {
+        synchronizeGeneralItemsWithServer(ctx,runId,gameId, false);
+
+    }
+
+	public void synchronizeGeneralItemsWithServer(Context ctx, Long runId, Long gameId, boolean overrideLastSyncDateCheck) {
+        long currentTime = System.currentTimeMillis();
+        if (!overrideLastSyncDateCheck && (lastSyncDate + 20000 > currentTime)) {
+            return;
+        }
+        lastSyncDate = currentTime;
 		LoadGeneralItemsFromDbTask loadFromDb_0 = new LoadGeneralItemsFromDbTask(gameId, runId);
 		loadFromDb_0.run(ctx);
 		
@@ -148,6 +150,10 @@ public class GeneralItemsDelegator {
 		if (gi.getIconUrl() != null) {
 			downloadArray.add(getIconDownloadObject(gi));
 		}
+        if (gi.getFileReferences() != null && !gi.getFileReferences().isEmpty()) {
+            downloadArray.addAll(getFileReferences(gi));
+        }
+
 		if (gi instanceof AudioObject) {
 			downloadArray.add(getDownloadItemsAudioObject((AudioObject) gi));
 		}
@@ -155,19 +161,22 @@ public class GeneralItemsDelegator {
 			downloadArray.add(getDownloadItemsVideoObject((VideoObject) gi));
 		}
 		if (gi instanceof SingleChoiceImageTest) {
-			return getDownloadItemsSingleChoiceImageTest((SingleChoiceImageTest) gi);
+            downloadArray.addAll(getDownloadItemsSingleChoiceImageTest((SingleChoiceImageTest) gi));
 		}
 		if (gi instanceof MultipleChoiceImageTest) {
-			return getDownloadItemsMultipleChoiceImageTest((MultipleChoiceImageTest) gi);
+            downloadArray.addAll(getDownloadItemsMultipleChoiceImageTest((MultipleChoiceImageTest) gi));
 		}
 		return downloadArray.toArray(new DownloadItem[]{});
 	}
-	
-	private DownloadItem getIconDownloadObject(GeneralItem gi) {
+
+
+
+    private DownloadItem getIconDownloadObject(GeneralItem gi) {
 		DownloadItem returnObject = new DownloadItem();
 		returnObject = getBaseItem(gi);
 		returnObject.setLocalId(ICON_LOCAL_ID);
 		returnObject.setRemoteUrl(gi.getIconUrl());
+        if (gi.getIconUrlMd5Hash()!=null) returnObject.setMd5Hash(gi.getIconUrlMd5Hash());
 		return returnObject;
 	}
 	
@@ -176,7 +185,9 @@ public class GeneralItemsDelegator {
 		returnObject = getBaseItem(oa);
 		returnObject.setLocalId(AUDIO_LOCAL_ID);
 		returnObject.setRemoteUrl(oa.getAudioFeed());
-		return returnObject;
+        if (oa.getMd5Hash()!= null) returnObject.setMd5Hash(oa.getMd5Hash());
+
+        return returnObject;
 	}
 
 	private DownloadItem getDownloadItemsVideoObject(VideoObject gi) {
@@ -184,10 +195,24 @@ public class GeneralItemsDelegator {
 		returnObject = getBaseItem(gi);
 		returnObject.setLocalId(VIDEO_LOCAL_ID);
 		returnObject.setRemoteUrl(gi.getVideoFeed());
+        if (gi.getMd5Hash()!= null) returnObject.setMd5Hash(gi.getMd5Hash());
 		return returnObject;
 	}
 
-	private DownloadItem[] getDownloadItemsSingleChoiceImageTest(SingleChoiceImageTest gi) {
+    private Collection<? extends DownloadItem> getFileReferences(GeneralItem gi) {
+        ArrayList<DownloadItem> list = new ArrayList<MediaCacheGeneralItems.DownloadItem>();
+        for (FileReference fileReference: gi.getFileReferences()) {
+            DownloadItem downloadItem = getBaseItem(gi);
+            downloadItem.setLocalId(fileReference.getKey());
+            downloadItem.setRemoteUrl(fileReference.getFileReference());
+            downloadItem.setPreferredFileName(fileReference.getKey());
+            if (fileReference.getMd5Hash()!= null) downloadItem.setMd5Hash(fileReference.getMd5Hash());
+            list.add(downloadItem);
+        }
+        return list;
+    }
+
+	private ArrayList<DownloadItem> getDownloadItemsSingleChoiceImageTest(SingleChoiceImageTest gi) {
 		ArrayList<DownloadItem> list = new ArrayList<MediaCacheGeneralItems.DownloadItem>();
 		if (gi.getAudioQuestion() != null) {
 			DownloadItem audioQuestion = getBaseItem(gi);
@@ -211,10 +236,10 @@ public class GeneralItemsDelegator {
 				list.add(audioDi);
 			}
 		}
-		return list.toArray(new DownloadItem[] {});
+		return list; //.toArray(new DownloadItem[] {});
 	}
 	
-	private DownloadItem[] getDownloadItemsMultipleChoiceImageTest(MultipleChoiceImageTest gi) {
+	private ArrayList<DownloadItem> getDownloadItemsMultipleChoiceImageTest(MultipleChoiceImageTest gi) {
 		ArrayList<DownloadItem> list = new ArrayList<MediaCacheGeneralItems.DownloadItem>();
 		if (gi.getAudioQuestion() != null) {
 			DownloadItem audioQuestion = getBaseItem(gi);
@@ -238,7 +263,7 @@ public class GeneralItemsDelegator {
 				list.add(audioDi);
 			}
 		}
-		return list.toArray(new DownloadItem[] {});
+		return list; //.toArray(new DownloadItem[] {});
 	}
 
 	private DownloadItem getBaseItem(GeneralItem gi) {

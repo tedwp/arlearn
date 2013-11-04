@@ -55,7 +55,7 @@ import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.ScoreDefinitionDelegator;
 import org.celstec.arlearn2.delegators.TeamsDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
-import org.celstec.arlearn2.delegators.generalitems.CreateGeneralItems;
+
 import org.codehaus.jettison.json.JSONObject;
 
 import com.google.gdata.util.AuthenticationException;

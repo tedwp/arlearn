@@ -42,6 +42,9 @@ public class AudioObjectActivity extends NarratorItemActivity {
 		completeAction.setGeneralItemType(getGeneralItem().getType());
 		
 		Uri localAudioUri = GeneralItemsDelegator.getInstance().getLocalMediaUriMap(getGeneralItem()).get("audio");
+        if (localAudioUri == null) {
+            System.out.println("break");
+        }
 		apd =  new AudioPlayerDelegate(localAudioUri, this, completeAction);
 		apd.setPlayButton((ImageView) findViewById(R.id.ao_playButton));
 		apd.setStopButton((ImageView) findViewById(R.id.ao_stopButton));

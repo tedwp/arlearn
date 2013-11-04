@@ -72,8 +72,10 @@
     </entity>
     <entity name="Inquiry" representedClassName="Inquiry" syncable="YES">
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="hypothesis" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="icon" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="inquiryId" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="reflection" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="run" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Run" inverseName="inquiry" inverseEntity="Run" syncable="YES"/>
@@ -117,7 +119,7 @@
         <element name="GeneralItem" positionX="-405" positionY="-153" width="128" height="283"/>
         <element name="GeneralItemData" positionX="-182" positionY="-148" width="128" height="133"/>
         <element name="GeneralItemVisibility" positionX="-792" positionY="36" width="128" height="148"/>
-        <element name="Inquiry" positionX="-1152" positionY="-351" width="128" height="133"/>
+        <element name="Inquiry" positionX="-1152" positionY="-351" width="128" height="165"/>
         <element name="Response" positionX="-783" positionY="-378" width="128" height="208"/>
         <element name="Run" positionX="-1152" positionY="-144" width="128" height="208"/>
         <element name="SynchronizationBookKeeping" positionX="-1089" positionY="135" width="128" height="90"/>

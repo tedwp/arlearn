@@ -26,7 +26,7 @@ public abstract class DataSourceModel {
 	protected DataSourceAdapter dataSourceAdapter;
 
 	private List<Integer> typeList = new ArrayList<Integer>();
-	private List<String> attributeList = new ArrayList<String>();
+    private List<String> attributeList = new ArrayList<String>();
 	private ArrayList<DerivedFieldTask> derivedTaskList = new ArrayList<DerivedFieldTask>();
 
 	public DataSourceModel(DataSourceAdapter dataSourceAdapter) {
@@ -93,6 +93,8 @@ public abstract class DataSourceModel {
 			break;
 		}
 		attributeList.add(attributeName);
+
+
 	}
 
 	public void addDerivedField(DerivedFieldTask task, boolean primaryKey, boolean hidden) {

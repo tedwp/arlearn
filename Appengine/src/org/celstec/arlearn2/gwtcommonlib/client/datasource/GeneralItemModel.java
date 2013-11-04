@@ -23,6 +23,8 @@ public class GeneralItemModel extends DataSourceModel {
     public static final String ICON_URL = "iconUrl";
     public static final String SECTION = "section";
     public static final String TAGS = "tags";
+    public static final String ROLES = "roles";
+    public static final String DELETE_ICON = "deleteIcon";
 
 	public final static int CREATED = 1;
 	public final static int DELETED = 2;
@@ -52,7 +54,7 @@ public class GeneralItemModel extends DataSourceModel {
 		addField(STRING_DATA_TYPE, "type", false, false);
 		addField(STRING_DATA_TYPE, "account", false, false);
 		addField(STRING_DATA_TYPE, "answer", false, false);
-		addField(STRING_AR_DATA_TYPE, "roles", false, false);
+		addField(STRING_AR_DATA_TYPE, ROLES, false, false);
 		addField(BOOLEAN_DATA_TYPE, "deleted", false, true);
 		addField(BOOLEAN_DATA_TYPE, "read", false, false);
 		addField(BOOLEAN_DATA_TYPE, "correct", false, false);
@@ -116,6 +118,29 @@ public class GeneralItemModel extends DataSourceModel {
 				return GENERALITEMID_FIELD;
 			}
 		}, false, false);
+        addDerivedField(new DerivedFieldTask() {
+            JSONObject jsonObject;
+
+            @Override
+            public void setJsonSource(JSONObject jsonObject) {
+                this.jsonObject = jsonObject;
+            }
+
+            @Override
+            public Object process() {
+                return "icon_delete";
+            }
+
+            @Override
+            public int getType() {
+                return STRING_DATA_TYPE;
+            }
+
+            @Override
+            public String getTargetFieldName() {
+                return DELETE_ICON;
+            }
+        }, false, false);
 	}
 	
 	

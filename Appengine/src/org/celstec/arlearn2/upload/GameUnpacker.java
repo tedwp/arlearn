@@ -37,8 +37,6 @@ import org.celstec.arlearn2.delegators.GameDelegator;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.celstec.arlearn2.delegators.NotificationDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
-import org.celstec.arlearn2.delegators.generalitems.CreateGeneralItems;
-import org.celstec.arlearn2.delegators.notification.ChannelNotificator;
 
 import com.google.gdata.util.AuthenticationException;
 

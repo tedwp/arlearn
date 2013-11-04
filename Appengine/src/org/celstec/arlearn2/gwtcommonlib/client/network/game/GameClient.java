@@ -79,13 +79,13 @@ public class GameClient extends GenericClient {
 		invokeJsonGET("/config/gameId/"+id, jcb);
 	}
 	
-	public void installManualTrigger(long gameId, String item, final JsonCallback jcb) {
-		invokeJsonPOST("/config/manualtrigger/gameId/"+gameId, item, jcb);
-	}
-	
-	public void removeManualTrigger(long gameId, long itemId, final JsonCallback jcb) {
-		invokeJsonGET("/config/removeManualTrigger/gameId/"+gameId+"/itemId/"+itemId, jcb);
-	}
+//	public void installManualTrigger(long gameId, String item, final JsonCallback jcb) {
+//		invokeJsonPOST("/config/manualtrigger/gameId/"+gameId, item, jcb);
+//	}
+//
+//	public void removeManualTrigger(long gameId, long itemId, final JsonCallback jcb) {
+//		invokeJsonGET("/config/removeManualTrigger/gameId/"+gameId+"/itemId/"+itemId, jcb);
+//	}
 		
 	public void deleteGame(long id, final JsonCallback jcb) {
 		invokeJsonDELETE("/gameId/"+id, jcb);

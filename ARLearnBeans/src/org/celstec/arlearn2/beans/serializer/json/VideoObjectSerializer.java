@@ -29,7 +29,9 @@ public class VideoObjectSerializer extends NarratorItemSerializer {
 		VideoObject gi = (VideoObject) bean;
 		JSONObject returnObject = super.toJSON(bean);
 		try {
-			if (gi.getVideoFeed() != null) returnObject.put("videoFeed", gi.getVideoFeed());			
+			if (gi.getVideoFeed() != null) returnObject.put("videoFeed", gi.getVideoFeed());
+            if (gi.getAutoPlay() != null) returnObject.put("autoPlay", gi.getAutoPlay());
+            if (gi.getMd5Hash() != null) returnObject.put("md5Hash", gi.getMd5Hash());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

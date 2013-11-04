@@ -18,16 +18,15 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.asynctasks.network;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.util.HashMap;
 
+import android.provider.MediaStore;
 import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
 import org.celstec.arlearn2.android.activities.ListMessagesActivity;
@@ -82,12 +81,12 @@ public class DownloadFileTask extends GenericTask implements NetworkTask {
 		// private void startUpload() {
 		try {
 			setReplicationStatus(MediaCacheGeneralItems.REP_STATUS_SYNCING);
-			downloadItem.setLocalPath(Uri.fromFile(new File(downloadFile(downloadItem.getRemoteUrl(), downloadItem))));
+			downloadItem.setLocalPath(Uri.fromFile(new File(downloadFile(downloadItem.getRemoteUrl(), downloadItem, null))));
 			setReplicationStatus(MediaCacheGeneralItems.REP_STATUS_DONE);
 		} catch (FileNotFoundException fnf) {
 			setReplicationStatus(MediaCacheGeneralItems.REP_STATUS_FILE_NOT_FOUND);
 			fnf.printStackTrace();
-		} catch (Exception e) {
+		}  catch (Exception e) {
 			setReplicationStatus(MediaCacheGeneralItems.REP_STATUS_TODO);
 		} 
 
@@ -117,15 +116,24 @@ public class DownloadFileTask extends GenericTask implements NetworkTask {
 		@Override
 		public void execute(DBAdapter db) {
 			downloadItem = db.getMediaCacheGeneralItems().getNextUnsyncedItem(gameId);
-			if (downloadItem != null) {
-				DownloadTaskHandler nwHandler = DownloadQueue.getNetworkTaskHandler();
-				if (!nwHandler.hasMessages(DownloadTaskHandler.SYNC_UPLOAD_MEDIA)) {
-					Message m = Message.obtain(nwHandler);
-					m.obj = DownloadFileTask.this;
-					m.what = DownloadTaskHandler.SYNC_UPLOAD_MEDIA;
-					m.sendToTarget();
-				}
 
+			if (downloadItem != null) {
+//                DownloadItem alreadyDownloadItem = db.getMediaCacheGeneralItems().getReplicated(gameId, downloadItem.getRemoteUrl());
+//                if (alreadyDownloadItem == null) {
+                    DownloadTaskHandler nwHandler = DownloadQueue.getNetworkTaskHandler();
+                    if (!nwHandler.hasMessages(DownloadTaskHandler.SYNC_UPLOAD_MEDIA)) {
+                        Message m = Message.obtain(nwHandler);
+                        m.obj = DownloadFileTask.this;
+                        m.what = DownloadTaskHandler.SYNC_UPLOAD_MEDIA;
+                        m.sendToTarget();
+                    }
+//                } else {
+//                    downloadItem.setLocalPath(alreadyDownloadItem.getLocalPath());
+//                    downloadItem.setReplicated(alreadyDownloadItem.getReplicated());
+//                    db.getMediaCacheGeneralItems().setReplicationStatus(gameId, downloadItem, MediaCacheGeneralItems.REP_STATUS_DONE);
+//
+//                    exitTask();
+//                }
 			} else {
 				exitTask();
 			}
@@ -139,18 +147,34 @@ public class DownloadFileTask extends GenericTask implements NetworkTask {
 		}
 	}
 
-	private String downloadFile(String url, DownloadItem di) throws FileNotFoundException {
+	private String downloadFile(String url, DownloadItem di, String origUrl) throws FileNotFoundException {
 		try {
 
 			URL myFileUrl = new URL(url);
-			File outputFile = urlToCacheFile(url);
+            if (origUrl == null) origUrl = url;
+            File outputFile = urlToCacheFile(origUrl, di);
+            if (di.getMd5Hash()!= null) {
+                File md5file = new File(outputFile+".md5");
+                if (md5file.exists()) {
+                    String oldmd5 = deserializeString(md5file);
+                    if (oldmd5.trim().equals(di.getMd5Hash())){
+                        if (outputFile.exists()) {
+                            return outputFile.getAbsolutePath();
+                        }
+                    }
+                }
+            }
+            if (outputFile.exists() && ((outputFile.lastModified() +60000)>System.currentTimeMillis())) {
+                return outputFile.getAbsolutePath();
+            }
+
 			HttpURLConnection.setFollowRedirects(false); // new
 			HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
 			conn.setDoInput(true);
 			if (conn.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
-				url = conn.getHeaderField("location");
+				String moveUrl = conn.getHeaderField("location");
 				conn.disconnect();
-				return downloadFile(url, di);
+				return downloadFile(moveUrl, di, origUrl);
 			}
 			conn.connect();
 
@@ -183,17 +207,75 @@ public class DownloadFileTask extends GenericTask implements NetworkTask {
 			fos.flush();
 			fos.close();
 			is.close();
-			return outputFile.getAbsolutePath();
+            PrintStream out = null;
+            try {
+                String md5Hash = getMD5Checksum(outputFile.getAbsolutePath());
+                out = new PrintStream(new FileOutputStream(outputFile.getAbsolutePath()+".md5"));
+                out.print(md5Hash);
+            } catch (Exception e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } finally {
+                if (out != null) out.close();
+            }
+            return outputFile.getAbsolutePath();
 		} catch (FileNotFoundException e) {
 			throw e;
 		} catch (IOException e) {
-			Log.e("error while retrieve media item - addToCache", e.getMessage(), e);
+            Log.e("error while retrieve media item - addToCache", e.getMessage()+" item "+di.getItemId(), e);
+            throw new FileNotFoundException(e.getMessage());
+
 		}
-		return null;
+//		return null;
 	}
 
-	private File urlToCacheFile(String url) {
+    private String deserializeString(File file)
+            throws IOException {
+        int len;
+        char[] chr = new char[4096];
+        final StringBuffer buffer = new StringBuffer();
+        final FileReader reader = new FileReader(file);
+        try {
+            while ((len = reader.read(chr)) > 0) {
+                buffer.append(chr, 0, len);
+            }
+        } finally {
+            reader.close();
+        }
+        return buffer.toString();
+    }
+
+    public static String getMD5Checksum(String filename) throws Exception {
+        byte[] b = createChecksum(filename);
+        String result = "";
+
+        for (int i=0; i < b.length; i++) {
+            result += Integer.toString( ( b[i] & 0xff ) + 0x100, 16).substring( 1 );
+        }
+        return result;
+    }
+
+    public static byte[] createChecksum(String filename) throws Exception {
+        InputStream fis =  new FileInputStream(filename);
+
+        byte[] buffer = new byte[1024];
+        MessageDigest complete = MessageDigest.getInstance("MD5");
+        int numRead;
+
+        do {
+            numRead = fis.read(buffer);
+            if (numRead > 0) {
+                complete.update(buffer, 0, numRead);
+            }
+        } while (numRead != -1);
+
+        fis.close();
+        return complete.digest();
+    }
+
+	private File urlToCacheFile(String url, DownloadItem di) {
 		String urlRet = url.hashCode() + getURLSuffix(url);
+        if (di.getPreferredFileName()!= null && !"".equals(di.getPreferredFileName().trim()))
+            urlRet = di.getPreferredFileName().trim();
 		if (urlRet.contains("?"))
 			urlRet = urlRet.substring(0, urlRet.indexOf("?"));
 		return new File(getCacheDir2(), urlRet);

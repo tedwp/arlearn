@@ -2,6 +2,10 @@ package org.celstec.arlearn2.portal.client.author.ui.gi.extensionEditors;
 
 import java.util.ArrayList;
 
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONString;
+import com.smartgwt.client.types.Overflow;
+import com.smartgwt.client.widgets.layout.VStack;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.GeneralItem;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.MultipleChoiceAnswer;
 import org.celstec.arlearn2.gwtcommonlib.client.objects.MultipleChoiceImageAnswerItem;
@@ -18,18 +22,34 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class SingleChoiceImageExtensionEditor extends VLayout implements ExtensionEditor{
+public class SingleChoiceImageExtensionEditor extends VStack implements ExtensionEditor{
 
 	protected  ArrayList<AnswerForm> forms = new ArrayList<AnswerForm>();
+    protected DynamicForm questionForm = new DynamicForm();
 
-	public SingleChoiceImageExtensionEditor() {
-
+    public SingleChoiceImageExtensionEditor() {
+        setOverflow(Overflow.AUTO);
+        setWidth100();
+        setHeight100();
 	}
 	
 	public SingleChoiceImageExtensionEditor(GeneralItem gi) {
 		this();
+
+
+        questionForm.setGroupTitle("Question");
+        final TextItem questionItem = new TextItem("audioQuestion", "question as audio");
+        final TextItem columnsItem = new TextItem("columns", "# columns");
+        questionForm.setFields(questionItem, columnsItem);
+        questionItem.setValue(gi.getString("audioQuestion"));
+        if (gi.getJsonRep().containsKey("columns") ) {
+            columnsItem.setValue(gi.getInteger("columns"));
+        } else {
+            columnsItem.setValue(3);
+        }
+        addMember(questionForm);
+
 		SingleChoiceImage scTest = (SingleChoiceImage) gi;
-		
 		for (MultipleChoiceImageAnswerItem answer: scTest.getAnswers()) {
 			AnswerForm aForm = new AnswerForm(answer, forms.size());
 			forms.add(aForm);
@@ -48,6 +68,15 @@ public class SingleChoiceImageExtensionEditor extends VLayout implements Extensi
 			if (answer != null) array.set(i++, answer.getJsonRep());
 		}
 		gi.getJsonRep().put("answers", array);
+        String audioQuestion = questionForm.getValueAsString("audioQuestion");
+        if (audioQuestion != null && !"".equals(audioQuestion)){
+            gi.getJsonRep().put("audioQuestion", new JSONString(audioQuestion));
+        }
+        String columnsString = questionForm.getValueAsString("columns");
+        if (columnsString != null && !"".equals(columnsString)){
+            Integer columns = Integer.parseInt(columnsString);
+            gi.getJsonRep().put("columns", new JSONNumber(columns));
+        }
 		
 
 	}
@@ -70,7 +99,9 @@ public class SingleChoiceImageExtensionEditor extends VLayout implements Extensi
 			setIsGroup(true);
 			
 			final TextItem imageItem = new TextItem(MultipleChoiceImageAnswerItem.IMAGE_URL, "picture url "+" "+(position+1));
-			if (answer != null) imageItem.setValue(answer.getString(MultipleChoiceImageAnswerItem.IMAGE_URL));
+            imageItem.setWidth("100%");
+
+            if (answer != null) imageItem.setValue(answer.getString(MultipleChoiceImageAnswerItem.IMAGE_URL));
 			
 			imageItem.setStartRow(true);
 			imageItem.addChangedHandler(new ChangedHandler() {
@@ -90,7 +121,9 @@ public class SingleChoiceImageExtensionEditor extends VLayout implements Extensi
 			if (answer != null) audioItem.setValue(answer.getString(MultipleChoiceImageAnswerItem.AUDIO_URL));
 			
 			audioItem.setStartRow(true);
-			audioItem.addChangedHandler(new ChangedHandler() {
+            audioItem.setWidth("100%");
+
+            audioItem.addChangedHandler(new ChangedHandler() {
 				
 				@Override
 				public void onChanged(ChangedEvent event) {

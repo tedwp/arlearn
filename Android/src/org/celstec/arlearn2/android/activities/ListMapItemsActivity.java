@@ -31,6 +31,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.view.Menu;
 import android.widget.ImageView;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
@@ -41,6 +42,7 @@ import org.celstec.arlearn2.android.db.MediaCache;
 import org.celstec.arlearn2.android.db.MyActions;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
+import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.beans.generalItem.*;
 import org.celstec.arlearn2.android.list.GenericListRecord;
 import org.celstec.arlearn2.android.list.GenericMessageListAdapter;
@@ -65,11 +67,14 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 
 	private double lng;
 	private double lat;
-	
-	public void onBroadcastMessage(Bundle bundle, boolean render) {
+    private static long lastReloadDate = 0;
+
+    public void onBroadcastMessage(Bundle bundle, boolean render) {
 		super.onBroadcastMessage(bundle, render);
-		if (render) 
+        long currentTime = System.currentTimeMillis();
+        if (render && (lastReloadDate +20000 <currentTime)){
 			renderList();
+        }
 	}
 	
 	@Override
@@ -79,6 +84,12 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
 
 		RunDelegator.getInstance().loadRun(this, getPropertiesAdapter().getCurrentRunId());
 	}
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean ret = super.onCreateOptionsMenu(menu);
+        menu.add(0, MenuHandler.SYNC, 0, getString(R.string.sync));
+        return ret;
+    }
 
     private void loadSections(TreeSet<GeneralItem> gil) {
         sections = new TreeSet<String>();
@@ -90,6 +101,7 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
         }
     }
     private boolean hasSections() {
+        if (sections.size() == 0) return false;
         if (sections.size() == 1 && sections.first().equals("")) return false;
         return true;
     }
@@ -217,7 +229,6 @@ public class ListMapItemsActivity extends GeneralActivity implements ListitemCli
             int icon = getIcon(gi);
             if (icon == 0) return null;
             returnDrawable = ctx.getResources().getDrawable(getIcon(gi));
-//            return ctx.getResources().getDrawable(getIcon(gi));
         }
         if (returnDrawable != null) {
             final float scale = ctx.getResources().getDisplayMetrics().density;

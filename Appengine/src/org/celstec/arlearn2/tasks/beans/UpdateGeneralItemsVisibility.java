@@ -104,23 +104,12 @@ public class UpdateGeneralItemsVisibility extends GenericBean{
 			log.severe("exception "+e.getMessage());
 			return;
 		}
-        if (userEmail.equals("2:109002798505335212351")) {
-            log.severe("sven is logged in ");
-        }
 		UsersDelegator ud = new UsersDelegator(gid);
 		User u = ud.getUserByEmail(getRunId(), getUserEmail());
 		GeneralItemList gil = gid.getGeneralItemsRun(getRunId());
-        if (userEmail.equals("2:109002798505335212351")) {
-            log.severe("general item list "+ gil);
-        }
         if (gil != null && gil.getGeneralItems() != null) {
 			for (GeneralItem gi: gil.getGeneralItems()) {
-                if (userEmail.equals("2:109002798505335212351")) {
-                log.severe("general item  "+ gi);
-                log.severe("general item  "+ gi.getDependsOn());
-                log.severe("GeneralItemDelegator.itemMatchesUserRoles(gi, u.getRoles())  "+GeneralItemDelegator.itemMatchesUserRoles(gi, u.getRoles()));
-                log.severe("general item  "+ gi.getDeleted());
-                }
+
 
 
 				if (gi.getDependsOn() == null && GeneralItemDelegator.itemMatchesUserRoles(gi, u.getRoles()) && (gi.getDeleted() == null || !gi.getDeleted())) {

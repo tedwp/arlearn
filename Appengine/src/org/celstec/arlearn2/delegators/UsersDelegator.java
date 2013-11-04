@@ -60,7 +60,7 @@ public class UsersDelegator extends GoogleDelegator {
 			return check;
 		Run run = (new RunDelegator(this)).getRun(u.getRunId());
 
-		u.setEmail(User.normalizeEmail(u.getEmail()));
+		u.setEmail(u.getAccountType()+":"+u.getLocalId());
 		u.setGameId(run.getGameId());
 		UserManager.addUser(u);
 		UsersCache.getInstance().removeUser(u.getRunId()); // removing because

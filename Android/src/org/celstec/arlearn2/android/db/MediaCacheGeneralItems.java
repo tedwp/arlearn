@@ -18,31 +18,20 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.db;
 
-import java.util.HashMap;
-
-import org.celstec.arlearn2.android.activities.ListMapItemsActivity;
-import org.celstec.arlearn2.android.activities.ListMessagesActivity;
-import org.celstec.arlearn2.android.asynctasks.ActivityUpdater;
-import org.celstec.arlearn2.android.cache.GeneralItemsCache;
-import org.celstec.arlearn2.android.cache.MediaCache;
 import org.celstec.arlearn2.android.cache.MediaGeneralItemCache;
-import org.celstec.arlearn2.android.db.MediaCacheGeneralItems.DownloadItem;
-import org.celstec.arlearn2.android.db.MediaCacheUpload.UploadItem;
-import org.celstec.arlearn2.android.db.beans.MediaCacheItem;
-import org.celstec.arlearn2.android.genItemActivities.NarratorItemActivity;
-import org.celstec.arlearn2.beans.generalItem.AudioObject;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem;
-import org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem;
-import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
-import org.celstec.arlearn2.beans.generalItem.VideoObject;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
-import android.os.Message;
 import android.util.Log;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class MediaCacheGeneralItems extends GenericDbTable {
 	
@@ -58,6 +47,8 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 	public static final String MIMETYPE = "mimetype";
 	public static final String BYTESTOTAL = "bytesTotal";
 	public static final String BYTESAVAILABLE = "bytesAvailable";
+    public static final String PREFFERED_FILE_NAME = "preferredFileName";
+    public static final String MD5_HASH = "md5Hash";
 
 	public static final int REP_STATUS_TODO = 0;
 	public static final int REP_STATUS_SYNCING = 1;
@@ -77,7 +68,9 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 				REMOTE_FILE + " text, " + //3 
 				URI + " text, " +
 				REPLICATED + " integer, " + //5
-				MIMETYPE + " text); " ;
+                MIMETYPE + " text, " + //5
+                PREFFERED_FILE_NAME + " text, " + //5
+                MD5_HASH + " text); " ;
 				
 	}
 
@@ -126,24 +119,71 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 			di.setLocalPath(Uri.parse(uri));
 		di.setReplicated(mCursor.getInt(5));
 		di.setMimetype(mCursor.getString(6));
+        di.setPreferredFileName(mCursor.getString(7));
+        di.setMd5Hash(mCursor.getString(8));
 		
 		return di;
 	}
 	
 	
 	public void addToCache(long gameId) {
+        JSONArray array = new JSONArray();
 		for (DownloadItem di: query(GAME_ID + " = ?", new String[] { ""+gameId}, 0)) {
 			switch (di.getReplicated()) {
 			case REP_STATUS_DONE:
 				MediaGeneralItemCache.getInstance(gameId).addDoneDownload(di);
+                File md5File = new File(di.getLocalPath().getPath() + ".md5");
+                if (di.getItemId() == 4373001) {
+                    System.out.println("strange");
+                }
+                if (md5File.exists()) {
+                    try {
+                        String md5String = deserializeString(md5File);
+                        Log.e("FILE", ""+di.getItemId()+ " " +di.getLocalId() + " " +md5String + "     -   " +di.getMd5Hash());
+                        if (di.getMd5Hash() == null || !di.getMd5Hash().equals(md5String)) {
+                            JSONObject description = new JSONObject();
+                            description.put("itemId", di.getItemId());
+                            description.put("md5Hash", md5String);
+                            description.put("localId", di.getLocalId());
+                            array.put(description);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    } catch (JSONException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
+
+
+                }
+
 				break;
 			default:
 				break;
 			}
 		}
-	}
-	
-	public void create(DownloadItem item) {
+        if (array.length() !=0) {
+            Log.e("FILE", ""+array.toString());
+        }
+
+    }
+
+    private String deserializeString(File file)
+            throws IOException {
+        int len;
+        char[] chr = new char[4096];
+        final StringBuffer buffer = new StringBuffer();
+        final FileReader reader = new FileReader(file);
+        try {
+            while ((len = reader.read(chr)) > 0) {
+                buffer.append(chr, 0, len);
+            }
+        } finally {
+            reader.close();
+        }
+        return buffer.toString();
+    }
+
+    public void create(DownloadItem item) {
 		db.getSQLiteDb().insert(getTableName(), null, getContentValues(item));
 	}
 
@@ -159,6 +199,8 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 		values.put(REMOTE_FILE, item.getRemoteUrl());
 		if (item.getMimetype() != null) item.setMimetype(item.getMimetype());
 		values.put(REPLICATED, item.getReplicated());
+        if (item.getPreferredFileName() != null) values.put(PREFFERED_FILE_NAME, item.getPreferredFileName());
+        if (item.getMd5Hash() != null) values.put(MD5_HASH, item.getMd5Hash());
 		return values;
 	}
 	
@@ -174,6 +216,13 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 		if (di.length == 0) return null;
 		return di[0];
 	}
+
+    public MediaCacheGeneralItems.DownloadItem getReplicated(Long gameId, String remoteUrl) {
+        DownloadItem []  di = query(REPLICATED + " = ? and "+GAME_ID + " = ? and "+REMOTE_FILE + " = ?", new String[] { "" + REP_STATUS_DONE, ""+gameId, remoteUrl }, 0);
+        MediaGeneralItemCache.getInstance(gameId).setAmountOfItemsToDownload(di.length);
+        if (di.length == 0) return null;
+        return di[0];
+    }
 	
 	public DownloadItem[] getDownloadItemsForGame(Long gameId) {
 		return query(GAME_ID + " = ?", new String[] { ""+gameId }, 0);
@@ -205,7 +254,10 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 		private Uri localPath;
 		private int replicated;
 		private  String mimetype;
-		public DownloadItem() {
+        private String preferredFileName;
+        private String md5Hash;
+
+        public DownloadItem() {
 			
 		}
 		public long getItemId() {
@@ -250,7 +302,21 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 		public void setMimetype(String mimetype) {
 			this.mimetype = mimetype;
 		}
-	}
+        public String getPreferredFileName() {
+            return preferredFileName;
+        }
+        public void setPreferredFileName(String preferredFileName) {
+            this.preferredFileName = preferredFileName;
+        }
+
+        public String getMd5Hash() {
+            return md5Hash;
+        }
+
+        public void setMd5Hash(String md5Hash) {
+            this.md5Hash = md5Hash;
+        }
+    }
 
 	
 }

@@ -8,6 +8,8 @@ import com.google.gwt.json.client.JSONObject;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.form.DynamicForm;
 
+import java.util.LinkedHashMap;
+
 public class SingleChoiceTest extends GeneralItem {
 	
 	public  final static String TYPE = "org.celstec.arlearn2.beans.generalItem.SingleChoiceTest";
@@ -56,7 +58,17 @@ public class SingleChoiceTest extends GeneralItem {
 	public boolean enableDataCollection() {
 		return false;
 	}
-	
+
+    public LinkedHashMap<String, String> getMetadataFields() {
+        LinkedHashMap<String, String> sortList = new LinkedHashMap<String, String>();
+        int i = 1;
+        for (MultipleChoiceAnswer answer: getAnswers()) {
+            sortList.put("Answer "+i++, answer.getString("answer"));
+        }
+
+        sortList.putAll(super.getMetadataFields());
+        return sortList;
+    }
 	
 }
 

@@ -60,6 +60,11 @@
         <servlet-class>org.celstec.arlearn2.oauth.OauthServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>FacebookServlet</servlet-name>
+        <servlet-class>org.celstec.arlearn2.facebook.FacebookServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>OauthServlet</servlet-name>
         <url-pattern>/oauth/*</url-pattern>
@@ -108,6 +113,11 @@
     <servlet-mapping>
         <servlet-name>UserContentServlet</servlet-name>
         <url-pattern>/user/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>FacebookServlet</servlet-name>
+        <url-pattern>/facebook/</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

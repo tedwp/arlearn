@@ -42,6 +42,10 @@ public class MultipleChoiceImageActivity extends SingleChoiceImageActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
+
+    public void setColumns() {
+        if (mct.getColumns() !=null) COLUMNS = mct.getColumns();
+    }
 	
 	protected OnClickListener createImageViewClickerListener(final String answerId, final ImageView im) {
 		return new OnClickListener() {

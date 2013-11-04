@@ -1,14 +1,5 @@
 package org.celstec.arlearn2.portal.client.author.ui.game;
 
-import java.util.LinkedHashMap;
-
-import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
-import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
-import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
-import org.celstec.arlearn2.portal.client.AuthoringConstants;
-import org.celstec.arlearn2.portal.client.author.ui.SectionConfig;
-import org.celstec.arlearn2.portal.client.author.ui.game.i18.GameConstants;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
 import com.smartgwt.client.types.Alignment;
@@ -20,6 +11,13 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.HStack;
 import com.smartgwt.client.widgets.layout.LayoutSpacer;
+import org.celstec.arlearn2.gwtcommonlib.client.datasource.GameModel;
+import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
+import org.celstec.arlearn2.gwtcommonlib.client.objects.Game;
+import org.celstec.arlearn2.portal.client.author.ui.SectionConfig;
+import org.celstec.arlearn2.portal.client.author.ui.game.i18.GameConstants;
+
+import java.util.LinkedHashMap;
 
 public class SharingConfigSection extends SectionConfig {
 	private final static String CCBY = "Attribution CC BY";
@@ -176,8 +174,8 @@ public class SharingConfigSection extends SectionConfig {
 	}
 
 //	public void hideDetail() {
-//		licenseForm.setVisibility(Visibility.HIDDEN);
-//		sharingForm.setVisibility(Visibility.HIDDEN);
+//		mapTypeForm.setVisibility(Visibility.HIDDEN);
+//		messageViewTypeForm.setVisibility(Visibility.HIDDEN);
 //		
 //	}
 }

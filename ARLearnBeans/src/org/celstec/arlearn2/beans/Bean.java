@@ -94,6 +94,7 @@ public class Bean  implements Serializable {
 	public boolean equals(Object obj) {
 		Bean other = (Bean ) obj;
 		if (obj == null) return false;
+        if (!obj.getClass().equals(this.getClass())) return false;
 		return nullSafeEquals(getError(), other.getError()) && 
 				nullSafeEquals(getType(), other.getType()) &&
 				 nullSafeEquals(getErrorCode(), other.getErrorCode()) && 

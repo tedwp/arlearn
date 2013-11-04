@@ -297,19 +297,19 @@ public class MyGames extends Service {
 		
 	}
 	
-	@POST
-	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("/config/manualtrigger/gameId/{gameIdentifier}")
-	public String installManualTrigger(@HeaderParam("Authorization") String token, 
-			String generalItem, 
-			@PathParam("gameIdentifier") Long gameIdentifier,
-			@DefaultValue("application/json") @HeaderParam("Accept") String accept)
-			throws AuthenticationException {
-		if (!validCredentials(token))
-			return serialise(getInvalidCredentialsBean(), accept);
-		GameDelegator qg = new GameDelegator(token);
-		return serialise(qg.addManualTrigger(gameIdentifier, generalItem), accept);
-	}
+//	@POST
+//	@Produces({ MediaType.APPLICATION_JSON })
+//	@Path("/config/manualtrigger/gameId/{gameIdentifier}")
+//	public String installManualTrigger(@HeaderParam("Authorization") String token,
+//			String generalItem,
+//			@PathParam("gameIdentifier") Long gameIdentifier,
+//			@DefaultValue("application/json") @HeaderParam("Accept") String accept)
+//			throws AuthenticationException {
+//		if (!validCredentials(token))
+//			return serialise(getInvalidCredentialsBean(), accept);
+//		GameDelegator qg = new GameDelegator(token);
+//		return serialise(qg.addManualTrigger(gameIdentifier, generalItem), accept);
+//	}
 	
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })

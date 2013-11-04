@@ -188,6 +188,13 @@
         ARLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
         [Account accountWithDictionary:accountDetails inManagedObjectContext:appDelegate.managedObjectContext];
         [ARLAccountDelegator resetAccount:appDelegate.managedObjectContext];
+        
+        [[NSUserDefaults standardUserDefaults] setObject:[accountDetails objectForKey:@"localId"] forKey:@"accountLocalId"];
+        [[NSUserDefaults standardUserDefaults] setObject:[accountDetails objectForKey:@"accountType"] forKey:@"accountType"];
+        
+        NSString *fullId = [NSString stringWithFormat:@"%@:%@",  [accountDetails objectForKey:@"accountType"], [accountDetails objectForKey:@"localId"]];
+        [[ARLNotificationSubscriber sharedSingleton] registerAccount:fullId];
+
         [self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
         [self dismissViewControllerAnimated:YES completion:nil];
     }

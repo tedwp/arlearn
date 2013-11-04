@@ -40,13 +40,10 @@ import org.celstec.arlearn2.delegators.RunDelegator;
 import org.celstec.arlearn2.delegators.ScoreDefinitionDelegator;
 import org.celstec.arlearn2.delegators.TeamsDelegator;
 import org.celstec.arlearn2.delegators.UsersDelegator;
-import org.celstec.arlearn2.delegators.generalitems.QueryGeneralItems;
-import org.celstec.arlearn2.jdo.UserLoggedInManager;
 
 import com.google.gdata.util.AuthenticationException;
 
 import java.io.*;
-import java.util.List;
 import java.util.ListIterator;
 
 public class DownloadServlet extends HttpServlet {

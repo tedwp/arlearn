@@ -51,6 +51,7 @@ public class OauthFbWorker extends OauthWorker {
 	public void exchangeCodeForAccessToken()  {
 		String authURL = getAuthUrl(code);
 		try {
+            log.log(Level.SEVERE, "url "+authURL);
 			URL url = new URL(authURL);
 			String result = readURL(url);
 			String accessToken = null;
