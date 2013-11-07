@@ -64,7 +64,7 @@ public class CCLicenceAdapter extends ArrayAdapter {
 
 		CCLicence cat = (CCLicence) getItem(position);
 		if (cat == null) {
-			Log.e("pete", "Invalid category for position: " + position);
+			Log.e("Error in licence view", "Invalid category for position: " + position);
 		}
 		holder.nameTxVw.setText(cat.getName());
 		holder.nameTxVw

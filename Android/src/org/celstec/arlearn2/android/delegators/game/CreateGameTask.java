@@ -54,11 +54,7 @@ public class CreateGameTask implements NetworkTask {
 			if (g.getErrorCode() != null) {
 					Toast.makeText(ctx, "update/creation of this game failed", Toast.LENGTH_LONG).show(); //TODO i18n
 			}			
-		}
-
-
-		
-		
+		}			
 	}
 
 

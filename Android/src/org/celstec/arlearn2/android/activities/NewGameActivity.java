@@ -226,8 +226,8 @@ public class NewGameActivity extends GeneralActivity {
 		ga.setAccessRights(iPermission);
 				
 		if (checkGameSameTitle(sNewGameName)) {
-			GameDelegator.getInstance().createGame(this, newGame);
-			//NewGameActivity.this.finish();
+			GameDelegator.getInstance().createGame(this, newGame);			
+			NewGameActivity.this.finish();
 		}
 	}
 

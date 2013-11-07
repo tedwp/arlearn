@@ -74,9 +74,11 @@ public class GameItemsActivity extends Activity implements ListitemClickInterfac
 	@Override
 	protected void onResume() {
 		super.onResume();
+		GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, selectedGame.getGameId());
+
 		renderGeneralItemsList();
 		
-	}
+	}	
 
 	/**
 	 * Load data from database
@@ -88,52 +90,64 @@ public class GameItemsActivity extends Activity implements ListitemClickInterfac
 		itemsListAdapter = new GeneralItemListAdapter(this, R.layout.game_items_tab, alGenericListRecord);
 		itemsListAdapter.setOnListItemClickCallback(this);
 		
+		HashMap<Long, GeneralItem> hmGeneralItems = new HashMap<Long, GeneralItem>();	
+		hmGeneralItems = GeneralItemsCache.getInstance().getGeneralItemsWithGameId(selectedGame.getGameId());
 		
-		AudioObject gi1 = new AudioObject();
-		gi1.setDescription("Audio item desc 1");
-		gi1.setId(000101l);
-		gi1.setDeleted(false);
-		gi1.setGameId(0l);
-		gi1.setName("Audio item name 1");
-		gi1.setType(Constants.GI_TYPE_AUDIO_OBJECT);
+		if(hmGeneralItems != null){
+						
+			for (GeneralItem gi : hmGeneralItems.values()) {
+				GeneralItemListRecord r = new GeneralItemListRecord(gi);
+				itemsListAdapter.add(r);								
+			}
+		}		
 		
-		VideoObject gi2 = new VideoObject();
-		gi2.setDescription("Video item desc 1");
-		gi2.setId(000102l);
-		gi2.setDeleted(false);
-		gi2.setGameId(0l);
-		gi2.setName("Video item name 1");
-		gi2.setType(Constants.GI_TYPE_VIDEO_OBJECT);
+//		
+//		AudioObject gi1 = new AudioObject();
+//		gi1.setDescription("Audio item desc 1");
+//		gi1.setId(000101l);
+//		gi1.setDeleted(false);
+//		gi1.setGameId(0l);
+//		gi1.setName("Audio item name 1");
+//		gi1.setType(Constants.GI_TYPE_AUDIO_OBJECT);
+//		
+//		VideoObject gi2 = new VideoObject();
+//		gi2.setDescription("Video item desc 1");
+//		gi2.setId(000102l);
+//		gi2.setDeleted(false);
+//		gi2.setGameId(0l);
+//		gi2.setName("Video item name 1");
+//		gi2.setType(Constants.GI_TYPE_VIDEO_OBJECT);
+//
+//		NarratorItem gi3 = new NarratorItem();
+//		gi3.setDescription("Narrator item desc 1");
+//		gi3.setId(000103l);
+//		gi3.setDeleted(false);
+//		gi3.setGameId(0l);
+//		gi3.setName("Narrator item name 1");
+//		gi3.setType(Constants.GI_TYPE_NARRATOR_ITEM);
+//		
+//
+//		MultipleChoiceTest gi4 = new MultipleChoiceTest();
+//		gi4.setDescription("Multiple choice item desc 1");
+//		gi4.setId(000104l);
+//		gi4.setDeleted(false);
+//		gi4.setGameId(0l);
+//		gi4.setName("Multiple choid item name 1");
+//		gi4.setType(Constants.GI_TYPE_MULTIPLE_CHOICE);
+//		
+//		
+//		
+//		GeneralItemListRecord r1 = new GeneralItemListRecord(gi1);
+//		GeneralItemListRecord r2 = new GeneralItemListRecord(gi2);
+//		GeneralItemListRecord r3 = new GeneralItemListRecord(gi3);
+//		GeneralItemListRecord r4 = new GeneralItemListRecord(gi4);
+//		
+//		
+//		itemsListAdapter.add(r1);
+//		itemsListAdapter.add(r2);
+//		itemsListAdapter.add(r3);
+//		itemsListAdapter.add(r4);
 
-		NarratorItem gi3 = new NarratorItem();
-		gi3.setDescription("Narrator item desc 1");
-		gi3.setId(000103l);
-		gi3.setDeleted(false);
-		gi3.setGameId(0l);
-		gi3.setName("Narrator item name 1");
-		gi3.setType(Constants.GI_TYPE_NARRATOR_ITEM);
-		
-
-		MultipleChoiceTest gi4 = new MultipleChoiceTest();
-		gi4.setDescription("Multiple choice item desc 1");
-		gi4.setId(000104l);
-		gi4.setDeleted(false);
-		gi4.setGameId(0l);
-		gi4.setName("Multiple choid item name 1");
-		gi4.setType(Constants.GI_TYPE_MULTIPLE_CHOICE);
-		
-		
-		
-		GeneralItemListRecord r1 = new GeneralItemListRecord(gi1);
-		GeneralItemListRecord r2 = new GeneralItemListRecord(gi2);
-		GeneralItemListRecord r3 = new GeneralItemListRecord(gi3);
-		GeneralItemListRecord r4 = new GeneralItemListRecord(gi4);
-		
-		
-		itemsListAdapter.add(r1);
-		itemsListAdapter.add(r2);
-		itemsListAdapter.add(r3);
-		itemsListAdapter.add(r4);
 		
 		listView.setAdapter(itemsListAdapter);
 	}
@@ -176,8 +190,22 @@ public class GameItemsActivity extends Activity implements ListitemClickInterfac
 			break;
 		case 1:
 			// Edit generalItem
-			Log.d(CLASSNAME, "Clicked edit generalItem " + position);	
-			intent = new Intent(GameItemsActivity.this, NewNarratorItemActivity.class);
+			Log.d(CLASSNAME, "Clicked edit generalItem " + position);
+			
+			if(selectedGeneralItem.getType().equals(Constants.GI_TYPE_PICTURE)){
+				intent = new Intent(GameItemsActivity.this, PictureItemActivity.class);
+			}else if(selectedGeneralItem.getType().equals(Constants.GI_TYPE_VIDEO_OBJECT)){
+				intent = new Intent(GameItemsActivity.this, VideorecorderActivity.class);
+			}else if(selectedGeneralItem.getType().equals(Constants.GI_TYPE_AUDIO_OBJECT)){
+				intent = new Intent(GameItemsActivity.this, AudiorecorderActivity.class);
+			}else if(selectedGeneralItem.getType().equals(Constants.GI_TYPE_MULTIPLE_CHOICE)){
+				intent = new Intent(GameItemsActivity.this, MultipleChoiceItemActivity.class);				
+			}else{
+				intent = new Intent(GameItemsActivity.this, NewNarratorItemActivity.class);
+			}
+			
+			
+			
 			intent.putExtra("generalItem", glr.getGeneralItem());
 			intent.putExtra("action", NewNarratorItemActivity.NI_ACTION_EDIT);
 			GameItemsActivity.this.startActivity(intent);
@@ -204,7 +232,7 @@ public class GameItemsActivity extends Activity implements ListitemClickInterfac
 	
 	public void onButtonNewGeneralItemClick(View v) {
 
-		final CharSequence[] csArrayElems = { "Text item", "Photo item", "Record video", "Record audio", "Multiple choice question" };
+		final CharSequence[] csArrayElems = { "Narrator item", "Photo xxx", "Video object", "Audio object", "Multiple choice test", "Single choice test", "Youtube Object", "Scan tag"  };
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Choose an item");

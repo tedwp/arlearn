@@ -52,13 +52,13 @@
 
 
 		<!-- Mobile game authoring activities -->
-		<activity android:name=".activities.GameTabActivity" android:label="grijaaaaaaaaaaaaaaander" />
+		<activity android:name=".activities.GameTabActivity" android:label="@string/mattitle" />
 		<activity android:name=".activities.GameItemsActivity" android:label="@string/app_name" />
 		<activity android:name=".activities.GameRunsActivity" android:label="@string/app_name" />
 		<activity android:name=".activities.GameDescActivity" android:label="@string/app_name" />	
 		
 		<activity android:name=".activities.EditGameActivity" android:label="@string/editGameHeader" />
-		<activity android:name=".activities.ListGamesActivity" android:label="@string/listGamesHeader"/>		
+		<activity android:name=".activities.ListGamesActivity" android:label="@string/mattitle"/>		
 		<activity android:name=".activities.ListGIActivity" android:label="@string/listGeneralItemHeader"/>
 		<activity android:name=".activities.NewNarratorItemActivity" android:label="@string/newGeneralItemHeader"/>
 		<activity android:name=".activities.SearchGeneralItemActivity" android:label="@string/newGeneralItemHeader"/>

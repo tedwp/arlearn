@@ -55,17 +55,20 @@ public class GameTabActivity extends TabActivity implements
 		}
 
 		setContentView(R.layout.gametabs);
+		this.setTitle("Mobile Authoring Tool");
 
 		Resources res = getResources();
 
 		TabHost th = getTabHost();
 
 		Intent intentI = new Intent().setClass(this, GameItemsActivity.class);
-		Intent intentR = new Intent().setClass(this, GameRunsActivity.class);
+		//Intent intentR = new Intent().setClass(this, GameRunsActivity.class);
+		Intent intentR = new Intent().setClass(this, ListRunsParticipateActivity.class);
 		Intent intentG = null;
 
 		if (oiAction.equals(Constants.AUTHORING_ACTION_EDIT)) {
-			this.setTitle(selectedGame.getTitle());
+			// Edit mode
+			
 			// Tab general items
 			intentI.putExtra("selectedGame", selectedGame);
 			intentI.putExtra("selectedGameAccess", selectedGameAccess);
@@ -76,7 +79,11 @@ public class GameTabActivity extends TabActivity implements
 			intentG = new Intent().setClass(this, GameDescActivity.class);
 			intentG.putExtra("selectedGame", selectedGame);
 			intentG.putExtra("selectedGameAccess", selectedGameAccess);
+			
 		} else {
+			// Create mode
+			
+			
 			// Tab games
 			intentG = new Intent().setClass(this, NewGameActivity.class);
 		}
@@ -87,14 +94,21 @@ public class GameTabActivity extends TabActivity implements
 		TabSpec tsRuns = th.newTabSpec("Runs")
 				.setIndicator("", res.getDrawable(R.drawable.add_user_48x))
 				.setContent(intentR);
-
 		TabSpec tsGameDesc = th.newTabSpec("Game")
 				.setIndicator("", res.getDrawable(R.drawable.list_icon))
 				.setContent(intentG);
+		
 
 		th.addTab(tsGameDesc);
 		th.addTab(tsItems);
 		th.addTab(tsRuns);
+		
+		if (oiAction.equals(Constants.AUTHORING_ACTION_CREATE)) {
+			th.getTabWidget().getChildAt(1).setVisibility(View.GONE);
+			th.getTabWidget().getChildAt(2).setVisibility(View.GONE);			
+		}
+
+		
 
 		th.setCurrentTab(0);
 

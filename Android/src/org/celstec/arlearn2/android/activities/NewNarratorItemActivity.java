@@ -26,14 +26,15 @@ import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Scroller;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class NewNarratorItemActivity extends GeneralActivity {
 
@@ -65,7 +66,7 @@ public class NewNarratorItemActivity extends GeneralActivity {
 			// Edit
 			etName.setText(ni.getName());
 			etDesc.setText(ni.getDescription());
-			ngButton.setText("Update item");
+			ngButton.setText("Save");
 		}
 
 		ngButton.setOnClickListener(new OnClickListener() {
@@ -123,6 +124,85 @@ public class NewNarratorItemActivity extends GeneralActivity {
 			builder.create();
 		}
 
+	}
+	
+	
+	public void onClickLocation(View target){
+		ImageView ivTagged = (ImageView) findViewById(R.id.ivTagged);
+		ivTagged.setVisibility(View.VISIBLE);
+		ivTagged.setImageResource(R.drawable.position_48x);
+		
+		TextView tvLong = (TextView)findViewById(R.id.tvLongitude);
+		TextView tvLat = (TextView)findViewById(R.id.tvLatitude);
+		TextView tvRad = (TextView)findViewById(R.id.tvRadius);
+		
+		Double odLat = null;		
+		Double odLng = null;
+		Integer oiRad = null;
+		try{
+
+			odLat = new Double(tvLat.getText().toString());		
+			odLng = new Double(tvLong.getText().toString());
+			oiRad = new Integer(tvRad.getText().toString());
+			
+		}catch(Exception exc){
+			exc.printStackTrace();
+			odLat = 0.0;		
+			odLng = 0.0;
+			oiRad = 0;
+		}
+
+
+		//ProximityDependency pd = new ProximityDependency();
+		//ni.setDependsOn(pd);
+		
+		ni.setLat(odLat);
+		ni.setLng(odLng);
+		ni.setRadius(oiRad);
+
+		TextView tvId = (TextView) findViewById(R.id.tvTagged);
+		tvId.setVisibility(View.VISIBLE);
+		tvId.setText("Lt:"+odLat+" Ln:"+odLng+" Rd:"+oiRad);
+
+		
+		
+	}
+	
+	public void onClickId(View target){
+
+		
+		
+		IntentIntegrator integrator = new IntentIntegrator(this);
+		integrator.initiateScan();
+		
+		
+		
+		
+	}
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+		ImageView ivTagged = (ImageView) findViewById(R.id.ivTagged);
+		ivTagged.setVisibility(View.VISIBLE);
+		ivTagged.setImageResource(R.drawable.qrcode_48x);
+		
+		TextView tvId = (TextView) findViewById(R.id.tvTagged);
+		tvId.setVisibility(View.VISIBLE);
+		try{
+
+			if(intent.getStringExtra("SCAN_RESULT") != null){		
+				tvId.setText(intent.getStringExtra("SCAN_RESULT"));			
+			}else{
+				tvId.setText("Cold not scan code");
+			}
+			
+		}catch(Exception exc){
+			exc.printStackTrace();
+			tvId.setText("Cold not scan code");
+		}
+		System.out.println("Decoded:"+ intent.getStringExtra("SCAN_RESULT"));
+		
+		
 	}
 
 

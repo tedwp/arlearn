@@ -52,6 +52,7 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 
 		lGameTitles = new ArrayList<String>();		
 		setContentView(R.layout.listgamescreen);
+		this.setTitle("Mobile Authoring Tool: Your games");
 	}
 
 	@Override
@@ -162,8 +163,9 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 	
 	
 	public void onReload(View v) {
-
-		vGames = GameCache.getInstance().getGames().toArray(new Game[]{});	
+	
+		GameDelegator.getInstance().synchronizeMyGamesWithServer(this);
+		renderGamesList();
 		
 	}	
 

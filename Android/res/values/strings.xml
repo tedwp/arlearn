@@ -11,7 +11,8 @@
     <string name="login">LOGIN</string>
     <string name="logout">LOGOUT</string>
     <string name="exit">EXIT</string>
-    <string name="creategame">GAMES</string>
+    <string name="creategame">AUTHORING TOOL</string>
+    <string name="mattitle">Mobile Authoring Tool</string>
     
     
      <!--Login Activity Strings-->

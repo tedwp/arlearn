@@ -18,32 +18,17 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.activities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn2.android.activities.ListOpenRunsActivity.QueryRuns;
 import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
-import org.celstec.arlearn2.android.cache.GeneralItemsCache;
-import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.GameDelegator;
 import org.celstec.arlearn2.android.delegators.GeneralItemsDelegator;
-import org.celstec.arlearn2.android.list.GeneralItemListAdapter;
-import org.celstec.arlearn2.android.list.GeneralItemListRecord;
-import org.celstec.arlearn2.android.list.GenericListRecord;
-import org.celstec.arlearn2.android.list.ListitemClickInterface;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
-import org.celstec.arlearn2.beans.generalItem.NarratorItem;
-import org.celstec.arlearn2.beans.generalItem.OpenQuestion;
 import org.celstec.arlearn2.client.GeneralItemClient;
-import org.celstec.arlearn2.client.RunClient;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -55,7 +40,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 //public class SearchGeneralItemActivity extends GeneralActivity implements ListitemClickInterface {
@@ -88,9 +72,9 @@ public class SearchGeneralItemActivity extends GeneralActivity {
         	public void onItemClick(AdapterView parent, View view,int position, long _id){
         		
         		
-        		GeneralItem g = gil.getGeneralItems().get(position);
+        		selectedGeneralItem = gil.getGeneralItems().get(position);
         		
-        		new QueryGeneralItem().execute(g.getId());
+        		new QueryGeneralItem().execute(selectedGeneralItem.getId());
         		
         		
         		
@@ -116,13 +100,14 @@ public class SearchGeneralItemActivity extends GeneralActivity {
   			
     			Log.d(CLASSNAME, "Clicked delete generalItem " + position);			
     			AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-    			builder.setMessage("Are you sure to reuse mOER '"+g.getName()+"' to Liege'?")
+    			builder.setMessage("Are you sure to reuse the item '"+selectedGeneralItem.getName()+"?")
     			       .setCancelable(false)
     			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
     			           public void onClick(DialogInterface dialog, int id) {   
     			        	   
     			        	   selectedGeneralItem.setGameId(lGameId);
-    			        	   selectedGeneralItem.setId(0l); // TODO check with Stefaan whether general items are created in server when id is 0
+    			        	   selectedGeneralItem.setId(null);
+    			        	     			        	   
     						
     			        	   GeneralItemsDelegator.getInstance().createGeneralItem(ctx, selectedGeneralItem);
     			        	   SearchGeneralItemActivity.this.finish();
@@ -206,7 +191,7 @@ public class SearchGeneralItemActivity extends GeneralActivity {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 		}
-	}	
+	}		
 	
 
 	@Override
@@ -230,6 +215,7 @@ public class SearchGeneralItemActivity extends GeneralActivity {
 	private void renderGeneralItemsList() {
 		
 
+		// Search all available items
 		GeneralItemsDelegator.getInstance().getGeneralItems(this, "");
 
 		if (GeneralItemsDelegator.getInstance().getGISearchList() != null){
@@ -243,73 +229,16 @@ public class SearchGeneralItemActivity extends GeneralActivity {
 				i++;
 			}
 	        
-	 
-
-	 
+			
 	        // Adding items to listview
 	        arrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.search_item_name, products);
-	        lv.setAdapter(arrayAdapter); 		
-				
+	        lv.setAdapter(arrayAdapter);				
 		
 			
 		}
 		
 	}
-	
 
-	
-	
-	/**
-	 * This list will replace the previous one when GeneralItems retrieved are
-	 * including information about type, description ...
-	 * 
-	 */
-//	private void renderGeneralItemsListAux() {
-//
-//		GeneralItemsDelegator.getInstance().getGeneralItems(this, "");
-//
-//		if (GeneralItemsDelegator.getInstance().getGISearchList() != null){
-//			
-//			ArrayList<GenericListRecord> alGenericListRecord = new ArrayList<GenericListRecord>();
-//			ListView listView = (ListView) findViewById(R.id.listGeneralItems);
-//
-//			adapter = new GeneralItemListAdapter(this, R.layout.searchlistgeneralitemscreen, alGenericListRecord);
-//			adapter.setOnListItemClickCallback(this);
-//
-//			
-//			gil = GeneralItemsDelegator.getInstance().getGISearchList();
-//			
-//			for (GeneralItem gi : gil.getGeneralItems()) {
-//				GeneralItemListRecord r = new GeneralItemListRecord(gi);
-//				adapter.add(r);								
-//			}
-//			listView.setAdapter(adapter);			
-//			
-//	        
-//		}
-//
-//          
-//        
-//	}
-//		
-//	
-//
-//	@Override
-//	public void onListItemClick(View v, int position,
-//			GenericListRecord messageListRecord) {
-//		
-//		System.out.println("Clicked on postion"+position);
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public boolean setOnLongClickListener(View v, int position,
-//			GenericListRecord messageListRecord) {
-//		System.out.println("Clicked on postion"+position);
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
 	
 	
 	
