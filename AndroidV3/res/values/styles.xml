@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ARLearn" parent="Theme.Sherlock">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    </style>
+
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <!-- Use a color attribute defined in colors.xml -->
+        <item name="android:background">#33485f</item>
+        <item name="android:titleTextStyle">@style/ARLearn.ActionBarTitle</item>
+
+    </style>
+
+    <style name="ARLearn.ActionBarTitle">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">#fff</item>
+    </style>
+
+
+
+    <style name="Theme.ARLearn" parent="Theme.Sherlock.Light">
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="ARLearn.HomePane">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">10dp</item>
+
+    </style>
+
+    <style name="ARLearn.HomePane.Icon">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentTop">true</item>
+    </style>
+
+    <style name="ARLearn.HomePane.Text">
+        <item name="android:textColor">#fff</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:gravity">center</item>
+
+    </style>
+
+    <style name="ARLearn.MyGames" parent="ARLearn.HomePane">
+        <item name="android:background">@drawable/gradient_home_games</item>
+    </style>
+
+    <style name="ARLearn.Store" parent="ARLearn.HomePane">
+        <item name="android:background">@drawable/gradient_home_store</item>
+    </style>
+
+    <style name="ARLearn.NearBy" parent="ARLearn.HomePane">
+        <item name="android:background">@drawable/gradient_home_nearme</item>
+    </style>
+
+    <style name="ARLearn.Scan" parent="ARLearn.HomePane">
+        <item name="android:background">@drawable/gradient_home_scan</item>
+    </style>
+
+
+    <style name="ARLearn.SlidingPane">
+        <item name="android:layout_width">280dp</item>
+        <item name="android:background">#212e3d</item>
+
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">left</item>
+
+    </style>
+
+    <style name="ARLearn.SlidingPane.Text">
+        <item name="android:textColor">#fff</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:typeface">monospace</item>
+
+    </style>
+</resources>
