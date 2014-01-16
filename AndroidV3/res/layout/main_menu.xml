@@ -28,10 +28,13 @@
 
                     android:id="@+id/gamesIcon"
                     android:src="@drawable/icon_mygames"
-                    android:contentDescription="my games section"/>
+                    android:contentDescription="my games section"
+
+                    />
 
             <TextView
                     style="@style/ARLearn.HomePane.Text"
+                    android:id="@+id/gameText"
                     android:layout_width="fill_parent"
                     android:text="@string/myGames"
                     />

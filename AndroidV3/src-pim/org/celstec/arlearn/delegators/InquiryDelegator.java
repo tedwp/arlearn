@@ -1,0 +1,118 @@
+package org.celstec.arlearn.delegators;
+
+import daoBase.DaoConfiguration;
+import org.celstec.arlearn2.android.delegators.ARL;
+import org.celstec.events.InquiryEvent;
+import org.celstec.arlearn2.client.InquiryClient;
+import org.celstec.dao.gen.InquiryLocalObject;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+/**
+ * ****************************************************************************
+ * Copyright (C) 2013 Open Universiteit Nederland
+ * <p/>
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p/>
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * <p/>
+ * Contributors: Stefaan Ternier
+ * ****************************************************************************
+ */
+public class InquiryDelegator {
+
+    private static InquiryDelegator instance;
+
+    private InquiryDelegator() {
+        ARL.eventBus.register(this);
+    }
+
+    public static InquiryDelegator getInstance() {
+        if (instance == null) {
+            instance = new InquiryDelegator();
+        }
+        return instance;
+    }
+
+    public void syncInquiries() {
+        ARL.eventBus.post(new SyncInquiries());
+    }
+
+    public void syncHypothesis(long inquiryId) {
+        ARL.eventBus.post(new SyncInquiriesHypothesis(inquiryId));
+    }
+
+    private void onEventAsync(SyncInquiries sge) {
+        String inquiries = InquiryClient.getInquiryClient().userInquiries();
+
+            JSONObject json = null;
+            try {
+                json = new JSONObject(inquiries);
+                JSONArray array = json.getJSONArray("result");
+                for (int i = 0; i< array.length(); i++) {
+                    JSONObject inqJsonObject = array.getJSONObject(i);
+                    long inquiryId =       inqJsonObject.getLong("inquiryId");
+                    InquiryLocalObject inquiry = DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(inquiryId);
+                    if (inquiry == null) {
+                        inquiry= new InquiryLocalObject();
+                    }
+                    inquiry.setId(inquiryId);
+                    inquiry.setTitle(inqJsonObject.getString("title"));
+                    inquiry.setDescription(inqJsonObject.getString("description"));
+                    long runId = InquiryClient.getInquiryClient(). getArlearnRunId(inquiry.getId());
+                    inquiry.setRunId(runId);
+                    DaoConfiguration.getInstance().getInquiryLocalObjectDao().insertOrReplace(inquiry);
+                    ARL.eventBus.post(new InquiryEvent(inquiry.getId()));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+    }
+
+    private void onEventAsync(SyncInquiriesHypothesis syncInquiriesHypothesis) {
+        InquiryClient.Hypothesis hypothesis = InquiryClient.getInquiryClient().getInquiryHypothesis(syncInquiriesHypothesis.inquiryId);
+        if (hypothesis != null) {
+            InquiryLocalObject inquiry = DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(syncInquiriesHypothesis.inquiryId);
+            if (inquiry == null) {
+                inquiry= new InquiryLocalObject();
+                inquiry.setId(syncInquiriesHypothesis.inquiryId);
+            }
+            inquiry.setHypothesisTitle(hypothesis.getTitle());
+            inquiry.setHypothesisDescription(hypothesis.getDescription());
+            DaoConfiguration.getInstance().getInquiryLocalObjectDao().insertOrReplace(inquiry);
+            ARL.eventBus.post(new InquiryEvent(inquiry.getId()));
+
+        }
+        System.out.println("synced");
+
+    }
+
+    private class SyncInquiries{}
+
+    private class SyncInquiriesHypothesis {
+        private long inquiryId;
+
+        private SyncInquiriesHypothesis(long inquiryId) {
+            this.inquiryId = inquiryId;
+        }
+
+        public long getInquiryId() {
+            return inquiryId;
+        }
+
+        public void setInquiryId(long inquiryId) {
+            this.inquiryId = inquiryId;
+        }
+    }
+}

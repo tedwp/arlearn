@@ -1,0 +1,54 @@
+<project name="buildjars" default="jar">
+
+    <path id="classpath">
+        <fileset dir="../AndroidV3/libs" includes="**/*.jar" />
+        <fileset dir="/Users/str/libraries/adt-bundle-mac/sdk/extras/google/google_play_services/libproject/google-play-services_lib/libs" includes="**/*.jar" />
+        <fileset dir="/Users/str/libraries/adt-bundle-mac/sdk/extras/android/support/v13" includes="**/*.jar" />
+        <fileset dir="/Users/str/libraries/adt-bundle-mac/sdk/platforms/android-18/" includes="**/*.jar" />
+    </path>
+
+    <path id="classpathwithBase">
+        <fileset dir="../AndroidV3/libs" includes="**/*.jar" />
+        <fileset dir="./build/jar" includes="**/*.jar" />
+        <fileset dir="/Users/str/libraries/adt-bundle-mac/sdk/platforms/android-18/" includes="**/*.jar" />
+    </path>
+
+    <target name="clean base">
+        <delete dir="build/base" />
+    </target>
+
+    <target name="clean pim">
+        <delete dir="build/pim" />
+    </target>
+
+    <target name="compile_base" depends="clean base">
+        <mkdir dir="build/base/classes" />
+
+        <javac target="1.6" srcdir="src-dao-gen" destdir="build/base/classes" classpathref="classpath" debug="on" excludes="org/celstec/dao/ARlearnDaoGenerator.java,org/celstec/arlearn2/android/listadapter/**">
+            <src path="src-network"></src>
+        </javac>
+        <javac target="1.6" srcdir="src-network" destdir="build/base/classes" classpathref="classpath" debug="on" excludes="org/celstec/arlearn2/android/listadapter/impl/**"/>
+    </target>
+
+    <target name="compile_pim" depends="clean pim">
+        <mkdir dir="build/pim/classes" />
+        <javac target="1.6" srcdir="src-pim" destdir="build/pim/classes" classpathref="classpathwithBase" debug="on" />
+    </target>
+
+    <target name="jar base" depends="compile_base">
+        <mkdir dir="build/base/jar" />
+        <jar destfile="build/jar/ARLearn-Android-Base.jar" basedir="build/base/classes">
+            <fileset dir="src-dao-gen" includes="**/*.java"/>
+            <fileset dir="src-network" includes="**/*.java"/>
+        </jar>
+    </target>
+
+    <target name="jar pim" depends="compile_pim">
+        <mkdir dir="build/base/jar" />
+        <jar destfile="build/jar/ARLearn-Android-PIM.jar" basedir="build/pim/classes">
+            <fileset dir="src-pim" includes="**/*.java"/>
+
+
+        </jar>
+    </target>
+</project>

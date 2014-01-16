@@ -1,17 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.celstec.arlearn.android"
+          package="org.celstec.arlearn2.android"
           android:versionCode="1"
           android:versionName="1.0">
 <uses-sdk android:minSdkVersion="8"/>
 <application android:label="@string/app_name" android:icon="@drawable/arlearn_icon_48">
-    <activity android:name=".StructureSlidingPaneLayout"
-              android:label="@string/app_name"
-              android:theme="@style/ARLearn">
+    <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="4030500" />
+    <!--<activity android:name=".StructureSlidingPaneLayout"-->
+              <!--android:label="@string/app_name"-->
+              <!--android:theme="@style/ARLearn">-->
+        <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN"/>-->
+            <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+        <!--</intent-filter>-->
+    <!--</activity>-->
+
+    <activity
+            android:name=".testAdapters.TestAdapters"
+            android:label="@string/app_name">
         <intent-filter>
             <action android:name="android.intent.action.MAIN"/>
             <category android:name="android.intent.category.LAUNCHER"/>
         </intent-filter>
     </activity>
+
+    <activity android:name=".testAdapters.MyGames" android:label="@string/app_name"/>
+    <activity android:name=".testAdapters.AllAccounts" android:label="@string/app_name"/>
+    <activity android:name=".testAdapters.ContributingElements" android:label="@string/app_name"/>
+    <activity android:name=".testAdapters.MyRuns" android:label="@string/app_name"/>
+    <activity android:name=".testAdapters.GeneralItems" android:label="@string/app_name"/>
+    <activity android:name=".testAdapters.Dependencies" android:label="@string/app_name"/>
+
+    <receiver android:name=".GCMWakefulReceiver" android:exported="true"
+              android:permission="com.google.android.c2dm.permission.SEND" >
+        <intent-filter>
+            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            <category android:name="org.celstec.arlearn2.android" />
+        </intent-filter>
+    </receiver>
+    <service android:name=".GCMIntentService" />
 </application>
+
+    <permission android:name="org.celstec.arlearn2.android.permission.C2D_MESSAGE"
+                android:protectionLevel="signature" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="org.celstec.arlearn2.android.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature
+            android:name="android.hardware.camera"
+            android:required="false" />
+    <uses-feature
+            android:name="android.hardware.camera.AUTOFOCUS"
+            android:required="false" />
+    <uses-feature
+            android:name="android.hardware.location.GPS"
+            android:required="false" />
+    <uses-feature
+            android:name="android.hardware.LOCATION"
+            android:required="false" />
 </manifest>
