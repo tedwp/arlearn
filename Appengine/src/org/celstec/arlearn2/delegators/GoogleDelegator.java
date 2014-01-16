@@ -63,7 +63,9 @@ public class GoogleDelegator {
 				}
 			}
 			
-		}
+		} else {
+            this.authToken =authToken;
+        }
 	}
 
 	public GoogleDelegator(Account account, String token){

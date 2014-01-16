@@ -189,7 +189,7 @@ public class RunDelegator extends GoogleDelegator {
 		RunAccessDelegator rd = new RunAccessDelegator(this);
 		rd.provideAccess(run.getRunId(), account, RunAccessJDO.OWNER);
 		if (this.account != null) {
-			new NotificationDelegator().broadcast(run, account.getFullId());
+			new NotificationDelegator(this).broadcast(run, account.getFullId());
 		}
 
         (new UpdateVariableInstancesForAll(authToken, this.account, run.getRunId(), run.getGameId(), 1)).scheduleTask();

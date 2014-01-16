@@ -36,6 +36,9 @@ public class UsersLoggedIn {
 	@Persistent
 	private String username;
 
+    @Persistent
+    private String authToken;
+
 	public Key getKey() {
 		return key;
 	}
@@ -57,5 +60,11 @@ public class UsersLoggedIn {
 		this.username = username;
 	}
 
-	
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
 }

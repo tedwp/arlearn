@@ -46,7 +46,7 @@ public class NotificationAPI extends Service {
 			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
 		APNDeviceDescription apnDeviceBean = (APNDeviceDescription) deserialise(deviceDescription, APNDeviceDescription.class, contentType);
-		new NotificationDelegator().registerDescription(apnDeviceBean);
+		new NotificationDelegator(this).registerDescription(apnDeviceBean);
 		System.out.println("register device "+apnDeviceBean);
 
 		return "{}";
@@ -61,7 +61,7 @@ public class NotificationAPI extends Service {
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept
 			) throws AuthenticationException {
 		
-		return serialise(new NotificationDelegator().listDevices(account), accept);
+		return serialise(new NotificationDelegator(this).listDevices(account), accept);
 	}
 	//{"aps":{"type":"org.celstec.arlearn2.beans.notification.GeneralItemModification","modificationType":7,"runId":74,"gameId":69,"itemId":71,"alert":"notification","sound":"default"}}
 	
@@ -73,7 +73,7 @@ public class NotificationAPI extends Service {
 			@PathParam("account") String userId,
 			@DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
 			@DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
-		new NotificationDelegator().broadcast(notification, userId);
+		new NotificationDelegator(this).broadcast(notification, userId);
 
 		return "{}";
 	}

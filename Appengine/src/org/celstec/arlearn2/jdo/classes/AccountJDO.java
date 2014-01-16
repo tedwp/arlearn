@@ -33,6 +33,7 @@ public class AccountJDO {
 	public final static int GOOGLECLIENT = 2;
 	public final static int LINKEDINCLIENT = 3;
     public final static int TWITTERCLIENT = 4;
+    public final static int WESPOTCLIENT = 5;
 
 	public final static int ADMINISTRATOR = 1;
 	public final static int USER = 2;
@@ -69,6 +70,9 @@ public class AccountJDO {
 	
 	@Persistent
 	private Integer accountLevel;
+
+    @Persistent
+    private Boolean allowTrackLocation;
 
 	public String getUniqueId() {
 		return uniqueId.getName();
@@ -149,5 +153,12 @@ public class AccountJDO {
 	public void setAccountLevel(Integer accountLevel) {
 		this.accountLevel = accountLevel;
 	}
-	
+
+    public Boolean getAllowTrackLocation() {
+        return allowTrackLocation;
+    }
+
+    public void setAllowTrackLocation(Boolean allowTrackLocation) {
+        this.allowTrackLocation = allowTrackLocation;
+    }
 }

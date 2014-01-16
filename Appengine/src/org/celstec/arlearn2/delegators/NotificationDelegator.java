@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.celstec.arlearn2.api.Service;
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.notification.APNDeviceDescription;
@@ -67,7 +68,12 @@ public class NotificationDelegator extends GoogleDelegator {
 		super(gd);
 	}
 
-	public NotificationDelegator() {
+    public NotificationDelegator(Service service) {
+        super(service);
+    }
+
+
+    public NotificationDelegator() {
 		super();
 	}
 
@@ -232,6 +238,12 @@ public class NotificationDelegator extends GoogleDelegator {
 		}
 	}
 
+    private void sendGlassNotification(String account, HashMap<String,Object> valueMap) {
+        if (GlassDelegator.glassCanProcess(account, valueMap)) {
+            new GlassDelegator(this).processGlassRequest(account, valueMap);
+        }
+    }
+
 	public void broadcast(Bean bean, String account) {
 			broadcast(JsonBeanSerialiser.serialiseToJson(bean), account);
 	}
@@ -258,6 +270,7 @@ public class NotificationDelegator extends GoogleDelegator {
 			}
 			sendGCMNotification(account, valueMap);
 			sendiOSNotificationAsJson(account, valueMap); //TODO rename
+            sendGlassNotification(account, valueMap);
 			channelService.sendMessage(new ChannelMessage(account, notification.toString()));
 			
 		} catch (JSONException e) {
@@ -265,5 +278,7 @@ public class NotificationDelegator extends GoogleDelegator {
 		}
 
 	}
+
+
 
 }

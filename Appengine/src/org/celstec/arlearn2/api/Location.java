@@ -18,12 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.api;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import org.celstec.arlearn2.beans.run.LocationUpdate;
@@ -49,4 +44,49 @@ public class Location extends Service {
 		return locationsString;
 		
 	}
+
+    @POST
+    @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("allowTrackLocation")
+    public String allowTrackLocation(@HeaderParam("Authorization") String token,
+                                     @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+                                     @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+        LocationDelegator ld = new LocationDelegator(this);
+        ld.allowTrackLocation(this.getAccount());
+
+        return "{}";
+    }
+
+    @POST
+    @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    public String submitUserLocation(@HeaderParam("Authorization") String token,
+                                     @FormParam("lat") Double lat,
+                                     @FormParam("lng") Double lng,
+                                     @FormParam("time") Long time,
+                                     @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+                                     @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+        LocationDelegator ld = new LocationDelegator(this);
+        ld.submitUserLocation(this.getAccount(), lat, lng, time);
+
+        return "{}";
+    }
+
+
+
+    @GET
+    @Path("/account/{account}")
+    @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    public String getLocation(@HeaderParam("Authorization") String token,
+                                     @PathParam("account") String account,
+                                     @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+                                     @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+
+        return new LocationDelegator(this).getUserLocations(account);
+    }
 }

@@ -33,6 +33,7 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 	private static RunConstants constants = GWT.create(RunConstants.class);
 
 	public static RunsTab instance;
+    RunConfigSection runConfigSection;
 	TeamPlayerConfigurationSection teamPlayerConfigurationSection;
 	TeamConfigurationSection teamConfigurationSection;
 	
@@ -96,9 +97,11 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 	
 	@Override
 	protected void initConfigSections() {
+        runConfigSection = new RunConfigSection();
 		teamPlayerConfigurationSection = new TeamPlayerConfigurationSection();
 		teamConfigurationSection = new TeamConfigurationSection();
-		addSectionDetail(teamPlayerConfigurationSection);
+        addSectionDetail(runConfigSection);
+        addSectionDetail(teamPlayerConfigurationSection);
 		addSectionDetail(teamConfigurationSection);
 		
 	}
@@ -107,47 +110,12 @@ public class RunsTab extends ListMasterSectionSectionStackDetailTab {
 	protected void masterRecordClick(RecordClickEvent event) {
 		if (event.getRecord() == null || event.getRecord().getAttributeAsLong(RunModel.RUNID_FIELD) == null) return;
 		Run run = new Run(((AbstractRecord) RunDataSource.getInstance().getRecord(event.getRecord().getAttributeAsLong(RunModel.RUNID_FIELD))).getCorrespondingJsonObject());
+        runConfigSection.loadRun(run);
 		teamPlayerConfigurationSection.loadRun(run);
 		teamConfigurationSection.loadRun(run);
 		showDetail();
 		
 	}
-
-//	@Override
-//	protected void masterRecordEditComplete(EditCompleteEvent event) {
-//		Map values = event.getNewValues();
-//		if (values.containsKey(RunModel.RUNID_FIELD)) {
-//			updateRun((Integer)values.get(RunModel.RUNID_FIELD), (String) values.get(RunModel.RUNTITLE_FIELD));
-//		} else {
-//			String gameIdString = ""+values.get(RunModel.GAMEID_FIELD);
-//			createRun(
-//					(String) values.get(RunModel.RUNTITLE_FIELD),
-//					Long.parseLong(gameIdString),
-//					getMasterListGrid().getRecord(event.getRowNum()));
-//		}	
-//		
-//	}
-	
-//	private void updateRun(long runId, String title) {
-//		Run existingRun = new Run(((AbstractRecord)RunDataSource.getInstance().getRecord(runId)).getCorrespondingJsonObject());
-//		existingRun.setTitle(title);
-//		RunClient.getInstance().createRun(existingRun,  new JsonCallback(){});
-//
-//	}
-	
-//	public void createRun(String title, Long gameId, final Record record) {
-//		Run newRun = new Run();
-//		newRun.setTitle(title);
-//		newRun.setGameId(gameId);
-//		RunClient.getInstance().createRun(newRun, new JsonCallback(){
-//			
-//			public void onJsonReceived(JSONValue jsonValue) {
-//				RunDataSource.getInstance().removeData(record);
-//				RunDataSource.getInstance().loadDataFromWeb();
-//			}
-//		});
-//		
-//	}
 
 	@Override
 	protected void deleteItem(final ListGridRecord rollOverRecord) {

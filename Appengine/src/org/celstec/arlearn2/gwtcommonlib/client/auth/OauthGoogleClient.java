@@ -28,13 +28,20 @@ public class OauthGoogleClient extends OauthClient {
 	}
 	
 	public String getLoginRedirectURL() {
-		 return "https://accounts.google.com/o/oauth2/auth?redirect_uri=" + redirect_uri + "&response_type=code&client_id=" + client_id_google + "&approval_prompt=force&scope=profile+email";
-//		return "https://accounts.google.com/o/oauth2/auth?redirect_uri=" + redirect_uri + 
-//				"&response_type=code" +
-//				"&state=%2Fprofile" +
-//				"&client_id=" + client_id_google + 
-//				"&approval_prompt=force" +
-//				"&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile";
+		 return "https://accounts.google.com/o/oauth2/auth?redirect_uri=" + redirect_uri +
+                 "&response_type=code&client_id=" + client_id_google + "&approval_prompt=force" +
+                 "&scope=profile+email";
 	}
+
+    public String getLoginRedirectURLWithGlass() {
+        //https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&
+        // client_id=279764831309-02t5m59sjr824ojv2sm8vk864jk5porg.apps.googleusercontent.com&
+        // redirect_uri=http://localhost:8080/oauth2callback
+        // &response_type=code
+        // &scope=https://www.googleapis.com/auth/glass.timeline%20https://www.googleapis.com/auth/glass.location%20https://www.googleapis.com/auth/userinfo.profile
+        return "https://accounts.google.com/o/oauth2/auth?redirect_uri=" + redirect_uri +
+                "&response_type=code&client_id=" + client_id_google + "&approval_prompt=force" +
+                "&scope=https://www.googleapis.com/auth/glass.timeline https://www.googleapis.com/auth/glass.location https://www.googleapis.com/auth/userinfo.profile  https://www.googleapis.com/auth/userinfo.email";
+    }
 
 }

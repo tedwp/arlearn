@@ -73,9 +73,9 @@ public class UsersDelegator extends GoogleDelegator {
 		rm.setModificationType(RunModification.CREATED);
 		rm.setRun(run);
 //		NotificationEngine.getInstance().notify(u.getEmail(), rm);
-		new NotificationDelegator().broadcast(run, u.getFullId());
+		new NotificationDelegator(this).broadcast(run, u.getFullId());
 		if (this.account != null) {
-			new NotificationDelegator().broadcast(u, u.getFullId());
+			new NotificationDelegator(this).broadcast(u, u.getFullId());
 		}
 		(new UpdateGeneralItemsVisibility(authToken, this.account, u.getRunId(), u.getEmail(), 1)).scheduleTask();
         (new UpdateVariableInstancesForUser(authToken, this.account, u.getFullId(), u.getRunId(), run.getGameId(), 1)).scheduleTask();
@@ -126,7 +126,7 @@ public class UsersDelegator extends GoogleDelegator {
 //		rm.setModificationType(RunModification.CREATED);
 //		rm.setRun(run);
 //		ChannelNotificator.getInstance().notify(u.getEmail(), rm);
-        (new NotificationDelegator()).broadcast(u, u.getFullId());
+        (new NotificationDelegator(this)).broadcast(u, u.getFullId());
 		return u;
 	}
 
@@ -238,7 +238,7 @@ public class UsersDelegator extends GoogleDelegator {
             User notificationUser = new User();
             notificationUser.setRunId(user.getRunId());
             notificationUser.setFullIdentifier(user.getFullId());
-			new NotificationDelegator().broadcast(notificationUser, user.getFullId());
+			new NotificationDelegator(this).broadcast(notificationUser, user.getFullId());
 		}
 		return user;
 	}
@@ -270,7 +270,7 @@ public class UsersDelegator extends GoogleDelegator {
 		rm.setRun(new Run());
 		rm.getRun().setRunId(runId);
 		NotificationEngine.getInstance().notify(email, rm);
-		new NotificationDelegator().broadcast(rm.getRun(), email);
+		new NotificationDelegator(this).broadcast(rm.getRun(), email);
 
 		// ChannelNotificator.getInstance().notify(email, rm);
 	}

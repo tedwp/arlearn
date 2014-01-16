@@ -52,7 +52,7 @@ public class GameAccessDelegator extends GoogleDelegator {
 			localID = st.nextToken();
 		}
 		GameAccessManager.addGameAccess(localID, accountType, gameId, accessRights);
-		new NotificationDelegator().broadcast(new Game(), accountString);	
+		new NotificationDelegator(this).broadcast(new Game(), accountString);
 
 	}
 
@@ -142,7 +142,7 @@ public class GameAccessDelegator extends GoogleDelegator {
 	
 	public void broadcastGameUpdate(Game game) {
 		for (GameAccess ga :GameAccessManager.getGameList(game.getGameId())){
-			new NotificationDelegator().broadcast(game, ga.getAccount());	
+			new NotificationDelegator(this).broadcast(game, ga.getAccount());
 		}
 	}
 

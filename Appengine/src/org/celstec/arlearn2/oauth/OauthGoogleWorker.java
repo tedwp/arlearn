@@ -78,7 +78,7 @@ public class OauthGoogleWorker extends OauthWorker {
 			if (profileJson.has("given_name")) given_name = profileJson.getString("given_name");
 			if (profileJson.has("family_name")) family_name = profileJson.getString("family_name");
 			if (profileJson.has("name")) name = profileJson.getString("name");
-			AccountJDO account = AccountManager.addAccount(id, AccountJDO.GOOGLECLIENT, email, given_name, family_name,name, picture);
+			AccountJDO account = AccountManager.addAccount(id, AccountJDO.GOOGLECLIENT, email, given_name, family_name,name, picture, false);
 			 saveAccessToken(account.getUniqueId(), accessToken);
 			 
 			 (new MigrateGamesTask(profileJson.getString("email"), AccountJDO.GOOGLECLIENT, profileJson.getString("id"),accessToken)).scheduleTask();

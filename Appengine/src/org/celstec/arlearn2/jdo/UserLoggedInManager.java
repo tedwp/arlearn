@@ -44,6 +44,7 @@ public class UserLoggedInManager {
 		UsersLoggedIn uli = new UsersLoggedIn();
 		uli.setKey(authToken.hashCode());
 		uli.setUsername(id);
+        uli.setAuthToken(authToken);
 		try {
 			pm.makePersistent(uli);
 		} finally {

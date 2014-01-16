@@ -18,10 +18,12 @@
  ******************************************************************************/
 package org.celstec.arlearn2.cache;
 
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import net.sf.jsr107cache.Cache;
 
+import org.celstec.arlearn2.delegators.LocationDelegator;
 import org.celstec.arlearn2.util.FusionCache;
 
 public class LocationCache {
@@ -53,4 +55,14 @@ public class LocationCache {
 	public void putLocationTableIdForRun(Long runId, Long tableId) {
 		cache.put(LOCATIONS_PREFIX+runId, tableId);
 	}
+
+    public void putLocationUser(String account, TreeSet<LocationDelegator.Location> locations) {
+        cache.put(LOCATIONS_PREFIX+account, locations);
+    }
+
+    public  TreeSet<LocationDelegator.Location> getLocations(String account) {
+        TreeSet<LocationDelegator.Location> result = (TreeSet<LocationDelegator.Location>) cache.get(LOCATIONS_PREFIX+account);
+        if (result == null) return new TreeSet<LocationDelegator.Location>();
+        return result;
+    }
 }

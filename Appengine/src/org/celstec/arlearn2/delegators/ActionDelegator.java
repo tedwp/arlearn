@@ -97,7 +97,7 @@ public class ActionDelegator extends GoogleDelegator{
 		ActionCache.getInstance().removeRunAction(action.getRunId());
 
         RunAccessDelegator rad = new RunAccessDelegator(this);
-        NotificationDelegator nd = new NotificationDelegator();
+        NotificationDelegator nd = new NotificationDelegator(this);
         for (RunAccess ra :rad.getRunAccess(r.getRunId()).getRunAccess()){
             nd.broadcast(action, ra.getAccount());
         }

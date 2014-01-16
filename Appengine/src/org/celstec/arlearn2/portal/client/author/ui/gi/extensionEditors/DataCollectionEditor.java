@@ -234,7 +234,11 @@ public class DataCollectionEditor extends VLayout implements ExtensionEditor{
 			openQuestion.put(OPENQUESTIONVALUEDESC,  new JSONString(form.getValueAsString(OPENQUESTIONVALUEDESC)==null?"":form.getValueAsString(OPENQUESTIONVALUEDESC)));
 			openQuestion.put(OPENQUESTIONTEXTDESC,  new JSONString(form.getValueAsString(OPENQUESTIONTEXTDESC)==null?"":form.getValueAsString(OPENQUESTIONTEXTDESC)));
 			gi.getJsonRep().put("openQuestion", openQuestion);
-		}
+		} else {
+            if (gi.getJsonRep().containsKey("openQuestion")) {
+                gi.getJsonRep().put("openQuestion", null);
+            }
+        }
 	}
 	
 	@Override

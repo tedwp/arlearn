@@ -12,11 +12,13 @@ public class AccountManager {
 
 
     public static Account addAccount(Account account) {
-        return toBean(addAccount(account.getLocalId(),account.getAccountType(), account.getEmail(), account.getGivenName(), account.getFamilyName(), account.getName(), account.getPicture()));
+        boolean allowTrackLocation = false;
+        if (account.getAllowTrackLocation()!=null) allowTrackLocation = account.getAllowTrackLocation();
+        return toBean(addAccount(account.getLocalId(),account.getAccountType(), account.getEmail(), account.getGivenName(), account.getFamilyName(), account.getName(), account.getPicture(), allowTrackLocation));
     }
 	public static AccountJDO addAccount(String localID, int accountType,
 			String email, String given_name, String family_name, String name,
-			String picture) {
+			String picture, boolean allowTrackLocation) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			try {
@@ -32,6 +34,7 @@ public class AccountManager {
 				account.setName(name);
 				account.setPicture(picture);
 				account.setLastModificationDate(System.currentTimeMillis());
+                account.setAllowTrackLocation(allowTrackLocation);
 				return account;
 			} catch (Exception e) {
 
@@ -48,7 +51,7 @@ public class AccountManager {
 			account.setPicture(picture);
 			account.setLastModificationDate(System.currentTimeMillis());
 			account.setAccountLevel(AccountJDO.USER);
-
+            account.setAllowTrackLocation(allowTrackLocation);
 			pm.makePersistent(account);
 			return account;
 		} finally {
@@ -89,6 +92,8 @@ public class AccountManager {
 		account.setGivenName(jdo.getGiven_name());
 		account.setPicture(jdo.getPicture());
 		account.setAccountLevel(jdo.getAccountLevel());
+        account.setAllowTrackLocation(jdo.getAllowTrackLocation());
+        if (account.getAllowTrackLocation()== null)  account.setAllowTrackLocation(false);
 		return account;
 	}
 

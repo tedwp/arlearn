@@ -69,7 +69,7 @@ public class DeleteUserAfterDeleteRun extends GenericBean {
                         User notificationUser = new User();
                         notificationUser.setRunId(user.getRunId());
                         notificationUser.setFullIdentifier(user.getFullId());
-                        new NotificationDelegator().broadcast(notificationUser, user.getFullId());
+                        new NotificationDelegator(getToken()).broadcast(notificationUser, user.getFullId());
                     }
                 }
             }

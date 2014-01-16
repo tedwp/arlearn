@@ -102,7 +102,7 @@ public class NotifyUsersFromGame extends GenericBean {
 					TeamModification tm = new TeamModification();
 					tm.setModificationType(TeamModification.ALTERED);
 					tm.setRunId(runId);
-					new NotificationDelegator().broadcast(tm, u.getFullId());
+					new NotificationDelegator(getToken()).broadcast(tm, u.getFullId());
 
 				}
 				if (u.getDeleted() == null || !u.getDeleted()) {
@@ -111,17 +111,17 @@ public class NotifyUsersFromGame extends GenericBean {
 					if (gim.getGeneralItem().getDependsOn() == null && GeneralItemDelegator.itemMatchesUserRoles(gim.getGeneralItem(), u.getRoles()) && (gim.getGeneralItem().getDeleted() == null || !gim.getGeneralItem().getDeleted())) {
 						GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), getRunId(), u.getFullId(), GeneralItemVisibilityManager.VISIBLE_STATUS, System.currentTimeMillis());
 					}
-					new NotificationDelegator().broadcast(gim, u.getFullId());
+					new NotificationDelegator(getToken()).broadcast(gim, u.getFullId());
 				}
 				if (modificationType == GeneralItemModification.VISIBLE) {
 					if (gim.getGeneralItem().getDeleted() == null || !gim.getGeneralItem().getDeleted()) {
 						GeneralItemVisibilityManager.setItemVisible(gim.getGeneralItem().getId(), getRunId(), u.getFullId(), GeneralItemVisibilityManager.VISIBLE_STATUS, System.currentTimeMillis());
 					}
-					new NotificationDelegator().broadcast(gim, u.getFullId());
+					new NotificationDelegator(getToken()).broadcast(gim, u.getFullId());
 				}
 				if (modificationType == GeneralItemModification.DELETED) {
 					GeneralItemVisibilityManager.delete(getRunId(), gim.getGeneralItem().getId(), u.getFullId(), null);
-					new NotificationDelegator().broadcast(gim, u.getFullId());
+					new NotificationDelegator(getToken()).broadcast(gim, u.getFullId());
 				}
 				if (modificationType == GameModification.ALTERED ||modificationType == GameModification.DELETED ||modificationType == GameModification.CREATED) {
 					UserManager.gameChanged(u);

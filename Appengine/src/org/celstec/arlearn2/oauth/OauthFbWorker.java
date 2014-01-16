@@ -85,6 +85,10 @@ public class OauthFbWorker extends OauthWorker {
 		 JSONObject profileJson;
 			try {
 				profileJson = new JSONObject(readURL(new URL("https://graph.facebook.com/me?access_token=" + accessToken)));
+                String picture = "";
+                if (profileJson.has("username")){
+                    picture = "http://graph.facebook.com/"+profileJson.getString("username")+"/picture";
+                }
 				AccountJDO account = AccountManager.addAccount(
 						 profileJson.getString("id"), 
 						 AccountJDO.FBCLIENT, 
@@ -92,7 +96,7 @@ public class OauthFbWorker extends OauthWorker {
 						 profileJson.getString("first_name"), 
 						 profileJson.getString("last_name"),
 						 profileJson.getString("first_name")+" "+profileJson.getString("last_name"),
-						 "http://graph.facebook.com/"+profileJson.getString("username")+"/picture");
+						 picture, false);
 				 saveAccessToken(account.getUniqueId(), accessToken);
 			} catch (Exception e) {
                 log.log(Level.SEVERE, e.getMessage(), e);

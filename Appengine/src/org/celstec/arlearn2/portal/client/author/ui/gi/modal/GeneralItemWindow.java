@@ -1,5 +1,6 @@
 package org.celstec.arlearn2.portal.client.author.ui.gi.modal;
 
+import com.google.gwt.core.client.GWT;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.GeneralItemModel;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.desktop.GeneralItemDataSource;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
@@ -27,6 +28,7 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
+import org.celstec.arlearn2.portal.client.author.ui.gi.i18.GeneralItemConstants;
 
 public abstract class GeneralItemWindow extends Window {
 	protected BasicMetadataEditor editor;
@@ -37,6 +39,8 @@ public abstract class GeneralItemWindow extends Window {
 	protected Game game;
 	LatLng coordinate;
 	protected HLayout buttonLayout;
+
+    private static GeneralItemConstants constants = GWT.create(GeneralItemConstants.class);
 
 	public GeneralItemWindow(GeneralItemsTab generalItemsTab, LatLng coordinate) {
 		this.game = generalItemsTab.getGame();
@@ -78,7 +82,7 @@ public abstract class GeneralItemWindow extends Window {
 	}
 
 	private void createToggleButton() {
-		toggleHtml = new IButton("Toggle HTML");
+		toggleHtml = new IButton(constants.toggleHtml());
 		toggleHtml.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				editor.toggleHtml();
@@ -87,7 +91,7 @@ public abstract class GeneralItemWindow extends Window {
 	}
 
 	private void createSubmitButton() {
-		submitButton = new IButton("create");
+		submitButton = new IButton(constants.create());
 		submitButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				createClick();

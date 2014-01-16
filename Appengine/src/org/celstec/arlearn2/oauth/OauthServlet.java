@@ -33,6 +33,7 @@ public class OauthServlet  extends HttpServlet {
 	private static final String GOOGLE = "google";
 	private static final String LINKEDIN = "linkedin";
     private static final String TWITTER = "twitter";
+    private static final String WESPOT = "wespot";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -69,6 +70,8 @@ public class OauthServlet  extends HttpServlet {
                 long expiresLong = 3600*24*7l;
                 resp.sendRedirect(baseUrl+"/oauth.html?accessToken=" + accessToken + "&type=" + AccountJDO.LINKEDINCLIENT + "&exp=" + expiresLong);
             }
+        } else if (req.getPathInfo().contains(WESPOT)) {
+            worker = new OauthWespotWorker();
         }
 		if (worker != null) {
 			worker.setBaseUrl(baseUrl);

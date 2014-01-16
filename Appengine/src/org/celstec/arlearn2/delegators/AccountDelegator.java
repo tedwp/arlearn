@@ -39,7 +39,7 @@ public class AccountDelegator extends GoogleDelegator {
 
 	public Account createAnonymousContact(Account inContact) {
 		String localID = UUID.randomUUID().toString();
-		return AccountManager.toBean(AccountManager.addAccount(localID, 0, inContact.getEmail(), inContact.getGivenName(), inContact.getFamilyName(), inContact.getName(), inContact.getPicture()));
+		return AccountManager.toBean(AccountManager.addAccount(localID, 0, inContact.getEmail(), inContact.getGivenName(), inContact.getFamilyName(), inContact.getName(), inContact.getPicture(), false));
 	}
 
 	public void makeSuper(String accountId) {

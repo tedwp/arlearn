@@ -356,7 +356,7 @@ public class VariableDelegator extends DependencyDelegator {
                 userList = ud.getUsers(vi.getRunId());
             }
             for (User u: userList.getUsers()) {
-                new NotificationDelegator().broadcast(vi, u.getFullId());
+                new NotificationDelegator(this).broadcast(vi, u.getFullId());
             }
 
             // update effect instance

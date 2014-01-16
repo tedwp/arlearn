@@ -84,7 +84,7 @@ public class OauthTwitterWorker {
             User user = twitter.verifyCredentials();
             AccountJDO account = AccountManager.addAccount(""+user.getId(), AccountJDO.TWITTERCLIENT, "",
                     "", "", user.getName(),
-                    user.getProfileImageURL());
+                    user.getProfileImageURL(),false);
             UserLoggedInManager.submitOauthUser(account.getUniqueId(), accessToken.getToken());
             return accessToken.getToken();
         } catch (TwitterException e) {

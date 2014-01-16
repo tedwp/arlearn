@@ -175,4 +175,37 @@ public interface GeneralItemConstants  extends Constants {
     @DefaultStringValue("Message dependent properties")
     String specificMetadata();
 
+    //Modal Window
+    @DefaultStringValue("Create Audio Object")
+    String createAudioObject();
+
+    @DefaultStringValue("Toggle HTML source")
+    String toggleHtml();
+
+    @DefaultStringValue("Create Single Choice Question with Images")
+    String createSingleChoiceWithImages();
+
+    @DefaultStringValue("Create Multiple Choice Question with Images")
+    String createMultipleChoiceWithImages();
+
+    @DefaultStringValue("Create Mozilla Open Badge Object")
+    String createMozillaOpenBadge();
+
+    @DefaultStringValue("Create Multiple Choice Question")
+    String createMultipleChoice();
+
+    @DefaultStringValue("Create Single Choice Question")
+    String createSingleChoice();
+
+    @DefaultStringValue("Create Narrator Item")
+    String createNarratorItem();
+
+    @Constants.DefaultStringValue("Create QR Scanner")
+    String createQrScanner();
+
+    @Constants.DefaultStringValue("Create Video Object")
+    String createVideoObject();
+
+    @Constants.DefaultStringValue("Create Youtube Object")
+    String createYoutubeObject();
 }

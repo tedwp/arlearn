@@ -26,5 +26,9 @@ public class AccountCache extends GenericCache {
 	public Account getAccount(String key) {
 		return (Account) getCache().get(CACHE_ACOUNTS_PREFIX+key);
 	}
+
+    public void removeAccount(String key) {
+        getCache().remove(CACHE_ACOUNTS_PREFIX+key);
+    }
 	
 }

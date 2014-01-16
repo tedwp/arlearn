@@ -296,7 +296,7 @@ public class GeneralItemDelegator extends DependencyDelegator {
 //                giBroadcast.setId(generalItem.getId());
 //                giBroadcast.setGameId(generalItem.getGameId());
 //                giBroadcast.se
-				new NotificationDelegator().broadcast(gim, u.getFullId());
+				new NotificationDelegator(this).broadcast(gim, u.getFullId());
 
 			}
 
@@ -320,7 +320,7 @@ public class GeneralItemDelegator extends DependencyDelegator {
 //                GeneralItem giBroadcast = new GeneralItem();
 //                giBroadcast.setId(generalItem.getId());
 //                giBroadcast.setGameId(generalItem.getGameId());
-                new NotificationDelegator().broadcast(gim, u.getFullId());
+                new NotificationDelegator(this).broadcast(gim, u.getFullId());
 			}
 		}
 	}

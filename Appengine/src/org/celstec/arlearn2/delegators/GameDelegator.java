@@ -337,7 +337,7 @@ public class GameDelegator extends GoogleDelegator {
 		gm.setModificationType(GameModification.DELETED);
 		gm.setGame(g);
 		if (this.account != null) {
-			new NotificationDelegator().broadcast(g, account.getFullId());
+			new NotificationDelegator(this).broadcast(g, account.getFullId());
 		}
 		ChannelNotificator.getInstance().notify(myAccount, gm);
 

@@ -52,4 +52,11 @@ public class Version extends Service {
 			throws AuthenticationException {
 		return serialise(VersionManager.getVersion(versionCode), accept);
 	}
+
+    @GET
+    @Produces({ MediaType.TEXT_PLAIN})
+    @Path("/time")
+    public String getServerTime() {
+        return ""+System.currentTimeMillis();
+    }
 }

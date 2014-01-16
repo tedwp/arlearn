@@ -55,7 +55,7 @@ public class ResponseDelegator extends GoogleDelegator {
 		ResponseManager.addResponse(r.getGeneralItemId(), r.getResponseValue(), run.getRunId(), r.getUserEmail(), r.getTimestamp());
 
         RunAccessDelegator rad = new RunAccessDelegator(this);
-        NotificationDelegator nd = new NotificationDelegator();
+        NotificationDelegator nd = new NotificationDelegator(this);
         for (RunAccess ra :rad.getRunAccess(r.getRunId()).getRunAccess()){
             nd.broadcast(r, ra.getAccount());
         }

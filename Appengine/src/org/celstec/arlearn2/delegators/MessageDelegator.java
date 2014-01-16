@@ -15,7 +15,7 @@ public class MessageDelegator extends GoogleDelegator {
 
 
 	public Message sendMessage(Message message, String userId) {
-		new NotificationDelegator().broadcast(message, account.getFullId());
+		new NotificationDelegator(this).broadcast(message, account.getFullId());
 		return message;
 	}
 	

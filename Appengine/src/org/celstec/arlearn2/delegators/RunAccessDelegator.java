@@ -101,7 +101,7 @@ public class RunAccessDelegator extends GoogleDelegator {
 
 	public void broadcastRunUpdate(Run run) {
 		for (RunAccess ra :RunAccessManager.getRunAccessList(run.getRunId())){
-			new NotificationDelegator().broadcast(run, ra.getAccount());	
+			new NotificationDelegator(this).broadcast(run, ra.getAccount());
 		}
 		
 		

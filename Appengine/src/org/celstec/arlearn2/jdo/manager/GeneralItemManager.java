@@ -76,6 +76,18 @@ public class GeneralItemManager {
 		}
 	}
 
+    public static GeneralItem getGeneralItem(Long itemId) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        try {
+            return toBean(pm.getObjectById(GeneralItemJDO.class, KeyFactory
+                    .createKey(GeneralItemJDO.class.getSimpleName(), itemId)));
+        } catch (Exception e) {
+           return null;
+        } finally {
+            pm.close();
+        }
+    }
+
 	public static List<GeneralItem> getGeneralitems(Long gameId, String generalItemId, String type) {
 		ArrayList<GeneralItem> returnProgressDefinitions = new ArrayList<GeneralItem>();
 		PersistenceManager pm = PMF.get().getPersistenceManager();

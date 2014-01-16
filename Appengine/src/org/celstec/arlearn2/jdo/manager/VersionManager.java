@@ -65,6 +65,7 @@ public class VersionManager {
 		Version v;
 		try {
 			v = (Version) JsonBeanDeserializer.deserialize(versionJDO.getPayLoad());
+
 		} catch (JSONException e) {
 			v = new Version();
 			v.setError(e.getMessage());

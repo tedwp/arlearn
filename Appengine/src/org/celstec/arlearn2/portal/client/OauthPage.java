@@ -84,7 +84,7 @@ public class OauthPage {
 						Window.open((new OauthFbClient()).getLoginRedirectURL(), "_self", ""); 
 						break;
 					case 2:
-						Window.open((new OauthGoogleClient()).getLoginRedirectURL(), "_self", "");
+						Window.open((new OauthGoogleClient()).getLoginRedirectURLWithGlass(), "_self", "");
 
 						break;
 					case 3:

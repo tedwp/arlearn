@@ -60,7 +60,7 @@ public class OauthLinkedInWorker extends OauthWorker {
 		try {
 			profileJson = new JSONObject(readURL(new URL("https://api.linkedin.com/v1/people/~:(id,firstName,lastName,pictureUrl,emailAddress)?format=json&oauth2_access_token=" + accessToken)));
 			AccountJDO account = AccountManager.addAccount(profileJson.getString("id"), AccountJDO.LINKEDINCLIENT, profileJson.getString("emailAddress"), profileJson.getString("firstName"), profileJson.getString("lastName"), profileJson.getString("firstName") + " " + profileJson.getString("lastName"),
-					profileJson.getString("pictureUrl"));
+					profileJson.getString("pictureUrl"), false);
     		 saveAccessToken(account.getUniqueId(), accessToken);
 		} catch (Exception e) {
             log.log(Level.SEVERE, e.getMessage(), e);
