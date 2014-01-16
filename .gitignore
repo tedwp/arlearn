@@ -1,7 +1,7 @@
 /gwt-unitCache
 /lib
 .idea
-.idea/*
+/idea/*
 *.iml
 .settings
 Appengine/.gwt/.gwt-log
