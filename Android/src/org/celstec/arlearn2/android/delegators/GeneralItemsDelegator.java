@@ -20,6 +20,7 @@ package org.celstec.arlearn2.android.delegators;
 
 import java.util.*;
 
+import android.util.Log;
 import org.celstec.arlearn2.android.asynctasks.db.CreateDownloadGeneralItems;
 import org.celstec.arlearn2.android.asynctasks.db.CreateProximityEvents;
 import org.celstec.arlearn2.android.asynctasks.db.GeneralItemDependencyHandler;
@@ -69,8 +70,10 @@ public class GeneralItemsDelegator {
     }
 
 	public void synchronizeGeneralItemsWithServer(Context ctx, Long runId, Long gameId, boolean overrideLastSyncDateCheck) {
+        Log.i("TEST", "synchronizeGeneralItemsWithServer");
         long currentTime = System.currentTimeMillis();
         if (!overrideLastSyncDateCheck && (lastSyncDate + 20000 > currentTime)) {
+            Log.i("TEST", "NOT UPDATING");
             return;
         }
         lastSyncDate = currentTime;

@@ -133,19 +133,23 @@ public class MediaCacheGeneralItems extends GenericDbTable {
 			case REP_STATUS_DONE:
 				MediaGeneralItemCache.getInstance(gameId).addDoneDownload(di);
                 File md5File = new File(di.getLocalPath().getPath() + ".md5");
-                if (di.getItemId() == 4373001) {
-                    System.out.println("strange");
-                }
+//                if (di.getItemId() == 4373001) {
+//                    System.out.println("strange");
+//                }
                 if (md5File.exists()) {
                     try {
                         String md5String = deserializeString(md5File);
-                        Log.e("FILE", ""+di.getItemId()+ " " +di.getLocalId() + " " +md5String + "     -   " +di.getMd5Hash());
+//                        Log.e("FILE", ""+di.getItemId()+ " " +di.getLocalId() + " " +md5String + "     -   " +di.getMd5Hash());
                         if (di.getMd5Hash() == null || !di.getMd5Hash().equals(md5String)) {
                             JSONObject description = new JSONObject();
                             description.put("itemId", di.getItemId());
                             description.put("md5Hash", md5String);
                             description.put("localId", di.getLocalId());
                             array.put(description);
+                            if (array.length() == 20){
+                                Log.e("FILE", ""+array.toString());
+                                array = new JSONArray();
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

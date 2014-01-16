@@ -30,6 +30,7 @@ public class VersionSerializer extends BeanSerializer {
 		JSONObject returnObject = super.toJSON(bean);
 		try {
 			if (versionBean.getVersionCode() != null) returnObject.put("versionCode", versionBean.getVersionCode());
+            if (versionBean.getServerTime() != null) returnObject.put("serverTime", versionBean.getServerTime());
 			if (versionBean.getServiceUrl() != null) returnObject.put("serviceUrl", versionBean.getServiceUrl());
 		} catch (JSONException e) {
 			e.printStackTrace();

@@ -73,15 +73,11 @@ public class LocationService extends IntentService {
 	private boolean continueRunning = true;
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		if (intent.getExtras() != null && intent.getExtras().getSerializable("bean") != null) {
-			Config config = (Config) intent.getExtras().getSerializable("bean");
-//			List<LocationUpdateConfig> list = config.getLocationUpdates();
-//			long gcd = list.get(0).getTimeBetweenUpdates();
-//			for (int i =1; i< list.size();i++){
-//				gcd = gcdThing(gcd, list.get(i).getTimeBetweenUpdates());
-//			}
+//		if (intent.getExtras() != null && intent.getExtras().getSerializable("bean") != null) {
+//			Config config = (Config) intent.getExtras().getSerializable("bean");
+
 			while (continueRunning) {
-				// Log.i("service", "is still running");
+
 				synchronized (this) {
 					Location location = getBestLocation(this);
 //							locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -89,23 +85,20 @@ public class LocationService extends IntentService {
 						LocationUpdate locUpdate = new LocationUpdate();
 						locUpdate.setLat(location.getLatitude());
 						locUpdate.setLng(location.getLongitude());
-						LocationClient.getLocationClient().postLocation(PropertiesAdapter.getInstance(this).getAuthToken(),PropertiesAdapter.getInstance(this).getCurrentRunId(), locUpdate);
+                        Log.e("TEST", "new location submitting "+location.getLatitude()+ " "+location.getTime());
+//						LocationClient.getLocationClient().postLocation(PropertiesAdapter.getInstance(this).getAuthToken(),PropertiesAdapter.getInstance(this).getCurrentRunId(), locUpdate);
+                        LocationClient.getLocationClient().submitLocation(PropertiesAdapter.getInstance(this).getAuthToken(),
+                                location.getLatitude(), location.getLongitude(), System.currentTimeMillis()
+                        );
 					}
 					try {
-						wait(2000);
+						wait(10000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
 			}
-//			if (locMgr != null) {
-//				locMgr.removeUpdates(unSensitiveListener);
-//				locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-//						gcd,
-//						Constants.DISTANCE_GPS_LISTENER_IN_METERES_UNSENSITIVE,
-//						unSensitiveListener);
-//			}
-		}
+//		}
 		
 
 	}

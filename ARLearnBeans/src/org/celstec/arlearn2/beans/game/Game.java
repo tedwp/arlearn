@@ -84,6 +84,7 @@ public class Game extends GameBean implements Serializable, Comparable<Game>{
 
 
 	public Config getConfig() {
+        if (config == null) return new Config();
 		return config;
 	}
 

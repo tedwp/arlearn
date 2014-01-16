@@ -23,9 +23,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import org.celstec.arlearn2.android.R;
+import org.celstec.arlearn2.android.asynctasks.network.SynchronizeGeneralItemVisiblityTask;
 import org.celstec.arlearn2.android.cache.GeneralItemVisibilityCache;
 import org.celstec.arlearn2.android.cache.RunCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
@@ -63,7 +65,23 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
 
         RunDelegator.getInstance().loadRun(this, runId);
         ResponseDelegator.getInstance().synchronizeResponsesWithServer(this, runId);
+
     }
+
+
+    private Handler mHandler = new Handler();
+
+    protected Runnable timeTask = new Runnable() {
+        public void run() {
+                try {
+                    SynchronizeGeneralItemVisiblityTask syncVisItemsTask_2 = new SynchronizeGeneralItemVisiblityTask();
+                    syncVisItemsTask_2.setRunId(runId);
+                    syncVisItemsTask_2.run(ListMessagesActivity.this);
+                }catch (Exception e) {
+                }
+            mHandler.postDelayed(timeTask, 60000);
+        }
+    };
 
     @Override
     protected void onSaveInstanceState (Bundle outState) {
@@ -91,6 +109,8 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
         if (gameId != null) {
             GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(this, runId, gameId);
             loadMessagesFromCache();
+            mHandler.postDelayed(timeTask, 10000);
+
 
             super.onResume();
         } else {
@@ -119,6 +139,7 @@ public class ListMessagesActivity extends GeneralActivity implements ListitemCli
     @Override
     protected void onPause() {
         super.onPause();
+        mHandler.removeCallbacks(timeTask);
     }
 
     @Override

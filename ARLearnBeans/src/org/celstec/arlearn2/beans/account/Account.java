@@ -41,6 +41,8 @@ public class Account extends Bean {
 	private String picture;
 	private Integer accountLevel;
 
+    private Boolean allowTrackLocation;
+
 	
 	public String getFullId() {
 		return accountType+":"+localId;
@@ -118,7 +120,16 @@ public class Account extends Bean {
 		this.accountLevel = accountLevel;
 	}
 
-	@Override
+    public Boolean getAllowTrackLocation() {
+        if (allowTrackLocation == null) return false;
+        return allowTrackLocation;
+    }
+
+    public void setAllowTrackLocation(Boolean allowTrackLocation) {
+        this.allowTrackLocation = allowTrackLocation;
+    }
+
+    @Override
 	public boolean equals(Object obj) {
 		Account other = (Account ) obj;
 		return super.equals(obj) && 
@@ -156,6 +167,7 @@ public class Account extends Bean {
 			if (object.has("familyName")) bean.setFamilyName(object.getString("familyName"));
 			if (object.has("picture")) bean.setPicture(object.getString("picture"));
 			if (object.has("accountLevel")) bean.setAccountLevel(object.getInt("accountLevel"));
+            if (object.has("allowTrackLocation")) bean.setAllowTrackLocation(object.getBoolean("allowTrackLocation"));
 		}
 	};
 	
@@ -178,6 +190,7 @@ public class Account extends Bean {
 				if (accountBean.getFamilyName() != null) returnObject.put("familyName", accountBean.getFamilyName());
 				if (accountBean.getPicture() != null) returnObject.put("picture", accountBean.getPicture());
 				if (accountBean.getAccountLevel() != null) returnObject.put("accountLevel", accountBean.getAccountLevel());
+                if (accountBean.getAllowTrackLocation() != null) returnObject.put("allowTrackLocation", accountBean.getAllowTrackLocation());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

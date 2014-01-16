@@ -142,7 +142,7 @@ public class AudioPlayerDelegate {
 		}
 	};
 
-	private void startPlaying() {
+	public void startPlaying() {
 		setStatus(PLAYING);
 		this.mPlayer.seekTo(0);
 		this.mPlayer.start();

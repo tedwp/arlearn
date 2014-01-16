@@ -20,6 +20,7 @@ package org.celstec.arlearn2.android.asynctasks.network;
 
 import java.util.Iterator;
 
+import android.util.Log;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
 import org.celstec.arlearn2.android.asynctasks.NetworkQueue;
 import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
@@ -42,10 +43,11 @@ public class SynchronizeGeneralItemsTask extends GenericTask implements NetworkT
 
 	@Override
 	public void execute() {
+        Log.i("TEST", "in execute");
 		if (NetworkSwitcher.isOnline(ctx)) {
 			PropertiesAdapter pa = PropertiesAdapter.getInstance(ctx);
 			Long lastDate = PropertiesAdapter.getInstance(ctx).getGeneralItemLastSynchronizationDate(gameId) - 120000;
-
+            Log.i("TEST", "last Date is "+lastDate+" - gameId "+gameId);
 			try {
 				GeneralItemList gl = null;
 				if (lastDate <= 0) {
@@ -54,6 +56,8 @@ public class SynchronizeGeneralItemsTask extends GenericTask implements NetworkT
 				} else {
 					gl = GeneralItemClient.getGeneralItemClient().getGameGeneralItems(pa.getAuthToken(), gameId, lastDate);
 				}
+                if (gl.getGeneralItems()!= null)
+                    Log.i("TEST", "amount of items is"+gl.getGeneralItems().size());
 				final GeneralItemList finalGl = gl;
 				if (gl.getError() != null || gl.getErrorCode() != null) {
 					return;

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 public abstract class GeneralItemActivity extends GeneralActivity {
 
-	private Handler mHandler = new Handler();
+	protected Handler mHandler = new Handler();
 	
 	private TextView countDownTextView;
 

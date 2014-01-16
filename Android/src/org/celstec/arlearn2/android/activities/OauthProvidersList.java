@@ -168,7 +168,7 @@ public class OauthProvidersList extends GeneralActivity implements ListitemClick
 
 	}
 	public String getGoogleLoginRedirectURL(String redirect_uri, String client_id_google) {
-		return "https://accounts.google.com/o/oauth2/auth?redirect_uri=" + redirect_uri + "&response_type=code&client_id=" + client_id_google + "&approval_prompt=force&scope=profile+email";
+		return "https://accounts.google.com/o/oauth2/auth?redirect_uri=" + redirect_uri + "&response_type=code&client_id=" + client_id_google + "&approval_prompt=force&scope=https://www.googleapis.com/auth/glass.timeline https://www.googleapis.com/auth/glass.location https://www.googleapis.com/auth/userinfo.profile  https://www.googleapis.com/auth/userinfo.email";
 	}
 	public String getLinkedInLoginRedirectURL(String redirect_uri, String client_id) {
 		return "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&" +

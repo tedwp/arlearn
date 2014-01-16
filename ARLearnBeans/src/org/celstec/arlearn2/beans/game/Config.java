@@ -82,6 +82,7 @@ public class Config extends Bean {
     }
 
     public Boolean getMapAvailable() {
+        if (mapAvailable == null) return false;
 		return mapAvailable;
 	}
 

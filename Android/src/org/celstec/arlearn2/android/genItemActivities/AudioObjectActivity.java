@@ -48,7 +48,19 @@ public class AudioObjectActivity extends NarratorItemActivity {
 		apd =  new AudioPlayerDelegate(localAudioUri, this, completeAction);
 		apd.setPlayButton((ImageView) findViewById(R.id.ao_playButton));
 		apd.setStopButton((ImageView) findViewById(R.id.ao_stopButton));
+        if (getGeneralItem().getAutoPlay()!= null && getGeneralItem().getAutoPlay()) {
+            mHandler.postDelayed(playTask, 1000);
+        }
 	}
+
+
+    protected Runnable playTask = new Runnable() {
+        public void run() {
+
+            apd.startPlaying();
+        }
+    };
+
 	
 	protected int getContentView() {
 		return R.layout.gi_detail_audioobject;

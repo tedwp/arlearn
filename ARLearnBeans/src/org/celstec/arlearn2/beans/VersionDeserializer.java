@@ -40,6 +40,7 @@ public class VersionDeserializer extends BeanDeserializer{
 		Version version = (Version) genericBean;
 		if (object.has("versionCode")) version.setVersionCode(object.getInt("versionCode"));
 		if (object.has("serviceUrl")) version.setServiceUrl(object.getString("serviceUrl"));
+        if (object.has("serverTime")) version.setServerTime(object.getLong("serverTime"));
 	}
 
 }

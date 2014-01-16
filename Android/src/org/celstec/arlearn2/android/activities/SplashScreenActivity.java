@@ -37,6 +37,7 @@ import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.arlearn2.android.menu.MenuHandler;
 import org.celstec.arlearn2.android.service.ChannelAPINotificationService;
+import org.celstec.arlearn2.android.service.LocationService;
 import org.celstec.arlearn2.beans.Info;
 import org.celstec.arlearn2.client.InfoClient;
 
@@ -79,6 +80,10 @@ public class SplashScreenActivity extends GeneralActivity {
 		clicked = false;
 		String fullName = PropertiesAdapter.getInstance(this).getFullName();
 		String pictureUrl = PropertiesAdapter.getInstance(this).getPicture();
+        if (PropertiesAdapter.getInstance(this).getAllowTrackLocation()) {
+
+            startService(new Intent(this, LocationService.class));
+        }
 		LinearLayout accountLayout = (LinearLayout) findViewById(R.id.accountLayout);
 		if (fullName == null) {
 			

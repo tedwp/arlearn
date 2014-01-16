@@ -18,7 +18,10 @@
  ******************************************************************************/
 package org.celstec.arlearn2.client;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.beans.Version;
+import org.celstec.arlearn2.client.exception.ARLearnException;
 
 public class VersionClient extends GenericClient{
 	
@@ -42,4 +45,18 @@ public class VersionClient extends GenericClient{
 	public Version createVersion(Version version) {
 		return (Version) executePost(getUrlPrefix(), null, version, Version.class);
 	}
+
+    public long getTime() {
+        HttpResponse response = conn.executeGET(getUrlPrefix()+"/time", null, "text/plain");
+        try {
+            return Long.parseLong((String) EntityUtils.toString(response.getEntity()));
+
+        } catch (Exception e) {
+            if (e instanceof ARLearnException) throw (ARLearnException) e;
+            return 0l;
+        }
+
+    }
+
+
 }

@@ -77,8 +77,10 @@ public class DownloadDetailsTask extends AsyncTask<Void, String, Void> {
 		}
 		PropertiesAdapter.getInstance(ctx).setFullId(newAddress);
 		PropertiesAdapter.getInstance(ctx).setFullName(ac.getName());
+        PropertiesAdapter.getInstance(ctx).setAllowTrackLocation(ac.getAllowTrackLocation());
 		PropertiesAdapter.getInstance(ctx).setParticipateGameLastSynchronizationDate(0l);
 		PropertiesAdapter.getInstance(ctx).setMyGameLastSynchronizationDate(0l);
+
 		PropertiesAdapter.getInstance(ctx).setRunLastSynchronizationDate(0l);
         if (ac.getAccountLevel()== null) ac.setAccountLevel(2);
 		PropertiesAdapter.getInstance(ctx).setAccountLevel(ac.getAccountLevel());

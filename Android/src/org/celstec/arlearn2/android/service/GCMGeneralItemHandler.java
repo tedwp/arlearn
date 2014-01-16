@@ -17,7 +17,7 @@ public class GCMGeneralItemHandler extends GCMHandler {
 
 	@Override
 	public void handle() {
-		GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(ctx, runId, gameId);
+		GeneralItemsDelegator.getInstance().synchronizeGeneralItemsWithServer(ctx, runId, gameId, true);
 
 	}
 

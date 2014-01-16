@@ -51,4 +51,14 @@ public class LocationClient extends GenericClient{
 			return locUpdate;
 		}
 	}
+
+    public void submitLocation(String token, double lat, double lng, long time) {
+        String postString = "lat="+lat+"&lng="+lng+"&time="+time;
+        HttpResponse response = ConnectionFactory.getConnection().executePOST(getUrlPrefix(), token, "application/json", postString, "application/json");
+        String entry;
+        try {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

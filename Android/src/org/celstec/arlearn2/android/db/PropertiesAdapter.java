@@ -246,4 +246,19 @@ public class PropertiesAdapter {
 		return getDefaultPrefs().getInt(Constants.ACCOUNT_Level, Account.USER);
 
 	}
+
+    public void setAllowTrackLocation(Boolean allowTrackLocation) {
+        boolean track = false;
+        if (allowTrackLocation != null) {
+            track = allowTrackLocation;
+        }
+        SharedPreferences.Editor editor = getDefaultPrefs().edit();
+        editor.putBoolean("trackLocation", track);
+        editor.commit();
+    }
+
+    public boolean getAllowTrackLocation(){
+        return getDefaultPrefs().getBoolean("trackLocation", false);
+
+    }
 }

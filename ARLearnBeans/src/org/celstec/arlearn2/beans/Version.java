@@ -22,6 +22,7 @@ public class Version extends Bean {
 
 	private Integer versionCode;
 	private String serviceUrl;
+    private Long serverTime;
 
 	public Integer getVersionCode() {
 		return versionCode;
@@ -39,7 +40,15 @@ public class Version extends Bean {
 		this.serviceUrl = serviceUrl;
 	}
 
-	@Override
+    public Long getServerTime() {
+        return serverTime;
+    }
+
+    public void setServerTime(Long serverTime) {
+        this.serverTime = serverTime;
+    }
+
+    @Override
 	public boolean equals(Object obj) {
 		Version other = (Version) obj;
 		return super.equals(obj) && nullSafeEquals(getVersionCode(), other.getVersionCode()) && 
