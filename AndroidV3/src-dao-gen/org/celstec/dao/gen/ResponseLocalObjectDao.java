@@ -1,12 +1,17 @@
 package org.celstec.dao.gen;
 
+import java.util.List;
+import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
+import de.greenrobot.dao.internal.SqlUtils;
 import de.greenrobot.dao.internal.DaoConfig;
+import de.greenrobot.dao.query.Query;
+import de.greenrobot.dao.query.QueryBuilder;
 
 import org.celstec.dao.gen.ResponseLocalObject;
 
@@ -24,15 +29,28 @@ public class ResponseLocalObjectDao extends AbstractDao<ResponseLocalObject, Lon
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property ContentType = new Property(1, String.class, "contentType", false, "CONTENT_TYPE");
-        public final static Property FileName = new Property(2, String.class, "fileName", false, "FILE_NAME");
-        public final static Property Value = new Property(3, String.class, "value", false, "VALUE");
-        public final static Property IsSynchronized = new Property(4, Boolean.class, "isSynchronized", false, "IS_SYNCHRONIZED");
-        public final static Property TimeStamp = new Property(5, Long.class, "timeStamp", false, "TIME_STAMP");
-        public final static Property Width = new Property(6, Integer.class, "width", false, "WIDTH");
-        public final static Property Height = new Property(7, Integer.class, "height", false, "HEIGHT");
+        public final static Property Type = new Property(1, Integer.class, "type", false, "TYPE");
+        public final static Property ContentType = new Property(2, String.class, "contentType", false, "CONTENT_TYPE");
+        public final static Property UriAsString = new Property(3, String.class, "UriAsString", false, "URI_AS_STRING");
+        public final static Property Value = new Property(4, String.class, "value", false, "VALUE");
+        public final static Property IsSynchronized = new Property(5, Boolean.class, "isSynchronized", false, "IS_SYNCHRONIZED");
+        public final static Property Revoked = new Property(6, Boolean.class, "revoked", false, "REVOKED");
+        public final static Property NextSynchronisationTime = new Property(7, Long.class, "nextSynchronisationTime", false, "NEXT_SYNCHRONISATION_TIME");
+        public final static Property AmountOfSynchronisationAttempts = new Property(8, Integer.class, "amountOfSynchronisationAttempts", false, "AMOUNT_OF_SYNCHRONISATION_ATTEMPTS");
+        public final static Property TimeStamp = new Property(9, Long.class, "timeStamp", false, "TIME_STAMP");
+        public final static Property Width = new Property(10, Integer.class, "width", false, "WIDTH");
+        public final static Property Height = new Property(11, Integer.class, "height", false, "HEIGHT");
+        public final static Property Lat = new Property(12, Double.class, "lat", false, "LAT");
+        public final static Property Lng = new Property(13, Double.class, "lng", false, "LNG");
+        public final static Property RunId = new Property(14, long.class, "runId", false, "RUN_ID");
+        public final static Property GeneralItem = new Property(15, long.class, "generalItem", false, "GENERAL_ITEM");
+        public final static Property Account = new Property(16, long.class, "account", false, "ACCOUNT");
     };
 
+    private DaoSession daoSession;
+
+    private Query<ResponseLocalObject> runLocalObject_ResponsesQuery;
+    private Query<ResponseLocalObject> generalItemLocalObject_ResponsesQuery;
 
     public ResponseLocalObjectDao(DaoConfig config) {
         super(config);
@@ -40,6 +58,7 @@ public class ResponseLocalObjectDao extends AbstractDao<ResponseLocalObject, Lon
     
     public ResponseLocalObjectDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -47,13 +66,22 @@ public class ResponseLocalObjectDao extends AbstractDao<ResponseLocalObject, Lon
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'RESPONSE_LOCAL_OBJECT' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
-                "'CONTENT_TYPE' TEXT NOT NULL ," + // 1: contentType
-                "'FILE_NAME' TEXT NOT NULL ," + // 2: fileName
-                "'VALUE' TEXT NOT NULL ," + // 3: value
-                "'IS_SYNCHRONIZED' INTEGER," + // 4: isSynchronized
-                "'TIME_STAMP' INTEGER," + // 5: timeStamp
-                "'WIDTH' INTEGER," + // 6: width
-                "'HEIGHT' INTEGER);"); // 7: height
+                "'TYPE' INTEGER," + // 1: type
+                "'CONTENT_TYPE' TEXT," + // 2: contentType
+                "'URI_AS_STRING' TEXT," + // 3: UriAsString
+                "'VALUE' TEXT," + // 4: value
+                "'IS_SYNCHRONIZED' INTEGER," + // 5: isSynchronized
+                "'REVOKED' INTEGER," + // 6: revoked
+                "'NEXT_SYNCHRONISATION_TIME' INTEGER," + // 7: nextSynchronisationTime
+                "'AMOUNT_OF_SYNCHRONISATION_ATTEMPTS' INTEGER," + // 8: amountOfSynchronisationAttempts
+                "'TIME_STAMP' INTEGER," + // 9: timeStamp
+                "'WIDTH' INTEGER," + // 10: width
+                "'HEIGHT' INTEGER," + // 11: height
+                "'LAT' REAL," + // 12: lat
+                "'LNG' REAL," + // 13: lng
+                "'RUN_ID' INTEGER NOT NULL ," + // 14: runId
+                "'GENERAL_ITEM' INTEGER NOT NULL ," + // 15: generalItem
+                "'ACCOUNT' INTEGER NOT NULL );"); // 16: account
     }
 
     /** Drops the underlying database table. */
@@ -71,29 +99,80 @@ public class ResponseLocalObjectDao extends AbstractDao<ResponseLocalObject, Lon
         if (id != null) {
             stmt.bindLong(1, id);
         }
-        stmt.bindString(2, entity.getContentType());
-        stmt.bindString(3, entity.getFileName());
-        stmt.bindString(4, entity.getValue());
+ 
+        Integer type = entity.getType();
+        if (type != null) {
+            stmt.bindLong(2, type);
+        }
+ 
+        String contentType = entity.getContentType();
+        if (contentType != null) {
+            stmt.bindString(3, contentType);
+        }
+ 
+        String UriAsString = entity.getUriAsString();
+        if (UriAsString != null) {
+            stmt.bindString(4, UriAsString);
+        }
+ 
+        String value = entity.getValue();
+        if (value != null) {
+            stmt.bindString(5, value);
+        }
  
         Boolean isSynchronized = entity.getIsSynchronized();
         if (isSynchronized != null) {
-            stmt.bindLong(5, isSynchronized ? 1l: 0l);
+            stmt.bindLong(6, isSynchronized ? 1l: 0l);
+        }
+ 
+        Boolean revoked = entity.getRevoked();
+        if (revoked != null) {
+            stmt.bindLong(7, revoked ? 1l: 0l);
+        }
+ 
+        Long nextSynchronisationTime = entity.getNextSynchronisationTime();
+        if (nextSynchronisationTime != null) {
+            stmt.bindLong(8, nextSynchronisationTime);
+        }
+ 
+        Integer amountOfSynchronisationAttempts = entity.getAmountOfSynchronisationAttempts();
+        if (amountOfSynchronisationAttempts != null) {
+            stmt.bindLong(9, amountOfSynchronisationAttempts);
         }
  
         Long timeStamp = entity.getTimeStamp();
         if (timeStamp != null) {
-            stmt.bindLong(6, timeStamp);
+            stmt.bindLong(10, timeStamp);
         }
  
         Integer width = entity.getWidth();
         if (width != null) {
-            stmt.bindLong(7, width);
+            stmt.bindLong(11, width);
         }
  
         Integer height = entity.getHeight();
         if (height != null) {
-            stmt.bindLong(8, height);
+            stmt.bindLong(12, height);
         }
+ 
+        Double lat = entity.getLat();
+        if (lat != null) {
+            stmt.bindDouble(13, lat);
+        }
+ 
+        Double lng = entity.getLng();
+        if (lng != null) {
+            stmt.bindDouble(14, lng);
+        }
+        stmt.bindLong(15, entity.getRunId());
+        stmt.bindLong(16, entity.getGeneralItem());
+        stmt.bindLong(17, entity.getAccount());
+    }
+
+    @Override
+    protected void attachEntity(ResponseLocalObject entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */
@@ -107,13 +186,22 @@ public class ResponseLocalObjectDao extends AbstractDao<ResponseLocalObject, Lon
     public ResponseLocalObject readEntity(Cursor cursor, int offset) {
         ResponseLocalObject entity = new ResponseLocalObject( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getString(offset + 1), // contentType
-            cursor.getString(offset + 2), // fileName
-            cursor.getString(offset + 3), // value
-            cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0, // isSynchronized
-            cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5), // timeStamp
-            cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6), // width
-            cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7) // height
+            cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1), // type
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // contentType
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // UriAsString
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // value
+            cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0, // isSynchronized
+            cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0, // revoked
+            cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7), // nextSynchronisationTime
+            cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8), // amountOfSynchronisationAttempts
+            cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9), // timeStamp
+            cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10), // width
+            cursor.isNull(offset + 11) ? null : cursor.getInt(offset + 11), // height
+            cursor.isNull(offset + 12) ? null : cursor.getDouble(offset + 12), // lat
+            cursor.isNull(offset + 13) ? null : cursor.getDouble(offset + 13), // lng
+            cursor.getLong(offset + 14), // runId
+            cursor.getLong(offset + 15), // generalItem
+            cursor.getLong(offset + 16) // account
         );
         return entity;
     }
@@ -122,13 +210,22 @@ public class ResponseLocalObjectDao extends AbstractDao<ResponseLocalObject, Lon
     @Override
     public void readEntity(Cursor cursor, ResponseLocalObject entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setContentType(cursor.getString(offset + 1));
-        entity.setFileName(cursor.getString(offset + 2));
-        entity.setValue(cursor.getString(offset + 3));
-        entity.setIsSynchronized(cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0);
-        entity.setTimeStamp(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
-        entity.setWidth(cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6));
-        entity.setHeight(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
+        entity.setType(cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1));
+        entity.setContentType(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setUriAsString(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setValue(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setIsSynchronized(cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0);
+        entity.setRevoked(cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0);
+        entity.setNextSynchronisationTime(cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7));
+        entity.setAmountOfSynchronisationAttempts(cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8));
+        entity.setTimeStamp(cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9));
+        entity.setWidth(cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10));
+        entity.setHeight(cursor.isNull(offset + 11) ? null : cursor.getInt(offset + 11));
+        entity.setLat(cursor.isNull(offset + 12) ? null : cursor.getDouble(offset + 12));
+        entity.setLng(cursor.isNull(offset + 13) ? null : cursor.getDouble(offset + 13));
+        entity.setRunId(cursor.getLong(offset + 14));
+        entity.setGeneralItem(cursor.getLong(offset + 15));
+        entity.setAccount(cursor.getLong(offset + 16));
      }
     
     /** @inheritdoc */
@@ -154,4 +251,134 @@ public class ResponseLocalObjectDao extends AbstractDao<ResponseLocalObject, Lon
         return true;
     }
     
+    /** Internal query to resolve the "responses" to-many relationship of RunLocalObject. */
+    public List<ResponseLocalObject> _queryRunLocalObject_Responses(long runId) {
+        synchronized (this) {
+            if (runLocalObject_ResponsesQuery == null) {
+                QueryBuilder<ResponseLocalObject> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.RunId.eq(null));
+                runLocalObject_ResponsesQuery = queryBuilder.build();
+            }
+        }
+        Query<ResponseLocalObject> query = runLocalObject_ResponsesQuery.forCurrentThread();
+        query.setParameter(0, runId);
+        return query.list();
+    }
+
+    /** Internal query to resolve the "responses" to-many relationship of GeneralItemLocalObject. */
+    public List<ResponseLocalObject> _queryGeneralItemLocalObject_Responses(long generalItem) {
+        synchronized (this) {
+            if (generalItemLocalObject_ResponsesQuery == null) {
+                QueryBuilder<ResponseLocalObject> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.GeneralItem.eq(null));
+                generalItemLocalObject_ResponsesQuery = queryBuilder.build();
+            }
+        }
+        Query<ResponseLocalObject> query = generalItemLocalObject_ResponsesQuery.forCurrentThread();
+        query.setParameter(0, generalItem);
+        return query.list();
+    }
+
+    private String selectDeep;
+
+    protected String getSelectDeep() {
+        if (selectDeep == null) {
+            StringBuilder builder = new StringBuilder("SELECT ");
+            SqlUtils.appendColumns(builder, "T", getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T0", daoSession.getGeneralItemLocalObjectDao().getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T1", daoSession.getAccountLocalObjectDao().getAllColumns());
+            builder.append(" FROM RESPONSE_LOCAL_OBJECT T");
+            builder.append(" LEFT JOIN GENERAL_ITEM_LOCAL_OBJECT T0 ON T.'GENERAL_ITEM'=T0.'_id'");
+            builder.append(" LEFT JOIN ACCOUNT_LOCAL_OBJECT T1 ON T.'ACCOUNT'=T1.'_id'");
+            builder.append(' ');
+            selectDeep = builder.toString();
+        }
+        return selectDeep;
+    }
+    
+    protected ResponseLocalObject loadCurrentDeep(Cursor cursor, boolean lock) {
+        ResponseLocalObject entity = loadCurrent(cursor, 0, lock);
+        int offset = getAllColumns().length;
+
+        GeneralItemLocalObject generalItemLocalObject = loadCurrentOther(daoSession.getGeneralItemLocalObjectDao(), cursor, offset);
+         if(generalItemLocalObject != null) {
+            entity.setGeneralItemLocalObject(generalItemLocalObject);
+        }
+        offset += daoSession.getGeneralItemLocalObjectDao().getAllColumns().length;
+
+        AccountLocalObject accountLocalObject = loadCurrentOther(daoSession.getAccountLocalObjectDao(), cursor, offset);
+         if(accountLocalObject != null) {
+            entity.setAccountLocalObject(accountLocalObject);
+        }
+
+        return entity;    
+    }
+
+    public ResponseLocalObject loadDeep(Long key) {
+        assertSinglePk();
+        if (key == null) {
+            return null;
+        }
+
+        StringBuilder builder = new StringBuilder(getSelectDeep());
+        builder.append("WHERE ");
+        SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
+        String sql = builder.toString();
+        
+        String[] keyArray = new String[] { key.toString() };
+        Cursor cursor = db.rawQuery(sql, keyArray);
+        
+        try {
+            boolean available = cursor.moveToFirst();
+            if (!available) {
+                return null;
+            } else if (!cursor.isLast()) {
+                throw new IllegalStateException("Expected unique result, but count was " + cursor.getCount());
+            }
+            return loadCurrentDeep(cursor, true);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
+    public List<ResponseLocalObject> loadAllDeepFromCursor(Cursor cursor) {
+        int count = cursor.getCount();
+        List<ResponseLocalObject> list = new ArrayList<ResponseLocalObject>(count);
+        
+        if (cursor.moveToFirst()) {
+            if (identityScope != null) {
+                identityScope.lock();
+                identityScope.reserveRoom(count);
+            }
+            try {
+                do {
+                    list.add(loadCurrentDeep(cursor, false));
+                } while (cursor.moveToNext());
+            } finally {
+                if (identityScope != null) {
+                    identityScope.unlock();
+                }
+            }
+        }
+        return list;
+    }
+    
+    protected List<ResponseLocalObject> loadDeepAllAndCloseCursor(Cursor cursor) {
+        try {
+            return loadAllDeepFromCursor(cursor);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+
+    /** A raw-style query where you can pass any WHERE clause and arguments. */
+    public List<ResponseLocalObject> queryDeep(String where, String... selectionArg) {
+        Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
+        return loadDeepAllAndCloseCursor(cursor);
+    }
+ 
 }

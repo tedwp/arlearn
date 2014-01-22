@@ -31,12 +31,13 @@ import java.util.List;
  * Contributors: Stefaan Ternier
  * ****************************************************************************
  */
-public class AccountDelegator {
+public class AccountDelegator extends AbstractDelegator{
 
     private static AccountDelegator instance;
+    private AccountLocalObject loggedInAccount;
 
     private AccountDelegator() {
-//        ARL.eventBus.register(this);
+        ARL.eventBus.register(this);
     }
 
     public static AccountDelegator getInstance() {
@@ -46,6 +47,27 @@ public class AccountDelegator {
         return instance;
     }
 
+    public void syncMyAccountDetails() {
+        ARL.eventBus.post(new SyncMyAccount());
+    }
+
+    public void syncAccount(String fullId) {
+        ARL.eventBus.post(new SyncAccount(fullId));
+    }
+
+    public AccountLocalObject getLoggedInAccount(){
+        return loggedInAccount;
+    }
+
+    private void onEventAsync(SyncMyAccount sma) {
+        String token = returnTokenIfOnline();
+        if (token != null) {
+            Account account = AccountClient.getAccountClient().accountDetails(token);
+            loggedInAccount = syncAccount(account);
+            DaoConfiguration.getInstance().getAccountLocalObjectDao().insertOrReplace(loggedInAccount);
+        }
+    }
+
     public AccountLocalObject getAccount(String accountFullId) {
         AccountLocalObjectDao dao = DaoConfiguration.getInstance().getAccountLocalObjectDao();
         List<AccountLocalObject> resultList = dao.queryBuilder().where(AccountLocalObjectDao.Properties.FullId.eq(accountFullId)).list();
@@ -53,21 +75,33 @@ public class AccountDelegator {
         return resultList.get(0);
     }
 
-    public AccountLocalObject syncAccount(String fullId) {
-        Account account = CollaborationClient.getAccountClient().getContact(ARL.properties.getAuthToken(), fullId);
-        AccountLocalObject localObject = getAccount(fullId);
-        if (localObject != null) {
-            //todo sync
-            return localObject;
+    private void onEventAsync(SyncAccount sa) {
+        String token = returnTokenIfOnline();
+        if (token != null) {
+            Account account = CollaborationClient.getAccountClient().getContact(token, sa.getFullId());
+            DaoConfiguration.getInstance().getAccountLocalObjectDao().insertOrReplace(syncAccount(account));
         }
-        //Account did not yet locally exist, so create new account
-        AccountLocalObject newAccount = toDaoLocalObject(account);
-        DaoConfiguration.getInstance().getAccountLocalObjectDao().insertOrReplace(newAccount);
-        return newAccount;
     }
 
-    private AccountLocalObject toDaoLocalObject(Account aBean) {
-        AccountLocalObject accountDao = new AccountLocalObject();
+    public AccountLocalObject asyncAccountLocalObject(String fullId) {
+        String token = returnTokenIfOnline();
+        if (token != null) {
+            Account account = CollaborationClient.getAccountClient().getContact(token, fullId);
+            AccountLocalObject resultObject = syncAccount(account);
+            DaoConfiguration.getInstance().getAccountLocalObjectDao().insertOrReplace(resultObject);
+            return resultObject;
+        }
+        return null;
+    }
+
+    private AccountLocalObject syncAccount(Account account) {
+        AccountLocalObject localObject = getAccount(account.getFullId());
+        localObject = toDaoLocalObject(account, localObject);
+        return localObject;
+    }
+
+    private AccountLocalObject toDaoLocalObject(Account aBean, AccountLocalObject accountDao) {
+        if (accountDao == null) accountDao = new AccountLocalObject();
         accountDao.setName(aBean.getName());
         accountDao.setFamilyName(aBean.getFamilyName());
         accountDao.setGivenName(aBean.getGivenName());
@@ -78,4 +112,21 @@ public class AccountDelegator {
         return accountDao;
     }
 
+    private class SyncMyAccount{}
+
+    private class SyncAccount {
+        private String fullId;
+
+        private SyncAccount(String fullId) {
+            this.fullId = fullId;
+        }
+
+        public String getFullId() {
+            return fullId;
+        }
+
+        public void setFullId(String fullId) {
+            this.fullId = fullId;
+        }
+    }
 }

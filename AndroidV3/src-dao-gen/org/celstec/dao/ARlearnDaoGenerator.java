@@ -54,12 +54,6 @@ public class ARlearnDaoGenerator {
         dependency = createDependency(schema);
         generalItem = createGeneralItem(schema);
 
-//        actionDependency = createActionDependency(schema);
-//        andDependency = createAndDependency(schema);
-//        orDependency = createOrDependency(schema);
-//        timeDependency = createTimeDependency(schema);
-//        proximityDependency = createProximityDependency(schema);
-
         generalItemMediaObjects = createGeneralItemMediaObjects(schema);
         run = createRunItem(schema);
 
@@ -118,6 +112,7 @@ public class ARlearnDaoGenerator {
         inquiry.addStringProperty("hypothesisDescription");
         inquiry.addByteProperty("icon");
         inquiry.addStringProperty("reflection");
+        inquiry.addBooleanProperty("isSynchronized");
 
         Property runId = inquiry.addLongProperty("runId").notNull().getProperty();
         inquiry.addToOne(run, runId);
@@ -166,13 +161,31 @@ public class ARlearnDaoGenerator {
         Entity response = schema.addEntity("ResponseLocalObject");
 
         response.addIdProperty();
-        response.addStringProperty("contentType").notNull();
-        response.addStringProperty("fileName").notNull();
-        response.addStringProperty("value").notNull();
+        response.addIntProperty("type");
+        response.addStringProperty("contentType");
+//        response.addStringProperty("fileName");
+        response.addStringProperty("UriAsString");
+        response.addStringProperty("value");
         response.addBooleanProperty("isSynchronized");
+        response.addBooleanProperty("revoked");
+        response.addLongProperty("nextSynchronisationTime");
+        response.addIntProperty("amountOfSynchronisationAttempts");
         response.addLongProperty("timeStamp");
         response.addIntProperty("width");
         response.addIntProperty("height");
+        response.addDoubleProperty("lat");
+        response.addDoubleProperty("lng");
+
+        Property runId = response.addLongProperty("runId").notNull().getProperty();
+        run.addToMany(response, runId, "responses");
+
+        Property itemId = response.addLongProperty("generalItem").notNull().getProperty();
+        response.addToOne(generalItem, itemId);
+        generalItem.addToMany(response, itemId, "responses");
+
+        Property accountId = response.addLongProperty("account").notNull().getProperty();
+        response.addToOne(account, accountId);
+
         return response;
     }
 

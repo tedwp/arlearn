@@ -1,0 +1,10 @@
+.classpath
+.settings/*
+bin/*
+gen/*
+lib/*
+build/*
+/bin
+/libs
+/gen
+/build

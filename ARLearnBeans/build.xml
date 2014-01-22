@@ -17,7 +17,8 @@
 		<mkdir dir="build/jar" />
 		<jar destfile="../lib/ARLearnBeans.jar" basedir="build/classes"  ></jar>
 		<jar destfile="../Android/libs/ARLearnBeans.jar" basedir="build/classes"></jar>
-		<jar destfile="../Appengine/war/WEB-INF/lib/ARLearnBeans.jar" basedir="build/classes"></jar>
+        <jar destfile="../AndroidV3/libs/ARLearnBeans.jar" basedir="build/classes"></jar>
+        <jar destfile="../Appengine/war/WEB-INF/lib/ARLearnBeans.jar" basedir="build/classes"></jar>
 		<jar destfile="build/jar/ARLearnBeans.jar" basedir="build/classes">
 		</jar>
 	</target>

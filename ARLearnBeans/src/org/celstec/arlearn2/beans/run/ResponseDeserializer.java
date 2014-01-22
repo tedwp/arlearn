@@ -43,7 +43,7 @@ public class ResponseDeserializer extends RunBeanDeserializer{
 		if (object.has("generalItemId")) bean.setGeneralItemId(object.getLong("generalItemId"));
 		if (object.has("userEmail")) bean.setUserEmail(object.getString("userEmail"));
 		if (object.has("responseValue")) bean.setResponseValue(object.getString("responseValue"));
-		if (object.has("responseItemId")) bean.setResponseItemId(object.getString("responseItemId"));
+		if (object.has("responseItemId")) bean.setResponseItemId(object.getLong("responseItemId"));
 		if (object.has("timestamp")) bean.setTimestamp(object.getLong("timestamp"));
 		if (object.has("revoked")) bean.setRevoked(object.getBoolean("revoked"));
 

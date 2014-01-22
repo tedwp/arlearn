@@ -74,6 +74,10 @@ public class DaoConfiguration {
         return session.getActionLocalObjectDao();
     }
 
+    public ResponseLocalObjectDao getResponseLocalObjectDao() {
+        return session.getResponseLocalObjectDao();
+    }
+
     public BadgeLocalObjectDao getBadgesLocalObjectDao() {
         return session.getBadgeLocalObjectDao();
     }

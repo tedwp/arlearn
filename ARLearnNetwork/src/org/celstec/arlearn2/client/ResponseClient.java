@@ -21,6 +21,7 @@ package org.celstec.arlearn2.client;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.beans.run.Response;
+import org.celstec.arlearn2.beans.run.ResponseList;
 import org.celstec.arlearn2.network.ConnectionFactory;
 
 public class ResponseClient extends GenericClient{
@@ -38,7 +39,11 @@ public class ResponseClient extends GenericClient{
 		}
 		return instance;
 	}
-	
+
+    public ResponseList getResponses(String token, Long runId, Long from) {
+        return (ResponseList) executeGet(getUrlPrefix()+"/runId/"+runId+"?from="+from, token, ResponseList.class);
+    }
+
 	public Response publishAction(String token, Response response) {
 		HttpResponse httpResp = ConnectionFactory.getConnection().executePOST(getUrlPrefix(), token, "application/json", toJson(response), "application/json");
 		String entry;

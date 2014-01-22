@@ -33,7 +33,8 @@ public class InquiryLocalObjectDao extends AbstractDao<InquiryLocalObject, Long>
         public final static Property HypothesisDescription = new Property(4, String.class, "hypothesisDescription", false, "HYPOTHESIS_DESCRIPTION");
         public final static Property Icon = new Property(5, Byte.class, "icon", false, "ICON");
         public final static Property Reflection = new Property(6, String.class, "reflection", false, "REFLECTION");
-        public final static Property RunId = new Property(7, long.class, "runId", false, "RUN_ID");
+        public final static Property IsSynchronized = new Property(7, Boolean.class, "isSynchronized", false, "IS_SYNCHRONIZED");
+        public final static Property RunId = new Property(8, long.class, "runId", false, "RUN_ID");
     };
 
     private DaoSession daoSession;
@@ -59,7 +60,8 @@ public class InquiryLocalObjectDao extends AbstractDao<InquiryLocalObject, Long>
                 "'HYPOTHESIS_DESCRIPTION' TEXT," + // 4: hypothesisDescription
                 "'ICON' INTEGER," + // 5: icon
                 "'REFLECTION' TEXT," + // 6: reflection
-                "'RUN_ID' INTEGER NOT NULL );"); // 7: runId
+                "'IS_SYNCHRONIZED' INTEGER," + // 7: isSynchronized
+                "'RUN_ID' INTEGER NOT NULL );"); // 8: runId
     }
 
     /** Drops the underlying database table. */
@@ -107,7 +109,12 @@ public class InquiryLocalObjectDao extends AbstractDao<InquiryLocalObject, Long>
         if (reflection != null) {
             stmt.bindString(7, reflection);
         }
-        stmt.bindLong(8, entity.getRunId());
+ 
+        Boolean isSynchronized = entity.getIsSynchronized();
+        if (isSynchronized != null) {
+            stmt.bindLong(8, isSynchronized ? 1l: 0l);
+        }
+        stmt.bindLong(9, entity.getRunId());
     }
 
     @Override
@@ -133,7 +140,8 @@ public class InquiryLocalObjectDao extends AbstractDao<InquiryLocalObject, Long>
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // hypothesisDescription
             cursor.isNull(offset + 5) ? null : (byte) cursor.getShort(offset + 5), // icon
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // reflection
-            cursor.getLong(offset + 7) // runId
+            cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0, // isSynchronized
+            cursor.getLong(offset + 8) // runId
         );
         return entity;
     }
@@ -148,7 +156,8 @@ public class InquiryLocalObjectDao extends AbstractDao<InquiryLocalObject, Long>
         entity.setHypothesisDescription(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setIcon(cursor.isNull(offset + 5) ? null : (byte) cursor.getShort(offset + 5));
         entity.setReflection(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setRunId(cursor.getLong(offset + 7));
+        entity.setIsSynchronized(cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0);
+        entity.setRunId(cursor.getLong(offset + 8));
      }
     
     /** @inheritdoc */

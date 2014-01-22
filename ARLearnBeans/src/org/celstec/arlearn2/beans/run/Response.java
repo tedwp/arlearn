@@ -26,7 +26,7 @@ public class Response extends RunBean implements Comparable<Response>{
 	private Long generalItemId;
 	private String userEmail;
 	private String responseValue;
-	private String responseItemId;
+	private Long responseItemId;
 	private Long timestamp;
     private Boolean revoked;
     
@@ -66,11 +66,11 @@ public class Response extends RunBean implements Comparable<Response>{
 		this.responseValue = responseValue;
 	}
 
-	public String getResponseItemId() {
+	public Long getResponseItemId() {
 		return responseItemId;
 	}
 
-	public void setResponseItemId(String responseItemId) {
+	public void setResponseItemId(Long responseItemId) {
 		this.responseItemId = responseItemId;
 	}
 

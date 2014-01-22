@@ -1,7 +1,10 @@
 package org.celstec.arlearn.delegators;
 
+import android.util.Log;
 import daoBase.DaoConfiguration;
+import de.greenrobot.dao.query.QueryBuilder;
 import org.celstec.arlearn2.android.delegators.ARL;
+import org.celstec.dao.gen.InquiryLocalObjectDao;
 import org.celstec.events.InquiryEvent;
 import org.celstec.arlearn2.client.InquiryClient;
 import org.celstec.dao.gen.InquiryLocalObject;
@@ -53,31 +56,51 @@ public class InquiryDelegator {
     }
 
     private void onEventAsync(SyncInquiries sge) {
+        uploadInquiries();
+        downloadInquiries();
+    }
+
+    private void uploadInquiries() {
+        InquiryLocalObjectDao dao = DaoConfiguration.getInstance().getInquiryLocalObjectDao();
+        QueryBuilder<InquiryLocalObject> qb = dao.queryBuilder();
+        qb.where(InquiryLocalObjectDao.Properties.IsSynchronized.eq(false));
+        for (InquiryLocalObject inquiry: qb.list()) {
+            try {
+                InquiryClient.getInquiryClient().createInquiry(inquiry);
+                dao.delete(inquiry);
+            } catch (Exception e) {
+                Log.e("ARLearn", e.getMessage(), e);
+            }
+        }
+    }
+
+
+    private void downloadInquiries() {
         String inquiries = InquiryClient.getInquiryClient().userInquiries();
 
-            JSONObject json = null;
-            try {
-                json = new JSONObject(inquiries);
-                JSONArray array = json.getJSONArray("result");
-                for (int i = 0; i< array.length(); i++) {
-                    JSONObject inqJsonObject = array.getJSONObject(i);
-                    long inquiryId =       inqJsonObject.getLong("inquiryId");
-                    InquiryLocalObject inquiry = DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(inquiryId);
-                    if (inquiry == null) {
-                        inquiry= new InquiryLocalObject();
-                    }
-                    inquiry.setId(inquiryId);
-                    inquiry.setTitle(inqJsonObject.getString("title"));
-                    inquiry.setDescription(inqJsonObject.getString("description"));
-                    long runId = InquiryClient.getInquiryClient(). getArlearnRunId(inquiry.getId());
-                    inquiry.setRunId(runId);
-                    DaoConfiguration.getInstance().getInquiryLocalObjectDao().insertOrReplace(inquiry);
-                    ARL.eventBus.post(new InquiryEvent(inquiry.getId()));
+        JSONObject json = null;
+        try {
+            json = new JSONObject(inquiries);
+            JSONArray array = json.getJSONArray("result");
+            for (int i = 0; i< array.length(); i++) {
+                JSONObject inqJsonObject = array.getJSONObject(i);
+                long inquiryId =       inqJsonObject.getLong("inquiryId");
+                InquiryLocalObject inquiry = DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(inquiryId);
+                if (inquiry == null) {
+                    inquiry= new InquiryLocalObject();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+                inquiry.setId(inquiryId);
+                inquiry.setTitle(inqJsonObject.getString("title"));
+                inquiry.setDescription(inqJsonObject.getString("description"));
+                inquiry.setIsSynchronized(true);
+                long runId = InquiryClient.getInquiryClient(). getArlearnRunId(inquiry.getId());
+                inquiry.setRunId(runId);
+                DaoConfiguration.getInstance().getInquiryLocalObjectDao().insertOrReplace(inquiry);
+                ARL.eventBus.post(new InquiryEvent(inquiry.getId()));
             }
-
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void onEventAsync(SyncInquiriesHypothesis syncInquiriesHypothesis) {
@@ -94,8 +117,6 @@ public class InquiryDelegator {
             ARL.eventBus.post(new InquiryEvent(inquiry.getId()));
 
         }
-        System.out.println("synced");
-
     }
 
     private class SyncInquiries{}

@@ -9,6 +9,7 @@ import de.greenrobot.event.EventBus;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.gcm.GCMRegisterTask;
 import org.celstec.arlearn2.android.gcm.GCMRegistration;
+import org.celstec.dao.gen.AccountLocalObject;
 
 /**
  * ****************************************************************************
@@ -37,6 +38,7 @@ public class ARL {
     public static GiFileReferenceDelegator fileReferences;
     public static RunDelegator runs;
     public static AccountDelegator accounts;
+    public static ResponseDelegator responses;
     public static PropertiesAdapter properties;
     public static TimeDelegator time;
     public static EventBus eventBus = new EventBus();
@@ -53,10 +55,10 @@ public class ARL {
         accounts = AccountDelegator.getInstance();
         time = TimeDelegator.getInstance(ctx);
         fileReferences = GiFileReferenceDelegator.getInstance();
+        responses = ResponseDelegator.getInstance();
         new GCMRegisterTask().execute((Activity) ctx);
 
     }
-
 
     public static boolean isOnline() {
         ConnectivityManager cm =
@@ -66,6 +68,10 @@ public class ARL {
             return true;
         }
         return false;
+    }
+
+    public static Context getContext(){
+        return ctx;
     }
 
 

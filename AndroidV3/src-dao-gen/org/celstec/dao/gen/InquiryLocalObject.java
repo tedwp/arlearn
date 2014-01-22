@@ -20,6 +20,7 @@ public class InquiryLocalObject {
     private String hypothesisDescription;
     private Byte icon;
     private String reflection;
+    private Boolean isSynchronized;
     private long runId;
 
     /** Used to resolve relations */
@@ -43,7 +44,7 @@ public class InquiryLocalObject {
         this.id = id;
     }
 
-    public InquiryLocalObject(Long id, String title, String description, String hypothesisTitle, String hypothesisDescription, Byte icon, String reflection, long runId) {
+    public InquiryLocalObject(Long id, String title, String description, String hypothesisTitle, String hypothesisDescription, Byte icon, String reflection, Boolean isSynchronized, long runId) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -51,6 +52,7 @@ public class InquiryLocalObject {
         this.hypothesisDescription = hypothesisDescription;
         this.icon = icon;
         this.reflection = reflection;
+        this.isSynchronized = isSynchronized;
         this.runId = runId;
     }
 
@@ -114,6 +116,14 @@ public class InquiryLocalObject {
 
     public void setReflection(String reflection) {
         this.reflection = reflection;
+    }
+
+    public Boolean getIsSynchronized() {
+        return isSynchronized;
+    }
+
+    public void setIsSynchronized(Boolean isSynchronized) {
+        this.isSynchronized = isSynchronized;
     }
 
     public long getRunId() {

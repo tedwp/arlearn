@@ -13,7 +13,8 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public abstract class DataCollectorDelegate {
-	public static final int PICTURE_RESULT = 1;
+
+    public static final int PICTURE_RESULT = 1;
 	public static final int AUDIO_RESULT = 2;
 	public static final int VIDEO_RESULT = 3;
 	public static final int TEXT_RESULT = 4;

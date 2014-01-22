@@ -1,12 +1,16 @@
 package org.celstec.arlearn2.client;
 
+import android.util.Log;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn2.beans.AuthResponse;
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.client.exception.ARLearnException;
+import org.celstec.dao.gen.InquiryLocalObject;
 import org.codehaus.jettison.json.JSONObject;
+
+import java.net.URLEncoder;
 
 /**
  * ****************************************************************************
@@ -87,6 +91,23 @@ public class InquiryClient extends GenericClient{
 
         }
         return null;
+    }
+
+    public void createInquiry(InquiryLocalObject inquiry) {
+
+        try {
+            Log.e("ARLearn", url+"&method=group.save&name="+
+                    URLEncoder.encode(inquiry.getTitle(), "UTF8")+"&briefdescription=brfDescr&description="+
+                    URLEncoder.encode(inquiry.getDescription(), "UTF8")+"&interests=test");
+            HttpResponse response = conn.executeGET(url+"&method=group.save&name="+
+                    URLEncoder.encode(inquiry.getTitle(), "UTF8")+"&briefdescription=brfDescr&description="+
+                    URLEncoder.encode(inquiry.getDescription(), "UTF8")+"&interests=test", null, "application/json");
+            JSONObject json = new JSONObject(EntityUtils.toString(response.getEntity()));
+            Log.e("ARLearn", "return after creating inquiry " + json.toString());
+        } catch (Exception e) {
+            if (e instanceof ARLearnException) throw (ARLearnException) e;
+
+        }
     }
 
     public class Hypothesis {

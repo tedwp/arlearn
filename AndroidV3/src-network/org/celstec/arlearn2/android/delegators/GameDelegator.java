@@ -75,7 +75,6 @@ public final class GameDelegator extends AbstractDelegator{
                    process(gl);
                    lastSyncDate = gl.getServerTime();
                 }
-
         }
     }
 
@@ -152,9 +151,11 @@ public final class GameDelegator extends AbstractDelegator{
 
         public void sync() {
             if (existingGame != null) {
-                for (GameContributorLocalObject gameContributorLocalObject: existingGame.getContributors()) {
-                    DaoConfiguration.getInstance().getGameContributorLocalObjectDao().delete(gameContributorLocalObject);
-                    existingGame.getContributors().remove(gameContributorLocalObject);
+                synchronized (existingGame){
+                    for (GameContributorLocalObject gameContributorLocalObject: existingGame.getContributors()) {
+                        DaoConfiguration.getInstance().getGameContributorLocalObjectDao().delete(gameContributorLocalObject);
+                        existingGame.getContributors().remove(gameContributorLocalObject);
+                    }
                 }
             }
             newGame.resetContributors();
@@ -165,7 +166,7 @@ public final class GameDelegator extends AbstractDelegator{
                 Log.e("TEST", ""+gameAccess.getAccount());
                 AccountLocalObject account = ARL.accounts.getAccount(gameAccess.getAccount());
                 if  (account == null) {
-                    account = ARL.accounts.syncAccount(gameAccess.getAccount());
+                    account = ARL.accounts.asyncAccountLocalObject(gameAccess.getAccount());
                 }
                 if (account != null) {
                         GameContributorLocalObject contributor = new GameContributorLocalObject();

@@ -29,6 +29,7 @@ public class RunLocalObject {
     private Long gameLocalObject__resolvedKey;
 
     private List<ActionLocalObject> actions;
+    private List<ResponseLocalObject> responses;
     private List<GeneralItemVisibilityLocalObject> visibilities;
 
     // KEEP FIELDS - put your custom fields here
@@ -136,6 +137,28 @@ public class RunLocalObject {
     /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     public synchronized void resetActions() {
         actions = null;
+    }
+
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<ResponseLocalObject> getResponses() {
+        if (responses == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            ResponseLocalObjectDao targetDao = daoSession.getResponseLocalObjectDao();
+            List<ResponseLocalObject> responsesNew = targetDao._queryRunLocalObject_Responses(id);
+            synchronized (this) {
+                if(responses == null) {
+                    responses = responsesNew;
+                }
+            }
+        }
+        return responses;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetResponses() {
+        responses = null;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
