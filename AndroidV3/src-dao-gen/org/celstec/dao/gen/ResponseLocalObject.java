@@ -334,14 +334,35 @@ public class ResponseLocalObject {
 
     }
 
+    private static final int PICTURE_TYPE = 1;
+    private static final  int VIDEO_TYPE = 2;
+    private static final  int AUDIO_TYPE = 3;
 
     public void setPictureType(){
-        setType(1);
+        setType(PICTURE_TYPE);
+    }
+
+    public void setVideoType(){
+        setType(VIDEO_TYPE);
+    }
+
+    public void setAudioType(){
+        setType(AUDIO_TYPE);
     }
 
     public boolean isPicture() {
         if (getType() == null) return false;
-        return getType() == 1;
+        return getType() == PICTURE_TYPE;
+    }
+
+    public boolean isVideo() {
+        if (getType() == null) return false;
+        return getType() == VIDEO_TYPE;
+    }
+
+    public boolean isAudio() {
+        if (getType() == null) return false;
+        return getType() == AUDIO_TYPE;
     }
 
     public Uri getUri() {
@@ -355,8 +376,14 @@ public class ResponseLocalObject {
         bean.setGeneralItemId(getGeneralItem());
         bean.setTimestamp(getTimeStamp());
         switch (getType()) {
-            case 1:
+            case PICTURE_TYPE:
                 bean.setResponseValue(getPictureValue());
+                break;
+            case VIDEO_TYPE:
+                bean.setResponseValue(getVideoValue());
+                break;
+            case AUDIO_TYPE:
+                bean.setResponseValue(getAudioValue());
             break;
         }
         return bean;
@@ -368,6 +395,28 @@ public class ResponseLocalObject {
             jsonResponse.put("imageUrl", buildRemotePath(getUri(), runId, getAccountLocalObject().getFullId()));
             jsonResponse.put("width", getWidth());
             jsonResponse.put("height", getHeight());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonResponse.toString();
+    }
+
+    private String getVideoValue() {
+        JSONObject jsonResponse = new JSONObject();
+        try {
+            jsonResponse.put("videoUrl", buildRemotePath(getUri(), runId, getAccountLocalObject().getFullId()));
+            jsonResponse.put("width", getWidth());
+            jsonResponse.put("height", getHeight());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonResponse.toString();
+    }
+
+    private String getAudioValue() {
+        JSONObject jsonResponse = new JSONObject();
+        try {
+            jsonResponse.put("audioUrl", buildRemotePath(getUri(), runId, getAccountLocalObject().getFullId()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
