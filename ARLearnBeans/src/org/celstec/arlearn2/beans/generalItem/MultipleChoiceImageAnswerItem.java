@@ -26,9 +26,12 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public class MultipleChoiceImageAnswerItem extends MultipleChoiceAnswerItem{
-	
-	private String imageUrl;
+
+    private String label;
+    private String imageUrl;
+    private String imageMd5Hash;
 	private String audioUrl;
+    private String audioMd5Hash;
 
 	public MultipleChoiceImageAnswerItem() {
 	}
@@ -54,8 +57,32 @@ public class MultipleChoiceImageAnswerItem extends MultipleChoiceAnswerItem{
 		return super.equals(obj) && 
 			nullSafeEquals(getImageUrl(), other.getImageUrl()); 
 	}
-	
-	public static MultipleChoiceAnswerItemDeserializer deserializer = new MultipleChoiceAnswerItemDeserializer() {
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getImageMd5Hash() {
+        return imageMd5Hash;
+    }
+
+    public void setImageMd5Hash(String imageMd5Hash) {
+        this.imageMd5Hash = imageMd5Hash;
+    }
+
+    public String getAudioMd5Hash() {
+        return audioMd5Hash;
+    }
+
+    public void setAudioMd5Hash(String audioMd5Hash) {
+        this.audioMd5Hash = audioMd5Hash;
+    }
+
+    public static MultipleChoiceAnswerItemDeserializer deserializer = new MultipleChoiceAnswerItemDeserializer() {
 
 		@Override
 		public MultipleChoiceImageAnswerItem toBean(JSONObject object) {
@@ -73,6 +100,10 @@ public class MultipleChoiceImageAnswerItem extends MultipleChoiceAnswerItem{
 			MultipleChoiceImageAnswerItem bean = (MultipleChoiceImageAnswerItem) genericBean;
 			if (object.has("imageUrl")) bean.setImageUrl(object.getString("imageUrl"));
 			if (object.has("audioUrl")) bean.setAudioUrl(object.getString("audioUrl"));
+
+            if (object.has("label")) bean.setLabel(object.getString("label"));
+            if (object.has("imageMd5Hash")) bean.setImageMd5Hash(object.getString("imageMd5Hash"));
+            if (object.has("audioMd5Hash")) bean.setAudioMd5Hash(object.getString("audioMd5Hash"));
 		}
 		
 	};
@@ -86,6 +117,10 @@ public class MultipleChoiceImageAnswerItem extends MultipleChoiceAnswerItem{
 			try {
 				if (item.getImageUrl() != null) returnObject.put("imageUrl", item.getImageUrl());
 				if (item.getAudioUrl() != null) returnObject.put("audioUrl", item.getAudioUrl());
+
+                if (item.getLabel() != null) returnObject.put("label", item.getLabel());
+                if (item.getImageMd5Hash() != null) returnObject.put("imageMd5Hash", item.getImageMd5Hash());
+                if (item.getAudioMd5Hash() != null) returnObject.put("audioMd5Hash", item.getAudioMd5Hash());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

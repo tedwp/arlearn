@@ -3,16 +3,16 @@
     <string name="app_name">ARLearn</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
-
+    
     <string name="networkUnavailable">Impossible de trouver une connexion internet.\nMerci de bien vouloir réessayer</string>
     <string name="networkUnavailable2">Impossible de se connecter au serveur sync</string>
-
-    <!--Menu Strings-->
+    
+     <!--Menu Strings-->
     <string name="login">CONNEXION</string>
     <string name="logout">DECONNEXION</string>
     <string name="exit">SORTIR</string>
-
-    <!--Login Activity Strings-->
+    
+     <!--Login Activity Strings-->
     <string name="loginHeader">Connexion avec votre compte Google</string>
     <string name="uNameHint">E-mail</string>
     <string name="passwordHint">Mot de passe</string>
@@ -22,38 +22,38 @@
     <string name="loginFailed">Connexion impossible pour *** </string>
     <string name="checkCredentials">Vérification des certificats</string>
     <string name="sendInstructions">Envoyez-moi les instructions</string>
-    <string name="correctDateSettings">L\'heure et la date de votre téléphone sont incorrects. \nMerci de les corriger pour pouvoir continuer.</string>
-
+	<string name="correctDateSettings">L\'heure et la date de votre téléphone sont incorrects. \nMerci de les corriger pour pouvoir continuer.</string>
+        
     <!--NfcScanOnDemand Activity Strings-->
     <string name="scanTag">Scannez un tag NFC ou un code-barre</string>
     <string name="scanTagMenu">Scannez un code-barre</string>
     <string name="cancel">Annuler</string>
-
-    <!--List Runs Participate Activity Strings-->
+     
+     <!--List Runs Participate Activity Strings-->
     <string name="listExcursionsHeader">Selectionnez une excursion</string>
     <string name="loadingExcursions">Chargement des excursions</string>
-    <string name="registerRun">Voulez-vous enregistrer ce run ?</string>
+    <string name="registerRun">Voulez-vous enregistrer cette session ?</string>
     <string name="cacheGame">Voulez-vous télécharger ce jeu pour un usage hors-ligne ?</string>
     <string name="delete">Supprimer</string>
-    <string name="scanRun">Scannez un tag de Run</string>
-
-    <!--List Open Runs Strings-->
-    <string name="noMatchingRuns">Aucun run ne correspond à ce tag</string>
-    <string name="noMoreMatchingRuns">Déjà enregistré pour tous les runs correspondants</string>
-    <string name="addOpenRunTitle">Sélectionnez le run à ajouter</string>
-
+ 	 <string name="scanRun">Scannez un tag de session</string>  
+    
+ 	  <!--List Open Runs Strings-->
+    <string name="noMatchingRuns">Aucune session ne correspond à ce tag</string>
+    <string name="noMoreMatchingRuns">Déjà enregistré pour toutes les sessions correspondantes</string>
+    <string name="addOpenRunTitle">Sélectionnez la session à ajouter</string>
+    
     <!--Map View Activity Strings-->
     <string name="mapViewHeader">Excursion</string>
     <string name="messagesMenu">Messages</string>
     <string name="myLocationMenu">Ma Localisation</string>
-
-    <!--Multiple Choice Detail Activity Strings-->
+    
+     <!--Multiple Choice Detail Activity Strings-->
     <string name="mct_header">Question à Choix Multiples</string>
     <string name="mct_submit">Soumettre la réponse</string>
-
+    
     <!--Audio Object Activity Strings-->
     <string name="ao_answer_menu">Fournir la réponse</string>
-
+    
     <!--Answer Activity Strings-->
     <string name="answerQuestionHeader">Répondre à la question</string>
     <string name="annotateCounterReset">00:00.0</string>
@@ -62,29 +62,29 @@
     <string name="nothingToPublish">Rien à publier</string>
     <string name="addVideo">Ajouter une vidéo</string>
     <string name="addPicture">Prendre une photo</string>
-
+    
     <!--Display Message Activity Strings-->
     <string name="messageHeader">Message</string>
-
-    <!-- View Answer Activity Strings-->
+    
+     <!-- View Answer Activity Strings-->
     <string name="viewAnswerHeader">votre réponse</string>
     <string name="deleteAnswer">effacer la réponse</string>
     <string name="listMessagesHeader">Liste des messages</string>
-
-    <!-- OSM Downloader -->
+    
+    <!-- OSM Downloader -->  
     <string name="startDownloading">Télécharger la carte</string>
     <string name="offlineDownloadExplanation">Ce jeu permet le téléchargement des données cartographiques afin de pouvoir continuer le chargement de la carte même sans connexion. Cliquez sur le bouton ci-dessous pour commencer à télécharger lea carte. Attention, cela peut nécessiter un espace mémoire conséquent.</string>
     <string name="downloadMap">Télécharger la carte</string>
     <string name="deleteMap">Effacer la carte</string>
-
+    
     <!--Todo-->
-    <string name="makeAnnotation">Voulez-vous créer une annotation ici ?</string>
-    <string name="reset">REINITIALISER</string>
-    <string name="refresh">ACTUALISER</string>
-    <string name="resetQuestion">Etes-vous sûr de vouloir supprimer toute la progression ?</string>
-
-    <string name="downloadBusy">Patience. Le fichier n\'a pas encore été téléchargé</string>
-    <string name="warningDownloadBusy">ATTENTION: tous les médias n\'ont pas été téléchargés.</string>
-    <string name="errorDownloadFailed">ERREUR: un fichier au moins n\'a pas pu être téléchargé.</string>
-
+     <string name="makeAnnotation">Voulez-vous créer une annotation ici ?</string>
+     <string name="reset">REINITIALISER</string>
+     <string name="refresh">ACTUALISER</string>
+     <string name="resetQuestion">Etes-vous sûr de vouloir supprimer toute la progression ?</string>
+     
+        <string name="downloadBusy">Patience. Le fichier n\'a pas encore été téléchargé</string>
+        <string name="warningDownloadBusy">ATTENTION: tous les médias n\'ont pas été téléchargés.</string>
+     <string name="errorDownloadFailed">ERREUR: un fichier au moins n\'a pas pu être téléchargé.</string>
+    
 </resources>

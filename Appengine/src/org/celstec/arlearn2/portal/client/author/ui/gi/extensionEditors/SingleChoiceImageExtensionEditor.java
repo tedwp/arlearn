@@ -40,7 +40,9 @@ public class SingleChoiceImageExtensionEditor extends VStack implements Extensio
         questionForm.setGroupTitle("Question");
         final TextItem questionItem = new TextItem("audioQuestion", "question as audio");
         final TextItem columnsItem = new TextItem("columns", "# columns");
-        questionForm.setFields(questionItem, columnsItem);
+        final TextItem md5HashItem = new TextItem("md5Hash", "md5 hash");
+
+        questionForm.setFields(questionItem, columnsItem, md5HashItem);
         questionItem.setValue(gi.getString("audioQuestion"));
         if (gi.getJsonRep().containsKey("columns") ) {
             columnsItem.setValue(gi.getInteger("columns"));
@@ -77,6 +79,12 @@ public class SingleChoiceImageExtensionEditor extends VStack implements Extensio
             Integer columns = Integer.parseInt(columnsString);
             gi.getJsonRep().put("columns", new JSONNumber(columns));
         }
+
+        String md5HashString = questionForm.getValueAsString("md5Hash");
+        if (md5HashString != null && !"".equals(md5HashString)){
+            gi.getJsonRep().put("md5Hash", new JSONString(md5HashString));
+
+        }
 		
 
 	}
@@ -97,7 +105,10 @@ public class SingleChoiceImageExtensionEditor extends VStack implements Extensio
 		public AnswerForm(MultipleChoiceImageAnswerItem answer, final int position) {
 			setGroupTitle("answer "+(position+1));
 			setIsGroup(true);
-			
+            final TextItem labelItem = new TextItem(MultipleChoiceImageAnswerItem.LABEL, "Label");
+            if (answer != null) labelItem.setValue(answer.getString(MultipleChoiceImageAnswerItem.LABEL));
+            labelItem.setStartRow(true);
+
 			final TextItem imageItem = new TextItem(MultipleChoiceImageAnswerItem.IMAGE_URL, "picture url "+" "+(position+1));
             imageItem.setWidth("100%");
 
@@ -116,8 +127,11 @@ public class SingleChoiceImageExtensionEditor extends VStack implements Extensio
 					
 				}
 			});
-			
-			final TextItem audioItem = new TextItem(MultipleChoiceImageAnswerItem.AUDIO_URL, "audio url ");
+            final TextItem imageMd5Item = new TextItem(MultipleChoiceImageAnswerItem.IMAGE_MD5, "md5 hash image");
+            if (answer != null) imageMd5Item.setValue(answer.getString(MultipleChoiceImageAnswerItem.IMAGE_MD5));
+            imageMd5Item.setStartRow(true);
+
+            final TextItem audioItem = new TextItem(MultipleChoiceImageAnswerItem.AUDIO_URL, "audio url ");
 			if (answer != null) audioItem.setValue(answer.getString(MultipleChoiceImageAnswerItem.AUDIO_URL));
 			
 			audioItem.setStartRow(true);
@@ -136,15 +150,20 @@ public class SingleChoiceImageExtensionEditor extends VStack implements Extensio
 				}
 			});
 
+            final TextItem audioMd5Item = new TextItem(MultipleChoiceImageAnswerItem.AUDIO_MD5, "md5 hash audio");
+            if (answer != null) audioMd5Item.setValue(answer.getString(MultipleChoiceImageAnswerItem.AUDIO_MD5));
+            audioMd5Item.setStartRow(true);
 
-			final CheckboxItem isCorrect = new CheckboxItem("isCorrect", "is Correct");
+
+
+            final CheckboxItem isCorrect = new CheckboxItem("isCorrect", "is Correct");
 			if (answer != null) isCorrect.setValue(answer.getBoolean("isCorrect"));
 			isCorrect.setColSpan(1);
 			
 			HiddenItem hiddenId = new HiddenItem("id");
 			if (answer != null) hiddenId.setValue(answer.getString("id"));
 
-			setFields(imageItem, audioItem, isCorrect, hiddenId);
+			setFields(labelItem, imageItem, imageMd5Item, audioItem, audioMd5Item, isCorrect, hiddenId);
 			
 			setNumCols(4);
 
@@ -152,13 +171,27 @@ public class SingleChoiceImageExtensionEditor extends VStack implements Extensio
 		
 		public MultipleChoiceImageAnswerItem getMultipleChoiceAnswer() {
 			MultipleChoiceImageAnswerItem result = new MultipleChoiceImageAnswerItem();
-			String imageUrlString = getValueAsString(MultipleChoiceImageAnswerItem.IMAGE_URL);
+            String labelString = getValueAsString(MultipleChoiceImageAnswerItem.LABEL);
+            if (!(labelString == null || labelString.equals(""))){
+                result.setString(MultipleChoiceImageAnswerItem.LABEL, getValueAsString(MultipleChoiceImageAnswerItem.LABEL));
+            }
+            String imageUrlString = getValueAsString(MultipleChoiceImageAnswerItem.IMAGE_URL);
 			if (imageUrlString == null || imageUrlString.equals("")) return null;
 			result.setString(MultipleChoiceImageAnswerItem.IMAGE_URL, getValueAsString(MultipleChoiceImageAnswerItem.IMAGE_URL));
-			
+
+            String imageMd5String = getValueAsString(MultipleChoiceImageAnswerItem.IMAGE_MD5);
+            if (!(imageMd5String == null || imageMd5String.equals(""))) {
+            result.setString(MultipleChoiceImageAnswerItem.IMAGE_MD5, getValueAsString(MultipleChoiceImageAnswerItem.IMAGE_MD5));
+            }
 			String audioUrlString = getValueAsString(MultipleChoiceImageAnswerItem.AUDIO_URL);
 			if (audioUrlString == null || audioUrlString.equals("")) return null;
 			result.setString(MultipleChoiceImageAnswerItem.AUDIO_URL, getValueAsString(MultipleChoiceImageAnswerItem.AUDIO_URL));
+
+            String audioMd5String = getValueAsString(MultipleChoiceImageAnswerItem.AUDIO_MD5);
+            if (!(audioMd5String == null || audioMd5String.equals(""))) {
+                result.setString(MultipleChoiceImageAnswerItem.AUDIO_MD5, getValueAsString(MultipleChoiceImageAnswerItem.AUDIO_MD5));
+            }
+
 			if (getValueAsString("id") != null && !getValueAsString("id").equals("")) {
 				result.setString("id", getValueAsString("id"));
 			} else {

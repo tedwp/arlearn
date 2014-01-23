@@ -256,13 +256,13 @@ public class GeneralItemsDelegator {
 			if (mciai.getImageUrl() != null) {
 				DownloadItem imageDi = getBaseItem(gi);
 				imageDi.setLocalId(mciai.getId() + ":i");
-				imageDi.setRemoteUrl(mciai.getImageUrl());
+				imageDi.setRemoteUrl(mciai.getImageUrl().trim());
 				list.add(imageDi);
 			}
 			if (mciai.getAudioUrl() != null) {
 				DownloadItem audioDi = getBaseItem(gi);
 				audioDi.setLocalId(mciai.getId() + ":a");
-				audioDi.setRemoteUrl(mciai.getAudioUrl());
+				audioDi.setRemoteUrl(mciai.getAudioUrl().trim());
 				list.add(audioDi);
 			}
 		}

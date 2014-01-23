@@ -17,9 +17,12 @@ public class MultipleChoiceImageExtensionEditor  extends SingleChoiceImageExtens
         questionForm.setGroupTitle("Question");
         final TextItem questionItem = new TextItem("audioQuestion", "question as audio");
         final TextItem columnsItem = new TextItem("columns", "# columns");
+        final TextItem md5HashItem = new TextItem("md5Hash", "md5 hash");
 
-        questionForm.setFields(questionItem, columnsItem);
+
+        questionForm.setFields(questionItem, columnsItem, md5HashItem);
         questionItem.setValue(gi.getString("audioQuestion"));
+        md5HashItem.setValue(gi.getString("md5Hash"));
         if (gi.getJsonRep().containsKey("columns") ) {
             columnsItem.setValue(gi.getInteger("columns"));
         } else {

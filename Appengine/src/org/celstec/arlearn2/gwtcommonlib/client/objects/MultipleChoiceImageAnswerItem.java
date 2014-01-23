@@ -6,7 +6,10 @@ public class MultipleChoiceImageAnswerItem extends Bean {
 
 	public  final static String TYPE = "org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem";
 	public  final static String IMAGE_URL = "imageUrl";
+    public  final static String IMAGE_MD5 = "imageMd5Hash";
 	public  final static String AUDIO_URL = "audioUrl";
+    public  final static String AUDIO_MD5 = "audioMd5Hash";
+    public  final static String LABEL = "label";
 	public  final static String ID = "id";
 
 

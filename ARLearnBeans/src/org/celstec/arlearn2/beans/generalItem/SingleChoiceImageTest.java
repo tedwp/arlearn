@@ -28,6 +28,7 @@ public class SingleChoiceImageTest extends SingleChoiceTest {
 
 	private String audioQuestion;
     private Integer columns;
+    private String md5Hash;
 
 	public String getAudioQuestion() {
 		return audioQuestion;
@@ -44,6 +45,14 @@ public class SingleChoiceImageTest extends SingleChoiceTest {
 
     public void setColumns(Integer columns) {
         this.columns = columns;
+    }
+
+    public String getMd5Hash() {
+        return md5Hash;
+    }
+
+    public void setMd5Hash(String md5Hash) {
+        this.md5Hash = md5Hash;
     }
 
     public static GeneralItemDeserializer deserializer = new GeneralItemDeserializer(){
@@ -64,6 +73,7 @@ public class SingleChoiceImageTest extends SingleChoiceTest {
 			SingleChoiceImageTest mctItem = (SingleChoiceImageTest) genericBean;
 			if (object.has("richText")) mctItem.setRichText(object.getString("richText"));
             if (object.has("columns")) mctItem.setColumns(object.getInt("columns"));
+            if (object.has("md5Hash")) mctItem.setMd5Hash(object.getString("md5Hash"));
 			if (object.has("text")) mctItem.setText(object.getString("text"));
 			if (object.has("audioQuestion")) mctItem.setAudioQuestion(object.getString("audioQuestion"));
 			if (object.has("answers")) mctItem.setAnswers(ListDeserializer.toBean(object.getJSONArray("answers"), MultipleChoiceImageAnswerItem.class));
@@ -79,6 +89,7 @@ public class SingleChoiceImageTest extends SingleChoiceTest {
 			try {
 				if (mct.getAudioQuestion() != null) returnObject.put("audioQuestion", mct.getAudioQuestion());
                 if (mct.getColumns() != null) returnObject.put("columns", mct.getColumns());
+                if (mct.getMd5Hash() != null) returnObject.put("md5Hash", mct.getMd5Hash());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

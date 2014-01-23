@@ -1,5 +1,11 @@
 package org.celstec.arlearn2.cache;
 
+import com.google.appengine.api.utils.SystemProperty;
+import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
+import org.celstec.arlearn2.delegators.ActionRelevancyPredictor;
+
+import java.util.HashSet;
+
 /**
  * ****************************************************************************
  * Copyright (C) 2013 Open Universiteit Nederland
@@ -20,5 +26,27 @@ package org.celstec.arlearn2.cache;
  * Contributors: Stefaan Ternier
  * ****************************************************************************
  */
-public class CategoryCache {
+public class CategoryCache extends GenericCache {
+
+    private static CategoryCache instance;
+
+    private static String CATEGORY_PREFIX = SystemProperty.applicationVersion.get()+"Category";
+
+    private CategoryCache() {
+    }
+
+    public static CategoryCache getInstance() {
+        if (instance == null)
+            instance = new CategoryCache();
+        return instance;
+
+    }
+
+    public void storeKeyValue(String key, String value) {
+        getCache().put(CATEGORY_PREFIX+key, value);
+    }
+
+    public String getValue(String key) {
+        return (String) getCache().get(CATEGORY_PREFIX+key);
+    }
 }

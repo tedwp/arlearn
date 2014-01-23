@@ -1,5 +1,10 @@
 package org.celstec.arlearn2.api;
 
+import com.google.gdata.util.AuthenticationException;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+
 /**
  * ****************************************************************************
  * Copyright (C) 2013 Open Universiteit Nederland
@@ -20,5 +25,25 @@ package org.celstec.arlearn2.api;
  * Contributors: Stefaan Ternier
  * ****************************************************************************
  */
-public class Store {
+@Path("/store")
+public class Store extends Service {
+
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @CacheControlHeader("no-cache")
+    @Path("/categories/lang/{lang}")
+    public String getCategories(@PathParam("lang") String lang){
+        return "{}";
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @CacheControlHeader("no-cache")
+    @Path("/categories/{categoryId}")
+    public String getGames(@PathParam("categoryId") Long categoryId, @QueryParam("resumptionToken") String cursor ){
+        return "{}";
+    }
+
+
+
 }
