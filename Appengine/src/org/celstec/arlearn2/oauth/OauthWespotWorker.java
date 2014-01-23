@@ -65,7 +65,7 @@ public class OauthWespotWorker extends OauthWorker {
 
     @Override
     protected String getAuthUrl(String authCode) {
-        return "https://localhost:8080/oauth/token?client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&client_secret=" + client_secret + "&code=" + authCode;
+        return "https://wespot-arlearn.appspot.com/oauth/token?client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&client_secret=" + client_secret + "&code=" + authCode;
     }
 
     public void saveAccount(String accessToken) {
@@ -74,7 +74,7 @@ public class OauthWespotWorker extends OauthWorker {
             System.out.println("TODO query user details");
 //            String readUrl = readURL(new URL("http://localhost:8080/oauth/resource_query?access_token="+accessToken));
 //            System.out.println("result is "+readUrl);
-            JSONObject profileJson = new JSONObject(readURL(new URL("http://localhost:8080/oauth/resource_query?access_token="+accessToken)));
+            JSONObject profileJson = new JSONObject(readURL(new URL("https://wespot-arlearn.appspot.com/oauth/resource_query?access_token="+accessToken)));
             String id = "";
             String picture = "";
             String email = "";
@@ -89,11 +89,7 @@ public class OauthWespotWorker extends OauthWorker {
             if (profileJson.has("name")) name = profileJson.getString("name");
             AccountJDO account = AccountManager.addAccount(id, AccountJDO.WESPOTCLIENT, email, given_name, family_name, name, picture, false);
             saveAccessToken(account.getUniqueId(), accessToken);
-//
-//            (new MigrateGamesTask(profileJson.getString("email"), AccountJDO.GOOGLECLIENT, profileJson.getString("id"),accessToken)).scheduleTask();
-//            (new MigrateRunsTask(profileJson.getString("email"), AccountJDO.GOOGLECLIENT, profileJson.getString("id"),accessToken)).scheduleTask();
-//
-//            (new MigrateUserTask(profileJson.getString("email"), AccountJDO.GOOGLECLIENT, profileJson.getString("id"),accessToken)).scheduleTask();
+
         } catch (Throwable ex) {
             throw new RuntimeException("failed login", ex);
         }

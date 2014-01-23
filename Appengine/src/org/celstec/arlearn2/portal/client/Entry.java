@@ -19,10 +19,7 @@
 package org.celstec.arlearn2.portal.client;
 
 import org.celstec.arlearn2.gwtcommonlib.client.LocalSettings;
-import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthClient;
-import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthFbClient;
-import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthGoogleClient;
-import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthLinkedIn;
+import org.celstec.arlearn2.gwtcommonlib.client.auth.*;
 import org.celstec.arlearn2.gwtcommonlib.client.datasource.JsonObjectListCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.OauthNetworkClient;
@@ -94,7 +91,9 @@ public class Entry implements EntryPoint {
 					case OauthClient.LINKEDINCLIENT:
 						OauthLinkedIn.init(object.get("clientId").isString().stringValue(), object.get("redirectUri").isString().stringValue());
 						break;
-
+                    case OauthClient.WESPOTCLIENT:
+                            OauthWespot.init(object.get("clientId").isString().stringValue(), object.get("redirectUri").isString().stringValue());
+                            break;
 					default:
 						break;
 				}

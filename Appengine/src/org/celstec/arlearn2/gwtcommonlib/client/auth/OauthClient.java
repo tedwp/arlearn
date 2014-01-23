@@ -30,7 +30,7 @@ public class OauthClient {
 	public final static int FBCLIENT = 1;
 	public final static int GOOGLECLIENT = 2;
 	public final static int LINKEDINCLIENT = 3;
-
+    public final static int WESPOTCLIENT = 5;
 	
 	private String accessToken;
 	private int type;

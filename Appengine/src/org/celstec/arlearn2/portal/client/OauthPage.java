@@ -2,10 +2,7 @@ package org.celstec.arlearn2.portal.client;
 
 import com.smartgwt.client.data.DataSourceField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
-import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthFbClient;
-import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthGoogleClient;
-import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthLinkedIn;
-import org.celstec.arlearn2.gwtcommonlib.client.auth.OauthTwitter;
+import org.celstec.arlearn2.gwtcommonlib.client.auth.*;
 import org.celstec.arlearn2.portal.client.toolbar.ToolBar;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -67,7 +64,7 @@ public class OauthPage {
 	
 	private void createButtons() {
 		  tileGrid = new TileGrid();  
-	        tileGrid.setTileWidth(250);  
+	        tileGrid.setTileWidth(250);
 	        tileGrid.setTileHeight(250);  
 	        tileGrid.setHeight(400);  
 	        tileGrid.setWidth(1100);
@@ -93,6 +90,9 @@ public class OauthPage {
                     case 4:
                         Window.open((new OauthTwitter()).getLoginRedirectURL(), "_self", "");
                         break;
+                    case 5:
+                         Window.open((new OauthWespot()).getLoginRedirectURL(), "_self", "");
+                         break;
 					default:
 						break;
 					}
@@ -122,6 +122,11 @@ public class OauthPage {
             twitterRec.setAttribute("commonName", "Sign in with Twitter");
             twitterRec.setAttribute("rec", 4);
 
+            Record wespot = new Record();
+            wespot.setAttribute("picture", "wespot.png");
+            wespot.setAttribute("commonName", "Sign in with weSPOT");
+            wespot.setAttribute("rec", 5);
+
 	        DataSource ds =new DataSource();
 	        ds.setClientOnly(true);
 
@@ -136,6 +141,7 @@ public class OauthPage {
 	        ds.addData(google);
 	        ds.addData(linkedIn);
             ds.addData(twitterRec);
+//            ds.addData(wespot);
 	        
 	        tileGrid.setDataSource(ds); 
 	        tileGrid.setAutoFetchData(true);  

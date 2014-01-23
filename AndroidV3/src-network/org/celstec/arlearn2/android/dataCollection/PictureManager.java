@@ -51,9 +51,6 @@ public class PictureManager extends DataCollectionManager {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
             if (resultCode == Activity.RESULT_OK) {
-                // Image captured and saved to fileUri specified in the Intent
-//                Toast.makeText(this, "Image saved to:\n" +
-//                        data.getData(), Toast.LENGTH_LONG).show();
                 Uri uri = null;
                 String filePath = null;
                 if (data != null) {

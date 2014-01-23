@@ -44,7 +44,7 @@ public class ResponseManager {
 
 	private static final int RESPONSES_IN_LIST = 20;
 	
-	public static void addResponse(Long generalItemId, String responseValue, Long runId, String userEmail, Long timeStamp) {
+	public static long addResponse(Long generalItemId, String responseValue, Long runId, String userEmail, Long timeStamp) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		ResponseJDO responseRecord = new ResponseJDO();
 		responseRecord.setGeneralItemId(generalItemId);
@@ -59,6 +59,7 @@ public class ResponseManager {
 		} finally {
 			pm.close();
 		}
+        return responseRecord.getId();
 	}
 	
 	public static Response revokeResponse(Long runId, Long generalItemId, String userEmail, Long timestamp){

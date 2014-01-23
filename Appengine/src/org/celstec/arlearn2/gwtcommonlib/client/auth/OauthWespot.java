@@ -21,4 +21,19 @@ package org.celstec.arlearn2.gwtcommonlib.client.auth;
  * ****************************************************************************
  */
 public class OauthWespot {
+
+    private static  String client_id_wespot ;
+    private static  String redirect_uri ;
+
+    public static void init(String clientId, String redirectUri) {
+        client_id_wespot = clientId;
+        redirect_uri = redirectUri;
+    }
+
+    public String getLoginRedirectURL() {
+        return "https://wespot-arlearn.appspot.com/oauth/auth?redirect_uri=" + redirect_uri +
+                "&response_type=code&client_id=" + client_id_wespot + "&approval_prompt=force" +
+                "&scope=profile+email";
+    }
+
 }

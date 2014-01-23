@@ -52,6 +52,8 @@ public class TestAdapters extends Activity {
         ARL.properties.setAuthToken(authToken);
         ARL.properties.setFullId("2:116757187626671489073");
 
+        ARL.accounts.syncMyAccountDetails();
+
 //        DaoConfiguration daoConfiguration= DaoConfiguration.getInstance(this);
         findViewById(R.id.myGamesButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +87,12 @@ public class TestAdapters extends Activity {
             }
         });
 
+        findViewById(R.id.dataCollection).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(TestAdapters.this, DataCollectionTestActivity.class));
+            }
+        });
         findViewById(R.id.dependencies).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,15 +109,15 @@ public class TestAdapters extends Activity {
         alo.setTime(1230l);
         alo.setAccount(5);
         DaoConfiguration.getInstance().getActionDependencyLocalObjectDao().insertOrReplace(alo);
-for (int i =0; i<=100;i ++) {
-        alo = new ActionLocalObject();
-        alo.setAction("read");
-        alo.setRunId(19806001l);
-        alo.setGeneralItem(19766002l);
-        alo.setTime(1239l+i);
-        alo.setAccount(5);
-        DaoConfiguration.getInstance().getActionDependencyLocalObjectDao().insertOrReplace(alo);
-}
+//for (int i =0; i<=100;i ++) {
+//        alo = new ActionLocalObject();
+//        alo.setAction("read");
+//        alo.setRunId(19806001l);
+//        alo.setGeneralItem(19766002l);
+//        alo.setTime(1239l+i);
+//        alo.setAccount(5);
+//        DaoConfiguration.getInstance().getActionDependencyLocalObjectDao().insertOrReplace(alo);
+//}
 //    for (int i =0; i<=100;i ++) {
 //        GameLocalObject glo = new GameLocalObject();
 //        glo.setTitle("a game "+i);
@@ -120,11 +128,19 @@ for (int i =0; i<=100;i ++) {
 
 
 
-        BadgesDelegator.getInstance().syncBadges(2, "116743449349920850150");
+//        BadgesDelegator.getInstance().syncBadges(2, "116743449349920850150");
+//
 
         INQ.inquiry.syncInquiries();
         INQ.inquiry.syncHypothesis(151l);
-//        InquiryLocalObject iObject =DaoConfiguration.getInstance().getSession().getInquiryLocalObjectDao().load(7765l);
+//        InquiryLocalObject iObject = new InquiryLocalObject();
+//        iObject.setDescription("Stefaans test");
+//        iObject.setTitle("a title");
+//        iObject.setIsSynchronized(false);
+//        DaoConfiguration.getInstance().getSession().getInquiryLocalObjectDao().insert(iObject);
+//        INQ.inquiry.syncInquiries();
+
+
 //        Log.e("ARLearn", "inq loaded"+iObject.getTitle());
 //        for (BadgeLocalObject badge: iObject.getBadges()) {
 //            Log.e("ARLearn", "badge"+badge.getTitle());

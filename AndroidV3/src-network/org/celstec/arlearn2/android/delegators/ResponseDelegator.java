@@ -68,10 +68,7 @@ public class ResponseDelegator extends AbstractDelegator{
     }
 
     private void onEventAsync(SyncResponses syncResponses) {
-
         ResponseLocalObjectDao dao = DaoConfiguration.getInstance().getResponseLocalObjectDao();
-
-        Log.e("ARLearn", "st " + ARL.time.getServerTime());
         long serverTime = ARL.time.getServerTime();
 
         QueryBuilder<ResponseLocalObject> qb = dao.queryBuilder().orderAsc(ResponseLocalObjectDao.Properties.TimeStamp);
@@ -162,7 +159,6 @@ public class ResponseDelegator extends AbstractDelegator{
         QueryBuilder<ResponseLocalObject> qb = dao.queryBuilder().orderAsc(ResponseLocalObjectDao.Properties.TimeStamp);
         Query<ResponseLocalObject> notSyncedQuery = qb.where(ResponseLocalObjectDao.Properties.UriAsString.like("http://%"), ResponseLocalObjectDao.Properties.RunId.eq(runId)).build();
         for (ResponseLocalObject response : notSyncedQuery.list()) {
-            System.out.println(response.getUriAsString());
             File targetFile = urlToCacheFile(runId, response.getId(), response.getUri().getLastPathSegment());
             Uri newUri = Uri.fromFile(targetFile);
             try {
@@ -173,9 +169,9 @@ public class ResponseDelegator extends AbstractDelegator{
                     DaoConfiguration.getInstance().getResponseLocalObjectDao().insertOrReplace(response);
                 }
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                Log.e("ARLearn", e.getMessage(), e);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Log.e("ARLearn", e.getMessage(), e);
             }
         }
     }
