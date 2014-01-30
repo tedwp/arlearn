@@ -1,0 +1,14 @@
+build.gradle
+.classpath
+.settings/*
+bin/*
+gen/*
+lib/*
+/bin
+/libs
+/gen
+/out
+/ant.properties
+/local.properties
+/proguard-project.txt
+/project.properties

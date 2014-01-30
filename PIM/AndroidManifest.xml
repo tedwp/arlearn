@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="net.wespot.pim"
+          android:versionCode="1"
+          android:versionName="1.0">
+    <uses-sdk android:minSdkVersion="14"/>
+    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
+        <meta-data
+                android:name="com.google.android.gms.version"
+                android:value="4030500" />
+        <meta-data android:name="com.google.android.maps.v2.API_KEY"
+                   android:value="AIzaSyCmFOi19bTi0XHWEZ5Ytif02kZm8ywXAaU"/>
+        <activity android:name="net.wespot.pim.MainActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".GCMWakefulReceiver" android:exported="true"
+                  android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.RefreshList" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".GCMIntentService" />
+
+        <activity
+                android:name="net.wespot.pim.controller.ImageDetailActivity"
+                android:label="@string/app_name"
+                android:theme="@style/AppTheme.FullScreen" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value=".InquiryActivity" />
+        </activity>
+
+        <activity android:name="net.wespot.pim.controller.InquiryActivity" android:label="@string/inquiry_title_new" />
+    </application>
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="net.wespot.pim.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-feature
+            android:name="android.hardware.camera"
+            android:required="false" />
+    <uses-feature
+            android:name="android.hardware.camera.AUTOFOCUS"
+            android:required="false" />
+    <uses-feature
+            android:name="android.hardware.location.GPS"
+            android:required="false" />
+    <uses-feature
+            android:name="android.hardware.LOCATION"
+            android:required="false" />
+
+</manifest>
