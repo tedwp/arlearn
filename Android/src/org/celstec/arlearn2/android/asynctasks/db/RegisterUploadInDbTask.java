@@ -20,6 +20,7 @@ package org.celstec.arlearn2.android.asynctasks.db;
 
 import org.celstec.arlearn2.android.asynctasks.DatabaseTask;
 import org.celstec.arlearn2.android.asynctasks.GenericTask;
+import org.celstec.arlearn2.android.broadcast.NetworkSwitcher;
 import org.celstec.arlearn2.android.cache.MediaUploadCache;
 import org.celstec.arlearn2.android.db.DBAdapter;
 
@@ -113,7 +114,7 @@ public class RegisterUploadInDbTask  extends GenericTask implements  DatabaseTas
 	@Override
 	public void execute(DBAdapter db) {
 		db.getMediaCacheUpload().addFileToUpload(getItemId(), getLocalId(), getGameId(), getRunId(), getUsername(), getLocalFile(), getMimetype());
-		runAfterTasks(db.getContext()); //TODO do this in the thread that did invokes the execute
+		if (NetworkSwitcher.isOnline(db.getContext())) runAfterTasks(db.getContext()); //TODO do this in the thread that did invokes the execute
 	}
 	
 	
