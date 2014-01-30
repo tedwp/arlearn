@@ -1,7 +1,14 @@
 /gwt-unitCache
 /lib
-.idea
+/.idea
 /idea/*
 *.iml
 .settings
 Appengine/.gwt/.gwt-log
+Android/gradle/
+/Android/gradle/
+/Android/gradlew
+/Android/gradlew.bat
+/AndroidV3/.idea
+/Android/gradlew
+/Android/gradlew.bat
