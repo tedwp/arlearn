@@ -19,5 +19,6 @@
 		<jar destfile="../lib/ARLearnNetwork.jar" basedir="build/classes"></jar>
 		<jar destfile="../Android/libs/ARLearnNetwork.jar" basedir="build/classes"></jar>
         <jar destfile="../AndroidV3/libs/ARLearnNetwork.jar" basedir="build/classes"></jar>
+        <jar destfile="../PIM/libs/ARLearnNetwork.jar" basedir="build/classes"></jar>
 	</target>
 </project>
