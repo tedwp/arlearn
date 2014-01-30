@@ -116,6 +116,10 @@ public class Account extends Bean {
 		return accountLevel;
 	}
 
+    public boolean isAdministrator() {
+        return getAccountLevel() == ADMINISTRATOR;
+    }
+
 	public void setAccountLevel(Integer accountLevel) {
 		this.accountLevel = accountLevel;
 	}

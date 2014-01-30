@@ -26,59 +26,18 @@ import org.codehaus.jettison.json.JSONObject;
  * Contributors: Stefaan Ternier
  * ****************************************************************************
  */
-public class Category extends Bean {
+public class GameCategory extends Bean {
 
     private Long id;
+    private Long gameId;
     private Long categoryId;
-    private String title;
-    private String lang;
     private Boolean deleted;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getLang() {
-        return lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
-
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
-    }
 
     public static BeanDeserializer deserializer = new BeanDeserializer(){
 
         @Override
-        public Category toBean(JSONObject object) {
-            Category bean = new Category();
+        public GameCategory toBean(JSONObject object) {
+            GameCategory bean = new GameCategory();
             try {
                 initBean(object, bean);
             } catch (JSONException e) {
@@ -89,13 +48,11 @@ public class Category extends Bean {
 
         public void initBean(JSONObject object, Bean genericBean) throws JSONException {
             super.initBean(object, genericBean);
-            Category bean = (Category) genericBean;
+            GameCategory bean = (GameCategory) genericBean;
             if (object.has("id")) bean.setId(object.getLong("id"));
+            if (object.has("gameId")) bean.setGameId(object.getLong("gameId"));
             if (object.has("categoryId")) bean.setCategoryId(object.getLong("categoryId"));
-            if (object.has("title")) bean.setTitle(object.getString("title"));
-            if (object.has("lang")) bean.setLang(object.getString("lang"));
-            if (object.has("deleted")) bean.setDeleted(object.getBoolean("lang"));
-
+            if (object.has("deleted")) bean.setDeleted(object.getBoolean("categoryId"));
         }
     };
 
@@ -103,18 +60,49 @@ public class Category extends Bean {
 
         @Override
         public JSONObject toJSON(Object bean) {
-            Category categoryBean = (Category) bean;
+            GameCategory gameCategoryBean = (GameCategory) bean;
             JSONObject returnObject = super.toJSON(bean);
             try {
-                if (categoryBean.getId() != null) returnObject.put("id", categoryBean.getId());
-                if (categoryBean.getCategoryId() != null) returnObject.put("categoryId", categoryBean.getCategoryId());
-                if (categoryBean.getTitle() != null) returnObject.put("title", categoryBean.getTitle());
-                if (categoryBean.getLang() != null) returnObject.put("lang", categoryBean.getLang());
-                if (categoryBean.getDeleted() != null) returnObject.put("deleted", categoryBean.getDeleted());
+                if (gameCategoryBean.getId() != null) returnObject.put("id", gameCategoryBean.getId());
+                if (gameCategoryBean.getGameId() != null) returnObject.put("gameId", gameCategoryBean.getGameId());
+                if (gameCategoryBean.getCategoryId() != null) returnObject.put("categoryId", gameCategoryBean.getCategoryId());
+                if (gameCategoryBean.getDeleted() != null) returnObject.put("deleted", gameCategoryBean.getDeleted());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             return returnObject;
         }
     };
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(Long gameId) {
+        this.gameId = gameId;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 }

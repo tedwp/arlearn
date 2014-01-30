@@ -56,6 +56,9 @@ import org.celstec.arlearn2.beans.oauth.OauthInfo;
 import org.celstec.arlearn2.beans.oauth.OauthInfoList;
 import org.celstec.arlearn2.beans.run.*;
 import org.celstec.arlearn2.beans.store.Category;
+import org.celstec.arlearn2.beans.store.CategoryList;
+import org.celstec.arlearn2.beans.store.GameCategory;
+import org.celstec.arlearn2.beans.store.GameCategoryList;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -339,6 +342,9 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
         customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.ObjectCollectionDisplay$DisplayZone", ObjectCollectionDisplay.displayZoneDeserializer);
 
         customDeserializerMapString.put("org.celstec.arlearn2.beans.store.Category", Category.deserializer);
+        customDeserializerMapString.put("org.celstec.arlearn2.beans.oauth.CategoryList", CategoryList.deserializer);
+        customDeserializerMapString.put("org.celstec.arlearn2.beans.oauth.GameCategory", GameCategory.deserializer);
+        customDeserializerMapString.put("org.celstec.arlearn2.beans.oauth.GameCategoryList", GameCategoryList.deserializer);
 
         customDeserializerMapString.put("org.celstec.arlearn2.beans.run.User", User.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.AuthResponse", new AuthResponseDeserializer());

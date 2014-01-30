@@ -66,6 +66,9 @@ import org.celstec.arlearn2.beans.oauth.OauthInfoList;
 import org.celstec.arlearn2.beans.run.*;
 import org.celstec.arlearn2.beans.serializer.BeanSerializer;
 import org.celstec.arlearn2.beans.store.Category;
+import org.celstec.arlearn2.beans.store.CategoryList;
+import org.celstec.arlearn2.beans.store.GameCategory;
+import org.celstec.arlearn2.beans.store.GameCategoryList;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -157,6 +160,9 @@ public class JsonBeanSerialiser extends BeanSerializer{
         customSerializerMap.put(ObjectCollectionDisplay.DisplayZone.class.getCanonicalName(), ObjectCollectionDisplay.displayZoneSerializer);
 
         customSerializerMap.put(Category.class.getCanonicalName(), Category.serializer);
+        customSerializerMap.put(CategoryList.class.getCanonicalName(), CategoryList.serializer);
+        customSerializerMap.put(GameCategory.class.getCanonicalName(), GameCategory.serializer);
+        customSerializerMap.put(GameCategoryList.class.getCanonicalName(), GameCategoryList.serializer);
 
         customSerializerMap.put(YoutubeObject.class.getCanonicalName(), YoutubeObject.serializer);
 		customSerializerMap.put(OpenBadge.class.getCanonicalName(), OpenBadge.serializer);
