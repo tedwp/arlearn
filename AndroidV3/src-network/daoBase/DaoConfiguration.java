@@ -101,4 +101,13 @@ public class DaoConfiguration {
         return session.getDependencyLocalObjectDao();
     }
 
+    public CategoryLocalObjectDao getCategoryLocalObjectDao() {
+        return session.getCategoryLocalObjectDao();
+    }
+
+    public GameCategoryLocalObjectDao getGameCategoryDao() {
+        return session.getGameCategoryLocalObjectDao();
+    }
+
+
 }

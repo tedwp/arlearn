@@ -5,14 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import daoBase.DaoConfiguration;
+import de.greenrobot.dao.query.Query;
 import de.greenrobot.dao.query.QueryBuilder;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.events.GameEvent;
 import org.celstec.arlearn2.android.listadapter.LazyListAdapter;
-import org.celstec.dao.gen.*;
+import org.celstec.dao.gen.GameContributorLocalObject;
+import org.celstec.dao.gen.GameLocalObject;
+import org.celstec.dao.gen.GameLocalObjectDao;
+import org.celstec.dao.gen.RunLocalObject;
 
 /**
  * ****************************************************************************
@@ -34,32 +37,25 @@ import org.celstec.dao.gen.*;
  * Contributors: Stefaan Ternier
  * ****************************************************************************
  */
-public class GamesLazyListAdapter extends LazyListAdapter<GameLocalObject> {
+public class CategoryGamesLazyListAdapter extends LazyListAdapter<GameLocalObject> {
 
-    private QueryBuilder qb;
-    private GamesLazyListAdapter adapterInq;
+//    private QueryBuilder qb;
+    private Query query;
 
-    public GamesLazyListAdapter(Context context) {
+    public CategoryGamesLazyListAdapter(Context context, long category) {
         super(context);
         GameLocalObjectDao dao = DaoConfiguration.getInstance().getGameLocalObjectDao();
-        qb = dao.queryBuilder().orderAsc(GameLocalObjectDao.Properties.Title);
-        ARL.eventBus.register(this);
-        setLazyList(qb.listLazy());
-    }
+//        qb = dao.queryBuilder().orderAsc(GameLocalObjectDao.Properties.Title);
+        query = dao.queryRawCreate(
+                ", GAME_CATEGORY_LOCAL_OBJECT G WHERE G.CATEGORY_ID=? AND T._ID=G.GAME_ID", ""+category);
 
-    public GamesLazyListAdapter(Context context, boolean showDeleted) {
-        super(context);
-        GameLocalObjectDao dao = DaoConfiguration.getInstance().getGameLocalObjectDao();
-        qb = dao.queryBuilder().orderAsc(GameLocalObjectDao.Properties.Title);
-        qb.where(GameLocalObjectDao.Properties.Deleted.eq(showDeleted));
         ARL.eventBus.register(this);
-        setLazyList(qb.listLazy());
+        setLazyList(query.listLazy());
     }
-
 
     public void onEventMainThread(GameEvent event) {
         if (lazyList != null) lazyList.close();
-        setLazyList(qb.listLazy());
+        setLazyList(query.listLazy());
         notifyDataSetChanged();
     }
 

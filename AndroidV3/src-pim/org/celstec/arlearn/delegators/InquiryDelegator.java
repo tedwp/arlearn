@@ -35,6 +35,7 @@ import org.codehaus.jettison.json.JSONObject;
 public class InquiryDelegator {
 
     private static InquiryDelegator instance;
+    private InquiryLocalObject currentInquiry;
 
     private InquiryDelegator() {
         ARL.eventBus.register(this);
@@ -45,6 +46,18 @@ public class InquiryDelegator {
             instance = new InquiryDelegator();
         }
         return instance;
+    }
+
+    public InquiryLocalObject getCurrentInquiry() {
+        return currentInquiry;
+    }
+
+    public void setCurrentInquiry(InquiryLocalObject currentInquiry) {
+        this.currentInquiry = currentInquiry;
+    }
+
+    public InquiryLocalObject getInquiryLocalObject(long inquiryId) {
+        return INQ.dao.getInquiryLocalObjectDao().load(inquiryId);
     }
 
     public void syncInquiries() {

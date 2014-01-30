@@ -44,7 +44,7 @@ public class ResponseLocalObjectDao extends AbstractDao<ResponseLocalObject, Lon
         public final static Property Lng = new Property(13, Double.class, "lng", false, "LNG");
         public final static Property RunId = new Property(14, long.class, "runId", false, "RUN_ID");
         public final static Property GeneralItem = new Property(15, long.class, "generalItem", false, "GENERAL_ITEM");
-        public final static Property Account = new Property(16, long.class, "account", false, "ACCOUNT");
+        public final static Property Account = new Property(16, Long.class, "account", false, "ACCOUNT");
     };
 
     private DaoSession daoSession;
@@ -81,7 +81,7 @@ public class ResponseLocalObjectDao extends AbstractDao<ResponseLocalObject, Lon
                 "'LNG' REAL," + // 13: lng
                 "'RUN_ID' INTEGER NOT NULL ," + // 14: runId
                 "'GENERAL_ITEM' INTEGER NOT NULL ," + // 15: generalItem
-                "'ACCOUNT' INTEGER NOT NULL );"); // 16: account
+                "'ACCOUNT' INTEGER);"); // 16: account
     }
 
     /** Drops the underlying database table. */
@@ -166,7 +166,11 @@ public class ResponseLocalObjectDao extends AbstractDao<ResponseLocalObject, Lon
         }
         stmt.bindLong(15, entity.getRunId());
         stmt.bindLong(16, entity.getGeneralItem());
-        stmt.bindLong(17, entity.getAccount());
+ 
+        Long account = entity.getAccount();
+        if (account != null) {
+            stmt.bindLong(17, account);
+        }
     }
 
     @Override
@@ -201,7 +205,7 @@ public class ResponseLocalObjectDao extends AbstractDao<ResponseLocalObject, Lon
             cursor.isNull(offset + 13) ? null : cursor.getDouble(offset + 13), // lng
             cursor.getLong(offset + 14), // runId
             cursor.getLong(offset + 15), // generalItem
-            cursor.getLong(offset + 16) // account
+            cursor.isNull(offset + 16) ? null : cursor.getLong(offset + 16) // account
         );
         return entity;
     }
@@ -225,7 +229,7 @@ public class ResponseLocalObjectDao extends AbstractDao<ResponseLocalObject, Lon
         entity.setLng(cursor.isNull(offset + 13) ? null : cursor.getDouble(offset + 13));
         entity.setRunId(cursor.getLong(offset + 14));
         entity.setGeneralItem(cursor.getLong(offset + 15));
-        entity.setAccount(cursor.getLong(offset + 16));
+        entity.setAccount(cursor.isNull(offset + 16) ? null : cursor.getLong(offset + 16));
      }
     
     /** @inheritdoc */
@@ -309,9 +313,7 @@ public class ResponseLocalObjectDao extends AbstractDao<ResponseLocalObject, Lon
         offset += daoSession.getGeneralItemLocalObjectDao().getAllColumns().length;
 
         AccountLocalObject accountLocalObject = loadCurrentOther(daoSession.getAccountLocalObjectDao(), cursor, offset);
-         if(accountLocalObject != null) {
-            entity.setAccountLocalObject(accountLocalObject);
-        }
+        entity.setAccountLocalObject(accountLocalObject);
 
         return entity;    
     }

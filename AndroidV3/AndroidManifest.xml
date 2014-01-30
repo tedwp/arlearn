@@ -8,23 +8,23 @@
     <meta-data
             android:name="com.google.android.gms.version"
             android:value="4132500" />
-    <!--<activity android:name=".StructureSlidingPaneLayout"-->
-              <!--android:label="@string/app_name"-->
-              <!--android:theme="@style/ARLearn">-->
-        <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN"/>-->
-            <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-        <!--</intent-filter>-->
-    <!--</activity>-->
-
-    <activity
-            android:name=".testAdapters.TestAdapters"
-            android:label="@string/app_name">
+    <activity android:name=".StructureSlidingPaneLayout"
+              android:label="@string/app_name"
+              android:theme="@style/ARLearn">
         <intent-filter>
             <action android:name="android.intent.action.MAIN"/>
             <category android:name="android.intent.category.LAUNCHER"/>
         </intent-filter>
     </activity>
+
+    <!--<activity-->
+            <!--android:name=".testAdapters.TestAdapters"-->
+            <!--android:label="@string/app_name">-->
+        <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN"/>-->
+            <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+        <!--</intent-filter>-->
+    <!--</activity>-->
 
     <activity android:name=".testAdapters.MyGames" android:label="@string/app_name"/>
     <activity android:name=".testAdapters.AllAccounts" android:label="@string/app_name"/>

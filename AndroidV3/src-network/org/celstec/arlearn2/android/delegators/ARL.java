@@ -41,12 +41,14 @@ public class ARL {
     public static ResponseDelegator responses;
     public static PropertiesAdapter properties;
     public static TimeDelegator time;
+    public static StoreDelegator store;
     public static EventBus eventBus = new EventBus();
+    public static DaoConfiguration dao;
     private static Context ctx;
 
     public static void init(Context ctx) {
         ARL.ctx = ctx;
-        DaoConfiguration daoConfiguration= DaoConfiguration.getInstance(ctx);
+        dao= DaoConfiguration.getInstance(ctx);
 
         properties = PropertiesAdapter.getInstance(ctx);
         games = GameDelegator.getInstance();
@@ -56,6 +58,7 @@ public class ARL {
         time = TimeDelegator.getInstance(ctx);
         fileReferences = GiFileReferenceDelegator.getInstance();
         responses = ResponseDelegator.getInstance();
+        store = StoreDelegator.getInstance();
         new GCMRegisterTask().execute((Activity) ctx);
 
     }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/categoryItem"
+android:orientation="vertical"
+style="@style/ARLearn.Store"
+android:layout_weight="1"
+android:layout_height="100dp"
+        >
+
+<ImageView
+        style="@style/ARLearn.HomePane.Icon"
+        android:id="@+id/storeIcon"
+        android:src="@drawable/icon_store"
+        android:contentDescription="store section"/>
+
+<TextView
+        style="@style/ARLearn.HomePane.Text"
+
+        android:text="..."
+        android:id="@+id/categoryItemText"/>
+
+</RelativeLayout>

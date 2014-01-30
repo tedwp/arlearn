@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:paddingLeft="16dp"
+              android:paddingRight="16dp"
+              android:orientation="vertical"
+              android:background="#f8fafb"
+        >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+
+                  android:orientation="horizontal"
+                  android:layout_weight="1">
+
+        <RelativeLayout
+                android:id="@+id/games"
+                android:orientation="vertical"
+                style="@style/ARLearn.MyGames"
+                >
+
+            <ImageView
+                    style="@style/ARLearn.HomePane.Icon"
+
+                    android:id="@+id/gamesIcon"
+                    android:src="@drawable/icon_mygames"
+                    android:contentDescription="my games section"
+
+                    />
+
+            <TextView
+                    style="@style/ARLearn.HomePane.Text"
+                    android:id="@+id/searchText"
+                    android:layout_width="fill_parent"
+                    android:text="@string/searchText"
+                    />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/category"
+                android:orientation="vertical"
+                style="@style/ARLearn.Store"
+                >
+
+            <ImageView
+                    style="@style/ARLearn.HomePane.Icon"
+                    android:id="@+id/storeIcon"
+                    android:src="@drawable/icon_store"
+                    android:contentDescription="store section"/>
+
+            <TextView
+                    style="@style/ARLearn.HomePane.Text"
+
+                    android:text="@string/category"
+                    android:id="@+id/category"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+        <RelativeLayout
+                android:id="@+id/scan"
+                style="@style/ARLearn.Scan">
+
+            <ImageView
+                    style="@style/ARLearn.HomePane.Icon"
+                    android:id="@+id/scanIcon"
+                    android:src="@drawable/icon_scan"
+                    android:contentDescription="scan section"/>
+
+            <TextView
+                    style="@style/ARLearn.HomePane.Text"
+                    android:text="@string/topGames"
+                    android:id="@+id/topGames"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/nearme"
+                style="@style/ARLearn.NearBy">
+
+            <ImageView
+                    style="@style/ARLearn.HomePane.Icon"
+                    android:id="@+id/nearMeIcon"
+                    android:src="@drawable/icon_nearby"
+                    android:contentDescription="near me section"/>
+
+            <TextView
+                    style="@style/ARLearn.HomePane.Text"
+                    android:text="@string/nearMe"
+                    android:id="@+id/nearMe"/>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

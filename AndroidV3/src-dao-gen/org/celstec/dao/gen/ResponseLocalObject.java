@@ -1,6 +1,5 @@
 package org.celstec.dao.gen;
 
-
 import org.celstec.dao.gen.DaoSession;
 import de.greenrobot.dao.DaoException;
 
@@ -37,7 +36,7 @@ public class ResponseLocalObject {
     private Double lng;
     private long runId;
     private long generalItem;
-    private long account;
+    private Long account;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -62,7 +61,7 @@ public class ResponseLocalObject {
         this.id = id;
     }
 
-    public ResponseLocalObject(Long id, Integer type, String contentType, String UriAsString, String value, Boolean isSynchronized, Boolean revoked, Long nextSynchronisationTime, Integer amountOfSynchronisationAttempts, Long timeStamp, Integer width, Integer height, Double lat, Double lng, long runId, long generalItem, long account) {
+    public ResponseLocalObject(Long id, Integer type, String contentType, String UriAsString, String value, Boolean isSynchronized, Boolean revoked, Long nextSynchronisationTime, Integer amountOfSynchronisationAttempts, Long timeStamp, Integer width, Integer height, Double lat, Double lng, long runId, long generalItem, Long account) {
         this.id = id;
         this.type = type;
         this.contentType = contentType;
@@ -216,11 +215,11 @@ public class ResponseLocalObject {
         this.generalItem = generalItem;
     }
 
-    public long getAccount() {
+    public Long getAccount() {
         return account;
     }
 
-    public void setAccount(long account) {
+    public void setAccount(Long account) {
         this.account = account;
     }
 
@@ -254,7 +253,7 @@ public class ResponseLocalObject {
 
     /** To-one relationship, resolved on first access. */
     public AccountLocalObject getAccountLocalObject() {
-        long __key = this.account;
+        Long __key = this.account;
         if (accountLocalObject__resolvedKey == null || !accountLocalObject__resolvedKey.equals(__key)) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
@@ -270,12 +269,9 @@ public class ResponseLocalObject {
     }
 
     public void setAccountLocalObject(AccountLocalObject accountLocalObject) {
-        if (accountLocalObject == null) {
-            throw new DaoException("To-one property 'account' has not-null constraint; cannot set to-one to null");
-        }
         synchronized (this) {
             this.accountLocalObject = accountLocalObject;
-            account = accountLocalObject.getId();
+            account = accountLocalObject == null ? null : accountLocalObject.getId();
             accountLocalObject__resolvedKey = account;
         }
     }

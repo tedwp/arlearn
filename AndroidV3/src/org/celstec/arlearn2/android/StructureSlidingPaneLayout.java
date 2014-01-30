@@ -11,6 +11,8 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import org.celstec.arlearn2.android.events.CategoryEvent;
+import org.celstec.dao.gen.CategoryLocalObject;
 
 /**
  * ****************************************************************************
@@ -50,22 +52,6 @@ public class StructureSlidingPaneLayout extends SherlockFragmentActivity {
 
         setContentView(R.layout.structure_sliding_pane);
         getSupportActionBar().setIcon(R.drawable.arlearn_icon_48);
-//        getSupportActionBar().getThemedContext().setTheme(R.style.MyActionBar);
-
-        // List of settings
-//        settings_list = (LinearLayout) findViewById(R.id.container);
-
-//        for (int i = 0; i < Utils.SETTING_LIST.size(); i++){
-//            settings_list.addView(createNewButton(i, Utils.SETTING_LIST.get(i), R.drawable.ic_launcher, SETTINGS_LIST));
-//        }
-
-        // Slide Pane
-//        mSlidingLayout = (SlidingPaneLayout) findViewById(R.id.sliding_pane_layout);
-//        mSlidingLayout.setPanelSlideListener(new SliderListener());
-//        mSlidingLayout.setParallaxDistance(200);
-//        mSlidingLayout.setShadowResource(R.drawable.slidingmenu_shadow);
-//        mSlidingLayout.setCoveredFadeColor(Color.parseColor("#000000"));
-//        mSlidingLayout.getViewTreeObserver().addOnGlobalLayoutListener(new FirstLayoutListener());
 
         // Action bar
         mActionBar = createActionBarHelper();
@@ -74,27 +60,6 @@ public class StructureSlidingPaneLayout extends SherlockFragmentActivity {
         // Handle fragments. First time a default fragment is placed here.
         restoreFragment(savedInstanceState);
     }
-
-//    private View createNewButton(int id, String c_text, int c_image, int type ) {
-//        RelativeLayout layout_button = (RelativeLayout) getLayoutInflater().inflate(R.layout.structure_row_menu_sliding_panel, null);
-//
-//        TextView text = (TextView) layout_button.findViewById(R.id.text);
-//        ImageView image = (ImageView) layout_button.findViewById(R.id.icon);
-//
-//        text.setText(c_text);
-//        text.setId(id);
-//
-//        switch (type){
-//            case SETTINGS_LIST:
-//                text.setOnClickListener(new ClickOnSettingsList());
-//                break;
-//        }
-//
-//        image.setImageDrawable(getResources().getDrawable(c_image));
-//        image.getLayoutParams().height = 60;
-//
-//        return layout_button;
-//    }
 
     private void restoreFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null){
@@ -215,4 +180,5 @@ public class StructureSlidingPaneLayout extends SherlockFragmentActivity {
             // TODO add functionality
         }
     }
+
 }

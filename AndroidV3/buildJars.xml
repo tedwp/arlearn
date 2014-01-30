@@ -24,7 +24,8 @@
     <target name="compile_base" depends="clean base">
         <mkdir dir="build/base/classes" />
 
-        <javac target="1.6" srcdir="src-dao-gen" destdir="build/base/classes" classpathref="classpath" debug="on" excludes="org/celstec/dao/ARlearnDaoGenerator.java,org/celstec/arlearn2/android/listadapter/**">
+        <javac target="1.6" srcdir="src-dao-gen" verbose="true"
+               destdir="build/base/classes" classpathref="classpath" debug="on" excludes="org/celstec/dao/ARlearnDaoGenerator.java,org/celstec/arlearn2/android/listadapter/**">
             <src path="src-network"></src>
         </javac>
         <javac target="1.6" srcdir="src-network" destdir="build/base/classes" classpathref="classpath" debug="on" excludes="org/celstec/arlearn2/android/listadapter/impl/**"/>

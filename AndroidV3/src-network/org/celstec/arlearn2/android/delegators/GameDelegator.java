@@ -55,6 +55,22 @@ public final class GameDelegator extends AbstractDelegator{
         return instance;
     }
 
+    public void syncGame(Long gameId) {
+        ARL.eventBus.post(new SyncGame(gameId));
+
+    }
+    private void onEventAsync(SyncGame g) {
+        String token = returnTokenIfOnline();
+        if (token != null) {
+            Game game = GameClient.getGameClient().getGame(token, g.getGameId());
+            if (game.getError() == null) {
+                GamesList gl = new GamesList();
+                gl.addGame(game);
+                process(gl);
+            }
+        }
+    }
+
     private void onEventAsync(SyncGamesEventParticipate sge) {
         String token = returnTokenIfOnline();
         if (token != null) {
@@ -116,6 +132,23 @@ public final class GameDelegator extends AbstractDelegator{
         return gameDao;
     }
 
+
+
+    private class SyncGame {
+        private long gameId;
+
+        private SyncGame(long gameId) {
+            this.gameId = gameId;
+        }
+
+        public long getGameId() {
+            return gameId;
+        }
+
+        public void setGameId(long gameId) {
+            this.gameId = gameId;
+        }
+    }
 
     private class SyncGamesEventParticipate {
 

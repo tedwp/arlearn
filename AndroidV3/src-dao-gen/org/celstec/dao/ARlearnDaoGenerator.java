@@ -43,6 +43,10 @@ public class ARlearnDaoGenerator {
     private static Entity response;
     private static Entity inquiry;
     private static Entity badge;
+
+    private static Entity category;
+    private static Entity gameCategory;
+
     private static Entity generalItemVisibility;
 
     public static void main(String[] args) throws Exception {
@@ -63,6 +67,8 @@ public class ARlearnDaoGenerator {
         generalItemVisibility = createGeneralItemVisibility(schema);
         badge = createBadges(schema);
 
+        category = createCategory(schema);
+        gameCategory = createGameCategory(schema);
         new DaoGenerator().generateAll(schema, "src-dao-gen");
 
     }
@@ -183,7 +189,7 @@ public class ARlearnDaoGenerator {
         response.addToOne(generalItem, itemId);
         generalItem.addToMany(response, itemId, "responses");
 
-        Property accountId = response.addLongProperty("account").notNull().getProperty();
+        Property accountId = response.addLongProperty("account").getProperty();
         response.addToOne(account, accountId);
 
         return response;
@@ -348,6 +354,30 @@ public class ARlearnDaoGenerator {
         runToGeneralItemVisibility.setName("visibilities");
 
         return generalItemVisibility;
+    }
+
+    private static Entity createCategory(Schema schema) {
+        Entity category = schema.addEntity("CategoryLocalObject");
+        category.addIdProperty();
+        category.addStringProperty("lang");
+        category.addStringProperty("category");
+        category.addBooleanProperty("deleted");
+        return category;
+    }
+
+    private static Entity createGameCategory(Schema schema) {
+        Entity gameCategory = schema.addEntity("GameCategoryLocalObject");
+        gameCategory.addIdProperty();
+        gameCategory.addBooleanProperty("deleted");
+
+        Property categoryId = gameCategory.addLongProperty("categoryId").getProperty();
+        ToMany toMany = category.addToMany(gameCategory, categoryId);
+        toMany.setName("games");
+
+        Property gameId = gameCategory.addLongProperty("gameId").getProperty();
+        gameCategory.addToOne(game, gameId);
+        return gameCategory;
+
     }
 
 }

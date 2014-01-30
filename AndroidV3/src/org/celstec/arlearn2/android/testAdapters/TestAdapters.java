@@ -100,6 +100,8 @@ public class TestAdapters extends Activity {
             }
         });
         ARL.eventBus.register(this);
+        ARL.store.synCategories();
+        ARL.store.syncGamesForCategory(3l);
 
         ActionLocalObject alo = new ActionLocalObject();
 //        alo.setId(1l);
@@ -131,8 +133,11 @@ public class TestAdapters extends Activity {
 //        BadgesDelegator.getInstance().syncBadges(2, "116743449349920850150");
 //
 
+
         INQ.inquiry.syncInquiries();
         INQ.inquiry.syncHypothesis(151l);
+        InquiryLocalObject object;
+
 //        InquiryLocalObject iObject = new InquiryLocalObject();
 //        iObject.setDescription("Stefaans test");
 //        iObject.setTitle("a title");

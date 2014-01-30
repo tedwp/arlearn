@@ -1,15 +1,16 @@
 package org.celstec.arlearn2.android;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
-import org.celstec.arlearn2.android.events.FileDownloadStatus;
+import org.celstec.arlearn.delegators.INQ;
+import org.celstec.arlearn2.android.delegators.ARL;
 
 /**
  * ****************************************************************************
@@ -33,16 +34,23 @@ import org.celstec.arlearn2.android.events.FileDownloadStatus;
  */
 public class MainMenu extends SherlockFragment {
     private static final String TAG = "MainMenu";
+    private String authToken = "ya29.1.AADtN_V345QcK9W1bqSBWH98rK1pb2fl9KDsfvzhtDlOBkERiDXuuvRMlT9_6zg";
 
     private View button1;
-    private View button2;
+    private View storeButton;
     private View button3;
     private View button4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
+        INQ.init(getActivity());
+        ARL.properties.setAuthToken(authToken);
+        ARL.properties.setFullId("2:116757187626671489073");
+
+        ARL.accounts.syncMyAccountDetails();
+
 
     }
 
@@ -54,12 +62,12 @@ public class MainMenu extends SherlockFragment {
         // TODO some styling
         ((TextView)v.findViewById(R.id.gameText)).setText("iets anders");
         button1 = v.findViewById(R.id.games);
-        button2 =  v.findViewById(R.id.store);
+        storeButton =  v.findViewById(R.id.store);
         button3 =  v.findViewById(R.id.scan);
         button4 =  v.findViewById(R.id.nearme);
 
         button1.setOnClickListener(new ClickButton1());
-        button2.setOnClickListener(new ClickButton2());
+        storeButton.setOnClickListener(new ClickButton2());
         button3.setOnClickListener(new ClickButton3());
         button4.setOnClickListener(new ClickButton4());
 
@@ -78,6 +86,14 @@ public class MainMenu extends SherlockFragment {
         @Override
         public void onClick(View view) {
             Log.e(TAG, "Click Store" );
+//            startActivity(new Intent(MainMenu.this.getActivity(), StoreActivity.class));
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                Bundle args = new Bundle();
+
+                StoreFragment frag = new StoreFragment();
+                frag.setArguments(args);
+                fm.beginTransaction().replace(R.id.right_pane, frag).addToBackStack(null).commit();
         }
     }
 

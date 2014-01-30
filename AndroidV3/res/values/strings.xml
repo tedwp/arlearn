@@ -6,4 +6,8 @@
     <string name="library">Library</string>
     <string name="scan">Scan</string>
     <string name="nearMe">Near Me</string>
+
+    <string name="searchText">Search</string>
+    <string name="category">Category</string>
+    <string name="topGames">Top games</string>
 </resources>
