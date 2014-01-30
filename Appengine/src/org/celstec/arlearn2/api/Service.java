@@ -64,6 +64,10 @@ public class Service {
 			return false;
 		}
 	}
+
+    public boolean isAdministrator(String authToken) {
+        return validCredentials(authToken) && account.isAdministrator();
+    }
 	
 	protected String toJson(Object bean) {
 		if (bean == null) return "";

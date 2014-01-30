@@ -2,6 +2,8 @@ package org.celstec.arlearn2.cache;
 
 import com.google.appengine.api.utils.SystemProperty;
 import org.celstec.arlearn2.beans.generalItem.GeneralItemList;
+import org.celstec.arlearn2.beans.store.Category;
+import org.celstec.arlearn2.beans.store.CategoryList;
 import org.celstec.arlearn2.delegators.ActionRelevancyPredictor;
 
 import java.util.HashSet;
@@ -42,11 +44,31 @@ public class CategoryCache extends GenericCache {
 
     }
 
-    public void storeKeyValue(String key, String value) {
-        getCache().put(CATEGORY_PREFIX+key, value);
+    public void storeCategory(Category bean) {
+        getCache().put(CATEGORY_PREFIX+bean.getId(), bean);
     }
 
-    public String getValue(String key) {
-        return (String) getCache().get(CATEGORY_PREFIX+key);
+    public void storeCategories(CategoryList bean) {
+        if (!bean.getCategoryList().isEmpty()){
+            getCache().put(CATEGORY_PREFIX+":lang:"+bean.getCategoryList().get(0).getLang(), bean);
+        }
+    }
+
+    public void storeCategoriesByCatId(CategoryList bean) {
+        if (!bean.getCategoryList().isEmpty()){
+            getCache().put(CATEGORY_PREFIX+":catId:"+bean.getCategoryList().get(0).getCategoryId(), bean);
+        }
+    }
+
+    public Category getCategory(Long id) {
+        return (Category) getCache().get(CATEGORY_PREFIX+id);
+    }
+
+    public CategoryList getCategories(String lang) {
+        return (CategoryList) getCache().get(CATEGORY_PREFIX+":lang:"+lang);
+    }
+
+    public CategoryList getCategories(Long categoryId) {
+        return (CategoryList) getCache().get(CATEGORY_PREFIX+":catId:"+categoryId);
     }
 }

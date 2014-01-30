@@ -4,12 +4,14 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.beans.store.Category;
+import org.celstec.arlearn2.beans.store.CategoryList;
 import org.celstec.arlearn2.jdo.PMF;
 import org.celstec.arlearn2.jdo.classes.AccountJDO;
 import org.celstec.arlearn2.jdo.classes.CategoryJDO;
 import org.celstec.arlearn2.jdo.classes.RunAccessJDO;
 
 import javax.jdo.PersistenceManager;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,14 +36,16 @@ import java.util.List;
  */
 public class CategoryManager {
 
-    public static CategoryJDO addCategory(String title, String lang) {
+    public static Category addCategory(Long categoryId, String title, String lang) {
         PersistenceManager pm = PMF.get().getPersistenceManager();
         CategoryJDO categoryJDO = new CategoryJDO();
+        categoryJDO.setCategoryId(categoryId);
         categoryJDO.setTitle(title);
         categoryJDO.setLang(lang);
+        categoryJDO.setDeleted(false);
         try {
             pm.makePersistent(categoryJDO);
-            return categoryJDO;
+            return toBean(categoryJDO);
         } finally {
             pm.close();
         }
@@ -51,7 +55,7 @@ public class CategoryManager {
         return null;
     }
 
-    public Category getCategory(long id) {
+    public static Category getCategory(long id) {
         PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             return toBean(pm.getObjectById(CategoryJDO.class, KeyFactory
@@ -65,6 +69,40 @@ public class CategoryManager {
         }
     }
 
+    public static CategoryList getCategories(String lang) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        try {
+            javax.jdo.Query query = pm.newQuery(CategoryJDO.class);
+            query.setFilter("lang == '"+lang+"'");
+            List<CategoryJDO> list = (List<CategoryJDO>) query.execute();
+            CategoryList resultList = new CategoryList();
+            for (CategoryJDO categoryJDO : list) {
+                resultList.addCategory(toBean(categoryJDO));
+            }
+            return resultList;
+        } finally {
+            pm.close();
+        }
+    }
+
+    public static CategoryList getCategories(Long id) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        try {
+            javax.jdo.Query query = pm.newQuery(CategoryJDO.class);
+            query.setFilter("categoryId == "+id);
+            List<CategoryJDO> list = (List<CategoryJDO>) query.execute();
+            CategoryList resultList = new CategoryList();
+            for (CategoryJDO categoryJDO : list) {
+                resultList.addCategory(toBean(categoryJDO));
+            }
+            return resultList;
+        } finally {
+            pm.close();
+        }
+    }
+
+
+
     public static Category toBean(CategoryJDO jdo){
         if (jdo == null)
             return null;
@@ -72,7 +110,12 @@ public class CategoryManager {
         category.setLang(jdo.getLang());
         category.setTitle(jdo.getTitle());
         category.setId(jdo.getId());
+        category.setDeleted(jdo.getDeleted());
+        category.setCategoryId(jdo.getCategoryId());
         return category;
 
     }
+
+
+
 }

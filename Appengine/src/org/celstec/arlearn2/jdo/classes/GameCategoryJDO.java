@@ -1,13 +1,11 @@
 package org.celstec.arlearn2.jdo.classes;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-
 /**
  * ****************************************************************************
  * Copyright (C) 2013 Open Universiteit Nederland
@@ -29,7 +27,7 @@ import javax.jdo.annotations.PrimaryKey;
  * ****************************************************************************
  */
 @PersistenceCapable
-public class CategoryJDO {
+public class GameCategoryJDO {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -39,16 +37,13 @@ public class CategoryJDO {
     private Long categoryId;
 
     @Persistent
-    private String title;
-
-    @Persistent
-    private String lang;
+    private Long gameId;
 
     @Persistent
     private Boolean deleted;
 
-    public Long getId() {
-        return id.getId();
+    public Key getId() {
+        return id;
     }
 
     public void setId(Key id) {
@@ -63,20 +58,12 @@ public class CategoryJDO {
         this.categoryId = categoryId;
     }
 
-    public String getTitle() {
-        return title;
+    public Long getGameId() {
+        return gameId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getLang() {
-        return lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
+    public void setGameId(Long gameId) {
+        this.gameId = gameId;
     }
 
     public Boolean getDeleted() {

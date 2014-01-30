@@ -3,10 +3,8 @@ package org.celstec.arlearn2.jdo.classes;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
 
 /**
  * ****************************************************************************
@@ -29,61 +27,41 @@ import javax.jdo.annotations.PrimaryKey;
  * ****************************************************************************
  */
 @PersistenceCapable
-public class CategoryJDO {
-
-    @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    protected Key id;
+public class TopGames extends GameClass {
 
     @Persistent
-    private Long categoryId;
+    private Long amountOfUsers;
 
     @Persistent
-    private String title;
+    private Long generateTimestamp;
 
-    @Persistent
-    private String lang;
-
-    @Persistent
-    private Boolean deleted;
-
-    public Long getId() {
+    public Long getGameId() {
         return id.getId();
     }
 
-    public void setId(Key id) {
-        this.id = id;
+    public void setGameId(Long gameId) {
+        super.setGameId(gameId);
+        if (gameId != null)
+            setGameId(KeyFactory.createKey(TopGames.class.getSimpleName(), gameId));
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public void setGameId(Key gameId) {
+        this.id = gameId;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public Long getAmountOfUsers() {
+        return amountOfUsers;
     }
 
-    public String getTitle() {
-        return title;
+    public void setAmountOfUsers(Long amountOfUsers) {
+        this.amountOfUsers = amountOfUsers;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public Long getGenerateTimestamp() {
+        return generateTimestamp;
     }
 
-    public String getLang() {
-        return lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
-
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
+    public void setGenerateTimestamp(Long generateTimestamp) {
+        this.generateTimestamp = generateTimestamp;
     }
 }

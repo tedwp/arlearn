@@ -10,6 +10,8 @@ import org.celstec.arlearn2.jdo.manager.AccountManager;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Path("/account")
 public class AccountApi extends Service {
@@ -112,6 +114,7 @@ public class AccountApi extends Service {
 		ad.makeSuper(accountFullId);
 		return "{}";
 	}
+    private static final Logger log = Logger.getLogger(AccountApi.class.getName());
 
     @POST
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -124,6 +127,8 @@ public class AccountApi extends Service {
     ) throws AuthenticationException {
 
         Object inContact = deserialise(contact, Account.class, contentType);
+        log.log(Level.SEVERE, "registering account"+contact);
+
         if (inContact instanceof java.lang.String)
             return serialise(getBeanDoesNotParseException((String) inContact), accept);
         AccountDelegator ad = new AccountDelegator(this);
