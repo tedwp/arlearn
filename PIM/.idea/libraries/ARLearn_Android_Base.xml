@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="ARLearn-Android-Base">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/ARLearn-Android-Base.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/ARLearn-Android-PIM.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/ARLearnBeans.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/ARLearnNetwork.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/greendao-1.3.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jettison-1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/libs/ARLearn-Android-Base.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/ARLearn-Android-PIM.jar!/" />
+    </SOURCES>
+  </library>
+</component>

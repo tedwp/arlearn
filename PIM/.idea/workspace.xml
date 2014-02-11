@@ -1,0 +1,1212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidDataSourceStorage">
+    <data-sources>
+      <data-source>
+        <classpath-elements>
+          <url>file://$USER_HOME$/Library/Preferences/IntelliJIdea13/jdbc-drivers/xerial-sqlite-license.txt</url>
+        </classpath-elements>
+        <classpath-elements>
+          <url>file://$USER_HOME$/Library/Preferences/IntelliJIdea13/jdbc-drivers/sqlite-jdbc-3.7.6.3-20110609.081603-3.jar</url>
+        </classpath-elements>
+        <option name="databaseName" value="games-db" />
+        <option name="deviceId" value="SERIAL_NUMBER_HT247W107563" />
+        <option name="name" value="Android SQLite" />
+        <option name="packageName" value="com.example.RefreshList" />
+      </data-source>
+    </data-sources>
+  </component>
+  <component name="AndroidLayoutPreviewToolWindow">
+    <option name="state">
+      <GlobalState>
+        <option name="visible" value="false" />
+      </GlobalState>
+    </option>
+  </component>
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+    <layouts>
+      <layout url="file://$PROJECT_DIR$/res/layout/fragment_new_wondermoment.xml">
+        <config>
+          <device>Nexus 4</device>
+          <theme>@android:style/Theme.Holo</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/res/layout/fragment_profile.xml">
+        <config>
+          <device>Nexus 4</device>
+          <theme>@android:style/Theme.Holo</theme>
+        </config>
+      </layout>
+    </layouts>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="ERROR" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3a183c58-9f26-4636-a0b3-55c48675f03d" name="Default" comment="" />
+    <ignored path="RefreshList.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="DebuggerManager">
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </breakpoint_any>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <breakpoint_rules />
+    <ui_properties />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="RefreshList" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="InqMapFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/InqMapFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="27" column="10" selection-start="1101" selection-end="1101" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="1500">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ImageDetailActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/controller/ImageDetailActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="29" column="10" selection-start="1052" selection-end="1052" vertical-scroll-proportion="0.0" vertical-offset="435" max-vertical-offset="3225">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InqDataFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/InqDataFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="12" column="21" selection-start="351" selection-end="351" vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="4920">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InqImageGridFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/InqImageGridFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="41" column="17" selection-start="1575" selection-end="1575" vertical-scroll-proportion="0.0" vertical-offset="615" max-vertical-offset="4830">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InqImageDetailFragment.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/InqImageDetailFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="53" column="17" selection-start="1983" selection-end="1983" vertical-scroll-proportion="0.30607477" vertical-offset="323" max-vertical-offset="1485">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InqHypothesisFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/InqHypothesisFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="29" column="10" selection-start="1172" selection-end="1172" vertical-scroll-proportion="0.0" vertical-offset="435" max-vertical-offset="1020">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InquiryActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/controller/InquiryActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="26" column="10" selection-start="912" selection-end="912" vertical-scroll-proportion="0.0" vertical-offset="390" max-vertical-offset="2760">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DrawerActionBarBaseFragActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/layout/DrawerActionBarBaseFragActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="12" column="10" selection-start="377" selection-end="377" vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="3780">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InqWonderMomentFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/InqWonderMomentFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="44" column="21" selection-start="1699" selection-end="1699" vertical-scroll-proportion="0.0" vertical-offset="660" max-vertical-offset="7680">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ImageGridActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/controller/ImageGridActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="21" column="10" selection-start="792" selection-end="792" vertical-scroll-proportion="0.0" vertical-offset="315" max-vertical-offset="780">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/controller/AppSectionsPagerAdapter.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/MainActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/utils/images/Images.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/controller/ImageGridActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/view/inqImageDetailFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/utils/layout/resfreshListFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/utils/layout/RefreshListFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/controller/API.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/view/inqDescriptionFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/view/inqHypothesisFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/view/inqImageGridFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/controller/ImageDetailActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/view/pimInquiriesFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/view/inqDataFragment.java" />
+        <option value="dbtable:/1c8276e1/0f38ec62-c27c-4a75-b663-30778753a64c/..INQUIRY_LOCAL_OBJECT" />
+        <option value="dbtable:/1c8276e1/0f38ec62-c27c-4a75-b663-30778753a64c/..RESPONSE_LOCAL_OBJECT" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/view/demoObjectFragment.java" />
+        <option value="$PROJECT_DIR$/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/utils/layout/DrawerActionBarBaseFragActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/controller/Adapters/inquiryPagerAdapter.java" />
+        <option value="$PROJECT_DIR$/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/view/inqMapFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/view/InqImageDetailFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/controller/InquiryActivity.java" />
+        <option value="$PROJECT_DIR$/res/layout/fragment_map.xml" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/view/InqMapFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/example/RefreshList/controller/Adapters/InquiryPagerAdapter.java" />
+        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/controller/Adapters/BadgesLazyListAdapter.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/utils/images/ImageCache.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/utils/images/ImageFetcher.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/utils/images/ImageResizer.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/utils/images/ImageWorker.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/controller/Adapters/InquiryLazyListAdapter.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/utils/images/RecyclingBitmapDrawable.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/view/PimProfileFragment.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/view/PimInquiriesFragment.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/view/DemoObjectFragment.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/view/PimFriendsFragment.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/view/InqDescriptionFragment.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/utils/LocationUtils.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/controller/ImageGridActivity.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/controller/InquiryActivity.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/utils/layout/DrawerActionBarBaseFragActivity.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/view/InqWonderMomentFragment.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/view/InqMapFragment.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/controller/ImageDetailActivity.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/view/InqDataFragment.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/view/InqImageGridFragment.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/view/InqHypothesisFragment.java" />
+        <option value="$PROJECT_DIR$/src/net/wespot/pim/view/InqImageDetailFragment.java" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="y" value="22" />
+    <option name="width" value="1241" />
+    <option name="height" value="1308" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Android</id>
+          </State>
+          <State>
+            <id>Android Lint</id>
+          </State>
+          <State>
+            <id>Probable bugs</id>
+          </State>
+          <State>
+            <id>UI Form Problems</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>AndroidDomInspection</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <OptionsSetting value="true" id="Undo Check Out" />
+    <OptionsSetting value="true" id="Get Latest Version" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectStructureProblems">
+    <ignored-problems>
+      <problem id="module-circular-dependency(project:general)" />
+      <problem id="unused-library(library:project:android-support-v4)" />
+    </ignored-problems>
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="weSPOT-PIM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="weSPOT-PIM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="google-play-services_lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="options.lastSelected" value="preferences.keymap" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Libs/adt-bundle-mac-x86_64-20130729/sdk/extras/google/google_play_services/libproject/google-play-services_lib" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="GoToClass.includeLibraries" value="false" />
+    <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="recentsLimit" value="5" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="OverrideImplement.overriding.sorted" value="false" />
+    <property name="FullScreen" value="false" />
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager2.SHOW" value="true" />
+    <property name="UI_DESIGNER_EDITOR_MODE.PaletteToolWindowManager.SHOW" value="true" />
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager2.WIDTH" value="452" />
+    <property name="dynamic.classpath" value="false" />
+    <property name="last_directory_selection" value="$USER_HOME$/Libs/ActionBarSherlock-master/actionbarsherlock/src/com/example/RefreshList/controller" />
+    <property name="restartRequiresConfirmation" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.example.RefreshList.view" />
+      <recent name="com.example.RefreshList.utils.layout" />
+      <recent name="com.example.RefreshList.utils" />
+      <recent name="com.example.RefreshList.model" />
+      <recent name="com.example.RefreshList" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/libs" />
+      <recent name="$PROJECT_DIR$/res/values" />
+      <recent name="$PROJECT_DIR$/res/drawable" />
+      <recent name="$PROJECT_DIR$/res/layout" />
+      <recent name="$PROJECT_DIR$/res" />
+    </key>
+    <key name="ExtractSuperBase.RECENT_KEYS">
+      <recent name="com.example.RefreshList.controller" />
+      <recent name="com.example.RefreshList.view" />
+      <recent name="com.example.RefreshList" />
+    </key>
+    <key name="MoveMembersDialog.RECENTS_KEY">
+      <recent name="com.example.RefreshList.view.DataFragment" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="uk.co.senab.actionbarpulltorefresh.library" />
+      <recent name="com.example.RefreshList" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Android Application.weSPOT-PIM">
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin" singleton="true">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m" />
+      <option name="PROGRAM_PARAMETERS" />
+      <method />
+    </configuration>
+    <configuration default="true" type="GrailsRunConfigurationType" factoryName="Grails" singleton="true">
+      <module name="" />
+      <setting name="vmparams" value="" />
+      <setting name="cmdLine" value="run-app" />
+      <setting name="depsClasspath" value="false" />
+      <setting name="passParentEnv" value="true" />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <setting name="launchBrowser" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlashRunConfigurationType" factoryName="Flash App">
+      <option name="BCName" value="" />
+      <option name="IOSSimulatorSdkPath" value="" />
+      <option name="adlOptions" value="" />
+      <option name="airProgramParameters" value="" />
+      <option name="appDescriptorForEmulator" value="Android" />
+      <option name="debugTransport" value="USB" />
+      <option name="debuggerSdkRaw" value="BC SDK" />
+      <option name="emulator" value="NexusOne" />
+      <option name="emulatorAdlOptions" value="" />
+      <option name="fastPackaging" value="true" />
+      <option name="fullScreenHeight" value="0" />
+      <option name="fullScreenWidth" value="0" />
+      <option name="launchUrl" value="false" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browserFamily" value="FIREFOX" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="/Applications/Flash Player Debugger.app" />
+        </LauncherParameters>
+      </option>
+      <option name="mobileRunTarget" value="Emulator" />
+      <option name="moduleName" value="" />
+      <option name="overriddenMainClass" value="" />
+      <option name="overriddenOutputFileName" value="" />
+      <option name="overrideMainClass" value="false" />
+      <option name="runTrusted" value="true" />
+      <option name="screenDpi" value="0" />
+      <option name="screenHeight" value="0" />
+      <option name="screenWidth" value="0" />
+      <option name="url" value="http://" />
+      <option name="usbDebugPort" value="7936" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlexUnitRunConfigurationType" factoryName="FlexUnit" appDescriptorForEmulator="Android" class_name="" emulatorAdlOptions="" method_name="" output_log_level="null" package_name="" scope="Class">
+      <option name="BCName" value="" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browserFamily" value="FIREFOX" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="/Applications/Flash Player Debugger.app" />
+        </LauncherParameters>
+      </option>
+      <option name="moduleName" value="" />
+      <option name="trusted" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="myFilePath" />
+      <option name="GLUE" />
+      <option name="myNameFilter" />
+      <option name="myGeneratedName" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="com.intellij.persistence.run.ConsoleRunConfigurationType" factoryName="Query Language Console">
+      <option name="VM_PARAMETERS" value="" />
+      <option name="USER_CFG_CLASS" />
+      <option name="CONTEXT_PROVIDER" />
+      <method />
+    </configuration>
+    <configuration default="false" name="weSPOT-PIM" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="weSPOT-PIM" />
+      <option name="ACTIVITY_CLASS" value="net.wespot.pim.MainActivity" />
+      <option name="MODE" value="specific_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="USB_DEVICE" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="true" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <RunnerSettings RunnerId="AndroidDebugRunner" />
+      <ConfigurationWrapper RunnerId="AndroidDebugRunner" />
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="Android Application.weSPOT-PIM" />
+    </list>
+    <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
+      <Host>localhost</Host>
+      <Port>5050</Port>
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="sslv3">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3a183c58-9f26-4636-a0b3-55c48675f03d" name="Default" comment="" />
+      <created>1389374797990</created>
+      <updated>1389374797990</updated>
+      <workItem from="1389374799316" duration="4182000" />
+      <workItem from="1389383565417" duration="26072000" />
+      <workItem from="1389693185877" duration="14818000" />
+      <workItem from="1389801394144" duration="214000" />
+      <workItem from="1389802008257" duration="4892000" />
+      <workItem from="1389814151959" duration="686000" />
+      <workItem from="1389814864152" duration="683000" />
+      <workItem from="1389858353230" duration="4796000" />
+      <workItem from="1389949533533" duration="16955000" />
+      <workItem from="1390228639253" duration="192000" />
+      <workItem from="1390229020937" duration="13351000" />
+      <workItem from="1390314287769" duration="22096000" />
+      <workItem from="1390574574500" duration="11592000" />
+      <workItem from="1390760030920" duration="18011000" />
+      <workItem from="1390897966929" duration="1771000" />
+      <workItem from="1390900738644" duration="24158000" />
+      <workItem from="1391070625348" duration="2389000" />
+      <workItem from="1391075552319" duration="389000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="167247000" />
+  </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="22" width="1241" height="1308" extended-state="0" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32826748" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18416801" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.113893375" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41489363" sideWeight="0.6066236" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32674772" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24878837" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20889261" sideWeight="0.3933764" order="6" side_tool="false" content_ui="tabs" x="21" y="296" width="1238" height="226" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3296875" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28773978" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36744967" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="combo" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.10258482" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22340426" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30369127" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USERS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="jar://$PROJECT_DIR$/libs/ARLearn-Android-PIM.jar!/org/celstec/arlearn/delegators/INQ.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="8" selection-start="1255" selection-end="1420" vertical-scroll-proportion="0.66367716" vertical-offset="199" max-vertical-offset="645" />
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/ARLearn-Android-Base.jar!/org/celstec/arlearn2/android/delegators/ARL.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="13" selection-start="1430" selection-end="1430" vertical-scroll-proportion="-0.586758" vertical-offset="617" max-vertical-offset="1125" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/images/DiskLruCache.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="793" column="0" selection-start="28924" selection-end="28924" vertical-scroll-proportion="0.0" vertical-offset="10893" max-vertical-offset="13680" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/images/AsyncTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="681" column="1" selection-start="27249" selection-end="27249" vertical-scroll-proportion="0.0" vertical-offset="5582" max-vertical-offset="9855" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/images/Utils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="39" selection-start="1058" selection-end="1074" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1050" />
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/ARLearn-Android-PIM.jar!/org/celstec/arlearn/delegators/InquiryDelegator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="30" selection-start="1874" selection-end="1874" vertical-scroll-proportion="0.0" vertical-offset="381" max-vertical-offset="2100" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/layout/RecyclingImageView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="11" selection-start="1168" selection-end="1168" vertical-scroll-proportion="0.0" vertical-offset="842" max-vertical-offset="1215" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/layout/RefreshListFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="29" selection-start="1603" selection-end="1603" vertical-scroll-proportion="0.0" vertical-offset="504" max-vertical-offset="1290" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/images/Images.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="55" column="94" selection-start="2027" selection-end="2052" vertical-scroll-proportion="0.0" vertical-offset="526" max-vertical-offset="4380" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/fragment_section_hypothesis.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="757" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/PimBadgesFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="13" selection-start="1408" selection-end="1408" vertical-scroll-proportion="0.0" vertical-offset="296" max-vertical-offset="1080">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Libs/adt-bundle-mac-x86_64-20130729/sdk/platforms/android-18/android.jar!/android/widget/GridView.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="38" selection-start="842" selection-end="842" vertical-scroll-proportion="0.0" vertical-offset="56" max-vertical-offset="1335" />
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Libs/adt-bundle-mac-x86_64-20130729/sdk/platforms/android-18/android.jar!/android/widget/AdapterView.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="91" column="19" selection-start="4013" selection-end="4013" vertical-scroll-proportion="0.0" vertical-offset="1121" max-vertical-offset="1935" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/controller/Adapters/NewInquiryPagerAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="24" selection-start="1574" selection-end="1574" vertical-scroll-proportion="0.0" vertical-offset="284" max-vertical-offset="1305" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/fragment_collection_object.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="741" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="73" selection-start="973" selection-end="1019" vertical-scroll-proportion="-3.3333333" vertical-offset="210" max-vertical-offset="660" />
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/google-play-services.jar!/com/google/android/gms/maps/MapFragment.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="13" selection-start="170" selection-end="170" vertical-scroll-proportion="0.28301886" vertical-offset="0" max-vertical-offset="1335" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="0" selection-start="2459" selection-end="2459" vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="810">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/android/support/v4/app/Fragment.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="92" column="57" selection-start="3574" selection-end="3574" vertical-scroll-proportion="0.35568514" vertical-offset="1243" max-vertical-offset="4065" />
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/android/support/v4/app/FragmentPagerAdapter.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="22" selection-start="174" selection-end="174" vertical-scroll-proportion="0.22522523" vertical-offset="0" max-vertical-offset="615" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="51" column="12" selection-start="1657" selection-end="2132" vertical-scroll-proportion="0.0" vertical-offset="294" max-vertical-offset="1800">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/controller/Adapters/AppSectionsPagerAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="69" column="44" selection-start="2537" selection-end="2537" vertical-scroll-proportion="0.0" vertical-offset="819" max-vertical-offset="1260" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/fragment_map.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="0" selection-start="39" selection-end="39" vertical-scroll-proportion="0.016891891" vertical-offset="0" max-vertical-offset="888" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/controller/Adapters/InquiryPagerAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="67" selection-start="1435" selection-end="1435" vertical-scroll-proportion="0.5409836" vertical-offset="0" max-vertical-offset="1635" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/GCMIntentService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="13" selection-start="979" selection-end="979" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="465">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="32" selection-start="982" selection-end="982" vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="1170">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/DemoFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="42" selection-start="1565" selection-end="1565" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="795">
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gen/net/wespot/pim/R.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="19" selection-start="165" selection-end="165" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="180">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/controller/Adapters/BadgesLazyListAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="47" column="33" selection-start="1888" selection-end="1888" vertical-scroll-proportion="0.0" vertical-offset="450" max-vertical-offset="2445" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/images/ImageCache.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="436" column="28" selection-start="17545" selection-end="17545" vertical-scroll-proportion="0.0" vertical-offset="6075" max-vertical-offset="10500" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/images/ImageFetcher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="18" selection-start="887" selection-end="887" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4950" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/images/ImageResizer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="10" selection-start="897" selection-end="897" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3810" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/images/ImageWorker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="10" selection-start="1156" selection-end="1156" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6930" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/controller/Adapters/InquiryLazyListAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="10" selection-start="212" selection-end="212" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="855" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/images/RecyclingBitmapDrawable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="10" selection-start="813" selection-end="813" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1425" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/PimProfileFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="10" selection-start="1141" selection-end="1141" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="705">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/PimInquiriesFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="10" selection-start="1173" selection-end="1173" vertical-scroll-proportion="0.0" vertical-offset="188" max-vertical-offset="1560">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/DemoObjectFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="10" selection-start="231" selection-end="231" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="735">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/PimFriendsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="10" selection-start="1226" selection-end="1226" vertical-scroll-proportion="0.0" vertical-offset="198" max-vertical-offset="1020">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/InqDescriptionFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="10" selection-start="1172" selection-end="1172" vertical-scroll-proportion="0.0" vertical-offset="183" max-vertical-offset="990">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/LocationUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="10" selection-start="728" selection-end="728" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1200" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/controller/ImageGridActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="10" selection-start="792" selection-end="792" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="570">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/controller/InquiryActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="10" selection-start="912" selection-end="912" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2505">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/utils/layout/DrawerActionBarBaseFragActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="10" selection-start="377" selection-end="377" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3630">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/InqMapFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="10" selection-start="1101" selection-end="1101" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="1500">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/controller/ImageDetailActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="10" selection-start="1052" selection-end="1052" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2955">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/InqWonderMomentFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="44" column="21" selection-start="1699" selection-end="1699" vertical-scroll-proportion="0.0" vertical-offset="420" max-vertical-offset="7245">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/InqDataFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="21" selection-start="351" selection-end="351" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4815">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/InqHypothesisFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="10" selection-start="1172" selection-end="1172" vertical-scroll-proportion="0.0" vertical-offset="236" max-vertical-offset="1020">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/InqImageGridFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="17" selection-start="1575" selection-end="1575" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4515">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/wespot/pim/view/InqImageDetailFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="17" selection-start="1983" selection-end="1983" vertical-scroll-proportion="0.30607477" vertical-offset="323" max-vertical-offset="1485">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="Copyright.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>Android (weSPOT-PIM)|Android</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>AppEngine API 1.8.4+jersey 1.17.1</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.6</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>weSPOT-PIM</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>Android 4.3 Platform</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>httpclient-4.0.1</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
+
