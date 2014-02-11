@@ -17,23 +17,29 @@
 package net.wespot.pim.controller;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.util.Log;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuItem;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.InquiryPagerAdapter;
 import net.wespot.pim.controller.Adapters.NewInquiryPagerAdapter;
 import net.wespot.pim.utils.layout.DrawerActionBarBaseFragActivity;
-import net.wespot.pim.view.InqWonderMomentFragment;
 import org.celstec.arlearn.delegators.INQ;
 
 public class InquiryActivity extends DrawerActionBarBaseFragActivity implements ActionBar.TabListener{
 
     private static final String TAG = "InquiryActivity";
+    public static final String PHASE = "num_phase";
+    private int mStackLevel = 0;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide fragments representing
@@ -49,22 +55,38 @@ public class InquiryActivity extends DrawerActionBarBaseFragActivity implements 
      * The {@link android.support.v4.view.ViewPager} that will display the object collection.
      */
     private ViewPager mViewPager;
+    private long num_phase;
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Establish the first screen
-        new InqWonderMomentFragment();
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
         if (INQ.inquiry.getCurrentInquiry() == null){
-            Log.e(TAG, "New inquiry");
+            Log.e(TAG, "Back pressed - New inquiry");
 
-//                InquiryLocalObject iObject = new InquiryLocalObject();
+
+//            showCreateInquiryDialogFragment();
+//            INQ.inquiry.getCurrentInquiry().getRunLocalObject();
+
+//            InquiryLocalObject iObject = new InquiryLocalObject();
 //                iObject.setDescription("Stefaans test");
 //                iObject.setTitle("a title");
 //                iObject.setIsSynchronized(false);
 //                DaoConfiguration.getInstance().getSession().getInquiryLocalObjectDao().insert(iObject);
 //                INQ.inquiry.syncInquiries();
+
+        }else{
+            Log.e(TAG, "Back pressed - Show inquiry");
+        }
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.main);
+
+        if (INQ.inquiry.getCurrentInquiry() == null){
+            Log.e(TAG, "New inquiry");
 
             // Create an adapter that when requested, will return a fragment representing an object in
             // the collection.
@@ -92,7 +114,6 @@ public class InquiryActivity extends DrawerActionBarBaseFragActivity implements 
             mInquiryPagerAdapter = new InquiryPagerAdapter(getSupportFragmentManager());
             getmActionBarHelper().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-
             // Set up the ViewPager, attaching the adapter.
             mViewPager = (ViewPager) findViewById(R.id.pager);
             mViewPager.setAdapter(mInquiryPagerAdapter);
@@ -117,14 +138,13 @@ public class InquiryActivity extends DrawerActionBarBaseFragActivity implements 
                                 .setTabListener(this));
             }
 
+            getActionBar().setTitle(INQ.inquiry.getCurrentInquiry().getTitle());
 
-            // TODO get the information from the inquiry
-            Resources res = getResources();
-            String text = String.format(res.getString(R.string.inquiry_title), INQ.inquiry.getCurrentInquiry().getTitle(), "");
-            CharSequence styledText = Html.fromHtml(text);
+            Bundle extras = getIntent().getExtras();
+            if (extras != null){
+                mViewPager.setCurrentItem(extras.getInt(PHASE));
+            }
         }
-
-
     }
 
     @Override
@@ -155,6 +175,7 @@ public class InquiryActivity extends DrawerActionBarBaseFragActivity implements 
 //                }
 
                 onBackPressed();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -163,7 +184,6 @@ public class InquiryActivity extends DrawerActionBarBaseFragActivity implements 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         mViewPager.setCurrentItem(tab.getPosition());
-
     }
 
     @Override
@@ -174,5 +194,31 @@ public class InquiryActivity extends DrawerActionBarBaseFragActivity implements 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
+    }
+
+    void showCreateInquiryDialogFragment() {
+        DialogFragment dialog = new CreateInquiryDialogFragment();
+        dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+    }
+
+    public class CreateInquiryDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.inquiry_create_title)
+                    .setPositiveButton(R.string.inquiry_create_yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // FIRE ZE MISSILES!
+                        }
+                    })
+                    .setNegativeButton(R.string.inquiry_create_no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            return builder.create();
+        }
     }
 }

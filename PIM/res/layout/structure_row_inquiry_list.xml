@@ -27,4 +27,10 @@
             android:layout_alignTop="@+id/name"
             android:layout_margin="20dp"
             android:layout_centerVertical="true"/>
+    <TextView android:layout_width="20dp" android:layout_height="20dp" android:id="@+id/imageView2"
+               android:src="@drawable/foto_perfil_croped"
+               android:layout_centerVertical="true"
+               android:layout_toLeftOf="@+id/imageView" android:text="1" android:textSize="20dp"/>
+
+
 </RelativeLayout>

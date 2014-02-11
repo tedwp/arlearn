@@ -1,5 +1,8 @@
 package net.wespot.pim.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * ****************************************************************************
  * Copyright (C) 2013 Open Universiteit Nederland
@@ -24,5 +27,14 @@ public class Constants {
 
     public static final int SIMULATED_REFRESH_LENGTH = 1000;
 
+
+    public static final List<String> INQUIRY_PHASES_LIST = Arrays.asList(
+            "Description",
+            "Hypothesis",
+            "Data analysis",
+            "Map",
+            "Interpretation",
+            "Communication"
+    );
 }
 

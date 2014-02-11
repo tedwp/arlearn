@@ -5,6 +5,9 @@
     <string name="demo_external_activity">Demo External Activity</string>
     <string name="inquiry_title_new">New inquiry</string>
     <string name="inquiry_title">Inquiry $1s</string>
+    <string name="inquiry_create_title">Create an inquiry</string>
+    <string name="inquiry_create_yes">Yes</string>
+    <string name="inquiry_create_no">No</string>
 
     <string name="menu_refresh">Refresh</string>
     <string name="menu_search">Search</string>
@@ -40,9 +43,7 @@
 
 
     <string name="imageview_description">Image Thumbnail</string>
-
-
-
+    <string name="splash_login_button">Login button</string>
 
 
 </resources>

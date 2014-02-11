@@ -23,12 +23,16 @@ package net.wespot.pim.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
-import net.wespot.pim.controller.InquiryActivity;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
+import net.wespot.pim.controller.InquiryActivity;
+import net.wespot.pim.controller.InquiryPhasesActivity;
 import net.wespot.pim.utils.layout.RefreshListFragment;
 import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.delegators.ARL;
@@ -38,6 +42,7 @@ import org.celstec.arlearn2.android.delegators.ARL;
  */
 public class PimInquiriesFragment extends RefreshListFragment {
 
+    private static final String TAG = "PimInquiriesFragment";
     private InquiryLazyListAdapter adapterInq;
 
     @Override
@@ -91,8 +96,10 @@ public class PimInquiriesFragment extends RefreshListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent = new Intent(getActivity(), InquiryActivity.class);
+        Intent intent = new Intent(getActivity(), InquiryPhasesActivity.class);
+//        Intent intent = new Intent(getActivity(), InquiryActivity.class);
         INQ.inquiry.setCurrentInquiry(INQ.inquiry.getInquiryLocalObject(adapterInq.getItemId(position)));
+
 //        intent.putExtra(InquiryActivity.INQUIRY_ID, adapterInq.getItemId(position));
         startActivity(intent);
     }
