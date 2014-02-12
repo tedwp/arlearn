@@ -229,10 +229,10 @@ public class GameItemsActivity extends Activity implements ListitemClickInterfac
 		
 	}
 
-	
+
 	public void onButtonNewGeneralItemClick(View v) {
 
-		final CharSequence[] csArrayElems = { "Narrator item", "Photo xxx", "Video object", "Audio object", "Multiple choice test", "Single choice test", "Youtube Object", "Scan tag"  };
+		final CharSequence[] csArrayElems = { "Narrator item", "Video object", "Audio object", "Multiple choice test"};
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Choose an item");
@@ -255,14 +255,6 @@ public class GameItemsActivity extends Activity implements ListitemClickInterfac
 					GameItemsActivity.this.startActivity(intent);
 					break;
 				case 1:
-					// Photo item
-					intent = new Intent(GameItemsActivity.this, PictureItemActivity.class);
-					NarratorItem pi = new NarratorItem();
-					pi.setGameId(selectedGame.getGameId());
-					intent.putExtra("generalItem", pi);
-					GameItemsActivity.this.startActivity(intent);
-					break;
-				case 2:
 					// VideoObject
 					intent = new Intent(GameItemsActivity.this, VideorecorderActivity.class);
 					VideoObject v = new VideoObject();
@@ -270,7 +262,7 @@ public class GameItemsActivity extends Activity implements ListitemClickInterfac
 					intent.putExtra("generalItem", v);
 					GameItemsActivity.this.startActivity(intent);
 					break;
-				case 3:
+				case 2:
 					// Audio
 					intent = new Intent(GameItemsActivity.this, AudiorecorderActivity.class);
 					AudioObject a = new AudioObject();
@@ -278,7 +270,7 @@ public class GameItemsActivity extends Activity implements ListitemClickInterfac
 					intent.putExtra("generalItem", a);
 					GameItemsActivity.this.startActivity(intent);
 					break;
-				case 4:
+				case 3:
 					// MultipleChoiceTest item
 					intent = new Intent(GameItemsActivity.this, MultipleChoiceItemActivity.class);
 					MultipleChoiceTest m = new MultipleChoiceTest();
@@ -302,7 +294,81 @@ public class GameItemsActivity extends Activity implements ListitemClickInterfac
 		AlertDialog alert = builder.create();
 		alert.show();
 
-	}
+	}	
+	
+//	public void onButtonNewGeneralItemClick(View v) {
+//
+//		final CharSequence[] csArrayElems = { "Narrator item", "Photo xxx", "Video object", "Audio object", "Multiple choice test", "Single choice test", "Youtube Object", "Scan tag"  };
+//
+//		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//		builder.setTitle("Choose an item");
+//		builder.setSingleChoiceItems(csArrayElems, -1, new DialogInterface.OnClickListener() {
+//			public void onClick(DialogInterface dialog, int iCheckBoxIndex) {
+//				Log.d(CLASSNAME, "Clicked item " + iCheckBoxIndex);
+//				// Toast.makeText(getApplicationContext(),
+//				// csArrayElems[iCheckBoxIndex], Toast.LENGTH_SHORT).show();
+//
+//				// finish();
+//				Intent intent = null;
+//				switch (iCheckBoxIndex) {
+//				case 0:
+//					// Narrator item			
+//					intent = new Intent(GameItemsActivity.this, NewNarratorItemActivity.class);
+//					NarratorItem n = new NarratorItem();
+//					n.setGameId(selectedGame.getGameId());
+//					intent.putExtra("generalItem", n);
+//					intent.putExtra("action", NewNarratorItemActivity.NI_ACTION_CREATE);
+//					GameItemsActivity.this.startActivity(intent);
+//					break;
+//				case 1:
+//					// Photo item
+//					intent = new Intent(GameItemsActivity.this, PictureItemActivity.class);
+//					NarratorItem pi = new NarratorItem();
+//					pi.setGameId(selectedGame.getGameId());
+//					intent.putExtra("generalItem", pi);
+//					GameItemsActivity.this.startActivity(intent);
+//					break;
+//				case 2:
+//					// VideoObject
+//					intent = new Intent(GameItemsActivity.this, VideorecorderActivity.class);
+//					VideoObject v = new VideoObject();
+//					v.setGameId(selectedGame.getGameId());
+//					intent.putExtra("generalItem", v);
+//					GameItemsActivity.this.startActivity(intent);
+//					break;
+//				case 3:
+//					// Audio
+//					intent = new Intent(GameItemsActivity.this, AudiorecorderActivity.class);
+//					AudioObject a = new AudioObject();
+//					a.setGameId(selectedGame.getGameId());
+//					intent.putExtra("generalItem", a);
+//					GameItemsActivity.this.startActivity(intent);
+//					break;
+//				case 4:
+//					// MultipleChoiceTest item
+//					intent = new Intent(GameItemsActivity.this, MultipleChoiceItemActivity.class);
+//					MultipleChoiceTest m = new MultipleChoiceTest();
+//					m.setGameId(selectedGame.getGameId());
+//					intent.putExtra("generalItem", m);
+//					GameItemsActivity.this.startActivity(intent);
+//					break;					
+//				default:
+//// Commented by btb					
+////					intent = new Intent(GameItemsActivity.this, NarratorItemActivity.class);
+////					intent.putExtra("genItemType", csArrayElems[iCheckBoxIndex]);
+////					intent.putExtra("selectedGame", selectedGame);
+////					GameItemsActivity.this.startActivity(intent);
+//					break;
+//				}
+//
+//				dialog.dismiss();
+//
+//			}
+//		});
+//		AlertDialog alert = builder.create();
+//		alert.show();
+//
+//	}
 
 	public boolean isGenItemActivity() {
 		return false;

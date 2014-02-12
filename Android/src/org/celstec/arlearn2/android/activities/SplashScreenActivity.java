@@ -127,19 +127,22 @@ public class SplashScreenActivity extends GeneralActivity {
 	}
 
 	private void userClickedLogo() {
-		if (blocked)
-			return;
-		if (!clicked) {
-			clicked = true;
-			if (menuHandler.getPropertiesAdapter().isAuthenticated()) {
-				startActivity(new Intent(SplashScreenActivity.this, ListRunsParticipateActivity.class));
-			} else {
-				// startActivity(new Intent(SplashScreenActivity.this,
-				// LoginActivity.class));
-				startActivity(new Intent(SplashScreenActivity.this, OauthProvidersList.class));
-
-			}
-		}
+//		if (blocked)
+//			return;
+//		if (!clicked) {
+//			clicked = true;
+//			if (menuHandler.getPropertiesAdapter().isAuthenticated()) {
+//				startActivity(new Intent(SplashScreenActivity.this, ListRunsParticipateActivity.class));
+//			} else {
+//				// startActivity(new Intent(SplashScreenActivity.this,
+//				// LoginActivity.class));
+//				startActivity(new Intent(SplashScreenActivity.this, OauthProvidersList.class));
+//
+//			}
+//		}
+//		
+		startActivity(new Intent(SplashScreenActivity.this, ListGamesActivity.class));
+		
 	}
 
 	public boolean isGenItemActivity() {
@@ -161,7 +164,7 @@ public class SplashScreenActivity extends GeneralActivity {
 		}
 
 		protected void onProgressUpdate(String... values) {
-			userClickedLogo();
+			//userClickedLogo();
 		}
 
 	}

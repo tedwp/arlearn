@@ -78,14 +78,14 @@
 
         <Button
             android:id="@+id/buttonGPS"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:onClick="onClickLocation"
             android:text="Bind to location" />
 
         <Button
             android:id="@+id/buttonQR"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:onClick="onClickId"
             android:text="Bind to tag" />

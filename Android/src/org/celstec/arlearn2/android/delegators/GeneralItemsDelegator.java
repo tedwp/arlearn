@@ -190,7 +190,7 @@ public class GeneralItemsDelegator {
 		ArrayList<DownloadItem> downloadArray = new ArrayList<MediaCacheGeneralItems.DownloadItem>();
 		if (gi.getIconUrl() != null) {
 			downloadArray.add(getIconDownloadObject(gi));
-		}
+		}		
 		if (gi instanceof AudioObject) {
 			downloadArray.add(getDownloadItemsAudioObject((AudioObject) gi));
 		}
@@ -343,34 +343,34 @@ public class GeneralItemsDelegator {
 		
 	}
 	
-	public void uploadGeneralItem(Context ctx, GeneralItem gi, String username, Uri uri){
-		
-		String sMime = "";
-		if(gi.getType().equals(Constants.GI_TYPE_AUDIO_OBJECT)){
-			sMime = "audio/AMR";
+	public void uploadGeneralItem(Context ctx, GeneralItem gi, String username,
+			Uri uri) {
 
-			
-			
-		}else if (gi.getType().equals(Constants.GI_TYPE_VIDEO_OBJECT)){
-		
-			sMime = "video/mp4";
-			
-			
-//		// Pending photo object
-//		}else if (gi.getType().equals(Constants.GI_TYPE_)){			
-//		"application/jpg"
-			
-			
-			
-		}
-		
+		String sMime = "";
 		long currentTime = 0l;
-		RegisterUploadInDbTask task = RegisterUploadInDbTask.uploadFile(gi.getGameId(), "audio:"+currentTime,  username, uri, sMime);
+		RegisterUploadInDbTask task = null;
+
+		if (gi.getType().equals(Constants.GI_TYPE_AUDIO_OBJECT)) {
+			sMime = "audio/AMR";
+			task = RegisterUploadInDbTask.uploadFile(gi.getGameId(), "audio:"
+					+ currentTime, username, uri, sMime);
+
+		} else if (gi.getType().equals(Constants.GI_TYPE_VIDEO_OBJECT)) {
+
+			sMime = "video/mp4";
+			task = RegisterUploadInDbTask.uploadFile(gi.getGameId(), "video:"
+					+ currentTime, username, uri, sMime);
+
+		} else if (gi.getType().equals(Constants.GI_TYPE_PICTURE)) {
+			sMime = "application/jpg";
+			task = RegisterUploadInDbTask.uploadFile(gi.getGameId(), "icon:"
+					+ currentTime, username, uri, sMime);
+
+		}
+
 		task.taskToRunAfterExecute(new UploadFileSyncTask());
 		task.run(ctx);
 
-		
-		
 	}
 	
 	public void saveGeneralItemsSearchList(final GeneralItemList al){

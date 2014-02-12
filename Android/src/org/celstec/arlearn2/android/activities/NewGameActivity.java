@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.activities;
 
+import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.cache.GameCache;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
@@ -26,8 +27,10 @@ import org.celstec.arlearn2.beans.game.Config;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GameAccess;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -43,20 +46,26 @@ import android.widget.ListAdapter;
 import android.widget.Spinner;
 
 public class NewGameActivity extends GeneralActivity {
-	// protected Button ngButton;
 
 	CCLicence[] aLicenses;
 	int iLicense = -1;
 	String sLicense = "";
 	int iAccess = -1;
 	int iPermission = -1;
+	
+//	private Activity context;
+//
+//	public NewGameActivity(Activity context) {
+//		this.context = context;
+//	}
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.newgamescreen);
 
-		loadLicence();
+		loadLicenceArray();
 		// loadContacts();
 		loadSpinnerAccess();
 		loadSpinnerPermission();
@@ -72,7 +81,7 @@ public class NewGameActivity extends GeneralActivity {
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
 				Log.d("", "chosen " + arg2);
-				iAccess = arg2+1;
+				iAccess = arg2 + 1;
 			}
 
 			@Override
@@ -99,7 +108,7 @@ public class NewGameActivity extends GeneralActivity {
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
 				Log.d("", "chosen " + arg2);
-				iPermission = arg2 +1;
+				iPermission = arg2 + 1;
 
 			}
 
@@ -118,34 +127,32 @@ public class NewGameActivity extends GeneralActivity {
 
 	}
 
-	private void loadLicence() {
+	private void loadLicenceArray() {
 
 		aLicenses = new CCLicence[8];
 
 		// define the display string, the image, and the value to use
 		// when the choice is selected
-		aLicenses[0] = new CCLicence(getString(R.string.licenseby),
+		aLicenses[Constants.CC_BYPD] = new CCLicence(getString(R.string.licensebypd),
+				getImg(R.drawable.by_pd), getString(R.string.licensebypd));		
+		aLicenses[Constants.CC_BY] = new CCLicence(getString(R.string.licenseby),
 				getImg(R.drawable.by), getString(R.string.licenseby));
-		aLicenses[1] = new CCLicence(getString(R.string.licensebysa),
+		aLicenses[Constants.CC_BYSA] = new CCLicence(getString(R.string.licensebysa),
 				getImg(R.drawable.by_sa), getString(R.string.licensebysa));
-		aLicenses[2] = new CCLicence(getString(R.string.licensebync),
+		aLicenses[Constants.CC_BYND] = new CCLicence(getString(R.string.licensebynd),
+				getImg(R.drawable.by_nd), getString(R.string.licensebynd));		
+		aLicenses[Constants.CC_BYNC] = new CCLicence(getString(R.string.licensebync),
 				getImg(R.drawable.by_nc), getString(R.string.licensebync));
-		aLicenses[3] = new CCLicence(getString(R.string.licensebyncnd),
-				getImg(R.drawable.by_nc_nd), getString(R.string.licensebyncnd));
-		aLicenses[4] = new CCLicence(getString(R.string.licensebyncsa),
+		aLicenses[Constants.CC_BYNCSA] = new CCLicence(getString(R.string.licensebyncsa),
 				getImg(R.drawable.by_nc_sa), getString(R.string.licensebyncsa));
-		aLicenses[5] = new CCLicence(getString(R.string.licensebynd),
-				getImg(R.drawable.by_nd), getString(R.string.licensebynd));
-		aLicenses[6] = new CCLicence(getString(R.string.licensebynpd),
+		aLicenses[Constants.CC_BYNCND] = new CCLicence(getString(R.string.licensebyncnd),
+				getImg(R.drawable.by_nc_nd), getString(R.string.licensebyncnd));
+		aLicenses[Constants.CC_BYNPD] = new CCLicence(getString(R.string.licensebynpd),
 				getImg(R.drawable.by_npd), getString(R.string.licensebynpd));
-		aLicenses[7] = new CCLicence(getString(R.string.licensebypd),
-				getImg(R.drawable.by_pd), getString(R.string.licensebypd));
-
 	}
 
-	/**
-	 * Handle the event to display the AlertDialog with the list
-	 */
+
+	
 	public void handleClickCC(View target) {
 		// define the list adapter with the choices
 		ListAdapter adapter = new CCLicenceAdapter(this, aLicenses);
@@ -156,34 +163,34 @@ public class NewGameActivity extends GeneralActivity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// a choice has been made!
-				sLicense = aLicenses[which].getVal();
-				Log.d("", "chosen " + sLicense);
+				String selectedVal = aLicenses[which].getVal();
+				Log.d("", "chosen " + selectedVal);
 
 				ImageView ivcc = (ImageView) findViewById(R.id.ivCC);
 
 				switch (which) {
-				case 0:
+				case Constants.CC_BY:
 					ivcc.setImageResource(R.drawable.by);
 					break;
-				case 1:
+				case Constants.CC_BYSA:
 					ivcc.setImageResource(R.drawable.by_sa);
 					break;
-				case 2:
+				case Constants.CC_BYNC:
 					ivcc.setImageResource(R.drawable.by_nc);
 					break;
-				case 3:
+				case Constants.CC_BYNCND:
 					ivcc.setImageResource(R.drawable.by_nc_nd);
 					break;
-				case 4:
+				case Constants.CC_BYNCSA:
 					ivcc.setImageResource(R.drawable.by_nc_sa);
 					break;
-				case 5:
+				case Constants.CC_BYND:
 					ivcc.setImageResource(R.drawable.by_nd);
 					break;
-				case 6:
+				case Constants.CC_BYNPD:
 					ivcc.setImageResource(R.drawable.by_npd);
 					break;
-				case 7:
+				case Constants.CC_BYPD:
 					ivcc.setImageResource(R.drawable.by_pd);
 					break;
 
@@ -198,36 +205,50 @@ public class NewGameActivity extends GeneralActivity {
 	}
 
 
-	public void onClickCreate(View target) {		
-		String sNewGameName = ((EditText) findViewById(R.id.etNewGame)).getText().toString();
-		String sGameDesc = ((EditText) findViewById(R.id.etGameDescText)).getText().toString();
-		Boolean bWithMap = ((CheckBox) findViewById(R.id.cbWithMap)).isChecked();
-		//Boolean bWithMap = ((Spinner) findViewById(R.id.spinAccess)).getSelectedItem()
-		
-		System.out.println("Name:"+sNewGameName);
-		System.out.println("Desc:"+sGameDesc);
-		System.out.println("Map:"+bWithMap);
-		System.out.println("CCLic:"+sLicense);
-		System.out.println("Access:"+iAccess);
-		System.out.println("iPerm:"+iPermission);
-		
+	public void onClickCreate(View target) {
+		String sNewGameName = ((EditText) findViewById(R.id.etNewGame))
+				.getText().toString();
+		String sGameDesc = ((EditText) findViewById(R.id.etGameDescText))
+				.getText().toString();
+		Boolean bWithMap = ((CheckBox) findViewById(R.id.cbWithMap))
+				.isChecked();
+		// Boolean bWithMap = ((Spinner)
+		// findViewById(R.id.spinAccess)).getSelectedItem()
+
+		System.out.println("Name:" + sNewGameName);
+		System.out.println("Desc:" + sGameDesc);
+		System.out.println("Map:" + bWithMap);
+		System.out.println("CCLic:" + sLicense);
+		System.out.println("Access:" + iAccess);
+		System.out.println("iPerm:" + iPermission);
+
 		Game newGame = new Game();
 		newGame.setTitle(sNewGameName);
 		newGame.setDescription(sGameDesc);
 		newGame.setLicenseCode(sLicense);
 		newGame.setSharing(iAccess);
-		
+
 		Config c = new Config();
 		c.setMapAvailable(bWithMap);
 		newGame.setConfig(c);
-		
+
 		// TODO Pending to link to created game
 		GameAccess ga = new GameAccess();
 		ga.setAccessRights(iPermission);
-				
+
 		if (checkGameSameTitle(sNewGameName)) {
-			GameDelegator.getInstance().createGame(this, newGame);			
+			GameDelegator.getInstance().createGame(this, newGame);
+			
+//			GameAccess gaAux = new GameAccess();
+//			gaAux = GameCache.getInstance().getGameAccess(newGame.getGameId());			
+//
+			Intent intent = new Intent(NewGameActivity.this, ListGamesActivity.class);
+//			intent.putExtra("selectedAction", Constants.AUTHORING_ACTION_EDIT);
+//			intent.putExtra("selectedGame", newGame);
+//			intent.putExtra("selectedGameAccess", gaAux);
+			NewGameActivity.this.startActivity(intent);		
 			NewGameActivity.this.finish();
+
 		}
 	}
 

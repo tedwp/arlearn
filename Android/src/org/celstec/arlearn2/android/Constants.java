@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android;
 
+
 public class Constants {
 	
 	public static String SHARED_PREFERENCES = "prefs";
@@ -63,5 +64,16 @@ public class Constants {
 	public static final Integer AUTHORING_ACTION_CREATE = 1;
 	public static final Integer AUTHORING_ACTION_EDIT = 2;
 	
-
+	// Creative Commons licenses
+	public static final int CC_BYPD = 0;
+	public static final int CC_BY = 1;
+	public static final int CC_BYSA = 2;
+	public static final int CC_BYND = 3;
+	public static final int CC_BYNC = 4;
+	public static final int CC_BYNCSA = 5;
+	public static final int CC_BYNCND = 6;
+	public static final int CC_BYNPD = 7;
+	
+	
+	
 }

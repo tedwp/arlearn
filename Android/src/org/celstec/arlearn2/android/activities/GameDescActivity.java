@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.activities;
 
+import org.celstec.arlearn2.android.Constants;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GameAccess;
@@ -62,7 +63,8 @@ public class GameDescActivity extends Activity {
 		// selectedGameAccess.getAccessRights());
 
 		loadGameData();
-		loadLicence();
+		loadLicenceArray();
+		loadSelectedLicence();
 		// loadContacts();
 		loadSpinnerAccess();
 		loadSpinnerChange();
@@ -151,45 +153,48 @@ public class GameDescActivity extends Activity {
 		spinner.setSelection(iSel);
 	}
 
-	private void loadLicence() {
+	private void loadLicenceArray() {
 
 		aLicenses = new CCLicence[8];
 
 		// define the display string, the image, and the value to use
 		// when the choice is selected
-		aLicenses[0] = new CCLicence(getString(R.string.licenseby),
+		aLicenses[Constants.CC_BYPD] = new CCLicence(getString(R.string.licensebypd),
+				getImg(R.drawable.by_pd), getString(R.string.licensebypd));		
+		aLicenses[Constants.CC_BY] = new CCLicence(getString(R.string.licenseby),
 				getImg(R.drawable.by), getString(R.string.licenseby));
-		aLicenses[1] = new CCLicence(getString(R.string.licensebysa),
+		aLicenses[Constants.CC_BYSA] = new CCLicence(getString(R.string.licensebysa),
 				getImg(R.drawable.by_sa), getString(R.string.licensebysa));
-		aLicenses[2] = new CCLicence(getString(R.string.licensebync),
+		aLicenses[Constants.CC_BYND] = new CCLicence(getString(R.string.licensebynd),
+				getImg(R.drawable.by_nd), getString(R.string.licensebynd));		
+		aLicenses[Constants.CC_BYNC] = new CCLicence(getString(R.string.licensebync),
 				getImg(R.drawable.by_nc), getString(R.string.licensebync));
-		aLicenses[3] = new CCLicence(getString(R.string.licensebyncnd),
-				getImg(R.drawable.by_nc_nd), getString(R.string.licensebyncnd));
-		aLicenses[4] = new CCLicence(getString(R.string.licensebyncsa),
+		aLicenses[Constants.CC_BYNCSA] = new CCLicence(getString(R.string.licensebyncsa),
 				getImg(R.drawable.by_nc_sa), getString(R.string.licensebyncsa));
-		aLicenses[5] = new CCLicence(getString(R.string.licensebynd),
-				getImg(R.drawable.by_nd), getString(R.string.licensebynd));
-		aLicenses[6] = new CCLicence(getString(R.string.licensebynpd),
+		aLicenses[Constants.CC_BYNCND] = new CCLicence(getString(R.string.licensebyncnd),
+				getImg(R.drawable.by_nc_nd), getString(R.string.licensebyncnd));
+		aLicenses[Constants.CC_BYNPD] = new CCLicence(getString(R.string.licensebynpd),
 				getImg(R.drawable.by_npd), getString(R.string.licensebynpd));
-		aLicenses[7] = new CCLicence(getString(R.string.licensebypd),
-				getImg(R.drawable.by_pd), getString(R.string.licensebypd));
+	}
+
+	private void loadSelectedLicence() {		
 
 		if (selectedGame.getLicenseCode() == getString(R.string.licenseby)) {
-			iLicense = 0;
+			iLicense = Constants.CC_BY;
 		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebysa)) {
-			iLicense = 1;
+			iLicense = Constants.CC_BYSA;
 		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebync)) {
-			iLicense = 2;
+			iLicense = Constants.CC_BYNC;
 		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebyncnd)) {
-			iLicense = 3;
+			iLicense = Constants.CC_BYNCND;
 		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebyncsa)) {
-			iLicense = 4;
+			iLicense = Constants.CC_BYNCSA;
 		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebynd)) {
-			iLicense = 5;
+			iLicense = Constants.CC_BYND;
 		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebynpd)) {
-			iLicense = 6;
+			iLicense = Constants.CC_BYNPD;
 		} else if (selectedGame.getLicenseCode() == getString(R.string.licensebypd)) {
-			iLicense = 7;
+			iLicense = Constants.CC_BYPD;
 		}
 
 	}
@@ -274,28 +279,28 @@ public class GameDescActivity extends Activity {
 				ImageView ivcc = (ImageView) findViewById(R.id.ivCC);
 
 				switch (which) {
-				case 0:
+				case Constants.CC_BY:
 					ivcc.setImageResource(R.drawable.by);
 					break;
-				case 1:
+				case Constants.CC_BYSA:
 					ivcc.setImageResource(R.drawable.by_sa);
 					break;
-				case 2:
+				case Constants.CC_BYNC:
 					ivcc.setImageResource(R.drawable.by_nc);
 					break;
-				case 3:
+				case Constants.CC_BYNCND:
 					ivcc.setImageResource(R.drawable.by_nc_nd);
 					break;
-				case 4:
+				case Constants.CC_BYNCSA:
 					ivcc.setImageResource(R.drawable.by_nc_sa);
 					break;
-				case 5:
+				case Constants.CC_BYND:
 					ivcc.setImageResource(R.drawable.by_nd);
 					break;
-				case 6:
+				case Constants.CC_BYNPD:
 					ivcc.setImageResource(R.drawable.by_npd);
 					break;
-				case 7:
+				case Constants.CC_BYPD:
 					ivcc.setImageResource(R.drawable.by_pd);
 					break;
 

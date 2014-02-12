@@ -146,7 +146,9 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 			intent.putExtra("selectedAction", Constants.AUTHORING_ACTION_EDIT);
 			intent.putExtra("selectedGame", gAux);
 			intent.putExtra("selectedGameAccess", gaAux);
-			ListGamesActivity.this.startActivity(intent);			
+			ListGamesActivity.this.startActivity(intent);		
+			//ListGamesActivity.this.finish();
+			//ListGamesActivity.this.recreate();
 			break;
 
 		default:
@@ -158,7 +160,9 @@ public class ListGamesActivity extends GeneralActivity implements ListitemClickI
 	public void onButtonNewGameClick(View v) {
 		Intent intent = new Intent(ListGamesActivity.this, GameTabActivity.class);
 		intent.putExtra("selectedAction", Constants.AUTHORING_ACTION_CREATE);
-		ListGamesActivity.this.startActivity(intent);			
+		ListGamesActivity.this.startActivity(intent);
+		//ListGamesActivity.this.finish();
+		//ListGamesActivity.this.recreate();
 	}
 	
 	

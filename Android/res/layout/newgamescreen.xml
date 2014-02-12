@@ -44,7 +44,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Description:"
+            android:text="Purpose:"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/black" />
 
@@ -107,6 +107,15 @@
             android:scaleType="fitStart"
             android:src="@drawable/by" />
     </LinearLayout>
+    
+    <Button
+        android:id="@+id/bNewGame"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickCreate"
+        android:maxLines="1"
+        android:text="Create" />
+    
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -121,12 +130,14 @@
             android:layout_weight="2"
             android:text="Access:"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="invisible"
             android:textColor="@color/black" />
 
         <Spinner
             android:id="@+id/spinAccess"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:layout_weight="1" />
     </LinearLayout>
 
@@ -143,21 +154,16 @@
             android:layout_weight="2"
             android:text="Permissions:"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="invisible"
             android:textColor="@color/black" />
 
         <Spinner
             android:id="@+id/spinChange"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:layout_weight="1" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/bNewGame"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onClickCreate"
-        android:maxLines="1"
-        android:text="Create" />
 
 </LinearLayout>

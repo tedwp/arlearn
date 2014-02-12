@@ -54,8 +54,7 @@ public class CCLicenceAdapter extends ArrayAdapter {
 			convertView = inflater.inflate(RESOURCE, null);
 
 			holder = new ViewHolder();
-			holder.nameTxVw = (TextView) convertView
-					.findViewById(R.id.tvLicenseRow);
+			holder.nameTxVw = (TextView) convertView.findViewById(R.id.tvLicenseRow);
 			convertView.setTag(holder);
 		} else {
 			// view already defined, retrieve view holder
@@ -67,8 +66,7 @@ public class CCLicenceAdapter extends ArrayAdapter {
 			Log.e("Error in licence view", "Invalid category for position: " + position);
 		}
 		holder.nameTxVw.setText(cat.getName());
-		holder.nameTxVw
-				.setCompoundDrawables(cat.getImg(), null, null, null);
+		holder.nameTxVw.setCompoundDrawables(cat.getImg(), null, null, null);
 
 		return convertView;
 	}
@@ -96,5 +94,6 @@ class CCLicence {
 	public String getVal() {
 		return _val;
 	}
+
 
 }
