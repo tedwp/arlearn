@@ -131,10 +131,15 @@ public class NetworkToolbar extends ToolBar {
 //				createMenuItemGET("Get responses (from/until)", "response/runId/***?from=0&until="+System.currentTimeMillis()),
 //				separator,
 				createMenuItemPOST(
-						"Create Message",
-						"messages/userId/***",
-						"{  \"type\": \"org.celstec.arlearn2.beans.run.Message\",  \"runId\": 0, \"title\": \"Heading\", \"messageBody\": \"Here comes some text\" }")
-				
+						"Create Thread",
+						"messages/thread",
+						"{  \"type\": \"org.celstec.arlearn2.beans.run.Thread\",  \"runId\": 0, \"name\": \"Communication\" }")
+
+                ,
+                createMenuItemPOST(
+                        "Create Message",
+                        "messages/userId/***",
+                        "{  \"type\": \"org.celstec.arlearn2.beans.run.Message\",  \"runId\": 0, \"title\": \"Heading\", \"messageBody\": \"Here comes some text\" }")
 		);
 		
 		

@@ -37,18 +37,18 @@ import java.util.Map;
  * Contributors: Stefaan Ternier
  * ****************************************************************************
  */
-public class AppEngineFileUploader {
+public class AppengineFileUploader {
 
     private Map<String, String> parameters;
 
-    public AppEngineFileUploader(long runId, String account, String fileName) {
+    public AppengineFileUploader(long runId, String account, String fileName) {
         this.parameters = new HashMap<String, String>();
         this.parameters.put("runId", ""+runId);
         this.parameters.put("account", ""+account);
         this.parameters.put("fileName", ""+fileName);
 
     }
-    public AppEngineFileUploader(Map<String, String> parameters) {
+    public AppengineFileUploader(Map<String, String> parameters) {
         this.parameters = parameters;
 
     }

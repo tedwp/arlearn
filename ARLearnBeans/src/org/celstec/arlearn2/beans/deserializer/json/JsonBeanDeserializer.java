@@ -55,6 +55,7 @@ import org.celstec.arlearn2.beans.notification.authoring.RunCreationStatus;
 import org.celstec.arlearn2.beans.oauth.OauthInfo;
 import org.celstec.arlearn2.beans.oauth.OauthInfoList;
 import org.celstec.arlearn2.beans.run.*;
+import org.celstec.arlearn2.beans.run.Thread;
 import org.celstec.arlearn2.beans.store.Category;
 import org.celstec.arlearn2.beans.store.CategoryList;
 import org.celstec.arlearn2.beans.store.GameCategory;
@@ -324,6 +325,8 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.GeneralItemVisibilityList", GeneralItemVisibilityList.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Message", Message.deserializer);
         customDeserializerMapString.put("org.celstec.arlearn2.beans.run.VariableInstance", VariableInstance.deserializer);
+        customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Thread", Thread.deserializer);
+        customDeserializerMapString.put("org.celstec.arlearn2.beans.run.ThreadList", ThreadList.deserializer);
 
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceAnswerItem", mcaid);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.generalItem.MultipleChoiceImageAnswerItem", MultipleChoiceImageAnswerItem.deserializer);

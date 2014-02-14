@@ -37,15 +37,19 @@ public class NetworkTaskHandler extends Handler {
 
 	@Override
 	public void handleMessage(Message message) {
-		Log.i("NWTask", "start "+System.currentTimeMillis());
 		NetworkTask task = (NetworkTask) message.obj;
+        Log.i("NTask", "start "+task.getClass().getCanonicalName()+System.currentTimeMillis());
+
+        if ("".equals(task.getClass().getCanonicalName())) {
+            Log.i("NTask", "break here");
+        }
 		long time = System.currentTimeMillis();
 		try {
 			task.execute();
 		} catch (Exception e) {
 			Log.e("exception", "in databasehandler", e);
 		}
-		Log.i("NWTask", "end "+task.getClass().getCanonicalName()+" "+ (System.currentTimeMillis()-time));
+		Log.i("NTask", "end "+task.getClass().getCanonicalName()+" "+ (System.currentTimeMillis()-time));
 	}
 
 }

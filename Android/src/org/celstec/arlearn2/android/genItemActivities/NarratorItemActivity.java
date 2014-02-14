@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+import android.util.Log;
 import android.webkit.WebSettings;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.activities.AnswerQuestionActivity;
@@ -160,7 +161,8 @@ public class NarratorItemActivity extends GeneralItemActivity {
 	private DataCollectorDelegateManager dataCollectorManager;
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode != 0) dataCollectorManager.processResult(requestCode, data);
+        Log.e("TASK", "dc "+dataCollectorManager);
+        if (resultCode != 0) dataCollectorManager.processResult(requestCode, data);
 	}
 
 	
