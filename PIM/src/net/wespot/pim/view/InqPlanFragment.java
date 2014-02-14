@@ -1,4 +1,4 @@
-package net.wespot.pim;
+package net.wespot.pim.view;
 
 /**
  * ****************************************************************************
@@ -26,22 +26,38 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.TextView;
+import net.wespot.pim.R;
+import org.celstec.arlearn.delegators.INQ;
+import org.celstec.dao.gen.InquiryLocalObject;
 
 /**
  * A dummy fragment representing a section of the app, but that simply displays dummy text.
  */
-public class DemoFragment extends Fragment {
+public class InqPlanFragment extends Fragment {
 
-    public static final String ARG_SECTION_NUMBER = "section_number";
+    private static final String MIME_TYPE = "text/html";
+    private static final String ENCONDING = null;
+    private InquiryLocalObject inquiry;
+
+    public InqPlanFragment() {
+//        this.inquiry = API.getInquiryLocalObject();;
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_section_dummy, container, false);
-        Bundle args = getArguments();
-        ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-                getString(R.string.dummy_section_text, args.getInt(ARG_SECTION_NUMBER)));
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        super.onCreateView(inflater,container,savedInstanceState);
+
+        final View rootView = inflater.inflate(R.layout.fragment_section_plan, container, false);
+        WebView webView = (WebView) rootView.findViewById(R.id.description_plan);
+
+        TextView title = (TextView) rootView.findViewById(R.id.title_plan);
+        title.setText(R.string.inquiry_title_plan);
+
+//        webView.loadData(INQ.inquiry.getCurrentInquiry().get.getDescription(),MIME_TYPE, ENCONDING);
+        webView.loadData("PLANNNNNNNNN",MIME_TYPE, ENCONDING);
         return rootView;
     }
 }

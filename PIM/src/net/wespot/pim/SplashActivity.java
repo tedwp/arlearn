@@ -41,7 +41,7 @@ public class SplashActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash);
+        setContentView(R.layout.activity_splash);
 
         mAdapter = new InitialPagerAdapter(getSupportFragmentManager());
 

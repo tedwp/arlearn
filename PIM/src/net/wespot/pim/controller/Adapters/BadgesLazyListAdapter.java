@@ -45,7 +45,7 @@ public class BadgesLazyListAdapter extends AbstractBadgesLazyListAdapter {
     public View newView(Context context, BadgeLocalObject item, ViewGroup parent) {
         if (item == null) return null;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return inflater.inflate(R.layout.structure_row_badges_grid, parent, false);
+        return inflater.inflate(R.layout.entry_badges_list, parent, false);
 
     }
     @Override

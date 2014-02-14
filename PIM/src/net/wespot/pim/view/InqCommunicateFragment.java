@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.TextView;
 import net.wespot.pim.R;
 import org.celstec.arlearn.delegators.INQ;
 import org.celstec.dao.gen.InquiryLocalObject;
@@ -34,13 +35,13 @@ import org.celstec.dao.gen.InquiryLocalObject;
 /**
  * A dummy fragment representing a section of the app, but that simply displays dummy text.
  */
-public class InqDescriptionFragment extends Fragment {
+public class InqCommunicateFragment extends Fragment {
 
     private static final String MIME_TYPE = "text/html";
     private static final String ENCONDING = null;
     private InquiryLocalObject inquiry;
 
-    public InqDescriptionFragment() {
+    public InqCommunicateFragment() {
 //        this.inquiry = API.getInquiryLocalObject();;
     }
 
@@ -49,13 +50,14 @@ public class InqDescriptionFragment extends Fragment {
 
         super.onCreateView(inflater,container,savedInstanceState);
 
-        final View rootView = inflater.inflate(R.layout.fragment_section_hypothesis, container, false);
-        WebView webView = (WebView) rootView.findViewById(R.id.description_hypothesis);
+        final View rootView = inflater.inflate(R.layout.fragment_section_communicate, container, false);
+        WebView webView = (WebView) rootView.findViewById(R.id.description_communicate);
 
-        // TODO test image
-        getResources().getString(R.drawable.foto_perfil_croped);
+        TextView title = (TextView) rootView.findViewById(R.id.title_communicate);
+        title.setText(R.string.inquiry_title_communicate);
 
-        webView.loadData(INQ.inquiry.getCurrentInquiry().getDescription(),MIME_TYPE, ENCONDING);
+        webView.loadData("Communicate",MIME_TYPE, ENCONDING);
+//        webView.loadData(INQ.inquiry.getCurrentInquiry().getDescription(),MIME_TYPE, ENCONDING);
         return rootView;
     }
 }

@@ -4,15 +4,8 @@ import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
-
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.view.View;
-import android.widget.RelativeLayout;
-import net.wespot.pim.R;
-
 import android.support.v4.app.FragmentActivity;
+import net.wespot.pim.R;
 
 /**
  * ****************************************************************************
@@ -34,13 +27,10 @@ import android.support.v4.app.FragmentActivity;
  * Contributors: Angel Suarez
  * ****************************************************************************
  */
-public class DrawerActionBarBaseFragActivity extends FragmentActivity {
+public class ActionBarFragmentActivity extends FragmentActivity {
 
-    private static final String TAG = "DrawerActionBarBaseFragActivity";
     private ActionBarHelper mActionBarHelper;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private DrawerLayout mDrawerLayout;
-    private RelativeLayout mDrawer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,78 +38,8 @@ public class DrawerActionBarBaseFragActivity extends FragmentActivity {
 
         setContentView(R.layout.main);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawer = (RelativeLayout) findViewById(R.id.start_drawer);
-
-        mDrawerLayout.setDrawerListener(new DrawerListener());
-        mDrawerLayout.setDrawerShadow(R.drawable.actionbar_shadow, GravityCompat.START);
-
-        // ActionBarDrawerToggle provides convenient helpers for tying together the
-        // prescribed interactions between a top-level sliding drawer and the action bar.
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
-
         mActionBarHelper = createActionBarHelper();
         mActionBarHelper.init();
-
-
-//        FragmentManager fmanager = getSupportFragmentManager();
-//        Fragment fragment = fmanager.findFragmentById(R.id.map);
-//        SupportMapFragment supportmapfragment = (SupportMapFragment)fragment;
-//        GoogleMap map = supportmapfragment.getMap();
-//
-//        LatLng sydney = new LatLng(-33.867, 151.206);
-//
-//        //        map.setMyLocationEnabled(true);
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
-//
-//        map.addMarker(new MarkerOptions()
-//                .title("Sydney")
-//                .snippet("The most populous city in Australia.")
-//                .position(sydney));
-
-
-//        MapFragment a = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
-//
-//        GoogleMap map = a.getMap();
-//
-//        LatLng sydney = new LatLng(-33.867, 151.206);
-//
-//        //        map.setMyLocationEnabled(true);
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
-//
-//        map.addMarker(new MarkerOptions()
-//                .title("Sydney")
-//                .snippet("The most populous city in Australia.")
-//                .position(sydney));
-
-    }
-
-    /**
-     * Create a drawerlistener.
-     */
-    private class DrawerListener implements DrawerLayout.DrawerListener {
-        @Override
-        public void onDrawerOpened(View drawerView) {
-            mDrawerToggle.onDrawerOpened(drawerView);
-            mActionBarHelper.onDrawerOpened();
-        }
-
-        @Override
-        public void onDrawerClosed(View drawerView) {
-            mDrawerToggle.onDrawerClosed(drawerView);
-            mActionBarHelper.onDrawerClosed();
-        }
-
-        @Override
-        public void onDrawerSlide(View drawerView, float slideOffset) {
-            mDrawerToggle.onDrawerSlide(drawerView, slideOffset);
-        }
-
-        @Override
-        public void onDrawerStateChanged(int newState) {
-            mDrawerToggle.onDrawerStateChanged(newState);
-        }
     }
 
     /**
@@ -139,14 +59,6 @@ public class DrawerActionBarBaseFragActivity extends FragmentActivity {
 
     public void setmActionBarHelper(ActionBarHelper mActionBarHelper) {
         this.mActionBarHelper = mActionBarHelper;
-    }
-
-    public DrawerLayout getmDrawerLayout() {
-        return mDrawerLayout;
-    }
-
-    public void setmDrawerLayout(DrawerLayout mDrawerLayout) {
-        this.mDrawerLayout = mDrawerLayout;
     }
 
     /**
@@ -176,8 +88,8 @@ public class DrawerActionBarBaseFragActivity extends FragmentActivity {
         ActionBarHelperICS() {
 //            mActionBar = getSupportActionBar();
             mActionBar = getActionBar();
-            mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+            mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                    mActionBar.setDisplayShowHomeEnabled(false);
             //        actionBar.setHomeButtonEnabled(false);
 
         }

@@ -19,5 +19,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:textSize="24sp"
+    android:textSize="58sp"
     android:padding="32dp" />

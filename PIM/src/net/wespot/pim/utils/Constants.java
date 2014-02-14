@@ -26,15 +26,23 @@ import java.util.List;
 public class Constants {
 
     public static final int SIMULATED_REFRESH_LENGTH = 1000;
+    public static final String MIME_TYPE = "text/html";
+    public static final String ENCONDING = null;
 
+    public static final List<String> MAIN_LIST = Arrays.asList(
+            "My Inquiries",
+            "Profile",
+            "Badges",
+            "Friends"
+    );
 
     public static final List<String> INQUIRY_PHASES_LIST = Arrays.asList(
-            "Description",
             "Hypothesis",
-            "Data analysis",
-            "Map",
-            "Interpretation",
-            "Communication"
+            "Plan",
+            "Collect data",
+            "Analyse",
+            "Discuss",
+            "Communicate"
     );
 }
 

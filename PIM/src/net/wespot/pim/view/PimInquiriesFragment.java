@@ -23,10 +23,10 @@ package net.wespot.pim.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.*;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import net.wespot.pim.R;
@@ -34,16 +34,34 @@ import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
 import net.wespot.pim.controller.InquiryActivity;
 import net.wespot.pim.controller.InquiryPhasesActivity;
 import net.wespot.pim.utils.layout.RefreshListFragment;
+import net.wespot.pim.utils.layout.TempEntryFragment;
 import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.delegators.ARL;
 
 /**
  * A fragment that launches other parts of the demo application.
  */
-public class PimInquiriesFragment extends RefreshListFragment {
+public class PimInquiriesFragment extends Fragment {
 
     private static final String TAG = "PimInquiriesFragment";
     private InquiryLazyListAdapter adapterInq;
+
+    private ListView inquiries;
+    private View new_inquiry;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootview = inflater.inflate(R.layout.fragment_inquiries, container, false);
+
+        TempEntryFragment button_new_inquiry = (TempEntryFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.inquiries_new_inquiry);
+        button_new_inquiry.setName(getString(R.string.inquiry_title_new));
+        inquiries = (ListView) rootview.findViewById(R.id.list_inquiries);
+        new_inquiry = (View) rootview.findViewById(R.id.inquiries_new_inquiry);
+
+        getActivity().setTitle(R.string.inquiry_title);
+
+        return rootview;
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -62,7 +80,10 @@ public class PimInquiriesFragment extends RefreshListFragment {
 
 
         adapterInq =  new InquiryLazyListAdapter(this.getActivity());
-        setListAdapter(adapterInq);
+        inquiries.setAdapter(adapterInq);
+        inquiries.setOnItemClickListener(new onListInquiryClick());
+
+        new_inquiry.setOnClickListener(new OnClickNewInquiry());
     }
 
 
@@ -94,13 +115,23 @@ public class PimInquiriesFragment extends RefreshListFragment {
         super.onDestroy();
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent = new Intent(getActivity(), InquiryPhasesActivity.class);
-//        Intent intent = new Intent(getActivity(), InquiryActivity.class);
-        INQ.inquiry.setCurrentInquiry(INQ.inquiry.getInquiryLocalObject(adapterInq.getItemId(position)));
-
+    private class onListInquiryClick implements android.widget.AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Intent intent = new Intent(getActivity(), InquiryPhasesActivity.class);
+            INQ.inquiry.setCurrentInquiry(INQ.inquiry.getInquiryLocalObject(adapterInq.getItemId(i)));
 //        intent.putExtra(InquiryActivity.INQUIRY_ID, adapterInq.getItemId(position));
-        startActivity(intent);
+            startActivity(intent);
+        }
+    }
+
+    private class OnClickNewInquiry implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Log.e(TAG, "New inquiry");
+            INQ.inquiry.setCurrentInquiry(null);
+            Intent intent = new Intent(getActivity(), InquiryActivity.class);
+            startActivity(intent);
+        }
     }
 }

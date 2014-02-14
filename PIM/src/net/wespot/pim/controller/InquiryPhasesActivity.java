@@ -21,33 +21,41 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.PhasesLazyListAdapter;
 import net.wespot.pim.utils.Constants;
-import net.wespot.pim.utils.layout.DrawerActionBarBaseFragActivity;
+import net.wespot.pim.utils.layout.ActionBarFragmentActivity;
+import net.wespot.pim.utils.layout.TempEntryFragment;
 import org.celstec.arlearn.delegators.INQ;
 
-public class InquiryPhasesActivity extends DrawerActionBarBaseFragActivity {
+public class InquiryPhasesActivity extends ActionBarFragmentActivity {
 
     private static final String TAG = "InquiryActivity";
     private ListView list_phases;
+    private WebView inquiry_description_title;
     private PhasesLazyListAdapter phasesListAdapter;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.phases);
+        setContentView(R.layout.activity_phases);
 
         phasesListAdapter = new PhasesLazyListAdapter(this, Constants.INQUIRY_PHASES_LIST);
 
+        inquiry_description_title = (WebView) findViewById(R.id.list_phases_title);
         list_phases = (ListView) findViewById(R.id.list_phases);
         list_phases.setAdapter(phasesListAdapter);
-
         list_phases.setOnItemClickListener(new OnItemClickPhasesList());
 
+        TempEntryFragment button_invite_friends = (TempEntryFragment) this.getSupportFragmentManager().findFragmentById(R.id.invites_friends_to_inquiry);
+        button_invite_friends.setName(getString(R.string.phases_invite_new_friend));
+
         getActionBar().setTitle(INQ.inquiry.getCurrentInquiry().getTitle());
+        inquiry_description_title.loadData(INQ.inquiry.getCurrentInquiry().getDescription(), Constants.MIME_TYPE, Constants.ENCONDING);
+
     }
 
     @Override

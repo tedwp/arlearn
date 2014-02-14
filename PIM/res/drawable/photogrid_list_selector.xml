@@ -18,12 +18,12 @@
 
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="@color/grid_state_pressed" />
+            <solid android:color="@color/data_collect.grid.image.pressed" />
         </shape>
     </item>
     <item android:state_focused="true">
         <shape>
-            <solid android:color="@color/grid_state_focused" />
+            <solid android:color="@color/data_collect.grid.image.focused" />
         </shape>
     </item>
     <item android:drawable="@android:color/transparent" />

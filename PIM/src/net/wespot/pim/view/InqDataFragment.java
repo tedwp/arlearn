@@ -66,7 +66,7 @@ public class InqDataFragment extends Fragment implements AdapterView.OnItemClick
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final View v = inflater.inflate(R.layout.image_grid_fragment, container, false);
+        final View v = inflater.inflate(R.layout.fragment_data_collect_grid, container, false);
         final GridView mGridView = (GridView) v.findViewById(R.id.gridView);
         mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(this);
@@ -130,8 +130,8 @@ public class InqDataFragment extends Fragment implements AdapterView.OnItemClick
 
         setHasOptionsMenu(true);
 
-        mImageThumbSize = getResources().getDimensionPixelSize(R.dimen.image_thumbnail_size);
-        mImageThumbSpacing = getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
+        mImageThumbSize = getResources().getDimensionPixelSize(R.dimen.data_collect_thumbnail_image_size);
+        mImageThumbSpacing = getResources().getDimensionPixelSize(R.dimen.data_collect_thumbnail_image_spacing);
 
         mAdapter = new ImageAdapter(getActivity());
 

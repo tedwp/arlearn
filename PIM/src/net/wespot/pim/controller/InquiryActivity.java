@@ -32,10 +32,10 @@ import android.view.MenuItem;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.InquiryPagerAdapter;
 import net.wespot.pim.controller.Adapters.NewInquiryPagerAdapter;
-import net.wespot.pim.utils.layout.DrawerActionBarBaseFragActivity;
+import net.wespot.pim.utils.layout.ActionBarFragmentActivity;
 import org.celstec.arlearn.delegators.INQ;
 
-public class InquiryActivity extends DrawerActionBarBaseFragActivity implements ActionBar.TabListener{
+public class InquiryActivity extends ActionBarFragmentActivity implements ActionBar.TabListener{
 
     private static final String TAG = "InquiryActivity";
     public static final String PHASE = "num_phase";
@@ -83,7 +83,7 @@ public class InquiryActivity extends DrawerActionBarBaseFragActivity implements 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_inquiry);
 
         if (INQ.inquiry.getCurrentInquiry() == null){
             Log.e(TAG, "New inquiry");
@@ -112,7 +112,7 @@ public class InquiryActivity extends DrawerActionBarBaseFragActivity implements 
             // ViewPager and its adapters use support library fragments, so we must use
             // getSupportFragmentManager.
             mInquiryPagerAdapter = new InquiryPagerAdapter(getSupportFragmentManager());
-            getmActionBarHelper().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            getmActionBarHelper().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 
             // Set up the ViewPager, attaching the adapter.
             mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -123,7 +123,7 @@ public class InquiryActivity extends DrawerActionBarBaseFragActivity implements 
                     // When swiping between different app sections, select the corresponding tab.
                     // We can also use ActionBar.Tab#select() to do this if we have a reference to the
                     // Tab.
-                    getmActionBarHelper().setSelectedNavigationItem(position);
+//                    getmActionBarHelper().setSelectedNavigationItem(position);
                 }
             });
 
@@ -199,6 +199,8 @@ public class InquiryActivity extends DrawerActionBarBaseFragActivity implements 
     void showCreateInquiryDialogFragment() {
         DialogFragment dialog = new CreateInquiryDialogFragment();
         dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+
+
     }
 
     public class CreateInquiryDialogFragment extends DialogFragment {

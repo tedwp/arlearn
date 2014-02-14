@@ -16,8 +16,19 @@
 -->
 
 <resources>
+    <color name="data_collect.grid.image.pressed">#BB7dbcd3</color>
+    <color name="data_collect.grid.image.focused">#777dbcd3</color>
+    <color name="app.base.black">#ff000000</color>
+    <color name="app.base.white">#ffffffff</color>
+    <color name="app.base.blue">#ff688fbe</color>
 
-    <color name="grid_state_pressed">#BB7dbcd3</color>
-    <color name="grid_state_focused">#777dbcd3</color>
-
+    <color name="view_pager.indicator.circle.fill">#FFFFFFFF</color>
+    <color name="view_pager.indicator.page">#00000000</color>
+    <color name="view_pager.indicator.stroke">#FFDDDDDD</color>
+    <color name="view_pager.indicator.line.selected">#FF33B5E5</color>
+    <color name="view_pager.indicator.line.unselected">#FFBBBBBB</color>
+    <color name="view_pager.indicator.footer">#FF33B5E5</color>
+    <color name="view_pager.indicator.title.selected">#FFFFFFFF</color>
+    <color name="view_pager.indicator.title.text">#BBFFFFFF</color>
+    <color name="view_pager.indicator.underline.selected">#FF33B5E5</color>
 </resources>

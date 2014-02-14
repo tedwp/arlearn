@@ -2,28 +2,28 @@ package net.wespot.pim;
 
 import android.annotation.TargetApi;
 
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import net.wespot.pim.controller.Adapters.AppSectionsPagerAdapter;
 import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
-import net.wespot.pim.utils.layout.DrawerActionBarBaseFragActivity;
-import daoBase.DaoConfiguration;
-import org.celstec.arlearn.delegators.INQ;
+import net.wespot.pim.controller.WrapperActivity;
+import net.wespot.pim.utils.layout.TempEntryFragment;
+import net.wespot.pim.utils.layout.MainActionBarFragmentActivity;
 
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class MainActivity extends DrawerActionBarBaseFragActivity implements ActionBar.TabListener {
-    private ViewPager mViewPager;
-    private ListView mListInquiries;
-    private AppSectionsPagerAdapter mAppSectionsPagerAdapter;
-    private InquiryLazyListAdapter adapterInq;
+public class MainActivity extends MainActionBarFragmentActivity /*implements ActionBar.TabListener*/ {
+    private static final String TAG = "MainActivity";
+
+    private View my_inquiries;
+    private View profile;
+    private View badges;
+    private View friends;
 
     /**
      * Called when the activity is first created.
@@ -33,67 +33,64 @@ public class MainActivity extends DrawerActionBarBaseFragActivity implements Act
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Create the adapter that will return a fragment for each of the three primary sections
-        // of the app.
-        mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
-        // user swipes between sections.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mAppSectionsPagerAdapter);
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        TempEntryFragment button_inq_frag = (TempEntryFragment) getSupportFragmentManager().findFragmentById(R.id.main_myinquiries_link);
+        button_inq_frag.setName(getString(R.string.wrapper_myinquiry));
+        my_inquiries = findViewById(R.id.main_myinquiries_link);
+        my_inquiries.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPageSelected(int position) {
-                // When swiping between different app sections, select the corresponding tab.
-                // We can also use ActionBar.Tab#select() to do this if we have a reference to the
-                // Tab.
-                getmActionBarHelper().setSelectedNavigationItem(position);
+            public void onClick(View view) {
+                Log.e(TAG, "my inquiries");
+                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
+                intent.putExtra(WrapperActivity.OPTION, 0);
+                startActivity(intent);
             }
         });
 
-        // For each of the sections in the app, add a tab to the action bar.
-        for (int i = 0; i < mAppSectionsPagerAdapter.getCount(); i++) {
-            // Create a tab with text corresponding to the page title defined by the adapter.
-            // Also specify this Activity object, which implements the TabListener interface, as the
-            // listener for when this tab is selected.
-            getmActionBarHelper().addTab(
-                    getmActionBarHelper().newTab()
-                            .setText(mAppSectionsPagerAdapter.getPageTitle(i))
-                            .setTabListener(this));
-        }
+        TempEntryFragment button_prof_frag = (TempEntryFragment) getSupportFragmentManager().findFragmentById(R.id.main_profile_link);
+        button_prof_frag.setName(getString(R.string.wrapper_profile));
+        profile = findViewById(R.id.main_profile_link);
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e(TAG, "my profile");
+                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
+                intent.putExtra(WrapperActivity.OPTION, 1);
+                startActivity(intent);
+            }
+        });
 
-        // Set up de ListView of menu inquiries
-        // TODO can be setted up in parent to be accesible for all drawer layout
-        INQ.init(this);
-        INQ.inquiry.syncInquiries();
-        INQ.inquiry.syncHypothesis(151l);
+        TempEntryFragment button_badges_frag = (TempEntryFragment) getSupportFragmentManager().findFragmentById(R.id.main_badges_link);
+        button_badges_frag.setName(getString(R.string.wrapper_badges));
+        badges = findViewById(R.id.main_badges_link);
+        badges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e(TAG, "my badges");
+                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
+                intent.putExtra(WrapperActivity.OPTION, 2);
+                startActivity(intent);
+            }
+        });
 
-        DaoConfiguration daoConfiguration= DaoConfiguration.getInstance(this);
-        adapterInq =  new InquiryLazyListAdapter(this);
-
-        mListInquiries = (ListView) findViewById(R.id.inquiries_list_menu);
-        mListInquiries.setAdapter(adapterInq);
+        TempEntryFragment button_friends_frag = (TempEntryFragment) getSupportFragmentManager().findFragmentById(R.id.main_friends_link);
+        button_friends_frag.setName(getString(R.string.wrapper_friends));
+        friends = (View) findViewById(R.id.main_friends_link);
+        friends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e(TAG, "my friends");
+                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
+                intent.putExtra(WrapperActivity.OPTION, 3);
+                startActivity(intent);
+            }
+        });
     }
 
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        mViewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.main, menu);
+        menuInflater.inflate(R.menu.main_default, menu);
 
         // Calling super after populating the menu is necessary here to ensure that the
         // action bar helpers have a chance to handle this event.
@@ -103,27 +100,24 @@ public class MainActivity extends DrawerActionBarBaseFragActivity implements Act
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                Toast.makeText(this, "Tapped home", Toast.LENGTH_SHORT).show();
-                if(getmDrawerLayout().isDrawerOpen(GravityCompat.START)){
-                    getmDrawerLayout().closeDrawer(Gravity.START);
-                }else{
-                    getmDrawerLayout().openDrawer(GravityCompat.START);
-                }
+//            case android.R.id.home:
+//                Toast.makeText(this, "Tapped home", Toast.LENGTH_SHORT).show();
+//                break;
+            case R.id.menu_logout:
+                Toast.makeText(this, "Tapped logout", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.menu_search:
-                Toast.makeText(this, "Tapped search", Toast.LENGTH_SHORT).show();
-                onSearchRequested();
-                break;
-            case R.id.menu_share:
-                Toast.makeText(this, "Tapped share", Toast.LENGTH_SHORT).show();
-                break;
+//            case R.id.menu_logout:
+//                Toast.makeText(this, "Tapped logout", Toast.LENGTH_SHORT).show();
+//                onSearchRequested();
+//                break;
+//            case R.id.menu_share:
+//                Toast.makeText(this, "Tapped share", Toast.LENGTH_SHORT).show();
+//                break;
             // add case implemented on inquiresFragment.java
 
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }

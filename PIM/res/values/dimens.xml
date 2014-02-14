@@ -17,8 +17,27 @@
 
 <resources>
 
-    <dimen name="image_thumbnail_size">100dp</dimen>
-    <dimen name="image_thumbnail_spacing">1dp</dimen>
-    <dimen name="image_detail_pager_margin">80dp</dimen>
+    <dimen name="data_collect.thumbnail.image.size">100dp</dimen>
+    <dimen name="data_collect.thumbnail.image.spacing">1dp</dimen>
+    <dimen name="data_collect.pager.image.detail.maring">80dp</dimen>
 
+    <dimen name="mainscreen.margintop.first">100dp</dimen>
+    <dimen name="mainscreen.margintop.second">40dp</dimen>
+
+    <dimen name="inquiry.fragments.titles">18dp</dimen>
+    <dimen name="inquiry.fragments.titles.padding">10dp</dimen>
+
+    <dimen name="view_pager.indicator.line.width">12dp</dimen>
+    <dimen name="view_pager.indicator.line.gap.width">4dp</dimen>
+    <dimen name="view_pager.indicator.line.stroke.width">1dp</dimen>
+    <dimen name="view_pager.indicator.title.clip.padding">4dp</dimen>
+    <dimen name="view_pager.indicator.title.text_size">15dp</dimen>
+    <dimen name="view_pager.indicator.title.padding">5dp</dimen>
+    <dimen name="view_pager.indicator.title.padding.top">7dp</dimen>
+    <dimen name="view_pager.indicator.title.footer.line_height">2dp</dimen>
+    <dimen name="view_pager.indicator.title.footer.height">4dp</dimen>
+    <dimen name="view_pager.indicator.title.footer.underline.padding">20dp</dimen>
+    <dimen name="view_pager.indicator.title.footer.padding">7dp</dimen>
+    <dimen name="view_pager.indicator.circle.stroke.width">1dp</dimen>
+    <dimen name="view_pager.indicator.circle.radius">3dp</dimen>
 </resources>

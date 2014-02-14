@@ -106,12 +106,12 @@ public class PhasesLazyListAdapter extends BaseAdapter {
     public View newView(Context context,  String item, ViewGroup parent) {
         if (item == null) return null;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return inflater.inflate(R.layout.structure_row_inquiry_list, parent, false);
+        return inflater.inflate(R.layout.entry_inquiry_list, parent, false);
 
     }
 
     public void bindView(View view, Context context,  String item) {
-        TextView firstLineView =(TextView) view.findViewById(R.id.name);
+        TextView firstLineView =(TextView) view.findViewById(R.id.name_entry_list);
         firstLineView.setText(item);
     }
 

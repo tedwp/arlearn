@@ -29,33 +29,33 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.TextView;
 import net.wespot.pim.R;
-import net.wespot.pim.utils.Constants;
-import org.celstec.arlearn.delegators.INQ;
 import org.celstec.dao.gen.InquiryLocalObject;
 
 /**
  * A dummy fragment representing a section of the app, but that simply displays dummy text.
  */
-public class InqHypothesisFragment extends Fragment {
+public class InqAnalyseFragment extends Fragment {
 
+    private static final String MIME_TYPE = "text/html";
+    private static final String ENCONDING = null;
 
-    private InquiryLocalObject inquiry;
-
-    public InqHypothesisFragment() {
+    public InqAnalyseFragment() {
+//        this.inquiry = API.getInquiryLocalObject();;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
         super.onCreateView(inflater,container,savedInstanceState);
 
-        final View rootView = inflater.inflate(R.layout.fragment_section_hypothesis, container, false);
-        WebView webView = (WebView) rootView.findViewById(R.id.description_hypothesis);
-        TextView title = (TextView) rootView.findViewById(R.id.title_hypothesis);
-        title.setText(R.string.inquiry_title_hypothesis);
-        webView.loadData(INQ.inquiry.getCurrentInquiry().getHypothesisDescription(), Constants.MIME_TYPE, Constants.ENCONDING);
+        final View rootView = inflater.inflate(R.layout.fragment_section_analyse, container, false);
+        WebView webView = (WebView) rootView.findViewById(R.id.description_analyse);
+
+        TextView title = (TextView) rootView.findViewById(R.id.title_analyse);
+        title.setText(R.string.inquiry_title_analyse);
+
+        webView.loadData("Analyse",MIME_TYPE, ENCONDING);
+//        webView.loadData(INQ.inquiry.getCurrentInquiry().getDescription(),MIME_TYPE, ENCONDING);
         return rootView;
     }
-
 }

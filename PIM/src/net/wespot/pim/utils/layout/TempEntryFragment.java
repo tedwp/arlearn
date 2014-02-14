@@ -1,13 +1,12 @@
-package net.wespot.pim.controller.Adapters;
+package net.wespot.pim.utils.layout;
 
-import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import net.wespot.pim.R;
-import org.celstec.dao.gen.InquiryLocalObject;
-import org.celstec.listadapter.AbstractInquiryLazyListAdapter;
 
 /**
  * ****************************************************************************
@@ -26,26 +25,32 @@ import org.celstec.listadapter.AbstractInquiryLazyListAdapter;
  * You should have received a copy of the GNU Lesser General Public License
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  * <p/>
- * Contributors: Stefaan Ternier
+ * Contributors: Angel Suarez
  * ****************************************************************************
  */
-public class InquiryLazyListAdapter extends AbstractInquiryLazyListAdapter {
+public class TempEntryFragment extends Fragment {
 
-    public InquiryLazyListAdapter(Context context) {
-        super(context);
+    private TextView name;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.entry_main_list, container, false);
     }
 
     @Override
-    public View newView(Context context, InquiryLocalObject item, ViewGroup parent) {
-        if (item == null) return null;
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return inflater.inflate(R.layout.entry_inquiry_list, parent, false);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
 
-    }
-    @Override
-    public void bindView(View view, Context context,  InquiryLocalObject item) {
-        TextView firstLineView =(TextView) view.findViewById(R.id.name_entry_list);
-        firstLineView.setText(item.getTitle());
+        name = (TextView) view.findViewById(R.id.name_entry_list);
+
+        super.onViewCreated(view, savedInstanceState);
     }
 
+    public CharSequence getName() {
+        return name.getText();
+    }
+
+    public void setName(String name) {
+        this.name.setText(name);
+    }
 }

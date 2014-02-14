@@ -56,7 +56,7 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
             Utils.enableStrictMode();
         }
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.image_detail_pager);
+        setContentView(R.layout.fragment_pager_detail_image);
 
         // Fetch screen height and width, to use as our max size when loading images as this
         // activity runs full screen
@@ -85,7 +85,7 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), INQ.inquiry.getCurrentInquiry().getRunLocalObject().getResponses().size());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
-        mPager.setPageMargin((int) getResources().getDimension(R.dimen.image_detail_pager_margin));
+        mPager.setPageMargin((int) getResources().getDimension(R.dimen.data_collect_pager_image_detail_maring));
         mPager.setOffscreenPageLimit(2);
 
         // Set up activity to go full screen
@@ -94,24 +94,6 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         // Enable some additional newer visibility and ActionBar features to create a more
         // immersive photo viewing experience
         if (Utils.hasHoneycomb()) {
-//            final ActionBar actionBar = getActionBar();
-
-            // Hide title text and set home as up
-//            actionBar.setDisplayShowTitleEnabled(false);
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-
-            // Hide and show the ActionBar as the visibility changes
-//            mPager.setOnSystemUiVisibilityChangeListener(
-//                    new View.OnSystemUiVisibilityChangeListener() {
-//                        @Override
-//                        public void onSystemUiVisibilityChange(int vis) {
-//                            if ((vis & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0) {
-//                                actionBar.hide();
-//                            } else {
-//                                actionBar.show();
-//                            }
-//                        }
-//                    });
 
             // Start low profile mode and hide ActionBar
             mPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);

@@ -43,27 +43,32 @@ public class InquiryPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int i) {
 
-        Fragment frag = new DemoObjectFragment();
+        Fragment frag;
         Bundle args = new Bundle();
 
         switch (i) {
             case 0:
-                frag = new InqDescriptionFragment();
-//                    args.putLong(INQUIRY_ID, inquiry_id); // Our object is just an integer :-P
-//                    frag.setArguments(args);
-
+                frag = new InqHypothesisFragment();
                 return frag;
             case 1:
-                frag =  new InqHypothesisFragment();
+                frag =  new InqPlanFragment();
                 return frag;
             case 2:
-                // TODO check with Stefaan if can I manually bound runs to an inquiry on the database
                 if (INQ.inquiry.getCurrentInquiry().getRunLocalObject() != null){
                     frag = new InqDataFragment();
                     return frag;
+                }else{
+                    frag = new InqNoDataFragment();
+                    return frag;
                 }
             case 3:
-                frag =  new InqMapFragment();
+                frag =  new InqAnalyseFragment();
+                return frag;
+            case 4:
+                frag =  new InqDiscussFragment();
+                return frag;
+            case 5:
+                frag =  new InqCommunicateFragment();
                 return frag;
             default:
                 // The other sections of the app are dummy placeholders.
@@ -78,26 +83,5 @@ public class InquiryPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         // For this contrived example, we have a 100-object collection.
         return 6;
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-
-        switch (position){
-            case 0:
-                return "Wonder moment";
-            case 1:
-                return "Description";
-            case 2:
-                if (INQ.inquiry.getCurrentInquiry().getRunLocalObject() != null){
-                    return "Collect data";
-                }
-            case 3:
-                return "Map";
-            case 4:
-                return "Analysis";
-            default:
-                return "Section " + (position + 1);
-        }
     }
 }

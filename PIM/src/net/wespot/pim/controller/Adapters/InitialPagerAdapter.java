@@ -60,13 +60,4 @@ public class InitialPagerAdapter extends FragmentPagerAdapter {
         // For this contrived example, we have a 100-object collection.
         return 4;
     }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-
-        switch (position){
-            default:
-                return "Section " + (position + 1);
-        }
-    }
 }

@@ -8,11 +8,21 @@
     <string name="inquiry_create_title">Create an inquiry</string>
     <string name="inquiry_create_yes">Yes</string>
     <string name="inquiry_create_no">No</string>
+    <string name="inquiry_title">Menu</string>
+    <string name="inquiry_title_list">Open inquiries</string>
+
+    <string name="phases_invite_new_friend">Invite friends</string>
+
+    <string name="wrapper_myinquiry">My Inquiries</string>
+    <string name="wrapper_profile">Profile</string>
+    <string name="wrapper_badges">Badges</string>
+    <string name="wrapper_friends">Friends</string>
 
     <string name="menu_refresh">Refresh</string>
     <string name="menu_search">Search</string>
     <string name="menu_add">New</string>
     <string name="menu_share">Share</string>
+    <string name="menu_logout">Logout</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -41,6 +51,12 @@
     <string name="wonder_moment_address_output_string">%1$s %2$s %3$s</string>
     <string name="wonder_moment_no_address_found">No address found for location</string>
 
+    <string name="inquiry_title_hypothesis">Hypothesis</string>
+    <string name="inquiry_title_plan">Plan</string>
+    <string name="inquiry_title_data">Collect data</string>
+    <string name="inquiry_title_analyse">Analyse</string>
+    <string name="inquiry_title_discuss">Discuss</string>
+    <string name="inquiry_title_communicate">Communicate</string>
 
     <string name="imageview_description">Image Thumbnail</string>
     <string name="splash_login_button">Login button</string>

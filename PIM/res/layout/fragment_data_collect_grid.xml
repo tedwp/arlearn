@@ -20,10 +20,10 @@
     style="@style/PhotoGridLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:columnWidth="@dimen/image_thumbnail_size"
-    android:horizontalSpacing="@dimen/image_thumbnail_spacing"
+    android:columnWidth="@dimen/data_collect.thumbnail.image.size"
+    android:horizontalSpacing="@dimen/data_collect.thumbnail.image.spacing"
     android:numColumns="auto_fit"
     android:stretchMode="columnWidth"
-    android:verticalSpacing="@dimen/image_thumbnail_spacing" >
+    android:verticalSpacing="@dimen/data_collect.thumbnail.image.spacing" >
 
 </GridView>

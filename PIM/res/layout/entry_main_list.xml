@@ -3,9 +3,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="0dp">
-
     <TextView
-            android:id="@+id/name"
+            android:id="@+id/name_entry_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/texto_de_pruebas"
@@ -24,13 +23,14 @@
             android:id="@+id/imageView"
             android:src="@drawable/foto_perfil_croped"
             android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/name"
+            android:layout_alignTop="@+id/name_entry_list"
             android:layout_margin="20dp"
             android:layout_centerVertical="true"/>
-    <TextView android:layout_width="20dp" android:layout_height="20dp" android:id="@+id/imageView2"
+    <TextView android:layout_width="20dp"
+              android:layout_height="20dp"
+              android:id="@+id/imageView2"
                android:src="@drawable/foto_perfil_croped"
                android:layout_centerVertical="true"
-               android:layout_toLeftOf="@+id/imageView" android:text="1" android:textSize="20dp"/>
-
-
+               android:layout_toLeftOf="@+id/imageView"
+               android:text="1" android:textSize="20dp"/>
 </RelativeLayout>

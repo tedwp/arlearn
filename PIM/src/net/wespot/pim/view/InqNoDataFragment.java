@@ -1,5 +1,13 @@
 package net.wespot.pim.view;
 
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import net.wespot.pim.R;
+
 /**
  * ****************************************************************************
  * Copyright (C) 2013 Open Universiteit Nederland
@@ -20,23 +28,16 @@ package net.wespot.pim.view;
  * Contributors: Angel Suarez
  * ****************************************************************************
  */
+public class InqNoDataFragment extends Fragment {
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import net.wespot.pim.R;
-
-/**
- * A fragment that launches other parts of the demo application.
- */
-public class PimProfileFragment extends Fragment {
+    public static final String INQUIRY_ID = "inquiry_id";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        View rootView = inflater.inflate(R.layout.fragment_no_data_collected, container, false);
+        Bundle args = getArguments();
+        ((TextView) rootView.findViewById(android.R.id.text1)).setText("No data collected");
         return rootView;
     }
 }
