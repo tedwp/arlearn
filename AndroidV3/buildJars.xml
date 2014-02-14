@@ -24,11 +24,11 @@
     <target name="compile_base" depends="clean base">
         <mkdir dir="build/base/classes" />
 
-        <javac target="1.6" srcdir="src-dao-gen" verbose="true"
+        <javac includeantruntime="false"  srcdir="src-dao-gen" verbose="true"
                destdir="build/base/classes" classpathref="classpath" debug="on" excludes="org/celstec/dao/ARlearnDaoGenerator.java,org/celstec/arlearn2/android/listadapter/**">
             <src path="src-network"></src>
         </javac>
-        <javac target="1.6" srcdir="src-network" destdir="build/base/classes" classpathref="classpath" debug="on" excludes="org/celstec/arlearn2/android/listadapter/impl/**"/>
+        <javac  srcdir="src-network" destdir="build/base/classes" classpathref="classpath" debug="on" excludes="org/celstec/arlearn2/android/listadapter/impl/**"/>
     </target>
 
     <target name="compile_pim" depends="clean pim">
@@ -42,14 +42,19 @@
             <fileset dir="src-dao-gen" includes="**/*.java"/>
             <fileset dir="src-network" includes="**/*.java"/>
         </jar>
+        <jar destfile="../PIM/libs/ARLearn-Android-Base.jar" basedir="build/base/classes">
+            <fileset dir="src-dao-gen" includes="**/*.java"/>
+            <fileset dir="src-network" includes="**/*.java"/>
+        </jar>
     </target>
 
     <target name="jar pim" depends="compile_pim">
         <mkdir dir="build/base/jar" />
         <jar destfile="build/jar/ARLearn-Android-PIM.jar" basedir="build/pim/classes">
             <fileset dir="src-pim" includes="**/*.java"/>
-
-
+        </jar>
+        <jar destfile="../PIM/libs/ARLearn-Android-PIM.jar" basedir="build/pim/classes">
+            <fileset dir="src-pim" includes="**/*.java"/>
         </jar>
     </target>
 </project>
