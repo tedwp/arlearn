@@ -8,9 +8,15 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Message extends RunBean{
 
-	private String title;
+    private Long messageId;
+    private Long threadId;
+    private Long runId;
+    private String title;
 	private String messageBody;
-	
+    private Long date;
+    private String userIds;
+    private String teamIds;
+
     public Message() {}
 
     

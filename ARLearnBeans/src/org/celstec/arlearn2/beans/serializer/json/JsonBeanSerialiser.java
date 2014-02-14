@@ -64,6 +64,7 @@ import org.celstec.arlearn2.beans.notification.authoring.RunCreationStatus;
 import org.celstec.arlearn2.beans.oauth.OauthInfo;
 import org.celstec.arlearn2.beans.oauth.OauthInfoList;
 import org.celstec.arlearn2.beans.run.*;
+import org.celstec.arlearn2.beans.run.Thread;
 import org.celstec.arlearn2.beans.serializer.BeanSerializer;
 import org.celstec.arlearn2.beans.store.Category;
 import org.celstec.arlearn2.beans.store.CategoryList;
@@ -137,6 +138,8 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(GeneralItemVisibilityList.class.getCanonicalName(), GeneralItemVisibilityList.serializer);
 		customSerializerMap.put(Message.class.getCanonicalName(), Message.serializer);
         customSerializerMap.put(VariableInstance.class.getCanonicalName(), VariableInstance.serializer);
+        customSerializerMap.put(Thread.class.getCanonicalName(), Thread.serializer);
+        customSerializerMap.put(ThreadList.class.getCanonicalName(), ThreadList.serializer);
 
 		customSerializerMap.put(Action.class.getCanonicalName(), new ActionSerializer());
 		customSerializerMap.put(ActionList.class.getCanonicalName(), new ActionListSerializer());

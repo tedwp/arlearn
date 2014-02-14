@@ -215,6 +215,7 @@ public class DBAdapter {
     public static DatabaseHandler getDatabaseThread(Context ctx) {
 		startLatch = new CountDownLatch(1);
     	if (thread == null) {
+
     		thread = new DatabaseThread(ctx);
     		thread.start();
     	} else {
@@ -271,7 +272,11 @@ public class DBAdapter {
 		public void handleMessage(Message message) {
 			DatabaseTask task = (DatabaseTask) message.obj;
 			long time = System.currentTimeMillis();
-			try {
+            Log.i("DBTask", "start "+task.getClass().getCanonicalName());
+            if ("".equals(task.getClass().getCanonicalName())) {
+                Log.i("Task", "break here");
+            }
+            try {
 				task.execute(staticDb);
 			} catch (Exception e) {
 				Log.e("exception", "in databasehandler", e);
