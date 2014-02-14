@@ -95,16 +95,6 @@ public class BadgesDelegator {
                 }
 
                 badge.setAccountLocalObject(account);
-//                if (inqJsonObject.has("originalrequest")) {
-//                    String origRequest = inqJsonObject.getString("originalrequest");
-//                    JSONObject origJson = new JSONObject(origRequest);
-//                    String url = origJson.getJSONObject("badge").getJSONObject("issuer").getString("origin")+
-//                            origJson.getJSONObject("badge").getString("image");
-////                    Log.e("TEST", "imageurl "+url);
-////                    badge.setDescription(origJson.getJSONObject("badge").getString("description"));
-////                    badge.setBadgeIcon(downloadImage(url));
-//                }
-//                Log.e("TEST", "object");
                 DaoConfiguration.getInstance().getSession().getBadgeLocalObjectDao().insertOrReplace(badge);
                 ARL.eventBus.post(new BadgeEvent());
             }

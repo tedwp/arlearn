@@ -116,9 +116,10 @@ public class ARlearnDaoGenerator {
         inquiry.addStringProperty("description");
         inquiry.addStringProperty("hypothesisTitle");
         inquiry.addStringProperty("hypothesisDescription");
-        inquiry.addByteProperty("icon");
         inquiry.addStringProperty("reflection");
         inquiry.addBooleanProperty("isSynchronized");
+        inquiry.addByteArrayProperty("icon");
+
 
         Property runId = inquiry.addLongProperty("runId").notNull().getProperty();
         inquiry.addToOne(run, runId);

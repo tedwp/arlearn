@@ -8,7 +8,7 @@ import de.greenrobot.dao.query.Query;
 import de.greenrobot.dao.query.QueryBuilder;
 import org.celstec.arlearn2.android.db.Constants;
 import org.celstec.arlearn2.android.events.ResponseEvent;
-import org.celstec.arlearn2.android.util.AppEngineFileUploader;
+import org.celstec.arlearn2.android.util.AppengineFileUploader;
 import org.celstec.arlearn2.android.util.FileDownloader;
 import org.celstec.arlearn2.beans.run.ResponseList;
 import org.celstec.arlearn2.client.ResponseClient;
@@ -91,7 +91,7 @@ public class ResponseDelegator extends AbstractDelegator{
 
     private void synchronize(ResponseLocalObject response) {
         Response responseBean = response.getBean();
-        AppEngineFileUploader uploader = new AppEngineFileUploader(response.getRunId(), response.getAccountLocalObject().getFullId(), response.getUri().getLastPathSegment());
+        AppengineFileUploader uploader = new AppengineFileUploader(response.getRunId(), response.getAccountLocalObject().getFullId(), response.getUri().getLastPathSegment());
         String token = returnTokenIfOnline();
         if (token != null) {
             String uploadUrl = uploader.requestUploadUrl(token) ;

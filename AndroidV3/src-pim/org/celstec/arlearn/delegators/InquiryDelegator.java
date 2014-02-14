@@ -3,6 +3,10 @@ package org.celstec.arlearn.delegators;
 import android.util.Log;
 import daoBase.DaoConfiguration;
 import de.greenrobot.dao.query.QueryBuilder;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.dao.gen.InquiryLocalObjectDao;
 import org.celstec.events.InquiryEvent;
@@ -11,6 +15,8 @@ import org.celstec.dao.gen.InquiryLocalObject;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
+import java.io.InputStream;
 
 /**
  * ****************************************************************************
@@ -108,11 +114,37 @@ public class InquiryDelegator {
                 inquiry.setIsSynchronized(true);
                 long runId = InquiryClient.getInquiryClient(). getArlearnRunId(inquiry.getId());
                 inquiry.setRunId(runId);
+                inquiry.setIcon(downloadImage(inqJsonObject.getString("icon")));
+
+
                 DaoConfiguration.getInstance().getInquiryLocalObjectDao().insertOrReplace(inquiry);
                 ARL.eventBus.post(new InquiryEvent(inquiry.getId()));
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    private byte[] downloadImage(String imageUrl){
+        try {
+            DefaultHttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet(imageUrl);
+            HttpResponse response = client.execute(request);
+            HttpEntity entity = response.getEntity();
+            int imageLength = (int)(entity.getContentLength());
+            InputStream is = entity.getContent();
+
+            byte[] imageBlob = new byte[imageLength];
+            int bytesRead = 0;
+            while (bytesRead < imageLength) {
+                int n = is.read(imageBlob, bytesRead, imageLength - bytesRead);
+                if (n <= 0)
+                    ; // do some error handling
+                bytesRead += n;
+            }
+            return imageBlob;
+        }catch (Exception e) {
+            return null;
         }
     }
 
