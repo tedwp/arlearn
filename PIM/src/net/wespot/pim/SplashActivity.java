@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import net.wespot.pim.controller.Adapters.InitialPagerAdapter;
 import net.wespot.pim.utils.layout.CirclePageIndicator;
@@ -32,7 +33,7 @@ import net.wespot.pim.utils.layout.PageIndicator;
  */
 public class SplashActivity extends FragmentActivity {
 
-    private ImageButton loginButton;
+    private Button loginButton;
 
     InitialPagerAdapter mAdapter;
     ViewPager mPager;
@@ -45,7 +46,7 @@ public class SplashActivity extends FragmentActivity {
 
         mAdapter = new InitialPagerAdapter(getSupportFragmentManager());
 
-        loginButton = (ImageButton) findViewById(R.id.login);
+        loginButton = (Button) findViewById(R.id.login);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

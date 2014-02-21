@@ -26,6 +26,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import net.wespot.pim.view.DemoObjectFragment;
+import net.wespot.pim.view.SplashImagesFragment;
 
 /**
  * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a fragment
@@ -48,8 +49,8 @@ public class InitialPagerAdapter extends FragmentPagerAdapter {
         switch (i) {
             default:
                 // The other sections of the app are dummy placeholders.
-                frag = new DemoObjectFragment();
-                args.putInt(INQUIRY_ID, i + 1); // Our object is just an integer :-P
+                frag = new SplashImagesFragment();
+                args.putInt(INQUIRY_ID, i); // Our object is just an integer :-P
                 frag.setArguments(args);
                 return frag;
         }
@@ -58,6 +59,6 @@ public class InitialPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // For this contrived example, we have a 100-object collection.
-        return 4;
+        return 3;
     }
 }

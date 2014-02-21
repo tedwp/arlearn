@@ -67,7 +67,7 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
 
     private static final String TAG = "InqWonderMomentFragment";
     private static final int REQUEST_CODE = 1234;
-    private static final int RESULT_OK = 123;
+    private static final int RESULT_OK = -1;
 
     private EditText wm_content;
 
@@ -246,6 +246,7 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            Log.e(TAG, matches.toString());
 //                 resultList.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, matches));
             wm_content.setText((wm_content.getText().equals(null)? matches.get(0) : wm_content.getText()+" "+matches.get(0)));
         }

@@ -1,30 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Inquiries</string>
-    <string name="inquiry_title_new">New inquiry</string>
+    <string name="inquiry_title_new">Nueva inquiry</string>
     <string name="inquiry_title">Inquiry $1s</string>
-    <string name="inquiry_create_title">Create an inquiry</string>
-    <string name="inquiry_create_yes">Yes</string>
+    <string name="inquiry_create_title">Crear nueva inquiry</string>
+    <string name="inquiry_create_yes">Si</string>
     <string name="inquiry_create_no">No</string>
     <string name="inquiry_title">Menu</string>
-    <string name="inquiry_title_list">Open inquiries</string>
+    <string name="inquiry_title_list">Inquiries abiertas</string>
 
+    <string name="phases_invite_new_friend">Invita amigos</string>
 
-    <string name="friends_friend_new">Add friend</string>
-    <string name="friends_title_list">Friends</string>
-
-    <string name="phases_invite_new_friend">Invite friends</string>
-
-    <string name="wrapper_myinquiry">My Inquiries</string>
-    <string name="wrapper_profile">Profile</string>
+    <string name="wrapper_myinquiry">Mis inquiries</string>
+    <string name="wrapper_profile">Perfil</string>
     <string name="wrapper_badges">Badges</string>
-    <string name="wrapper_friends">Friends</string>
+    <string name="wrapper_friends">Amigos</string>
 
-    <string name="menu_refresh">Refresh</string>
-    <string name="menu_search">Search</string>
-    <string name="menu_add">New</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_logout">Logout</string>
+    <string name="menu_refresh">Refresca</string>
+    <string name="menu_search">Busca</string>
+    <string name="menu_add">Nuevo</string>
+    <string name="menu_share">Comparte</string>
+    <string name="menu_logout">Salir</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -39,11 +35,11 @@
 
     <string name="search_hint">Search</string>
 
-    <string name="wonder_moment_title">Click to capture your wonder moment</string>
+    <string name="wonder_moment_title">Captura tu wonder moment</string>
     <string name="wonder_moment_record_voice">Record wonder moment</string>
-    <string name="wonder_moment_date_placeholder">Set up date</string>
-    <string name="wonder_moment_time_placeholder">Set up time</string>
-    <string name="wonder_moment_location_placeholder">Click to setup the location</string>
+    <string name="wonder_moment_date_placeholder">Configura la fecha</string>
+    <string name="wonder_moment_time_placeholder">Configura la hora</string>
+    <string name="wonder_moment_location_placeholder">Configura la localizacion</string>
     <string name="wonder_moment_content_placeholder">Set your wonder moment here</string>
     <string name="wonder_moment_latitude_longitude">%1$.8f, %2$.8f</string>
     <string name="wonder_moment_no_geocoder_available">Cannot get address. No geocoder available.</string>
@@ -53,17 +49,16 @@
     <string name="wonder_moment_address_output_string">%1$s %2$s %3$s</string>
     <string name="wonder_moment_no_address_found">No address found for location</string>
 
-    <string name="inquiry_title_hypothesis">Hypothesis</string>
+    <string name="inquiry_title_hypothesis">Hipotesis</string>
     <string name="inquiry_title_plan">Plan</string>
-    <string name="inquiry_title_data">Collect data</string>
-    <string name="inquiry_title_analyse">Analyse</string>
-    <string name="inquiry_title_discuss">Discuss</string>
-    <string name="inquiry_title_communicate">Communicate</string>
+    <string name="inquiry_title_data">Colecciona datos</string>
+    <string name="inquiry_title_analyse">Analisis</string>
+    <string name="inquiry_title_discuss">Discusion</string>
+    <string name="inquiry_title_communicate">Comunicacion</string>
 
     <string name="imageview_description">Image Thumbnail</string>
-    <string name="splash_login_button">Login</string>
-
-    <string name="icon_list">1</string>
+    <string name="splash_login_button">Login button</string>
+    <string name="icon_list">icon_list</string>
 
 
 </resources>

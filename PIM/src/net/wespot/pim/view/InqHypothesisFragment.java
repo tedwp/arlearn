@@ -54,6 +54,7 @@ public class InqHypothesisFragment extends Fragment {
         WebView webView = (WebView) rootView.findViewById(R.id.description_hypothesis);
         TextView title = (TextView) rootView.findViewById(R.id.title_hypothesis);
         title.setText(R.string.inquiry_title_hypothesis);
+        webView.setBackgroundColor(0x00000000);
         webView.loadData(INQ.inquiry.getCurrentInquiry().getHypothesisDescription(), Constants.MIME_TYPE, Constants.ENCONDING);
         return rootView;
     }

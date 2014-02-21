@@ -55,6 +55,7 @@ public class InqAnalyseFragment extends Fragment {
         title.setText(R.string.inquiry_title_analyse);
 
         webView.loadData("Analyse",MIME_TYPE, ENCONDING);
+        webView.setBackgroundColor(0x00000000);
 //        webView.loadData(INQ.inquiry.getCurrentInquiry().getDescription(),MIME_TYPE, ENCONDING);
         return rootView;
     }

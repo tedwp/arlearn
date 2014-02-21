@@ -14,10 +14,6 @@
   limitations under the License.
   -->
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/text1"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:textSize="30sp"
-    android:padding="32dp" />
+<ImageView android:id="@+id/image_splash_screen"
+        android:layout_height="wrap_content" android:layout_width="match_parent"
+           xmlns:android="http://schemas.android.com/apk/res/android"/>

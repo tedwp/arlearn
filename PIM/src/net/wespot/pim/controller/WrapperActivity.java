@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import net.wespot.pim.R;
 import net.wespot.pim.utils.layout.ActionBarFragmentActivity;
 import net.wespot.pim.view.PimBadgesFragmentList;
+import net.wespot.pim.view.PimFriendsFragment;
 import net.wespot.pim.view.PimInquiriesFragment;
 
 public class WrapperActivity extends ActionBarFragmentActivity{
@@ -47,7 +48,7 @@ public class WrapperActivity extends ActionBarFragmentActivity{
 
                     fragmentTransaction = fragmentManager.beginTransaction();
                     PimInquiriesFragment fragment = new PimInquiriesFragment();
-                    fragmentTransaction.add(R.id.drawer_layout, fragment);
+                    fragmentTransaction.add(R.id.content, fragment);
                     fragmentTransaction.commit();
 
                     break;
@@ -59,12 +60,16 @@ public class WrapperActivity extends ActionBarFragmentActivity{
                     setContentView(R.layout.wrapper);
                     fragmentTransaction = fragmentManager.beginTransaction();
                     PimBadgesFragmentList badgesFragment = new PimBadgesFragmentList();
-                    fragmentTransaction.add(R.id.drawer_layout, badgesFragment);
+                    fragmentTransaction.add(R.id.content, badgesFragment);
                     fragmentTransaction.commit();
                     break;
                 default:
-                    setContentView(R.layout.screen_friends);
+                    setContentView(R.layout.wrapper);
 
+                    fragmentTransaction = fragmentManager.beginTransaction();
+                    PimFriendsFragment friend = new PimFriendsFragment();
+                    fragmentTransaction.add(R.id.content, friend);
+                    fragmentTransaction.commit();
                     break;
             }
         }

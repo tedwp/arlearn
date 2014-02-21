@@ -6,7 +6,7 @@
         <TextView android:id="@+id/title_plan"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              style="@style/title_fragments_in_inquiries"/>
+              style="@style/CustomTheme.TextView.Title2"/>
 
         <WebView
                 android:id="@+id/description_plan"

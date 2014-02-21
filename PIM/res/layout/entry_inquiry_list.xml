@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="0dp">
+
+        style="@style/CustomTheme.ListItem">
 
     <TextView
             android:id="@+id/name_entry_list"
@@ -10,25 +11,22 @@
             android:layout_height="wrap_content"
             android:text="@string/texto_de_pruebas"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/img"
+            android:layout_toRightOf="@+id/inquiry_entry_icon"
             android:layout_margin="15dp"/>
     <ImageView
-            android:id="@+id/img"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:id="@+id/inquiry_entry_icon"
+            style="@style/CustomTheme.ListItem.ImageView.Left"
             android:src="@drawable/foto_perfil_croped"
-            android:contentDescription="icon_list"/>
-    <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:id="@+id/imageView"
-            android:src="@drawable/foto_perfil_croped"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/name_entry_list"
-            android:layout_margin="20dp"
-            android:layout_centerVertical="true"/>
-    <TextView android:layout_width="20dp" android:layout_height="20dp" android:id="@+id/imageView2"
-               android:src="@drawable/foto_perfil_croped"
-               android:layout_centerVertical="true"
-               android:layout_toLeftOf="@+id/imageView" android:text="1" android:textSize="20dp"/>
+            android:contentDescription="@string/icon_list"/>
+    <TextView
+            android:id="@+id/notificationTextInquiry"
+            style="@style/CustomTheme.NotificationText" />
+    <!--<TextView android:layout_width="20dp"-->
+              <!--android:layout_height="20dp"-->
+              <!--android:id="@+id/imageView2"-->
+               <!--android:src="@drawable/foto_perfil_croped"-->
+               <!--android:layout_centerVertical="true"-->
+               <!--android:layout_toLeftOf="@+id/imageView"-->
+               <!--android:text="@string/icon_list"-->
+               <!--android:textSize="20dp"/>-->
 </RelativeLayout>

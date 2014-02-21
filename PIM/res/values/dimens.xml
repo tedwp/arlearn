@@ -21,7 +21,7 @@
     <dimen name="data_collect.thumbnail.image.spacing">1dp</dimen>
     <dimen name="data_collect.pager.image.detail.maring">80dp</dimen>
 
-    <dimen name="mainscreen.margintop.first">100dp</dimen>
+    <dimen name="mainscreen.margintop.first">120dp</dimen>
     <dimen name="mainscreen.margintop.second">40dp</dimen>
 
     <dimen name="inquiry.fragments.titles">18dp</dimen>
@@ -40,4 +40,12 @@
     <dimen name="view_pager.indicator.title.footer.padding">7dp</dimen>
     <dimen name="view_pager.indicator.circle.stroke.width">1dp</dimen>
     <dimen name="view_pager.indicator.circle.radius">3dp</dimen>
+
+    <dimen name="listitem.imageview.left.height">40dp</dimen>
+    <dimen name="listitem.imageview.left.width">40dp</dimen>
+
+    <dimen name="listitem.imageview.right.height">40dp</dimen>
+    <dimen name="listitem.imageview.right.width">40dp</dimen>
+
+    <dimen name="profile.imageview.margin.top">120dp</dimen>
 </resources>

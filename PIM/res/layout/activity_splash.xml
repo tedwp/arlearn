@@ -19,9 +19,10 @@
             <!--android:layout_height="60dp"-->
             <!--android:id="@+id/logout"-->
             <!--android:layout_alignParentBottom="true"/>-->
-    <ImageButton android:layout_width="100dp" android:layout_height="60dp" android:id="@+id/login"
+    <Button android:layout_width="100dp" android:layout_height="60dp" android:id="@+id/login"
                  android:clickable="true" android:src="@drawable/foto_perfil_croped"
                  android:contentDescription="@string/splash_login_button"
+                 android:text="@string/splash_login_button"
                  android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
                  android:layout_margin="10dp"/>
 </RelativeLayout>

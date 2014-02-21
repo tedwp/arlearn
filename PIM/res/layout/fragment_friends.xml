@@ -2,26 +2,26 @@
 
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content"
+    android:id="@+id/content_friends"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <fragment android:name="net.wespot.pim.utils.layout.TempEntryFragment"
-              android:id="@+id/inquiries_new_inquiry"
+              android:id="@+id/friends_add_friend"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"/>
-    <TextView android:id="@+id/inquiries_title_list"
-              android:layout_below="@id/inquiries_new_inquiry"
+
+    <TextView android:id="@+id/friends_title_list"
+              android:layout_below="@id/friends_add_friend"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:text="@string/inquiry_title_list"
-              style="@style/CustomTheme.TextView.Title1"
-            />
-    <ListView android:id="@+id/list_inquiries"
+              android:text="@string/friends_title_list"
+              style="@style/CustomTheme.TextView.Title1" />
+
+    <ListView android:id="@+id/list_friends"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:dividerHeight="1dp"
-              android:layout_below="@+id/inquiries_title_list"
-              />
+              android:layout_below="@+id/friends_title_list" />
 
 </RelativeLayout>

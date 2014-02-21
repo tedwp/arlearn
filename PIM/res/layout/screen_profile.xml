@@ -30,7 +30,9 @@
         <ImageView
                 android:layout_width="182dp"
                 android:layout_height="180dp"
-                android:id="@+id/imageView" android:layout_gravity="center_horizontal"
+                android:id="@+id/imageView"
+                android:layout_marginTop="@dimen/profile.imageview.margin.top"
+                android:layout_gravity="center_horizontal"
                 android:contentDescription="@string/profile_picture_description"
                 android:src="@drawable/foto_perfil_croped"
                 android:layout_above="@+id/profile_name" android:layout_centerHorizontal="true"/>

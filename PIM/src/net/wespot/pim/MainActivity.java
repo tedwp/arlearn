@@ -35,6 +35,8 @@ public class MainActivity extends MainActionBarFragmentActivity /*implements Act
 
         TempEntryFragment button_inq_frag = (TempEntryFragment) getSupportFragmentManager().findFragmentById(R.id.main_myinquiries_link);
         button_inq_frag.setName(getString(R.string.wrapper_myinquiry));
+        //TODO hardcode number of notificatons
+        button_inq_frag.setNotification("112");
         my_inquiries = findViewById(R.id.main_myinquiries_link);
         my_inquiries.setOnClickListener(new View.OnClickListener() {
             @Override

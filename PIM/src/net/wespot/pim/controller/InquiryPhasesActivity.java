@@ -18,6 +18,7 @@ package net.wespot.pim.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,25 +37,79 @@ public class InquiryPhasesActivity extends ActionBarFragmentActivity {
     private static final String TAG = "InquiryActivity";
     private ListView list_phases;
     private WebView inquiry_description_title;
-    private PhasesLazyListAdapter phasesListAdapter;
+    private TempEntryFragment button_hypothesis;
+    private View button_hypothesisView;
+    private TempEntryFragment button_plan;
+    private View button_planView;
+    private TempEntryFragment button_data;
+    private View button_dataView;
+    private TempEntryFragment button_analyse;
+    private View button_analyseView;
+    private TempEntryFragment button_discuss;
+    private View button_discussView;
+    private TempEntryFragment button_communicate;
+    private View button_communicateView;
+//    private PhasesLazyListAdapter phasesListAdapter;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_phases);
 
-        phasesListAdapter = new PhasesLazyListAdapter(this, Constants.INQUIRY_PHASES_LIST);
+//        phasesListAdapter = new PhasesLazyListAdapter(this, Constants.INQUIRY_PHASES_LIST);
 
         inquiry_description_title = (WebView) findViewById(R.id.list_phases_title);
-        list_phases = (ListView) findViewById(R.id.list_phases);
-        list_phases.setAdapter(phasesListAdapter);
-        list_phases.setOnItemClickListener(new OnItemClickPhasesList());
+//        list_phases = (ListView) findViewById(R.id.list_phases);
+//        list_phases.setAdapter(phasesListAdapter);
+//        list_phases.setOnItemClickListener(new OnItemClickPhasesList());
 
-        TempEntryFragment button_invite_friends = (TempEntryFragment) this.getSupportFragmentManager().findFragmentById(R.id.invites_friends_to_inquiry);
+        button_hypothesis = (TempEntryFragment)
+                this.getSupportFragmentManager().findFragmentById(R.id.list_phases_hypothesis);
+        button_hypothesis.setName(Constants.INQUIRY_PHASES_LIST.get(0));
+        button_hypothesisView = (View) findViewById(R.id.list_phases_hypothesis);
+        button_hypothesisView.setOnClickListener(new OnClickNewInquiry(0));
+
+
+        button_plan = (TempEntryFragment)
+                this.getSupportFragmentManager().findFragmentById(R.id.list_phases_plan);
+        button_plan.setName(Constants.INQUIRY_PHASES_LIST.get(1));
+        button_planView = (View) findViewById(R.id.list_phases_plan);
+        button_planView.setOnClickListener(new OnClickNewInquiry(1));
+
+
+        button_data = (TempEntryFragment)
+                this.getSupportFragmentManager().findFragmentById(R.id.list_phases_data);
+        button_data.setName(Constants.INQUIRY_PHASES_LIST.get(2));
+        button_dataView = (View) findViewById(R.id.list_phases_data);
+        button_dataView.setOnClickListener(new OnClickNewInquiry(2));
+        //TODO hardcode number of notificatons
+        button_data.setNotification("12");
+
+        button_analyse = (TempEntryFragment)
+                this.getSupportFragmentManager().findFragmentById(R.id.list_phases_analyse);
+        button_analyse.setName(Constants.INQUIRY_PHASES_LIST.get(3));
+        button_analyseView = (View) findViewById(R.id.list_phases_analyse);
+        button_analyseView.setOnClickListener(new OnClickNewInquiry(3));
+
+        button_discuss = (TempEntryFragment)
+                this.getSupportFragmentManager().findFragmentById(R.id.list_phases_discuss);
+        button_discuss.setName(Constants.INQUIRY_PHASES_LIST.get(4));
+        button_discussView = (View) findViewById(R.id.list_phases_discuss);
+        button_discussView.setOnClickListener(new OnClickNewInquiry(4));
+
+        button_communicate = (TempEntryFragment)
+                this.getSupportFragmentManager().findFragmentById(R.id.list_phases_communicate);
+        button_communicate.setName(Constants.INQUIRY_PHASES_LIST.get(5));
+        button_communicateView = (View) findViewById(R.id.list_phases_communicate);
+        button_communicateView.setOnClickListener(new OnClickNewInquiry(5));
+
+        TempEntryFragment button_invite_friends = (TempEntryFragment)
+                this.getSupportFragmentManager().findFragmentById(R.id.invites_friends_to_inquiry);
         button_invite_friends.setName(getString(R.string.phases_invite_new_friend));
 
         getActionBar().setTitle(INQ.inquiry.getCurrentInquiry().getTitle());
         inquiry_description_title.loadData(INQ.inquiry.getCurrentInquiry().getDescription(), Constants.MIME_TYPE, Constants.ENCONDING);
+        inquiry_description_title.setBackgroundColor(0x00000000);
 
     }
 
@@ -73,11 +128,27 @@ public class InquiryPhasesActivity extends ActionBarFragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class OnItemClickPhasesList implements AdapterView.OnItemClickListener {
+//    private class OnItemClickPhasesList implements AdapterView.OnItemClickListener {
+//        @Override
+//        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//            Intent intent = new Intent(getApplicationContext(), InquiryActivity.class);
+//            intent.putExtra(InquiryActivity.PHASE, i);
+//            startActivity(intent);
+//        }
+//    }
+
+    private class OnClickNewInquiry implements View.OnClickListener {
+
+        private int phase;
+
+        public OnClickNewInquiry(int i) {
+                 phase = i;
+        }
+
         @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        public void onClick(View view) {
             Intent intent = new Intent(getApplicationContext(), InquiryActivity.class);
-            intent.putExtra(InquiryActivity.PHASE, i);
+            intent.putExtra(InquiryActivity.PHASE, phase);
             startActivity(intent);
         }
     }

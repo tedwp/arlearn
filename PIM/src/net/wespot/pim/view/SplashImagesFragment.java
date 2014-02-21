@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import net.wespot.pim.R;
 
@@ -28,16 +29,34 @@ import net.wespot.pim.R;
  * Contributors: Angel Suarez
  * ****************************************************************************
  */
-public class DemoObjectFragment extends Fragment {
+public class SplashImagesFragment extends Fragment {
 
     public static final String INQUIRY_ID = "inquiry_id";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_collection_object, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_splash_image, container, false);
         Bundle args = getArguments();
-        ((TextView) rootView.findViewById(android.R.id.text1)).setText("Placeholder");
+
+
+
+        switch (args.getInt(INQUIRY_ID)){
+            case 0:
+                ((ImageView) rootView.findViewById(R.id.image_splash_screen)).
+                        setImageDrawable(getResources().getDrawable(R.drawable.screen1));
+                break;
+            case 1:
+                ((ImageView) rootView.findViewById(R.id.image_splash_screen)).
+                        setImageDrawable(getResources().getDrawable(R.drawable.screen2));
+                break;
+            case 2:
+                ((ImageView) rootView.findViewById(R.id.image_splash_screen)).
+                        setImageDrawable(getResources().getDrawable(R.drawable.screen3));
+                break;
+        }
+
+
 //        ((TextView) rootView.findViewById(android.R.id.text1)).setText(
 //                Integer.toString(args.getInt(INQUIRY_ID)));
         return rootView;
