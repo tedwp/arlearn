@@ -160,7 +160,14 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
         wm_clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                wm_content.setText("");
+//                wm_content.setText("");
+
+                Toast.makeText(getActivity(), "New inquiry initialized", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH.toString());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "weSPOT voice recognition...");
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
 
@@ -223,6 +230,7 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_inquiry, menu);
 
+        menu.setGroupVisible(R.id.actions_general, false);
         menu.setGroupVisible(R.id.actions_wonder_moment, true);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -230,14 +238,14 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_record_wonder_moment:
-                Toast.makeText(getActivity(), "New inquiry initialized", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH.toString());
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "weSPOT voice recognition...");
-                startActivityForResult(intent, REQUEST_CODE);
-                break;
+//            case R.id.menu_record_wonder_moment:
+//                Toast.makeText(getActivity(), "New inquiry initialized", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH.toString());
+//                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "weSPOT voice recognition...");
+//                startActivityForResult(intent, REQUEST_CODE);
+//                break;
         }
         return super.onOptionsItemSelected(item);
     }

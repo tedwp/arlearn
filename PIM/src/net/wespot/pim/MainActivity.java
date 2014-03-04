@@ -21,6 +21,7 @@ public class MainActivity extends MainActionBarFragmentActivity /*implements Act
     private static final String TAG = "MainActivity";
 
     private View my_inquiries;
+    private View my_media;
     private View profile;
     private View badges;
     private View friends;
@@ -48,6 +49,21 @@ public class MainActivity extends MainActionBarFragmentActivity /*implements Act
             }
         });
 
+        TempEntryFragment button_media_frag = (TempEntryFragment) getSupportFragmentManager().findFragmentById(R.id.main_mymedia_link);
+        button_media_frag.setName(getString(R.string.wrapper_mymedia));
+        //TODO hardcode number of notificatons
+        button_media_frag.setNotification("36");
+        my_media = findViewById(R.id.main_mymedia_link);
+        my_media.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e(TAG, "my media content");
+                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
+                intent.putExtra(WrapperActivity.OPTION, 1);
+                startActivity(intent);
+            }
+        });
+
         TempEntryFragment button_prof_frag = (TempEntryFragment) getSupportFragmentManager().findFragmentById(R.id.main_profile_link);
         button_prof_frag.setName(getString(R.string.wrapper_profile));
         profile = findViewById(R.id.main_profile_link);
@@ -56,7 +72,7 @@ public class MainActivity extends MainActionBarFragmentActivity /*implements Act
             public void onClick(View view) {
                 Log.e(TAG, "my profile");
                 Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
-                intent.putExtra(WrapperActivity.OPTION, 1);
+                intent.putExtra(WrapperActivity.OPTION, 2);
                 startActivity(intent);
             }
         });
@@ -69,7 +85,7 @@ public class MainActivity extends MainActionBarFragmentActivity /*implements Act
             public void onClick(View view) {
                 Log.e(TAG, "my badges");
                 Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
-                intent.putExtra(WrapperActivity.OPTION, 2);
+                intent.putExtra(WrapperActivity.OPTION, 3);
                 startActivity(intent);
             }
         });
@@ -82,7 +98,7 @@ public class MainActivity extends MainActionBarFragmentActivity /*implements Act
             public void onClick(View view) {
                 Log.e(TAG, "my friends");
                 Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
-                intent.putExtra(WrapperActivity.OPTION, 3);
+                intent.putExtra(WrapperActivity.OPTION, 4);
                 startActivity(intent);
             }
         });

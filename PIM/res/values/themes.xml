@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-     <style name="CustomTheme">
+    <style name="CustomTheme">
         <!--<item name="android:background">@color/app.base.white</item>-->
         <!--<item name="android:background">@drawable/login_960</item>-->
-         <item name="android:textColor">@color/app.base.black</item>
-         <item name="android:windowBackground">@drawable/mainmenu_960</item>
-         <item name="android:actionBarStyle">@style/CustomTheme.ActionBar</item>
-         <item name="android:webViewStyle">@style/CustomTheme.WebView</item>
-         <!--<item name="android:textViewStyle">@style/CustomTheme.TextView</item>-->
-     </style>
+        <item name="android:textColor">@color/app.base.black</item>
+        <item name="android:windowBackground">@drawable/mainmenu_960</item>
+        <item name="android:actionBarStyle">@style/CustomTheme.ActionBar</item>
+        <item name="android:webViewStyle">@style/CustomTheme.WebView</item>
+        <!--<item name="android:textViewStyle">@style/CustomTheme.TextView</item>-->
+    </style>
+
+    <style name="CustomTheme.Transparent">
+        <!--<item name="android:background">@color/app.base.white</item>-->
+        <!--<item name="android:background">@drawable/login_960</item>-->
+        <item name="android:textColor">@color/app.base.blue</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@drawable/login_960</item>
+        <!--<item name="android:textViewStyle">@style/CustomTheme.TextView</item>-->
+    </style>
 
     <style name="CustomTheme.TextView">
         <item name="android:background">@color/app.base.white.transparent</item>

@@ -37,6 +37,7 @@ public class Constants {
     );
 
     public static final List<String> INQUIRY_PHASES_LIST = Arrays.asList(
+            "Description",
             "Hypothesis",
             "Plan",
             "Collect data",

@@ -53,10 +53,14 @@ public class WrapperActivity extends ActionBarFragmentActivity{
 
                     break;
                 case 1:
+                    // TODO redirect to the media content
+                    setContentView(R.layout.screen_profile);
+                    break;
+                case 2:
                     setContentView(R.layout.screen_profile);
 
                     break;
-                case 2:
+                case 3:
                     setContentView(R.layout.wrapper);
                     fragmentTransaction = fragmentManager.beginTransaction();
                     PimBadgesFragmentList badgesFragment = new PimBadgesFragmentList();

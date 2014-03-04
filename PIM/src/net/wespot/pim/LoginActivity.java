@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import net.wespot.pim.controller.Adapters.InitialPagerAdapter;
 import net.wespot.pim.utils.layout.CirclePageIndicator;
 import net.wespot.pim.utils.layout.PageIndicator;
@@ -31,38 +30,27 @@ import net.wespot.pim.utils.layout.PageIndicator;
  * Contributors: Angel Suarez
  * ****************************************************************************
  */
-public class SplashActivity extends FragmentActivity {
+public class LoginActivity extends FragmentActivity {
 
     private Button loginButton;
 
-    InitialPagerAdapter mAdapter;
-    ViewPager mPager;
-    PageIndicator mIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+        setContentView(R.layout.activity_login);
 
-        mAdapter = new InitialPagerAdapter(getSupportFragmentManager());
+        getActionBar().hide();
 
         loginButton = (Button) findViewById(R.id.login);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
         });
-
-        mPager = (ViewPager)findViewById(R.id.pager);
-        mPager.setAdapter(mAdapter);
-
-        CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.indicator);
-        mIndicator = indicator;
-        indicator.setViewPager(mPager);
-        indicator.setSnap(true);
 
     }
 }

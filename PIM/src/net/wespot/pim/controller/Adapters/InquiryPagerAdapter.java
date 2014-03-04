@@ -48,12 +48,15 @@ public class InquiryPagerAdapter extends FragmentPagerAdapter {
 
         switch (i) {
             case 0:
-                frag = new InqHypothesisFragment();
+                frag = new InqDescriptionFragment();
                 return frag;
             case 1:
-                frag =  new InqPlanFragment();
+                frag = new InqHypothesisFragment();
                 return frag;
             case 2:
+                frag =  new InqPlanFragment();
+                return frag;
+            case 3:
                 if (INQ.inquiry.getCurrentInquiry().getRunLocalObject() != null){
                     frag = new InqDataFragment();
                     return frag;
@@ -61,13 +64,13 @@ public class InquiryPagerAdapter extends FragmentPagerAdapter {
                     frag = new InqNoDataFragment();
                     return frag;
                 }
-            case 3:
+            case 4:
                 frag =  new InqAnalyseFragment();
                 return frag;
-            case 4:
+            case 5:
                 frag =  new InqDiscussFragment();
                 return frag;
-            case 5:
+            case 6:
                 frag =  new InqCommunicateFragment();
                 return frag;
             default:

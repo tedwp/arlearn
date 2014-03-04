@@ -10,10 +10,15 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_marginTop="@dimen/mainscreen.margintop.first"/>
+        <fragment android:name="net.wespot.pim.utils.layout.TempEntryFragment"
+                  android:id="@+id/main_mymedia_link"
+                  android:layout_below="@id/main_myinquiries_link"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"/>
 
         <fragment android:name="net.wespot.pim.utils.layout.TempEntryFragment"
                   android:id="@+id/main_profile_link"
-                  android:layout_below="@+id/main_myinquiries_link"
+                  android:layout_below="@id/main_mymedia_link"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_marginTop="@dimen/mainscreen.margintop.second"/>

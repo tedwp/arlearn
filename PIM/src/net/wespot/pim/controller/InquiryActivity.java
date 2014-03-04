@@ -138,7 +138,7 @@ public class InquiryActivity extends ActionBarFragmentActivity implements Action
                                 .setTabListener(this));
             }
 
-            getActionBar().setTitle(INQ.inquiry.getCurrentInquiry().getTitle());
+            getActionBar().setTitle(getResources().getString(R.string.actionbar_inquiry)+" - "+INQ.inquiry.getCurrentInquiry().getTitle());
 
             Bundle extras = getIntent().getExtras();
             if (extras != null){

@@ -19,8 +19,17 @@
               android:layout_height="fill_parent"
               android:orientation="vertical">
 
-    <EditText android:id="@+id/wonder_moment_location" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/wonder_moment_location_placeholder"
+    <EditText android:id="@+id/wonder_moment_title"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" android:hint="@string/wonder_moment_title_placeholder"
               android:inputType="none" />
+
+    <EditText android:id="@+id/wonder_moment_location"
+              android:layout_width="match_parent"
+              android:layout_below="@id/wonder_moment_title"
+              android:layout_height="wrap_content" android:hint="@string/wonder_moment_location_placeholder"
+              android:inputType="none" />
+
     <LinearLayout android:id="@+id/layout_date" android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="horizontal" android:layout_below="@+id/wonder_moment_location">
         <EditText android:id="@+id/wonder_moment_date" android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -36,7 +45,7 @@
             android:id="@+id/wonder_moment_clear"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_home"
+            android:src="@drawable/ic_action_mic"
             android:text="Button" android:layout_alignTop="@+id/wonder_moment_content"
             android:layout_alignParentRight="true" android:clickable="true" android:focusableInTouchMode="false"/>
 

@@ -9,6 +9,12 @@
     <string name="inquiry_title">Menu</string>
     <string name="inquiry_title_list">Open inquiries</string>
 
+    <string name="actionbar_inquiry_list">Inquiry list</string>
+    <string name="actionbar_inquiry">Inquiry</string>
+
+    <string name="login_user_hint">username</string>
+    <string name="login_password_hint">password</string>
+
 
     <string name="friends_friend_new">Add friend</string>
     <string name="friends_title_list">Friends</string>
@@ -16,6 +22,7 @@
     <string name="phases_invite_new_friend">Invite friends</string>
 
     <string name="wrapper_myinquiry">My Inquiries</string>
+    <string name="wrapper_mymedia">My media</string>
     <string name="wrapper_profile">Profile</string>
     <string name="wrapper_badges">Badges</string>
     <string name="wrapper_friends">Friends</string>
@@ -40,9 +47,12 @@
     <string name="search_hint">Search</string>
 
     <string name="wonder_moment_title">Click to capture your wonder moment</string>
+    <string name="wonder_moment_save">Save</string>
+
     <string name="wonder_moment_record_voice">Record wonder moment</string>
     <string name="wonder_moment_date_placeholder">Set up date</string>
     <string name="wonder_moment_time_placeholder">Set up time</string>
+    <string name="wonder_moment_title_placeholder">Click to setup the title</string>
     <string name="wonder_moment_location_placeholder">Click to setup the location</string>
     <string name="wonder_moment_content_placeholder">Set your wonder moment here</string>
     <string name="wonder_moment_latitude_longitude">%1$.8f, %2$.8f</string>
@@ -53,6 +63,7 @@
     <string name="wonder_moment_address_output_string">%1$s %2$s %3$s</string>
     <string name="wonder_moment_no_address_found">No address found for location</string>
 
+    <string name="inquiry_title_description">Description</string>
     <string name="inquiry_title_hypothesis">Hypothesis</string>
     <string name="inquiry_title_plan">Plan</string>
     <string name="inquiry_title_data">Collect data</string>
