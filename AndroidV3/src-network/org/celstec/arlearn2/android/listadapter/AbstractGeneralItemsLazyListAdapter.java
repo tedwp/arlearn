@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import daoBase.DaoConfiguration;
 import de.greenrobot.dao.query.QueryBuilder;
-import org.celstec.arlearn2.android.R;
+
 import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.events.GeneralItemEvent;
 import org.celstec.dao.gen.GeneralItemLocalObject;
@@ -54,13 +54,5 @@ public abstract class AbstractGeneralItemsLazyListAdapter extends LazyListAdapte
     public void close() {
         if (lazyList != null)lazyList.close();
         ARL.eventBus.unregister(this);
-    }
-
-    @Override
-    public View newView(Context context, GeneralItemLocalObject item, ViewGroup parent) {
-        if (item == null) return null;
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return inflater.inflate(R.layout.list_game_row, parent, false);
-
     }
 }

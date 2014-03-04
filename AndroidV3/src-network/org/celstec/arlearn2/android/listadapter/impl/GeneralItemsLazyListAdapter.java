@@ -74,5 +74,13 @@ public class GeneralItemsLazyListAdapter  extends AbstractGeneralItemsLazyListAd
         }
     }
 
+    @Override
+    public View newView(Context context, GeneralItemLocalObject item, ViewGroup parent) {
+        if (item == null) return null;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        return inflater.inflate(R.layout.list_game_row, parent, false);
+
+    }
+
 }
 
