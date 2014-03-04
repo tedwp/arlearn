@@ -11,6 +11,7 @@ import de.greenrobot.dao.query.QueryBuilder;
 import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.events.GeneralItemEvent;
+import org.celstec.arlearn2.android.listadapter.AbstractGeneralItemsLazyListAdapter;
 import org.celstec.arlearn2.android.listadapter.LazyListAdapter;
 import org.celstec.dao.gen.*;
 
@@ -34,37 +35,12 @@ import org.celstec.dao.gen.*;
  * Contributors: Stefaan Ternier
  * ****************************************************************************
  */
-public class GeneralItemsLazyListAdapter  extends LazyListAdapter<GeneralItemLocalObject> {
-
-    private QueryBuilder qb;
-    private GeneralItemsLazyListAdapter adapterInq;
+public class GeneralItemsLazyListAdapter  extends AbstractGeneralItemsLazyListAdapter {
 
     public GeneralItemsLazyListAdapter(Context context) {
         super(context);
-        GeneralItemLocalObjectDao dao = DaoConfiguration.getInstance().getGeneralItemLocalObjectDao();
-        qb = dao.queryBuilder().orderAsc(GeneralItemLocalObjectDao.Properties.LastModificationDate);
-        ARL.eventBus.register(this);
-        setLazyList(qb.listLazy());
     }
 
-    public void onEventMainThread(GeneralItemEvent event) {
-        if (lazyList != null) lazyList.close();
-        setLazyList(qb.listLazy());
-        notifyDataSetChanged();
-    }
-
-    public void close() {
-        if (lazyList != null)lazyList.close();
-        ARL.eventBus.unregister(this);
-    }
-
-    @Override
-    public View newView(Context context, GeneralItemLocalObject item, ViewGroup parent) {
-        if (item == null) return null;
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return inflater.inflate(R.layout.list_game_row, parent, false);
-
-    }
     @Override
     public void bindView(View view, Context context,  GeneralItemLocalObject item) {
         TextView firstLineView =(TextView) view.findViewById(R.id.firstLine);
