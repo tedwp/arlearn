@@ -2,6 +2,7 @@ package org.celstec.arlearn2.android.delegators;
 
 import daoBase.DaoConfiguration;
 import de.greenrobot.dao.query.QueryBuilder;
+import org.celstec.arlearn2.android.db.Constants;
 import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.client.AccountClient;
 import org.celstec.arlearn2.client.CollaborationClient;
@@ -48,7 +49,13 @@ public class AccountDelegator extends AbstractDelegator{
     }
 
     public void syncMyAccountDetails() {
-        ARL.eventBus.post(new SyncMyAccount());
+        long accountId = ARL.properties.getAccount();
+        if (accountId != 0) {
+            loggedInAccount = DaoConfiguration.getInstance().getAccountLocalObjectDao().load(accountId);
+        }
+        if (loggedInAccount == null) {
+            ARL.eventBus.post(new SyncMyAccount());
+        }
     }
 
     public void syncAccount(String fullId) {
@@ -65,6 +72,7 @@ public class AccountDelegator extends AbstractDelegator{
             Account account = AccountClient.getAccountClient().accountDetails(token);
             loggedInAccount = syncAccount(account);
             DaoConfiguration.getInstance().getAccountLocalObjectDao().insertOrReplace(loggedInAccount);
+            ARL.properties.setAccount(loggedInAccount.getId());
         }
     }
 

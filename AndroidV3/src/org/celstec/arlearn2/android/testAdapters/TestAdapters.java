@@ -14,6 +14,7 @@ import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn.delegators.InquiryDelegator;
 import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.events.FileDownloadStatus;
+import org.celstec.arlearn2.client.InquiryClient;
 import org.celstec.dao.gen.ActionLocalObject;
 import org.celstec.dao.gen.BadgeLocalObject;
 import org.celstec.dao.gen.GameLocalObject;
@@ -138,9 +139,13 @@ public class TestAdapters extends Activity {
         INQ.inquiry.syncHypothesis(151l);
         InquiryLocalObject object;
 
-//        InquiryLocalObject iObject = new InquiryLocalObject();
-//        iObject.setDescription("Stefaans test");
-//        iObject.setTitle("a title");
+        InquiryLocalObject iObject = new InquiryLocalObject();
+        iObject.setDescription("Stefaans test");
+        iObject.setTitle("a title");
+        CreateInquiryObject createInquiryObject = new CreateInquiryObject();
+        createInquiryObject.inquiry = iObject;
+        ARL.eventBus.post(createInquiryObject);
+
 //        iObject.setIsSynchronized(false);
 //        DaoConfiguration.getInstance().getSession().getInquiryLocalObjectDao().insert(iObject);
 //        INQ.inquiry.syncInquiries();
@@ -150,6 +155,16 @@ public class TestAdapters extends Activity {
 //        for (BadgeLocalObject badge: iObject.getBadges()) {
 //            Log.e("ARLearn", "badge"+badge.getTitle());
 //        }
+
+    }
+    private class CreateInquiryObject {
+        public InquiryLocalObject inquiry;
+
+    }
+
+    private void onEventBackgroundThread(CreateInquiryObject inquiryObject){
+
+        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount());
 
     }
 

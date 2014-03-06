@@ -75,23 +75,23 @@ public class InquiryDelegator {
     }
 
     private void onEventAsync(SyncInquiries sge) {
-        uploadInquiries();
+//        uploadInquiries();
         downloadInquiries();
     }
 
-    private void uploadInquiries() {
-        InquiryLocalObjectDao dao = DaoConfiguration.getInstance().getInquiryLocalObjectDao();
-        QueryBuilder<InquiryLocalObject> qb = dao.queryBuilder();
-        qb.where(InquiryLocalObjectDao.Properties.IsSynchronized.eq(false));
-        for (InquiryLocalObject inquiry: qb.list()) {
-            try {
-                InquiryClient.getInquiryClient().createInquiry(inquiry);
-                dao.delete(inquiry);
-            } catch (Exception e) {
-                Log.e("ARLearn", e.getMessage(), e);
-            }
-        }
-    }
+//    private void uploadInquiries() {
+//        InquiryLocalObjectDao dao = DaoConfiguration.getInstance().getInquiryLocalObjectDao();
+//        QueryBuilder<InquiryLocalObject> qb = dao.queryBuilder();
+//        qb.where(InquiryLocalObjectDao.Properties.IsSynchronized.eq(false));
+//        for (InquiryLocalObject inquiry: qb.list()) {
+//            try {
+//                InquiryClient.getInquiryClient().createInquiry(inquiry);
+//                dao.delete(inquiry);
+//            } catch (Exception e) {
+//                Log.e("ARLearn", e.getMessage(), e);
+//            }
+//        }
+//    }
 
 
     private void downloadInquiries() {
