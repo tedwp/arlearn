@@ -137,6 +137,7 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(GeneralItemVisibility.class.getCanonicalName(), GeneralItemVisibility.serializer);
 		customSerializerMap.put(GeneralItemVisibilityList.class.getCanonicalName(), GeneralItemVisibilityList.serializer);
 		customSerializerMap.put(Message.class.getCanonicalName(), Message.serializer);
+        customSerializerMap.put(MessageList.class.getCanonicalName(), MessageList.serializer);
         customSerializerMap.put(VariableInstance.class.getCanonicalName(), VariableInstance.serializer);
         customSerializerMap.put(Thread.class.getCanonicalName(), Thread.serializer);
         customSerializerMap.put(ThreadList.class.getCanonicalName(), ThreadList.serializer);

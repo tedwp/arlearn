@@ -324,6 +324,7 @@ public class JsonBeanDeserializer  extends BeanDeserializer{
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.GeneralItemVisibility", GeneralItemVisibility.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.GeneralItemVisibilityList", GeneralItemVisibilityList.deserializer);
 		customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Message", Message.deserializer);
+        customDeserializerMapString.put("org.celstec.arlearn2.beans.run.MessageList", MessageList.deserializer);
         customDeserializerMapString.put("org.celstec.arlearn2.beans.run.VariableInstance", VariableInstance.deserializer);
         customDeserializerMapString.put("org.celstec.arlearn2.beans.run.Thread", Thread.deserializer);
         customDeserializerMapString.put("org.celstec.arlearn2.beans.run.ThreadList", ThreadList.deserializer);
