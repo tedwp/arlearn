@@ -8,4 +8,5 @@ build/*
 /libs
 /gen
 /build
+./assets/config.properties
 ./project.properties
