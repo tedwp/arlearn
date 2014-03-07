@@ -22,6 +22,7 @@ package org.celstec.arlearn2.android.db;
  */
 public class Constants {
 
+    public static final String CURRENT_ACCOUNT = "currentAccount";
     public static String SHARED_PREFERENCES = "prefs";
     public static String AUTHENTICATED = "authenticated";
     public static String USER_EMAIL = "userEmail";

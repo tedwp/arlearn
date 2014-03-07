@@ -3,10 +3,13 @@ package org.celstec.arlearn2.client;
 import android.util.Log;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.celstec.arlearn.delegators.INQ;
+import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.beans.AuthResponse;
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.client.exception.ARLearnException;
+import org.celstec.dao.gen.AccountLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -35,7 +38,7 @@ import java.net.URLEncoder;
 public class InquiryClient extends GenericClient{
 
     public static InquiryClient instance;
-    public static String url = "http://wespot.kmi.open.ac.uk/services/api/rest/json/?api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8";
+    public static String url = "http://dev.inquiry.wespot.net/services/api/rest/json/?";
 
     private InquiryClient() {
         super("");
@@ -93,15 +96,40 @@ public class InquiryClient extends GenericClient{
         return null;
     }
 
-    public void createInquiry(InquiryLocalObject inquiry) {
+    public void createInquiry(InquiryLocalObject inquiry, AccountLocalObject account) {
+        String provider = "";
+        switch (account.getAccountType()){
+            case 1:
+                provider = "Facebook";
+                break;
+            case 2:
+                provider = "Google";
+                break;
+            case 3:
+                provider = "LinkedId";
+                break;
+            case 4:
+                provider = "Twitter";
+                break;
+            case 5:
+                provider = "weSPOT";
+                break;
+        }
 
         try {
-            Log.e("ARLearn", url+"&method=group.save&name="+
-                    URLEncoder.encode(inquiry.getTitle(), "UTF8")+"&briefdescription=brfDescr&description="+
-                    URLEncoder.encode(inquiry.getDescription(), "UTF8")+"&interests=test");
-            HttpResponse response = conn.executeGET(url+"&method=group.save&name="+
-                    URLEncoder.encode(inquiry.getTitle(), "UTF8")+"&briefdescription=brfDescr&description="+
-                    URLEncoder.encode(inquiry.getDescription(), "UTF8")+"&interests=test", null, "application/json");
+
+            HttpResponse response = conn.executePOST(url + "&method=inquiry.create" +
+                    "&api_key="+ARL.config.getProperty("elgg_api_key")+
+                    "&name=" + URLEncoder.encode(inquiry.getTitle(), "UTF8") +
+                    "&description=" + URLEncoder.encode(inquiry.getDescription(), "UTF8") +
+                    "&interests=" + URLEncoder.encode("pim interests dummy value", "UTF8") +
+                    "&membership=2" +
+                    "&vis=1" +
+                    "&wespot_arlearn_enable=no" +
+                    "&group_multiple_admin_allow_enable=no" +
+                    "&provider=" + provider +
+                    "&user_uid=" + provider + "_" + account.getLocalId()
+                    , null, "application/json", "", "application/json");
             JSONObject json = new JSONObject(EntityUtils.toString(response.getEntity()));
             Log.e("ARLearn", "return after creating inquiry " + json.toString());
         } catch (Exception e) {

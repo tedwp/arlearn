@@ -250,6 +250,16 @@ public class PropertiesAdapter {
         return getDefaultPrefs().getInt(Constants.ACCOUNT_Level, Account.USER);
     }
 
+    public void setAccount(Long accountId) {
+        SharedPreferences.Editor editor = getDefaultPrefs().edit();
+        editor.putLong(Constants.CURRENT_ACCOUNT, accountId);
+        editor.commit();
+    }
+
+    public long getAccount() {
+        return getDefaultPrefs().getLong(Constants.CURRENT_ACCOUNT, 0);
+    }
+
     public void setTimeDifferenceWithServer(long timeDiff) {
         SharedPreferences.Editor editor = getDefaultPrefs().edit();
         editor.putLong("timeDifferenceWithServer", timeDiff);
