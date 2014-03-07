@@ -71,8 +71,11 @@ public class AccountDelegator extends AbstractDelegator{
         if (token != null) {
             Account account = AccountClient.getAccountClient().accountDetails(token);
             loggedInAccount = syncAccount(account);
-            DaoConfiguration.getInstance().getAccountLocalObjectDao().insertOrReplace(loggedInAccount);
-            ARL.properties.setAccount(loggedInAccount.getId());
+            if (loggedInAccount!=null) {
+                DaoConfiguration.getInstance().getAccountLocalObjectDao().insertOrReplace(loggedInAccount);
+                ARL.properties.setAccount(loggedInAccount.getId());
+                ARL.properties.setFullId(loggedInAccount.getFullId());
+            }
         }
     }
 

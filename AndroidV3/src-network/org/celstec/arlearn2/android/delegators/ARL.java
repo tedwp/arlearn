@@ -10,6 +10,7 @@ import org.celstec.arlearn2.android.db.ConfigAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.gcm.GCMRegisterTask;
 import org.celstec.arlearn2.android.gcm.GCMRegistration;
+import org.celstec.arlearn2.client.GenericClient;
 import org.celstec.dao.gen.AccountLocalObject;
 
 import java.util.Properties;
@@ -56,6 +57,7 @@ public class ARL {
 
         properties = PropertiesAdapter.getInstance(ctx);
         config = new ConfigAdapter(ctx).getProperties();
+        GenericClient.urlPrefix = config.getProperty("arlearn_server");
         games = GameDelegator.getInstance();
         generalItems = GeneralItemDelegator.getInstance();
         runs = RunDelegator.getInstance();

@@ -11,6 +11,7 @@ import org.celstec.arlearn2.android.R;
 import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.events.FileDownloadStatus;
+import org.celstec.arlearn2.client.GenericClient;
 import org.celstec.dao.gen.ActionLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
 
@@ -140,7 +141,9 @@ public class TestAdapters extends Activity {
         createInquiryObject.inquiry = iObject;
 
         String key = ARL.config.getProperty("elgg_api_key");
-        ARL.eventBus.post(createInquiryObject);
+//        ARL.eventBus.post(createInquiryObject);
+
+        key = GenericClient.urlPrefix;
 
 //        iObject.setIsSynchronized(false);
 //        DaoConfiguration.getInstance().getSession().getInquiryLocalObjectDao().insert(iObject);
