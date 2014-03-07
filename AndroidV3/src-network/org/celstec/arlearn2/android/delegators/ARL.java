@@ -6,10 +6,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import daoBase.DaoConfiguration;
 import de.greenrobot.event.EventBus;
+import org.celstec.arlearn2.android.db.ConfigAdapter;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.gcm.GCMRegisterTask;
 import org.celstec.arlearn2.android.gcm.GCMRegistration;
 import org.celstec.dao.gen.AccountLocalObject;
+
+import java.util.Properties;
 
 /**
  * ****************************************************************************
@@ -40,6 +43,7 @@ public class ARL {
     public static AccountDelegator accounts;
     public static ResponseDelegator responses;
     public static PropertiesAdapter properties;
+    public static Properties config;
     public static TimeDelegator time;
     public static StoreDelegator store;
     public static EventBus eventBus = new EventBus();
@@ -51,6 +55,7 @@ public class ARL {
         dao= DaoConfiguration.getInstance(ctx);
 
         properties = PropertiesAdapter.getInstance(ctx);
+        config = new ConfigAdapter(ctx).getProperties();
         games = GameDelegator.getInstance();
         generalItems = GeneralItemDelegator.getInstance();
         runs = RunDelegator.getInstance();

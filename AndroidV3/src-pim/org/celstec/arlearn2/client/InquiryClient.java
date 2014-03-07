@@ -4,6 +4,7 @@ import android.util.Log;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.celstec.arlearn.delegators.INQ;
+import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.beans.AuthResponse;
 import org.celstec.arlearn2.beans.Bean;
 import org.celstec.arlearn2.beans.account.Account;
@@ -37,8 +38,7 @@ import java.net.URLEncoder;
 public class InquiryClient extends GenericClient{
 
     public static InquiryClient instance;
-    public static String url = "http://dev.inquiry.wespot.net/services/api/rest/json/?api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8";
-    public static String apiKey = "27936b77bcb9bb67df2965c6518f37a77a7ab9f8";
+    public static String url = "http://dev.inquiry.wespot.net/services/api/rest/json/?";
 
     private InquiryClient() {
         super("");
@@ -119,6 +119,7 @@ public class InquiryClient extends GenericClient{
         try {
 
             HttpResponse response = conn.executePOST(url + "&method=inquiry.create" +
+                    "&api_key="+ARL.config.getProperty("elgg_api_key")+
                     "&name=" + URLEncoder.encode(inquiry.getTitle(), "UTF8") +
                     "&description=" + URLEncoder.encode(inquiry.getDescription(), "UTF8") +
                     "&interests=" + URLEncoder.encode("pim interests dummy value", "UTF8") +

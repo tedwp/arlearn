@@ -138,9 +138,11 @@ public class NetworkToolbar extends ToolBar {
                 ,
                 createMenuItemPOST(
                         "Create Message",
-                        "messages/userId/***",
-                        "{  \"type\": \"org.celstec.arlearn2.beans.run.Message\",  \"runId\": 0, \"title\": \"Heading\", \"messageBody\": \"Here comes some text\" }")
-		);
+                        "messages/message",
+                        "{  \"type\": \"org.celstec.arlearn2.beans.run.Message\",  \"runId\": 0, \"threadId\": 0, \"subject\": \"Heading\", \"body\": \"Here comes some text\" }"),
+                createMenuItemGET("Retrieve messages by thread", "messages/threadId/***"),
+                createMenuItemGET("Retrieve messages for default thread", "messages/runId/***/default")
+        );
 		
 		
 		

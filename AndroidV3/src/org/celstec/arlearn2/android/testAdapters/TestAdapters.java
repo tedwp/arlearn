@@ -4,20 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import daoBase.DaoConfiguration;
 import org.celstec.arlearn2.android.R;
-import org.celstec.arlearn.delegators.BadgesDelegator;
 import org.celstec.arlearn.delegators.INQ;
-import org.celstec.arlearn.delegators.InquiryDelegator;
 import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.events.FileDownloadStatus;
-import org.celstec.arlearn2.client.InquiryClient;
 import org.celstec.dao.gen.ActionLocalObject;
-import org.celstec.dao.gen.BadgeLocalObject;
-import org.celstec.dao.gen.GameLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
 
 import java.text.DateFormat;
@@ -144,6 +138,8 @@ public class TestAdapters extends Activity {
         iObject.setTitle("a title");
         CreateInquiryObject createInquiryObject = new CreateInquiryObject();
         createInquiryObject.inquiry = iObject;
+
+        String key = ARL.config.getProperty("elgg_api_key");
         ARL.eventBus.post(createInquiryObject);
 
 //        iObject.setIsSynchronized(false);
@@ -164,7 +160,9 @@ public class TestAdapters extends Activity {
 
     private void onEventBackgroundThread(CreateInquiryObject inquiryObject){
 
-        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount());
+//        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount());
+
+
 
     }
 

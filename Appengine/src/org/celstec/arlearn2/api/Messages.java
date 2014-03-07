@@ -68,5 +68,40 @@ public class Messages extends Service {
         return serialise(td.getThreads(runId), accept);
     }
 
+    @POST
+    @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/message")
+    public String createMessage(
+            @HeaderParam("Authorization") String token,
+            String message,
+            @DefaultValue("application/json") @HeaderParam("Content-Type") String contentType,
+            @DefaultValue("application/json") @HeaderParam("Accept") String accept)
+            throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+
+        Object inMessage = deserialise(message, org.celstec.arlearn2.beans.run.Message.class, contentType);
+        if (inMessage instanceof java.lang.String)
+            return serialise(getBeanDoesNotParseException((String) inMessage), accept);
+
+        MessageDelegator messageDelegator = new MessageDelegator(this);
+        return serialise(messageDelegator.createMessage((Message) inMessage), accept);
+
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/threadId/{threadId}")
+    public String getMessagesForThread(@HeaderParam("Authorization") String token,
+                                       @PathParam("threadId") Long threadId,
+                                       @DefaultValue("application/json") @HeaderParam("Accept") String accept)
+            throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+        MessageDelegator md = new MessageDelegator(this);
+
+
+        return serialise(md.getMessagesForThread(threadId), accept);
+    }
 
 }
