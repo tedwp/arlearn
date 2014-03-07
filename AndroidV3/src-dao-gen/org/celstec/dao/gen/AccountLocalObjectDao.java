@@ -32,7 +32,7 @@ public class AccountLocalObjectDao extends AbstractDao<AccountLocalObject, Long>
         public final static Property AccountType = new Property(6, Integer.class, "accountType", false, "ACCOUNT_TYPE");
         public final static Property LocalId = new Property(7, String.class, "localId", false, "LOCAL_ID");
         public final static Property FullId = new Property(8, String.class, "fullId", false, "FULL_ID");
-        public final static Property Picture = new Property(9, Byte.class, "picture", false, "PICTURE");
+        public final static Property Picture = new Property(9, byte[].class, "picture", false, "PICTURE");
     };
 
     private DaoSession daoSession;
@@ -60,7 +60,7 @@ public class AccountLocalObjectDao extends AbstractDao<AccountLocalObject, Long>
                 "'ACCOUNT_TYPE' INTEGER," + // 6: accountType
                 "'LOCAL_ID' TEXT," + // 7: localId
                 "'FULL_ID' TEXT," + // 8: fullId
-                "'PICTURE' INTEGER);"); // 9: picture
+                "'PICTURE' BLOB);"); // 9: picture
     }
 
     /** Drops the underlying database table. */
@@ -119,9 +119,9 @@ public class AccountLocalObjectDao extends AbstractDao<AccountLocalObject, Long>
             stmt.bindString(9, fullId);
         }
  
-        Byte picture = entity.getPicture();
+        byte[] picture = entity.getPicture();
         if (picture != null) {
-            stmt.bindLong(10, picture);
+            stmt.bindBlob(10, picture);
         }
     }
 
@@ -150,7 +150,7 @@ public class AccountLocalObjectDao extends AbstractDao<AccountLocalObject, Long>
             cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6), // accountType
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // localId
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // fullId
-            cursor.isNull(offset + 9) ? null : (byte) cursor.getShort(offset + 9) // picture
+            cursor.isNull(offset + 9) ? null : cursor.getBlob(offset + 9) // picture
         );
         return entity;
     }
@@ -167,7 +167,7 @@ public class AccountLocalObjectDao extends AbstractDao<AccountLocalObject, Long>
         entity.setAccountType(cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6));
         entity.setLocalId(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setFullId(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setPicture(cursor.isNull(offset + 9) ? null : (byte) cursor.getShort(offset + 9));
+        entity.setPicture(cursor.isNull(offset + 9) ? null : cursor.getBlob(offset + 9));
      }
     
     /** @inheritdoc */

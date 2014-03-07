@@ -22,7 +22,7 @@ public class AccountLocalObject {
     private Integer accountType;
     private String localId;
     private String fullId;
-    private Byte picture;
+    private byte[] picture;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -42,7 +42,7 @@ public class AccountLocalObject {
         this.id = id;
     }
 
-    public AccountLocalObject(Long id, String email, String familyName, String givenName, String name, Integer accountLevel, Integer accountType, String localId, String fullId, Byte picture) {
+    public AccountLocalObject(Long id, String email, String familyName, String givenName, String name, Integer accountLevel, Integer accountType, String localId, String fullId, byte[] picture) {
         this.id = id;
         this.email = email;
         this.familyName = familyName;
@@ -133,11 +133,11 @@ public class AccountLocalObject {
         this.fullId = fullId;
     }
 
-    public Byte getPicture() {
+    public byte[] getPicture() {
         return picture;
     }
 
-    public void setPicture(Byte picture) {
+    public void setPicture(byte[] picture) {
         this.picture = picture;
     }
 
