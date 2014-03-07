@@ -27,6 +27,7 @@ import net.wespot.pim.utils.layout.ActionBarFragmentActivity;
 import net.wespot.pim.view.PimBadgesFragmentList;
 import net.wespot.pim.view.PimFriendsFragment;
 import net.wespot.pim.view.PimInquiriesFragment;
+import net.wespot.pim.view.PimProfileFragment;
 
 public class WrapperActivity extends ActionBarFragmentActivity{
 
@@ -57,8 +58,11 @@ public class WrapperActivity extends ActionBarFragmentActivity{
                     setContentView(R.layout.screen_profile);
                     break;
                 case 2:
-                    setContentView(R.layout.screen_profile);
-
+                    setContentView(R.layout.wrapper);
+                    fragmentTransaction = fragmentManager.beginTransaction();
+                    PimProfileFragment fragmentProfile = new PimProfileFragment();
+                    fragmentTransaction.add(R.id.content, fragmentProfile);
+                    fragmentTransaction.commit();
                     break;
                 case 3:
                     setContentView(R.layout.wrapper);
@@ -69,7 +73,6 @@ public class WrapperActivity extends ActionBarFragmentActivity{
                     break;
                 default:
                     setContentView(R.layout.wrapper);
-
                     fragmentTransaction = fragmentManager.beginTransaction();
                     PimFriendsFragment friend = new PimFriendsFragment();
                     fragmentTransaction.add(R.id.content, friend);

@@ -74,7 +74,6 @@ public class LoginActivity extends FragmentActivity {
             }
         });
 
-
         INQ.init(this);
         INQ.inquiry.syncInquiries();
         INQ.inquiry.syncHypothesis(151l);
@@ -91,7 +90,11 @@ public class LoginActivity extends FragmentActivity {
                     Log.e(TAG, "auth token is "+token);
 
                     ARL.properties.setAuthToken(token);
+//                    ARL.properties.setFullId("2:117769871710404943583");
                     ARL.accounts.syncMyAccountDetails();
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
 
                     finish();
                 }
