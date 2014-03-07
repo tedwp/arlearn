@@ -90,7 +90,6 @@ public class LoginActivity extends FragmentActivity {
                     token = token.substring(token.indexOf("=")+1, token.indexOf("&"));
                     Log.e(TAG, "auth token is "+token);
 
-
                     ARL.properties.setAuthToken(token);
                     ARL.accounts.syncMyAccountDetails();
 
