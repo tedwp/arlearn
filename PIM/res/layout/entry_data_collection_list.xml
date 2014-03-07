@@ -11,14 +11,14 @@
             android:layout_height="wrap_content"
             android:text="@string/texto_de_pruebas"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/inquiry_entry_data_colletion_icon"
+            android:layout_toRightOf="@+id/inquiry_entry_data_collection_icon"
             android:layout_margin="15dp"/>
     <ImageView
-            android:id="@+id/inquiry_entry_data_colletion_icon"
+            android:id="@+id/inquiry_entry_data_collection_icon"
             style="@style/CustomTheme.ListItem.ImageView.Left"
             android:src="@drawable/foto_perfil_croped"
             android:contentDescription="@string/icon_list"/>
     <TextView
-            android:id="@+id/notificationText_data_colletion_"
+            android:id="@+id/notification_text_data_colletion"
             style="@style/CustomTheme.NotificationText" />
 </RelativeLayout>

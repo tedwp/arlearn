@@ -27,6 +27,8 @@ public class Constants {
 
     public static final int SIMULATED_REFRESH_LENGTH = 1000;
     public static final String MIME_TYPE = "text/html";
+    public static final String URL_LOGIN_NAME = "url";
+    public static final String URL_LOGIN = "http://wespot-arlearn.appspot.com/MobileLogin.html";
     public static final String ENCONDING = null;
 
     public static final List<String> MAIN_LIST = Arrays.asList(

@@ -6,7 +6,8 @@
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/login" android:layout_margin="10dp"/>
+                android:layout_above="@+id/login"
+                android:layout_margin="10dp"/>
         <net.wespot.pim.utils.layout.CirclePageIndicator
                 android:id="@+id/indicator"
                 android:padding="10dip"
@@ -19,7 +20,8 @@
             <!--android:layout_height="60dp"-->
             <!--android:id="@+id/logout"-->
             <!--android:layout_alignParentBottom="true"/>-->
-    <Button android:layout_width="100dp" android:layout_height="60dp" android:id="@+id/login"
+    <Button android:layout_width="100dp" android:layout_height="60dp"
+            android:id="@+id/login"
                  android:clickable="true" android:src="@drawable/foto_perfil_croped"
                  android:contentDescription="@string/splash_login_button"
                  android:text="@string/splash_login_button"

@@ -69,15 +69,11 @@ public class PimInquiriesFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        INQ.init(getActivity());
-        INQ.inquiry.syncInquiries();
-        INQ.inquiry.syncHypothesis(151l);
 
-        ARL.init(getActivity());
-        ARL.properties.setAuthToken("ya29.1.AADtN_Wk3DnTkoP7u1l-BxvWjDeqVgQF6HCjj13GYi9xLk-SUXbdVQ4nPn7hiamhwgzskw");
-        ARL.properties.setFullId("2:117769871710404943583");
+//        ARL.properties.setAuthToken("ya29.1.AADtN_Wk3DnTkoP7u1l-BxvWjDeqVgQF6HCjj13GYi9xLk-SUXbdVQ4nPn7hiamhwgzskw");
+//        ARL.properties.setFullId("2:117769871710404943583");
+        ARL.runs.syncRunsParticipate();
         ARL.responses.syncResponses(19806001l);
-
 
         adapterInq =  new InquiryLazyListAdapter(this.getActivity());
         inquiries.setAdapter(adapterInq);

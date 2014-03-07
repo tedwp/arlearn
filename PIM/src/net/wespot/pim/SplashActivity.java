@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import net.wespot.pim.controller.Adapters.InitialPagerAdapter;
+import net.wespot.pim.utils.Constants;
 import net.wespot.pim.utils.layout.CirclePageIndicator;
 import net.wespot.pim.utils.layout.PageIndicator;
 
@@ -52,6 +53,7 @@ public class SplashActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.putExtra(Constants.URL_LOGIN_NAME, Constants.URL_LOGIN);
                 startActivity(intent);
             }
         });

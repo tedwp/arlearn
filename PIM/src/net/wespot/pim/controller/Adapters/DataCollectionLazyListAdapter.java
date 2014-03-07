@@ -10,9 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import net.wespot.pim.R;
+import org.celstec.arlearn2.android.listadapter.AbstractGeneralItemsLazyListAdapter;
 import org.celstec.dao.gen.GeneralItemLocalObject;
-import org.celstec.dao.gen.InquiryLocalObject;
-import org.celstec.listadapter.AbstractInquiryLazyListAdapter;
 
 import java.lang.ref.WeakReference;
 
@@ -36,23 +35,23 @@ import java.lang.ref.WeakReference;
  * Contributors: Stefaan Ternier
  * ****************************************************************************
  */
-public class DataCollectionLazyListAdapter  {
+public class DataCollectionLazyListAdapter extends AbstractGeneralItemsLazyListAdapter {
 
     public DataCollectionLazyListAdapter(Context context) {
-//        super(context);
+        super(context);
     }
 
     public View newView(Context context, GeneralItemLocalObject item, ViewGroup parent) {
         if (item == null) return null;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return inflater.inflate(R.layout.entry_inquiry_list, parent, false);
+        return inflater.inflate(R.layout.entry_data_collection_list, parent, false);
 
     }
     public void bindView(View view, Context context,  GeneralItemLocalObject item) {
-        TextView firstLineView =(TextView) view.findViewById(R.id.name_entry_list);
+        TextView firstLineView =(TextView) view.findViewById(R.id.name_entry_data_colletion_list);
         firstLineView.setText(item.getTitle());
-        ImageView icon = (ImageView) view.findViewById(R.id.inquiry_entry_icon);
-        TextView notificationText = (TextView) view.findViewById(R.id.notificationTextInquiry);
+        ImageView icon = (ImageView) view.findViewById(R.id.inquiry_entry_data_collection_icon);
+        TextView notificationText = (TextView) view.findViewById(R.id.notification_text_data_colletion);
 
         //TODO change item.getId by item.getnumberupdates
         notificationText.setVisibility(View.VISIBLE);
@@ -65,6 +64,11 @@ public class DataCollectionLazyListAdapter  {
 //        else{
             icon.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.foto_perfil_croped));
 //        }
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return 0;
     }
 
     class BitmapWorkerTask extends AsyncTask<byte[], Void, Bitmap>{

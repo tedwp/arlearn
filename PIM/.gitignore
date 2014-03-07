@@ -11,5 +11,6 @@ lib/*
 /out
 /ant.properties
 /local.properties
+/assets/config.properties
 /proguard-project.txt
 /project.properties

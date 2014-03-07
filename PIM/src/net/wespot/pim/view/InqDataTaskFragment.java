@@ -27,40 +27,55 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ListView;
 import android.widget.TextView;
 import net.wespot.pim.R;
+import net.wespot.pim.controller.Adapters.DataCollectionLazyListAdapter;
+import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
 import net.wespot.pim.utils.Constants;
 import org.celstec.arlearn.delegators.INQ;
+import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.dao.gen.GameLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
 
 /**
  * A dummy fragment representing a section of the app, but that simply displays dummy text.
  */
-public class InqDescriptionFragment extends Fragment {
+public class InqDataTaskFragment extends Fragment {
 
-
+    private ListView data_collection_tasks;
     private InquiryLocalObject inquiry;
 
-    public InqDescriptionFragment() {
+    private DataCollectionLazyListAdapter datAdapter;
+
+    public InqDataTaskFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
         super.onCreateView(inflater,container,savedInstanceState);
 
-        final View rootView = inflater.inflate(R.layout.fragment_section_description, container, false);
-        WebView webView = (WebView) rootView.findViewById(R.id.description_description);
-        TextView title = (TextView) rootView.findViewById(R.id.title_description);
-        title.setText(R.string.inquiry_title_description);
-        webView.setBackgroundColor(0x00000000);
-        webView.loadData(INQ.inquiry.getCurrentInquiry().getDescription(), Constants.MIME_TYPE, Constants.ENCONDING);
+        GameLocalObject gameObject = INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject();
 
+        INQ.generalItems.syncGeneralItems(gameObject);
 
+        View rootView = inflater.inflate(R.layout.fragment_data_collection_task, container, false);
+
+        data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
+        datAdapter =  new DataCollectionLazyListAdapter(this.getActivity());
+        data_collection_tasks.setAdapter(datAdapter);
 
         return rootView;
+
+
+//
+//        final View rootView = inflater.inflate(R.layout.fragment_section_hypothesis, container, false);
+//        WebView webView = (WebView) rootView.findViewById(R.id.description_hypothesis);
+//        TextView title = (TextView) rootView.findViewById(R.id.title_hypothesis);
+//        title.setText(R.string.inquiry_title_hypothesis);
+//        webView.setBackgroundColor(0x00000000);
+//        webView.loadData(INQ.inquiry.getCurrentInquiry().getHypothesisDescription(), Constants.MIME_TYPE, Constants.ENCONDING);
+//        return rootView;
     }
 
 }
