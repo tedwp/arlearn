@@ -2,6 +2,10 @@ package org.celstec.arlearn2.android.delegators;
 
 import daoBase.DaoConfiguration;
 import de.greenrobot.dao.query.QueryBuilder;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.celstec.arlearn2.android.db.Constants;
 import org.celstec.arlearn2.beans.account.Account;
 import org.celstec.arlearn2.client.AccountClient;
@@ -10,6 +14,7 @@ import org.celstec.dao.gen.AccountLocalObject;
 import org.celstec.dao.gen.AccountLocalObjectDao;
 import org.celstec.dao.gen.GameLocalObjectDao;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -120,7 +125,31 @@ public class AccountDelegator extends AbstractDelegator{
         accountDao.setAccountLevel(aBean.getAccountLevel());
         accountDao.setAccountType(aBean.getAccountType());
         accountDao.setLocalId(aBean.getLocalId());
+        accountDao.setPicture(downloadImage(aBean.getPicture()));
         return accountDao;
+    }
+
+    private byte[] downloadImage(String imageUrl){
+        try {
+            DefaultHttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet(imageUrl);
+            HttpResponse response = client.execute(request);
+            HttpEntity entity = response.getEntity();
+            int imageLength = (int)(entity.getContentLength());
+            InputStream is = entity.getContent();
+
+            byte[] imageBlob = new byte[imageLength];
+            int bytesRead = 0;
+            while (bytesRead < imageLength) {
+                int n = is.read(imageBlob, bytesRead, imageLength - bytesRead);
+                if (n <= 0)
+                    ; // do some error handling
+                bytesRead += n;
+            }
+            return imageBlob;
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     private class SyncMyAccount{}

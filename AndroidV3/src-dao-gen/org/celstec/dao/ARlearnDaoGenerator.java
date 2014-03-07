@@ -84,7 +84,7 @@ public class ARlearnDaoGenerator {
         account.addIntProperty("accountType");
         account.addStringProperty("localId");
         account.addStringProperty("fullId");
-        account.addByteProperty("picture");
+        account.addByteArrayProperty("picture");
         return account;
     }
 
