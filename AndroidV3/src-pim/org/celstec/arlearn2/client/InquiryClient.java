@@ -38,7 +38,7 @@ import java.net.URLEncoder;
 public class InquiryClient extends GenericClient{
 
     public static InquiryClient instance;
-    public static String url = "http://dev.inquiry.wespot.net/services/api/rest/json/?";
+//    public static String url = "http://dev.inquiry.wespot.net/services/api/rest/json/?";
 
     private InquiryClient() {
         super("");
@@ -66,7 +66,9 @@ public class InquiryClient extends GenericClient{
     }
 
     public long getArlearnRunId(long inquiryId) {
-        HttpResponse response = conn.executeGET("http://wespot.kmi.open.ac.uk/services/api/rest/json/?api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&method=inquiry.arlearnrun&inquiryId="+inquiryId, null, "application/json");
+        String url = getUrlPrefix();
+        url+= "&method=inquiry.arlearnrun&inquiryId="+inquiryId;
+        HttpResponse response = conn.executeGET(url, null, "application/json");
         try {
 //            return EntityUtils.toString(response.getEntity());
             JSONObject json = new JSONObject(EntityUtils.toString(response.getEntity()));
@@ -80,7 +82,7 @@ public class InquiryClient extends GenericClient{
     }
 
     public Hypothesis getInquiryHypothesis(long inquiryId) {
-        HttpResponse response = conn.executeGET(url+"&method=inquiry.hypothesis&inquiryId="+inquiryId, null, "application/json");
+        HttpResponse response = conn.executeGET(getUrlPrefix()+"&method=inquiry.hypothesis&inquiryId="+inquiryId, null, "application/json");
         try {
 //            return EntityUtils.toString(response.getEntity());
             JSONObject json = new JSONObject(EntityUtils.toString(response.getEntity()));
@@ -104,8 +106,7 @@ public class InquiryClient extends GenericClient{
 
         try {
 
-            HttpResponse response = conn.executePOST(url + "&method=inquiry.create" +
-                    "&api_key="+ARL.config.getProperty("elgg_api_key")+
+            HttpResponse response = conn.executePOST(getUrlPrefix() + "&method=inquiry.create" +
                     "&name=" + URLEncoder.encode(inquiry.getTitle(), "UTF8") +
                     "&description=" + URLEncoder.encode(inquiry.getDescription(), "UTF8") +
                     "&interests=" + URLEncoder.encode("pim interests dummy value", "UTF8") +
@@ -159,19 +160,14 @@ public class InquiryClient extends GenericClient{
         switch (id){
             case 1:
                 return  "Facebook";
-                break;
             case 2:
                 return  "Google";
-                break;
             case 3:
                 return  "LinkedId";
-                break;
             case 4:
                 return  "Twitter";
-                break;
             case 5:
                 return  "weSPOT";
-                break;
         }
         return "idNotMappedToProviderName";
     }
