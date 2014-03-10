@@ -38,6 +38,13 @@ import java.net.URLEncoder;
 public class InquiryClient extends GenericClient{
 
     public static InquiryClient instance;
+
+    public final static int CLOSED_MEMBERSHIP=0;
+    public final static int OPEN_MEMBERSHIP=1;
+
+    public final static int VIS_INQUIRY_MEMBERS_ONLY=0;
+    public final static int VIS_LOGGED_IN_USERS=1;
+    public final static int VIS_PUBLIC=2;
 //    public static String url = "http://dev.inquiry.wespot.net/services/api/rest/json/?";
 
     private InquiryClient() {
@@ -100,7 +107,7 @@ public class InquiryClient extends GenericClient{
         return null;
     }
 
-    public void createInquiry(InquiryLocalObject inquiry, AccountLocalObject account) {
+    public void createInquiry(InquiryLocalObject inquiry, AccountLocalObject account, int visibility, int membership) {
         String provider = providerIdToElggName(account.getAccountType());
 
 
@@ -110,8 +117,8 @@ public class InquiryClient extends GenericClient{
                     "&name=" + URLEncoder.encode(inquiry.getTitle(), "UTF8") +
                     "&description=" + URLEncoder.encode(inquiry.getDescription(), "UTF8") +
                     "&interests=" + URLEncoder.encode("pim interests dummy value", "UTF8") +
-                    "&membership=2" +
-                    "&vis=1" +
+                    "&membership=" + membership +
+                    "&vis=" + visibility +
                     "&wespot_arlearn_enable=no" +
                     "&group_multiple_admin_allow_enable=no" +
                     "&provider=" + provider +
