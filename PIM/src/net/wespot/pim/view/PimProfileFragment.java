@@ -78,7 +78,7 @@ public class PimProfileFragment extends Fragment {
         if (account.getPicture() != null){
             BitmapWorkerTask task = new BitmapWorkerTask(picture);
             // TODO change to picture
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, account.getPicture());
         }
         else{
             picture.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.foto_perfil_croped));

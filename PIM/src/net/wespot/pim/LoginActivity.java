@@ -52,61 +52,59 @@ public class LoginActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        INQ.init(this);
+        INQ.inquiry.syncInquiries();
+//        INQ.inquiry.syncHypothesis(151l);
 
         requestWindowFeature(Window.FEATURE_PROGRESS);
         getActionBar().hide();
 
-        setContentView(R.layout.activity_login);
+        if (INQ.accounts.getLoggedInAccount() == null){
+            setContentView(R.layout.activity_login);
 
-        webView = (WebView) findViewById(R.id.login_webpage);
+            webView = (WebView) findViewById(R.id.login_webpage);
 
-        Bundle extras = getIntent().getExtras();
+            Bundle extras = getIntent().getExtras();
 
-        if (extras != null) {
-            webView.loadUrl(extras.getString(Constants.URL_LOGIN_NAME));
-        }
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebChromeClient(new WebChromeClient() {
-            // Show loading progress in activity's title bar.
-            @Override
-            public void onProgressChanged(WebView view, int progress) {
-                setProgress(progress * 100);
+            if (extras != null) {
+                webView.loadUrl(extras.getString(Constants.URL_LOGIN_NAME));
             }
-        });
-
-        INQ.init(this);
-        INQ.inquiry.syncInquiries();
-        INQ.inquiry.syncHypothesis(151l);
-
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-                setTitle(url);
-                Log.e(TAG, "onPageStarted " + url);
-                if (url.contains("oauth.html?accessToken=")) {
-                    String token = url.substring(url.indexOf("?")+1);
-                    token = token.substring(token.indexOf("=")+1, token.indexOf("&"));
-                    Log.e(TAG, "auth token is "+token);
-
-                    ARL.properties.setAuthToken(token);
-//                    ARL.properties.setFullId("2:117769871710404943583");
-                    ARL.accounts.syncMyAccountDetails();
-
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-
-                    finish();
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.setWebChromeClient(new WebChromeClient() {
+                // Show loading progress in activity's title bar.
+                @Override
+                public void onProgressChanged(WebView view, int progress) {
+                    setProgress(progress * 100);
                 }
-            }
-        });
-//
-//        loginButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+            });
+
+            webView.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                    super.onPageStarted(view, url, favicon);
+                    setTitle(url);
+                    Log.e(TAG, "onPageStarted " + url);
+                    if (url.contains("oauth.html?accessToken=")) {
+                        String token = url.substring(url.indexOf("?")+1);
+                        token = token.substring(token.indexOf("=")+1, token.indexOf("&"));
+                        Log.e(TAG, "auth token is "+token);
+
+                        ARL.properties.setAuthToken(token);
+                        ARL.accounts.syncMyAccountDetails();
+
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+
+                        finish();
+                    }
+                }
+            });
+        }
+        else{
+            Log.e(TAG, "Already login with "+INQ.accounts.getLoggedInAccount().getFullId()+" account");
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }
+
     }
 }
