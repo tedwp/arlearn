@@ -40,7 +40,7 @@ public class InquiryClient extends GenericClient{
     public static InquiryClient instance;
 
     public final static int CLOSED_MEMBERSHIP=0;
-    public final static int OPEN_MEMBERSHIP=1;
+    public final static int OPEN_MEMBERSHIP=2;
 
     public final static int VIS_INQUIRY_MEMBERS_ONLY=0;
     public final static int VIS_LOGGED_IN_USERS=1;
