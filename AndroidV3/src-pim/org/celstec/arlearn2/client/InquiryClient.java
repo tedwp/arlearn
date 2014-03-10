@@ -52,7 +52,9 @@ public class InquiryClient extends GenericClient{
     }
 
     public String userInquiries() {
-        HttpResponse response = conn.executeGET(getUrlPrefix(), null, "application/json");
+        String url = getUrlPrefix();
+        url += "&oauthId="+INQ.accounts.getLoggedInAccount().getLocalId()+"&oauthProvider="+providerIdToElggName(INQ.accounts.getLoggedInAccount().getAccountType())+"&method=user.inquiries";
+        HttpResponse response = conn.executeGET(url, null, "application/json");
         try {
             return EntityUtils.toString(response.getEntity());
 
@@ -97,24 +99,8 @@ public class InquiryClient extends GenericClient{
     }
 
     public void createInquiry(InquiryLocalObject inquiry, AccountLocalObject account) {
-        String provider = "";
-        switch (account.getAccountType()){
-            case 1:
-                provider = "Facebook";
-                break;
-            case 2:
-                provider = "Google";
-                break;
-            case 3:
-                provider = "LinkedId";
-                break;
-            case 4:
-                provider = "Twitter";
-                break;
-            case 5:
-                provider = "weSPOT";
-                break;
-        }
+        String provider = providerIdToElggName(account.getAccountType());
+
 
         try {
 
@@ -166,6 +152,27 @@ public class InquiryClient extends GenericClient{
 
 
     public String getUrlPrefix() {
-        return "http://wespot.kmi.open.ac.uk/services/api/rest/json/?api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&oauthId=116743449349920850150&oauthProvider=Google&method=user.inquiries";
+        return INQ.config.getProperty("wespot_server")+"?api_key="+INQ.config.getProperty("elgg_api_key");
+    }
+
+    private String providerIdToElggName(int id){
+        switch (id){
+            case 1:
+                return  "Facebook";
+                break;
+            case 2:
+                return  "Google";
+                break;
+            case 3:
+                return  "LinkedId";
+                break;
+            case 4:
+                return  "Twitter";
+                break;
+            case 5:
+                return  "weSPOT";
+                break;
+        }
+        return "idNotMappedToProviderName";
     }
 }
