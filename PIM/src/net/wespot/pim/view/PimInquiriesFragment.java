@@ -69,9 +69,6 @@ public class PimInquiriesFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-
-//        ARL.properties.setAuthToken("ya29.1.AADtN_Wk3DnTkoP7u1l-BxvWjDeqVgQF6HCjj13GYi9xLk-SUXbdVQ4nPn7hiamhwgzskw");
-//        ARL.properties.setFullId("2:117769871710404943583");
         INQ.inquiry.syncInquiries();
 
         ARL.runs.syncRunsParticipate();
@@ -96,7 +93,7 @@ public class PimInquiriesFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add:
-                Toast.makeText(getActivity(), "New inquiry initialized", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Save new inquiry initialized", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), InquiryActivity.class);
                 // TODO  change this for a new InquiryLocalObject or provide a way to create that on the API
                 INQ.inquiry.setCurrentInquiry(null);
@@ -116,9 +113,11 @@ public class PimInquiriesFragment extends Fragment {
     private class onListInquiryClick implements android.widget.AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            // This links to the PhasesActivities but then go back to the InquiryActivity.class, as it has been done for the
+            // new inquiry. Then in new inquiry depends on the INQ.inquiry object we go to create a new one o visualise the
+            // current inquiry
             Intent intent = new Intent(getActivity(), InquiryPhasesActivity.class);
             INQ.inquiry.setCurrentInquiry(INQ.inquiry.getInquiryLocalObject(adapterInq.getItemId(i)));
-//        intent.putExtra(InquiryActivity.INQUIRY_ID, adapterInq.getItemId(position));
             startActivity(intent);
         }
     }

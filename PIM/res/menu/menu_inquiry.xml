@@ -28,7 +28,7 @@
 
     <group
             android:id="@+id/actions_wonder_moment" >
-        <item android:id="@+id/menu_record_wonder_moment"
+        <item android:id="@+id/menu_save_inquiry"
               android:title="@string/wonder_moment_save"
               android:icon="@drawable/ic_content_save"
               android:orderInCategory="1"

@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.util.Log;
@@ -33,6 +34,8 @@ import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.InquiryPagerAdapter;
 import net.wespot.pim.controller.Adapters.NewInquiryPagerAdapter;
 import net.wespot.pim.utils.layout.ActionBarFragmentActivity;
+import net.wespot.pim.view.InqWonderMomentFragment;
+import net.wespot.pim.view.PimInquiriesFragment;
 import org.celstec.arlearn.delegators.INQ;
 
 public class InquiryActivity extends ActionBarFragmentActivity implements ActionBar.TabListener{
@@ -83,27 +86,40 @@ public class InquiryActivity extends ActionBarFragmentActivity implements Action
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_inquiry);
+
 
         if (INQ.inquiry.getCurrentInquiry() == null){
             Log.e(TAG, "New inquiry");
+
+//            setContentView(R.layout.activity_inquiry);
 
             // Create an adapter that when requested, will return a fragment representing an object in
             // the collection.
             // ViewPager and its adapters use support library fragments, so we must use
             // getSupportFragmentManager.
-            mNewInquiryPagerAdapter = new NewInquiryPagerAdapter(getSupportFragmentManager());
-            getmActionBarHelper().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+//            mNewInquiryPagerAdapter = new NewInquiryPagerAdapter(getSupportFragmentManager());
+//            getmActionBarHelper().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+//
+//            // Set up the ViewPager, attaching the adapter.
+//            mViewPager = (ViewPager) findViewById(R.id.pager);
+//            mViewPager.setAdapter(mNewInquiryPagerAdapter);
+//
+//            // TODO get the information from the inquiry
+//            Resources res = getResources();
+//            String text = String.format(res.getString(R.string.inquiry_title_new), "", "");
+//            CharSequence styledText = Html.fromHtml(text);
 
-            // Set up the ViewPager, attaching the adapter.
-            mViewPager = (ViewPager) findViewById(R.id.pager);
-            mViewPager.setAdapter(mNewInquiryPagerAdapter);
+            setContentView(R.layout.wrapper);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            android.support.v4.app.FragmentTransaction fragmentTransaction;
 
-            // TODO get the information from the inquiry
-            Resources res = getResources();
-            String text = String.format(res.getString(R.string.inquiry_title_new), "", "");
-            CharSequence styledText = Html.fromHtml(text);
+            fragmentTransaction = fragmentManager.beginTransaction();
+            InqWonderMomentFragment fragment = new InqWonderMomentFragment();
+            fragmentTransaction.add(R.id.content, fragment);
+            fragmentTransaction.commit();
         }else{
+
+            setContentView(R.layout.activity_inquiry);
 
             Log.e(TAG, "Show inquiry");
 

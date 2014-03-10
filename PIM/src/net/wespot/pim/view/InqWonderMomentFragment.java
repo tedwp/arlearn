@@ -49,6 +49,10 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationRequest;
+import org.celstec.arlearn.delegators.INQ;
+import org.celstec.arlearn2.android.delegators.ARL;
+import org.celstec.arlearn2.client.InquiryClient;
+import org.celstec.dao.gen.InquiryLocalObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -69,6 +73,9 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
     private static final int REQUEST_CODE = 1234;
     private static final int RESULT_OK = -1;
 
+    private InquiryLocalObject new_inquiry;
+
+    private EditText wm_title;
     private EditText wm_content;
 
     private EditText wm_date;
@@ -85,6 +92,58 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
     boolean mUpdatesRequested = false;
     public ProgressBar wm_progress_bar;
 
+
+
+    private class CreateInquiryObject {
+        public InquiryLocalObject inquiry;
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_new_wondermoment, container, false);
+
+        wm_title = (EditText) rootView.findViewById(R.id.wonder_moment_title);
+        wm_content = (EditText) rootView.findViewById(R.id.wonder_moment_content);
+
+        wm_date = (EditText) rootView.findViewById(R.id.wonder_moment_date);
+        wm_time = (EditText) rootView.findViewById(R.id.wonder_moment_time);
+        wm_location = (EditText) rootView.findViewById(R.id.wonder_moment_location);
+        wm_clear = (ImageView) rootView.findViewById(R.id.wonder_moment_clear);
+        wm_progress_bar = (ProgressBar) rootView.findViewById(R.id.wonder_moment_progress_location);
+
+        setDataTime();
+
+        wm_clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                wm_content.setText("");
+
+                Toast.makeText(getActivity(), "New inquiry initialized", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH.toString());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "weSPOT voice recognition...");
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
+
+        // Disable button if no recognition service is present
+        PackageManager pm = getActivity().getPackageManager();
+        List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
+        if (activities.size() == 0) {
+            Toast.makeText(getActivity(), "Recognizer Not Found", 1000).show();
+        }
+
+        setManagerLocation();
+
+        // Create inquiry
+        new_inquiry = new InquiryLocalObject();
+
+
+        return rootView;
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -92,18 +151,97 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_new_wondermoment, container, false);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_save_inquiry:
+                // TODO put here the method to create inquiry
 
-        wm_content = (EditText) rootView.findViewById(R.id.wonder_moment_content);
-        wm_date = (EditText) rootView.findViewById(R.id.wonder_moment_date);
-        wm_time = (EditText) rootView.findViewById(R.id.wonder_moment_time);
-        wm_location = (EditText) rootView.findViewById(R.id.wonder_moment_location);
-        wm_clear = (ImageView) rootView.findViewById(R.id.wonder_moment_clear);
-        wm_progress_bar = (ProgressBar) rootView.findViewById(R.id.wonder_moment_progress_location);
+                new_inquiry.setDescription(wm_content.getText().toString());
+                new_inquiry.setTitle(wm_title.getText().toString());
 
+
+                if (!new_inquiry.getTitle().equals("")) {
+                    if (!new_inquiry.getDescription().equals("")) {
+                        if (INQ.isOnline()) {
+                            CreateInquiryObject createInquiryObject = new CreateInquiryObject();
+                            createInquiryObject.inquiry = new_inquiry;
+                            Toast.makeText(getActivity(), "Synchronizing & saving inquiry...", 1000).show();
+
+                            ARL.eventBus.register(this);
+                            // To invoke onEventBackgroundThread this line is needed
+                            ARL.eventBus.post(createInquiryObject);
+
+                        } else {
+                            Toast.makeText(getActivity(), "Enable internet connection", 1000).show();
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Provide a proper description for the inquiry", 1000).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Provide a proper title for the inquiry", 1000).show();
+                }
+
+
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void onEventBackgroundThread(CreateInquiryObject inquiryObject){
+        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount());
+        INQ.inquiry.syncInquiries();
+        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+        getActivity().finish();
+    }
+
+    public void onDestroy(){
+        super.onDestroy();
+        ARL.eventBus.unregister(this);
+    }
+
+    private void setManagerLocation() {
+        wm_location.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction())
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        Log.e(TAG, "Click to start to find location");
+                        startFindingLocation();
+                        break;
+                }
+                return false;
+            }
+        });
+
+        // Retriving location
+
+        // Create a new global location parameters object
+        mLocationRequest = LocationRequest.create();
+
+        /*
+         * Set the update interval
+         */
+        mLocationRequest.setInterval(LocationUtils.UPDATE_INTERVAL_IN_MILLISECONDS);
+
+        // Use high accuracy
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        // Set the interval ceiling to one minute
+        mLocationRequest.setFastestInterval(LocationUtils.FAST_INTERVAL_CEILING_IN_MILLISECONDS);
+
+        // Note that location updates are off until the user turns them on
+        mUpdatesRequested = false;
+
+        mLocationClient = new LocationClient(getActivity(), this, this);
+
+        Log.e(TAG, "Start to find location");
+    }
+
+    private void setDataTime() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d, yyyy");
+
         String test = sdf.format(cal.getTime());
         wm_date.setText(test);
 
@@ -142,66 +280,6 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
                 return false;
             }
         });
-
-        wm_location.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction())
-                {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.e(TAG, "Click to start to find location");
-                        startFindingLocation();
-                        break;
-                }
-                return false;
-            }
-        });
-
-        wm_clear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                wm_content.setText("");
-
-                Toast.makeText(getActivity(), "New inquiry initialized", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH.toString());
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "weSPOT voice recognition...");
-                startActivityForResult(intent, REQUEST_CODE);
-            }
-        });
-
-        // Disable button if no recognition service is present
-        PackageManager pm = getActivity().getPackageManager();
-        List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
-        if (activities.size() == 0) {
-            Toast.makeText(getActivity(), "Recognizer Not Found", 1000).show();
-        }
-
-        // Retriving location
-
-        // Create a new global location parameters object
-        mLocationRequest = LocationRequest.create();
-
-        /*
-         * Set the update interval
-         */
-        mLocationRequest.setInterval(LocationUtils.UPDATE_INTERVAL_IN_MILLISECONDS);
-
-        // Use high accuracy
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        // Set the interval ceiling to one minute
-        mLocationRequest.setFastestInterval(LocationUtils.FAST_INTERVAL_CEILING_IN_MILLISECONDS);
-
-        // Note that location updates are off until the user turns them on
-        mUpdatesRequested = false;
-
-        mLocationClient = new LocationClient(getActivity(), this, this);
-
-        Log.e(TAG, "Start to find location");
-
-        return rootView;
     }
 
     public void startFindingLocation() {
@@ -235,20 +313,8 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-//            case R.id.menu_record_wonder_moment:
-//                Toast.makeText(getActivity(), "New inquiry initialized", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-//                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-//                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH.toString());
-//                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "weSPOT voice recognition...");
-//                startActivityForResult(intent, REQUEST_CODE);
-//                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
