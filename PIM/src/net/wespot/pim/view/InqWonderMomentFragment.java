@@ -188,7 +188,7 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
     }
 
     private void onEventBackgroundThread(CreateInquiryObject inquiryObject){
-        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount());
+        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount(),InquiryClient.VIS_PUBLIC,InquiryClient.OPEN_MEMBERSHIP);
         INQ.inquiry.syncInquiries();
         getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
         getActivity().finish();
