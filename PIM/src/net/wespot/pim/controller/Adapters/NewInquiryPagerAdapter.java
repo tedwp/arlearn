@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import net.wespot.pim.view.DemoObjectFragment;
-import net.wespot.pim.view.InqWonderMomentFragment;
+import net.wespot.pim.view.InqCreateInquiryFragment;
 
 /**
  * ****************************************************************************
@@ -46,7 +46,7 @@ public class NewInquiryPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 // The first section of the app is the most interesting -- it offers
                 // a launchpad into the other demonstrations in this example application.
-                return new InqWonderMomentFragment();
+                return new InqCreateInquiryFragment();
             case 1:
                 // The first section of the app is the most interesting -- it offers
                 // a launchpad into the other demonstrations in this example application.

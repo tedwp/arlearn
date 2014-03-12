@@ -12,7 +12,7 @@
             android:text="@string/texto_de_pruebas"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/inquiry_entry_icon"
-            android:layout_margin="15dp"/>
+            android:layout_margin="0dp"/>
     <ImageView
             android:id="@+id/inquiry_entry_icon"
             style="@style/CustomTheme.ListItem.ImageView.Left"

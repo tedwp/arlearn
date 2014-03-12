@@ -64,12 +64,12 @@ import java.util.Locale;
 /**
  * A dummy fragment representing a section of the app, but that simply displays dummy text.
  */
-public class InqWonderMomentFragment extends Fragment implements LocationListener, GooglePlayServicesClient.ConnectionCallbacks,
+public class InqCreateInquiryFragment extends Fragment implements LocationListener, GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener{
 
     public static final String INQUIRY_ID = "object";
 
-    private static final String TAG = "InqWonderMomentFragment";
+    private static final String TAG = "InqCreateInquiryFragment";
     private static final int REQUEST_CODE = 1234;
     private static final int RESULT_OK = -1;
 
@@ -92,11 +92,8 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
     boolean mUpdatesRequested = false;
     public ProgressBar wm_progress_bar;
 
-
-
     private class CreateInquiryObject {
         public InquiryLocalObject inquiry;
-
     }
 
     @Override
@@ -140,7 +137,6 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
         // Create inquiry
         new_inquiry = new InquiryLocalObject();
 
-
         return rootView;
     }
 
@@ -158,7 +154,6 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
 
                 new_inquiry.setDescription(wm_content.getText().toString());
                 new_inquiry.setTitle(wm_title.getText().toString());
-
 
                 if (!new_inquiry.getTitle().equals("")) {
                     if (!new_inquiry.getDescription().equals("")) {
@@ -181,14 +176,17 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
                     Toast.makeText(getActivity(), "Provide a proper title for the inquiry", 1000).show();
                 }
 
-
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void onEventBackgroundThread(CreateInquiryObject inquiryObject){
-        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount(),InquiryClient.VIS_PUBLIC,InquiryClient.OPEN_MEMBERSHIP);
+        // int $membership (Membership: 0 -> Closed, 2 -> Open)
+        // * int $vis (Visibility: 0 -> Inquiry members only, 1 -> logged in users, 2 -> Public)
+        // public void createInquiry(InquiryLocalObject inquiry, AccountLocalObject account, int visibility, int membership)
+
+        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount(), 2, 2);
         INQ.inquiry.syncInquiries();
         getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
         getActivity().finish();
@@ -214,7 +212,7 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
             }
         });
 
-        // Retriving location
+        /* Retrieving location */
 
         // Create a new global location parameters object
         mLocationRequest = LocationRequest.create();
@@ -312,9 +310,6 @@ public class InqWonderMomentFragment extends Fragment implements LocationListene
         menu.setGroupVisible(R.id.actions_wonder_moment, true);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
-
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

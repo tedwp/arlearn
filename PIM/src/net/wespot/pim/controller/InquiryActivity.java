@@ -21,12 +21,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,8 +32,7 @@ import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.InquiryPagerAdapter;
 import net.wespot.pim.controller.Adapters.NewInquiryPagerAdapter;
 import net.wespot.pim.utils.layout.ActionBarFragmentActivity;
-import net.wespot.pim.view.InqWonderMomentFragment;
-import net.wespot.pim.view.PimInquiriesFragment;
+import net.wespot.pim.view.InqCreateInquiryFragment;
 import org.celstec.arlearn.delegators.INQ;
 
 public class InquiryActivity extends ActionBarFragmentActivity implements ActionBar.TabListener{
@@ -114,7 +111,7 @@ public class InquiryActivity extends ActionBarFragmentActivity implements Action
             android.support.v4.app.FragmentTransaction fragmentTransaction;
 
             fragmentTransaction = fragmentManager.beginTransaction();
-            InqWonderMomentFragment fragment = new InqWonderMomentFragment();
+            InqCreateInquiryFragment fragment = new InqCreateInquiryFragment();
             fragmentTransaction.add(R.id.content, fragment);
             fragmentTransaction.commit();
         }else{

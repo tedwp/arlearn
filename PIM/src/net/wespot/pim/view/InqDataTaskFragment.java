@@ -55,6 +55,8 @@ public class InqDataTaskFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
 
+        INQ.runs.syncRunsParticipate();
+
         GameLocalObject gameObject = INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject();
 
         INQ.generalItems.syncGeneralItems(gameObject);
