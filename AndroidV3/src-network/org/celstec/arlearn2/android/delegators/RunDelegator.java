@@ -53,6 +53,10 @@ public class RunDelegator extends AbstractDelegator{
         ARL.eventBus.post(new SyncRunsEventParticipate());
     }
 
+    public void syncRun(long runId) {
+        ARL.eventBus.post(new SyncRun(runId));
+    }
+
 
     private void onEventAsync(SyncRunsEventParticipate sge) {
         String token = returnTokenIfOnline();
@@ -63,6 +67,18 @@ public class RunDelegator extends AbstractDelegator{
                     lastSyncDateParticipate = rl.getServerTime();
                 }
 
+        }
+    }
+
+    private void onEventAsync(SyncRun syncRun) {
+        String token = returnTokenIfOnline();
+        if (token != null) {
+            Run run =RunClient.getRunClient().getRun(syncRun.runId, token);
+            if (run.getError() == null) {
+                RunList rl = new RunList();
+                rl.addRun(run);
+                process(rl);
+            }
         }
     }
 
@@ -112,5 +128,20 @@ public class RunDelegator extends AbstractDelegator{
     }
 
     private class SyncRunsEvent {
+    }
+
+    private class SyncRun {
+        private  long runId;
+        public SyncRun(long runId) {
+            this.runId = runId;
+        }
+
+        public long getRunId() {
+            return runId;
+        }
+
+        public void setRunId(long runId) {
+            this.runId = runId;
+        }
     }
 }
