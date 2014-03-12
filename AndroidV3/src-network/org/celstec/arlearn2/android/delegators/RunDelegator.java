@@ -71,9 +71,13 @@ public class RunDelegator extends AbstractDelegator{
     }
 
     private void onEventAsync(SyncRun syncRun) {
+        asyncRun(syncRun.runId);
+    }
+
+    public void asyncRun(long runId) {
         String token = returnTokenIfOnline();
         if (token != null) {
-            Run run =RunClient.getRunClient().getRun(syncRun.runId, token);
+            Run run =RunClient.getRunClient().getRun(runId, token);
             if (run.getError() == null) {
                 RunList rl = new RunList();
                 rl.addRun(run);
