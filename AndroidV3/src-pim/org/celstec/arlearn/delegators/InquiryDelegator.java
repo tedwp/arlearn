@@ -8,7 +8,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.celstec.arlearn2.android.delegators.ARL;
+import org.celstec.arlearn2.android.delegators.RunDelegator;
 import org.celstec.dao.gen.InquiryLocalObjectDao;
+import org.celstec.dao.gen.RunLocalObject;
 import org.celstec.events.InquiryEvent;
 import org.celstec.arlearn2.client.InquiryClient;
 import org.celstec.dao.gen.InquiryLocalObject;
@@ -55,7 +57,7 @@ public class InquiryDelegator {
     }
 
     public void syncDataCollectionTasks(){
-
+        ARL.eventBus.post(new SyncDataCollectionTasks());
     }
 
     public InquiryLocalObject getCurrentInquiry() {
@@ -100,7 +102,7 @@ public class InquiryDelegator {
 
     private void downloadInquiries() {
         String inquiries = InquiryClient.getInquiryClient().userInquiries();
-
+        if (inquiries == null) return;
         JSONObject json = null;
         try {
             json = new JSONObject(inquiries);
@@ -121,7 +123,7 @@ public class InquiryDelegator {
                 inquiry.setIcon(downloadImage(inqJsonObject.getString("icon")));
 
 
-                DaoConfiguration.getInstance().getInquiryLocalObjectDao().insertOrReplace(inquiry);
+                long rid = DaoConfiguration.getInstance().getInquiryLocalObjectDao().insertOrReplace(inquiry);
                 ARL.eventBus.post(new InquiryEvent(inquiry.getId()));
             }
         } catch (JSONException e) {
@@ -149,6 +151,24 @@ public class InquiryDelegator {
             return imageBlob;
         }catch (Exception e) {
             return null;
+        }
+    }
+    private void onEventAsync(SyncDataCollectionTasks dcTask) {
+        InquiryLocalObject currentInq = getCurrentInquiry();
+        if (currentInq != null) {
+            if (currentInq.getRunLocalObject() == null) {
+                if (currentInq.getRunId() == 0) return;
+                INQ.runs.asyncRun(currentInq.getRunId()); //this is done synchronously
+            }
+        RunLocalObject run = DaoConfiguration.getInstance().getRunLocalObjectDao().load(currentInq.getRunId());
+        if (run != null) {
+            if (run.getGameLocalObject() == null) {
+                INQ.games.asyncGame(run.getGameId());
+
+            }
+            run.refresh();
+            INQ.generalItems.syncGeneralItems(run.getGameId());
+        }
         }
     }
 
@@ -184,5 +204,8 @@ public class InquiryDelegator {
         public void setInquiryId(long inquiryId) {
             this.inquiryId = inquiryId;
         }
+    }
+
+    private class SyncDataCollectionTasks {
     }
 }

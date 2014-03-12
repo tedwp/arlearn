@@ -39,15 +39,15 @@ import java.util.Date;
  * ****************************************************************************
  */
 public class TestAdapters extends Activity {
-    private String authToken = "ya29.1.AADtN_V345QcK9W1bqSBWH98rK1pb2fl9KDsfvzhtDlOBkERiDXuuvRMlT9_6zg";
+    private String authToken = "d324aa9b75782d9b7b76372a1f9439bd";
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_adapters);
         INQ.init(this);
         ARL.properties.setAuthToken(authToken);
-        ARL.properties.setFullId("2:116757187626671489073");
-
+        ARL.properties.setFullId("5:stefaan.ternier");
+//        ARL.properties.setAccount(0l);
         ARL.accounts.syncMyAccountDetails();
 
 //        DaoConfiguration daoConfiguration= DaoConfiguration.getInstance(this);
@@ -133,17 +133,21 @@ public class TestAdapters extends Activity {
         INQ.inquiry.syncInquiries();
         INQ.inquiry.syncHypothesis(151l);
         InquiryLocalObject object;
+        InquiryLocalObject ilo = INQ.inquiry.getInquiryLocalObject(28845l);
+        INQ.inquiry.setCurrentInquiry(ilo);
+        INQ.inquiry.syncDataCollectionTasks();
+        System.out.println(ilo);
 
-        InquiryLocalObject iObject = new InquiryLocalObject();
-        iObject.setDescription("Stefaans test");
-        iObject.setTitle("a title");
-        CreateInquiryObject createInquiryObject = new CreateInquiryObject();
-        createInquiryObject.inquiry = iObject;
-
-        String key = ARL.config.getProperty("elgg_api_key");
-//        ARL.eventBus.post(createInquiryObject);
-
-        key = GenericClient.urlPrefix;
+//        InquiryLocalObject iObject = new InquiryLocalObject();
+//        iObject.setDescription("Stefaans test");
+//        iObject.setTitle("a title");
+//        CreateInquiryObject createInquiryObject = new CreateInquiryObject();
+//        createInquiryObject.inquiry = iObject;
+//
+//        String key = ARL.config.getProperty("elgg_api_key");
+////        ARL.eventBus.post(createInquiryObject);
+//
+//        key = GenericClient.urlPrefix;
 
 //        iObject.setIsSynchronized(false);
 //        DaoConfiguration.getInstance().getSession().getInquiryLocalObjectDao().insert(iObject);

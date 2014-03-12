@@ -61,16 +61,20 @@ public final class GameDelegator extends AbstractDelegator{
     }
 
 
-    private void onEventAsync(SyncGame g) {
+    public void asyncGame(long gameId) {
         String token = returnTokenIfOnline();
         if (token != null) {
-            Game game = GameClient.getGameClient().getGame(token, g.getGameId());
+            Game game = GameClient.getGameClient().getGame(token, gameId);
             if (game.getError() == null) {
                 GamesList gl = new GamesList();
                 gl.addGame(game);
                 process(gl);
             }
         }
+    }
+
+    private void onEventAsync(SyncGame g) {
+        asyncGame(g.getGameId());
     }
 
     private void onEventAsync(SyncGamesEventParticipate sge) {
@@ -117,6 +121,7 @@ public final class GameDelegator extends AbstractDelegator{
             GameLocalObject existingGame = DaoConfiguration.getInstance().getGameLocalObjectDao().load(gBean.getGameId());
             GameLocalObject newGame = toDaoLocalObject(gBean);
             if ( (existingGame == null || newGame.getLastModificationDate() > existingGame.getLastModificationDate())) {
+                DaoConfiguration.getInstance().getGameLocalObjectDao().insertOrReplace(newGame);
                 ARL.eventBus.post(new SyncGameContributors(existingGame, newGame));
 //                DaoConfiguration.getInstance().getGameLocalObjectDao().insertOrReplace(toDaoLocalObject(gBean));
 
@@ -133,6 +138,7 @@ public final class GameDelegator extends AbstractDelegator{
         gameDao.setLastModificationDate(gBean.getLastModificationDate());
         return gameDao;
     }
+
 
 
 

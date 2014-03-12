@@ -59,6 +59,9 @@ public class InquiryClient extends GenericClient{
     }
 
     public String userInquiries() {
+        if (INQ.accounts.getLoggedInAccount() == null) {
+            return null;
+        }
         String url = getUrlPrefix();
         url += "&oauthId="+INQ.accounts.getLoggedInAccount().getLocalId()+"&oauthProvider="+providerIdToElggName(INQ.accounts.getLoggedInAccount().getAccountType())+"&method=user.inquiries";
         HttpResponse response = conn.executeGET(url, null, "application/json");
