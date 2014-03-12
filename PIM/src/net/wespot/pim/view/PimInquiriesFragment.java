@@ -69,7 +69,7 @@ public class PimInquiriesFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        INQ.inquiry.syncInquiries();
+//        INQ.inquiry.syncInquiries();
 
         ARL.runs.syncRunsParticipate();
         ARL.responses.syncResponses(19806001l);

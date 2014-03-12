@@ -35,6 +35,8 @@ import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
 import net.wespot.pim.utils.Constants;
 import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.delegators.ARL;
+import org.celstec.arlearn2.beans.game.GamesList;
+import org.celstec.arlearn2.client.GameClient;
 import org.celstec.dao.gen.GameLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
 
@@ -56,8 +58,16 @@ public class InqDataTaskFragment extends Fragment {
         super.onCreateView(inflater,container,savedInstanceState);
 
         INQ.runs.syncRunsParticipate();
+        INQ.games.syncGame(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameId());
+        INQ.games.syncGamesParticipate();
+
+        // if game is created proceed
+        // if not wait till is created
+
+
 
         GameLocalObject gameObject = INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject();
+
 
         INQ.generalItems.syncGeneralItems(gameObject);
 
@@ -68,16 +78,10 @@ public class InqDataTaskFragment extends Fragment {
         data_collection_tasks.setAdapter(datAdapter);
 
         return rootView;
-
-
-//
-//        final View rootView = inflater.inflate(R.layout.fragment_section_hypothesis, container, false);
-//        WebView webView = (WebView) rootView.findViewById(R.id.description_hypothesis);
-//        TextView title = (TextView) rootView.findViewById(R.id.title_hypothesis);
-//        title.setText(R.string.inquiry_title_hypothesis);
-//        webView.setBackgroundColor(0x00000000);
-//        webView.loadData(INQ.inquiry.getCurrentInquiry().getHypothesisDescription(), Constants.MIME_TYPE, Constants.ENCONDING);
-//        return rootView;
     }
+
+//    private void onEventAsync(SyncGameContributors sge) {
+//
+//    }
 
 }

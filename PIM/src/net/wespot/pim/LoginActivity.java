@@ -83,11 +83,10 @@ public class LoginActivity extends FragmentActivity {
                 public void onPageStarted(WebView view, String url, Bitmap favicon) {
                     super.onPageStarted(view, url, favicon);
                     setTitle(url);
-                    Log.e(TAG, "onPageStarted " + url);
+                    Log.e(TAG, "onPageStarted ");
                     if (url.contains("oauth.html?accessToken=")) {
                         String token = url.substring(url.indexOf("?")+1);
                         token = token.substring(token.indexOf("=")+1, token.indexOf("&"));
-                        Log.e(TAG, "auth token is "+token);
 
                         ARL.properties.setAuthToken(token);
                         ARL.accounts.syncMyAccountDetails();

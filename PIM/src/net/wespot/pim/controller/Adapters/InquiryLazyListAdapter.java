@@ -42,6 +42,11 @@ public class InquiryLazyListAdapter extends AbstractInquiryLazyListAdapter {
     }
 
     @Override
+    public int getCount() {
+        return super.getCount();
+    }
+
+    @Override
     public View newView(Context context, InquiryLocalObject item, ViewGroup parent) {
         if (item == null) return null;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

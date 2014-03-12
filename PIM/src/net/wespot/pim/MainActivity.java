@@ -14,6 +14,7 @@ import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
 import net.wespot.pim.controller.WrapperActivity;
 import net.wespot.pim.utils.layout.TempEntryFragment;
 import net.wespot.pim.utils.layout.MainActionBarFragmentActivity;
+import org.celstec.arlearn.delegators.INQ;
 
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
