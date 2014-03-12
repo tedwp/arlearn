@@ -177,5 +177,4 @@ public class InquiryPhasesActivity extends ActionBarFragmentActivity {
             startActivity(intent);
         }
     }
-
 }

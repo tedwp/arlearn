@@ -23,10 +23,14 @@ package net.wespot.pim.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import net.wespot.pim.R;
@@ -35,6 +39,8 @@ import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
 import net.wespot.pim.utils.Constants;
 import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.delegators.ARL;
+import org.celstec.arlearn2.android.events.GameEvent;
+import org.celstec.arlearn2.android.events.RunEvent;
 import org.celstec.arlearn2.beans.game.GamesList;
 import org.celstec.arlearn2.client.GameClient;
 import org.celstec.dao.gen.GameLocalObject;
@@ -43,31 +49,31 @@ import org.celstec.dao.gen.InquiryLocalObject;
 /**
  * A dummy fragment representing a section of the app, but that simply displays dummy text.
  */
-public class InqDataTaskFragment extends Fragment {
+public class InqDataCollectionFragment extends Fragment {
 
+    private static final String TAG = "InqDataCollectionFragment";
     private ListView data_collection_tasks;
     private InquiryLocalObject inquiry;
 
     private DataCollectionLazyListAdapter datAdapter;
 
-    public InqDataTaskFragment() {
+    public InqDataCollectionFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
 
-        INQ.runs.syncRunsParticipate();
-        INQ.games.syncGame(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameId());
-        INQ.games.syncGamesParticipate();
+        INQ.inquiry.syncDataCollectionTasks();
+
+//        INQ.runs.syncRunsParticipate();
+//        INQ.games.syncGame(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameId());
+//        INQ.games.syncGamesParticipate();
 
         // if game is created proceed
         // if not wait till is created
 
-
-
         GameLocalObject gameObject = INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject();
-
 
         INQ.generalItems.syncGeneralItems(gameObject);
 
@@ -75,13 +81,26 @@ public class InqDataTaskFragment extends Fragment {
 
         data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
         datAdapter =  new DataCollectionLazyListAdapter(this.getActivity());
+        data_collection_tasks.setOnItemClickListener(new onListDataCollectionTasksClick());
         data_collection_tasks.setAdapter(datAdapter);
 
         return rootView;
     }
 
-//    private void onEventAsync(SyncGameContributors sge) {
-//
-//    }
+    private void onEventAsync(RunEvent g) {
+        // Run synchronized
+        Log.e(TAG, "Runs loaded OK");
+    }
 
+    private void onEventAsync(GameEvent g) {
+        // Game synchronized
+        Log.e(TAG, "Games loaded OK");
+    }
+
+    private class onListDataCollectionTasksClick implements android.widget.AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+        }
+    }
 }

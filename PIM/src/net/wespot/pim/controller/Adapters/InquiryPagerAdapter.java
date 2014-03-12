@@ -26,7 +26,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import net.wespot.pim.view.*;
-import org.celstec.arlearn.delegators.INQ;
 
 /**
  * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a fragment
@@ -57,7 +56,7 @@ public class InquiryPagerAdapter extends FragmentPagerAdapter {
                 frag =  new InqPlanFragment();
                 return frag;
             case 3:
-                frag = new InqDataTaskFragment();
+                frag = new InqDataCollectionFragment();
 
 //                if (INQ.inquiry.getCurrentInquiry().getRunLocalObject() != null){
 //                    frag = new InqDataFragment();

@@ -71,8 +71,8 @@ public class PimInquiriesFragment extends Fragment {
 
 //        INQ.inquiry.syncInquiries();
 
-        ARL.runs.syncRunsParticipate();
-        ARL.responses.syncResponses(19806001l);
+//        ARL.runs.syncRunsParticipate();
+//        ARL.responses.syncResponses(19806001l);
 
         adapterInq =  new InquiryLazyListAdapter(this.getActivity());
         inquiries.setAdapter(adapterInq);
