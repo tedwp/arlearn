@@ -54,6 +54,10 @@ public class InquiryDelegator {
         return instance;
     }
 
+    public void syncDataCollectionTasks(){
+
+    }
+
     public InquiryLocalObject getCurrentInquiry() {
         return currentInquiry;
     }
