@@ -59,6 +59,8 @@ public final class GameDelegator extends AbstractDelegator{
         ARL.eventBus.post(new SyncGame(gameId));
 
     }
+
+
     private void onEventAsync(SyncGame g) {
         String token = returnTokenIfOnline();
         if (token != null) {
