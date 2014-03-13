@@ -21,19 +21,14 @@ package net.wespot.pim.view;
  * ****************************************************************************
  */
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.*;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
-import net.wespot.pim.controller.InquiryActivity;
-import net.wespot.pim.controller.InquiryPhasesActivity;
-import net.wespot.pim.utils.layout.TempEntryFragment;
+import net.wespot.pim.controller.WrapperActivity;
+import net.wespot.pim.utils.layout.ButtonEntryDelegator;
 import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.delegators.ARL;
 
@@ -52,8 +47,16 @@ public class PimFriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.fragment_friends, container, false);
 
-        TempEntryFragment button_new_inquiry = (TempEntryFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.friends_add_friend);
-        button_new_inquiry.setName(getString(R.string.friends_friend_new));
+        // This is needed to set the class
+        ButtonEntryDelegator man = ButtonEntryDelegator.getInstance(getActivity());
+
+        // Creation of the links
+        man._button_list(add_friend, R.id.friends_add_friend, getResources().getString(R.string.friends_friend_new), null, null, null);
+
+
+//        _EntryListTemp button_new_inquiry = (_EntryListTemp) getActivity().getSupportFragmentManager().findFragmentById(R.id.friends_add_friend);
+//        button_new_inquiry.setName(getString(R.string.friends_friend_new));
+
         friends = (ListView) rootview.findViewById(R.id.list_friends);
         add_friend = (View) rootview.findViewById(R.id.friends_add_friend);
 

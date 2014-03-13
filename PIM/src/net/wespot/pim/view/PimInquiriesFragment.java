@@ -33,10 +33,10 @@ import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
 import net.wespot.pim.controller.InquiryActivity;
 import net.wespot.pim.controller.InquiryPhasesActivity;
-import net.wespot.pim.utils.layout.RefreshListFragment;
-import net.wespot.pim.utils.layout.TempEntryFragment;
+import net.wespot.pim.controller.WrapperActivity;
+import net.wespot.pim.utils.layout.ButtonEntry;
+import net.wespot.pim.utils.layout.ButtonEntryDelegator;
 import org.celstec.arlearn.delegators.INQ;
-import org.celstec.arlearn2.android.delegators.ARL;
 
 /**
  * A fragment that launches other parts of the demo application.
@@ -53,8 +53,17 @@ public class PimInquiriesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.fragment_inquiries, container, false);
 
-        TempEntryFragment button_new_inquiry = (TempEntryFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.inquiries_new_inquiry);
+//        // This is needed to set the class
+//        ButtonEntryDelegator man = ButtonEntryDelegator.getInstance(getActivity());
+//
+//        // Creation of the links
+//        man._button_list(new_inquiry, R.id.inquiries_new_inquiry, getResources().getString(R.string.inquiry_title_new), WrapperActivity.class, null, null);
+
+
+        ButtonEntry button_new_inquiry = (ButtonEntry) getActivity().getSupportFragmentManager().findFragmentById(R.id.inquiries_new_inquiry);
         button_new_inquiry.setName(getString(R.string.inquiry_title_new));
+
+
         inquiries = (ListView) rootview.findViewById(R.id.list_inquiries);
         new_inquiry = (View) rootview.findViewById(R.id.inquiries_new_inquiry);
 

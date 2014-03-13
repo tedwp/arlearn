@@ -22,47 +22,47 @@
                     <!--android:id="@+id/list_phases_title"-->
                     <!--android:layout_width="match_parent"-->
                     <!--android:layout_height="wrap_content"/>-->
-            <fragment android:name="net.wespot.pim.utils.layout.TempEntryFragment"
+            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
                       android:id="@+id/list_phases_description"
                       android:layout_width="match_parent"
                       android:layout_below="@id/head_list_phases"
                       android:layout_height="wrap_content"/>
 
-            <fragment android:name="net.wespot.pim.utils.layout.TempEntryFragment"
+            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
                       android:id="@+id/list_phases_hypothesis"
                       android:layout_below="@id/list_phases_description"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"/>
 
-            <fragment android:name="net.wespot.pim.utils.layout.TempEntryFragment"
+            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
                       android:id="@+id/list_phases_plan"
                       android:layout_below="@id/list_phases_hypothesis"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"/>
 
-            <fragment android:name="net.wespot.pim.utils.layout.TempEntryFragment"
+            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
                       android:id="@+id/list_phases_data"
                       android:layout_below="@id/list_phases_plan"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"/>
-            <fragment android:name="net.wespot.pim.utils.layout.TempEntryFragment"
+            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
                       android:id="@+id/list_phases_analyse"
                       android:layout_below="@id/list_phases_data"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"/>
-            <fragment android:name="net.wespot.pim.utils.layout.TempEntryFragment"
+            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
                       android:id="@+id/list_phases_discuss"
                       android:layout_below="@id/list_phases_analyse"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"/>
 
-            <fragment android:name="net.wespot.pim.utils.layout.TempEntryFragment"
+            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
                       android:id="@+id/list_phases_communicate"
                       android:layout_below="@id/list_phases_discuss"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"/>
 
-            <fragment android:name="net.wespot.pim.utils.layout.TempEntryFragment"
+            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
                       android:layout_marginTop="@dimen/mainscreen.margintop.second"
                       android:id="@+id/invites_friends_to_inquiry"
                       android:layout_below="@id/list_phases_communicate"

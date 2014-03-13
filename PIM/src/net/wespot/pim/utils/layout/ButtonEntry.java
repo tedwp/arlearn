@@ -28,44 +28,46 @@ import net.wespot.pim.R;
  * Contributors: Angel Suarez
  * ****************************************************************************
  */
-public class TempEntryFragment extends Fragment  {
 
-    private TextView name;
+    public class ButtonEntry extends Fragment {
 
+        private TextView name;
+        private TextView notification;
 
-    private TextView notification;
+        public ButtonEntry() {
+        }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.entry_main_list, container, false);
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            // Inflate the layout for this fragment
+            return inflater.inflate(R.layout.entry_main_list, container, false);
+        }
+
+        @Override
+
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+
+            name = (TextView) view.findViewById(R.id.name_entry_list);
+            notification = (TextView) view.findViewById(R.id.notificationText);
+
+            super.onViewCreated(view, savedInstanceState);
+        }
+
+        public CharSequence getName() {
+            return name.getText();
+        }
+
+        public void setName(String name) {
+            this.name.setText(name);
+        }
+
+        public CharSequence getNotification() {
+            return notification.getText();
+        }
+
+        public void setNotification(CharSequence notif) {
+            notification.setVisibility(View.VISIBLE);
+            this.notification.setText(notif);
+        }
+
     }
-
-    @Override
-
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-
-        name = (TextView) view.findViewById(R.id.name_entry_list);
-        notification = (TextView) view.findViewById(R.id.notificationText);
-
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    public CharSequence getName() {
-        return name.getText();
-    }
-
-    public void setName(String name) {
-        this.name.setText(name);
-    }
-
-    public CharSequence getNotification() {
-        return notification.getText();
-    }
-
-    public void setNotification(CharSequence notif) {
-        notification.setVisibility(View.VISIBLE);
-        this.notification.setText(notif);
-    }
-
-}

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <fragment android:name="net.wespot.pim.utils.layout.TempEntryFragment"
+    <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
               android:id="@+id/inquiries_new_inquiry"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"/>

@@ -182,11 +182,11 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
     }
 
     private void onEventBackgroundThread(CreateInquiryObject inquiryObject){
-        // int $membership (Membership: 0 -> Closed, 2 -> Open)
         // * int $vis (Visibility: 0 -> Inquiry members only, 1 -> logged in users, 2 -> Public)
+        // int $membership (Membership: 0 -> Closed, 2 -> Open)
         // public void createInquiry(InquiryLocalObject inquiry, AccountLocalObject account, int visibility, int membership)
 
-        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount(), 2, 2);
+        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount(), 0, 2);
         INQ.inquiry.syncInquiries();
         getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
         getActivity().finish();

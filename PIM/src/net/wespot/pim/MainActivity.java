@@ -6,15 +6,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
-import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
 import net.wespot.pim.controller.WrapperActivity;
-import net.wespot.pim.utils.layout.TempEntryFragment;
+import net.wespot.pim.utils.layout.ButtonEntryDelegator;
 import net.wespot.pim.utils.layout.MainActionBarFragmentActivity;
-import org.celstec.arlearn.delegators.INQ;
 
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -35,76 +31,126 @@ public class MainActivity extends MainActionBarFragmentActivity /*implements Act
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        TempEntryFragment button_inq_frag = (TempEntryFragment) getSupportFragmentManager().findFragmentById(R.id.main_myinquiries_link);
-        button_inq_frag.setName(getString(R.string.wrapper_myinquiry));
-        //TODO hardcode number of notificatons
-        button_inq_frag.setNotification("112");
-        my_inquiries = findViewById(R.id.main_myinquiries_link);
-        my_inquiries.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e(TAG, "my inquiries");
-                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
-                intent.putExtra(WrapperActivity.OPTION, 0);
-                startActivity(intent);
-            }
-        });
+        // This is needed to set the class
+        ButtonEntryDelegator man = ButtonEntryDelegator.getInstance(this);
 
-        TempEntryFragment button_media_frag = (TempEntryFragment) getSupportFragmentManager().findFragmentById(R.id.main_mymedia_link);
-        button_media_frag.setName(getString(R.string.wrapper_mymedia));
-        //TODO hardcode number of notificatons
-        button_media_frag.setNotification("36");
-        my_media = findViewById(R.id.main_mymedia_link);
-        my_media.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e(TAG, "my media content");
-                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
-                intent.putExtra(WrapperActivity.OPTION, 1);
-                startActivity(intent);
-            }
-        });
+        // Creation of the links
+        man._button_list(my_inquiries, R.id.main_myinquiries_link, getResources().getString(R.string.wrapper_myinquiry), WrapperActivity.class, 0, WrapperActivity.OPTION, "112");
 
-        TempEntryFragment button_prof_frag = (TempEntryFragment) getSupportFragmentManager().findFragmentById(R.id.main_profile_link);
-        button_prof_frag.setName(getString(R.string.wrapper_profile));
-        profile = findViewById(R.id.main_profile_link);
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e(TAG, "my profile");
-                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
-                intent.putExtra(WrapperActivity.OPTION, 2);
-                startActivity(intent);
-            }
-        });
+        man._button_list(my_media, R.id.main_mymedia_link, getResources().getString(R.string.wrapper_mymedia), WrapperActivity.class, 1, WrapperActivity.OPTION);
 
-        TempEntryFragment button_badges_frag = (TempEntryFragment) getSupportFragmentManager().findFragmentById(R.id.main_badges_link);
-        button_badges_frag.setName(getString(R.string.wrapper_badges));
-        badges = findViewById(R.id.main_badges_link);
-        badges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e(TAG, "my badges");
-                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
-                intent.putExtra(WrapperActivity.OPTION, 3);
-                startActivity(intent);
-            }
-        });
+        man._button_list(profile, R.id.main_profile_link, getResources().getString(R.string.wrapper_profile), WrapperActivity.class, 2, WrapperActivity.OPTION);
 
-        TempEntryFragment button_friends_frag = (TempEntryFragment) getSupportFragmentManager().findFragmentById(R.id.main_friends_link);
-        button_friends_frag.setName(getString(R.string.wrapper_friends));
-        friends = (View) findViewById(R.id.main_friends_link);
-        friends.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e(TAG, "my friends");
-                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
-                intent.putExtra(WrapperActivity.OPTION, 4);
-                startActivity(intent);
-            }
-        });
+        man._button_list(badges, R.id.main_badges_link, getResources().getString(R.string.wrapper_badges), WrapperActivity.class, 3, WrapperActivity.OPTION);
+
+        man._button_list(friends, R.id.main_friends_link, getResources().getString(R.string.wrapper_friends), WrapperActivity.class, 4, WrapperActivity.OPTION);
+
+//        _entry_list_temp button_inq_frag = (_entry_list_temp) getSupportFragmentManager().findFragmentById(R.id.main_myinquiries_link);
+//        button_inq_frag.setName(getString(R.string.wrapper_myinquiry));
+//        //TODO hardcode number of notificatons
+//        button_inq_frag.setNotification("112");
+//        my_inquiries = findViewById(R.id.main_myinquiries_link);
+//        my_inquiries.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.e(TAG, "my inquiries");
+//                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
+//                intent.putExtra(WrapperActivity.OPTION, 0);
+//                startActivity(intent);
+//            }
+//        });
+
+//        _entry_list_temp button_media_frag = (_entry_list_temp) getSupportFragmentManager().findFragmentById(R.id.main_mymedia_link);
+//        button_media_frag.setName(getString(R.string.wrapper_mymedia));
+//        //TODO hardcode number of notificatons
+//        button_media_frag.setNotification("36");
+//        my_media = findViewById(R.id.main_mymedia_link);
+//        my_media.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.e(TAG, "my media content");
+//                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
+//                intent.putExtra(WrapperActivity.OPTION, 1);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        _entry_list_temp button_prof_frag = (_entry_list_temp) getSupportFragmentManager().findFragmentById(R.id.main_profile_link);
+//        button_prof_frag.setName(getString(R.string.wrapper_profile));
+//        profile = findViewById(R.id.main_profile_link);
+//        profile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.e(TAG, "my profile");
+//                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
+//                intent.putExtra(WrapperActivity.OPTION, 2);
+//                startActivity(intent);
+//            }
+//        });
+
+//        _entry_list_temp button_badges_frag = (_entry_list_temp) getSupportFragmentManager().findFragmentById(R.id.main_badges_link);
+//        button_badges_frag.setName(getString(R.string.wrapper_badges));
+//        badges = findViewById(R.id.main_badges_link);
+//        badges.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.e(TAG, "my badges");
+//                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
+//                intent.putExtra(WrapperActivity.OPTION, 3);
+//                startActivity(intent);
+//            }
+//        });
+
+
+
+//        _entry_list_temp button_friends_frag = (_entry_list_temp) getSupportFragmentManager().findFragmentById(R.id.main_friends_link);
+//        button_friends_frag.setName(getString(R.string.wrapper_friends));
+//        friends = (View) findViewById(R.id.main_friends_link);
+//        friends.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.e(TAG, "my friends");
+//                Intent intent = new Intent(getApplicationContext(), WrapperActivity.class);
+//                intent.putExtra(WrapperActivity.OPTION, 4);
+//                startActivity(intent);
+//            }
+//        });
     }
 
+//    private static void _button_list(MainActivity mainActivity, View view, int id, int name, Integer option, Class destination, String... arg) {
+//        // arg [0]: notification [1] icon....
+//
+//        _entry_list_temp button_fragment = (_entry_list_temp) mainActivity.getSupportFragmentManager().findFragmentById(id);
+//        button_fragment.setName(mainActivity.getString(name));
+//
+//        if (arg.length != 0){
+//            button_fragment.setNotification(arg[0]);
+//        }
+//
+//        view = (View) mainActivity.findViewById(id);
+//        view.setOnClickListener(mainActivity.new _extended_intent(destination, option));
+//    }
+//
+//
+//    private class _extended_intent implements View.OnClickListener {
+//
+//        private Object[] opt;
+//        private Class dest;
+//
+//        public _extended_intent(Class destination, Object... option) {
+//             opt=option;
+//             dest=destination;
+//        }
+//
+//        @Override
+//        public void onClick(View view) {
+//            Intent intent = new Intent(getApplicationContext(), dest);
+//            if (opt.length !=0){
+//                intent.putExtra(WrapperActivity.OPTION, (Integer) opt[0]);
+//            }
+//            startActivity(intent);
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -137,6 +183,7 @@ public class MainActivity extends MainActionBarFragmentActivity /*implements Act
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 
 }

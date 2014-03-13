@@ -31,7 +31,6 @@ public class ActionBarFragmentActivity extends FragmentActivity {
 
     private ActionBarHelper mActionBarHelper;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
