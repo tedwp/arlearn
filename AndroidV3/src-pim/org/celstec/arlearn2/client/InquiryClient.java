@@ -123,10 +123,11 @@ public class InquiryClient extends GenericClient{
                 "&wespot_arlearn_enable=no" +
                 "&group_multiple_admin_allow_enable=no" +
                 "&provider=" + provider +
-                "&user_uid=" + provider + "_" + account.getLocalId();
+                "&user_uid=" + provider + "_" + account.getLocalId() +
+                "&api_key="+INQ.config.getProperty("elgg_api_key");
 
 
-            HttpResponse response = conn.executePOST(getUrlPrefix() + "&method=inquiry.create"
+            HttpResponse response = conn.executePOST(getUrlPrefix()
                     , null, "application/json", postBody, "application/json");
             JSONObject json = new JSONObject(EntityUtils.toString(response.getEntity()));
             Log.e("ARLearn", "return after creating inquiry " + json.toString());
@@ -164,7 +165,7 @@ public class InquiryClient extends GenericClient{
 
 
     public String getUrlPrefix() {
-        return INQ.config.getProperty("wespot_server")+"?api_key="+INQ.config.getProperty("elgg_api_key");
+        return INQ.config.getProperty("wespot_server");
     }
 
     private String providerIdToElggName(int id){
