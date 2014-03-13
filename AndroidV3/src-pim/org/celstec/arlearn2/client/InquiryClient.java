@@ -127,7 +127,7 @@ public class InquiryClient extends GenericClient{
 
 
             HttpResponse response = conn.executePOST(getUrlPrefix()
-                    , postBody, "application/json", "", "application/json");
+                    , null, "application/json", postBody, "application/json");
             JSONObject json = new JSONObject(EntityUtils.toString(response.getEntity()));
             Log.e("ARLearn", "return after creating inquiry " + json.toString());
         } catch (Exception e) {
