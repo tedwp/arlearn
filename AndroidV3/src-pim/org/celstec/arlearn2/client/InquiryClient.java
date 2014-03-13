@@ -126,7 +126,7 @@ public class InquiryClient extends GenericClient{
                 "&user_uid=" + provider + "_" + account.getLocalId();
 
 
-            HttpResponse response = conn.executePOST(getUrlPrefix()
+            HttpResponse response = conn.executePOST(getUrlPrefix() + "&method=inquiry.create"
                     , null, "application/json", postBody, "application/json");
             JSONObject json = new JSONObject(EntityUtils.toString(response.getEntity()));
             Log.e("ARLearn", "return after creating inquiry " + json.toString());
