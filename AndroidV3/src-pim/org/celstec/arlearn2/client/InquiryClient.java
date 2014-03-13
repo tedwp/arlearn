@@ -113,20 +113,21 @@ public class InquiryClient extends GenericClient{
     public void createInquiry(InquiryLocalObject inquiry, AccountLocalObject account, int visibility, int membership) {
         String provider = providerIdToElggName(account.getAccountType());
 
-
         try {
+        String postBody = "method=inquiry.create" +
+                "&name=" + URLEncoder.encode(inquiry.getTitle(), "UTF8") +
+                "&description=" + URLEncoder.encode(inquiry.getDescription(), "UTF8") +
+                "&interests=" + URLEncoder.encode("pim interests dummy value", "UTF8") +
+                "&membership=" + membership +
+                "&vis=" + visibility +
+                "&wespot_arlearn_enable=no" +
+                "&group_multiple_admin_allow_enable=no" +
+                "&provider=" + provider +
+                "&user_uid=" + provider + "_" + account.getLocalId();
 
-            HttpResponse response = conn.executePOST(getUrlPrefix() + "&method=inquiry.create" +
-                    "&name=" + URLEncoder.encode(inquiry.getTitle(), "UTF8") +
-                    "&description=" + URLEncoder.encode(inquiry.getDescription(), "UTF8") +
-                    "&interests=" + URLEncoder.encode("pim interests dummy value", "UTF8") +
-                    "&membership=" + membership +
-                    "&vis=" + visibility +
-                    "&wespot_arlearn_enable=no" +
-                    "&group_multiple_admin_allow_enable=no" +
-                    "&provider=" + provider +
-                    "&user_uid=" + provider + "_" + account.getLocalId()
-                    , null, "application/json", "", "application/json");
+
+            HttpResponse response = conn.executePOST(getUrlPrefix()
+                    , postBody, "application/json", "", "application/json");
             JSONObject json = new JSONObject(EntityUtils.toString(response.getEntity()));
             Log.e("ARLearn", "return after creating inquiry " + json.toString());
         } catch (Exception e) {
