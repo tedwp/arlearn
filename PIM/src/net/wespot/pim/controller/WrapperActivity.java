@@ -37,7 +37,6 @@ public class WrapperActivity extends ActionBarFragmentActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         Bundle extras = getIntent().getExtras();
 
         FragmentManager fragmentManager = getSupportFragmentManager();

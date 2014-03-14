@@ -90,55 +90,6 @@ public class InquiryPhasesActivity extends ActionBarFragmentActivity {
 
         button_manager._button_list(button_communicateView, R.id.list_phases_communicate, Constants.INQUIRY_PHASES_LIST.get(6), InquiryActivity.class, 6, InquiryActivity.PHASE);
 
-//        button_descriptionView = (View) findViewById(R.id.list_phases_description);
-//        button_description = (_EntryListTemp) this.getSupportFragmentManager().findFragmentById(R.id.list_phases_description);
-//        button_description.setName(Constants.INQUIRY_PHASES_LIST.get(0));
-//        button_descriptionView.setOnClickListener(new OnClickNewInquiry(0));
-
-//        button_hypothesis = (_EntryListTemp)
-//                this.getSupportFragmentManager().findFragmentById(R.id.list_phases_hypothesis);
-//        button_hypothesis.setName(Constants.INQUIRY_PHASES_LIST.get(1));
-//        button_hypothesisView = (View) findViewById(R.id.list_phases_hypothesis);
-//        button_hypothesisView.setOnClickListener(new OnClickNewInquiry(1));
-//
-//
-//        button_plan = (_EntryListTemp)
-//                this.getSupportFragmentManager().findFragmentById(R.id.list_phases_plan);
-//        button_plan.setName(Constants.INQUIRY_PHASES_LIST.get(2));
-//        button_planView = (View) findViewById(R.id.list_phases_plan);
-//        button_planView.setOnClickListener(new OnClickNewInquiry(2));
-//
-//
-//        button_data = (_EntryListTemp)
-//                this.getSupportFragmentManager().findFragmentById(R.id.list_phases_data);
-//        button_data.setName(Constants.INQUIRY_PHASES_LIST.get(3));
-//        button_dataView = (View) findViewById(R.id.list_phases_data);
-//        button_dataView.setOnClickListener(new OnClickNewInquiry(3));
-//        //TODO hardcode number of notificatons
-//        button_data.setNotification("12");
-//
-//        button_analyse = (_EntryListTemp)
-//                this.getSupportFragmentManager().findFragmentById(R.id.list_phases_analyse);
-//        button_analyse.setName(Constants.INQUIRY_PHASES_LIST.get(4));
-//        button_analyseView = (View) findViewById(R.id.list_phases_analyse);
-//        button_analyseView.setOnClickListener(new OnClickNewInquiry(4));
-//
-//        button_discuss = (_EntryListTemp)
-//                this.getSupportFragmentManager().findFragmentById(R.id.list_phases_discuss);
-//        button_discuss.setName(Constants.INQUIRY_PHASES_LIST.get(5));
-//        button_discussView = (View) findViewById(R.id.list_phases_discuss);
-//        button_discussView.setOnClickListener(new OnClickNewInquiry(5));
-//
-//        button_communicate = (_EntryListTemp)
-//                this.getSupportFragmentManager().findFragmentById(R.id.list_phases_communicate);
-//        button_communicate.setName(Constants.INQUIRY_PHASES_LIST.get(6));
-//        button_communicateView = (View) findViewById(R.id.list_phases_communicate);
-//        button_communicateView.setOnClickListener(new OnClickNewInquiry(6));
-
-//        _EntryListTemp button_invite_friends = (_EntryListTemp)
-//                this.getSupportFragmentManager().findFragmentById(R.id.invites_friends_to_inquiry);
-//        button_invite_friends.setName(getString(R.string.phases_invite_new_friend));
-
         button_manager._button_list(button_friendsView, R.id.invites_friends_to_inquiry, getString(R.string.phases_invite_new_friend), null, null, null);
 
 
