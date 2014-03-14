@@ -68,6 +68,21 @@ public class Messages extends Service {
         return serialise(td.getThreads(runId), accept);
     }
 
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/thread/runId/{runId}/default")
+    public String getDefaultThread(@HeaderParam("Authorization") String token, @PathParam("runId") Long runId,
+                             @DefaultValue("application/json") @HeaderParam("Accept") String accept)
+            throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+        ThreadDelegator td = new ThreadDelegator(this);
+
+
+        return serialise(td.getDefaultThread(runId), accept);
+    }
+
+
     @POST
     @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     @Path("/message")
@@ -102,6 +117,21 @@ public class Messages extends Service {
 
 
         return serialise(md.getMessagesForThread(threadId), accept);
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/runId/{runId}/default")
+    public String getMessagesForDefaultThread(@HeaderParam("Authorization") String token,
+                                       @PathParam("runId") Long runId,
+                                       @DefaultValue("application/json") @HeaderParam("Accept") String accept)
+            throws AuthenticationException {
+        if (!validCredentials(token))
+            return serialise(getInvalidCredentialsBean(), accept);
+        MessageDelegator md = new MessageDelegator(this);
+
+
+        return serialise(md.getMessagesForDefaultThread(runId), accept);
     }
 
 }

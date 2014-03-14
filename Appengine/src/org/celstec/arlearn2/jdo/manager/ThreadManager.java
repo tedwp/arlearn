@@ -34,15 +34,16 @@ import java.util.List;
  */
 public class ThreadManager {
 
-    private static final String params[] = new String[] { "threadId", "runId" };
-    private static final String paramsNames[] = new String[] { "threadIdParam", "runIdParam" };
-    private static final String types[] = new String[] { "Long", "Long" };
+    private static final String params[] = new String[] { "threadId", "runId", "isDefault" };
+    private static final String paramsNames[] = new String[] { "threadIdParam", "runIdParam", "isDefaultParam" };
+    private static final String types[] = new String[] { "Long", "Long", "Boolean" };
 
-    public static org.celstec.arlearn2.beans.run.Thread createThread(Thread thread) {
+    public static org.celstec.arlearn2.beans.run.Thread createThread(Thread thread, boolean isDefault) {
         PersistenceManager pm = PMF.get().getPersistenceManager();
         ThreadJDO threadJDO = new ThreadJDO();
         threadJDO.setName(thread.getName());
         threadJDO.setRunId(thread.getRunId());
+        threadJDO.setIsDefault(isDefault);
 
         try {
             pm.makePersistent(threadJDO);
@@ -67,16 +68,26 @@ public class ThreadManager {
     public static List<Thread> getThreads(Long runId) {
         ArrayList<Thread> threadArrayList = new ArrayList<Thread>();
         PersistenceManager pm = PMF.get().getPersistenceManager();
-        Iterator<ThreadJDO> it = getThreads(pm, runId).iterator();
+        Iterator<ThreadJDO> it = getThreads(pm, null, runId, null).iterator();
         while (it.hasNext()) {
             threadArrayList.add(toBean(it.next()));
         }
         return threadArrayList;
     }
 
-    private static List<ThreadJDO> getThreads(PersistenceManager pm, Long runId) {
+    public static Thread getDefaultThread(Long runId) {
+        ArrayList<Thread> threadArrayList = new ArrayList<Thread>();
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        Iterator<ThreadJDO> it = getThreads(pm, null, runId, true).iterator();
+        while (it.hasNext()) {
+            return toBean(it.next());
+        }
+        return null;
+    }
+
+    private static List<ThreadJDO> getThreads(PersistenceManager pm, Long threadId, Long runId, Boolean isDefault) {
         Query query = pm.newQuery(ThreadJDO.class);
-        Object args[] = {null, runId };
+        Object args[] = {threadId, runId , isDefault};
         query.setFilter(ManagerUtil.generateFilter(args, params, paramsNames));
         query.declareParameters(ManagerUtil.generateDeclareParameters(args, types, params, paramsNames));
         return (List<ThreadJDO>) query.executeWithArray(ManagerUtil.filterOutNulls(args));

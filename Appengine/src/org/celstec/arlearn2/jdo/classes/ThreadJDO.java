@@ -1,7 +1,5 @@
 package org.celstec.arlearn2.jdo.classes;
 
-import com.google.appengine.api.datastore.KeyFactory;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -41,7 +39,11 @@ public class ThreadJDO{
     private String name;
 
     @Persistent
+    private Boolean isDefault;
+
+    @Persistent
     private Boolean deleted;
+
 
     public Long getThreadId() {
         return threadId;
@@ -74,5 +76,13 @@ public class ThreadJDO{
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public boolean getIsDefault() {
+        return (isDefault == null) ? false : isDefault;
+    }
+
+    public void setIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
     }
 }

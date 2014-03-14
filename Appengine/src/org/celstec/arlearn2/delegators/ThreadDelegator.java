@@ -56,7 +56,7 @@ public class ThreadDelegator extends GoogleDelegator {
             inThread.setErrorCode(1);
             return  inThread;
         }
-        return ThreadManager.createThread(inThread);
+        return ThreadManager.createThread(inThread, false);
     }
 
 
@@ -64,6 +64,17 @@ public class ThreadDelegator extends GoogleDelegator {
         ThreadList threadList = new ThreadList();
         threadList.setThreads(ThreadManager.getThreads(runId));
         return threadList;
+    }
+
+    public Thread getDefaultThread(long runId) {
+        Thread thread = ThreadManager.getDefaultThread(runId);
+        if (thread == null) {
+            thread = new Thread();
+            thread.setRunId(runId);
+            thread.setName("Default");
+            thread = ThreadManager.createThread(thread, true);
+        }
+        return thread;
     }
 
 }

@@ -6,6 +6,7 @@ import org.celstec.arlearn2.api.Service;
 import org.celstec.arlearn2.beans.run.Message;
 import org.celstec.arlearn2.beans.run.MessageList;
 import org.celstec.arlearn2.jdo.manager.MessageManager;
+import org.celstec.arlearn2.jdo.manager.ThreadManager;
 
 public class MessageDelegator extends GoogleDelegator {
 	private static final Logger logger = Logger.getLogger(MessageDelegator.class.getName());
@@ -29,6 +30,13 @@ public class MessageDelegator extends GoogleDelegator {
     public MessageList getMessagesForThread(long threadId){
         return MessageManager.getMessagesByThreadId(threadId);
     }
-	
 
+
+    public MessageList getMessagesForDefaultThread(Long runId) {
+        org.celstec.arlearn2.beans.run.Thread thread = ThreadManager.getDefaultThread(runId);
+        if (thread != null) {
+            return getMessagesForThread(thread.getThreadId());
+        }
+        return null;
+    }
 }
