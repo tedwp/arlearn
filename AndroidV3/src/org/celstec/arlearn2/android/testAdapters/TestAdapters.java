@@ -12,6 +12,7 @@ import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.events.FileDownloadStatus;
 import org.celstec.arlearn2.client.GenericClient;
+import org.celstec.arlearn2.client.InquiryClient;
 import org.celstec.dao.gen.ActionLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
 
@@ -132,20 +133,20 @@ public class TestAdapters extends Activity {
 
         INQ.inquiry.syncInquiries();
         INQ.inquiry.syncHypothesis(151l);
-        InquiryLocalObject object;
-        InquiryLocalObject ilo = INQ.inquiry.getInquiryLocalObject(28845l);
-        INQ.inquiry.setCurrentInquiry(ilo);
-        INQ.inquiry.syncDataCollectionTasks();
-        System.out.println(ilo);
+//        InquiryLocalObject object;
+//        InquiryLocalObject ilo = INQ.inquiry.getInquiryLocalObject(28845l);
+//        INQ.inquiry.setCurrentInquiry(ilo);
+//        INQ.inquiry.syncDataCollectionTasks();
+//        System.out.println(ilo);
 
-//        InquiryLocalObject iObject = new InquiryLocalObject();
-//        iObject.setDescription("Stefaans test");
-//        iObject.setTitle("a title");
-//        CreateInquiryObject createInquiryObject = new CreateInquiryObject();
-//        createInquiryObject.inquiry = iObject;
-//
-//        String key = ARL.config.getProperty("elgg_api_key");
-////        ARL.eventBus.post(createInquiryObject);
+        InquiryLocalObject iObject = new InquiryLocalObject();
+        iObject.setDescription("Stefaans post");
+        iObject.setTitle("a title");
+        CreateInquiryObject createInquiryObject = new CreateInquiryObject();
+        createInquiryObject.inquiry = iObject;
+
+        String key = ARL.config.getProperty("elgg_api_key");
+        ARL.eventBus.post(createInquiryObject);
 //
 //        key = GenericClient.urlPrefix;
 
@@ -167,7 +168,7 @@ public class TestAdapters extends Activity {
 
     private void onEventBackgroundThread(CreateInquiryObject inquiryObject){
 
-//        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount());
+        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount(), InquiryClient.VIS_PUBLIC, InquiryClient.OPEN_MEMBERSHIP);
 
 
 
