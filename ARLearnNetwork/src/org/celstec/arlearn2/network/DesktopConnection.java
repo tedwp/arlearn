@@ -130,7 +130,7 @@ public class DesktopConnection implements HttpConnection {
 		HttpClient httpClient = new DefaultHttpClient();
 		try {
 			HttpPost request = new HttpPost(url);
-			request.setHeader("Authorization", "GoogleLogin auth=" + token);
+			if (token != null) request.setHeader("Authorization", "GoogleLogin auth=" + token);
 			if (accept != null)
 				request.setHeader("Accept", accept);
 			if (contentType != null)
