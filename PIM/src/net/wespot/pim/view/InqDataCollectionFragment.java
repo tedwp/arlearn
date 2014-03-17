@@ -24,27 +24,17 @@ package net.wespot.pim.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.DataCollectionLazyListAdapter;
-import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
-import net.wespot.pim.controller.InquiryActivity;
-import net.wespot.pim.utils.Constants;
 import org.celstec.arlearn.delegators.INQ;
-import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.events.GameEvent;
 import org.celstec.arlearn2.android.events.RunEvent;
-import org.celstec.arlearn2.beans.game.GamesList;
-import org.celstec.arlearn2.client.GameClient;
 import org.celstec.dao.gen.GameLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
 
@@ -79,7 +69,7 @@ public class InqDataCollectionFragment extends Fragment {
 
         INQ.generalItems.syncGeneralItems(gameObject);
 
-        View rootView = inflater.inflate(R.layout.fragment_data_collection_task, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_data_collection, container, false);
 
         data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
         datAdapter =  new DataCollectionLazyListAdapter(this.getActivity());
@@ -103,7 +93,7 @@ public class InqDataCollectionFragment extends Fragment {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Intent intent = new Intent(getActivity(), InqDataCollectionTaskFragment.class);
-            intent.putExtra("DataCollectionTask", i);
+            intent.putExtra("DataCollectionTask", datAdapter.getItem(i).getId());
             startActivity(intent);
         }
     }

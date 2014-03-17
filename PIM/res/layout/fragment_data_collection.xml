@@ -12,7 +12,7 @@
               android:text="@string/data_collection_task"
               style="@style/CustomTheme.TextView.Title1"
             />
-    <ListView android:id="@+id/data_collection_tasks_items"
+    <ListView android:id="@+id/data_collection_tasks"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:dividerHeight="1dp"

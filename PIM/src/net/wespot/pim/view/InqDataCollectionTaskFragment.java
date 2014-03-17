@@ -22,23 +22,18 @@ package net.wespot.pim.view;
  */
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import daoBase.DaoConfiguration;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.DataCollectionLazyListAdapter;
+import net.wespot.pim.controller.Adapters.ResponsesLazyListAdapter;
 import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import org.celstec.arlearn.delegators.INQ;
-import org.celstec.arlearn2.android.events.GameEvent;
-import org.celstec.arlearn2.android.events.RunEvent;
 import org.celstec.dao.gen.GameLocalObject;
+import org.celstec.dao.gen.GeneralItemLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
 
 /**
@@ -47,19 +42,45 @@ import org.celstec.dao.gen.InquiryLocalObject;
 public class InqDataCollectionTaskFragment extends _ActBar_FragmentActivity {
 
     private static final String TAG = "InqDataCollectionTaskFragment";
-    private ListView data_collection_tasks;
+    private ListView data_collection_tasks_items;
     private InquiryLocalObject inquiry;
 
-    private DataCollectionLazyListAdapter datAdapter;
+    private ResponsesLazyListAdapter datAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.fragment_data_collection_task);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null){
             Log.e(TAG,extras.getInt("DataCollectionTask")+" testing");
+
+
+//            GameLocalObject gameObject = INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject();
+//            gameObject.getGeneralItems().get(extras.getInt("DataCollectionTask")).getResponses();
+
+            long a = extras.getLong("DataCollectionTask");
+
+            GeneralItemLocalObject genObject = DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(a);
+
+            genObject.getResponses();
+
+            data_collection_tasks_items = (ListView) findViewById(R.id.data_collection_tasks_items);
+            datAdapter =  new ResponsesLazyListAdapter(this);
+
+            data_collection_tasks_items.setOnItemClickListener(new onListDataCollectionTasksClick());
+            data_collection_tasks_items.setAdapter(datAdapter);
+
+        }
+    }
+
+    private class onListDataCollectionTasksClick implements android.widget.AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
         }
     }
 
@@ -83,12 +104,12 @@ public class InqDataCollectionTaskFragment extends _ActBar_FragmentActivity {
 //
 //        INQ.generalItems.syncGeneralItems(gameObject);
 //
-//        View rootView = inflater.inflate(R.layout.fragment_data_collection_task, container, false);
+//        View rootView = inflater.inflate(R.layout.fragment_data_collection, container, false);
 //
-//        data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
+//        data_collection_tasks_items = (ListView) rootView.findViewById(R.id.data_collection_tasks_items);
 //        datAdapter =  new DataCollectionLazyListAdapter(this.getActivity());
-//        data_collection_tasks.setOnItemClickListener(new onListDataCollectionTasksClick());
-//        data_collection_tasks.setAdapter(datAdapter);
+//        data_collection_tasks_items.setOnItemClickListener(new onListDataCollectionTasksClick());
+//        data_collection_tasks_items.setAdapter(datAdapter);
 //
 //        return rootView;
 //    }

@@ -23,8 +23,6 @@ package net.wespot.pim.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +68,7 @@ public class InqDataCollectionTaskItemFragment extends Fragment {
 
         INQ.generalItems.syncGeneralItems(gameObject);
 
-        View rootView = inflater.inflate(R.layout.fragment_data_collection_task, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_data_collection, container, false);
 
         data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
         datAdapter =  new DataCollectionLazyListAdapter(this.getActivity());
