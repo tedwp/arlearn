@@ -28,14 +28,24 @@ import org.celstec.dao.gen.ResponseLocalObjectDao;
  * Contributors: Stefaan Ternier
  * ****************************************************************************
  */
-public abstract class AbstractResponsesGeneralItemsLazyListAdapter extends LazyListAdapter<ResponseLocalObject> {
+public abstract class AbstractResponsesLazyListAdapter extends LazyListAdapter<ResponseLocalObject> {
 
     private QueryBuilder qb;
 
-    public AbstractResponsesGeneralItemsLazyListAdapter(Context context) {
+    public AbstractResponsesLazyListAdapter(Context context) {
         super(context);
         ResponseLocalObjectDao dao = DaoConfiguration.getInstance().getResponseLocalObjectDao();
         qb = dao.queryBuilder().orderAsc(ResponseLocalObjectDao.Properties.TimeStamp);
+        ARL.eventBus.register(this);
+        setLazyList(qb.listLazy());
+    }
+
+    public AbstractResponsesLazyListAdapter(Context context, long generalItemId) {
+        super(context);
+        ResponseLocalObjectDao dao = DaoConfiguration.getInstance().getResponseLocalObjectDao();
+        qb = dao.queryBuilder()
+                .orderAsc(ResponseLocalObjectDao.Properties.TimeStamp)
+                .where(ResponseLocalObjectDao.Properties.GeneralItem.eq(generalItemId));
         ARL.eventBus.register(this);
         setLazyList(qb.listLazy());
     }
