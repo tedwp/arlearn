@@ -31,11 +31,11 @@ import android.view.MenuItem;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.InquiryPagerAdapter;
 import net.wespot.pim.controller.Adapters.NewInquiryPagerAdapter;
-import net.wespot.pim.utils.layout.ActionBarFragmentActivity;
+import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import net.wespot.pim.view.InqCreateInquiryFragment;
 import org.celstec.arlearn.delegators.INQ;
 
-public class InquiryActivity extends ActionBarFragmentActivity implements ActionBar.TabListener{
+public class InquiryActivity extends _ActBar_FragmentActivity implements ActionBar.TabListener{
 
     private static final String TAG = "InquiryActivity";
     public static final String PHASE = "num_phase";
@@ -63,18 +63,6 @@ public class InquiryActivity extends ActionBarFragmentActivity implements Action
 
         if (INQ.inquiry.getCurrentInquiry() == null){
             Log.e(TAG, "Back pressed - New inquiry");
-
-
-//            showCreateInquiryDialogFragment();
-//            INQ.inquiry.getCurrentInquiry().getRunLocalObject();
-
-//            InquiryLocalObject iObject = new InquiryLocalObject();
-//                iObject.setDescription("Stefaans test");
-//                iObject.setTitle("a title");
-//                iObject.setIsSynchronized(false);
-//                DaoConfiguration.getInstance().getSession().getInquiryLocalObjectDao().insert(iObject);
-//                INQ.inquiry.syncInquiries();
-
         }else{
             Log.e(TAG, "Back pressed - Show inquiry");
         }
@@ -83,28 +71,15 @@ public class InquiryActivity extends ActionBarFragmentActivity implements Action
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        // Avoiding NULL exceptions when resuming the PIM
+        if (INQ.inquiry == null){
+            INQ.init(this);
+            INQ.inquiry.syncInquiries();
+            Log.e(TAG, "recover INQ.inquiry is needed.");
+        }
 
         if (INQ.inquiry.getCurrentInquiry() == null){
             Log.e(TAG, "New inquiry");
-
-//            setContentView(R.layout.activity_inquiry);
-
-            // Create an adapter that when requested, will return a fragment representing an object in
-            // the collection.
-            // ViewPager and its adapters use support library fragments, so we must use
-            // getSupportFragmentManager.
-//            mNewInquiryPagerAdapter = new NewInquiryPagerAdapter(getSupportFragmentManager());
-//            getmActionBarHelper().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-//
-//            // Set up the ViewPager, attaching the adapter.
-//            mViewPager = (ViewPager) findViewById(R.id.pager);
-//            mViewPager.setAdapter(mNewInquiryPagerAdapter);
-//
-//            // TODO get the information from the inquiry
-//            Resources res = getResources();
-//            String text = String.format(res.getString(R.string.inquiry_title_new), "", "");
-//            CharSequence styledText = Html.fromHtml(text);
 
             setContentView(R.layout.wrapper);
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -209,31 +184,31 @@ public class InquiryActivity extends ActionBarFragmentActivity implements Action
 
     }
 
-    void showCreateInquiryDialogFragment() {
-        DialogFragment dialog = new CreateInquiryDialogFragment();
-        dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
-
-
-    }
-
-    public class CreateInquiryDialogFragment extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the Builder class for convenient dialog construction
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(R.string.inquiry_create_title)
-                    .setPositiveButton(R.string.inquiry_create_yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // FIRE ZE MISSILES!
-                        }
-                    })
-                    .setNegativeButton(R.string.inquiry_create_no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-            // Create the AlertDialog object and return it
-            return builder.create();
-        }
-    }
+//    void showCreateInquiryDialogFragment() {
+//        DialogFragment dialog = new CreateInquiryDialogFragment();
+//        dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+//
+//
+//    }
+//
+//    public class CreateInquiryDialogFragment extends DialogFragment {
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            // Use the Builder class for convenient dialog construction
+//            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//            builder.setMessage(R.string.inquiry_create_title)
+//                    .setPositiveButton(R.string.inquiry_create_yes, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            // FIRE ZE MISSILES!
+//                        }
+//                    })
+//                    .setNegativeButton(R.string.inquiry_create_no, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            // User cancelled the dialog
+//                        }
+//                    });
+//            // Create the AlertDialog object and return it
+//            return builder.create();
+//        }
+//    }
 }

@@ -54,7 +54,6 @@ public class LoginActivity extends FragmentActivity {
 
         INQ.init(this);
         INQ.inquiry.syncInquiries();
-//        INQ.inquiry.syncHypothesis(151l);
 
         requestWindowFeature(Window.FEATURE_PROGRESS);
         getActionBar().hide();

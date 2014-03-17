@@ -20,8 +20,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -29,71 +28,70 @@ import android.widget.TextView;
 import net.wespot.pim.R;
 import net.wespot.pim.utils.Constants;
 import net.wespot.pim.utils.images.BitmapWorkerTask;
-import net.wespot.pim.utils.layout.ActionBarFragmentActivity;
 import net.wespot.pim.utils.layout.ButtonEntryDelegator;
+import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import org.celstec.arlearn.delegators.INQ;
 
-public class InquiryPhasesActivity extends ActionBarFragmentActivity {
+public class InquiryPhasesActivity extends _ActBar_FragmentActivity {
 
     private static final String TAG = "InquiryActivity";
     private ListView list_phases;
     private TextView inquiry_description_title;
     private ImageView inquiry_description_image;
 
-//    private _EntryListTemp button_description;
-    private View button_descriptionView;
-//    private _EntryListTemp button_hypothesis;
-    private View button_hypothesisView;
+    private View b_description;
+    private View b_hypothesis;
+    private View b_plan;
+    private View b_data;
+    private View b_analyse;
+    private View b_discuss;
+    private View b_communicate;
+    private View b_add_friends;
 
-//    private _EntryListTemp button_plan;
-    private View button_planView;
-//    private _EntryListTemp button_data;
-    private View button_dataView;
-//    private _EntryListTemp button_analyse;
-    private View button_analyseView;
-//    private _EntryListTemp button_discuss;
-    private View button_discussView;
-//    private _EntryListTemp button_communicate;
-    private View button_communicateView;
-    private View button_friendsView;
-//    private PhasesLazyListAdapter phasesListAdapter;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Avoiding NULL exceptions when resuming the PIM
+        if (INQ.inquiry == null){
+            INQ.init(this);
+            INQ.inquiry.syncInquiries();
+            Log.e(TAG, "recover INQ.inquiry is needed.");
+        }
+
         setContentView(R.layout.activity_phases);
-
-//        phasesListAdapter = new PhasesLazyListAdapter(this, Constants.INQUIRY_PHASES_LIST);
-
-        inquiry_description_title = (TextView) findViewById(R.id.list_phases_title);
-        inquiry_description_image = (ImageView) findViewById(R.id.list_phases_image);
-//        list_phases = (ListView) findViewById(R.id.list_phases);
-//        list_phases.setAdapter(phasesListAdapter);
-//        list_phases.setOnItemClickListener(new OnItemClickPhasesList());
-
 
         // This is needed to set the class
         ButtonEntryDelegator button_manager = ButtonEntryDelegator.getInstance(this);
 
         // Creation of the links
-        button_manager._button_list(button_descriptionView, R.id.list_phases_description, Constants.INQUIRY_PHASES_LIST.get(0), InquiryActivity.class, 0, InquiryActivity.PHASE);
+        b_description =button_manager._button_list(R.id.list_phases_description, Constants.INQUIRY_PHASES_LIST.get(0), R.drawable.ic_description, InquiryActivity.class, true);
+        b_description.setOnClickListener(new OnClick(0));
 
-        button_manager._button_list(button_hypothesisView, R.id.list_phases_hypothesis, Constants.INQUIRY_PHASES_LIST.get(1), InquiryActivity.class, 1, InquiryActivity.PHASE);
+        b_hypothesis =button_manager._button_list(R.id.list_phases_hypothesis, Constants.INQUIRY_PHASES_LIST.get(1), R.drawable.ic_hypothesis, InquiryActivity.class, true);
+        b_hypothesis.setOnClickListener(new OnClick(1));
 
-        button_manager._button_list(button_planView, R.id.list_phases_plan, Constants.INQUIRY_PHASES_LIST.get(2), InquiryActivity.class, 2, InquiryActivity.PHASE);
+        b_plan =button_manager._button_list(R.id.list_phases_plan, Constants.INQUIRY_PHASES_LIST.get(2),R.drawable.ic_plan, InquiryActivity.class, true);
+        b_plan.setOnClickListener(new OnClick(2));
 
-        button_manager._button_list(button_dataView, R.id.list_phases_data, Constants.INQUIRY_PHASES_LIST.get(3), InquiryActivity.class, 3, InquiryActivity.PHASE, "112");
+        b_data =button_manager._button_list(R.id.list_phases_data, Constants.INQUIRY_PHASES_LIST.get(3),R.drawable.ic_data, InquiryActivity.class, true, "112");
+        b_data.setOnClickListener(new OnClick(3));
 
-        button_manager._button_list(button_analyseView, R.id.list_phases_analyse, Constants.INQUIRY_PHASES_LIST.get(4), InquiryActivity.class, 4, InquiryActivity.PHASE);
+        b_analyse =button_manager._button_list(R.id.list_phases_analyse, Constants.INQUIRY_PHASES_LIST.get(4), R.drawable.ic_analyze, InquiryActivity.class,true);
+        b_analyse.setOnClickListener(new OnClick(4));
 
-        button_manager._button_list(button_discussView, R.id.list_phases_discuss, Constants.INQUIRY_PHASES_LIST.get(5), InquiryActivity.class, 5, InquiryActivity.PHASE);
+        b_discuss =button_manager._button_list(R.id.list_phases_discuss, Constants.INQUIRY_PHASES_LIST.get(5), R.drawable.ic_discuss, InquiryActivity.class, true);
+        b_discuss.setOnClickListener(new OnClick(5));
 
-        button_manager._button_list(button_communicateView, R.id.list_phases_communicate, Constants.INQUIRY_PHASES_LIST.get(6), InquiryActivity.class, 6, InquiryActivity.PHASE);
+        b_communicate =button_manager._button_list(R.id.list_phases_communicate, Constants.INQUIRY_PHASES_LIST.get(6),  R.drawable.ic_communicate, InquiryActivity.class, true);
+        b_communicate.setOnClickListener(new OnClick(6));
 
-        button_manager._button_list(button_friendsView, R.id.invites_friends_to_inquiry, getString(R.string.phases_invite_new_friend), null, null, null);
-
+        b_add_friends =button_manager._button_list(R.id.invites_friends_to_inquiry, getString(R.string.phases_invite_new_friend), R.drawable.ic_invite_friend, null, false);
 
         getActionBar().setTitle(R.string.actionbar_inquiry_list);
+
+        inquiry_description_title = (TextView) findViewById(R.id.list_phases_title);
+        inquiry_description_image = (ImageView) findViewById(R.id.list_phases_image);
 
         if (INQ.inquiry.getCurrentInquiry().getIcon() != null){
             BitmapWorkerTask task = new BitmapWorkerTask(inquiry_description_image);
@@ -106,38 +104,13 @@ public class InquiryPhasesActivity extends ActionBarFragmentActivity {
         inquiry_description_title.setText(INQ.inquiry.getCurrentInquiry().getTitle());
 //        inquiry_description_title.loadData(INQ.inquiry.getCurrentInquiry().getDescription(), Constants.MIME_TYPE, Constants.ENCONDING);
 //        inquiry_description_title.setBackgroundColor(0x00000000);
-
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-//    private class OnItemClickPhasesList implements AdapterView.OnItemClickListener {
-//        @Override
-//        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//            Intent intent = new Intent(getApplicationContext(), InquiryActivity.class);
-//            intent.putExtra(InquiryActivity.PHASE, i);
-//            startActivity(intent);
-//        }
-//    }
-
-    private class OnClickNewInquiry implements View.OnClickListener {
+    private class OnClick implements View.OnClickListener {
 
         private int phase;
 
-        public OnClickNewInquiry(int i) {
+        public OnClick(int i) {
                  phase = i;
         }
 

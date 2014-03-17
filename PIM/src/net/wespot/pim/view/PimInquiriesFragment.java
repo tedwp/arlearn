@@ -23,25 +23,24 @@ package net.wespot.pim.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
 import net.wespot.pim.controller.InquiryActivity;
 import net.wespot.pim.controller.InquiryPhasesActivity;
-import net.wespot.pim.controller.WrapperActivity;
-import net.wespot.pim.utils.layout.ButtonEntry;
+import net.wespot.pim.utils.Constants;
 import net.wespot.pim.utils.layout.ButtonEntryDelegator;
+import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
+import net.wespot.pim.utils.layout.ButtonEntry;
 import org.celstec.arlearn.delegators.INQ;
 
 /**
  * A fragment that launches other parts of the demo application.
  */
-public class PimInquiriesFragment extends Fragment {
+public class PimInquiriesFragment extends _ActBar_FragmentActivity {
 
     private static final String TAG = "PimInquiriesFragment";
     private InquiryLazyListAdapter adapterInq;
@@ -50,67 +49,26 @@ public class PimInquiriesFragment extends Fragment {
     private View new_inquiry;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_inquiries, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-//        // This is needed to set the class
-//        ButtonEntryDelegator man = ButtonEntryDelegator.getInstance(getActivity());
-//
-//        // Creation of the links
-//        man._button_list(new_inquiry, R.id.inquiries_new_inquiry, getResources().getString(R.string.inquiry_title_new), WrapperActivity.class, null, null);
+        setContentView(R.layout.fragment_inquiries);
 
+        inquiries = (ListView) findViewById(R.id.list_inquiries);
+        new_inquiry = (View) findViewById(R.id.inquiries_new_inquiry);
 
-        ButtonEntry button_new_inquiry = (ButtonEntry) getActivity().getSupportFragmentManager().findFragmentById(R.id.inquiries_new_inquiry);
-        button_new_inquiry.setName(getString(R.string.inquiry_title_new));
+        setTitle(R.string.inquiry_title);
 
-
-        inquiries = (ListView) rootview.findViewById(R.id.list_inquiries);
-        new_inquiry = (View) rootview.findViewById(R.id.inquiries_new_inquiry);
-
-        getActivity().setTitle(R.string.inquiry_title);
-
-        return rootview;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setHasOptionsMenu(true);
-
-//        INQ.inquiry.syncInquiries();
-
-//        ARL.runs.syncRunsParticipate();
-//        ARL.responses.syncResponses(19806001l);
-
-        adapterInq =  new InquiryLazyListAdapter(this.getActivity());
+        adapterInq =  new InquiryLazyListAdapter(this);
         inquiries.setAdapter(adapterInq);
         inquiries.setOnItemClickListener(new onListInquiryClick());
 
+        // This is needed to set the class
+        ButtonEntryDelegator button_manager = ButtonEntryDelegator.getInstance(this);
+
+        // Creation of the links
+        new_inquiry =button_manager._button_list(R.id.inquiries_new_inquiry, getString(R.string.inquiry_title_new), R.drawable.ic_add_inquiry, InquiryActivity.class, true);
         new_inquiry.setOnClickListener(new OnClickNewInquiry());
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        menu.setGroupVisible(R.id.actions_inquiries_list, true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_add:
-                Toast.makeText(getActivity(), "Save new inquiry initialized", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), InquiryActivity.class);
-                // TODO  change this for a new InquiryLocalObject or provide a way to create that on the API
-                INQ.inquiry.setCurrentInquiry(null);
-//                intent.putExtra(InquiryActivity.INQUIRY_ID, 0);
-                startActivity(intent);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -119,13 +77,13 @@ public class PimInquiriesFragment extends Fragment {
         super.onDestroy();
     }
 
-    private class onListInquiryClick implements android.widget.AdapterView.OnItemClickListener {
+    private class onListInquiryClick implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             // This links to the PhasesActivities but then go back to the InquiryActivity.class, as it has been done for the
             // new inquiry. Then in new inquiry depends on the INQ.inquiry object we go to create a new one o visualise the
             // current inquiry
-            Intent intent = new Intent(getActivity(), InquiryPhasesActivity.class);
+            Intent intent = new Intent(getApplicationContext(), InquiryPhasesActivity.class);
             INQ.inquiry.setCurrentInquiry(INQ.inquiry.getInquiryLocalObject(adapterInq.getItemId(i)));
             startActivity(intent);
         }
@@ -136,7 +94,7 @@ public class PimInquiriesFragment extends Fragment {
         public void onClick(View view) {
             Log.e(TAG, "New inquiry");
             INQ.inquiry.setCurrentInquiry(null);
-            Intent intent = new Intent(getActivity(), InquiryActivity.class);
+            Intent intent = new Intent(getApplicationContext(), InquiryActivity.class);
             startActivity(intent);
         }
     }

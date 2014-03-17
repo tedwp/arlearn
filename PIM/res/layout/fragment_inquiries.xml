@@ -23,5 +23,4 @@
               android:dividerHeight="1dp"
               android:layout_below="@+id/inquiries_title_list"
               />
-
 </RelativeLayout>

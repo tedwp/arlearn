@@ -8,6 +8,7 @@
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
                            android:layout_margin="30dp"
+                           android:maxHeight="60dp"
                            android:layout_centerVertical="true"
                            android:src="@drawable/foto_perfil_croped"/>
 

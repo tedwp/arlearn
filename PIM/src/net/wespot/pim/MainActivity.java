@@ -2,26 +2,22 @@ package net.wespot.pim;
 
 import android.annotation.TargetApi;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.view.*;
 import android.widget.*;
-import net.wespot.pim.controller.WrapperActivity;
 import net.wespot.pim.utils.layout.ButtonEntryDelegator;
 import net.wespot.pim.utils.layout.MainActionBarFragmentActivity;
+import net.wespot.pim.view.PimBadgesFragmentList;
+import net.wespot.pim.view.PimFriendsFragment;
+import net.wespot.pim.view.PimInquiriesFragment;
+import net.wespot.pim.view.PimProfileFragment;
 
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MainActivity extends MainActionBarFragmentActivity {
     private static final String TAG = "MainActivity";
-
-    private View my_inquiries;
-    private View my_media;
-    private View profile;
-    private View badges;
-    private View friends;
 
     /**
      * Called when the activity is first created.
@@ -35,18 +31,17 @@ public class MainActivity extends MainActionBarFragmentActivity {
         ButtonEntryDelegator man = ButtonEntryDelegator.getInstance(this);
 
         // Creation of the links
-        man._button_list(my_inquiries, R.id.main_myinquiries_link, getResources().getString(R.string.wrapper_myinquiry), WrapperActivity.class, 0, WrapperActivity.OPTION, "112");
+        man._button_list(R.id.main_myinquiries_link, getResources().getString(R.string.wrapper_myinquiry), R.drawable.ic_inquiries, PimInquiriesFragment.class, false, "112");
 
-        man._button_list(my_media, R.id.main_mymedia_link, getResources().getString(R.string.wrapper_mymedia), WrapperActivity.class, 1, WrapperActivity.OPTION);
+        man._button_list(R.id.main_mymedia_link, getResources().getString(R.string.wrapper_mymedia),R.drawable.ic_inquiries,  PimProfileFragment.class, false);
 
-        man._button_list(profile, R.id.main_profile_link, getResources().getString(R.string.wrapper_profile), WrapperActivity.class, 2, WrapperActivity.OPTION);
+        man._button_list(R.id.main_profile_link, getResources().getString(R.string.wrapper_profile),R.drawable.ic_profile, PimProfileFragment.class, false);
 
-        man._button_list(badges, R.id.main_badges_link, getResources().getString(R.string.wrapper_badges), WrapperActivity.class, 3, WrapperActivity.OPTION);
+        man._button_list(R.id.main_badges_link, getResources().getString(R.string.wrapper_badges), R.drawable.ic_badges, PimBadgesFragmentList.class, false);
 
-        man._button_list(friends, R.id.main_friends_link, getResources().getString(R.string.wrapper_friends), WrapperActivity.class, 4, WrapperActivity.OPTION);
+        man._button_list(R.id.main_friends_link, getResources().getString(R.string.wrapper_friends),R.drawable.ic_friends, PimFriendsFragment.class, false);
     }
 
-//
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -66,4 +61,6 @@ public class MainActivity extends MainActionBarFragmentActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

@@ -24,7 +24,6 @@ package net.wespot.pim.view;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,17 +31,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import net.wespot.pim.R;
 import net.wespot.pim.utils.images.BitmapWorkerTask;
+import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import org.celstec.arlearn.delegators.INQ;
-import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.dao.gen.AccountLocalObject;
 
 /**
  * A fragment that launches other parts of the demo application.
  */
-public class PimProfileFragment extends Fragment {
+public class PimProfileFragment extends _ActBar_FragmentActivity {
 
     private static final String TAG = "PimProfileFragment";
-
 
     private TextView name;
     private TextView email;
@@ -50,26 +48,17 @@ public class PimProfileFragment extends Fragment {
     private ImageView picture;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.screen_profile, container, false);
-
-        name = (TextView) rootview.findViewById(R.id.profile_name);
-        email = (TextView) rootview.findViewById(R.id.profile_email_value);
-        web = (TextView) rootview.findViewById(R.id.profile_website_value);
-        picture = (ImageView) rootview.findViewById(R.id.imageView);
-
-        getActivity().setTitle(R.string.profile_name);
-
-        return rootview;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setHasOptionsMenu(true);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         AccountLocalObject account = INQ.accounts.getLoggedInAccount();
+
+        setContentView(R.layout.screen_profile);
+
+        name = (TextView) findViewById(R.id.profile_name);
+        email = (TextView) findViewById(R.id.profile_email_value);
+        web = (TextView) findViewById(R.id.profile_website_value);
+        picture = (ImageView) findViewById(R.id.imageView);
 
         name.setText(account.getName());
         email.setText(account.getEmail());
@@ -84,16 +73,7 @@ public class PimProfileFragment extends Fragment {
             picture.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.foto_perfil_croped));
         }
 
-//        picture.setImageBitmap(account.getPicture());
-
-//        INQ.init(getActivity());
-//        INQ.inquiry.syncInquiries();
-//        INQ.inquiry.syncHypothesis(151l);
-//
-//        ARL.init(getActivity());
-//        ARL.properties.setAuthToken("ya29.1.AADtN_Wk3DnTkoP7u1l-BxvWjDeqVgQF6HCjj13GYi9xLk-SUXbdVQ4nPn7hiamhwgzskw");
-//        ARL.properties.setFullId("2:117769871710404943583");
-//        ARL.responses.syncResponses(19806001l);
+        setTitle(R.string.profile_name);
     }
 
     @Override

@@ -1,10 +1,12 @@
 package net.wespot.pim.utils.layout;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import net.wespot.pim.R;
 
@@ -33,6 +35,7 @@ import net.wespot.pim.R;
 
         private TextView name;
         private TextView notification;
+        private ImageView icon;
 
         public ButtonEntry() {
         }
@@ -49,6 +52,7 @@ import net.wespot.pim.R;
 
             name = (TextView) view.findViewById(R.id.name_entry_list);
             notification = (TextView) view.findViewById(R.id.notificationText);
+            icon = (ImageView) view.findViewById(R.id.inquiry_entry_icon);
 
             super.onViewCreated(view, savedInstanceState);
         }
@@ -68,6 +72,14 @@ import net.wespot.pim.R;
         public void setNotification(CharSequence notif) {
             notification.setVisibility(View.VISIBLE);
             this.notification.setText(notif);
+        }
+
+        public Drawable getIcon() {
+            return icon.getDrawable();
+        }
+
+        public void setIcon(Drawable a) {
+            this.icon.setImageDrawable(a);
         }
 
     }

@@ -93,12 +93,12 @@ public class InqDataCollectionTaskItemFragment extends Fragment {
     private class onListDataCollectionTasksClick implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            FragmentManager fragmentManager = getChildFragmentManager();
-            FragmentTransaction fragmentTransaction;
-            fragmentTransaction = fragmentManager.beginTransaction();
-            PimInquiriesFragment fragment = new PimInquiriesFragment();
-            fragmentTransaction.add(R.id.content, fragment);
-            fragmentTransaction.commit();
+//            FragmentManager fragmentManager = getChildFragmentManager();
+//            FragmentTransaction fragmentTransaction;
+//            fragmentTransaction = fragmentManager.beginTransaction();
+//            PimInquiriesFragment fragment = new PimInquiriesFragment();
+//            fragmentTransaction.add(R.id.content, fragment);
+//            fragmentTransaction.commit();
         }
     }
 }

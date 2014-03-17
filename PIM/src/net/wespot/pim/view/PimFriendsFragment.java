@@ -22,20 +22,17 @@ package net.wespot.pim.view;
  */
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.*;
+import android.view.View;
 import android.widget.ListView;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
-import net.wespot.pim.controller.WrapperActivity;
+import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import net.wespot.pim.utils.layout.ButtonEntryDelegator;
-import org.celstec.arlearn.delegators.INQ;
-import org.celstec.arlearn2.android.delegators.ARL;
 
 /**
  * A fragment that launches other parts of the demo application.
  */
-public class PimFriendsFragment extends Fragment {
+public class PimFriendsFragment extends _ActBar_FragmentActivity {
 
     private static final String TAG = "PimInquiriesFragment";
     private InquiryLazyListAdapter adapterInq;
@@ -44,58 +41,29 @@ public class PimFriendsFragment extends Fragment {
     private View add_friend;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_friends, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.fragment_friends);
 
         // This is needed to set the class
-        ButtonEntryDelegator man = ButtonEntryDelegator.getInstance(getActivity());
+        ButtonEntryDelegator man = ButtonEntryDelegator.getInstance(this);
 
         // Creation of the links
-        man._button_list(add_friend, R.id.friends_add_friend, getResources().getString(R.string.friends_friend_new), null, null, null);
+        add_friend = man._button_list(R.id.friends_add_friend, getResources().getString(R.string.friends_friend_new), R.drawable.ic_invite_friend, null, false);
 
+        friends = (ListView) findViewById(R.id.list_friends);
+        add_friend = (View) findViewById(R.id.friends_add_friend);
 
-//        _EntryListTemp button_new_inquiry = (_EntryListTemp) getActivity().getSupportFragmentManager().findFragmentById(R.id.friends_add_friend);
-//        button_new_inquiry.setName(getString(R.string.friends_friend_new));
+        setTitle(R.string.inquiry_title);
 
-        friends = (ListView) rootview.findViewById(R.id.list_friends);
-        add_friend = (View) rootview.findViewById(R.id.friends_add_friend);
-
-        getActivity().setTitle(R.string.inquiry_title);
-
-        return rootview;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setHasOptionsMenu(true);
-
-        INQ.init(getActivity());
-        INQ.inquiry.syncInquiries();
-        INQ.inquiry.syncHypothesis(151l);
-
-        ARL.init(getActivity());
-        ARL.properties.setAuthToken("ya29.1.AADtN_Wk3DnTkoP7u1l-BxvWjDeqVgQF6HCjj13GYi9xLk-SUXbdVQ4nPn7hiamhwgzskw");
-        ARL.properties.setFullId("2:117769871710404943583");
-        ARL.responses.syncResponses(19806001l);
-
-
-        adapterInq =  new InquiryLazyListAdapter(this.getActivity());
+        adapterInq =  new InquiryLazyListAdapter(this);
         friends.setAdapter(adapterInq);
-//        friends.setOnItemClickListener(new onListInquiryClick());
-//
-//        add_friend.setOnClickListener(new OnClickNewInquiry());
     }
-
-
-
 
     @Override
     public void onDestroy() {
         adapterInq.close();
         super.onDestroy();
     }
-
-
 }

@@ -1,17 +1,14 @@
 package net.wespot.pim.utils.layout;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
-import net.wespot.pim.R;
-import net.wespot.pim.controller.WrapperActivity;
 
 /**
  * ****************************************************************************
@@ -51,16 +48,22 @@ public class ButtonEntryDelegator {
     }
 
     /**
-     * @param view body of the button
+     * @param id identificator
      * @param name string name used on the string.xml
-     * @param option
+     * @param icon icon for the link
+     * @param destination end of the intent
+     * @param options true => option within the intent; false => no intent options
+     * @param arg string arguments to add in the link, such us notifications or icons.
      */
-    public static void _button_list(View view, int id, String name, Class destination, Integer option, String option_name, Object... arg) {
+    public static View _button_list(int id, String name, int icon, Class destination, boolean options, String... arg) {
 
         // arg [0] option [1] notification [2] icon ...
 
+        View view;
+
         ButtonEntry button_fragment = (ButtonEntry) instance.act.getSupportFragmentManager().findFragmentById(id);
         button_fragment.setName(name);
+        button_fragment.setIcon(instance.act.getResources().getDrawable(icon));
 
         if (arg.length != 0){
             button_fragment.setNotification((String)arg[0]);
@@ -68,32 +71,31 @@ public class ButtonEntryDelegator {
 
         view = (View) instance.act.findViewById(id);
 
-        if(option != null){
-            view.setOnClickListener(new _extended_intent(destination, option, option_name));
+        if(!options){
+
+                view.setOnClickListener(new _extended_intent(destination));
+
         }else{
-            Log.e(TAG, "Not implemented yet.");
+            Log.d(TAG, "Need to provide and setOnClickListener");
         }
+        return view;
     }
 
     private static class _extended_intent implements View.OnClickListener {
-
-        private Object[] opt;
         private Class dest;
 
-        public _extended_intent(Class destination, Object... option) {
-            opt=option;
+        public _extended_intent(Class destination) {
             dest=destination;
         }
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(instance.act.getApplicationContext(), dest);
-            if (opt.length !=0){
-                intent.putExtra(opt[1].toString(), (Integer) opt[0]);
+            if (dest!=null){
+                Intent intent = new Intent(instance.act.getApplicationContext(), dest);
+                instance.act.startActivity(intent);
+            }else{
+                Toast.makeText(instance.act,"A destination is needed", 10).show();
             }
-            instance.act.startActivity(intent);
         }
     }
-
-
 }

@@ -114,8 +114,6 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
         wm_clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                wm_content.setText("");
-
                 Toast.makeText(getActivity(), "New inquiry initialized", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);

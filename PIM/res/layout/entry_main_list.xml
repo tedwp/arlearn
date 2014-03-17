@@ -20,15 +20,4 @@
 
     <TextView android:id="@+id/notificationText"
               style="@style/CustomTheme.NotificationText" />
-
-    <!--<ImageView-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:id="@+id/imageView"-->
-            <!--android:src="@drawable/foto_perfil_croped"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_alignTop="@+id/name_entry_list"-->
-            <!--android:layout_margin="20dp"-->
-            <!--android:layout_centerVertical="true"/>-->
-
 </RelativeLayout>

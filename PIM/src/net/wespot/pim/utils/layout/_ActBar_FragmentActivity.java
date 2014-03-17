@@ -5,7 +5,11 @@ import android.app.ActionBar;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import net.wespot.pim.R;
+import org.celstec.arlearn.delegators.INQ;
 
 /**
  * ****************************************************************************
@@ -27,9 +31,23 @@ import net.wespot.pim.R;
  * Contributors: Angel Suarez
  * ****************************************************************************
  */
-public class ActionBarFragmentActivity extends FragmentActivity {
+public class _ActBar_FragmentActivity extends FragmentActivity {
 
+    private static final String TAG = "_ActBar_FragmentActivity";
     private ActionBarHelper mActionBarHelper;
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Avoiding NULL exceptions when resuming the PIM
+        if (INQ.inquiry == null){
+            INQ.init(this);
+            INQ.inquiry.syncInquiries();
+            Log.e(TAG, "recover INQ.inquiry is needed.");
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +68,21 @@ public class ActionBarFragmentActivity extends FragmentActivity {
         } else {
             return new ActionBarHelper();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public ActionBarHelper getmActionBarHelper() {

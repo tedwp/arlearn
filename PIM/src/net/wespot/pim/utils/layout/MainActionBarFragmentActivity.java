@@ -29,7 +29,7 @@ import net.wespot.pim.R;
  */
 public class MainActionBarFragmentActivity extends FragmentActivity {
 
-    private static final String TAG = "ActionBarFragmentActivity";
+    private static final String TAG = "_ActBar_FragmentActivity";
     private ActionBarHelper mActionBarHelper;
 
 

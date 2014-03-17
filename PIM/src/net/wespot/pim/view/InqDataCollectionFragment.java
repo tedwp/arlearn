@@ -21,6 +21,7 @@ package net.wespot.pim.view;
  * ****************************************************************************
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -36,6 +37,7 @@ import android.widget.TextView;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.DataCollectionLazyListAdapter;
 import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
+import net.wespot.pim.controller.InquiryActivity;
 import net.wespot.pim.utils.Constants;
 import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.delegators.ARL;
@@ -100,7 +102,9 @@ public class InqDataCollectionFragment extends Fragment {
     private class onListDataCollectionTasksClick implements android.widget.AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+            Intent intent = new Intent(getActivity(), InqDataCollectionTaskFragment.class);
+            intent.putExtra("DataCollectionTask", i);
+            startActivity(intent);
         }
     }
 }

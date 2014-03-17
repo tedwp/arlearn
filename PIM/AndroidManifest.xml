@@ -23,8 +23,15 @@
                   android:screenOrientation="portrait"/>
         <activity android:name="net.wespot.pim.controller.InquiryPhasesActivity" android:label="@string/app_name"
                   android:screenOrientation="portrait"/>
-        <activity android:name="net.wespot.pim.controller.WrapperActivity" android:label="@string/app_name"
+        <activity android:name=".view.PimInquiriesFragment" android:label="@string/app_name"
                   android:screenOrientation="portrait" />
+        <activity android:name=".view.PimProfileFragment" android:label="@string/app_name"
+                  android:screenOrientation="portrait" />
+        <activity android:name=".view.PimFriendsFragment" android:label="@string/app_name"
+                  android:screenOrientation="portrait" />
+        <activity android:name=".view.InqDataCollectionTaskFragment" android:label="@string/app_name"
+                  android:screenOrientation="portrait" />
+
 
         <receiver android:name=".GCMWakefulReceiver" android:exported="true"
                   android:permission="com.google.android.c2dm.permission.SEND" >

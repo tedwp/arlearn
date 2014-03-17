@@ -16,6 +16,9 @@
     <string name="login_password_hint">password</string>
 
 
+    <string name="data_collection_task">Data collection tasks</string>
+
+
     <string name="friends_friend_new">Add friend</string>
     <string name="friends_title_list">Friends</string>
 
