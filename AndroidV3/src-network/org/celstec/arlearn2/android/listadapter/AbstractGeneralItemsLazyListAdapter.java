@@ -45,6 +45,16 @@ public abstract class AbstractGeneralItemsLazyListAdapter extends LazyListAdapte
         setLazyList(qb.listLazy());
     }
 
+    public AbstractGeneralItemsLazyListAdapter(Context context, long gameId) {
+        super(context);
+        GeneralItemLocalObjectDao dao = DaoConfiguration.getInstance().getGeneralItemLocalObjectDao();
+        qb = dao.queryBuilder()
+                .where(GeneralItemLocalObjectDao.Properties.GameId.eq(gameId))
+                .orderAsc(GeneralItemLocalObjectDao.Properties.LastModificationDate);
+        ARL.eventBus.register(this);
+        setLazyList(qb.listLazy());
+    }
+
     public void onEventMainThread(GeneralItemEvent event) {
         if (lazyList != null) lazyList.close();
         setLazyList(qb.listLazy());
