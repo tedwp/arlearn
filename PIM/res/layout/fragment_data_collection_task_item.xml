@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical" android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pager"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    </android.support.v4.view.ViewPager>
+    <RelativeLayout android:id="@+id/linear"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentBottom="true"
+                  android:background ="#88000000">
+        <ImageView android:id="@+id/prev_button"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_alignParentLeft="true"
+                     android:src="@drawable/ic_nav_previous_item"
+                     android:contentDescription="@string/placeholder"/>
+
+        <TextView android:id="@+id/info_current_element"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_centerInParent="true"
+                  android:layout_gravity="center"
+                  android:text="@string/placeholder"/>
+
+        <ImageView android:id="@+id/next_button"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_alignParentRight="true"
+                     android:src="@drawable/ic_nav_next_item"
+                     android:contentDescription="@string/placeholder"/>
+    </RelativeLayout>
+</RelativeLayout>

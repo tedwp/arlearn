@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import net.wespot.pim.R;
-import org.celstec.arlearn2.android.listadapter.AbstractResponsesGeneralItemsLazyListAdapter;
+import org.celstec.arlearn2.android.listadapter.AbstractResponsesLazyListAdapter;
 import org.celstec.dao.gen.GeneralItemLocalObject;
 import org.celstec.dao.gen.ResponseLocalObject;
 
@@ -36,10 +36,14 @@ import java.lang.ref.WeakReference;
  * Contributors: Stefaan Ternier
  * ****************************************************************************
  */
-public class ResponsesLazyListAdapter extends AbstractResponsesGeneralItemsLazyListAdapter {
+public class ResponsesLazyListAdapter extends AbstractResponsesLazyListAdapter {
 
     public ResponsesLazyListAdapter(Context context) {
         super(context);
+    }
+
+    public ResponsesLazyListAdapter(Context context, long generalItemId) {
+        super(context, generalItemId);
     }
 
     @Override
@@ -60,7 +64,7 @@ public class ResponsesLazyListAdapter extends AbstractResponsesGeneralItemsLazyL
         TextView notificationText = (TextView) view.findViewById(R.id.notification_text_data_collection_response);
 
         //TODO change item.getId by item.getnumberupdates
-        notificationText.setVisibility(View.VISIBLE);
+        notificationText.setVisibility(View.INVISIBLE);
         notificationText.setText(item.getId()+"");
 
         if (item.isAudio()){

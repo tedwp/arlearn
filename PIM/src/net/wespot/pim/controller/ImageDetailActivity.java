@@ -22,11 +22,15 @@ import android.os.Bundle;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
+import android.widget.ImageView;
+import android.widget.TextView;
+import daoBase.DaoConfiguration;
 import net.wespot.pim.BuildConfig;
 import net.wespot.pim.R;
 import net.wespot.pim.utils.images.ImageCache;
@@ -44,10 +48,16 @@ import org.celstec.arlearn.delegators.INQ;
 public class ImageDetailActivity extends FragmentActivity implements OnClickListener {
     private static final String IMAGE_CACHE_DIR = "images";
     public static final String EXTRA_IMAGE = "extra_image";
+    private static final String TAG = "ImageDetailActivity";
+    private long generalItemId;
 
     private ImagePagerAdapter mAdapter;
     private ImageFetcher mImageFetcher;
     private ViewPager mPager;
+
+    private TextView current_info;
+    private ImageView prev_item;
+    private ImageView next_item;
 
     @TargetApi(VERSION_CODES.HONEYCOMB)
     @Override
@@ -57,6 +67,17 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_pager_detail_image);
+
+        prev_item = (ImageView) findViewById(R.id.prev_button);
+        next_item = (ImageView) findViewById(R.id.next_button);
+        current_info = (TextView) findViewById(R.id.info_current_element);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+            Log.e(TAG, extras.getLong("DataCollectionTaskGeneralItemId") + " testing");
+
+            generalItemId = extras.getLong("DataCollectionTaskGeneralItemId");
+        }
 
         // Fetch screen height and width, to use as our max size when loading images as this
         // activity runs full screen
@@ -82,11 +103,13 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         mImageFetcher.setImageFadeIn(false);
 
         // Set up ViewPager and backing adapter
-        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), INQ.inquiry.getCurrentInquiry().getRunLocalObject().getResponses().size());
+//        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(generalItemId).getResponses().size());
+        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), DaoConfiguration.getInstance().getResponseLocalObjectDao().loadAll().size());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
-        mPager.setPageMargin((int) getResources().getDimension(R.dimen.data_collect_pager_image_detail_maring));
+        mPager.setPageMargin((int) getResources().getDimension(R.dimen.data_collect_pager_image_detail_margin));
         mPager.setOffscreenPageLimit(2);
+        mPager.setOnPageChangeListener(new MyListener());
 
         // Set up activity to go full screen
         getWindow().addFlags(LayoutParams.FLAG_FULLSCREEN);
@@ -105,6 +128,22 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         if (extraCurrentItem != -1) {
             mPager.setCurrentItem(extraCurrentItem);
         }
+
+        next_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                mPager.setCurrentItem(mPager.getCurrentItem()+1);
+            }
+        });
+
+        prev_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                mPager.setCurrentItem(mPager.getCurrentItem()-1);
+            }
+        });
     }
 
     @Override
@@ -170,7 +209,8 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         @Override
         public Fragment getItem(int position) {
 //            return null;
-            return InqImageDetailFragment.newInstance(String.valueOf(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getResponses().get(position)));
+            return InqImageDetailFragment.newInstance(String.valueOf(DaoConfiguration.getInstance().getResponseLocalObjectDao().loadAll().get(position).getUriAsString()));
+//            return InqImageDetailFragment.newInstance(String.valueOf(DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(generalItemId).getResponses().get(position).getUriAsString()));
         }
     }
 
@@ -186,6 +226,29 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
             mPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         } else {
             mPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+        }
+    }
+
+    private class MyListener implements ViewPager.OnPageChangeListener {
+        @Override
+        public void onPageScrolled(int i, float v, int i2) {
+
+        }
+
+        @Override
+        public void onPageSelected(int i) {
+            int real_position = i+1;
+            int real_number_elements = mAdapter.getCount();
+
+            Log.e(TAG, "Current element: "+real_position);
+            Log.e(TAG, "Number elements: "+real_number_elements);
+
+            current_info.setText(real_position+" of "+real_number_elements);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {
+
         }
     }
 }

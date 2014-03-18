@@ -56,7 +56,7 @@ public class InqDiscussFragment extends Fragment {
         TextView title = (TextView) rootView.findViewById(R.id.title_discuss);
         title.setText(R.string.inquiry_title_discuss);
 
-        webView.loadData("Discuss",MIME_TYPE, ENCONDING);
+        webView.loadData("Placerholder for the description",MIME_TYPE, ENCONDING);
         webView.setBackgroundColor(0x00000000);
 //        webView.loadData(INQ.inquiry.getCurrentInquiry().getDescription(),MIME_TYPE, ENCONDING);
         return rootView;

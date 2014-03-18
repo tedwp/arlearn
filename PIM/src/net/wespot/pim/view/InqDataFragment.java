@@ -63,6 +63,27 @@ public class InqDataFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
+
+        mImageThumbSize = getResources().getDimensionPixelSize(R.dimen.data_collect_thumbnail_image_size);
+        mImageThumbSpacing = getResources().getDimensionPixelSize(R.dimen.data_collect_thumbnail_image_spacing);
+
+        mAdapter = new ImageAdapter(getActivity());
+
+        ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(getActivity(), IMAGE_CACHE_DIR);
+
+        cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
+
+        // The ImageFetcher takes care of loading images into our ImageView children asynchronously
+        mImageFetcher = new ImageFetcher(getActivity(), mImageThumbSize);
+        mImageFetcher.setLoadingImage(R.drawable.empty_photo);
+        mImageFetcher.addImageCache(getActivity().getSupportFragmentManager(), cacheParams);
+    }
+
+    @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -122,27 +143,6 @@ public class InqDataFragment extends Fragment implements AdapterView.OnItemClick
                 });
 
         return v;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setHasOptionsMenu(true);
-
-        mImageThumbSize = getResources().getDimensionPixelSize(R.dimen.data_collect_thumbnail_image_size);
-        mImageThumbSpacing = getResources().getDimensionPixelSize(R.dimen.data_collect_thumbnail_image_spacing);
-
-        mAdapter = new ImageAdapter(getActivity());
-
-        ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(getActivity(), IMAGE_CACHE_DIR);
-
-        cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
-
-        // The ImageFetcher takes care of loading images into our ImageView children asynchronously
-        mImageFetcher = new ImageFetcher(getActivity(), mImageThumbSize);
-        mImageFetcher.setLoadingImage(R.drawable.empty_photo);
-        mImageFetcher.addImageCache(getActivity().getSupportFragmentManager(), cacheParams);
     }
 
 

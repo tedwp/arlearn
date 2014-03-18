@@ -57,7 +57,7 @@ public class InqPlanFragment extends Fragment {
         title.setText(R.string.inquiry_title_plan);
 
 //        webView.loadData(INQ.inquiry.getCurrentInquiry().get.getDescription(),MIME_TYPE, ENCONDING);
-        webView.loadData("PLANNNNNNNNN",MIME_TYPE, ENCONDING);
+        webView.loadData("Placeholder for plan",MIME_TYPE, ENCONDING);
         webView.setBackgroundColor(0x00000000);
         return rootView;
     }

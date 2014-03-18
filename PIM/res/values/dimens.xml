@@ -19,7 +19,9 @@
 
     <dimen name="data_collect.thumbnail.image.size">100dp</dimen>
     <dimen name="data_collect.thumbnail.image.spacing">1dp</dimen>
-    <dimen name="data_collect.pager.image.detail.maring">80dp</dimen>
+    <dimen name="data_collect_pager_image_detail_margin">80dp</dimen>
+
+
 
     <dimen name="login.edittext.margintop">200dp</dimen>
 
