@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import daoBase.DaoConfiguration;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.DataCollectionLazyListAdapter;
 import org.celstec.arlearn.delegators.INQ;
@@ -56,7 +57,6 @@ public class InqDataCollectionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
 
-        INQ.inquiry.syncDataCollectionTasks();
 
 //        INQ.runs.syncRunsParticipate();
 //        INQ.games.syncGame(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameId());
@@ -65,9 +65,24 @@ public class InqDataCollectionFragment extends Fragment {
         // if game is created proceed
         // if not wait till is created
 
-        GameLocalObject gameObject = INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject();
+        // Avoiding NULL exceptions when resuming the PIM
+        if (INQ.inquiry == null){
+            INQ.init(getActivity());
+            INQ.inquiry.syncInquiries();
+            Log.e(TAG, "recover INQ.inquiry is needed.");
+        }
 
-        INQ.generalItems.syncGeneralItems(gameObject);
+
+//        GameLocalObject gameObject = INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject();
+//
+//        INQ.generalItems.syncGeneralItems(gameObject);
+
+        INQ.inquiry.syncDataCollectionTasks();
+
+
+//        GameLocalObject gameLocalObject = DaoConfiguration.getInstance().getGameLocalObjectDao().load(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId());
+//
+//        gameLocalObject.getGeneralItems();
 
         View rootView = inflater.inflate(R.layout.fragment_data_collection, container, false);
 
