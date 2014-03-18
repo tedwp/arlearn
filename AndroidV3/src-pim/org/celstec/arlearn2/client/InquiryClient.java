@@ -63,7 +63,8 @@ public class InquiryClient extends GenericClient{
             return null;
         }
         String url = getUrlPrefix();
-        url += "&oauthId="+INQ.accounts.getLoggedInAccount().getLocalId()+"&oauthProvider="+providerIdToElggName(INQ.accounts.getLoggedInAccount().getAccountType())+"&method=user.inquiries";
+        url += "&api_key="+INQ.config.getProperty("elgg_api_key")+"&oauthId="+INQ.accounts.getLoggedInAccount().getLocalId()+
+                "&oauthProvider="+providerIdToElggName(INQ.accounts.getLoggedInAccount().getAccountType())+"&method=user.inquiries";
         HttpResponse response = conn.executeGET(url, null, "application/json");
         try {
             return EntityUtils.toString(response.getEntity());
@@ -112,7 +113,6 @@ public class InquiryClient extends GenericClient{
 
     public void createInquiry(InquiryLocalObject inquiry, AccountLocalObject account, int visibility, int membership) {
         String provider = providerIdToElggName(account.getAccountType());
-
         try {
         String postBody = "method=inquiry.create" +
                 "&name=" + URLEncoder.encode(inquiry.getTitle(), "UTF8") +
@@ -125,7 +125,6 @@ public class InquiryClient extends GenericClient{
                 "&provider=" + provider +
                 "&user_uid=" + provider + "_" + account.getLocalId() +
                 "&api_key="+INQ.config.getProperty("elgg_api_key");
-
 
             HttpResponse response = conn.executePOST(getUrlPrefix()
                     , null, "application/json", postBody, "application/x-www-form-urlencoded");
