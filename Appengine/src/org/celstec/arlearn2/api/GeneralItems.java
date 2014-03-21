@@ -256,17 +256,7 @@ public class GeneralItems extends Service {
                          @DefaultValue("application/json") @HeaderParam("Accept") String accept) throws AuthenticationException {
         if (!validCredentials(token))
             return serialise(getInvalidCredentialsBean(), accept);
-//        try {
-//            JSONArray array = new JSONArray(md5Hashes);
-//            for (int i = 0;i < array.length(); i++) {
-//                JSONObject object =array.getJSONObject(i);
-//                System.out.println("object to parse "+object);
-//                new UpdateMdHash(getToken(), getAccount(), object.getLong("itemId"), object.getString("md5Hash"), object.getString("localId")).scheduleTask();
                 new UpdateMdHash(getToken(), getAccount(), md5Hashes).scheduleTask();
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
 
         return "{}";
     }

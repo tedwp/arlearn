@@ -65,58 +65,6 @@ public class UpdateMdHash extends GenericBean {
         this.md5Hashes = md5Hashes;
     }
 
-    //    public Long getGeneralItemId() {
-//        return generalItemId;
-//    }
-//
-//    public void setGeneralItemId(Long generalItemId) {
-//        this.generalItemId = generalItemId;
-//    }
-//
-//    public String getMd5Hash() {
-//        return md5Hash;
-//    }
-//
-//    public void setMd5Hash(String md5Hash) {
-//        this.md5Hash = md5Hash;
-//    }
-//
-//    public String getLocalId() {
-//        return localId;
-//    }
-//
-//    public void setLocalId(String localId) {
-//        this.localId = localId;
-//    }
-
-//    @Override
-//    public void run() {
-//        System.out.println("about to process "+ generalItemId + " "+localId +" "+md5Hash);
-//        GeneralItemDelegator gid = new GeneralItemDelegator(this);
-//        GeneralItem item = gid.getGeneralItem(generalItemId);
-//
-//        if ("icon".equals(localId)) {
-//            item.setIconUrlMd5Hash(md5Hash);
-//        } else  if ("audio".equals(localId)) {
-//            ((AudioObject) item).setMd5Hash(md5Hash);
-//        } else if ("video".equals(localId)) {
-//            ((VideoObject) item).setMd5Hash(md5Hash);
-//        } else {
-//            List<FileReference> fileReferences =  item.getFileReferences();
-//            if (fileReferences != null && !fileReferences.isEmpty()) {
-//                for (FileReference ref : fileReferences) {
-//                    if (ref.getKey().equals(localId)) {
-//                        ref.setMd5Hash(md5Hash);
-//                    }
-//                }
-//            }
-//        }
-//        gid.createGeneralItem(item);
-//        System.out.println("item "+item.toString());
-//
-//
-//    }
-
     @Override
     public void run() {
 
@@ -127,28 +75,26 @@ public class UpdateMdHash extends GenericBean {
                 Long generalItemId = object.getLong("itemId");
                 String md5Hash = object.getString("md5Hash");
                 String localId =object.getString("localId");
-//                new UpdateMdHash(getToken(), getAccount(), object.getLong("itemId"), object.getString("md5Hash"), object.getString("localId")).scheduleTask();
                 GeneralItemDelegator gid = new GeneralItemDelegator(this);
                 GeneralItem item = gid.getGeneralItem(generalItemId);
-                if (item != null) {
-                if ("icon".equals(localId)) {
-                    item.setIconUrlMd5Hash(md5Hash);
-                } else  if ("audio".equals(localId)) {
-                    ((AudioObject) item).setMd5Hash(md5Hash);
-                } else if ("video".equals(localId)) {
-                    ((VideoObject) item).setMd5Hash(md5Hash);
-                } else {
-                    List<FileReference> fileReferences =  item.getFileReferences();
-                    if (fileReferences != null && !fileReferences.isEmpty()) {
-                        for (FileReference ref : fileReferences) {
-                            if (ref.getKey().equals(localId)) {
-                                ref.setMd5Hash(md5Hash);
+                if (item != null && !item.getDeleted()) {
+                    if ("icon".equals(localId)) {
+                        item.setIconUrlMd5Hash(md5Hash);
+                    } else  if ("audio".equals(localId)) {
+                        ((AudioObject) item).setMd5Hash(md5Hash);
+                    } else if ("video".equals(localId)) {
+                        ((VideoObject) item).setMd5Hash(md5Hash);
+                    } else {
+                        List<FileReference> fileReferences =  item.getFileReferences();
+                        if (fileReferences != null && !fileReferences.isEmpty()) {
+                            for (FileReference ref : fileReferences) {
+                                if (ref.getKey().equals(localId)) {
+                                    ref.setMd5Hash(md5Hash);
+                                }
                             }
                         }
                     }
-                }
-                gid.createGeneralItem(item);
-//                System.out.println("item "+item.toString());
+                    gid.createGeneralItem(item);
                 }
             }
         } catch (JSONException e) {
