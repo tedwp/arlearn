@@ -18,6 +18,8 @@ import org.celstec.dao.gen.RunLocalObjectDao;
 import org.celstec.dao.gen.ActionLocalObjectDao;
 import org.celstec.dao.gen.ResponseLocalObjectDao;
 import org.celstec.dao.gen.InquiryLocalObjectDao;
+import org.celstec.dao.gen.ThreadLocalObjectDao;
+import org.celstec.dao.gen.MessageLocalObjectDao;
 import org.celstec.dao.gen.GeneralItemVisibilityLocalObjectDao;
 import org.celstec.dao.gen.BadgeLocalObjectDao;
 import org.celstec.dao.gen.CategoryLocalObjectDao;
@@ -42,6 +44,8 @@ public class DaoMaster extends AbstractDaoMaster {
         ActionLocalObjectDao.createTable(db, ifNotExists);
         ResponseLocalObjectDao.createTable(db, ifNotExists);
         InquiryLocalObjectDao.createTable(db, ifNotExists);
+        ThreadLocalObjectDao.createTable(db, ifNotExists);
+        MessageLocalObjectDao.createTable(db, ifNotExists);
         GeneralItemVisibilityLocalObjectDao.createTable(db, ifNotExists);
         BadgeLocalObjectDao.createTable(db, ifNotExists);
         CategoryLocalObjectDao.createTable(db, ifNotExists);
@@ -60,6 +64,8 @@ public class DaoMaster extends AbstractDaoMaster {
         ActionLocalObjectDao.dropTable(db, ifExists);
         ResponseLocalObjectDao.dropTable(db, ifExists);
         InquiryLocalObjectDao.dropTable(db, ifExists);
+        ThreadLocalObjectDao.dropTable(db, ifExists);
+        MessageLocalObjectDao.dropTable(db, ifExists);
         GeneralItemVisibilityLocalObjectDao.dropTable(db, ifExists);
         BadgeLocalObjectDao.dropTable(db, ifExists);
         CategoryLocalObjectDao.dropTable(db, ifExists);
@@ -105,6 +111,8 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(ActionLocalObjectDao.class);
         registerDaoClass(ResponseLocalObjectDao.class);
         registerDaoClass(InquiryLocalObjectDao.class);
+        registerDaoClass(ThreadLocalObjectDao.class);
+        registerDaoClass(MessageLocalObjectDao.class);
         registerDaoClass(GeneralItemVisibilityLocalObjectDao.class);
         registerDaoClass(BadgeLocalObjectDao.class);
         registerDaoClass(CategoryLocalObjectDao.class);

@@ -85,8 +85,8 @@ public class MessageList extends Bean {
     public static BeanDeserializer deserializer = new BeanDeserializer() {
 
         @Override
-        public ThreadList toBean(JSONObject object) {
-            ThreadList tl = new ThreadList();
+        public MessageList toBean(JSONObject object) {
+            MessageList tl = new MessageList();
             try {
                 initBean(object, tl);
             } catch (JSONException e) {

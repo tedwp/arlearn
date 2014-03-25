@@ -96,6 +96,12 @@ public class TestAdapters extends Activity {
                 startActivity(new Intent(TestAdapters.this, Dependencies.class));
             }
         });
+        findViewById(R.id.showThreads).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(TestAdapters.this, ThreadsActivity.class));
+            }
+        });
         ARL.eventBus.register(this);
         ARL.store.synCategories();
         ARL.store.syncGamesForCategory(3l);
@@ -139,14 +145,14 @@ public class TestAdapters extends Activity {
 //        INQ.inquiry.syncDataCollectionTasks();
 //        System.out.println(ilo);
 
-        InquiryLocalObject iObject = new InquiryLocalObject();
-        iObject.setDescription("Stefaans post");
-        iObject.setTitle("a title");
-        CreateInquiryObject createInquiryObject = new CreateInquiryObject();
-        createInquiryObject.inquiry = iObject;
+//        InquiryLocalObject iObject = new InquiryLocalObject();
+//        iObject.setDescription("Stefaans post");
+//        iObject.setTitle("a title");
+//        CreateInquiryObject createInquiryObject = new CreateInquiryObject();
+//        createInquiryObject.inquiry = iObject;
 
-        String key = ARL.config.getProperty("elgg_api_key");
-        ARL.eventBus.post(createInquiryObject);
+//        String key = ARL.config.getProperty("elgg_api_key");
+//        ARL.eventBus.post(createInquiryObject);
 //
 //        key = GenericClient.urlPrefix;
 
@@ -168,7 +174,7 @@ public class TestAdapters extends Activity {
 
     private void onEventBackgroundThread(CreateInquiryObject inquiryObject){
 
-        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount(), InquiryClient.VIS_PUBLIC, InquiryClient.OPEN_MEMBERSHIP);
+//        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount(), InquiryClient.VIS_PUBLIC, InquiryClient.OPEN_MEMBERSHIP);
 
 
 

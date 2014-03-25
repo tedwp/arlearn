@@ -32,6 +32,7 @@ public class Thread extends Bean {
     private Long runId;
     private Boolean deleted;
     private String name;
+    private Long lastModificationDate;
 
     public Long getThreadId() {
         return threadId;
@@ -65,6 +66,14 @@ public class Thread extends Bean {
         this.name = name;
     }
 
+    public Long getLastModificationDate() {
+        return lastModificationDate;
+    }
+
+    public void setLastModificationDate(Long lastModificationDate) {
+        this.lastModificationDate = lastModificationDate;
+    }
+
     public static BeanDeserializer deserializer = new BeanDeserializer(){
 
         @Override
@@ -85,6 +94,7 @@ public class Thread extends Bean {
             if (object.has("threadId")) bean.setThreadId(object.getLong("threadId"));
             if (object.has("name")) bean.setName(object.getString("name"));
             if (object.has("deleted")) bean.setDeleted(object.getBoolean("deleted"));
+            if (object.has("lastModificationDate")) bean.setLastModificationDate(object.getLong("lastModificationDate"));
         }
     };
 
@@ -99,6 +109,7 @@ public class Thread extends Bean {
                 if (thread.getThreadId() != null) returnObject.put("threadId", thread.getThreadId());
                 if (thread.getName() != null) returnObject.put("name", thread.getName());
                 if (thread.getDeleted() != null) returnObject.put("deleted", thread.getDeleted());
+                if (thread.getLastModificationDate() != null) returnObject.put("lastModificationDate", thread.getLastModificationDate());
             } catch (JSONException e) {
                 e.printStackTrace();
             }

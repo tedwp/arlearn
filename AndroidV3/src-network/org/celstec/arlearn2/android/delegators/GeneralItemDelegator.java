@@ -94,11 +94,13 @@ public class GeneralItemDelegator extends AbstractDelegator{
     public void process (GeneralItemList list, GameLocalObject gameLocalObject) {
         GeneralItemEvent iEvent = null;
         for (GeneralItem giBean: list.getGeneralItems()) {
+            DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(123l);
             GeneralItemLocalObject giDao = DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(giBean.getId());
             if (giDao == null) {
                 giDao = toDaoLocalObject(giBean);
             }
             giDao.setGameLocalObject(gameLocalObject);
+
 
             if (giBean.getDependsOn()!=null) {
                 if (giDao.getDependsOn() != null && !giDao.getDependencyLocalObject().recursiveEquals(giBean.getDependsOn())) {

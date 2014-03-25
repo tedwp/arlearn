@@ -40,11 +40,20 @@ import java.util.List;
 public class ObjectCollectionDisplay extends GeneralItem {
 
     private List<DisplayZone> displayZones;
-
+    private String richText;
 
     public ObjectCollectionDisplay(){
 
     }
+
+    public String getRichText() {
+        return richText;
+    }
+
+    public void setRichText(String richText) {
+        this.richText = richText;
+    }
+
     public List<DisplayZone> getDisplayZones() {
         return displayZones;
     }
@@ -122,6 +131,8 @@ public class ObjectCollectionDisplay extends GeneralItem {
             JSONObject returnObject = super.toJSON(bean);
             try {
                 if (ou.getDisplayZones() != null) returnObject.put("displayZones", ListSerializer.toJSON(ou.getDisplayZones()));
+                if (ou.getRichText() != null) returnObject.put("richText", ou.getRichText());
+
 
 
             } catch (JSONException e) {
@@ -185,6 +196,7 @@ public class ObjectCollectionDisplay extends GeneralItem {
             ObjectCollectionDisplay gi = (ObjectCollectionDisplay) genericBean;
 
             if (object.has("displayZones")) gi.setDisplayZones(ListDeserializer.toBean(object.getJSONArray("displayZones"), DisplayZone.class));
+            if (object.has("richText")) gi.setRichText(object.getString("richText"));
 
 
         }

@@ -18,6 +18,8 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.db;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import org.celstec.arlearn2.beans.account.Account;
 
 
@@ -269,5 +271,27 @@ public class PropertiesAdapter {
     public long getTimeDifferenceWithServer() {
         return getDefaultPrefs().getLong("timeDifferenceWithServer", 0);
 
+    }
+
+    public void storeGCMKey(String key) {
+        SharedPreferences.Editor editor = getDefaultPrefs().edit();
+        editor.putString("GCM_REG_KEY:"+ getAppVersion(),key);
+        editor.commit();
+    }
+
+    public String getGCMKey() {
+        return getDefaultPrefs().getString("GCM_REG_KEY:"+ getAppVersion(), null);
+    }
+
+
+    private int getAppVersion() {
+        try {
+            PackageInfo packageInfo = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            // should never happen
+            throw new RuntimeException("Could not get package name: " + e);
+        }
     }
 }

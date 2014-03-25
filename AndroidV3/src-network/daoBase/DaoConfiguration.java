@@ -93,6 +93,13 @@ public class DaoConfiguration {
         return session.getGeneralItemMediaLocalObjectDao();
     }
 
+    public ThreadLocalObjectDao getThreadLocalObject() {
+        return session.getThreadLocalObjectDao();
+    }
+
+    public MessageLocalObjectDao getMessageLocalObject() {
+        return session.getMessageLocalObjectDao();
+    }
 //    public ActionDependencyLocalObjectDao getActionDependencyLocalObjectDao() {
 //        return session.getActionDependencyLocalObjectDao();
 //    }
