@@ -2,10 +2,14 @@ package net.wespot.pim.utils.layout;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import net.wespot.pim.R;
+import net.wespot.pim.SplashActivity;
+import org.celstec.arlearn.delegators.INQ;
 
 /**
  * ****************************************************************************
@@ -36,6 +40,16 @@ public class MainActionBarFragmentActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Avoiding NULL exceptions when resuming the PIM
+        if (INQ.inquiry == null){
+
+            INQ.init(this);
+            INQ.accounts.syncMyAccountDetails();
+            INQ.inquiry.syncInquiries();
+            Log.e(TAG, "recover INQ.inquiry is needed.");
+        }
+
 
         setContentView(R.layout.main);
 

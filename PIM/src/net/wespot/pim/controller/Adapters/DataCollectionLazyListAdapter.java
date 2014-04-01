@@ -41,6 +41,10 @@ public class DataCollectionLazyListAdapter extends AbstractGeneralItemsLazyListA
         super(context);
     }
 
+    public DataCollectionLazyListAdapter(Context context, long gameId) {
+        super(context, gameId);
+    }
+
     public View newView(Context context, GeneralItemLocalObject item, ViewGroup parent) {
         if (item == null) return null;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -51,11 +55,11 @@ public class DataCollectionLazyListAdapter extends AbstractGeneralItemsLazyListA
         TextView firstLineView =(TextView) view.findViewById(R.id.name_entry_data_colletion_list);
         firstLineView.setText(item.getTitle());
         ImageView icon = (ImageView) view.findViewById(R.id.inquiry_entry_data_collection_icon);
-        TextView notificationText = (TextView) view.findViewById(R.id.notification_text_data_colletion);
+//        TextView notificationText = (TextView) view.findViewById(R.id.notification_text_data_colletion);
 
         //TODO change item.getId by item.getnumberupdates
-        notificationText.setVisibility(View.VISIBLE);
-        notificationText.setText(item.getId()+"");
+//        notificationText.setVisibility(View.VISIBLE);
+//        notificationText.setText(item.getId()+"");
 
 //        if (item.getIcon() != null){
 //            BitmapWorkerTask task = new BitmapWorkerTask(icon);

@@ -60,10 +60,10 @@ public class ButtonEntryDelegator {
         // arg [0] option [1] notification [2] icon ...
 
         View view;
-
         ButtonEntry button_fragment = (ButtonEntry) instance.act.getSupportFragmentManager().findFragmentById(id);
         button_fragment.setName(name);
         button_fragment.setIcon(instance.act.getResources().getDrawable(icon));
+
 
         if (arg.length != 0){
             button_fragment.setNotification((String)arg[0]);

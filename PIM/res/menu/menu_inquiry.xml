@@ -16,18 +16,9 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group
-            android:id="@+id/actions_inquiries_list" >
-        <item android:id="@+id/menu_add"
-              android:title="@string/menu_add"
-              android:icon="@drawable/ic_action_new"
-              android:orderInCategory="0"
-              android:showAsAction="always"
-              android:visible="@bool/spb_default_reversed"/>
-    </group>
 
-    <group
-            android:id="@+id/actions_wonder_moment" >
+
+    <group android:id="@+id/actions_wonder_moment">
         <item android:id="@+id/menu_save_inquiry"
               android:title="@string/wonder_moment_save"
               android:icon="@drawable/ic_content_save"
@@ -35,12 +26,17 @@
               android:showAsAction="always"
               android:visible="@bool/spb_default_reversed"/>
     </group>
-    <group
-            android:id="@+id/actions_general" >
-    <item android:id="@+id/menu_inquiry_share"
-        android:title="@string/menu_share"
-        android:icon="@drawable/ic_menu_share"
-        android:orderInCategory="3"
-        android:showAsAction="never" />
+    <group android:id="@+id/actions_general">
+        <item android:id="@+id/menu_refresh"
+              android:title="@string/menu_refresh"
+              android:showAsAction="always"
+              android:icon="@drawable/ic_action_refresh_white"
+              android:orderInCategory="2" />
+        <item android:id="@+id/menu_inquiry_share"
+              android:title="@string/menu_share"
+              android:icon="@drawable/ic_menu_share"
+              android:orderInCategory="3"
+              android:showAsAction="never"
+              android:visible="@bool/spb_default_reversed"/>
     </group>
 </menu>

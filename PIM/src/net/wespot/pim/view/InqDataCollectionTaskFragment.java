@@ -30,17 +30,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import daoBase.DaoConfiguration;
+import de.greenrobot.dao.query.Query;
+import de.greenrobot.dao.query.QueryBuilder;
 import net.wespot.pim.R;
-import net.wespot.pim.controller.Adapters.DataCollectionLazyListAdapter;
 import net.wespot.pim.controller.Adapters.ResponsesLazyListAdapter;
 import net.wespot.pim.controller.ImageDetailActivity;
 import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import org.celstec.arlearn.delegators.INQ;
-import org.celstec.dao.gen.GameLocalObject;
+import org.celstec.arlearn2.android.dataCollection.DataCollectionManager;
+import org.celstec.arlearn2.android.dataCollection.PictureManager;
+import org.celstec.arlearn2.android.dataCollection.VideoManager;
+import org.celstec.arlearn2.android.delegators.ARL;
+import org.celstec.arlearn2.android.events.ResponseEvent;
 import org.celstec.dao.gen.GeneralItemLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
+import org.celstec.dao.gen.ResponseLocalObject;
+import org.celstec.dao.gen.ResponseLocalObjectDao;
+
+import java.io.File;
 
 /**
  * Fragment to display responses from a Data Collection Task (General Item)
@@ -53,33 +61,55 @@ public class InqDataCollectionTaskFragment extends _ActBar_FragmentActivity {
     private long generalItemId;
 
     private ResponsesLazyListAdapter datAdapter;
+    private GeneralItemLocalObject genObject;
+    private PictureManager man_pic = new PictureManager(this);
+    private VideoManager man_vid = new VideoManager(this);
+    private File bitmapFile;
 
+    ResponseLocalObject response;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            INQ.init(this);
+            INQ.accounts.syncMyAccountDetails();
+            INQ.inquiry.setCurrentInquiry(DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(savedInstanceState.getLong("currentInquiry")));
+        }
+
         setContentView(R.layout.fragment_data_collection_task);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null){
-            Log.e(TAG,extras.getInt("DataCollectionTask")+" testing");
+            Log.e(TAG,extras.getLong("DataCollectionTask")+" testing");
 
             generalItemId = extras.getLong("DataCollectionTask");
 
-            GeneralItemLocalObject genObject = DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(generalItemId);
+            genObject = DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(generalItemId);
             genObject.getResponses();
 
             data_collection_tasks_items = (ListView) findViewById(R.id.data_collection_tasks_items);
             //TODO change to the other constructor
-//            datAdapter =  new ResponsesLazyListAdapter(this, generalItemId);
-            datAdapter =  new ResponsesLazyListAdapter(this);
+            datAdapter =  new ResponsesLazyListAdapter(this, generalItemId);
+//            datAdapter =  new ResponsesLazyListAdapter(this);
 
             data_collection_tasks_items.setOnItemClickListener(new onListDataCollectionTasksClick());
             data_collection_tasks_items.setAdapter(datAdapter);
 
             getActionBar().setTitle(getResources().getString(R.string.actionbar_list_data_collection_task));
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "pass OnResume ");
     }
 
     @Override
@@ -93,8 +123,17 @@ public class InqDataCollectionTaskFragment extends _ActBar_FragmentActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_data_collection:
-                Toast.makeText(this, "Display options for capture data", Toast.LENGTH_SHORT).show();
+            case R.id.menu_data_collection_image:
+//                Toast.makeText(this, "Display options for capture data", Toast.LENGTH_SHORT).show();
+                man_pic.setRunId(INQ.inquiry.getCurrentInquiry().getRunId());
+                man_pic.setGeneralItem(genObject);
+                man_pic.takeDataSample();
+                break;
+            case R.id.menu_data_collection_video:
+//                Toast.makeText(this, "Display options for capture data", Toast.LENGTH_SHORT).show();
+                man_vid.setRunId(INQ.inquiry.getCurrentInquiry().getRunId());
+                man_vid.setGeneralItem(genObject);
+                man_vid.takeDataSample();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -110,4 +149,30 @@ public class InqDataCollectionTaskFragment extends _ActBar_FragmentActivity {
             startActivity(intent);
         }
     }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+//        public static final int PICTURE_RESULT = 1;
+//        public static final int AUDIO_RESULT = 2;
+//        public static final int VIDEO_RESULT = 3;
+//        public static final int TEXT_RESULT = 4;
+
+        switch (requestCode){
+            case DataCollectionManager.PICTURE_RESULT:
+                man_pic.onActivityResult(requestCode, resultCode, data);
+                break;
+            case DataCollectionManager.AUDIO_RESULT:
+
+                break;
+            case DataCollectionManager.VIDEO_RESULT:
+                man_vid.onActivityResult(requestCode, resultCode, data);
+                break;
+            case DataCollectionManager.TEXT_RESULT:
+
+                break;
+        }
+
+        INQ.responses.syncResponses(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
+    }
+
 }

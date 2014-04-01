@@ -47,7 +47,6 @@ import net.wespot.pim.R;
         }
 
         @Override
-
         public void onViewCreated(View view, Bundle savedInstanceState) {
 
             name = (TextView) view.findViewById(R.id.name_entry_list);

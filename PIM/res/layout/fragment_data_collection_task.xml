@@ -9,7 +9,7 @@
     <TextView android:id="@+id/data_collection_tasks_title_list"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:text="@string/data_collection_task"
+              android:text="@string/data_collection_task_responses"
               style="@style/CustomTheme.TextView.Title1"
             />
     <ListView android:id="@+id/data_collection_tasks_items"

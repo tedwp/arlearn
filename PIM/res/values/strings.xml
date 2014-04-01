@@ -12,6 +12,7 @@
     <string name="actionbar_inquiry_list">Inquiry list</string>
     <string name="actionbar_inquiry">Inquiry</string>
     <string name="actionbar_list_data_collection_task">Data Collection Tasks</string>
+    <string name="actionbar_list_data_collection_task_responses">Responses</string>
 
     <string name="login_user_hint">username</string>
     <string name="login_password_hint">password</string>
@@ -19,6 +20,7 @@
 
     <string name="data_collection_tasks">Data collection tasks</string>
     <string name="data_collection_task">Data collection task</string>
+    <string name="data_collection_task_responses">Data collected</string>
 
 
     <string name="friends_friend_new">Add friend</string>
@@ -37,7 +39,8 @@
     <string name="menu_add">New</string>
     <string name="menu_share">Share</string>
     <string name="menu_logout">Logout</string>
-    <string name="menu_data_collection_collect_data">Collect data</string>
+    <string name="menu_data_collection_collect_data_image">Image</string>
+    <string name="menu_data_collection_collect_data_video">Video</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

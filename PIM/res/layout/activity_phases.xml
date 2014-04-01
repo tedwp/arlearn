@@ -45,7 +45,8 @@
                       android:id="@+id/list_phases_data"
                       android:layout_below="@id/list_phases_plan"
                       android:layout_width="match_parent"
-                      android:layout_height="wrap_content"/>
+                      android:layout_height="wrap_content"
+                    />
             <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
                       android:id="@+id/list_phases_analyse"
                       android:layout_below="@id/list_phases_data"

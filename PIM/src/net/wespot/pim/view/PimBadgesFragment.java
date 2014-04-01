@@ -21,9 +21,12 @@ package net.wespot.pim.view;
  * ****************************************************************************
  */
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import net.wespot.pim.SplashActivity;
 import net.wespot.pim.controller.Adapters.BadgesLazyListAdapter;
 import net.wespot.pim.utils.layout.RefreshListFragment;
 import daoBase.DaoConfiguration;
@@ -41,6 +44,7 @@ public class PimBadgesFragment extends RefreshListFragment {
 
     LazyList lazyList;
     private BadgesLazyListAdapter adapterInq;
+    private String TAG;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -48,6 +52,16 @@ public class PimBadgesFragment extends RefreshListFragment {
 
         setHasOptionsMenu(true);
 
+        // Avoiding NULL exceptions when resuming the PIM
+        if (INQ.inquiry == null){
+            Intent intent = new Intent(getActivity(), SplashActivity.class);
+            startActivity(intent);
+//            INQ.init(this);
+//            INQ.accounts.syncMyAccountDetails();
+//            INQ.inquiry.syncInquiries();
+            Log.e(TAG, "recover INQ.inquiry is needed.");
+        }
+        
         INQ.init(getActivity());
         INQ.badges.syncBadges(accountType,accountLocalId);
 

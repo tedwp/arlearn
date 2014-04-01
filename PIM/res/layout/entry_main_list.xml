@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="0dp"
-                style="@style/CustomTheme.ListItem">
+                android:background="@drawable/button">
     <TextView
             android:id="@+id/name_entry_list"
             android:layout_width="wrap_content"

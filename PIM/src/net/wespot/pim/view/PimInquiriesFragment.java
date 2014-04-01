@@ -29,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import net.wespot.pim.R;
+import net.wespot.pim.SplashActivity;
 import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
 import net.wespot.pim.controller.InquiryActivity;
 import net.wespot.pim.controller.InquiryPhasesActivity;
@@ -52,13 +53,6 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Avoiding NULL exceptions when resuming the PIM
-        if (INQ.inquiry == null){
-            INQ.init(this);
-            INQ.inquiry.syncInquiries();
-            Log.e(TAG, "recover INQ.inquiry is needed.");
-        }
 
         setContentView(R.layout.fragment_inquiries);
 
@@ -108,8 +102,15 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_data_collection:
-                Toast.makeText(this, "Display options for capture data", Toast.LENGTH_SHORT).show();
+            case R.id.menu_refresh:
+                Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT).show();
+
+                if (INQ.inquiry == null){
+                    INQ.init(this);
+                    Log.e(TAG, "recover INQ.inquiry is needed.");
+                }
+
+                INQ.inquiry.syncInquiries();
                 break;
         }
         return super.onOptionsItemSelected(item);

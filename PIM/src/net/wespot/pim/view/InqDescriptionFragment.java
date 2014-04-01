@@ -58,8 +58,6 @@ public class InqDescriptionFragment extends Fragment {
         webView.setBackgroundColor(0x00000000);
         webView.loadData(INQ.inquiry.getCurrentInquiry().getDescription(), Constants.MIME_TYPE, Constants.ENCONDING);
 
-
-
         return rootView;
     }
 

@@ -7,12 +7,10 @@ import android.os.Bundle;
 
 import android.view.*;
 import android.widget.*;
+import daoBase.DaoConfiguration;
 import net.wespot.pim.utils.layout.ButtonEntryDelegator;
 import net.wespot.pim.utils.layout.MainActionBarFragmentActivity;
-import net.wespot.pim.view.PimBadgesFragmentList;
-import net.wespot.pim.view.PimFriendsFragment;
-import net.wespot.pim.view.PimInquiriesFragment;
-import net.wespot.pim.view.PimProfileFragment;
+import net.wespot.pim.view.*;
 
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -31,9 +29,9 @@ public class MainActivity extends MainActionBarFragmentActivity {
         ButtonEntryDelegator man = ButtonEntryDelegator.getInstance(this);
 
         // Creation of the links
-        man._button_list(R.id.main_myinquiries_link, getResources().getString(R.string.wrapper_myinquiry), R.drawable.ic_inquiries, PimInquiriesFragment.class, false, "112");
+        man._button_list(R.id.main_myinquiries_link, getResources().getString(R.string.wrapper_myinquiry), R.drawable.ic_inquiries, PimInquiriesFragment.class, false,  DaoConfiguration.getInstance().getSession().getInquiryLocalObjectDao().loadAll().size()+"");
 
-        man._button_list(R.id.main_mymedia_link, getResources().getString(R.string.wrapper_mymedia),R.drawable.ic_inquiries,  PimProfileFragment.class, false);
+        man._button_list(R.id.main_mymedia_link, getResources().getString(R.string.wrapper_mymedia),R.drawable.ic_mymedia,  InqMyMediaFragment.class, false);
 
         man._button_list(R.id.main_profile_link, getResources().getString(R.string.wrapper_profile),R.drawable.ic_profile, PimProfileFragment.class, false);
 

@@ -21,6 +21,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -28,7 +29,9 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import net.wespot.pim.MainActivity;
 import net.wespot.pim.R;
+import net.wespot.pim.SplashActivity;
 import net.wespot.pim.controller.Adapters.InquiryPagerAdapter;
 import net.wespot.pim.controller.Adapters.NewInquiryPagerAdapter;
 import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
@@ -72,10 +75,13 @@ public class InquiryActivity extends _ActBar_FragmentActivity implements ActionB
         super.onCreate(savedInstanceState);
 
         // Avoiding NULL exceptions when resuming the PIM
-        if (INQ.inquiry == null){
+        if (INQ.inquiry == null ){
+//            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//            startActivity(intent);
             INQ.init(this);
+            INQ.accounts.syncMyAccountDetails();
             INQ.inquiry.syncInquiries();
-            Log.e(TAG, "recover INQ.inquiry is needed.");
+            Log.e(TAG, "recover INQ.inquiry is needed in InquiryActivity.");
         }
 
         if (INQ.inquiry.getCurrentInquiry() == null){

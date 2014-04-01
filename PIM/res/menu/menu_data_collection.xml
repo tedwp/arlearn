@@ -16,9 +16,14 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/menu_data_collection"
-        android:title="@string/menu_data_collection_collect_data"
-        android:icon="@drawable/ic_menu_share"
-        android:orderInCategory="1"
-        android:showAsAction="never" />
+    <item android:id="@+id/menu_data_collection_image"
+          android:title="@string/menu_data_collection_collect_data_image"
+          android:icon="@drawable/ic_camera"
+          android:orderInCategory="0"
+          android:showAsAction="always" />
+    <item android:id="@+id/menu_data_collection_video"
+          android:title="@string/menu_data_collection_collect_data_video"
+          android:icon="@drawable/ic_video"
+          android:orderInCategory="1"
+          android:showAsAction="always" />
 </menu>

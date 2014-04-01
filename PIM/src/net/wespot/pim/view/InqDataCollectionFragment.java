@@ -32,8 +32,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import daoBase.DaoConfiguration;
 import net.wespot.pim.R;
+import net.wespot.pim.SplashActivity;
 import net.wespot.pim.controller.Adapters.DataCollectionLazyListAdapter;
 import org.celstec.arlearn.delegators.INQ;
+import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.events.GameEvent;
 import org.celstec.arlearn2.android.events.RunEvent;
 import org.celstec.dao.gen.GameLocalObject;
@@ -53,44 +55,41 @@ public class InqDataCollectionFragment extends Fragment {
     public InqDataCollectionFragment() {
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
 
-
-//        INQ.runs.syncRunsParticipate();
-//        INQ.games.syncGame(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameId());
-//        INQ.games.syncGamesParticipate();
-
-        // if game is created proceed
-        // if not wait till is created
-
-        // Avoiding NULL exceptions when resuming the PIM
-        if (INQ.inquiry == null){
+        if (savedInstanceState != null) {
             INQ.init(getActivity());
-            INQ.inquiry.syncInquiries();
-            Log.e(TAG, "recover INQ.inquiry is needed.");
+            INQ.accounts.syncMyAccountDetails();
+            INQ.inquiry.setCurrentInquiry(DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(savedInstanceState.getLong("currentInquiry")));
         }
-
-
-//        GameLocalObject gameObject = INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject();
-//
-//        INQ.generalItems.syncGeneralItems(gameObject);
 
         INQ.inquiry.syncDataCollectionTasks();
 
-
-//        GameLocalObject gameLocalObject = DaoConfiguration.getInstance().getGameLocalObjectDao().load(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId());
-//
-//        gameLocalObject.getGeneralItems();
-
         View rootView = inflater.inflate(R.layout.fragment_data_collection, container, false);
 
-        data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
-        datAdapter =  new DataCollectionLazyListAdapter(this.getActivity());
-        data_collection_tasks.setOnItemClickListener(new onListDataCollectionTasksClick());
-        data_collection_tasks.setAdapter(datAdapter);
+        if(INQ.inquiry.getCurrentInquiry().getRunLocalObject()!=null){
+            if (INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject()!=null){
+                GameLocalObject gameLocalObject = DaoConfiguration.getInstance().getGameLocalObjectDao().load(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId());
 
+                if (gameLocalObject.getGeneralItems().size() != 0){
+                    INQ.responses.syncResponses(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
+                    data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
+                    datAdapter =  new DataCollectionLazyListAdapter(this.getActivity(),gameLocalObject.getId());
+                    data_collection_tasks.setOnItemClickListener(new onListDataCollectionTasksClick());
+                    data_collection_tasks.setAdapter(datAdapter);
+                }else{
+                    Log.e(TAG, "There are no data collection tasks for this inquiry");
+                }
+            }else{
+                Log.e(TAG, "There is no game for this run.");
+            }
+        }else{
+            Log.e(TAG, "Data collection task are not enabled on this inquiry");
+        }
         return rootView;
     }
 

@@ -16,6 +16,8 @@
 
 package net.wespot.pim.controller;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -25,7 +27,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import daoBase.DaoConfiguration;
+import net.wespot.pim.MainActivity;
 import net.wespot.pim.R;
+import net.wespot.pim.SplashActivity;
 import net.wespot.pim.utils.Constants;
 import net.wespot.pim.utils.images.BitmapWorkerTask;
 import net.wespot.pim.utils.layout.ButtonEntryDelegator;
@@ -48,15 +53,25 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity {
     private View b_communicate;
     private View b_add_friends;
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("currentInquiry", INQ.inquiry.getCurrentInquiry().getId());
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Avoiding NULL exceptions when resuming the PIM
-        if (INQ.inquiry == null){
+        if (savedInstanceState != null) {
+//            getSupportFragmentManager().popBackStack(null, getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
+            //return;
+//            Long currentInquiry = savedInstanceState.getLong("currentInquiry");
+//            Log.e(TAG, "savedInstanceState != null - value"+savedInstanceState.getLong("currentInquiry"));
+
             INQ.init(this);
-            INQ.inquiry.syncInquiries();
-            Log.e(TAG, "recover INQ.inquiry is needed.");
+            INQ.accounts.syncMyAccountDetails();
+            INQ.inquiry.setCurrentInquiry(DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(savedInstanceState.getLong("currentInquiry")));
+
         }
 
         setContentView(R.layout.activity_phases);
@@ -74,8 +89,17 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity {
         b_plan =button_manager._button_list(R.id.list_phases_plan, Constants.INQUIRY_PHASES_LIST.get(2),R.drawable.ic_plan, InquiryActivity.class, true);
         b_plan.setOnClickListener(new OnClick(2));
 
-        b_data =button_manager._button_list(R.id.list_phases_data, Constants.INQUIRY_PHASES_LIST.get(3),R.drawable.ic_data, InquiryActivity.class, true, "112");
-        b_data.setOnClickListener(new OnClick(3));
+        if (INQ.inquiry.getCurrentInquiry().getRunLocalObject()!=null){
+            if (INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject()!=null){
+                int numberDataCollectionTasks = DaoConfiguration.getInstance().getGameLocalObjectDao().load(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId()).getGeneralItems().size();
+                b_data =button_manager._button_list(R.id.list_phases_data, Constants.INQUIRY_PHASES_LIST.get(3),R.drawable.ic_data, InquiryActivity.class, true, numberDataCollectionTasks+"" );
+                b_data.setOnClickListener(new OnClick(3));
+            }else{
+                b_data =button_manager._button_list(R.id.list_phases_data, Constants.INQUIRY_PHASES_LIST.get(3),R.drawable.ic_data, InquiryActivity.class, true, "0");
+            }
+        }else{
+            b_data =button_manager._button_list(R.id.list_phases_data, Constants.INQUIRY_PHASES_LIST.get(3),R.drawable.ic_data, InquiryActivity.class, true, "0");
+        }
 
         b_analyse =button_manager._button_list(R.id.list_phases_analyse, Constants.INQUIRY_PHASES_LIST.get(4), R.drawable.ic_analyze, InquiryActivity.class,true);
         b_analyse.setOnClickListener(new OnClick(4));

@@ -17,6 +17,7 @@
 package net.wespot.pim.controller;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.app.*;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 import daoBase.DaoConfiguration;
 import net.wespot.pim.BuildConfig;
 import net.wespot.pim.R;
+import net.wespot.pim.SplashActivity;
 import net.wespot.pim.utils.images.ImageCache;
 import net.wespot.pim.utils.images.ImageFetcher;
 import net.wespot.pim.utils.images.Utils;
@@ -65,6 +67,20 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         if (BuildConfig.DEBUG) {
             Utils.enableStrictMode();
         }
+
+        // Avoiding NULL exceptions when resuming the PIM
+        if (INQ.inquiry == null){
+            Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
+            startActivity(intent);
+//            INQ.init(this);
+//            INQ.accounts.syncMyAccountDetails();
+//            INQ.inquiry.syncInquiries();
+            Log.e(TAG, "recover INQ.inquiry is needed.");
+        }
+
+//        INQ.inquiry.syncDataCollectionTasks();
+//        INQ.responses.syncResponses(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_pager_detail_image);
 
@@ -103,8 +119,8 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         mImageFetcher.setImageFadeIn(false);
 
         // Set up ViewPager and backing adapter
-//        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(generalItemId).getResponses().size());
-        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), DaoConfiguration.getInstance().getResponseLocalObjectDao().loadAll().size());
+        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(generalItemId).getResponses().size());
+//        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), DaoConfiguration.getInstance().getResponseLocalObjectDao().loadAll().size());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
         mPager.setPageMargin((int) getResources().getDimension(R.dimen.data_collect_pager_image_detail_margin));
@@ -209,8 +225,8 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         @Override
         public Fragment getItem(int position) {
 //            return null;
-            return InqImageDetailFragment.newInstance(String.valueOf(DaoConfiguration.getInstance().getResponseLocalObjectDao().loadAll().get(position).getUriAsString()));
-//            return InqImageDetailFragment.newInstance(String.valueOf(DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(generalItemId).getResponses().get(position).getUriAsString()));
+//            return InqImageDetailFragment.newInstance(String.valueOf(DaoConfiguration.getInstance().getResponseLocalObjectDao().loadAll().get(position).getUriAsString()));
+            return InqImageDetailFragment.newInstance(String.valueOf(DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(generalItemId).getResponses().get(position).getUriAsString()));
         }
     }
 
@@ -230,6 +246,16 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
     }
 
     private class MyListener implements ViewPager.OnPageChangeListener {
+
+        private MyListener() {
+            int real_number_elements = mAdapter.getCount();
+
+            Log.e(TAG, "Current element: "+1);
+            Log.e(TAG, "Number elements: "+real_number_elements);
+
+            current_info.setText(1+" of "+real_number_elements);
+        }
+
         @Override
         public void onPageScrolled(int i, float v, int i2) {
 
