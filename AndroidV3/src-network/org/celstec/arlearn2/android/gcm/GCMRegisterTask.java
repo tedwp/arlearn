@@ -2,6 +2,7 @@ package org.celstec.arlearn2.android.gcm;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
@@ -9,6 +10,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
+import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.beans.notification.GCMDeviceDescription;
 import org.celstec.arlearn2.client.NotificationClient;
 
@@ -44,7 +46,11 @@ public class GCMRegisterTask extends AsyncTask<Activity, Long, Void> {
         if (checkPlayServices(c[0])) {
             GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(c[0]);
             try {
-                String registrationId = gcm.register(SENDER_ID);
+                String registrationId = ARL.properties.getGCMKey();
+                if (registrationId == null) {
+                    registrationId = gcm.register(SENDER_ID);
+                    ARL.properties.storeGCMKey(registrationId);
+                }
 
                 Log.e(TAG, "deviceId " + getDeviceId());
                 Log.e(TAG, "regid "+registrationId);

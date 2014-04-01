@@ -47,6 +47,8 @@ public class ARL {
     public static Properties config;
     public static TimeDelegator time;
     public static StoreDelegator store;
+    public static ThreadsDelegator threads;
+    public static MessagesDelegator messages;
     public static EventBus eventBus = new EventBus();
     public static DaoConfiguration dao;
     private static Context ctx;
@@ -66,6 +68,9 @@ public class ARL {
         fileReferences = GiFileReferenceDelegator.getInstance();
         responses = ResponseDelegator.getInstance();
         store = StoreDelegator.getInstance();
+        threads = ThreadsDelegator.getInstance();
+        messages = MessagesDelegator.getInstance();
+
         new GCMRegisterTask().execute((Activity) ctx);
 
     }

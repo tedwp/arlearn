@@ -39,7 +39,7 @@ import org.celstec.dao.gen.InquiryLocalObject;
  */
 public abstract class LazyListAdapter<T> extends BaseAdapter {
 
-
+    private ListItemClickInterface<T> callback;
     protected boolean dataValid;
     protected LazyList<T> lazyList;
     protected Context context;
@@ -90,6 +90,11 @@ public abstract class LazyListAdapter<T> extends BaseAdapter {
         }
     }
 
+    public void setOnListItemClickCallback(ListItemClickInterface<T> callback) {
+        this.callback = callback;
+    }
+
+
 
     @Override
     public boolean hasStableIds() {
@@ -98,7 +103,7 @@ public abstract class LazyListAdapter<T> extends BaseAdapter {
     /**
      * @see android.widget.ListAdapter#getView(int, View, ViewGroup)
      */
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         if (!dataValid) {
             throw new IllegalStateException("this should only be called when lazylist is populated");
@@ -115,6 +120,22 @@ public abstract class LazyListAdapter<T> extends BaseAdapter {
         } else {
             v = convertView;
         }
+        v.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (callback!= null) callback.onListItemClick(v, position, getItem(position));
+
+            }
+        });
+        v.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                if (callback!= null) return callback.setOnLongClickListener(v, position, getItem(position));
+                return false;
+            }
+        });
         bindView(v, context, item);
         return v;
     }

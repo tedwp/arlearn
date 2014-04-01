@@ -41,6 +41,8 @@ public class ARlearnDaoGenerator {
     private static Entity run;
     private static Entity action;
     private static Entity response;
+    private static Entity thread;
+    private static Entity message;
     private static Entity inquiry;
     private static Entity badge;
 
@@ -64,6 +66,8 @@ public class ARlearnDaoGenerator {
         action = createAction(schema);
         response = createResponse(schema);
         inquiry = createInquiryItem(schema);
+        thread = createThread(schema);
+        message = createMessage(schema);
         generalItemVisibility = createGeneralItemVisibility(schema);
         badge = createBadges(schema);
 
@@ -88,6 +92,34 @@ public class ARlearnDaoGenerator {
         return account;
     }
 
+    private static Entity createThread(Schema schema) {
+        Entity threadLocalObject = schema.addEntity("ThreadLocalObject");
+        threadLocalObject.addIdProperty();
+        threadLocalObject.addStringProperty("name");
+        threadLocalObject.addLongProperty("lastModificationDate");
+
+        Property runId = threadLocalObject.addLongProperty("runId").notNull().getProperty();
+        run.addToMany(threadLocalObject, runId, "lastModificationDate");
+
+        return threadLocalObject;
+    }
+
+    private static Entity createMessage(Schema schema) {
+        Entity messageLocalObject = schema.addEntity("MessageLocalObject");
+        messageLocalObject.addIdProperty();
+        messageLocalObject.addStringProperty("subject");
+        messageLocalObject.addStringProperty("body");
+        messageLocalObject.addLongProperty("time");
+        messageLocalObject.addStringProperty("userIds");
+
+        Property threadId = messageLocalObject.addLongProperty("threadId").notNull().getProperty();
+        thread.addToMany(messageLocalObject, threadId, "messages");
+
+        Property runId = messageLocalObject.addLongProperty("runId").notNull().getProperty();
+        run.addToMany(messageLocalObject, runId, "messages");
+
+        return messageLocalObject;
+    }
 
     private static Entity createBadges(Schema schema) {
         Entity badge = schema.addEntity("BadgeLocalObject");

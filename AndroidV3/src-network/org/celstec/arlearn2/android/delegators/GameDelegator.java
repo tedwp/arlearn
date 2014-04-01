@@ -17,6 +17,8 @@ import org.celstec.dao.gen.AccountLocalObject;
 import org.celstec.dao.gen.GameContributorLocalObject;
 import org.celstec.dao.gen.GameLocalObject;
 
+import java.util.Iterator;
+
 /**
  * ****************************************************************************
  * Copyright (C) 2013 Open Universiteit Nederland
@@ -193,10 +195,16 @@ public final class GameDelegator extends AbstractDelegator{
         public void sync() {
             if (existingGame != null) {
                 synchronized (existingGame){
-                    for (GameContributorLocalObject gameContributorLocalObject: existingGame.getContributors()) {
+                    Iterator<GameContributorLocalObject> iterator = existingGame.getContributors().iterator();
+                    while (iterator.hasNext()) {
+                        GameContributorLocalObject gameContributorLocalObject = iterator.next();
                         DaoConfiguration.getInstance().getGameContributorLocalObjectDao().delete(gameContributorLocalObject);
-                        existingGame.getContributors().remove(gameContributorLocalObject);
+                        iterator.remove();
                     }
+//                    for (GameContributorLocalObject gameContributorLocalObject: existingGame.getContributors()) {
+//                        DaoConfiguration.getInstance().getGameContributorLocalObjectDao().delete(gameContributorLocalObject);
+//                        existingGame.getContributors().remove(gameContributorLocalObject);
+//                    }
                 }
             }
             newGame.resetContributors();

@@ -30,6 +30,8 @@ public class RunLocalObject {
 
     private List<ActionLocalObject> actions;
     private List<ResponseLocalObject> responses;
+    private List<ThreadLocalObject> lastModificationDate;
+    private List<MessageLocalObject> messages;
     private List<GeneralItemVisibilityLocalObject> visibilities;
 
     // KEEP FIELDS - put your custom fields here
@@ -159,6 +161,50 @@ public class RunLocalObject {
     /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     public synchronized void resetResponses() {
         responses = null;
+    }
+
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<ThreadLocalObject> getLastModificationDate() {
+        if (lastModificationDate == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            ThreadLocalObjectDao targetDao = daoSession.getThreadLocalObjectDao();
+            List<ThreadLocalObject> lastModificationDateNew = targetDao._queryRunLocalObject_LastModificationDate(id);
+            synchronized (this) {
+                if(lastModificationDate == null) {
+                    lastModificationDate = lastModificationDateNew;
+                }
+            }
+        }
+        return lastModificationDate;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetLastModificationDate() {
+        lastModificationDate = null;
+    }
+
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<MessageLocalObject> getMessages() {
+        if (messages == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            MessageLocalObjectDao targetDao = daoSession.getMessageLocalObjectDao();
+            List<MessageLocalObject> messagesNew = targetDao._queryRunLocalObject_Messages(id);
+            synchronized (this) {
+                if(messages == null) {
+                    messages = messagesNew;
+                }
+            }
+        }
+        return messages;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetMessages() {
+        messages = null;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */

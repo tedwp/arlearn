@@ -19,6 +19,8 @@ import org.celstec.dao.gen.RunLocalObject;
 import org.celstec.dao.gen.ActionLocalObject;
 import org.celstec.dao.gen.ResponseLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
+import org.celstec.dao.gen.ThreadLocalObject;
+import org.celstec.dao.gen.MessageLocalObject;
 import org.celstec.dao.gen.GeneralItemVisibilityLocalObject;
 import org.celstec.dao.gen.BadgeLocalObject;
 import org.celstec.dao.gen.CategoryLocalObject;
@@ -34,6 +36,8 @@ import org.celstec.dao.gen.RunLocalObjectDao;
 import org.celstec.dao.gen.ActionLocalObjectDao;
 import org.celstec.dao.gen.ResponseLocalObjectDao;
 import org.celstec.dao.gen.InquiryLocalObjectDao;
+import org.celstec.dao.gen.ThreadLocalObjectDao;
+import org.celstec.dao.gen.MessageLocalObjectDao;
 import org.celstec.dao.gen.GeneralItemVisibilityLocalObjectDao;
 import org.celstec.dao.gen.BadgeLocalObjectDao;
 import org.celstec.dao.gen.CategoryLocalObjectDao;
@@ -58,6 +62,8 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig actionLocalObjectDaoConfig;
     private final DaoConfig responseLocalObjectDaoConfig;
     private final DaoConfig inquiryLocalObjectDaoConfig;
+    private final DaoConfig threadLocalObjectDaoConfig;
+    private final DaoConfig messageLocalObjectDaoConfig;
     private final DaoConfig generalItemVisibilityLocalObjectDaoConfig;
     private final DaoConfig badgeLocalObjectDaoConfig;
     private final DaoConfig categoryLocalObjectDaoConfig;
@@ -73,6 +79,8 @@ public class DaoSession extends AbstractDaoSession {
     private final ActionLocalObjectDao actionLocalObjectDao;
     private final ResponseLocalObjectDao responseLocalObjectDao;
     private final InquiryLocalObjectDao inquiryLocalObjectDao;
+    private final ThreadLocalObjectDao threadLocalObjectDao;
+    private final MessageLocalObjectDao messageLocalObjectDao;
     private final GeneralItemVisibilityLocalObjectDao generalItemVisibilityLocalObjectDao;
     private final BadgeLocalObjectDao badgeLocalObjectDao;
     private final CategoryLocalObjectDao categoryLocalObjectDao;
@@ -112,6 +120,12 @@ public class DaoSession extends AbstractDaoSession {
         inquiryLocalObjectDaoConfig = daoConfigMap.get(InquiryLocalObjectDao.class).clone();
         inquiryLocalObjectDaoConfig.initIdentityScope(type);
 
+        threadLocalObjectDaoConfig = daoConfigMap.get(ThreadLocalObjectDao.class).clone();
+        threadLocalObjectDaoConfig.initIdentityScope(type);
+
+        messageLocalObjectDaoConfig = daoConfigMap.get(MessageLocalObjectDao.class).clone();
+        messageLocalObjectDaoConfig.initIdentityScope(type);
+
         generalItemVisibilityLocalObjectDaoConfig = daoConfigMap.get(GeneralItemVisibilityLocalObjectDao.class).clone();
         generalItemVisibilityLocalObjectDaoConfig.initIdentityScope(type);
 
@@ -134,6 +148,8 @@ public class DaoSession extends AbstractDaoSession {
         actionLocalObjectDao = new ActionLocalObjectDao(actionLocalObjectDaoConfig, this);
         responseLocalObjectDao = new ResponseLocalObjectDao(responseLocalObjectDaoConfig, this);
         inquiryLocalObjectDao = new InquiryLocalObjectDao(inquiryLocalObjectDaoConfig, this);
+        threadLocalObjectDao = new ThreadLocalObjectDao(threadLocalObjectDaoConfig, this);
+        messageLocalObjectDao = new MessageLocalObjectDao(messageLocalObjectDaoConfig, this);
         generalItemVisibilityLocalObjectDao = new GeneralItemVisibilityLocalObjectDao(generalItemVisibilityLocalObjectDaoConfig, this);
         badgeLocalObjectDao = new BadgeLocalObjectDao(badgeLocalObjectDaoConfig, this);
         categoryLocalObjectDao = new CategoryLocalObjectDao(categoryLocalObjectDaoConfig, this);
@@ -149,6 +165,8 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(ActionLocalObject.class, actionLocalObjectDao);
         registerDao(ResponseLocalObject.class, responseLocalObjectDao);
         registerDao(InquiryLocalObject.class, inquiryLocalObjectDao);
+        registerDao(ThreadLocalObject.class, threadLocalObjectDao);
+        registerDao(MessageLocalObject.class, messageLocalObjectDao);
         registerDao(GeneralItemVisibilityLocalObject.class, generalItemVisibilityLocalObjectDao);
         registerDao(BadgeLocalObject.class, badgeLocalObjectDao);
         registerDao(CategoryLocalObject.class, categoryLocalObjectDao);
@@ -166,6 +184,8 @@ public class DaoSession extends AbstractDaoSession {
         actionLocalObjectDaoConfig.getIdentityScope().clear();
         responseLocalObjectDaoConfig.getIdentityScope().clear();
         inquiryLocalObjectDaoConfig.getIdentityScope().clear();
+        threadLocalObjectDaoConfig.getIdentityScope().clear();
+        messageLocalObjectDaoConfig.getIdentityScope().clear();
         generalItemVisibilityLocalObjectDaoConfig.getIdentityScope().clear();
         badgeLocalObjectDaoConfig.getIdentityScope().clear();
         categoryLocalObjectDaoConfig.getIdentityScope().clear();
@@ -210,6 +230,14 @@ public class DaoSession extends AbstractDaoSession {
 
     public InquiryLocalObjectDao getInquiryLocalObjectDao() {
         return inquiryLocalObjectDao;
+    }
+
+    public ThreadLocalObjectDao getThreadLocalObjectDao() {
+        return threadLocalObjectDao;
+    }
+
+    public MessageLocalObjectDao getMessageLocalObjectDao() {
+        return messageLocalObjectDao;
     }
 
     public GeneralItemVisibilityLocalObjectDao getGeneralItemVisibilityLocalObjectDao() {
