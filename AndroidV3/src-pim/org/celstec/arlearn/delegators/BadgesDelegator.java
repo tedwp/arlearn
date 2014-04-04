@@ -57,8 +57,14 @@ public class BadgesDelegator {
         ARL.eventBus.post(new SyncBadges(accountType, accountLocalId));
     }
 
-//    private String accountLocalId = "105939139551108473521";
-//    private int accountType = 2;
+    public void syncBadges() {
+        AccountLocalObject account = ARL.accounts.getLoggedInAccount();
+        if (account != null) {
+            ARL.eventBus.post(new SyncBadges(account.getAccountType(), account.getLocalId()));
+        }
+    }
+
+
     private void onEventAsync(SyncBadges syncBadges) {
         String badges = BadgesClient.getBadgesClient().getUserBadges(syncBadges.getWespotId());
 
