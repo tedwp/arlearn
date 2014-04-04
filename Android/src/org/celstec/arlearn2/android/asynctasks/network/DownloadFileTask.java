@@ -161,6 +161,7 @@ public class DownloadFileTask extends GenericTask implements NetworkTask {
                         if (outputFile.exists()) {
                             return outputFile.getAbsolutePath();
                         }
+
                     }
                 }
             }
@@ -219,6 +220,7 @@ public class DownloadFileTask extends GenericTask implements NetworkTask {
             }
             return outputFile.getAbsolutePath();
 		} catch (FileNotFoundException e) {
+
 			throw e;
 		} catch (IOException e) {
             Log.e("error while retrieve media item - addToCache", e.getMessage()+" item "+di.getItemId(), e);

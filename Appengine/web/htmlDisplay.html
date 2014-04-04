@@ -12,8 +12,15 @@
 </head>
 
 <body>
-<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
-        style="position: absolute; width: 0; height: 0; border: 0"> </iframe>
-<div  align="center" width='100%' height='100%' id="htmlDisplay"></div>
+<div class="holder" style="width: 400px;height:300px;position:relative;">
+    <div style="position:absolute;top:0;left:0;height:40px;z-index: 1000000;" onclick="javascript:window.showAlert()">
+        <img src="images/info.png" />
+    </div>
+    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
+            style="position: absolute; width: 0; height: 0; border: 0"> </iframe>
+    <div  align="center" width='100%' height='100%' id="htmlDisplay" style="top:40px;"></div>
+
+
+</div>
 </body>
 </html>

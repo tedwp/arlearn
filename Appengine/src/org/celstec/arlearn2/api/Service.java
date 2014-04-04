@@ -54,15 +54,12 @@ public class Service {
 
 	protected boolean validCredentials(String authToken) {
 		UsersDelegator qu;
-		try {
 			qu = new UsersDelegator(authToken);
 			account = qu.getCurrentAccount();
 			token = qu.getAuthToken();
 			if (account != null) return true;
 			return (qu.getCurrentUserAccount() != null);
-		} catch (AuthenticationException e) {
-			return false;
-		}
+
 	}
 
     public boolean isAdministrator(String authToken) {

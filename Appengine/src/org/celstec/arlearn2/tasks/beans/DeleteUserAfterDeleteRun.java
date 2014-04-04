@@ -54,7 +54,6 @@ public class DeleteUserAfterDeleteRun extends GenericBean {
 
     @Override
     public void run() {
-        try {
             UsersDelegator ud = new UsersDelegator(getToken());
 
             if (getRunId() != null) {
@@ -73,9 +72,6 @@ public class DeleteUserAfterDeleteRun extends GenericBean {
                     }
                 }
             }
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
 
     }
 }

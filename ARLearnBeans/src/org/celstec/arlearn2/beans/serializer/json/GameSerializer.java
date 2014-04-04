@@ -39,6 +39,7 @@ public class GameSerializer extends GameBeanSerializer{
 			if (game.getConfig() != null) returnObject.put("config", JsonBeanSerialiser.serialiseToJson(game.getConfig()));
             if (game.getLng() != null) returnObject.put("lng", game.getLng());
             if (game.getLat() != null) returnObject.put("lat", game.getLat());
+            if (game.getLanguage() != null) returnObject.put("language", game.getLanguage());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

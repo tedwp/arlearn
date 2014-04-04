@@ -44,7 +44,7 @@ public class ThreadManager {
         threadJDO.setName(thread.getName());
         threadJDO.setRunId(thread.getRunId());
         threadJDO.setIsDefault(isDefault);
-
+        threadJDO.setLastModificationDate(System.currentTimeMillis());
         try {
             pm.makePersistent(threadJDO);
             return toBean(threadJDO);
@@ -62,6 +62,7 @@ public class ThreadManager {
         bean.setDeleted(jdo.getDeleted());
         bean.setRunId(jdo.getRunId());
         bean.setThreadId(jdo.getThreadId());
+        bean.setLastModificationDate(jdo.getLastModificationDate());
         return bean;
     }
 

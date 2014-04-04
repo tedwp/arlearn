@@ -71,6 +71,37 @@ public class SingleChoiceDisplay extends GeneralItemDisplay{
             hLayout.addMember(layout);
         }
     }
+
+    public SingleChoiceDisplay(SingleChoiceImage sci){
+        this.sct = new SingleChoiceTest(sci.getJsonRep());
+        answers = this.sct.getAnswers();
+        canvases = new Canvas[answers.length];
+
+        hLayout = new HLayout();
+        hLayout.setPadding(3);
+        hLayout.setWidth100();
+        hLayout.setHeight100();
+
+        int j = 0;
+        for (MultipleChoiceAnswer answer : answers) {
+            Canvas canvas = createAnswerCanvas(answer.getString(MultipleChoiceAnswer.ID));
+            canvasHashMap.put(answer.getString(MultipleChoiceAnswer.ANSWER), canvas);
+            canvases[j++] = canvas;
+        }
+        for (int i = 0; i<canvases.length; i++) {
+            VLayout layout = new VLayout(10);
+            layout.setMembersMargin(10);
+            layout.setWidth((100/canvases.length)+"%");
+            layout.setPadding(2);
+            HTMLPane html = new HTMLPane();
+            html.setContents("<h2>"+answers[i].getString(MultipleChoiceAnswer.ANSWER)+"</h2>");
+            html.setHeight(60);
+            layout.addMember(html);
+            layout.addMember(canvases[i]);
+            hLayout.addMember(layout);
+        }
+    }
+
     @Override
     public void handleAction(Action action) {}
 

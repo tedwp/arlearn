@@ -38,11 +38,9 @@ import org.celstec.arlearn2.jdo.manager.AccountManager;
 import org.celstec.arlearn2.jdo.manager.UserManager;
 import org.celstec.arlearn2.tasks.beans.*;
 
-import com.google.gdata.util.AuthenticationException;
-
 public class UsersDelegator extends GoogleDelegator {
 
-	public UsersDelegator(String authtoken) throws AuthenticationException {
+	public UsersDelegator(String authtoken) {
 		super(authtoken);
 	}
 

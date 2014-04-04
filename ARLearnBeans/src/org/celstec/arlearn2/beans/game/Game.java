@@ -35,6 +35,7 @@ public class Game extends GameBean implements Serializable, Comparable<Game>{
 	private Config config;
 	private Integer sharing;
 	private String licenseCode;
+    private String language;
     private Double lng;
     private Double lat;
 	
@@ -140,8 +141,17 @@ public class Game extends GameBean implements Serializable, Comparable<Game>{
 			nullSafeEquals(getSharing(), other.getSharing()); 
 
 	}
-	
-	@Override
+
+    public String getLanguage() {
+        if (language == null) return "en";
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    @Override
 	public int compareTo(Game o) {
 		int result = getTitle().compareToIgnoreCase(o.getTitle());
 		if (result != 0) return result;

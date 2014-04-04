@@ -59,8 +59,6 @@ public class MainMenu extends SherlockFragment {
 
         final View v = inflater.inflate(R.layout.main_menu, container, false);
 
-        // TODO some styling
-        ((TextView)v.findViewById(R.id.gameText)).setText("iets anders");
         button1 = v.findViewById(R.id.games);
         storeButton =  v.findViewById(R.id.store);
         button3 =  v.findViewById(R.id.scan);

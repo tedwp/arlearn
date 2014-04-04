@@ -4,6 +4,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.RootPanel;
+import org.celstec.arlearn2.beans.generalItem.SingleChoiceImageTest;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallback;
 import org.celstec.arlearn2.gwtcommonlib.client.network.JsonCallbackGeneralItem;
 import org.celstec.arlearn2.gwtcommonlib.client.network.UserClient;
@@ -85,7 +86,13 @@ public class CrsDisplay {
 
     private GeneralItemDisplay generalItemDisplay;
 
+    public static native void exportStaticMethod() /*-{
+        $wnd.showAlert =
+            $entry(@org.celstec.arlearn2.portal.client.htmlDisplay.ObjectCollectionCRSDisplay::showAlert());
+    }-*/;
+
     private void loadGeneralItem() {
+        exportStaticMethod();
         GeneralItemsClient.getInstance().getGeneralItem(gameId, generalItemId, new JsonCallbackGeneralItem(){
 
             public void onGeneralItemReceived(GeneralItem gi) {
@@ -93,6 +100,11 @@ public class CrsDisplay {
                     generalItemDisplay = new SingleChoiceDisplay((SingleChoiceTest) gi);
                     SingleChoiceTest sct = (SingleChoiceTest) gi;
                     loadResponses(runId);
+                } else if (gi.getType().equals(SingleChoiceImage.TYPE)) {
+                    generalItemDisplay = new SingleChoiceDisplay((SingleChoiceImage) gi);
+                    SingleChoiceTest sct = new SingleChoiceTest(gi.getJsonRep());
+                    loadResponses(runId);
+
                 } else if (gi.getType().equals(ObjectCollectionDisplay.TYPE)) {
                     generalItemDisplay = new ObjectCollectionCRSDisplay((ObjectCollectionDisplay) gi);
                 }

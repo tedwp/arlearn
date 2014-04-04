@@ -63,6 +63,9 @@ public class GameJDO extends GameClass {
     @Persistent
     private Boolean featured;
 
+    @Persistent
+    private String language;
+
 	public Long getGameId() {
 		return id.getId();
 	}
@@ -165,5 +168,13 @@ public class GameJDO extends GameClass {
 
     public void setFeatured(Boolean featured) {
         this.featured = featured;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

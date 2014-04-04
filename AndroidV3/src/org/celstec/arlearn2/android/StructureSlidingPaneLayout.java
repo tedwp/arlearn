@@ -42,6 +42,7 @@ public class StructureSlidingPaneLayout extends SherlockFragmentActivity {
     private static final String TAG = "StructureSlidingPaneLayout";
 
     private ActionBarHelper mActionBar;
+    private SherlockFragment frag;
 
     /**
      * Called when the activity is first created.
@@ -66,7 +67,7 @@ public class StructureSlidingPaneLayout extends SherlockFragmentActivity {
             FragmentManager fm = getSupportFragmentManager();
             Bundle args = new Bundle();
 
-            SherlockFragment frag = new MainMenu();
+            frag = new MainMenu();
             frag.setArguments(args);
             fm.beginTransaction().replace(R.id.right_pane, frag).addToBackStack(null).commit();
         }
@@ -117,6 +118,17 @@ public class StructureSlidingPaneLayout extends SherlockFragmentActivity {
         } else {
             return new ActionBarHelper();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (getSupportFragmentManager().getBackStackEntryCount() <=1) {
+            this.finish();
+        } else {
+            super.onBackPressed();
+        }
+
     }
 
     private class ActionBarHelper {

@@ -39,30 +39,29 @@ public class GameManager {
 	private static final String paramsNames[] = new String[] { "gameParam", "creatorEmailParam", "ownerEmailParam", "feedUrlParam", "titleParam" };
 	private static final String types[] = new String[] { "Long", "String", "String", "String", "String" };
 
-	@Deprecated
-	public static Long addGame(String title, String owner, String creatorEmail, String feedUrl, Long gameId, Config config, Double lat, Double lng) {
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		GameJDO gameJdo = new GameJDO();
-		gameJdo.setGameId(gameId);
-		gameJdo.setCreatorEmail(creatorEmail);
-		gameJdo.setOwner(owner);
-		gameJdo.setFeedUrl(feedUrl);
-		gameJdo.setTitle(title);
-        gameJdo.setLat(lat);
-        gameJdo.setLng(lng);
-		
-		gameJdo.setLastModificationDate(System.currentTimeMillis());
-		if (config != null)  {
-			gameJdo.setConfig(config.toString());
-		}
-		try {
-			GameJDO persistentGame = pm.makePersistent(gameJdo);
-			return persistentGame.getGameId();
-
-		} finally {
-			pm.close();
-		}
-	}
+//	@Deprecated
+//	public static Long addGame(String title, String owner, String creatorEmail, String feedUrl, Long gameId, Config config, Double lat, Double lng) {
+//		PersistenceManager pm = PMF.get().getPersistenceManager();
+//		GameJDO gameJdo = new GameJDO();
+//		gameJdo.setGameId(gameId);
+//		gameJdo.setCreatorEmail(creatorEmail);
+//		gameJdo.setOwner(owner);
+//		gameJdo.setFeedUrl(feedUrl);
+//		gameJdo.setTitle(title);
+//        gameJdo.setLat(lat);
+//        gameJdo.setLng(lng);
+//		gameJdo.setLastModificationDate(System.currentTimeMillis());
+//		if (config != null)  {
+//			gameJdo.setConfig(config.toString());
+//		}
+//		try {
+//			GameJDO persistentGame = pm.makePersistent(gameJdo);
+//			return persistentGame.getGameId();
+//
+//		} finally {
+//			pm.close();
+//		}
+//	}
 	
 	public static Long addGame(Game game, String myAccount) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -76,6 +75,7 @@ public class GameManager {
 		gameJdo.setDescription(game.getDescription());
         gameJdo.setLat(game.getLat());
         gameJdo.setLng(game.getLng());
+        gameJdo.setLanguage(game.getLanguage());
 		if (game.getLicenseCode() !=null) gameJdo.setLicenseCode(game.getLicenseCode());
 		gameJdo.setLastModificationDate(System.currentTimeMillis());
 		if (game.getConfig() != null)  {
@@ -100,6 +100,7 @@ public class GameManager {
 		gameJdo.setDescription(game.getDescription());
         gameJdo.setLat(game.getLat());
         gameJdo.setLng(game.getLng());
+        gameJdo.setLanguage(game.getLanguage());
 		if (game.getDeleted() != null) gameJdo.setDeleted(game.getDeleted());
 		if (game.getLicenseCode() !=null) gameJdo.setLicenseCode(game.getLicenseCode());
 
@@ -199,6 +200,7 @@ public class GameManager {
 		game.setSharing(jdo.getSharing());
         game.setLng(jdo.getLng());
         game.setLat(jdo.getLat());
+        game.setLanguage(jdo.getLanguage());
 		if (jdo.getLicenseCode() !=null) game.setLicenseCode(jdo.getLicenseCode());
 		if (jdo.getLastModificationDate() != null) {
 			game.setLastModificationDate(jdo.getLastModificationDate());

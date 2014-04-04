@@ -44,6 +44,8 @@ public class ThreadJDO{
     @Persistent
     private Boolean deleted;
 
+    @Persistent
+    private Long lastModificationDate;
 
     public Long getThreadId() {
         return threadId;
@@ -84,5 +86,13 @@ public class ThreadJDO{
 
     public void setIsDefault(Boolean isDefault) {
         this.isDefault = isDefault;
+    }
+
+    public Long getLastModificationDate() {
+        return lastModificationDate;
+    }
+
+    public void setLastModificationDate(Long lastModificationDate) {
+        this.lastModificationDate = lastModificationDate;
     }
 }
