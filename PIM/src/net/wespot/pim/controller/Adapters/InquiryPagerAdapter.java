@@ -50,31 +50,26 @@ public class InquiryPagerAdapter extends FragmentPagerAdapter {
                 frag = new InqDescriptionFragment();
                 return frag;
             case 1:
-                frag = new InqHypothesisFragment();
-                return frag;
-            case 2:
-                frag =  new InqPlanFragment();
-                return frag;
-            case 3:
                 frag = new InqDataCollectionFragment();
-
-//                if (INQ.inquiry.getCurrentInquiry().getRunLocalObject() != null){
-//                    frag = new InqDataFragment();
-//                    return frag;
-//                }else{
-//                    frag = new InqNoDataFragment();
-//                    return frag;
-//                }
                 return frag;
-            case 4:
-                frag =  new InqAnalyseFragment();
-                return frag;
-            case 5:
-                frag =  new InqDiscussFragment();
-                return frag;
-            case 6:
-                frag =  new InqCommunicateFragment();
-                return frag;
+//            case 1:
+//                frag = new InqHypothesisFragment();
+//                return frag;
+//            case 2:
+//                frag =  new InqPlanFragment();
+//                return frag;
+//            case 3:
+//                frag = new InqDataCollectionFragment();
+//                return frag;
+//            case 4:
+//                frag =  new InqAnalyseFragment();
+//                return frag;
+//            case 5:
+//                frag =  new InqDiscussFragment();
+//                return frag;
+//            case 6:
+//                frag =  new InqCommunicateFragment();
+//                return frag;
             default:
                 // The other sections of the app are dummy placeholders.
                 frag = new DemoObjectFragment();
@@ -87,6 +82,7 @@ public class InquiryPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // For this contrived example, we have a 100-object collection.
-        return 6;
+//        return 6;
+        return 2;
     }
 }

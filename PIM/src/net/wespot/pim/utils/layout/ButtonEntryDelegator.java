@@ -94,7 +94,7 @@ public class ButtonEntryDelegator {
                 Intent intent = new Intent(instance.act.getApplicationContext(), dest);
                 instance.act.startActivity(intent);
             }else{
-                Toast.makeText(instance.act,"Not implemented yet. A destination is needed", 10).show();
+                Toast.makeText(instance.act,"Not implemented yet.", 10).show();
             }
         }
     }

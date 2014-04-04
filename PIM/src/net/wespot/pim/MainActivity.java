@@ -37,7 +37,8 @@ public class MainActivity extends MainActionBarFragmentActivity {
 
         man._button_list(R.id.main_badges_link, getResources().getString(R.string.wrapper_badges), R.drawable.ic_badges, PimBadgesFragment.class, false);
 
-        man._button_list(R.id.main_friends_link, getResources().getString(R.string.wrapper_friends),R.drawable.ic_friends, PimFriendsFragment.class, false);
+//        man._button_list(R.id.main_friends_link, getResources().getString(R.string.wrapper_friends),R.drawable.ic_friends, PimFriendsFragment.class, false);
+        man._button_list(R.id.main_friends_link, getResources().getString(R.string.wrapper_friends),R.drawable.ic_friends, null, false);
     }
 
     @Override

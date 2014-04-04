@@ -72,30 +72,11 @@ public class InqMyMediaFragment extends _ActBar_FragmentActivity implements List
         data_collection_tasks.setAdapter(datAdapter);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_data_collection, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-//            case R.id.menu_data_collection:
-//                Toast.makeText(this, "Display options for capture data", Toast.LENGTH_SHORT).show();
-//                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onListItemClick(View v, int position, GeneralItemLocalObject object) {
-        Intent intent = new Intent(getApplicationContext(), ImageDetailActivity.class);
+        Intent intent = new Intent(getApplicationContext(), InqMyMediaDataCollectionTaskFragment.class);
         intent.putExtra("DataCollectionTask", object.getId());
-        intent.putExtra("DataCollectionTaskGeneralItemId", generalItemId);
-        intent.putExtra(ImageDetailActivity.EXTRA_IMAGE, position);
         startActivity(intent);
     }
 

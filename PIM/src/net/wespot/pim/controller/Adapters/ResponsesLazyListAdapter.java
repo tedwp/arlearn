@@ -72,7 +72,7 @@ public class ResponsesLazyListAdapter extends AbstractResponsesLazyListAdapter {
         }else if (item.isVideo()){
             icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_task_video));
         }else if (item.isPicture()){
-            icon.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.foto_perfil_croped));
+            icon.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_taks_photo));
         }
 
 ////        if (item.getIcon() != null){

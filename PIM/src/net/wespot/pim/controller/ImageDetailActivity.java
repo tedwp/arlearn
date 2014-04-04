@@ -76,19 +76,6 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
             INQ.inquiry.setCurrentInquiry(DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(savedInstanceState.getLong("currentInquiry")));
         }
 
-        // Avoiding NULL exceptions when resuming the PIM
-//        if (INQ.inquiry == null){
-//            Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
-//            startActivity(intent);
-////            INQ.init(this);
-////            INQ.accounts.syncMyAccountDetails();
-////            INQ.inquiry.syncInquiries();
-//            Log.e(TAG, "recover INQ.inquiry is needed.");
-//        }
-
-//        INQ.inquiry.syncDataCollectionTasks();
-//        INQ.responses.syncResponses(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_pager_detail_image);
 
@@ -127,7 +114,12 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         mImageFetcher.addImageCache(getSupportFragmentManager(), cacheParams);
         mImageFetcher.setImageFadeIn(false);
 
-        INQ.generalItems.syncGeneralItems(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameId());
+        if (INQ.inquiry.getCurrentInquiry()!=null){
+            INQ.generalItems.syncGeneralItems(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameId());
+        }
+        else{
+//            INQ
+        }
         // Set up ViewPager and backing adapter
 //        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(generalItemId).getResponses().size());
         mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), DaoConfiguration.getInstance().getResponseLocalObjectDao()._queryGeneralItemLocalObject_Responses(generalItemId).size());
@@ -282,7 +274,7 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
             int real_number_elements = mAdapter.getCount();
 
             Log.e(TAG, "Current element: "+real_position);
-            Log.e(TAG, "Number elements: "+real_number_elements);
+            Log.e(TAG, "Number elements: " + real_number_elements);
             current_info.setText(real_position+" of "+real_number_elements);
         }
 

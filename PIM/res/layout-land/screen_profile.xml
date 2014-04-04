@@ -37,7 +37,7 @@
                   android:layout_alignBottom="@+id/textView" android:layout_toRightOf="@+id/textView"
                   android:layout_marginLeft="30dp"/>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceSmall" android:text="@string/profile_website"
+                  android:textAppearance="?android:attr/textAppearanceSmall" android:text="@string/profile_id"
                   android:id="@+id/textView3"
                   android:layout_marginTop="42dp" android:layout_below="@+id/textView2"
                   android:layout_alignLeft="@+id/textView"/>

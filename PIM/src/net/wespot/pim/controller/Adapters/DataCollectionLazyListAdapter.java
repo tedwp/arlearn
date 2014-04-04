@@ -66,7 +66,7 @@ public class DataCollectionLazyListAdapter extends AbstractGeneralItemsLazyListA
 //            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.getIcon());
 //        }
 //        else{
-            icon.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.foto_perfil_croped));
+            icon.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_task_explore));
 //        }
     }
 

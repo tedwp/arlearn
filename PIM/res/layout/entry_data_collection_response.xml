@@ -15,7 +15,7 @@
     <ImageView
             android:id="@+id/inquiry_entry_data_collection_response_icon"
             style="@style/CustomTheme.ListItem.ImageView.Left"
-            android:src="@drawable/foto_perfil_croped"
+            android:src="@drawable/ic_taks_photo"
             android:contentDescription="@string/icon_list"/>
     <TextView
             android:id="@+id/notification_text_data_collection_response"

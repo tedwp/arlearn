@@ -18,12 +18,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView android:id="@+id/profile_title"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="@string/profile_title"
+              style="@style/CustomTheme.TextView.Title1"
+            />
+
     <RelativeLayout
+            android:layout_below="@id/profile_title"
             android:layout_width="match_parent"
             android:layout_height="fill_parent" android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:background="@color/app.base.white">
+
+
+
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceMedium" android:text="@string/profile_name_value"
+                  android:textAppearance="?android:attr/textAppearanceMedium"
                   android:id="@+id/profile_name" android:textStyle="bold"
                   android:layout_centerVertical="true" android:layout_centerHorizontal="true"
                   android:layout_margin="30dp" android:textSize="25dp"/>
@@ -48,11 +60,13 @@
                   android:id="@+id/profile_email_value" android:textStyle="bold" android:textSize="20dp"
                   android:layout_alignBottom="@+id/profile_email" android:layout_alignLeft="@+id/imageView"
                   android:layout_alignRight="@+id/profile_name" android:layout_marginLeft="20dp"/>
+
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceSmall" android:text="@string/profile_website"
+                  android:textAppearance="?android:attr/textAppearanceSmall" android:text="@string/profile_id"
                   android:id="@+id/profile_website"
                   android:layout_marginTop="27dp" android:layout_below="@+id/profile_email"
                   android:layout_alignLeft="@+id/profile_email"/>
+
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:textAppearance="?android:attr/textAppearanceMedium" android:text="@string/profile_website_value"
                   android:id="@+id/profile_website_value" android:textStyle="bold" android:textSize="20dp"

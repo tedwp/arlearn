@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import daoBase.DaoConfiguration;
 import net.wespot.pim.R;
 import net.wespot.pim.SplashActivity;
@@ -56,8 +57,6 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
 
     public InqDataCollectionFragment() {
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,6 +91,7 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
             }
         }else{
             Log.e(TAG, "Data collection task are not enabled on this inquiry");
+
         }
         return rootView;
     }

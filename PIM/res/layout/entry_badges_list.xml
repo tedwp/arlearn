@@ -6,7 +6,7 @@
     <ImageView
             android:id="@+id/icon_badge_gridview"
             style="@style/CustomTheme.ListItem.ImageView.Left"
-            android:src="@drawable/foto_perfil_croped"/>
+            android:src="@drawable/ic_placeholder"/>
     <TextView
             android:id="@+id/text_badge_gridview"
             android:layout_height="wrap_content"

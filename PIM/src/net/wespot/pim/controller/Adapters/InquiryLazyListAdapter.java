@@ -61,15 +61,15 @@ public class InquiryLazyListAdapter extends AbstractInquiryLazyListAdapter {
         TextView notificationText = (TextView) view.findViewById(R.id.notificationTextInquiry);
 
         //TODO change item.getId by item.getnumberupdates
-        notificationText.setVisibility(View.VISIBLE);
-        notificationText.setText(item.getId()+"");
+//        notificationText.setVisibility(View.VISIBLE);
+//        notificationText.setText(item.getId()+"");
 
         if (item.getIcon() != null){
             BitmapWorkerTask task = new BitmapWorkerTask(icon);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.getIcon());
         }
         else{
-            icon.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.foto_perfil_croped));
+            icon.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_placeholder));
         }
     }
 
