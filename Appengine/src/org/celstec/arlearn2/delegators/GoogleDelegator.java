@@ -28,7 +28,6 @@ import org.celstec.arlearn2.jdo.classes.ApplicationAccessKeyJDO;
 import org.celstec.arlearn2.jdo.manager.AccountManager;
 import org.celstec.arlearn2.jdo.manager.ApplicationKeyManager;
 
-import com.google.gdata.util.AuthenticationException;
 import org.celstec.arlearn2.tasks.beans.GenericBean;
 
 public class GoogleDelegator {
@@ -38,7 +37,7 @@ public class GoogleDelegator {
 	protected boolean onBehalfOf = false;
 	protected Account account;
 
-	public GoogleDelegator(String authToken) throws AuthenticationException {
+	public GoogleDelegator(String authToken) {
 		if (authToken == null) {
 			this.authToken = null;
 		} else if (authToken.contains("auth=")) {

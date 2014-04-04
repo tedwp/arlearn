@@ -60,7 +60,7 @@ public class NotificationDelegator extends GoogleDelegator {
 	static ChannelService channelService = ChannelServiceFactory.getChannelService();
 
 	
-	public NotificationDelegator(String authtoken) throws AuthenticationException {
+	public NotificationDelegator(String authtoken) {
 		super(authtoken);
 	}
 

@@ -52,6 +52,7 @@ public class GameDeserializer extends GameBeanDeserializer {
 		if (object.has("config")) g.setConfig((Config) JsonBeanDeserializer.deserialize(Config.class, object.getJSONObject("config")));
         if (object.has("lng")) g.setLng(object.getDouble("lng"));
         if (object.has("lat")) g.setLat(object.getDouble("lat"));
+        if (object.has("language")) g.setLanguage(object.getString("language"));
 
 	}
 }

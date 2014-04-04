@@ -52,6 +52,7 @@ public class MessageJDO {
     private String teamIds;
 
     private Boolean deleted;
+
     private Long runId;
 
     public Long getMessageId() {

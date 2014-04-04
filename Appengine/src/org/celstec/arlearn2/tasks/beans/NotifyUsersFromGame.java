@@ -128,9 +128,7 @@ public class NotifyUsersFromGame extends GenericBean {
 				}
 				}
 			}
-		} catch (AuthenticationException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
+		}  catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

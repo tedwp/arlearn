@@ -28,6 +28,7 @@ public class GameModel extends DataSourceModel {
     public static final String CREATE_RUN_ICON = "createRunIcon";
     public static final String DOWNLOAD_ICON = "downloadIcon";
     public static final String DELETE_GAME_ICON = "deleteGameIcon";
+    public static final String LANGUAGE = "language";
 
 	private DataSourceConstants constants = GWT.create(DataSourceConstants.class);
 
@@ -41,6 +42,7 @@ public class GameModel extends DataSourceModel {
 		addField(INTEGER_DATA_TYPE, GAMEID_FIELD, true, true);
 		addField(INTEGER_DATA_TYPE, GAME_ACCESS, false, true);
 		addField(STRING_DATA_TYPE, GAME_TITLE_FIELD, false, true);
+        addField(STRING_DATA_TYPE, LANGUAGE, false, true);
 		addField(STRING_DATA_TYPE, LICENSE_CODE, false, true);
 		addField(INTEGER_DATA_TYPE, TIME_FIELD, false, true);
 //		addField(BOOLEAN_DATA_TYPE, DELETED_FIELD, false, true);

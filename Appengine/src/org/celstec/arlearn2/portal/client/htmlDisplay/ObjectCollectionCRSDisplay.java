@@ -10,7 +10,7 @@ import org.celstec.arlearn2.gwtcommonlib.client.objects.*;
 
 import java.util.HashMap;
 import java.util.List;
-
+import com.smartgwt.client.widgets.Window;
 /**
  * ****************************************************************************
  * Copyright (C) 2013 Open Universiteit Nederland
@@ -32,7 +32,7 @@ import java.util.List;
  * ****************************************************************************
  */
 public class ObjectCollectionCRSDisplay extends GeneralItemDisplay{
-    private ObjectCollectionDisplay objectCollectionDisplay;
+    private static ObjectCollectionDisplay objectCollectionDisplay;
 
     private HLayout hLayout;
     private Canvas[] canvasesCorrect;
@@ -45,13 +45,31 @@ public class ObjectCollectionCRSDisplay extends GeneralItemDisplay{
 
     public ObjectCollectionCRSDisplay(){}
 
+
+    public static void showAlert() {
+        Window w = new Window();
+        w.setWidth(525);
+        w.setHeight(275);
+        w.setIsModal(true);
+        w.setShowModalMask(true);
+        w.setAutoCenter(true);
+        w.show();
+        HTMLPane pane = new HTMLPane();
+        pane.setContents(objectCollectionDisplay.getRichText());
+        w.addItem(pane);
+        w.setTitle(objectCollectionDisplay.getTitle());
+    }
+
+
     public ObjectCollectionCRSDisplay(ObjectCollectionDisplay objectCollectionDisplay){
         this.objectCollectionDisplay = objectCollectionDisplay;
+
 
         hLayout = new HLayout();
         hLayout.setPadding(3);
         hLayout.setWidth100();
         hLayout.setHeight100();
+        String description = objectCollectionDisplay.getRichText();
 
         List zonesList = objectCollectionDisplay.getZones();
         canvasesCorrect = new Canvas[zonesList.size()];
@@ -67,9 +85,6 @@ public class ObjectCollectionCRSDisplay extends GeneralItemDisplay{
                 Canvas canvas = createAnswerCanvas("wrong"+j);
                 canvas.setBorder("5px solid #ff4040");
                 canvas.setShowEdges(false);
-//                canvas.setEdgeBackgroundColor("1px solid #4040ff");
-//                canvas.setEdgeCenterBackgroundColor("1px solid #4040ff");
-//                canvas.setEdgeImage("edges/blue/6.png");
                 canvasesWrong [j] = canvas;
             }
 

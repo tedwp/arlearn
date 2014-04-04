@@ -1,10 +1,7 @@
 package org.celstec.arlearn2.tasks.beans;
 
 import org.celstec.arlearn2.beans.account.Account;
-import org.celstec.arlearn2.beans.generalItem.FileReference;
-import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.beans.generalItem.AudioObject;
-import org.celstec.arlearn2.beans.generalItem.VideoObject;
+import org.celstec.arlearn2.beans.generalItem.*;
 import org.celstec.arlearn2.delegators.GeneralItemDelegator;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -80,8 +77,49 @@ public class UpdateMdHash extends GenericBean {
                 if (item != null && !item.getDeleted()) {
                     if ("icon".equals(localId)) {
                         item.setIconUrlMd5Hash(md5Hash);
+                    } else if (item.getType().equals(SingleChoiceImageTest.class.getCanonicalName())) {
+                        if ("audio".equals(localId)) {
+                                SingleChoiceImageTest imageTest = (SingleChoiceImageTest) item;
+                                imageTest.setMd5Hash(md5Hash);
+                         } else {
+                        SingleChoiceImageTest imageTest = (SingleChoiceImageTest) item;
+                        for (MultipleChoiceAnswerItem imageAnswerItem2: imageTest.getAnswers()) {
+                            MultipleChoiceImageAnswerItem imageAnswerItem = (MultipleChoiceImageAnswerItem) imageAnswerItem2;
+                            if (localId.endsWith(":i") && localId.startsWith(imageAnswerItem.getId())) {
+                                imageAnswerItem.setImageMd5Hash(md5Hash);
+                            }
+                            if (localId.endsWith(":a") && localId.startsWith(imageAnswerItem.getId())) {
+                                imageAnswerItem.setAudioMd5Hash(md5Hash);
+                            }
+                        }
+                        }
+                    } else if (item.getType().equals(MultipleChoiceImageTest.class.getCanonicalName())) {
+                        if ("audio".equals(localId)) {
+                                MultipleChoiceImageTest imageTest = (MultipleChoiceImageTest) item;
+                                imageTest.setMd5Hash(md5Hash);
+                        } else {
+                        MultipleChoiceImageTest imageTest = (MultipleChoiceImageTest) item;
+                        for (MultipleChoiceAnswerItem imageAnswerItem2: imageTest.getAnswers()) {
+                            MultipleChoiceImageAnswerItem imageAnswerItem = (MultipleChoiceImageAnswerItem) imageAnswerItem2;
+                            if (localId.endsWith(":i") && localId.startsWith(imageAnswerItem.getId())) {
+                                imageAnswerItem.setImageMd5Hash(md5Hash);
+                            }
+                            if (localId.endsWith(":a") && localId.startsWith(imageAnswerItem.getId())) {
+                                imageAnswerItem.setAudioMd5Hash(md5Hash);
+                            }
+                        }
+                        }
                     } else  if ("audio".equals(localId)) {
-                        ((AudioObject) item).setMd5Hash(md5Hash);
+                        if (item.getType().equals(SingleChoiceImageTest.class.getCanonicalName())) {
+                            SingleChoiceImageTest imageTest = (SingleChoiceImageTest) item;
+                            imageTest.setMd5Hash(md5Hash);
+                        } else if (item.getType().equals(MultipleChoiceImageTest.class.getCanonicalName())) {
+                            MultipleChoiceImageTest imageTest = (MultipleChoiceImageTest) item;
+                            imageTest.setMd5Hash(md5Hash);
+                        } else {
+                            ((AudioObject) item).setMd5Hash(md5Hash);
+                        }
+
                     } else if ("video".equals(localId)) {
                         ((VideoObject) item).setMd5Hash(md5Hash);
                     } else {

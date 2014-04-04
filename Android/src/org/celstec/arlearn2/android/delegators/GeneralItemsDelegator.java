@@ -221,7 +221,9 @@ public class GeneralItemsDelegator {
 			DownloadItem audioQuestion = getBaseItem(gi);
 			audioQuestion.setLocalId(AUDIO_LOCAL_ID);
 			audioQuestion.setRemoteUrl(gi.getAudioQuestion());
-			list.add(audioQuestion);
+            if (gi.getMd5Hash()!= null) audioQuestion.setMd5Hash(gi.getMd5Hash());
+
+            list.add(audioQuestion);
 		}
 		gi.getAnswers();
 		for (MultipleChoiceAnswerItem imageAnswer : gi.getAnswers()) {
@@ -230,12 +232,15 @@ public class GeneralItemsDelegator {
 				DownloadItem imageDi = getBaseItem(gi);
 				imageDi.setLocalId(mciai.getId() + ":i");
 				imageDi.setRemoteUrl(mciai.getImageUrl());
-				list.add(imageDi);
+                if (mciai.getImageMd5Hash()!= null) imageDi.setMd5Hash(mciai.getImageMd5Hash());
+
+                list.add(imageDi);
 			}
 			if (mciai.getAudioUrl() != null) {
 				DownloadItem audioDi = getBaseItem(gi);
 				audioDi.setLocalId(mciai.getId() + ":a");
 				audioDi.setRemoteUrl(mciai.getAudioUrl());
+                if (mciai.getAudioMd5Hash()!= null) audioDi.setMd5Hash(mciai.getAudioMd5Hash());
 				list.add(audioDi);
 			}
 		}
@@ -248,6 +253,7 @@ public class GeneralItemsDelegator {
 			DownloadItem audioQuestion = getBaseItem(gi);
 			audioQuestion.setLocalId(AUDIO_LOCAL_ID);
 			audioQuestion.setRemoteUrl(gi.getAudioQuestion());
+            if (gi.getMd5Hash()!= null) audioQuestion.setMd5Hash(gi.getMd5Hash());
 			list.add(audioQuestion);
 		}
 		gi.getAnswers();
@@ -257,12 +263,14 @@ public class GeneralItemsDelegator {
 				DownloadItem imageDi = getBaseItem(gi);
 				imageDi.setLocalId(mciai.getId() + ":i");
 				imageDi.setRemoteUrl(mciai.getImageUrl().trim());
-				list.add(imageDi);
+                if (mciai.getImageMd5Hash()!= null) imageDi.setMd5Hash(mciai.getImageMd5Hash());
+                list.add(imageDi);
 			}
 			if (mciai.getAudioUrl() != null) {
 				DownloadItem audioDi = getBaseItem(gi);
 				audioDi.setLocalId(mciai.getId() + ":a");
 				audioDi.setRemoteUrl(mciai.getAudioUrl().trim());
+                if (mciai.getAudioMd5Hash()!= null) audioDi.setMd5Hash(mciai.getAudioMd5Hash());
 				list.add(audioDi);
 			}
 		}

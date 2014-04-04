@@ -7,6 +7,7 @@ import org.celstec.arlearn2.beans.run.Message;
 import org.celstec.arlearn2.beans.run.MessageList;
 import org.celstec.arlearn2.jdo.manager.MessageManager;
 import org.celstec.arlearn2.jdo.manager.ThreadManager;
+import org.celstec.arlearn2.tasks.beans.NotifyUsersForMessage;
 
 public class MessageDelegator extends GoogleDelegator {
 	private static final Logger logger = Logger.getLogger(MessageDelegator.class.getName());
@@ -24,7 +25,10 @@ public class MessageDelegator extends GoogleDelegator {
 
     public Message createMessage(Message message) {
         message.setDate(System.currentTimeMillis());
-        return MessageManager.createMessage(message);
+        Message returnMessage = MessageManager.createMessage(message);
+        (new NotifyUsersForMessage(authToken, returnMessage)).scheduleTask();
+
+        return returnMessage;
     }
 
     public MessageList getMessagesForThread(long threadId){

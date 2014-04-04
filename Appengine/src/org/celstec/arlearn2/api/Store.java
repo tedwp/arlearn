@@ -12,6 +12,9 @@ import org.celstec.arlearn2.delegators.CategoryDelegator;
 import org.celstec.arlearn2.mappers.CountOutput;
 import org.celstec.arlearn2.mappers.CountReducer;
 import org.celstec.arlearn2.mappers.CountRunsMapper;
+import org.celstec.arlearn2.mappers.lom.GamesMapper;
+import org.celstec.arlearn2.mappers.lom.LomOutput;
+import org.celstec.arlearn2.mappers.lom.LomReducer;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -122,8 +125,6 @@ public class Store extends Service {
     @CacheControlHeader("no-cache")
     @Path("/games/countUsers")
     public String startUsersMapReduce(
-            @PathParam("lang") String lang,
-            @QueryParam("resumptionToken") String cursor,
             @DefaultValue("application/json") @HeaderParam("Accept") String accept){
         String id = MapReduceJob.start(
                 MapReduceSpecification.of(
@@ -134,6 +135,26 @@ public class Store extends Service {
                         Marshallers.getLongMarshaller(),
                         new CountReducer(),
                         new CountOutput(2)),
+                getSettings());
+
+        return "{ 'jobId':"+id+"}";
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @CacheControlHeader("no-cache")
+    @Path("/games/generateOai")
+    public String startLomGeneration(
+            @DefaultValue("application/json") @HeaderParam("Accept") String accept){
+        String id = MapReduceJob.start(
+                MapReduceSpecification.of(
+                        "Lom Map Reduce",
+                        new DatastoreInput("GameJDO", 2),
+                        new GamesMapper(),
+                        Marshallers.getStringMarshaller(),
+                        Marshallers.getStringMarshaller(),
+                        new LomReducer(),
+                        new LomOutput(2)),
                 getSettings());
 
         return "{ 'jobId':"+id+"}";

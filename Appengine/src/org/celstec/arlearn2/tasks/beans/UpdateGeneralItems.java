@@ -101,13 +101,10 @@ public class UpdateGeneralItems extends GenericBean{
 
 		UsersDelegator qu = null;
 		User u = null;
-		try {
+
 			qu = new UsersDelegator("auth=" + getToken());
 			u = qu.getUserByEmail(runId, getUserEmail());
-		} catch (AuthenticationException e) {
-			e.printStackTrace();
-			log.severe("exception "+e.getMessage());
-		}
+
 		Action a = new Action();
 		a.setRunId(runId);
 		a.setAction(getAction());

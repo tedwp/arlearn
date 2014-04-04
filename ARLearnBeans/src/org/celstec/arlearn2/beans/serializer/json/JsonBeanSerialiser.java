@@ -50,15 +50,7 @@ import org.celstec.arlearn2.beans.deserializer.CustomDeserializer;
 import org.celstec.arlearn2.beans.deserializer.json.OpenQuestionDeserializer;
 import org.celstec.arlearn2.beans.game.*;
 import org.celstec.arlearn2.beans.generalItem.*;
-import org.celstec.arlearn2.beans.notification.APNDeviceDescription;
-import org.celstec.arlearn2.beans.notification.DeviceDescriptionList;
-import org.celstec.arlearn2.beans.notification.GCMDeviceDescription;
-import org.celstec.arlearn2.beans.notification.GameModification;
-import org.celstec.arlearn2.beans.notification.GeneralItemModification;
-import org.celstec.arlearn2.beans.notification.Ping;
-import org.celstec.arlearn2.beans.notification.Pong;
-import org.celstec.arlearn2.beans.notification.RunModification;
-import org.celstec.arlearn2.beans.notification.TeamModification;
+import org.celstec.arlearn2.beans.notification.*;
 import org.celstec.arlearn2.beans.notification.authoring.GameCreationStatus;
 import org.celstec.arlearn2.beans.notification.authoring.RunCreationStatus;
 import org.celstec.arlearn2.beans.oauth.OauthInfo;
@@ -179,7 +171,9 @@ public class JsonBeanSerialiser extends BeanSerializer{
 		customSerializerMap.put(GameModification.class.getCanonicalName(), GameModification.serializer);
 		customSerializerMap.put(TeamModification.class.getCanonicalName(), TeamModification.serializer);
 		customSerializerMap.put(GeneralItemModification.class.getCanonicalName(), new GeneralItemModificationSerializer());
-		customSerializerMap.put(AuthResponse.class.getCanonicalName(), new AuthResponseSerializer());
+        customSerializerMap.put(MessageNotification.class.getCanonicalName(), MessageNotification.serializer);
+
+        customSerializerMap.put(AuthResponse.class.getCanonicalName(), new AuthResponseSerializer());
 		customSerializerMap.put(Version.class.getCanonicalName(), new VersionSerializer());
 		customSerializerMap.put(LocationUpdate.class.getCanonicalName(), new LocationUpdateSerializer());
 		customSerializerMap.put(RunPackage.class.getCanonicalName(), new RunPackage.RunPackageSerializer());
