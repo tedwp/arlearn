@@ -21,54 +21,60 @@ package net.wespot.pim.view;
  * ****************************************************************************
  */
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import net.wespot.pim.SplashActivity;
+import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.BadgesLazyListAdapter;
-import net.wespot.pim.utils.layout.RefreshListFragment;
-import daoBase.DaoConfiguration;
-import de.greenrobot.dao.query.LazyList;
+import net.wespot.pim.controller.InquiryActivity;
+import net.wespot.pim.utils.layout.ButtonEntryDelegator;
+import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import org.celstec.arlearn.delegators.INQ;
+import org.celstec.arlearn2.android.listadapter.ListItemClickInterface;
+import org.celstec.dao.gen.BadgeLocalObject;
+import org.celstec.dao.gen.InquiryLocalObject;
 
 /**
  * A fragment that launches other parts of the demo application.
  */
-public class PimBadgesFragment extends RefreshListFragment {
+public class PimBadgesFragment extends _ActBar_FragmentActivity implements ListItemClickInterface<BadgeLocalObject> {
+
+    private static final String TAG = "PimBadgesFragment";
+    private BadgesLazyListAdapter adapterInq;
 
     //TODO don't hardcode credentials
     private String accountLocalId = "116743449349920850150";
     private int accountType = 2;
 
-    LazyList lazyList;
-    private BadgesLazyListAdapter adapterInq;
-    private String TAG;
+    private ListView badges;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        setHasOptionsMenu(true);
+        setContentView(R.layout.fragment_badges);
 
-        // Avoiding NULL exceptions when resuming the PIM
-        if (INQ.inquiry == null){
-            Intent intent = new Intent(getActivity(), SplashActivity.class);
-            startActivity(intent);
-//            INQ.init(this);
-//            INQ.accounts.syncMyAccountDetails();
-//            INQ.inquiry.syncInquiries();
-            Log.e(TAG, "recover INQ.inquiry is needed.");
-        }
-        
-        INQ.init(getActivity());
+        badges = (ListView) findViewById(R.id.list_badges);
+
+        setTitle(R.string.badges_title_list);
+
+        INQ.init(this);
         INQ.badges.syncBadges(accountType,accountLocalId);
 
-        DaoConfiguration daoConfiguration= DaoConfiguration.getInstance(this.getActivity());
-        adapterInq =  new BadgesLazyListAdapter(this.getActivity());
+        adapterInq =  new BadgesLazyListAdapter(this);
+        badges.setAdapter(adapterInq);
+        adapterInq.setOnListItemClickCallback(this);
 
-        setListAdapter(adapterInq);
+    }
+
+    @Override
+    public void onListItemClick(View v, int position, BadgeLocalObject object) {
+
+    }
+
+    @Override
+    public boolean setOnLongClickListener(View v, int position, BadgeLocalObject object) {
+        return false;
     }
 
     @Override
@@ -76,13 +82,4 @@ public class PimBadgesFragment extends RefreshListFragment {
         adapterInq.close();
         super.onDestroy();
     }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        //TODO provide an action for the listview
-//        Intent intent = new Intent(getActivity(), InquiryActivity.class);
-//        intent.putExtra(InquiryActivity.INQUIRY_ID, adapterInq.getItemId(position));
-//        startActivity(intent);
-    }
-
 }

@@ -40,6 +40,7 @@ import net.wespot.pim.utils.images.ImageFetcher;
 import net.wespot.pim.utils.images.Utils;
 import net.wespot.pim.view.InqImageDetailFragment;
 import org.celstec.arlearn.delegators.INQ;
+import org.celstec.dao.gen.ResponseLocalObject;
 //import com.example.android.bitmapfun.BuildConfig;
 //import com.example.android.bitmapfun.R;
 //import com.example.android.bitmapfun.provider.Images;
@@ -58,6 +59,7 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
     private ViewPager mPager;
 
     private TextView current_info;
+    private TextView info_image;
     private ImageView prev_item;
     private ImageView next_item;
 
@@ -68,15 +70,21 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
             Utils.enableStrictMode();
         }
 
-        // Avoiding NULL exceptions when resuming the PIM
-        if (INQ.inquiry == null){
-            Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
-            startActivity(intent);
-//            INQ.init(this);
-//            INQ.accounts.syncMyAccountDetails();
-//            INQ.inquiry.syncInquiries();
-            Log.e(TAG, "recover INQ.inquiry is needed.");
+        if (savedInstanceState != null) {
+            INQ.init(this);
+            INQ.accounts.syncMyAccountDetails();
+            INQ.inquiry.setCurrentInquiry(DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(savedInstanceState.getLong("currentInquiry")));
         }
+
+        // Avoiding NULL exceptions when resuming the PIM
+//        if (INQ.inquiry == null){
+//            Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
+//            startActivity(intent);
+////            INQ.init(this);
+////            INQ.accounts.syncMyAccountDetails();
+////            INQ.inquiry.syncInquiries();
+//            Log.e(TAG, "recover INQ.inquiry is needed.");
+//        }
 
 //        INQ.inquiry.syncDataCollectionTasks();
 //        INQ.responses.syncResponses(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
@@ -87,6 +95,7 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         prev_item = (ImageView) findViewById(R.id.prev_button);
         next_item = (ImageView) findViewById(R.id.next_button);
         current_info = (TextView) findViewById(R.id.info_current_element);
+        info_image = (TextView) findViewById(R.id.info_image);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null){
@@ -118,8 +127,10 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         mImageFetcher.addImageCache(getSupportFragmentManager(), cacheParams);
         mImageFetcher.setImageFadeIn(false);
 
+        INQ.generalItems.syncGeneralItems(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameId());
         // Set up ViewPager and backing adapter
-        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(generalItemId).getResponses().size());
+//        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(generalItemId).getResponses().size());
+        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), DaoConfiguration.getInstance().getResponseLocalObjectDao()._queryGeneralItemLocalObject_Responses(generalItemId).size());
 //        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), DaoConfiguration.getInstance().getResponseLocalObjectDao().loadAll().size());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
@@ -226,7 +237,10 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         public Fragment getItem(int position) {
 //            return null;
 //            return InqImageDetailFragment.newInstance(String.valueOf(DaoConfiguration.getInstance().getResponseLocalObjectDao().loadAll().get(position).getUriAsString()));
-            return InqImageDetailFragment.newInstance(String.valueOf(DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(generalItemId).getResponses().get(position).getUriAsString()));
+//            return InqImageDetailFragment.newInstance(String.valueOf(DaoConfiguration.getInstance().getGeneralItemLocalObjectDao().load(generalItemId).getResponses().get(position).getUriAsString()));
+            ResponseLocalObject res = DaoConfiguration.getInstance().getResponseLocalObjectDao()._queryGeneralItemLocalObject_Responses(generalItemId).get(position);
+            info_image.setText(res.getTimeStamp().toString());
+            return InqImageDetailFragment.newInstance(res);
         }
     }
 
@@ -254,6 +268,7 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
             Log.e(TAG, "Number elements: "+real_number_elements);
 
             current_info.setText(1+" of "+real_number_elements);
+
         }
 
         @Override
@@ -268,7 +283,6 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
 
             Log.e(TAG, "Current element: "+real_position);
             Log.e(TAG, "Number elements: "+real_number_elements);
-
             current_info.setText(real_position+" of "+real_number_elements);
         }
 

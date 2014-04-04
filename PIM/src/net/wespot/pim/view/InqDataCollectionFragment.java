@@ -38,13 +38,15 @@ import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.events.GameEvent;
 import org.celstec.arlearn2.android.events.RunEvent;
+import org.celstec.arlearn2.android.listadapter.ListItemClickInterface;
 import org.celstec.dao.gen.GameLocalObject;
+import org.celstec.dao.gen.GeneralItemLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
 
 /**
  * Fragment to display Data Collection Task (General Item) from an Inquiry (Game)
  */
-public class InqDataCollectionFragment extends Fragment {
+public class InqDataCollectionFragment extends Fragment implements ListItemClickInterface<GeneralItemLocalObject> {
 
     private static final String TAG = "InqDataCollectionFragment";
     private ListView data_collection_tasks;
@@ -79,7 +81,8 @@ public class InqDataCollectionFragment extends Fragment {
                     INQ.responses.syncResponses(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
                     data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
                     datAdapter =  new DataCollectionLazyListAdapter(this.getActivity(),gameLocalObject.getId());
-                    data_collection_tasks.setOnItemClickListener(new onListDataCollectionTasksClick());
+//                    data_collection_tasks.setOnItemClickListener(new onListDataCollectionTasksClick());
+                    datAdapter.setOnListItemClickCallback(this);
                     data_collection_tasks.setAdapter(datAdapter);
                 }else{
                     Log.e(TAG, "There are no data collection tasks for this inquiry");
@@ -103,12 +106,22 @@ public class InqDataCollectionFragment extends Fragment {
         Log.e(TAG, "Games loaded OK");
     }
 
-    private class onListDataCollectionTasksClick implements android.widget.AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            Intent intent = new Intent(getActivity(), InqDataCollectionTaskFragment.class);
-            intent.putExtra("DataCollectionTask", datAdapter.getItem(i).getId());
-            startActivity(intent);
-        }
+    @Override
+    public void onListItemClick(View v, int position, GeneralItemLocalObject object) {
+        Intent intent = new Intent(getActivity(), InqDataCollectionTaskFragment.class);
+        intent.putExtra("DataCollectionTask", object.getId());
+        startActivity(intent);
     }
+
+    @Override
+    public boolean setOnLongClickListener(View v, int position, GeneralItemLocalObject object) {
+        return false;
+    }
+
+//    private class onListDataCollectionTasksClick implements android.widget.AdapterView.OnItemClickListener {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//
+//            }
+//    }
 }

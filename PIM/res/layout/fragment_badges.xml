@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView android:id="@+id/badges_title_list"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="@string/badges_title_list"
+              style="@style/CustomTheme.TextView.Title1"
+            />
+    <ListView android:id="@+id/list_badges"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:dividerHeight="1dp"
+              android:layout_below="@+id/badges_title_list"
+              />
+</RelativeLayout>

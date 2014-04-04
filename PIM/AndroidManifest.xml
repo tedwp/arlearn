@@ -19,6 +19,8 @@
         </activity>
         <activity android:name=".LoginActivity"
                   android:label="@string/app_name"  android:screenOrientation="portrait"/>
+        <activity android:name=".controller.VideoFullScreenView"
+                  android:label="@string/app_name"  android:screenOrientation="portrait"/>
         <activity android:name="net.wespot.pim.MainActivity" android:label="@string/app_name"
                   android:screenOrientation="portrait"/>
         <activity android:name="net.wespot.pim.controller.InquiryPhasesActivity" android:label="@string/app_name"
@@ -32,6 +34,8 @@
         <activity android:name=".view.InqDataCollectionTaskFragment" android:label="@string/app_name"
                   android:screenOrientation="portrait" />
         <activity android:name=".view.InqMyMediaFragment" android:label="@string/app_name"
+                  android:screenOrientation="portrait" />
+        <activity android:name=".view.PimBadgesFragment" android:label="@string/app_name"
                   android:screenOrientation="portrait" />
 
 

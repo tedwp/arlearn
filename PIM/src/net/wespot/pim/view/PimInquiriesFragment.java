@@ -38,11 +38,13 @@ import net.wespot.pim.utils.layout.ButtonEntryDelegator;
 import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import net.wespot.pim.utils.layout.ButtonEntry;
 import org.celstec.arlearn.delegators.INQ;
+import org.celstec.arlearn2.android.listadapter.ListItemClickInterface;
+import org.celstec.dao.gen.InquiryLocalObject;
 
 /**
  * A fragment that launches other parts of the demo application.
  */
-public class PimInquiriesFragment extends _ActBar_FragmentActivity {
+public class PimInquiriesFragment extends _ActBar_FragmentActivity  implements ListItemClickInterface<InquiryLocalObject> {
 
     private static final String TAG = "PimInquiriesFragment";
     private InquiryLazyListAdapter adapterInq;
@@ -63,7 +65,7 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity {
 
         adapterInq =  new InquiryLazyListAdapter(this);
         inquiries.setAdapter(adapterInq);
-        inquiries.setOnItemClickListener(new onListInquiryClick());
+        adapterInq.setOnListItemClickCallback(this);
 
         // This is needed to set the class
         ButtonEntryDelegator button_manager = ButtonEntryDelegator.getInstance(this);
@@ -79,16 +81,19 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity {
         super.onDestroy();
     }
 
-    private class onListInquiryClick implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            // This links to the PhasesActivities but then go back to the InquiryActivity.class, as it has been done for the
-            // new inquiry. Then in new inquiry depends on the INQ.inquiry object we go to create a new one o visualise the
-            // current inquiry
-            Intent intent = new Intent(getApplicationContext(), InquiryPhasesActivity.class);
-            INQ.inquiry.setCurrentInquiry(INQ.inquiry.getInquiryLocalObject(adapterInq.getItemId(i)));
-            startActivity(intent);
-        }
+    @Override
+    public void onListItemClick(View v, int position, InquiryLocalObject object) {
+
+        Intent intent = new Intent(getApplicationContext(), InquiryPhasesActivity.class);
+        INQ.inquiry.setCurrentInquiry(object);
+        startActivity(intent);
+
+
+    }
+
+    @Override
+    public boolean setOnLongClickListener(View v, int position, InquiryLocalObject object) {
+        return false;
     }
 
     @Override
@@ -125,4 +130,5 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity {
             startActivity(intent);
         }
     }
+
 }

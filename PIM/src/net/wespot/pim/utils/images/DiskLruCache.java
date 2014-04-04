@@ -294,13 +294,13 @@ public final class DiskLruCache implements Closeable {
             try {
                 cache.readJournal();
                 cache.processJournal();
-                cache.journalWriter = new BufferedWriter(new FileWriter(cache.journalFile, true),
-                        IO_BUFFER_SIZE);
+                cache.journalWriter = new BufferedWriter(new FileWriter(cache.journalFile, true), IO_BUFFER_SIZE);
                 return cache;
             } catch (IOException journalIsCorrupt) {
 //                System.logW("DiskLruCache " + directory + " is corrupt: "
 //                        + journalIsCorrupt.getMessage() + ", removing");
                 cache.delete();
+//                closeQuietly(cache.journalWriter);
             }
         }
 

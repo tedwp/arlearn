@@ -43,6 +43,7 @@ import org.celstec.arlearn2.android.dataCollection.PictureManager;
 import org.celstec.arlearn2.android.dataCollection.VideoManager;
 import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.events.ResponseEvent;
+import org.celstec.arlearn2.android.listadapter.ListItemClickInterface;
 import org.celstec.dao.gen.GeneralItemLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
 import org.celstec.dao.gen.ResponseLocalObject;
@@ -53,7 +54,7 @@ import java.io.File;
 /**
  * Fragment to display responses from a Data Collection Task (General Item)
  */
-public class InqDataCollectionTaskFragment extends _ActBar_FragmentActivity {
+public class InqDataCollectionTaskFragment extends _ActBar_FragmentActivity implements ListItemClickInterface<ResponseLocalObject> {
 
     private static final String TAG = "InqDataCollectionTaskFragment";
     private ListView data_collection_tasks_items;
@@ -94,7 +95,8 @@ public class InqDataCollectionTaskFragment extends _ActBar_FragmentActivity {
             datAdapter =  new ResponsesLazyListAdapter(this, generalItemId);
 //            datAdapter =  new ResponsesLazyListAdapter(this);
 
-            data_collection_tasks_items.setOnItemClickListener(new onListDataCollectionTasksClick());
+            datAdapter.setOnListItemClickCallback(this);
+//            data_collection_tasks_items.setOnItemClickListener(new onListDataCollectionTasksClick());
             data_collection_tasks_items.setAdapter(datAdapter);
 
             getActionBar().setTitle(getResources().getString(R.string.actionbar_list_data_collection_task));
@@ -109,7 +111,6 @@ public class InqDataCollectionTaskFragment extends _ActBar_FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG, "pass OnResume ");
     }
 
     @Override
@@ -139,16 +140,30 @@ public class InqDataCollectionTaskFragment extends _ActBar_FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class onListDataCollectionTasksClick implements android.widget.AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            Intent intent = new Intent(getApplicationContext(), ImageDetailActivity.class);
-            intent.putExtra("DataCollectionTask", datAdapter.getItem(i).getId());
-            intent.putExtra("DataCollectionTaskGeneralItemId", generalItemId);
-            intent.putExtra(ImageDetailActivity.EXTRA_IMAGE, i);
-            startActivity(intent);
-        }
+    @Override
+    public void onListItemClick(View v, int position, ResponseLocalObject object) {
+        Intent intent = new Intent(getApplicationContext(), ImageDetailActivity.class);
+        intent.putExtra("DataCollectionTask", object.getId());
+        intent.putExtra("DataCollectionTaskGeneralItemId", generalItemId);
+        intent.putExtra(ImageDetailActivity.EXTRA_IMAGE, position);
+        startActivity(intent);
     }
+
+    @Override
+    public boolean setOnLongClickListener(View v, int position, ResponseLocalObject object) {
+        return false;
+    }
+
+//    private class onListDataCollectionTasksClick implements android.widget.AdapterView.OnItemClickListener {
+//        @Override
+//        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//            Intent intent = new Intent(getApplicationContext(), ImageDetailActivity.class);
+//            intent.putExtra("DataCollectionTask", datAdapter.getItem(i).getId());
+//            intent.putExtra("DataCollectionTaskGeneralItemId", generalItemId);
+//            intent.putExtra(ImageDetailActivity.EXTRA_IMAGE, i);
+//            startActivity(intent);
+//        }
+//    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 

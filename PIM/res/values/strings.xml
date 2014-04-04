@@ -9,6 +9,8 @@
     <string name="inquiry_title">Menu</string>
     <string name="inquiry_title_list">Open inquiries</string>
 
+    <string name="badges_title_list">Badges</string>
+
     <string name="actionbar_inquiry_list">Inquiry list</string>
     <string name="actionbar_inquiry">Inquiry</string>
     <string name="actionbar_list_data_collection_task">Data Collection Tasks</string>
