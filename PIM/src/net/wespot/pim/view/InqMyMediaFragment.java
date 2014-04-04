@@ -38,6 +38,8 @@ import net.wespot.pim.controller.Adapters.ResponsesLazyListAdapter;
 import net.wespot.pim.controller.ImageDetailActivity;
 import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import org.celstec.arlearn.delegators.INQ;
+import org.celstec.arlearn2.android.listadapter.ListItemClickInterface;
+import org.celstec.dao.gen.BadgeLocalObject;
 import org.celstec.dao.gen.GameLocalObject;
 import org.celstec.dao.gen.GeneralItemLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
@@ -45,7 +47,7 @@ import org.celstec.dao.gen.InquiryLocalObject;
 /**
  * Fragment to display responses from a Data Collection Task (General Item)
  */
-public class InqMyMediaFragment extends _ActBar_FragmentActivity {
+public class InqMyMediaFragment extends _ActBar_FragmentActivity implements ListItemClickInterface<GeneralItemLocalObject> {
 
     private static final String TAG = "InqDataCollectionTaskFragment";
     private ListView data_collection_tasks;
@@ -66,7 +68,7 @@ public class InqMyMediaFragment extends _ActBar_FragmentActivity {
 
         data_collection_tasks = (ListView) findViewById(R.id.data_collection_tasks);
         datAdapter =  new DataCollectionLazyListAdapter(getApplicationContext());
-        data_collection_tasks.setOnItemClickListener(new onListDataCollectionTasksClick());
+        datAdapter.setOnListItemClickCallback(this);
         data_collection_tasks.setAdapter(datAdapter);
     }
 
@@ -88,14 +90,17 @@ public class InqMyMediaFragment extends _ActBar_FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class onListDataCollectionTasksClick implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            Intent intent = new Intent(getApplicationContext(), ImageDetailActivity.class);
-            intent.putExtra("DataCollectionTask", datAdapter.getItem(i).getId());
-            intent.putExtra("DataCollectionTaskGeneralItemId", generalItemId);
-            intent.putExtra(ImageDetailActivity.EXTRA_IMAGE, i);
-            startActivity(intent);
-        }
+    @Override
+    public void onListItemClick(View v, int position, GeneralItemLocalObject object) {
+        Intent intent = new Intent(getApplicationContext(), ImageDetailActivity.class);
+        intent.putExtra("DataCollectionTask", object.getId());
+        intent.putExtra("DataCollectionTaskGeneralItemId", generalItemId);
+        intent.putExtra(ImageDetailActivity.EXTRA_IMAGE, position);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean setOnLongClickListener(View v, int position, GeneralItemLocalObject object) {
+        return false;
     }
 }
