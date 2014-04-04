@@ -42,10 +42,6 @@ public class PimBadgesFragment extends _ActBar_FragmentActivity implements ListI
     private static final String TAG = "PimBadgesFragment";
     private BadgesLazyListAdapter adapterInq;
 
-    //TODO don't hardcode credentials
-    private String accountLocalId = "116743449349920850150";
-    private int accountType = 2;
-
     private ListView badges;
 
     @Override
@@ -59,7 +55,7 @@ public class PimBadgesFragment extends _ActBar_FragmentActivity implements ListI
         setTitle(R.string.badges_title_list);
 
         INQ.init(this);
-        INQ.badges.syncBadges(accountType,accountLocalId);
+        INQ.badges.syncBadges();
 
         adapterInq =  new BadgesLazyListAdapter(this);
         badges.setAdapter(adapterInq);
