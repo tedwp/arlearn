@@ -75,8 +75,8 @@ public class GCMRegisterTask extends AsyncTask<Activity, Long, Void> {
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
                 try {
-                    GooglePlayServicesUtil.getErrorDialog(resultCode, ctx,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+//                    GooglePlayServicesUtil.getErrorDialog(resultCode, ctx,
+//                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
                 } catch (NoClassDefFoundError e) {
                     Log.i(TAG, "This device is not supported.",e);
                 }

@@ -58,6 +58,10 @@ public class StructureSlidingPaneLayout extends SherlockFragmentActivity {
         mActionBar = createActionBarHelper();
         mActionBar.init();
 
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+
         // Handle fragments. First time a default fragment is placed here.
         restoreFragment(savedInstanceState);
     }
