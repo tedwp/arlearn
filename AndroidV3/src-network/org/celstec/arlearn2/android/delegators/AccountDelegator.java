@@ -84,6 +84,14 @@ public class AccountDelegator extends AbstractDelegator{
         }
     }
 
+    public void disAuthenticate() {
+        loggedInAccount = null;
+    }
+
+    public boolean isAuthenticated(){
+        return loggedInAccount != null;
+    }
+
     public AccountLocalObject getAccount(String accountFullId) {
         AccountLocalObjectDao dao = DaoConfiguration.getInstance().getAccountLocalObjectDao();
         List<AccountLocalObject> resultList = dao.queryBuilder().where(AccountLocalObjectDao.Properties.FullId.eq(accountFullId)).list();
