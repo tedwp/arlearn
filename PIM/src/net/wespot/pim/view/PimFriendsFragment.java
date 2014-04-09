@@ -55,7 +55,7 @@ public class PimFriendsFragment extends _ActBar_FragmentActivity {
         friends = (ListView) findViewById(R.id.list_friends);
         add_friend = (View) findViewById(R.id.friends_add_friend);
 
-        setTitle(R.string.inquiry_title);
+        setTitle(R.string.common_title);
 
         adapterInq =  new InquiryLazyListAdapter(this);
         friends.setAdapter(adapterInq);

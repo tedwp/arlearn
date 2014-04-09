@@ -70,6 +70,9 @@ public class InqMyMediaFragment extends _ActBar_FragmentActivity implements List
         datAdapter =  new DataCollectionLazyListAdapter(getApplicationContext());
         datAdapter.setOnListItemClickCallback(this);
         data_collection_tasks.setAdapter(datAdapter);
+
+        setTitle(R.string.common_title);
+
     }
 
 

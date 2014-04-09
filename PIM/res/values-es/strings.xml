@@ -2,11 +2,11 @@
 <resources>
     <string name="app_name">Inquiries</string>
     <string name="inquiry_title_new">Nueva inquiry</string>
-    <string name="inquiry_title">Inquiry $1s</string>
+    <string name="common_title">Inquiry $1s</string>
     <string name="inquiry_create_title">Crear nueva inquiry</string>
     <string name="inquiry_create_yes">Si</string>
     <string name="inquiry_create_no">No</string>
-    <string name="inquiry_title">Menu</string>
+    <string name="common_title">Menu</string>
     <string name="inquiry_title_list">Inquiries abiertas</string>
 
     <string name="phases_invite_new_friend">Invita amigos</string>

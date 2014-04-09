@@ -25,18 +25,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import net.wespot.pim.R;
-import net.wespot.pim.SplashActivity;
 import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
 import net.wespot.pim.controller.InquiryActivity;
 import net.wespot.pim.controller.InquiryPhasesActivity;
-import net.wespot.pim.utils.Constants;
 import net.wespot.pim.utils.layout.ButtonEntryDelegator;
 import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
-import net.wespot.pim.utils.layout.ButtonEntry;
 import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.listadapter.ListItemClickInterface;
 import org.celstec.dao.gen.InquiryLocalObject;
@@ -56,12 +52,18 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity  implements L
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            INQ.init(this);
+            INQ.accounts.syncMyAccountDetails();
+            INQ.inquiry.syncInquiries();
+        }
+
         setContentView(R.layout.fragment_inquiries);
 
         inquiries = (ListView) findViewById(R.id.list_inquiries);
         new_inquiry = (View) findViewById(R.id.inquiries_new_inquiry);
 
-        setTitle(R.string.inquiry_title);
+        setTitle(R.string.common_title);
 
         adapterInq =  new InquiryLazyListAdapter(this);
         inquiries.setAdapter(adapterInq);
@@ -73,6 +75,9 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity  implements L
         // Creation of the links
         new_inquiry =button_manager._button_list(R.id.inquiries_new_inquiry, getString(R.string.inquiry_title_new), R.drawable.ic_add_inquiry, InquiryActivity.class, true);
         new_inquiry.setOnClickListener(new OnClickNewInquiry());
+
+        setTitle(R.string.common_title);
+
     }
 
     @Override
@@ -87,8 +92,6 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity  implements L
         Intent intent = new Intent(getApplicationContext(), InquiryPhasesActivity.class);
         INQ.inquiry.setCurrentInquiry(object);
         startActivity(intent);
-
-
     }
 
     @Override
@@ -109,12 +112,6 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity  implements L
         switch (item.getItemId()) {
             case R.id.menu_refresh:
                 Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT).show();
-
-                if (INQ.inquiry == null){
-                    INQ.init(this);
-                    Log.e(TAG, "recover INQ.inquiry is needed.");
-                }
-
                 INQ.inquiry.syncInquiries();
                 break;
         }

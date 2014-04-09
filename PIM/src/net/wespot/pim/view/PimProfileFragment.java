@@ -24,9 +24,6 @@ package net.wespot.pim.view;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import net.wespot.pim.R;
@@ -44,36 +41,44 @@ public class PimProfileFragment extends _ActBar_FragmentActivity {
 
     private TextView name;
     private TextView email;
-    private TextView web;
+    private TextView localid;
     private ImageView picture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AccountLocalObject account = INQ.accounts.getLoggedInAccount();
+        if (INQ.isOnline()){
 
-        setContentView(R.layout.screen_profile);
+//            INQ.accounts.syncMyAccountDetails();
+            AccountLocalObject account = INQ.accounts.getLoggedInAccount();
 
-        name = (TextView) findViewById(R.id.profile_name);
-        email = (TextView) findViewById(R.id.profile_email_value);
-        web = (TextView) findViewById(R.id.profile_website_value);
-        picture = (ImageView) findViewById(R.id.imageView);
+            setContentView(R.layout.screen_profile);
 
-        name.setText(account.getName());
-        email.setText(account.getEmail());
-        web.setText(account.getFullId());
+            name = (TextView) findViewById(R.id.profile_name_value);
+            email = (TextView) findViewById(R.id.profile_email_value);
+            localid = (TextView) findViewById(R.id.profile_localid_value);
+            picture = (ImageView) findViewById(R.id.imageView);
 
-        if (account.getPicture() != null){
-            BitmapWorkerTask task = new BitmapWorkerTask(picture);
-            // TODO change to picture
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, account.getPicture());
+            name.setText(account.getName());
+            email.setText(account.getEmail());
+            localid.setText(account.getLocalId());
+
+            if (account.getPicture() != null){
+                BitmapWorkerTask task = new BitmapWorkerTask(picture);
+                // TODO change to picture
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, account.getPicture());
+            }
+            else{
+                picture.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_placeholder));
+            }
+
+//            setTitle(account.getName());
+            setTitle(R.string.common_title);
+
+        }else{
+            setTitle(R.string.network_connection);
         }
-        else{
-            picture.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.foto_perfil_croped));
-        }
-
-        setTitle(R.string.profile_name);
     }
 
     @Override

@@ -28,7 +28,7 @@ import net.wespot.pim.R;
  * Contributors: Angel Suarez
  * ****************************************************************************
  */
-public class InqNoDataFragment extends Fragment {
+public class _InqNoDataFragment extends Fragment {
 
     public static final String INQUIRY_ID = "inquiry_id";
 

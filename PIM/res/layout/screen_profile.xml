@@ -30,49 +30,86 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent" android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:background="@color/app.base.white">
+            android:background="@color/app.base.white"
+            android:layout_margin="10dp">
 
-
-
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceMedium"
-                  android:id="@+id/profile_name" android:textStyle="bold"
-                  android:layout_centerVertical="true" android:layout_centerHorizontal="true"
-                  android:layout_margin="30dp" android:textSize="25dp"/>
         <ImageView
                 android:layout_width="182dp"
                 android:layout_height="180dp"
                 android:id="@+id/imageView"
-                android:layout_marginTop="@dimen/profile.imageview.margin.top"
                 android:layout_gravity="center_horizontal"
                 android:contentDescription="@string/profile_picture_description"
-                android:src="@drawable/foto_perfil_croped"
-                android:layout_above="@+id/profile_name" android:layout_centerHorizontal="true"/>
+                android:src="@drawable/ic_profile_placeholder"
+                android:layout_marginTop="33dp"
+                android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
+
+        <!--Name -->
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/profile_email"
-                android:id="@+id/profile_email"
-                android:layout_below="@+id/profile_name" android:layout_alignLeft="@+id/profile_name"/>
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceMedium" android:text="@string/profile_email_value"
-                  android:id="@+id/profile_email_value" android:textStyle="bold" android:textSize="20dp"
-                  android:layout_alignBottom="@+id/profile_email" android:layout_alignLeft="@+id/imageView"
-                  android:layout_alignRight="@+id/profile_name" android:layout_marginLeft="20dp"/>
+                android:inputType="textPersonName"
+                android:text="@string/profile_name"
+                android:ems="10"
+                android:id="@+id/profile_name"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="40dp"
+                android:textSize="20dp"
+                android:textColor="@color/app.base.blue"
+                android:layout_alignRight="@+id/imageView"/>
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceSmall" android:text="@string/profile_id"
-                  android:id="@+id/profile_website"
-                  android:layout_marginTop="27dp" android:layout_below="@+id/profile_email"
-                  android:layout_alignLeft="@+id/profile_email"/>
+                  android:inputType="textPersonName"
+                  android:text="Name"
+                  android:ems="10"
+                  android:id="@+id/profile_name_value"
+                  android:textSize="20dp"
+                  android:layout_below="@id/profile_name"
+                  android:layout_alignLeft="@+id/profile_name"/>
 
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceMedium" android:text="@string/profile_website_value"
-                  android:id="@+id/profile_website_value" android:textStyle="bold" android:textSize="20dp"
-                  android:layout_alignBottom="@+id/profile_website"
-                  android:layout_alignRight="@+id/profile_email_value"
-                  android:layout_alignLeft="@+id/profile_email_value"/>
+        <!-- email -->
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="@string/profile_email"
+                android:ems="10"
+                android:id="@+id/profile_email"
+                android:textSize="20dp"
+                android:textColor="@color/app.base.blue"
+                android:layout_marginTop="23dp" android:layout_below="@id/profile_name_value"
+                android:layout_alignLeft="@id/profile_name_value"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:inputType="textPersonName"
+                  android:text="Name"
+                  android:ems="10"
+                  android:id="@+id/profile_email_value"
+                  android:textSize="20dp"
+                  android:layout_below="@id/profile_email"
+                  android:layout_alignLeft="@id/profile_email"/>
+
+        <!-- local id -->
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="@string/profile_localid"
+                android:ems="10"
+                android:id="@+id/profile_localid"
+                android:textSize="20dp"
+                android:textColor="@color/app.base.blue"
+                android:layout_marginTop="23dp" android:layout_below="@id/profile_email_value"
+                android:layout_alignLeft="@id/profile_email_value"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:inputType="textPersonName"
+                  android:text="Name"
+                  android:ems="10"
+                  android:id="@+id/profile_localid_value"
+                  android:textSize="20dp"
+                  android:layout_below="@id/profile_localid"
+                  android:layout_alignLeft="@id/profile_localid"/>
     </RelativeLayout>
 
 </RelativeLayout>

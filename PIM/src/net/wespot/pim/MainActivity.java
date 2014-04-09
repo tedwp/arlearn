@@ -2,15 +2,18 @@ package net.wespot.pim;
 
 import android.annotation.TargetApi;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import daoBase.DaoConfiguration;
 import net.wespot.pim.utils.layout.ButtonEntryDelegator;
 import net.wespot.pim.utils.layout.MainActionBarFragmentActivity;
 import net.wespot.pim.view.*;
+import org.celstec.arlearn.delegators.INQ;
 
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -55,11 +58,19 @@ public class MainActivity extends MainActionBarFragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_logout:
-                Toast.makeText(this, "Tapped logout", Toast.LENGTH_SHORT).show();
+
+                Log.e(TAG, "Before logout: "+INQ.properties.isAuthenticated());
+                INQ.properties.disAuthenticate();
+                INQ.properties.setAccount(0l);
+
+                Intent myIntent = new Intent(this, SplashActivity.class);
+                myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);// clear back stack
+                startActivity(myIntent);
+                finish();
+
+                Log.e(TAG, "After logout: "+INQ.properties.isAuthenticated());
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }

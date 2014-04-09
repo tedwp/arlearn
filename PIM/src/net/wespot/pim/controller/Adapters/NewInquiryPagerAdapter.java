@@ -54,7 +54,7 @@ public class NewInquiryPagerAdapter extends FragmentStatePagerAdapter {
             case 2:
                 // The first section of the app is the most interesting -- it offers
                 // a launchpad into the other demonstrations in this example application.
-//                    return new InqDataFragment();
+//                    return new _InqDataFragment();
 //                case 3:
 //                    // The first section of the app is the most interesting -- it offers
 //                    // a launchpad into the other demonstrations in this example application.

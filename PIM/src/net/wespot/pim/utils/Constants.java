@@ -32,13 +32,6 @@ public class Constants {
     public static final String URL_LOGIN = "http://wespot-arlearn.appspot.com/MobileLogin.html";
     public static final String ENCONDING = null;
 
-    public static final List<String> MAIN_LIST = Arrays.asList(
-            "My Inquiries",
-            "Profile",
-            "Badges",
-            "Friends"
-    );
-
     public static final List<String> INQUIRY_PHASES_LIST = Arrays.asList(
             "Description",
             "Hypothesis",

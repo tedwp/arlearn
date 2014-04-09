@@ -29,6 +29,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import daoBase.DaoConfiguration;
 import net.wespot.pim.MainActivity;
 import net.wespot.pim.R;
 import net.wespot.pim.SplashActivity;
@@ -71,16 +72,30 @@ public class InquiryActivity extends _ActBar_FragmentActivity implements ActionB
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("currentInquiry", INQ.inquiry.getCurrentInquiry().getId());
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Avoiding NULL exceptions when resuming the PIM
-        if (INQ.inquiry == null ){
-//            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//            startActivity(intent);
+//        if (INQ.inquiry == null ){
+////            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+////            startActivity(intent);
+//            INQ.init(this);
+//            INQ.accounts.syncMyAccountDetails();
+//            INQ.inquiry.syncInquiries();
+//            Log.e(TAG, "recover INQ.inquiry is needed in InquiryActivity.");
+//        }
+
+        if (savedInstanceState != null) {
             INQ.init(this);
             INQ.accounts.syncMyAccountDetails();
             INQ.inquiry.syncInquiries();
+            INQ.inquiry.setCurrentInquiry(DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(savedInstanceState.getLong("currentInquiry")));
             Log.e(TAG, "recover INQ.inquiry is needed in InquiryActivity.");
         }
 

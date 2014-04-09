@@ -2,13 +2,12 @@
 <resources>
     <string name="app_name">Inquiries</string>
     <string name="inquiry_title_new">New inquiry</string>
-    <string name="inquiry_title">Inquiry $1s</string>
     <string name="inquiry_create_title">Create an inquiry</string>
     <string name="inquiry_create_yes">Yes</string>
     <string name="inquiry_create_no">No</string>
-    <string name="inquiry_title">Menu</string>
     <string name="inquiry_title_list">Open inquiries</string>
 
+    <string name="common_title">Menu</string>
     <string name="badges_title_list">Badges</string>
 
     <string name="actionbar_inquiry_list">Inquiry list</string>
@@ -48,13 +47,16 @@
 
     <string name="profile_title">Profile</string>
     <string name="profile_picture_description">profile_picture</string>
-    <string name="profile_name">Angel Suarez Fernandez</string>
+    <string name="profile_name">Name</string>
     <string name="profile_email">Email</string>
+    <string name="profile_localid">Local ID</string>
     <string name="profile_id">Id</string>
     <string name="profile_name_value">Angel Suarez Fernandez</string>
     <string name="profile_email_value">titogelo@gmail.com</string>
     <string name="profile_website_value">www.titogelo.es</string>
     <string name="texto_de_pruebas">Pruebasss</string>
+
+    <string name="network_connection">Not network connection</string>
 
     <string name="search_hint">Search</string>
 

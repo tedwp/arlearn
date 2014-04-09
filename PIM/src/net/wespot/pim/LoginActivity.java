@@ -14,6 +14,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.Toast;
 import net.wespot.pim.controller.Adapters.InitialPagerAdapter;
 import net.wespot.pim.utils.Constants;
 import net.wespot.pim.utils.layout.CirclePageIndicator;
@@ -53,55 +54,64 @@ public class LoginActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         INQ.init(this);
-        INQ.inquiry.syncInquiries();
+        if (INQ.isOnline()){
 
-        requestWindowFeature(Window.FEATURE_PROGRESS);
-        getActionBar().hide();
+            INQ.inquiry.syncInquiries();
 
-        if (INQ.accounts.getLoggedInAccount() == null){
-            setContentView(R.layout.activity_login);
+            requestWindowFeature(Window.FEATURE_PROGRESS);
+            getActionBar().hide();
 
-            webView = (WebView) findViewById(R.id.login_webpage);
+            if (!INQ.properties.isAuthenticated()){
+                setContentView(R.layout.activity_login);
 
-            Bundle extras = getIntent().getExtras();
+                webView = (WebView) findViewById(R.id.login_webpage);
 
-            if (extras != null) {
-                webView.loadUrl(extras.getString(Constants.URL_LOGIN_NAME));
-            }
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.setWebChromeClient(new WebChromeClient() {
-                // Show loading progress in activity's title bar.
-                @Override
-                public void onProgressChanged(WebView view, int progress) {
-                    setProgress(progress * 100);
+                Bundle extras = getIntent().getExtras();
+
+                if (extras != null) {
+                    webView.loadUrl(extras.getString(Constants.URL_LOGIN_NAME));
                 }
-            });
-
-            webView.setWebViewClient(new WebViewClient() {
-                @Override
-                public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                    super.onPageStarted(view, url, favicon);
-                    setTitle(url);
-                    Log.e(TAG, "onPageStarted ");
-                    if (url.contains("oauth.html?accessToken=")) {
-                        String token = url.substring(url.indexOf("?")+1);
-                        token = token.substring(token.indexOf("=")+1, token.indexOf("&"));
-
-                        ARL.properties.setAuthToken(token);
-                        ARL.accounts.syncMyAccountDetails();
-
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
-
-                        finish();
+                webView.getSettings().setJavaScriptEnabled(true);
+                webView.setWebChromeClient(new WebChromeClient() {
+                    // Show loading progress in activity's title bar.
+                    @Override
+                    public void onProgressChanged(WebView view, int progress) {
+                        setProgress(progress * 100);
                     }
-                }
-            });
-        }
-        else{
-            Log.e(TAG, "Already login with "+INQ.accounts.getLoggedInAccount().getFullId()+" account");
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+                });
+
+                webView.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                        super.onPageStarted(view, url, favicon);
+                        setTitle(url);
+                        Log.e(TAG, "onPageStarted ");
+                        if (url.contains("oauth.html?accessToken=")) {
+                            String token = url.substring(url.indexOf("?")+1);
+                            token = token.substring(token.indexOf("=")+1, token.indexOf("&"));
+
+                            ARL.properties.setAuthToken(token);
+                            ARL.properties.setIsAuthenticated();
+                            ARL.accounts.syncMyAccountDetails();
+
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+
+                            finish();
+                        }
+                    }
+                });
+            }
+            else{
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                ARL.accounts.syncMyAccountDetails();
+            }
+        }else{
+            Toast.makeText(this, R.string.network_connection, Toast.LENGTH_SHORT).show();
+//            //TODO remove these lines in production.
+//            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//            startActivity(intent);
         }
 
     }

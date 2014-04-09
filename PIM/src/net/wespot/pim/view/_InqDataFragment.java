@@ -40,8 +40,8 @@ import org.celstec.dao.gen.InquiryLocalObject;
  * Contributors: Angel Suarez
  * ****************************************************************************
  */
-public class InqDataFragment extends Fragment implements AdapterView.OnItemClickListener{
-    private static final String TAG = "InqDataFragment";
+public class _InqDataFragment extends Fragment implements AdapterView.OnItemClickListener{
+    private static final String TAG = "_InqDataFragment";
     private static final String IMAGE_CACHE_DIR = "thumbs";
     private int mImageThumbSize;
     private int mImageThumbSpacing;
@@ -50,7 +50,7 @@ public class InqDataFragment extends Fragment implements AdapterView.OnItemClick
 
     private InquiryLocalObject inquiry;
 
-    public InqDataFragment() {
+    public _InqDataFragment() {
 //        this.inquiry = API.getInquiryLocalObject();
     }
 
