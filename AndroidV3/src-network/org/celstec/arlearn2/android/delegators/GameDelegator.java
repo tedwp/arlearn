@@ -8,6 +8,7 @@ import android.util.Log;
 import daoBase.DaoConfiguration;
 import org.celstec.arlearn2.android.db.PropertiesAdapter;
 import org.celstec.arlearn2.android.events.GameEvent;
+import org.celstec.arlearn2.android.events.SearchResultList;
 import org.celstec.arlearn2.beans.game.Game;
 import org.celstec.arlearn2.beans.game.GameAccess;
 import org.celstec.arlearn2.beans.game.GameAccessList;
@@ -59,7 +60,10 @@ public final class GameDelegator extends AbstractDelegator{
 
     public void syncGame(Long gameId) {
         ARL.eventBus.post(new SyncGame(gameId));
+    }
 
+    public void search(String query) {
+        ARL.eventBus.post(new SearchGames(query));
     }
 
 
@@ -77,6 +81,14 @@ public final class GameDelegator extends AbstractDelegator{
 
     private void onEventAsync(SyncGame g) {
         asyncGame(g.getGameId());
+    }
+
+    private void onEventAsync(SearchGames sg) {
+        String token = returnTokenIfOnline();
+        if (token != null) {
+            GamesList result = GameClient.getGameClient().search(token, sg.query);
+            ARL.eventBus.post(new SearchResultList(result));
+        }
     }
 
     private void onEventAsync(SyncGamesEventParticipate sge) {
@@ -230,6 +242,22 @@ public final class GameDelegator extends AbstractDelegator{
             }
             DaoConfiguration.getInstance().getGameLocalObjectDao().insertOrReplace(newGame);
             ARL.eventBus.post(new GameEvent(newGame.getId()));
+        }
+    }
+
+    private class SearchGames {
+        private String query;
+
+        private SearchGames(String query) {
+            this.query = query;
+        }
+
+        public String getQuery() {
+            return query;
+        }
+
+        public void setQuery(String query) {
+            this.query = query;
         }
     }
 

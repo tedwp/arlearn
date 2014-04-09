@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.delegators.ARL;
@@ -50,6 +51,7 @@ public class MainMenu extends SherlockFragment {
         ARL.properties.setFullId("2:116757187626671489073");
 
         ARL.accounts.syncMyAccountDetails();
+
 
 
     }
