@@ -81,6 +81,12 @@ public class ButtonEntryDelegator {
         return view;
     }
 
+    public void setNotification(int id, String notification){
+        ButtonEntry button_fragment = (ButtonEntry) instance.act.getSupportFragmentManager().findFragmentById(id);
+        button_fragment.setNotification(notification);
+
+    }
+
     private static class _extended_intent implements View.OnClickListener {
         private Class dest;
 

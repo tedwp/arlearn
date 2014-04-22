@@ -30,8 +30,30 @@
               android:layout_height="wrap_content" android:hint="@string/wonder_moment_location_placeholder"
               android:inputType="none" />
 
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/wonder_moment_membership"
+                android:orientation="vertical" android:layout_below="@+id/wonder_moment_location">
+        <RadioButton android:id="@+id/wonder_moment_membership_open"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="@string/wonder_moment_membership_open"/>
+        <RadioButton android:id="@+id/wonder_moment_membership_closed"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="@string/wonder_moment_membership_closed"/>
+    </RadioGroup>
+
+    <Spinner
+            android:id="@+id/wonder_moment_visibility"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/wonder_moment_visibility_array"
+            android:prompt="@string/wonder_moment_visibility" android:layout_below="@id/wonder_moment_membership" />
+
     <LinearLayout android:id="@+id/layout_date" android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:orientation="horizontal" android:layout_below="@+id/wonder_moment_location">
+                  android:orientation="horizontal" android:layout_below="@id/wonder_moment_visibility">
         <EditText android:id="@+id/wonder_moment_date" android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:autoText="false" android:hint="@string/wonder_moment_date_placeholder"
                   android:inputType="date" android:layout_weight="1"/>
@@ -39,16 +61,8 @@
                   android:autoText="false" android:hint="@string/wonder_moment_time_placeholder"
                   android:inputType="time" android:layout_weight="4"/>
     </LinearLayout>
-
-    <EditText android:id="@+id/wonder_moment_content" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_below="@+id/layout_date"
+        <EditText android:id="@+id/wonder_moment_content" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_below="@+id/layout_date"
               android:gravity="top" android:hint="@string/wonder_moment_content_placeholder"/>
-
-    <LinearLayout android:orientation="horizontal" android:layout_below="@id/wonder_moment_content" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <ImageButton android:id="@+id/wonder_moment_save"  android:contentDescription="@string/wonder_moment_save" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true"/>
-        <ImageButton android:id="@+id/wonder_moment_cancel" android:contentDescription="@string/wonder_moment_cancel" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-
-    </LinearLayout>
-
     <ImageView
             android:id="@+id/wonder_moment_clear"
             android:layout_width="40dp"
@@ -65,6 +79,10 @@
             android:layout_alignParentTop="true"
             android:layout_alignLeft="@+id/wonder_moment_clear" android:layout_alignBottom="@+id/wonder_moment_location"
             android:layout_alignRight="@+id/wonder_moment_clear" android:layout_marginBottom="4dp" android:visibility="gone"/>
-
+    <!--<ListView-->
+            <!--android:id="@+id/list"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="0dip"-->
+            <!--android:layout_weight="1" />-->
 
 </RelativeLayout>

@@ -62,7 +62,7 @@ public class InquiryLazyListAdapter extends AbstractInquiryLazyListAdapter {
 
         //TODO change item.getId by item.getnumberupdates
 //        notificationText.setVisibility(View.VISIBLE);
-//        notificationText.setText(item.getId()+"");
+//        notificationText.setText(item.get);
 
         if (item.getIcon() != null){
             BitmapWorkerTask task = new BitmapWorkerTask(icon);

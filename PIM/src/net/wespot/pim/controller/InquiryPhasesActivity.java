@@ -54,6 +54,8 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity {
     private View b_communicate;
     private View b_add_friends;
 
+    private ButtonEntryDelegator button_manager;
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -69,10 +71,34 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity {
             INQ.inquiry.setCurrentInquiry(DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(savedInstanceState.getLong("currentInquiry")));
         }
 
+        INQ.inquiry.syncDataCollectionTasks();
+
         setContentView(R.layout.activity_phases);
 
+        getActionBar().setTitle(R.string.actionbar_inquiry_list);
+
+        inquiry_description_title = (TextView) findViewById(R.id.list_phases_title);
+        inquiry_description_image = (ImageView) findViewById(R.id.list_phases_image);
+
+        if (INQ.inquiry.getCurrentInquiry().getIcon() != null){
+            BitmapWorkerTask task = new BitmapWorkerTask(inquiry_description_image);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, INQ.inquiry.getCurrentInquiry().getIcon());
+        }
+        else{
+            inquiry_description_image.setImageBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_placeholder));
+        }
+
+        inquiry_description_title.setText(INQ.inquiry.getCurrentInquiry().getTitle());
+//        inquiry_description_title.loadData(INQ.inquiry.getCurrentInquiry().getDescription(), Constants.MIME_TYPE, Constants.ENCONDING);
+//        inquiry_description_title.setBackgroundColor(0x00000000);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         // This is needed to set the class
-        ButtonEntryDelegator button_manager = ButtonEntryDelegator.getInstance(this);
+        button_manager = ButtonEntryDelegator.getInstance(this);
 
         // Creation of the links
         b_description =button_manager._button_list(R.id.list_phases_description, Constants.INQUIRY_PHASES_LIST.get(0), R.drawable.ic_description, InquiryActivity.class, true);
@@ -109,22 +135,7 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity {
 
         b_add_friends =button_manager._button_list(R.id.invites_friends_to_inquiry, getString(R.string.phases_invite_new_friend), R.drawable.ic_invite_friend, null, false);
 
-        getActionBar().setTitle(R.string.actionbar_inquiry_list);
 
-        inquiry_description_title = (TextView) findViewById(R.id.list_phases_title);
-        inquiry_description_image = (ImageView) findViewById(R.id.list_phases_image);
-
-        if (INQ.inquiry.getCurrentInquiry().getIcon() != null){
-            BitmapWorkerTask task = new BitmapWorkerTask(inquiry_description_image);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, INQ.inquiry.getCurrentInquiry().getIcon());
-        }
-        else{
-            inquiry_description_image.setImageBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.foto_perfil_croped));
-        }
-
-        inquiry_description_title.setText(INQ.inquiry.getCurrentInquiry().getTitle());
-//        inquiry_description_title.loadData(INQ.inquiry.getCurrentInquiry().getDescription(), Constants.MIME_TYPE, Constants.ENCONDING);
-//        inquiry_description_title.setBackgroundColor(0x00000000);
     }
 
     private class OnClick implements View.OnClickListener {

@@ -21,6 +21,8 @@
 
     <string name="data_collection_tasks">Data collection tasks</string>
     <string name="data_collection_task">Data collection task</string>
+    <string name="data_collection_task_no_created">No data collection yet</string>
+    <string name="data_collection_task_no_enabled_created">Data collection disabled for the inquiry</string>
     <string name="data_collection_task_responses">Data collected</string>
 
     <string name="friends_friend_new">Add friend</string>
@@ -57,11 +59,22 @@
     <string name="texto_de_pruebas">Pruebasss</string>
 
     <string name="network_connection">Not network connection</string>
+    <string name="not_implement_yet">Not implemented yet</string>
 
     <string name="search_hint">Search</string>
 
     <string name="wonder_moment_title">Click to capture your wonder moment</string>
+    <string name="wonder_moment_membership">Membership</string>
+    <string name="wonder_moment_membership_open">Open - Any user may join</string>
+    <string name="wonder_moment_membership_closed">Closed - User must be invited</string>
+    <string name="wonder_moment_visibility">Visibility</string>
     <string name="wonder_moment_save">Save</string>
+    <string name="wonder_moment_cancel">Cancel</string>
+    <string-array name="wonder_moment_visibility_array">
+        <item>Inquiry members only</item>
+        <item>Logged in users</item>
+        <item>Public</item>
+    </string-array>
 
     <string name="wonder_moment_record_voice">Record wonder moment</string>
     <string name="wonder_moment_date_placeholder">Set up date</string>
@@ -87,6 +100,8 @@
 
     <string name="imageview_description">Image Thumbnail</string>
     <string name="splash_login_button">Login</string>
+    <string name="splash_login_button_google">Google</string>
+    <string name="splash_login_button_linkedin">Linkedin</string>
 
     <string name="icon_list">1</string>
     <string name="placeholder">placeholder</string>

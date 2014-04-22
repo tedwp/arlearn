@@ -21,6 +21,7 @@ package net.wespot.pim.view;
  * ****************************************************************************
  */
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -62,8 +63,9 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * A dummy fragment representing a section of the app, but that simply displays dummy text.
+ * Create a new inquiry
  */
+@SuppressLint("NewApi")
 public class InqCreateInquiryFragment extends Fragment implements LocationListener, GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener{
 
@@ -75,6 +77,9 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
 
     private InquiryLocalObject new_inquiry;
 
+    public static int TEMP_MEMBERSHIP = InquiryClient.OPEN_MEMBERSHIP;
+    public static int TEMP_VISIBILITY = InquiryClient.VIS_PUBLIC;
+
     private EditText wm_title;
     private EditText wm_content;
 
@@ -82,6 +87,12 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
     private EditText wm_time;
     private ImageView wm_clear;
     public EditText wm_location;
+    public ImageButton wm_save;
+    public ImageButton wm_cancel;
+    public Spinner wm_visibility;
+    public RadioGroup wm_membership;
+    public RadioButton wm_membership_open;
+    public RadioButton wm_membership_closed;
     // A request to connect to Location Services
     private LocationRequest mLocationRequest;
 
@@ -108,6 +119,48 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
         wm_location = (EditText) rootView.findViewById(R.id.wonder_moment_location);
         wm_clear = (ImageView) rootView.findViewById(R.id.wonder_moment_clear);
         wm_progress_bar = (ProgressBar) rootView.findViewById(R.id.wonder_moment_progress_location);
+        wm_membership_open = (RadioButton) rootView.findViewById(R.id.wonder_moment_membership_open);
+        wm_membership_closed = (RadioButton) rootView.findViewById(R.id.wonder_moment_membership_closed);
+        wm_visibility = (Spinner) rootView.findViewById(R.id.wonder_moment_visibility);
+
+        wm_membership_open.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TEMP_MEMBERSHIP = InquiryClient.OPEN_MEMBERSHIP;
+            }
+        });
+
+        wm_membership_closed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TEMP_MEMBERSHIP = InquiryClient.CLOSED_MEMBERSHIP;
+            }
+        });
+
+//        wm_membership.getCheckedRadioButtonId();
+
+//        wm_membership_open..onRadioButtonClicked(View)
+
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            wm_save =   (ImageButton) rootView.findViewById(R.id.wonder_moment_save);
+            wm_cancel =   (ImageButton) rootView.findViewById(R.id.wonder_moment_cancel);
+            wm_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_content_save_black));
+            wm_cancel.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_cancel_black));
+            wm_save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    save_inquiry();
+                }
+            });
+
+            wm_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
 
         setDataTime();
 
@@ -130,13 +183,31 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
             Toast.makeText(getActivity(), "Recognizer Not Found", 1000).show();
         }
 
-        setManagerLocation();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            setManagerLocation();
+        }
 
         // Create inquiry
         new_inquiry = new InquiryLocalObject();
 
         return rootView;
     }
+
+//    public void onRadioButtonClicked(View view) {
+//        // Is the button now checked?
+//        boolean checked = ((RadioButton) view).isChecked();
+//
+//        switch(view.getId()) {
+//            case R.id.wonder_moment_membership_open:
+//                if (checked)
+//                    TEMP_MEMBERSHIP = InquiryClient.OPEN_MEMBERSHIP;
+//                break;
+//            case R.id.wonder_moment_membership_closed:
+//                if (checked)
+//                    TEMP_MEMBERSHIP = InquiryClient.CLOSED_MEMBERSHIP;
+//                break;
+//        }
+//    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -150,33 +221,63 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
             case R.id.menu_save_inquiry:
                 // TODO put here the method to create inquiry
 
-                new_inquiry.setDescription(wm_content.getText().toString());
-                new_inquiry.setTitle(wm_title.getText().toString());
-
-                if (!new_inquiry.getTitle().equals("")) {
-                    if (!new_inquiry.getDescription().equals("")) {
-                        if (INQ.isOnline()) {
-                            CreateInquiryObject createInquiryObject = new CreateInquiryObject();
-                            createInquiryObject.inquiry = new_inquiry;
-                            Toast.makeText(getActivity(), "Synchronizing & saving inquiry...", 1000).show();
-
-                            ARL.eventBus.register(this);
-                            // To invoke onEventBackgroundThread this line is needed
-                            ARL.eventBus.post(createInquiryObject);
-
-                        } else {
-                            Toast.makeText(getActivity(), "Enable internet connection", 1000).show();
-                        }
-                    } else {
-                        Toast.makeText(getActivity(), "Provide a proper description for the inquiry", 1000).show();
-                    }
-                } else {
-                    Toast.makeText(getActivity(), "Provide a proper title for the inquiry", 1000).show();
-                }
+                save_inquiry();
 
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void save_inquiry() {
+        new_inquiry.setDescription(wm_content.getText().toString());
+        new_inquiry.setTitle(wm_title.getText().toString());
+
+
+//        wm_visibility.getSelectedItemId();
+//        wm_membership.getCheckedRadioButtonId();
+
+//        switch(wm_membership.getCheckedRadioButtonId()) {
+//            case R.id.wonder_moment_membership_open:
+//                TEMP_MEMBERSHIP = InquiryClient.OPEN_MEMBERSHIP;
+//                break;
+//            case R.id.wonder_moment_membership_closed:
+//                TEMP_MEMBERSHIP = InquiryClient.CLOSED_MEMBERSHIP;
+//                break;
+//        }
+
+        switch ((int)wm_visibility.getSelectedItemId()){
+            case InquiryClient.VIS_INQUIRY_MEMBERS_ONLY:
+                TEMP_VISIBILITY = InquiryClient.VIS_INQUIRY_MEMBERS_ONLY;
+                break;
+            case InquiryClient.VIS_LOGGED_IN_USERS:
+                TEMP_VISIBILITY = InquiryClient.VIS_LOGGED_IN_USERS;
+                break;
+            case InquiryClient.VIS_PUBLIC:
+                TEMP_VISIBILITY = InquiryClient.VIS_PUBLIC;
+                break;
+
+        }
+
+        if (!new_inquiry.getTitle().equals("")) {
+            if (!new_inquiry.getDescription().equals("")) {
+                if (INQ.isOnline()) {
+                    CreateInquiryObject createInquiryObject = new CreateInquiryObject();
+                    createInquiryObject.inquiry = new_inquiry;
+                    Toast.makeText(getActivity(), "Synchronizing & saving inquiry...", 1000).show();
+
+                    ARL.eventBus.register(this);
+                    // To invoke onEventBackgroundThread this line is needed
+                    ARL.eventBus.post(createInquiryObject);
+
+                } else {
+                    Toast.makeText(getActivity(), "Enable internet connection", 1000).show();
+                }
+            } else {
+                Toast.makeText(getActivity(), "Provide a proper description for the inquiry", 1000).show();
+            }
+        } else {
+            Toast.makeText(getActivity(), "Provide a proper title for the inquiry", 1000).show();
+        }
     }
 
     private void onEventBackgroundThread(CreateInquiryObject inquiryObject){
@@ -184,7 +285,7 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
         // int $membership (Membership: 0 -> Closed, 2 -> Open)
         // public void createInquiry(InquiryLocalObject inquiry, AccountLocalObject account, int visibility, int membership)
 
-        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount(), InquiryClient.VIS_PUBLIC, InquiryClient.OPEN_MEMBERSHIP);
+        InquiryClient.getInquiryClient().createInquiry(inquiryObject.inquiry, INQ.accounts.getLoggedInAccount(), TEMP_VISIBILITY, TEMP_MEMBERSHIP);
         INQ.inquiry.syncInquiries();
         getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
         getActivity().finish();
@@ -251,7 +352,6 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
                 switch (motionEvent.getAction())
                 {
                     case MotionEvent.ACTION_DOWN:
-                        Log.e(TAG, "toco");
                         DialogFragment dateFrag = new DatePickerFragment();
 //                            dateFrag.show(getSupportFragmentManager(), "timePicker");
                         dateFrag.show(getChildFragmentManager(), "timePicker");
@@ -267,7 +367,6 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
                 switch (motionEvent.getAction())
                 {
                     case MotionEvent.ACTION_DOWN:
-                        Log.e(TAG, "toco");
                         DialogFragment timeFrag = new TimePickerFragment();
                         timeFrag.show(getChildFragmentManager(), "timePicker");
 //                            timeFrag.show(getSupportFragmentManager(), "timePicker");
@@ -336,8 +435,9 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
             * Connect the client. Don't re-start any requests here;
             * instead, wait for onResume()
             */
-        mLocationClient.connect();
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            mLocationClient.connect();
+        }
     }
 
     @Override
@@ -569,6 +669,7 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
         }
 
     }
+
 }
 
 

@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import daoBase.DaoConfiguration;
 import net.wespot.pim.R;
@@ -51,6 +52,8 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
 
     private static final String TAG = "InqDataCollectionFragment";
     private ListView data_collection_tasks;
+    private TextView text_default;
+    private TextView data_collection_tasks_title_list;
     private InquiryLocalObject inquiry;
 
     private DataCollectionLazyListAdapter datAdapter;
@@ -68,9 +71,10 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
             INQ.inquiry.setCurrentInquiry(DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(savedInstanceState.getLong("currentInquiry")));
         }
 
-        INQ.inquiry.syncDataCollectionTasks();
-
         View rootView = inflater.inflate(R.layout.fragment_data_collection, container, false);
+        data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
+        text_default = (TextView) rootView.findViewById(R.id.text_default);
+        data_collection_tasks_title_list = (TextView) rootView.findViewById(R.id.data_collection_tasks_title_list);
 
         if(INQ.inquiry.getCurrentInquiry().getRunLocalObject()!=null){
             if (INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject()!=null){
@@ -80,30 +84,31 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
                     INQ.responses.syncResponses(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
                     data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
                     datAdapter =  new DataCollectionLazyListAdapter(this.getActivity(),gameLocalObject.getId());
-//                    data_collection_tasks.setOnItemClickListener(new onListDataCollectionTasksClick());
                     datAdapter.setOnListItemClickCallback(this);
                     data_collection_tasks.setAdapter(datAdapter);
                 }else{
                     Log.e(TAG, "There are no data collection tasks for this inquiry");
+                    data_collection_tasks_title_list.setVisibility(View.INVISIBLE);
+                    text_default.setVisibility(View.VISIBLE);
+                    text_default.setText(R.string.data_collection_task_no_created);
                 }
             }else{
                 Log.e(TAG, "There is no game for this run.");
             }
         }else{
             Log.e(TAG, "Data collection task are not enabled on this inquiry");
+            data_collection_tasks_title_list.setVisibility(View.INVISIBLE);
+            text_default.setVisibility(View.VISIBLE);
+            text_default.setText(R.string.data_collection_task_no_enabled_created);
 
         }
         return rootView;
     }
 
-    private void onEventAsync(RunEvent g) {
-        // Run synchronized
-        Log.e(TAG, "Runs loaded OK");
-    }
-
-    private void onEventAsync(GameEvent g) {
-        // Game synchronized
-        Log.e(TAG, "Games loaded OK");
+    @Override
+    public void onResume() {
+        super.onResume();
+        INQ.inquiry.syncDataCollectionTasks();
     }
 
     @Override
@@ -117,11 +122,4 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
     public boolean setOnLongClickListener(View v, int position, GeneralItemLocalObject object) {
         return false;
     }
-
-//    private class onListDataCollectionTasksClick implements android.widget.AdapterView.OnItemClickListener {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//
-//            }
-//    }
 }

@@ -29,6 +29,10 @@ public class Constants {
     public static final int SIMULATED_REFRESH_LENGTH = 1000;
     public static final String MIME_TYPE = "text/html";
     public static final String URL_LOGIN_NAME = "url";
+    public static final String TYPE_LOGIN = "type";
+    public static final int GOOGLE = 1;
+    public static final int WESPOT = 0;
+    public static final int LINKEDIN = 2;
     public static final String URL_LOGIN = "http://wespot-arlearn.appspot.com/MobileLogin.html";
     public static final String ENCONDING = null;
 

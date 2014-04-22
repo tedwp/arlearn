@@ -20,11 +20,29 @@
             <!--android:layout_height="60dp"-->
             <!--android:id="@+id/logout"-->
             <!--android:layout_alignParentBottom="true"/>-->
+
     <Button android:layout_width="100dp" android:layout_height="60dp"
             android:id="@+id/login"
-                 android:clickable="true" android:src="@drawable/foto_perfil_croped"
-                 android:contentDescription="@string/splash_login_button"
-                 android:text="@string/splash_login_button"
-                 android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
-                 android:layout_margin="10dp"/>
+            android:clickable="true" android:src="@drawable/foto_perfil_croped"
+            android:contentDescription="@string/splash_login_button"
+            android:text="@string/splash_login_button"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"/>
+
+    <Button android:layout_width="100dp" android:layout_height="60dp"
+            android:id="@+id/loginGoogle"
+            android:clickable="true"
+            android:contentDescription="@string/splash_login_button"
+            android:text="@string/splash_login_button_google"
+            android:layout_alignParentBottom="true"  android:layout_toRightOf="@id/login"
+            android:layout_margin="10dp"/>
+
+    <Button android:layout_width="100dp" android:layout_height="60dp"
+            android:id="@+id/loginLinkedin"
+            android:clickable="true"
+            android:contentDescription="@string/splash_login_button"
+            android:text="@string/splash_login_button_linkedin"
+            android:layout_alignParentBottom="true"  android:layout_toRightOf="@id/loginGoogle"
+            android:layout_margin="10dp"/>
+
 </RelativeLayout>

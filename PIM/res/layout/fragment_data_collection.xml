@@ -19,4 +19,13 @@
               android:layout_below="@id/data_collection_tasks_title_list"
               />
 
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/text_default"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:textSize="40sp"
+              android:padding="32dp"
+            android:visibility="gone"/>
+
 </RelativeLayout>

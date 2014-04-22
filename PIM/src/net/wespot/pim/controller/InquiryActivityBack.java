@@ -17,29 +17,22 @@
 package net.wespot.pim.controller;
 
 import android.app.ActionBar;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import daoBase.DaoConfiguration;
-import net.wespot.pim.MainActivity;
 import net.wespot.pim.R;
-import net.wespot.pim.SplashActivity;
 import net.wespot.pim.controller.Adapters.InquiryPagerAdapter;
 import net.wespot.pim.controller.Adapters.NewInquiryPagerAdapter;
 import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import net.wespot.pim.view.InqCreateInquiryFragment;
 import org.celstec.arlearn.delegators.INQ;
 
-public class InquiryActivity extends _ActBar_FragmentActivity implements ActionBar.TabListener{
+public class InquiryActivityBack extends _ActBar_FragmentActivity {
 
     private static final String TAG = "InquiryActivity";
     public static final String PHASE = "num_phase";
@@ -61,7 +54,7 @@ public class InquiryActivity extends _ActBar_FragmentActivity implements ActionB
     private ViewPager mViewPager;
     private long num_phase;
 
-    public InquiryActivity() {
+    public InquiryActivityBack() {
     }
 
     @Override
@@ -139,16 +132,16 @@ public class InquiryActivity extends _ActBar_FragmentActivity implements ActionB
                 }
             });
 
-            // For each of the sections in the app, add a tab to the action bar.
-            for (int i = 0; i < mInquiryPagerAdapter.getCount(); i++) {
-                // Create a tab with text corresponding to the page title defined by the adapter.
-                // Also specify this Activity object, which implements the TabListener interface, as the
-                // listener for when this tab is selected.
-                getmActionBarHelper().addTab(
-                        getmActionBarHelper().newTab()
-                                .setText(mInquiryPagerAdapter.getPageTitle(i))
-                                .setTabListener(this));
-            }
+//            // For each of the sections in the app, add a tab to the action bar.
+//            for (int i = 0; i < mInquiryPagerAdapter.getCount(); i++) {
+//                // Create a tab with text corresponding to the page title defined by the adapter.
+//                // Also specify this Activity object, which implements the TabListener interface, as the
+//                // listener for when this tab is selected.
+//                getmActionBarHelper().addTab(
+//                        getmActionBarHelper().newTab()
+//                                .setText(mInquiryPagerAdapter.getPageTitle(i))
+//                                .setTabListener(this));
+//            }
 
             getActionBar().setTitle(getResources().getString(R.string.actionbar_inquiry)+" - "+INQ.inquiry.getCurrentInquiry().getTitle());
 
@@ -192,47 +185,4 @@ public class InquiryActivity extends _ActBar_FragmentActivity implements ActionB
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        mViewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-
-    }
-
-//    void showCreateInquiryDialogFragment() {
-//        DialogFragment dialog = new CreateInquiryDialogFragment();
-//        dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
-//
-//
-//    }
-//
-//    public class CreateInquiryDialogFragment extends DialogFragment {
-//        @Override
-//        public Dialog onCreateDialog(Bundle savedInstanceState) {
-//            // Use the Builder class for convenient dialog construction
-//            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//            builder.setMessage(R.string.inquiry_create_title)
-//                    .setPositiveButton(R.string.inquiry_create_yes, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int id) {
-//                            // FIRE ZE MISSILES!
-//                        }
-//                    })
-//                    .setNegativeButton(R.string.inquiry_create_no, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int id) {
-//                            // User cancelled the dialog
-//                        }
-//                    });
-//            // Create the AlertDialog object and return it
-//            return builder.create();
-//        }
-//    }
 }

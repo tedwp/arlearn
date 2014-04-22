@@ -22,20 +22,25 @@ package net.wespot.pim.view;
  */
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
 import android.widget.ListView;
 import android.widget.Toast;
+import daoBase.DaoConfiguration;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.InquiryLazyListAdapter;
 import net.wespot.pim.controller.InquiryActivity;
+import net.wespot.pim.controller.InquiryActivityBack;
 import net.wespot.pim.controller.InquiryPhasesActivity;
 import net.wespot.pim.utils.layout.ButtonEntryDelegator;
 import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import org.celstec.arlearn.delegators.INQ;
+import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.listadapter.ListItemClickInterface;
 import org.celstec.dao.gen.InquiryLocalObject;
+import org.celstec.events.InquiryEvent;
 
 /**
  * A fragment that launches other parts of the demo application.
@@ -51,12 +56,13 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity  implements L
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ARL.eventBus.register(this);
         if (savedInstanceState != null) {
             INQ.init(this);
             INQ.accounts.syncMyAccountDetails();
-            INQ.inquiry.syncInquiries();
         }
+
+        INQ.inquiry.syncInquiries();
 
         setContentView(R.layout.fragment_inquiries);
 
@@ -72,23 +78,27 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity  implements L
         // This is needed to set the class
         ButtonEntryDelegator button_manager = ButtonEntryDelegator.getInstance(this);
 
+
         // Creation of the links
-        new_inquiry =button_manager._button_list(R.id.inquiries_new_inquiry, getString(R.string.inquiry_title_new), R.drawable.ic_add_inquiry, InquiryActivity.class, true);
+        new_inquiry =button_manager._button_list(R.id.inquiries_new_inquiry, getString(R.string.inquiry_title_new), R.drawable.ic_add_inquiry, null, true);
         new_inquiry.setOnClickListener(new OnClickNewInquiry());
 
         setTitle(R.string.common_title);
+    }
 
+    private void onEventAsync(InquiryEvent inquiryObject){
+//        Toast.makeText(getApplicationContext(), "Loaded: "+DaoConfiguration.getInstance().getInquiryLocalObjectDao().loadAll().size()+" inquiries",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDestroy() {
         adapterInq.close();
+        ARL.eventBus.unregister(this);
         super.onDestroy();
     }
 
     @Override
     public void onListItemClick(View v, int position, InquiryLocalObject object) {
-
         Intent intent = new Intent(getApplicationContext(), InquiryPhasesActivity.class);
         INQ.inquiry.setCurrentInquiry(object);
         startActivity(intent);
@@ -123,7 +133,12 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity  implements L
         public void onClick(View view) {
             Log.e(TAG, "New inquiry");
             INQ.inquiry.setCurrentInquiry(null);
-            Intent intent = new Intent(getApplicationContext(), InquiryActivity.class);
+            Intent intent;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                intent = new Intent(getApplicationContext(), InquiryActivity.class);
+            }else{
+                intent = new Intent(getApplicationContext(), InquiryActivityBack.class);
+            }
             startActivity(intent);
         }
     }

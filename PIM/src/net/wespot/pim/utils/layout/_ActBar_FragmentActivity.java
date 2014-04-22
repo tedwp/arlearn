@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.actionbarsherlock.ActionBarSherlock;
 import net.wespot.pim.R;
 import net.wespot.pim.SplashActivity;
 import org.celstec.arlearn.delegators.INQ;
@@ -59,10 +60,14 @@ public class _ActBar_FragmentActivity extends FragmentActivity {
      * Create a compatible helper that will manipulate the action bar if available.
      */
     private ActionBarHelper createActionBarHelper() {
+
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             return new ActionBarHelperICS();
         } else {
-            return new ActionBarHelper();
+//            return new ActionBarHelper();
+            return new ActionBarHelperOld();
         }
     }
 
@@ -110,7 +115,6 @@ public class _ActBar_FragmentActivity extends FragmentActivity {
         private final ActionBar mActionBar;
         private CharSequence mDrawerTitle;
         private CharSequence mTitle;
-
 
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         ActionBarHelperICS() {
@@ -183,4 +187,17 @@ public class _ActBar_FragmentActivity extends FragmentActivity {
     }
 
 
+    /**
+     * Action bar helper for use on ICS and newer devices.
+     */
+    private class ActionBarHelperOld extends ActionBarHelper{
+//        private final com.actionbarsherlock.ActionBarSherlock mActionBar;
+        private CharSequence mDrawerTitle;
+        private CharSequence mTitle;
+
+
+        ActionBarHelperOld() {
+//            this.mActionBar = ;
+        }
+    }
 }

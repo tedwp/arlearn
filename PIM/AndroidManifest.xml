@@ -3,7 +3,7 @@
           package="net.wespot.pim"
           android:versionCode="1"
           android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="14"/>
+    <uses-sdk android:targetSdkVersion="14" android:minSdkVersion="8"/>
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher" android:theme="@style/CustomTheme">
         <meta-data
                 android:name="com.google.android.gms.version"
@@ -21,10 +21,12 @@
                   android:label="@string/app_name"  android:screenOrientation="portrait"/>
         <activity android:name=".controller.VideoFullScreenView"
                   android:label="@string/app_name"  android:screenOrientation="portrait"/>
-        <activity android:name="net.wespot.pim.MainActivity" android:label="@string/app_name"
+        <activity android:name=".MainActivity" android:label="@string/app_name"
                   android:screenOrientation="portrait"/>
-        <activity android:name="net.wespot.pim.controller.InquiryPhasesActivity" android:label="@string/app_name"
+        <activity android:name=".controller.InquiryPhasesActivity" android:label="@string/app_name"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".controller.InquiryActivity" android:label="@string/inquiry_title_new"
+                  android:screenOrientation="portrait" />
         <activity android:name=".view.PimInquiriesFragment" android:label="@string/app_name"
                   android:screenOrientation="portrait" />
         <activity android:name=".view.PimProfileFragment" android:label="@string/app_name"
@@ -37,10 +39,11 @@
                   android:screenOrientation="portrait" />
         <activity android:name=".view.PimBadgesFragment" android:label="@string/app_name"
                   android:screenOrientation="portrait" />
+        <activity android:name=".controller.InquiryActivityBack" android:label="@string/app_name"
+                  android:screenOrientation="portrait" />
 
         <activity android:name=".view.InqMyMediaDataCollectionTaskFragment" android:label="@string/app_name"
                   android:screenOrientation="portrait" />
-
 
         <receiver android:name=".GCMWakefulReceiver" android:exported="true"
                   android:permission="com.google.android.c2dm.permission.SEND" >
@@ -52,7 +55,7 @@
         <service android:name=".GCMIntentService" />
 
         <activity
-                android:name="net.wespot.pim.controller.ImageDetailActivity"
+                android:name=".controller.ImageDetailActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.FullScreen"
                 android:screenOrientation="portrait">
@@ -60,8 +63,6 @@
                        android:value=".InquiryActivity" />
         </activity>
 
-        <activity android:name="net.wespot.pim.controller.InquiryActivity" android:label="@string/inquiry_title_new"
-                  android:screenOrientation="portrait" />
     </application>
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />

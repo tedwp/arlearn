@@ -46,7 +46,7 @@ public class MainActionBarFragmentActivity extends FragmentActivity {
 
             INQ.init(this);
             INQ.accounts.syncMyAccountDetails();
-            INQ.inquiry.syncInquiries();
+//            INQ.inquiry.syncInquiries();
             Log.e(TAG, "recover INQ.inquiry is needed.");
         }
 

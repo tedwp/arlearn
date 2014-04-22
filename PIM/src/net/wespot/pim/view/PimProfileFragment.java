@@ -50,7 +50,6 @@ public class PimProfileFragment extends _ActBar_FragmentActivity {
 
         if (INQ.isOnline()){
 
-//            INQ.accounts.syncMyAccountDetails();
             AccountLocalObject account = INQ.accounts.getLoggedInAccount();
 
             setContentView(R.layout.screen_profile);
@@ -60,9 +59,23 @@ public class PimProfileFragment extends _ActBar_FragmentActivity {
             localid = (TextView) findViewById(R.id.profile_localid_value);
             picture = (ImageView) findViewById(R.id.imageView);
 
-            name.setText(account.getName());
-            email.setText(account.getEmail());
-            localid.setText(account.getLocalId());
+            if (account.getName() == null){
+                name.setText("-");
+            }else{
+                name.setText(account.getName());
+            }
+
+            if (account.getEmail() == null){
+                email.setText("-");
+            }else{
+                email.setText(account.getEmail());
+            }
+
+            if (account.getLocalId() == null){
+                localid.setText("-");
+            }else{
+                localid.setText(account.getLocalId());
+            }
 
             if (account.getPicture() != null){
                 BitmapWorkerTask task = new BitmapWorkerTask(picture);
@@ -73,7 +86,6 @@ public class PimProfileFragment extends _ActBar_FragmentActivity {
                 picture.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_placeholder));
             }
 
-//            setTitle(account.getName());
             setTitle(R.string.common_title);
 
         }else{

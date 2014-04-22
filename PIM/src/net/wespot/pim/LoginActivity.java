@@ -1,7 +1,9 @@
 package net.wespot.pim;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +17,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
+import daoBase.DaoConfiguration;
 import net.wespot.pim.controller.Adapters.InitialPagerAdapter;
 import net.wespot.pim.utils.Constants;
 import net.wespot.pim.utils.layout.CirclePageIndicator;
@@ -42,6 +45,7 @@ import org.celstec.arlearn2.android.delegators.ARL;
  * Contributors: Angel Suarez
  * ****************************************************************************
  */
+@SuppressLint("NewApi")
 public class LoginActivity extends FragmentActivity {
 
     private static final String TAG = "LoginActivity";
@@ -53,15 +57,18 @@ public class LoginActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        INQ.init(this);
+
         if (INQ.isOnline()){
 
-            INQ.inquiry.syncInquiries();
-
             requestWindowFeature(Window.FEATURE_PROGRESS);
-            getActionBar().hide();
 
-            if (!INQ.properties.isAuthenticated()){
+            Log.e(TAG, "Version SDK: "+ Build.VERSION.SDK_INT+"");
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH){
+                getActionBar().hide();
+            }
+
+            if (!INQ.accounts.isAuthenticated()){
                 setContentView(R.layout.activity_login);
 
                 webView = (WebView) findViewById(R.id.login_webpage);
@@ -69,7 +76,8 @@ public class LoginActivity extends FragmentActivity {
                 Bundle extras = getIntent().getExtras();
 
                 if (extras != null) {
-                    webView.loadUrl(extras.getString(Constants.URL_LOGIN_NAME));
+                    String url = extras.getString(Constants.URL_LOGIN_NAME);
+                    webView.loadUrl(url);
                 }
                 webView.getSettings().setJavaScriptEnabled(true);
                 webView.setWebChromeClient(new WebChromeClient() {
@@ -85,14 +93,26 @@ public class LoginActivity extends FragmentActivity {
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
                         super.onPageStarted(view, url, favicon);
                         setTitle(url);
-                        Log.e(TAG, "onPageStarted ");
+                        Log.d(TAG, "onPageStarted ");
                         if (url.contains("oauth.html?accessToken=")) {
                             String token = url.substring(url.indexOf("?")+1);
                             token = token.substring(token.indexOf("=")+1, token.indexOf("&"));
 
-                            ARL.properties.setAuthToken(token);
-                            ARL.properties.setIsAuthenticated();
-                            ARL.accounts.syncMyAccountDetails();
+                            // DisAuthenticate also here because if app lost the session
+                            // and then you login with other account you will see the details
+                            // from the other account. Now we are sure that when you login
+                            // user details are displayed.
+                            INQ.accounts.disAuthenticate();
+                            INQ.properties.setAccount(0l);
+
+                            // Authenticate the user
+                            INQ.properties.setAuthToken(token);
+                            INQ.properties.setIsAuthenticated();
+                            INQ.accounts.syncMyAccountDetails();
+
+                            // Remove all inquiries and sync the new ones.
+                            DaoConfiguration.getInstance().getInquiryLocalObjectDao().deleteAll();
+                            INQ.inquiry.syncInquiries();
 
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
@@ -109,9 +129,6 @@ public class LoginActivity extends FragmentActivity {
             }
         }else{
             Toast.makeText(this, R.string.network_connection, Toast.LENGTH_SHORT).show();
-//            //TODO remove these lines in production.
-//            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//            startActivity(intent);
         }
 
     }
