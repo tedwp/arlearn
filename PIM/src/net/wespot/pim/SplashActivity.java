@@ -62,7 +62,7 @@ public class SplashActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                intent.putExtra(Constants.URL_LOGIN_NAME, Constants.URL_LOGIN);
+                intent.putExtra(Constants.URL_LOGIN_NAME, INQ.config.getProperty("wespot_login_url"));
                 intent.putExtra(Constants.TYPE_LOGIN, Constants.WESPOT);
                 startActivity(intent);
             }
@@ -73,15 +73,11 @@ public class SplashActivity extends FragmentActivity {
         login_google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO google login
-
                 Intent intent2 = new Intent(getApplicationContext(), LoginActivity.class);
-                String url = getGoogleLoginRedirectURL("http://streetlearn.appspot.com/oauth/google", "594104153413-8ddgvbqp0g21pid8fm8u2dau37521b16.apps.googleusercontent.com");
-               // Uri uri =Uri.parse(rest);
+                String url = getGoogleLoginRedirectURL(INQ.config.getProperty("google_login_url"), INQ.config.getProperty("google_login_client_apikey"));
                 intent2.putExtra(Constants.URL_LOGIN_NAME, url);
                 intent2.putExtra(Constants.TYPE_LOGIN, Constants.GOOGLE);
                 startActivity(intent2);
-//                Toast.makeText(getApplicationContext(), R.string.not_implement_yet, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -90,11 +86,11 @@ public class SplashActivity extends FragmentActivity {
         login_linkedin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO linkedin login
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                Toast.makeText(getApplicationContext(), R.string.not_implement_yet, Toast.LENGTH_SHORT).show();
-            }
+                Intent intent2 = new Intent(getApplicationContext(), LoginActivity.class);
+                String url = getLinkedInLoginRedirectURL(INQ.config.getProperty("linkedin_login_url"), INQ.config.getProperty("linkedin_login_client_apikey"));
+                intent2.putExtra(Constants.URL_LOGIN_NAME, url);
+                intent2.putExtra(Constants.TYPE_LOGIN, Constants.LINKEDIN);
+                startActivity(intent2);            }
         });
 
         mPager = (ViewPager)findViewById(R.id.pager);
