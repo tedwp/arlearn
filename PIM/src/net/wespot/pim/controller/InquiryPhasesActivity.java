@@ -118,6 +118,7 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity {
                 b_data.setOnClickListener(new OnClick(1));
             }else{
                 b_data =button_manager._button_list(R.id.list_phases_data, Constants.INQUIRY_PHASES_LIST.get(3),R.drawable.ic_data, InquiryActivity.class, true, "0");
+                b_data.setOnClickListener(new OnClickNoGame());
             }
         }else{
             b_data =button_manager._button_list(R.id.list_phases_data, Constants.INQUIRY_PHASES_LIST.get(3),R.drawable.ic_data, InquiryActivity.class, true, "0");
@@ -158,6 +159,14 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity {
         @Override
         public void onClick(View view) {
             Toast.makeText(getApplicationContext(), "Add data collection task on IWE", 10).show();
+
+        }
+    }
+
+    private class OnClickNoGame implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Toast.makeText(getApplicationContext(), "Game is not sync yet", 10).show();
 
         }
     }
