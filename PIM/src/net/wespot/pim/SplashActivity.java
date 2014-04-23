@@ -90,7 +90,8 @@ public class SplashActivity extends FragmentActivity {
                 String url = getLinkedInLoginRedirectURL(INQ.config.getProperty("linkedin_login_url"), INQ.config.getProperty("linkedin_login_client_apikey"));
                 intent2.putExtra(Constants.URL_LOGIN_NAME, url);
                 intent2.putExtra(Constants.TYPE_LOGIN, Constants.LINKEDIN);
-                startActivity(intent2);            }
+                startActivity(intent2);
+            }
         });
 
         mPager = (ViewPager)findViewById(R.id.pager);
