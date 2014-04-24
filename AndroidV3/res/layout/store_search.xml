@@ -11,12 +11,12 @@
 
 
 
-    <include layout="@layout/store_search_bar"/>
-    <!--<ListView-->
-            <!--android:id="@android:id/list"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="fill_parent"-->
-            <!--android:background="@android:color/transparent"-->
-            <!--android:cacheColorHint="#00000000" />-->
+    <!--<include layout="@layout/store_search_bar"/>-->
+    <ListView
+            android:id="@android:id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@android:color/transparent"
+            android:cacheColorHint="#00000000" />
 
 </LinearLayout>

@@ -47,6 +47,8 @@ public class MessageManager {
         messageJDO.setBody(message.getBody());
         messageJDO.setDate(message.getDate());
         messageJDO.setRunId(message.getRunId());
+        messageJDO.setSenderId(message.getSenderId());
+        messageJDO.setSenderProviderId(message.getSenderProviderId());
         try {
             pm.makePersistent(messageJDO);
             return toBean(messageJDO);
@@ -76,6 +78,8 @@ public class MessageManager {
         bean.setMessageId(jdo.getMessageId());
         bean.setDate(jdo.getDate());
         bean.setDeleted(jdo.getDeleted());
+        bean.setSenderId(jdo.getSenderId());
+        bean.setSenderProviderId(jdo.getSenderProviderId());
         return bean;
     }
 

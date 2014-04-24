@@ -15,6 +15,7 @@ import com.actionbarsherlock.app.SherlockListActivity;
 import daoBase.DaoConfiguration;
 import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.events.CategoryEvent;
+import org.celstec.arlearn2.android.views.SquareLinearLayout;
 import org.celstec.dao.gen.CategoryLocalObject;
 
 import java.util.HashMap;
@@ -72,7 +73,7 @@ public class CategoryFragment extends SherlockFragment{
                 tableLayout.addView(row);
             }
 
-            RelativeLayout item1 = (RelativeLayout) inflater.inflate(R.layout.store_category_item, row, false);
+            SquareLinearLayout item1 = (SquareLinearLayout) inflater.inflate(R.layout.store_category_item, row, false);
             row.addView(item1);
             categoryMap.put(categoryLocalObject.getId(), item1);
             ((TextView)item1.findViewById(R.id.categoryItemText)).setText(categoryLocalObject.getCategory());

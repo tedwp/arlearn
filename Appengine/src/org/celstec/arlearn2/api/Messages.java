@@ -100,6 +100,9 @@ public class Messages extends Service {
             return serialise(getBeanDoesNotParseException((String) inMessage), accept);
 
         MessageDelegator messageDelegator = new MessageDelegator(this);
+
+        ((Message) inMessage).setSenderProviderId(getAccount().getAccountType());
+        ((Message) inMessage).setSenderId(getAccount().getLocalId());
         return serialise(messageDelegator.createMessage((Message) inMessage), accept);
 
     }

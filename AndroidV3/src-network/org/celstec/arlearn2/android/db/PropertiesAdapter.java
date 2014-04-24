@@ -18,8 +18,10 @@
  ******************************************************************************/
 package org.celstec.arlearn2.android.db;
 
+import android.accounts.AccountManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import org.celstec.arlearn2.android.delegators.AccountDelegator;
 import org.celstec.arlearn2.beans.account.Account;
 
 
@@ -66,10 +68,12 @@ public class PropertiesAdapter {
         return getDefaultPrefs().getBoolean(Constants.AUTHENTICATED, false);
     }
 
+    @Deprecated
     public void setIsAuthenticated() {
         setAuthenticated(true);
     }
 
+    @Deprecated
     public void disAuthenticate() {
         setAuthenticated(false);
         setFullName(null);
@@ -222,22 +226,26 @@ public class PropertiesAdapter {
         return getDefaultPrefs().getLong(Constants.GIVIS_LAST_SYNC_DATE+runId, 0);
     }
 
+    @Deprecated
     public void setFullName(String givenName) {
         SharedPreferences.Editor editor = getDefaultPrefs().edit();
         editor.putString(Constants.GIVEN_NAME, givenName);
         editor.commit();
     }
 
+    @Deprecated
     public String getFullName() {
         return getDefaultPrefs().getString(Constants.GIVEN_NAME, null);
     }
 
+    @Deprecated
     public void setPicture(String picture) {
         SharedPreferences.Editor editor = getDefaultPrefs().edit();
         editor.putString(Constants.PICTUREL_URL, picture);
         editor.commit();
     }
 
+    @Deprecated
     public String getPicture() {
         return getDefaultPrefs().getString(Constants.PICTUREL_URL, null);
     }

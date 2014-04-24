@@ -51,9 +51,15 @@ public class MessageJDO {
     @Persistent
     private String teamIds;
 
+    @Persistent
     private Boolean deleted;
 
+    @Persistent
     private Long runId;
+
+    private Integer senderProviderId;
+
+    private String senderId;
 
     public Long getMessageId() {
         return messageId;
@@ -126,5 +132,21 @@ public class MessageJDO {
 
     public void setRunId(Long runId) {
         this.runId = runId;
+    }
+
+    public Integer getSenderProviderId() {
+        return senderProviderId;
+    }
+
+    public void setSenderProviderId(Integer senderProviderId) {
+        this.senderProviderId = senderProviderId;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 }

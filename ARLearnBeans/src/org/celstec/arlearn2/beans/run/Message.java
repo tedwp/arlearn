@@ -16,6 +16,8 @@ public class Message extends RunBean{
     private Long date;
     private String userIds;
     private String teamIds;
+    private Integer senderProviderId;
+    private String senderId;
 
     public Message() {}
 
@@ -76,6 +78,22 @@ public class Message extends RunBean{
         this.userIds = userIds;
     }
 
+    public Integer getSenderProviderId() {
+        return senderProviderId;
+    }
+
+    public void setSenderProviderId(Integer senderProviderId) {
+        this.senderProviderId = senderProviderId;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+
     public String[] getUserIdsArray() {
         if (userIds == null) return null;
         return userIds.split("\\s*,\\s*");
@@ -109,7 +127,8 @@ public class Message extends RunBean{
                 if (message.getDate() != null) returnObject.put("date", message.getDate());
                 if (message.getUserIds() != null) returnObject.put("userIds", message.getUserIds());
                 if (message.getTeamIds() != null) returnObject.put("teamIds", message.getTeamIds());
-
+                if (message.getSenderId() != null) returnObject.put("senderId", message.getSenderId());
+                if (message.getSenderProviderId() != null) returnObject.put("senderProviderId", message.getSenderProviderId());
 
             } catch (JSONException e) {
 				e.printStackTrace();
@@ -140,9 +159,10 @@ public class Message extends RunBean{
             if (object.has("threadId")) message.setThreadId(object.getLong("threadId"));
             if (object.has("messageId")) message.setMessageId(object.getLong("messageId"));
             if (object.has("date")) message.setDate(object.getLong("date"));
-            if (object.has("userIds")) message.setSubject(object.getString("userIds"));
-            if (object.has("teamIds")) message.setSubject(object.getString("teamIds"));
-
+            if (object.has("userIds")) message.setUserIds(object.getString("userIds"));
+            if (object.has("teamIds")) message.setTeamIds(object.getString("teamIds"));
+            if (object.has("senderId")) message.setSenderId(object.getString("senderId"));
+            if (object.has("senderProviderId")) message.setSenderProviderId(object.getInt("senderProviderId"));
 
         }
 

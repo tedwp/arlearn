@@ -85,6 +85,7 @@ public class AccountDelegator extends AbstractDelegator{
     }
 
     public void disAuthenticate() {
+        ARL.properties.setAuthToken(null);
         loggedInAccount = null;
     }
 
