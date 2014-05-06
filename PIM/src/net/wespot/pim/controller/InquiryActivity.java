@@ -84,20 +84,9 @@ public class InquiryActivity extends _ActBar_FragmentActivity implements ActionB
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Avoiding NULL exceptions when resuming the PIM
-//        if (INQ.inquiry == null ){
-////            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-////            startActivity(intent);
-//            INQ.init(this);
-//            INQ.accounts.syncMyAccountDetails();
-//            INQ.inquiry.syncInquiries();
-//            Log.e(TAG, "recover INQ.inquiry is needed in InquiryActivity.");
-//        }
-
         if (savedInstanceState != null) {
             INQ.init(this);
             INQ.accounts.syncMyAccountDetails();
-//            INQ.inquiry.syncInquiries();
             INQ.inquiry.setCurrentInquiry(DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(savedInstanceState.getLong("currentInquiry")));
             Log.e(TAG, "recover INQ.inquiry is needed in InquiryActivity.");
         }

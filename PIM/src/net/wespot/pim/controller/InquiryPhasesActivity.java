@@ -16,45 +16,28 @@
 
 package net.wespot.pim.controller;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import daoBase.DaoConfiguration;
-import net.wespot.pim.MainActivity;
 import net.wespot.pim.R;
-import net.wespot.pim.SplashActivity;
 import net.wespot.pim.utils.Constants;
 import net.wespot.pim.utils.images.BitmapWorkerTask;
-import net.wespot.pim.utils.layout.ButtonEntryDelegator;
+import net.wespot.pim.utils.layout.ButtonDelegator;
+import net.wespot.pim.utils.layout.ViewItemClickInterface;
 import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import org.celstec.arlearn.delegators.INQ;
 
-public class InquiryPhasesActivity extends _ActBar_FragmentActivity {
+public class InquiryPhasesActivity extends _ActBar_FragmentActivity implements ViewItemClickInterface {
 
     private static final String TAG = "InquiryActivity";
     private ListView list_phases;
     private TextView inquiry_description_title;
     private ImageView inquiry_description_image;
-
-    private View b_description;
-    private View b_hypothesis;
-    private View b_plan;
-    private View b_data;
-    private View b_analyse;
-    private View b_discuss;
-    private View b_communicate;
-    private View b_add_friends;
-
-    private ButtonEntryDelegator button_manager;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -75,14 +58,24 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity {
 
         setContentView(R.layout.activity_phases);
 
-        getActionBar().setTitle(R.string.actionbar_inquiry_list);
+        if (!(Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1)) {
+            if (!(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)){
+                getActionBar().setTitle(R.string.actionbar_inquiry_list);
+            }
+        }
 
         inquiry_description_title = (TextView) findViewById(R.id.list_phases_title);
         inquiry_description_image = (ImageView) findViewById(R.id.list_phases_image);
 
         if (INQ.inquiry.getCurrentInquiry().getIcon() != null){
             BitmapWorkerTask task = new BitmapWorkerTask(inquiry_description_image);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, INQ.inquiry.getCurrentInquiry().getIcon());
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+                task.execute(INQ.inquiry.getCurrentInquiry().getIcon());
+            } else {
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, INQ.inquiry.getCurrentInquiry().getIcon());
+            }
+
         }
         else{
             inquiry_description_image.setImageBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_placeholder));
@@ -91,83 +84,124 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity {
         inquiry_description_title.setText(INQ.inquiry.getCurrentInquiry().getTitle());
 //        inquiry_description_title.loadData(INQ.inquiry.getCurrentInquiry().getDescription(), Constants.MIME_TYPE, Constants.ENCONDING);
 //        inquiry_description_title.setBackgroundColor(0x00000000);
+
+        LinearLayout listPhasesContainer = (LinearLayout) findViewById(R.id.list_phases);
+        ButtonDelegator buttonDelegator =  ButtonDelegator.getInstance(this);
+        LinearLayout layout = buttonDelegator.layoutGenerator(R.dimen.mainscreen_margintop_zero);
+
+        for (int i=0; i < Constants.INQUIRY_ID_PHASES_LIST.size(); i++){
+            switch (i){
+                case Constants.ID_DATA:
+                    createDataCollectionButton(buttonDelegator, layout, i);
+                    break;
+                case Constants.ID_DESCRIPTION:
+                    buttonDelegator.buttonGenerator(layout,
+                            Constants.INQUIRY_ID_PHASES_LIST.get(i),
+                            Constants.INQUIRY_PHASES_LIST.get(i),String.valueOf(""),
+                            Constants.INQUIRY_ICON_PHASES_LIST.get(i)
+                    ).setOnListItemClickCallback(this);
+                    break;
+                case Constants.ID_QUESTION:
+                    buttonDelegator.buttonGenerator(layout,
+                            Constants.INQUIRY_ID_PHASES_LIST.get(i),
+                            Constants.INQUIRY_PHASES_LIST.get(i), String.valueOf(""),
+                            Constants.INQUIRY_ICON_PHASES_LIST.get(i)
+                    ).setOnListItemClickCallback(this);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        listPhasesContainer.addView(layout);
+
+        LinearLayout linkAddFriends = (LinearLayout) findViewById(R.id.link_friends);
+        ButtonDelegator buttonDelegatorAddFriends =  ButtonDelegator.getInstance(this);
+        LinearLayout layoutAddFriends = buttonDelegatorAddFriends.layoutGenerator(R.dimen.mainscreen_margintop_zero);
+
+        buttonDelegator.buttonGenerator(layoutAddFriends, 10, getResources().getString(R.string.phases_invite_new_friend),
+                "", R.drawable.ic_invite_friend
+        ).setOnListItemClickCallback(new ClickInviteFriend());
+
+        linkAddFriends.addView(layoutAddFriends);
+
+    }
+
+    private void createDataCollectionButton(ButtonDelegator buttonDelegator, LinearLayout layout, int i) {
+        if (INQ.inquiry.getCurrentInquiry().getRunLocalObject()!=null){
+            if (INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject()!=null){
+                int numberDataCollectionTasks = DaoConfiguration.getInstance().getGameLocalObjectDao().load(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId()).getGeneralItems().size();
+                buttonDelegator.buttonGenerator(layout,
+                        Constants.INQUIRY_ID_PHASES_LIST.get(i),
+                        Constants.INQUIRY_PHASES_LIST.get(i),String.valueOf(numberDataCollectionTasks),
+                        Constants.INQUIRY_ICON_PHASES_LIST.get(i)
+                ).setOnListItemClickCallback(this);
+            }else{
+                buttonDelegator.buttonGenerator(layout,
+                        Constants.INQUIRY_ID_PHASES_LIST.get(i),
+                        Constants.INQUIRY_PHASES_LIST.get(i),String.valueOf(""),
+                        Constants.INQUIRY_ICON_PHASES_LIST.get(i)
+                ).setOnListItemClickCallback(new NoDataCollection());
+            }
+        }else{
+            buttonDelegator.buttonGenerator(layout,
+                    Constants.INQUIRY_ID_PHASES_LIST.get(i),
+                    Constants.INQUIRY_PHASES_LIST.get(i),String.valueOf(""),
+                    Constants.INQUIRY_ICON_PHASES_LIST.get(i)
+            ).setOnListItemClickCallback(new ClickNoGame());
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        // This is needed to set the class
-        button_manager = ButtonEntryDelegator.getInstance(this);
-
-        // Creation of the links
-        b_description =button_manager._button_list(R.id.list_phases_description, Constants.INQUIRY_PHASES_LIST.get(0), R.drawable.ic_description, InquiryActivity.class, true);
-        b_description.setOnClickListener(new OnClick(0));
-
-        b_hypothesis =button_manager._button_list(R.id.list_phases_hypothesis, Constants.INQUIRY_PHASES_LIST.get(1), R.drawable.ic_hypothesis, null, false);
-//        b_hypothesis.setOnClickListener(new OnClick(1));
-
-        b_plan =button_manager._button_list(R.id.list_phases_plan, Constants.INQUIRY_PHASES_LIST.get(2),R.drawable.ic_plan, null, false);
-//        b_plan.setOnClickListener(new OnClick(2));
-
-        if (INQ.inquiry.getCurrentInquiry().getRunLocalObject()!=null){
-            if (INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject()!=null){
-                int numberDataCollectionTasks = DaoConfiguration.getInstance().getGameLocalObjectDao().load(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId()).getGeneralItems().size();
-                b_data =button_manager._button_list(R.id.list_phases_data, Constants.INQUIRY_PHASES_LIST.get(3),R.drawable.ic_data, InquiryActivity.class, true, numberDataCollectionTasks+"" );
-//                b_data.setOnClickListener(new OnClick(3));
-                b_data.setOnClickListener(new OnClick(1));
-            }else{
-                b_data =button_manager._button_list(R.id.list_phases_data, Constants.INQUIRY_PHASES_LIST.get(3),R.drawable.ic_data, InquiryActivity.class, true, "0");
-                b_data.setOnClickListener(new OnClickNoGame());
-            }
-        }else{
-            b_data =button_manager._button_list(R.id.list_phases_data, Constants.INQUIRY_PHASES_LIST.get(3),R.drawable.ic_data, InquiryActivity.class, true, "0");
-            b_data.setOnClickListener(new OnClickNoDataCollection());
-        }
-
-        b_analyse =button_manager._button_list(R.id.list_phases_analyse, Constants.INQUIRY_PHASES_LIST.get(4), R.drawable.ic_analyze, null,false);
-//        b_analyse.setOnClickListener(new OnClick(4));
-
-        b_discuss =button_manager._button_list(R.id.list_phases_discuss, Constants.INQUIRY_PHASES_LIST.get(5), R.drawable.ic_discuss, null, false);
-//        b_discuss.setOnClickListener(new OnClick(5));
-
-        b_communicate =button_manager._button_list(R.id.list_phases_communicate, Constants.INQUIRY_PHASES_LIST.get(6),  R.drawable.ic_communicate, null, false);
-//        b_communicate.setOnClickListener(new OnClick(6));
-
-        b_add_friends =button_manager._button_list(R.id.invites_friends_to_inquiry, getString(R.string.phases_invite_new_friend), R.drawable.ic_invite_friend, null, false);
-
-
     }
 
-    private class OnClick implements View.OnClickListener {
-
-        private int phase;
-
-        public OnClick(int i) {
-                 phase = i;
-        }
-
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(getApplicationContext(), InquiryActivity.class);
-            intent.putExtra(InquiryActivity.PHASE, phase);
-            startActivity(intent);
-        }
+    @Override
+    public void onListItemClick(View v, int id) {
+        Intent intent = new Intent(getApplicationContext(), InquiryActivity.class);
+        intent.putExtra(InquiryActivity.PHASE, id);
+        startActivity(intent);
     }
 
-    private class OnClickNoDataCollection implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            Toast.makeText(getApplicationContext(), "Add data collection task on IWE", 10).show();
-
-        }
+    @Override
+    public boolean setOnLongClickListener(View v) {
+        return false;
     }
 
-    private class OnClickNoGame implements View.OnClickListener {
+    private class ClickNoGame implements ViewItemClickInterface {
         @Override
-        public void onClick(View view) {
+        public void onListItemClick(View v, int id) {
             Toast.makeText(getApplicationContext(), "Game is not sync yet", 10).show();
+        }
 
+        @Override
+        public boolean setOnLongClickListener(View v) {
+            return false;
+        }
+    }
+
+    private class NoDataCollection implements ViewItemClickInterface {
+        @Override
+        public void onListItemClick(View v, int id) {
+            Toast.makeText(getApplicationContext(), "Add data collection task on IWE", 10).show();
+        }
+
+        @Override
+        public boolean setOnLongClickListener(View v) {
+            return false;
+        }
+    }
+
+    private class ClickInviteFriend implements ViewItemClickInterface {
+        @Override
+        public void onListItemClick(View v, int id) {
+            Toast.makeText(getApplicationContext(), "Invite friend to this inquiry", 10).show();
+        }
+
+        @Override
+        public boolean setOnLongClickListener(View v) {
+            return false;
         }
     }
 }

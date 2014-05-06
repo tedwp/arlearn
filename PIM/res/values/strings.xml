@@ -5,6 +5,8 @@
     <string name="inquiry_create_title">Create an inquiry</string>
     <string name="inquiry_create_yes">Yes</string>
     <string name="inquiry_create_no">No</string>
+    <string name="inquiry_create_voice_recognition">weSPOT voice recognition...</string>
+
     <string name="inquiry_title_list">Open inquiries</string>
 
     <string name="common_title">Menu</string>
@@ -75,7 +77,6 @@
         <item>Logged in users</item>
         <item>Public</item>
     </string-array>
-
     <string name="wonder_moment_record_voice">Record wonder moment</string>
     <string name="wonder_moment_date_placeholder">Set up date</string>
     <string name="wonder_moment_time_placeholder">Set up time</string>
@@ -89,9 +90,11 @@
     <string name="wonder_moment_illegal_argument_exception">Illegal arguments: Latitude %1$.8f Longitude %2$.8f</string>
     <string name="wonder_moment_address_output_string">%1$s %2$s %3$s</string>
     <string name="wonder_moment_no_address_found">No address found for location</string>
+    <string name="wonder_moment_placeholder_description">This is a self-guided, mobile created, inquiry. Please provide a description of the inquiry here.</string>
 
     <string name="inquiry_title_description">Description</string>
     <string name="inquiry_title_hypothesis">Hypothesis</string>
+    <string name="inquiry_title_question">Question</string>
     <string name="inquiry_title_plan">Plan</string>
     <string name="inquiry_title_data">Collect data</string>
     <string name="inquiry_title_analyse">Analyse</string>

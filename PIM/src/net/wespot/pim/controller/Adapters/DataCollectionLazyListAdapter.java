@@ -55,19 +55,7 @@ public class DataCollectionLazyListAdapter extends AbstractGeneralItemsLazyListA
         TextView firstLineView =(TextView) view.findViewById(R.id.name_entry_data_colletion_list);
         firstLineView.setText(item.getTitle());
         ImageView icon = (ImageView) view.findViewById(R.id.inquiry_entry_data_collection_icon);
-//        TextView notificationText = (TextView) view.findViewById(R.id.notification_text_data_colletion);
-
-        //TODO change item.getId by item.getnumberupdates
-//        notificationText.setVisibility(View.VISIBLE);
-//        notificationText.setText(item.getId()+"");
-
-//        if (item.getIcon() != null){
-//            BitmapWorkerTask task = new BitmapWorkerTask(icon);
-//            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.getIcon());
-//        }
-//        else{
-            icon.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_task_explore));
-//        }
+        icon.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_task_explore));
     }
 
     @Override

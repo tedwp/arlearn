@@ -79,7 +79,6 @@ public class PimProfileFragment extends _ActBar_FragmentActivity {
 
             if (account.getPicture() != null){
                 BitmapWorkerTask task = new BitmapWorkerTask(picture);
-                // TODO change to picture
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, account.getPicture());
             }
             else{

@@ -63,7 +63,6 @@ public class ResponsesLazyListAdapter extends AbstractResponsesLazyListAdapter {
         ImageView icon = (ImageView) view.findViewById(R.id.inquiry_entry_data_collection_response_icon);
         TextView notificationText = (TextView) view.findViewById(R.id.notification_text_data_collection_response);
 
-        //TODO change item.getId by item.getnumberupdates
         notificationText.setVisibility(View.INVISIBLE);
         notificationText.setText(item.getId()+"");
 

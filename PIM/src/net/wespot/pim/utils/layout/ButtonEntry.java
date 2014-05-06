@@ -1,5 +1,6 @@
 package net.wespot.pim.utils.layout;
 
+
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import net.wespot.pim.R;
+import net.wespot.pim.controller.InquiryPhasesActivity;
+import org.celstec.arlearn2.android.listadapter.ListItemClickInterface;
 
 /**
  * ****************************************************************************
@@ -31,54 +34,51 @@ import net.wespot.pim.R;
  * ****************************************************************************
  */
 
-    public class ButtonEntry extends Fragment {
+public class ButtonEntry extends Fragment {
 
-        private TextView name;
-        private TextView notification;
-        private ImageView icon;
+    private ViewItemClickInterface callback;
+    private String name;
+    private String notification;
+    private int icon;
+    private int id;
 
-        public ButtonEntry() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            // Inflate the layout for this fragment
-            return inflater.inflate(R.layout.entry_main_list, container, false);
-        }
-
-        @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
-
-            name = (TextView) view.findViewById(R.id.name_entry_list);
-            notification = (TextView) view.findViewById(R.id.notificationText);
-            icon = (ImageView) view.findViewById(R.id.inquiry_entry_icon);
-
-            super.onViewCreated(view, savedInstanceState);
-        }
-
-        public CharSequence getName() {
-            return name.getText();
-        }
-
-        public void setName(String name) {
-            this.name.setText(name);
-        }
-
-        public CharSequence getNotification() {
-            return notification.getText();
-        }
-
-        public void setNotification(CharSequence notif) {
-            notification.setVisibility(View.VISIBLE);
-            this.notification.setText(notif);
-        }
-
-        public Drawable getIcon() {
-            return icon.getDrawable();
-        }
-
-        public void setIcon(Drawable a) {
-            this.icon.setImageDrawable(a);
-        }
-
+    public ButtonEntry() {
     }
+
+    public ButtonEntry(int id, String name, String notification, int icon) {
+        this.id = id;
+        this.name = name;
+        this.notification = notification;
+        this.icon = icon;
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.entry_main_list, container, false);
+
+        ((TextView) view.findViewById(R.id.name_entry_list)).setText(name);
+        ((TextView) view.findViewById(R.id.notificationText)).setText(notification);
+        ((ImageView) view.findViewById(R.id.inquiry_entry_icon)).setImageDrawable(getResources().getDrawable(icon));
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (callback != null) callback.onListItemClick(view, id);
+            }
+        });
+
+        return  view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void setOnListItemClickCallback(ViewItemClickInterface callback) {
+        this.callback = callback;
+    }
+}

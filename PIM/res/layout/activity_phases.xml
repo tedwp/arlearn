@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" >
 
     <ScrollView android:layout_width="match_parent" android:layout_height="wrap_content">
         <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
@@ -10,7 +11,7 @@
                            android:layout_margin="30dp"
                            android:maxHeight="60dp"
                            android:layout_centerVertical="true"
-                           android:src="@drawable/foto_perfil_croped"/>
+                           android:src="@drawable/ic_placeholder"/>
 
                 <TextView android:id="@+id/list_phases_title"
                           android:textSize="20dp"
@@ -19,57 +20,14 @@
                           android:layout_toRightOf="@id/list_phases_image"
                           android:layout_height="wrap_content"/>
             </RelativeLayout>
-            <!--<WebView-->
-                    <!--android:id="@+id/list_phases_title"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"/>-->
-            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
-                      android:id="@+id/list_phases_description"
-                      android:layout_width="match_parent"
-                      android:layout_below="@id/head_list_phases"
-                      android:layout_height="wrap_content"/>
 
-            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
-                      android:id="@+id/list_phases_hypothesis"
-                      android:layout_below="@id/list_phases_description"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"/>
+            <LinearLayout android:id="@+id/list_phases" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" >
 
-            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
-                      android:id="@+id/list_phases_plan"
-                      android:layout_below="@id/list_phases_hypothesis"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"/>
+            </LinearLayout>
 
-            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
-                      android:id="@+id/list_phases_data"
-                      android:layout_below="@id/list_phases_plan"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                    />
-            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
-                      android:id="@+id/list_phases_analyse"
-                      android:layout_below="@id/list_phases_data"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"/>
-            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
-                      android:id="@+id/list_phases_discuss"
-                      android:layout_below="@id/list_phases_analyse"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"/>
+            <LinearLayout android:id="@+id/link_friends" android:layout_marginTop="@dimen/mainscreen_margintop_first" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" >
 
-            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
-                      android:id="@+id/list_phases_communicate"
-                      android:layout_below="@id/list_phases_discuss"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"/>
-
-            <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
-                      android:layout_marginTop="@dimen/mainscreen.margintop.second"
-                      android:id="@+id/invites_friends_to_inquiry"
-                      android:layout_below="@id/list_phases_communicate"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

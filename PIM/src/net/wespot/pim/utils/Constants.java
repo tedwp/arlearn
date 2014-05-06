@@ -1,5 +1,7 @@
 package net.wespot.pim.utils;
 
+import net.wespot.pim.R;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,14 +38,48 @@ public class Constants {
     public static final String URL_LOGIN = "http://wespot-arlearn.appspot.com/MobileLogin.html";
     public static final String ENCONDING = null;
 
+    // If we want to change the order of the screen this must be done here and also in the rest of lists
+    // Only appear the first three
+    public static final int  ID_DESCRIPTION = 0;
+    public static final int  ID_QUESTION = 1;
+    public static final int  ID_DATA = 2;
+    public static final int  ID_HYPOTHESIS = 3;
+    public static final int  ID_PLAN = 4;
+    public static final int  ID_ANALYSIS = 5;
+    public static final int  ID_DISCUSS = 6;
+    public static final int  ID_COMMUNICATE = 7;
+
     public static final List<String> INQUIRY_PHASES_LIST = Arrays.asList(
             "Description",
+            "Question",
+            "Collect data",
             "Hypothesis",
             "Plan",
-            "Collect data",
             "Analyse",
             "Discuss",
             "Communicate"
+    );
+
+    public static final List<Integer> INQUIRY_ICON_PHASES_LIST = Arrays.asList(
+            R.drawable.ic_description,
+            R.drawable.ic_placeholder,
+            R.drawable.ic_data,
+            R.drawable.ic_hypothesis,
+            R.drawable.ic_plan,
+            R.drawable.ic_analyze,
+            R.drawable.ic_discuss,
+            R.drawable.ic_communicate
+    );
+
+    public static final List<Integer> INQUIRY_ID_PHASES_LIST = Arrays.asList(
+            ID_DESCRIPTION,
+            ID_QUESTION,
+            ID_DATA,
+            ID_HYPOTHESIS,
+            ID_PLAN,
+            ID_ANALYSIS,
+            ID_DISCUSS,
+            ID_COMMUNICATE
     );
 }
 

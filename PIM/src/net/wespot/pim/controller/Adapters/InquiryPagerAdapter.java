@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import net.wespot.pim.utils.Constants;
 import net.wespot.pim.view.*;
 
 /**
@@ -46,30 +47,15 @@ public class InquiryPagerAdapter extends FragmentPagerAdapter {
         Bundle args = new Bundle();
 
         switch (i) {
-            case 0:
+            case Constants.ID_DESCRIPTION:
                 frag = new InqDescriptionFragment();
                 return frag;
-            case 1:
+            case Constants.ID_DATA:
                 frag = new InqDataCollectionFragment();
                 return frag;
-//            case 1:
-//                frag = new InqHypothesisFragment();
-//                return frag;
-//            case 2:
-//                frag =  new InqPlanFragment();
-//                return frag;
-//            case 3:
-//                frag = new InqDataCollectionFragment();
-//                return frag;
-//            case 4:
-//                frag =  new InqAnalyseFragment();
-//                return frag;
-//            case 5:
-//                frag =  new InqDiscussFragment();
-//                return frag;
-//            case 6:
-//                frag =  new InqCommunicateFragment();
-//                return frag;
+            case Constants.ID_QUESTION:
+                frag = new InqQuestionFragment();
+                return frag;
             default:
                 // The other sections of the app are dummy placeholders.
                 frag = new DemoObjectFragment();
@@ -83,6 +69,6 @@ public class InquiryPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         // For this contrived example, we have a 100-object collection.
 //        return 6;
-        return 2;
+        return 3;
     }
 }

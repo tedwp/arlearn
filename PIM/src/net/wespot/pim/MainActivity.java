@@ -10,20 +10,27 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import daoBase.DaoConfiguration;
-import net.wespot.pim.utils.layout.ButtonEntryDelegator;
+import net.wespot.pim.utils.layout.ButtonDelegator;
 import net.wespot.pim.utils.layout.MainActionBarFragmentActivity;
+import net.wespot.pim.utils.layout.ViewItemClickInterface;
 import net.wespot.pim.view.*;
 import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.delegators.ARL;
-import org.celstec.arlearn2.client.InquiryClient;
 import org.celstec.events.InquiryEvent;
 
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class MainActivity extends MainActionBarFragmentActivity {
+public class MainActivity extends MainActionBarFragmentActivity implements ViewItemClickInterface{
     private static final String TAG = "MainActivity";
+    private static final int MY_INQUIRIES = 12345;
+    private static final int MY_MEDIA = 12346;
+    private static final int PROFILE = 12347;
+    private static final int BADGES = 12348;
+    private static final int FRIENDS = 12349;
     private int number_inquiries;
-    private ButtonEntryDelegator man;
+
+    private ButtonDelegator man;
+
     /**
      * Called when the activity is first created.
      */
@@ -35,28 +42,31 @@ public class MainActivity extends MainActionBarFragmentActivity {
 
         INQ.inquiry.syncInquiries();
         number_inquiries = DaoConfiguration.getInstance().getInquiryLocalObjectDao().loadAll().size();
+
+        LinearLayout listMainMenu = (LinearLayout) findViewById(R.id.content);
+
+        ButtonDelegator buttonDelegator =  ButtonDelegator.getInstance(this);
+
+        LinearLayout layout = buttonDelegator.layoutGenerator(R.dimen.mainscreen_margintop_first);
+        buttonDelegator.buttonGenerator(layout, MY_INQUIRIES, getResources().getString(R.string.wrapper_myinquiry),
+                String.valueOf(number_inquiries + ""), R.drawable.ic_inquiries).setOnListItemClickCallback(this);
+        buttonDelegator.buttonGenerator(layout, MY_MEDIA, getResources().getString(R.string.wrapper_mymedia),
+                String.valueOf(""), R.drawable.ic_mymedia).setOnListItemClickCallback(this);
+        buttonDelegator.buttonGenerator(layout, PROFILE, getResources().getString(R.string.wrapper_profile),
+                String.valueOf(""), R.drawable.ic_profile).setOnListItemClickCallback(this);
+        buttonDelegator.buttonGenerator(layout, BADGES, getResources().getString(R.string.wrapper_badges),
+                String.valueOf(""), R.drawable.ic_badges).setOnListItemClickCallback(this);
+        buttonDelegator.buttonGenerator(layout, FRIENDS, getResources().getString(R.string.wrapper_friends),
+                String.valueOf(""), R.drawable.ic_friends).setOnListItemClickCallback(this);
+
+        listMainMenu.addView(layout);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        // This is needed to set the class
-        man = ButtonEntryDelegator.getInstance(this);
-
         number_inquiries = DaoConfiguration.getInstance().getInquiryLocalObjectDao().loadAll().size();
-
-        // Creation of the links
-        man._button_list(R.id.main_myinquiries_link, getResources().getString(R.string.wrapper_myinquiry), R.drawable.ic_inquiries, PimInquiriesFragment.class, false, number_inquiries+"" );
-
-        man._button_list(R.id.main_mymedia_link, getResources().getString(R.string.wrapper_mymedia),R.drawable.ic_mymedia,  InqMyMediaFragment.class, false);
-
-        man._button_list(R.id.main_profile_link, getResources().getString(R.string.wrapper_profile),R.drawable.ic_profile, PimProfileFragment.class, false);
-
-        man._button_list(R.id.main_badges_link, getResources().getString(R.string.wrapper_badges), R.drawable.ic_badges, PimBadgesFragment.class, false);
-
-//        man._button_list(R.id.main_friends_link, getResources().getString(R.string.wrapper_friends),R.drawable.ic_friends, PimFriendsFragment.class, false);
-        man._button_list(R.id.main_friends_link, getResources().getString(R.string.wrapper_friends),R.drawable.ic_friends, null, false);
     }
 
     private void onEventBackgroundThread(InquiryEvent inquiryObject){
@@ -101,5 +111,36 @@ public class MainActivity extends MainActionBarFragmentActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onListItemClick(View v, int id) {
+        switch (id){
+            case MY_INQUIRIES:
+                Intent intent_inquiries = new Intent(getApplicationContext(), PimInquiriesFragment.class);
+                startActivity(intent_inquiries);
+                break;
+            case MY_MEDIA:
+                Intent intent_media = new Intent(getApplicationContext(), InqMyMediaFragment.class);
+                startActivity(intent_media);
+                break;
+            case PROFILE:
+                Intent intent_profile = new Intent(getApplicationContext(), PimProfileFragment.class);
+                startActivity(intent_profile);
+                break;
+            case BADGES:
+                Intent intent_badges = new Intent(getApplicationContext(), PimBadgesFragment.class);
+                startActivity(intent_badges);
+                break;
+            case FRIENDS:
+                Intent intent_friends = new Intent(getApplicationContext(), PimFriendsFragment.class);
+                startActivity(intent_friends);
+                break;
+        }
+    }
+
+    @Override
+    public boolean setOnLongClickListener(View v) {
+        return false;
     }
 }

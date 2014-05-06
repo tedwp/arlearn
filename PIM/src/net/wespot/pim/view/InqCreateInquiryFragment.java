@@ -123,26 +123,24 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
         wm_membership_closed = (RadioButton) rootView.findViewById(R.id.wonder_moment_membership_closed);
         wm_visibility = (Spinner) rootView.findViewById(R.id.wonder_moment_visibility);
 
-        wm_membership_open.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TEMP_MEMBERSHIP = InquiryClient.OPEN_MEMBERSHIP;
-            }
-        });
-
-        wm_membership_closed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TEMP_MEMBERSHIP = InquiryClient.CLOSED_MEMBERSHIP;
-            }
-        });
-
-//        wm_membership.getCheckedRadioButtonId();
-
-//        wm_membership_open..onRadioButtonClicked(View)
 
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+
+            wm_membership_open.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TEMP_MEMBERSHIP = InquiryClient.OPEN_MEMBERSHIP;
+                }
+            });
+
+            wm_membership_closed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TEMP_MEMBERSHIP = InquiryClient.CLOSED_MEMBERSHIP;
+                }
+            });
+
             wm_save =   (ImageButton) rootView.findViewById(R.id.wonder_moment_save);
             wm_cancel =   (ImageButton) rootView.findViewById(R.id.wonder_moment_cancel);
             wm_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_content_save_black));
@@ -164,14 +162,14 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
 
         setDataTime();
 
+        //TODO check voice recognition
         wm_clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "New inquiry initialized", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH.toString());
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "weSPOT voice recognition...");
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getResources().getString(R.string.inquiry_create_voice_recognition));
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
@@ -193,22 +191,6 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
         return rootView;
     }
 
-//    public void onRadioButtonClicked(View view) {
-//        // Is the button now checked?
-//        boolean checked = ((RadioButton) view).isChecked();
-//
-//        switch(view.getId()) {
-//            case R.id.wonder_moment_membership_open:
-//                if (checked)
-//                    TEMP_MEMBERSHIP = InquiryClient.OPEN_MEMBERSHIP;
-//                break;
-//            case R.id.wonder_moment_membership_closed:
-//                if (checked)
-//                    TEMP_MEMBERSHIP = InquiryClient.CLOSED_MEMBERSHIP;
-//                break;
-//        }
-//    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -219,31 +201,16 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save_inquiry:
-                // TODO put here the method to create inquiry
-
                 save_inquiry();
-
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void save_inquiry() {
-        new_inquiry.setDescription(wm_content.getText().toString());
+        new_inquiry.setDescription(getResources().getString(R.string.wonder_moment_placeholder_description));
+//        new_inquiry.setDescription(wm_content.getText().toString());
         new_inquiry.setTitle(wm_title.getText().toString());
-
-
-//        wm_visibility.getSelectedItemId();
-//        wm_membership.getCheckedRadioButtonId();
-
-//        switch(wm_membership.getCheckedRadioButtonId()) {
-//            case R.id.wonder_moment_membership_open:
-//                TEMP_MEMBERSHIP = InquiryClient.OPEN_MEMBERSHIP;
-//                break;
-//            case R.id.wonder_moment_membership_closed:
-//                TEMP_MEMBERSHIP = InquiryClient.CLOSED_MEMBERSHIP;
-//                break;
-//        }
 
         switch ((int)wm_visibility.getSelectedItemId()){
             case InquiryClient.VIS_INQUIRY_MEMBERS_ONLY:
@@ -255,7 +222,6 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
             case InquiryClient.VIS_PUBLIC:
                 TEMP_VISIBILITY = InquiryClient.VIS_PUBLIC;
                 break;
-
         }
 
         if (!new_inquiry.getTitle().equals("")) {
@@ -303,7 +269,7 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
                 switch (motionEvent.getAction())
                 {
                     case MotionEvent.ACTION_DOWN:
-                        Log.e(TAG, "Click to start to find location");
+                        Log.d(TAG, "Click to start to find location");
                         startFindingLocation();
                         break;
                 }

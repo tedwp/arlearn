@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +52,8 @@ public class InquiryLazyListAdapter extends AbstractInquiryLazyListAdapter {
         if (item == null) return null;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         return inflater.inflate(R.layout.entry_inquiry_list, parent, false);
-
     }
+
     @Override
     public void bindView(View view, Context context,  InquiryLocalObject item) {
         TextView firstLineView =(TextView) view.findViewById(R.id.name_entry_list);
@@ -60,13 +61,14 @@ public class InquiryLazyListAdapter extends AbstractInquiryLazyListAdapter {
         ImageView icon = (ImageView) view.findViewById(R.id.inquiry_entry_icon);
         TextView notificationText = (TextView) view.findViewById(R.id.notificationTextInquiry);
 
-        //TODO change item.getId by item.getnumberupdates
-//        notificationText.setVisibility(View.VISIBLE);
-//        notificationText.setText(item.get);
-
         if (item.getIcon() != null){
             BitmapWorkerTask task = new BitmapWorkerTask(icon);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.getIcon());
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+                task.execute(item.getIcon());
+            } else {
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.getIcon());
+            }
         }
         else{
             icon.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_placeholder));

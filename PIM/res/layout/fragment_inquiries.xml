@@ -6,10 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"
-              android:id="@+id/inquiries_new_inquiry"
+    <!--<fragment android:name="net.wespot.pim.utils.layout.ButtonEntry"-->
+              <!--android:id="@+id/inquiries_new_inquiry"-->
+              <!--android:layout_width="match_parent"-->
+              <!--android:layout_height="wrap_content"/>-->
+
+    <LinearLayout android:id="@+id/inquiries_new_inquiry"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"/>
+              android:layout_height="wrap_content"
+            />
+
     <TextView android:id="@+id/inquiries_title_list"
               android:layout_below="@id/inquiries_new_inquiry"
               android:layout_width="match_parent"

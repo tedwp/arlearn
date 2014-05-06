@@ -86,12 +86,9 @@ public class InqMyMediaDataCollectionTaskFragment extends _ActBar_FragmentActivi
             genObject.getResponses();
 
             data_collection_tasks_items = (ListView) findViewById(R.id.data_collection_tasks_items);
-            //TODO change to the other constructor
             datAdapter =  new ResponsesLazyListAdapter(this, generalItemId);
-//            datAdapter =  new ResponsesLazyListAdapter(this);
 
             datAdapter.setOnListItemClickCallback(this);
-//            data_collection_tasks_items.setOnItemClickListener(new onListDataCollectionTasksClick());
             data_collection_tasks_items.setAdapter(datAdapter);
 
             getActionBar().setTitle(getResources().getString(R.string.actionbar_list_data_collection_task));

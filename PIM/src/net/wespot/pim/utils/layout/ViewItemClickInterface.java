@@ -1,16 +1,10 @@
-package net.wespot.pim.view;
+package net.wespot.pim.utils.layout;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import net.wespot.pim.R;
 
 /**
  * ****************************************************************************
- * Copyright (C) 2013 Open Universiteit Nederland
+ * Copyright (C) 2014 Open Universiteit Nederland
  * <p/>
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,18 +22,8 @@ import net.wespot.pim.R;
  * Contributors: Angel Suarez
  * ****************************************************************************
  */
-public class DemoObjectFragment extends Fragment {
+public interface ViewItemClickInterface {
 
-    public static final String INQUIRY_ID = "inquiry_id";
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.fragment_collection_object, container, false);
-        Bundle args = getArguments();
-        ((TextView) rootView.findViewById(android.R.id.text2)).setText("Placeholder");
-//        ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-//                Integer.toString(args.getInt(INQUIRY_ID)));
-        return rootView;
-    }
+    public void onListItemClick(View v, int id);
+    public boolean setOnLongClickListener(View v);
 }

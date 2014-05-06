@@ -26,13 +26,10 @@ import android.view.View;
 import android.widget.ListView;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.BadgesLazyListAdapter;
-import net.wespot.pim.controller.InquiryActivity;
-import net.wespot.pim.utils.layout.ButtonEntryDelegator;
 import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.listadapter.ListItemClickInterface;
 import org.celstec.dao.gen.BadgeLocalObject;
-import org.celstec.dao.gen.InquiryLocalObject;
 
 /**
  * A fragment that launches other parts of the demo application.

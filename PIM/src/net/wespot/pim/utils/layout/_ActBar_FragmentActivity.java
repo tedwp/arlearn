@@ -39,7 +39,6 @@ public class _ActBar_FragmentActivity extends FragmentActivity {
     private static final String TAG = "_ActBar_FragmentActivity";
     private ActionBarHelper mActionBarHelper;
 
-
     @Override
     protected void onResume() {
         super.onResume();
