@@ -159,9 +159,17 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity implements V
 
     @Override
     public void onListItemClick(View v, int id) {
-        Intent intent = new Intent(getApplicationContext(), InquiryActivity.class);
-        intent.putExtra(InquiryActivity.PHASE, id);
-        startActivity(intent);
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+            Intent intent = new Intent(getApplicationContext(), InquiryActivityBack.class);
+            intent.putExtra(InquiryActivity.PHASE, id);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(getApplicationContext(), InquiryActivity.class);
+            intent.putExtra(InquiryActivity.PHASE, id);
+            startActivity(intent);
+        }
+
     }
 
     @Override
