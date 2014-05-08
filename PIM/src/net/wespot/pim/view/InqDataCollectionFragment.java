@@ -21,9 +21,15 @@ package net.wespot.pim.view;
  * ****************************************************************************
  */
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.*;
 import android.widget.ListView;
@@ -32,24 +38,26 @@ import android.widget.Toast;
 import daoBase.DaoConfiguration;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.DataCollectionLazyListAdapter;
+import net.wespot.pim.utils.layout.NoticeDialogFragment;
 import org.celstec.arlearn.delegators.INQ;
+import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.listadapter.ListItemClickInterface;
+import org.celstec.arlearn2.beans.generalItem.GeneralItem;
+import org.celstec.arlearn2.client.InquiryClient;
 import org.celstec.dao.gen.GameLocalObject;
 import org.celstec.dao.gen.GeneralItemLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
-
 /**
  * Fragment to display Data Collection Task (General Item) from an Inquiry (Game)
  */
-public class InqDataCollectionFragment extends Fragment implements ListItemClickInterface<GeneralItemLocalObject> {
+public class InqDataCollectionFragment extends Fragment implements ListItemClickInterface<GeneralItemLocalObject>{
 
     private static final String TAG = "InqDataCollectionFragment";
+    private static final int DIALOG_FRAGMENT = 0;
     private ListView data_collection_tasks;
     private TextView text_default;
     private TextView data_collection_tasks_title_list;
     private InquiryLocalObject inquiry;
-
-
 
     private DataCollectionLazyListAdapter datAdapter;
 
@@ -59,6 +67,8 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
+
+
 
         if (savedInstanceState != null) {
             INQ.init(getActivity());
@@ -100,9 +110,11 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
         return rootView;
     }
 
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -121,11 +133,61 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_new_data_collection:
-                Toast.makeText(getActivity(), "Create data collection task", Toast.LENGTH_SHORT).show();
-                INQ.dataCollection.createDataCollectionTask(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId(), "demo data collection", "demo description data collection");
+
+                showDialog();
+
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showDialog() {
+
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        DialogFragment dialog = new NoticeDialogFragment();
+        dialog.setTargetFragment(this, DIALOG_FRAGMENT);
+        dialog.show(getFragmentManager().beginTransaction(), "dialog");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case DIALOG_FRAGMENT:
+
+                if (resultCode == Activity.RESULT_OK) {
+                    // After Ok code.
+                    Log.e(TAG, "ok code");
+
+                    Bundle extras = data.getExtras();
+
+                    String title = data.getStringExtra("title");
+
+                    INQ.dataCollection.createDataCollectionTask(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId(),"" , "");
+                    INQ.inquiry.syncDataCollectionTasks();
+
+                    Toast.makeText(getActivity(), getResources().getString(R.string.data_collection_dialog_creating), Toast.LENGTH_SHORT).show();
+                } else if (resultCode == Activity.RESULT_CANCELED){
+                    // After Cancel code.
+                    Log.e(TAG, "cancel code");
+                }
+                break;
+        }
+    }
+
+    private class CreateGeneralItem {
+        public GeneralItem generalItem;
+    }
+
+    private void onEventBackgroundThread(CreateGeneralItem generalItem){
+        Log.e(TAG, "Creation data collection task done ");
+        INQ.inquiry.syncDataCollectionTasks();
+
     }
 
     @Override
@@ -145,4 +207,18 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
     public boolean setOnLongClickListener(View v, int position, GeneralItemLocalObject object) {
         return false;
     }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ARL.eventBus.register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ARL.eventBus.unregister(this);
+    }
+
 }

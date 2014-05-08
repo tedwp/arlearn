@@ -26,6 +26,11 @@
     <string name="data_collection_task_no_created">No data collection yet</string>
     <string name="data_collection_task_no_enabled_created">Data collection disabled for the inquiry</string>
     <string name="data_collection_task_responses">Data collected</string>
+    <string name="data_collection_dialog_title">Title</string>
+    <string name="data_collection_dialog_description">Description</string>
+    <string name="data_collection_dialog_ok">Save</string>
+    <string name="data_collection_dialog_cancel">Cancel</string>
+    <string name="data_collection_dialog_creating">Creating data collection task</string>
 
     <string name="friends_friend_new">Add friend</string>
     <string name="friends_title_list">Friends</string>
