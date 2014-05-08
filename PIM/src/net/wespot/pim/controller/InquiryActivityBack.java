@@ -143,7 +143,7 @@ public class InquiryActivityBack extends _ActBar_FragmentActivity {
 //                                .setTabListener(this));
 //            }
 
-            getActionBar().setTitle(getResources().getString(R.string.actionbar_inquiry)+" - "+INQ.inquiry.getCurrentInquiry().getTitle());
+//            getActionBar().setTitle(getResources().getString(R.string.actionbar_inquiry)+" - "+INQ.inquiry.getCurrentInquiry().getTitle());
 
             Bundle extras = getIntent().getExtras();
             if (extras != null){

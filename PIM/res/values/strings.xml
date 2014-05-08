@@ -38,6 +38,7 @@
     <string name="wrapper_badges">Badges</string>
     <string name="wrapper_friends">Friends</string>
 
+    <string name="menu_new_data_collection">New data collection</string>
     <string name="menu_refresh">Refresh</string>
     <string name="menu_search">Search</string>
     <string name="menu_add">New</string>

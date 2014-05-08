@@ -127,19 +127,12 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 
-            wm_membership_open.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    TEMP_MEMBERSHIP = InquiryClient.OPEN_MEMBERSHIP;
-                }
-            });
+//            if (!(Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1)) {
+//                if (!(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)){
+//                    getActionBar().setTitle(getResources().getString(R.string.actionbar_list_data_collection_task));
+//                }
+//            }
 
-            wm_membership_closed.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    TEMP_MEMBERSHIP = InquiryClient.CLOSED_MEMBERSHIP;
-                }
-            });
 
             wm_save =   (ImageButton) rootView.findViewById(R.id.wonder_moment_save);
             wm_cancel =   (ImageButton) rootView.findViewById(R.id.wonder_moment_cancel);
@@ -158,6 +151,21 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
                     getActivity().onBackPressed();
                 }
             });
+        }else {
+            wm_membership_open.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TEMP_MEMBERSHIP = InquiryClient.OPEN_MEMBERSHIP;
+                }
+            });
+
+            wm_membership_closed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TEMP_MEMBERSHIP = InquiryClient.CLOSED_MEMBERSHIP;
+                }
+            });
+
         }
 
         setDataTime();
@@ -371,6 +379,7 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
 
         menu.setGroupVisible(R.id.actions_general, false);
         menu.setGroupVisible(R.id.actions_wonder_moment, true);
+        menu.setGroupVisible(R.id.actions_data_collection, false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

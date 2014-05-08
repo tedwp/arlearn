@@ -150,6 +150,8 @@ public class InquiryActivity extends _ActBar_FragmentActivity implements ActionB
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+
         return super.onCreateOptionsMenu(menu);
     }
 

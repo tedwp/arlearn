@@ -43,27 +43,29 @@
                 android:layout_marginTop="33dp"
                 android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
 
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent" android:layout_below="@id/imageView"
-                android:layout_marginRight="40dp" android:layout_marginTop="10dp"  android:layout_marginLeft="40dp">
-
         <!--Name -->
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:inputType="textPersonName"
                 android:text="@string/profile_name"
+                android:ems="10"
                 android:id="@+id/profile_name"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="40dp"
                 android:textSize="15dp"
-                android:textColor="@color/app.base.blue"/>
+                android:textColor="@color/app.base.blue"
+                android:layout_alignRight="@+id/imageView"/>
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:inputType="textPersonName"
                   android:text="Name"
                   android:ems="10"
+                  android:id="@+id/profile_name_value"
                   android:textSize="15dp"
-                  android:id="@+id/profile_name_value"/>
+                  android:layout_below="@id/profile_name"
+                  android:layout_alignLeft="@+id/profile_name"/>
 
         <!-- email -->
         <TextView
@@ -108,8 +110,6 @@
                   android:textSize="15dp"
                   android:layout_below="@id/profile_localid"
                   android:layout_alignLeft="@id/profile_localid"/>
-
-        </LinearLayout>
     </RelativeLayout>
 
 </RelativeLayout>

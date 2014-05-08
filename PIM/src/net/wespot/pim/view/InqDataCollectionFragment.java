@@ -25,11 +25,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import daoBase.DaoConfiguration;
 import net.wespot.pim.R;
 import net.wespot.pim.controller.Adapters.DataCollectionLazyListAdapter;
@@ -49,6 +48,8 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
     private TextView text_default;
     private TextView data_collection_tasks_title_list;
     private InquiryLocalObject inquiry;
+
+
 
     private DataCollectionLazyListAdapter datAdapter;
 
@@ -97,6 +98,34 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
 
         }
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_inquiry, menu);
+
+        menu.setGroupVisible(R.id.actions_general, false);
+        menu.setGroupVisible(R.id.actions_wonder_moment, false);
+        menu.setGroupVisible(R.id.actions_data_collection, true);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_new_data_collection:
+                Toast.makeText(getActivity(), "Create data collection task", Toast.LENGTH_SHORT).show();
+                INQ.dataCollection.createDataCollectionTask(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId(), "demo data collection", "demo description data collection");
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

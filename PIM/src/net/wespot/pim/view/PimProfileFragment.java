@@ -23,6 +23,7 @@ package net.wespot.pim.view;
 
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -79,16 +80,27 @@ public class PimProfileFragment extends _ActBar_FragmentActivity {
 
             if (account.getPicture() != null){
                 BitmapWorkerTask task = new BitmapWorkerTask(picture);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, account.getPicture());
+
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+                    task.execute(account.getPicture());
+                } else {
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, account.getPicture());
+                }
+
+
             }
             else{
                 picture.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_placeholder));
             }
-
-            setTitle(R.string.common_title);
+            if (!(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
+                setTitle(R.string.common_title);
+            }
 
         }else{
-            setTitle(R.string.network_connection);
+            if (!(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
+                setTitle(R.string.network_connection);
+            }
+
         }
     }
 

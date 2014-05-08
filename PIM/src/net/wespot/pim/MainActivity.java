@@ -71,7 +71,6 @@ public class MainActivity extends MainActionBarFragmentActivity implements ViewI
 
     private void onEventBackgroundThread(InquiryEvent inquiryObject){
         number_inquiries = DaoConfiguration.getInstance().getInquiryLocalObjectDao().loadAll().size();
-//        Log.d(TAG, "Lazy loaded: "+number_inquiries+" inquiries");
     }
 
     @Override

@@ -30,8 +30,34 @@
               android:layout_height="wrap_content" android:hint="@string/wonder_moment_location_placeholder"
               android:inputType="none" />
 
-    <LinearLayout android:id="@+id/layout_date" android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:orientation="horizontal" android:layout_below="@+id/wonder_moment_location">
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/wonder_moment_membership"
+                android:orientation="vertical"
+                android:layout_below="@id/wonder_moment_location">
+        <RadioButton android:id="@+id/wonder_moment_membership_open"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="@string/wonder_moment_membership_open"/>
+        <RadioButton android:id="@+id/wonder_moment_membership_closed"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="@string/wonder_moment_membership_closed"/>
+    </RadioGroup>
+
+    <Spinner
+            android:id="@+id/wonder_moment_visibility"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/wonder_moment_visibility_array"
+            android:prompt="@string/wonder_moment_visibility"
+            android:layout_below="@id/wonder_moment_membership" />
+
+    <LinearLayout android:id="@+id/layout_date"
+                  android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_below="@id/wonder_moment_visibility">
         <EditText android:id="@+id/wonder_moment_date" android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:autoText="false" android:hint="@string/wonder_moment_date_placeholder"
                   android:inputType="date" android:layout_weight="1"/>

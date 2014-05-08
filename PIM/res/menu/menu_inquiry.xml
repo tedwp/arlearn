@@ -39,4 +39,12 @@
               android:showAsAction="never"
               android:visible="@bool/spb_default_reversed"/>
     </group>
+
+    <group android:id="@+id/actions_data_collection">
+        <item android:id="@+id/menu_new_data_collection"
+              android:title="@string/menu_new_data_collection"
+              android:showAsAction="always"
+              android:icon="@drawable/ic_action_new"
+              android:orderInCategory="1" />
+    </group>
 </menu>

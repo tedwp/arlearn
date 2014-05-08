@@ -70,8 +70,6 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity  implements L
 
         inquiries = (ListView) findViewById(R.id.list_inquiries);
 
-        setTitle(R.string.common_title);
-
         adapterInq =  new InquiryLazyListAdapter(this);
         inquiries.setAdapter(adapterInq);
         adapterInq.setOnListItemClickCallback(this);
@@ -115,6 +113,10 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity  implements L
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_inquiry, menu);
+
+        menu.setGroupVisible(R.id.actions_general, true);
+        menu.setGroupVisible(R.id.actions_wonder_moment, false);
+        menu.setGroupVisible(R.id.actions_data_collection, false);
 
         return super.onCreateOptionsMenu(menu);
     }
