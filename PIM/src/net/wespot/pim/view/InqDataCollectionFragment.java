@@ -47,6 +47,9 @@ import org.celstec.arlearn2.client.InquiryClient;
 import org.celstec.dao.gen.GameLocalObject;
 import org.celstec.dao.gen.GeneralItemLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
+
+import java.util.Iterator;
+
 /**
  * Fragment to display Data Collection Task (General Item) from an Inquiry (Game)
  */
@@ -164,11 +167,21 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
                     // After Ok code.
                     Log.e(TAG, "ok code");
 
-                    Bundle extras = data.getExtras();
+//                    Bundle extras = data.getExtras();
+//
+//                    String title;
+//                    Iterator a = data.getExtras().keySet().iterator();
+//
+//
+//
+//                    while (a.hasNext()){
+//                        if (NoticeDialogFragment.TITLE.equals(a.next())) {
+//                            title =
+//                        }
+//                        String p = (String) a.next();
+//                    }
 
-                    String title = data.getStringExtra("title");
-
-                    INQ.dataCollection.createDataCollectionTask(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId(),"" , "");
+                    INQ.dataCollection.createDataCollectionTask(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId(),"demo title" , "demo description");
                     INQ.inquiry.syncDataCollectionTasks();
 
                     Toast.makeText(getActivity(), getResources().getString(R.string.data_collection_dialog_creating), Toast.LENGTH_SHORT).show();
