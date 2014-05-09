@@ -57,10 +57,7 @@ import org.celstec.dao.gen.InquiryLocalObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Create a new inquiry
@@ -70,6 +67,8 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
         GooglePlayServicesClient.OnConnectionFailedListener{
 
     public static final String INQUIRY_ID = "object";
+
+    String[] spinnerValues = { "Blur", "NFS", "Burnout","GTA IV", "Racing", };
 
     private static final String TAG = "InqCreateInquiryFragment";
     private static final int REQUEST_CODE = 1234;
@@ -121,9 +120,15 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
         wm_progress_bar = (ProgressBar) rootView.findViewById(R.id.wonder_moment_progress_location);
         wm_membership_open = (RadioButton) rootView.findViewById(R.id.wonder_moment_membership_open);
         wm_membership_closed = (RadioButton) rootView.findViewById(R.id.wonder_moment_membership_closed);
+//        wm_visibility = (Spinner) rootView.findViewById(R.id.wonder_moment_visibility);
+
         wm_visibility = (Spinner) rootView.findViewById(R.id.wonder_moment_visibility);
-
-
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.wonder_moment_visibility_array, R.layout.custom_spinner);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(R.layout.custom_spinner);
+        // Apply the adapter to the spinner
+        wm_visibility.setAdapter(adapter);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 
@@ -189,8 +194,11 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
             Toast.makeText(getActivity(), "Recognizer Not Found", 1000).show();
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            setManagerLocation();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+
+            if (servicesConnected()){
+                setManagerLocation();
+            }
         }
 
         // Create inquiry
@@ -198,6 +206,8 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
 
         return rootView;
     }
+
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

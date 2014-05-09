@@ -38,6 +38,7 @@ import net.wespot.pim.controller.Adapters.NewInquiryPagerAdapter;
 import net.wespot.pim.utils.layout._ActBar_FragmentActivity;
 import net.wespot.pim.view.InqCreateInquiryFragment;
 import org.celstec.arlearn.delegators.INQ;
+import org.celstec.arlearn.delegators.InquiryDelegator;
 
 public class InquiryActivity extends _ActBar_FragmentActivity implements ActionBar.TabListener{
 
@@ -78,7 +79,14 @@ public class InquiryActivity extends _ActBar_FragmentActivity implements ActionB
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong("currentInquiry", INQ.inquiry.getCurrentInquiry().getId());
+//
+//        final InquiryDelegator inquiry = INQ.inquiry;
+//
+//
+//        if (inquiry.in){
+//            outState.putLong("currentInquiry", INQ.inquiry.getCurrentInquiry().getId());
+//        }
+
     }
 
     public void onCreate(Bundle savedInstanceState) {

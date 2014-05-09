@@ -21,12 +21,15 @@
 
     <EditText android:id="@+id/wonder_moment_title"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content" android:hint="@string/wonder_moment_title_placeholder"
+              android:layout_height="wrap_content"
+              android:textColorHint="@color/app.base.grey_soft"
+              android:hint="@string/wonder_moment_title_placeholder"
               android:inputType="none" />
 
     <EditText android:id="@+id/wonder_moment_location"
               android:layout_width="match_parent"
               android:layout_below="@id/wonder_moment_title"
+              android:textColorHint="@color/app.base.grey_soft"
               android:layout_height="wrap_content" android:hint="@string/wonder_moment_location_placeholder"
               android:inputType="none" />
 
@@ -49,20 +52,34 @@
             android:id="@+id/wonder_moment_visibility"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/TextColorAppearanceSpinnerItem"
             android:entries="@array/wonder_moment_visibility_array"
             android:prompt="@string/wonder_moment_visibility" android:layout_below="@id/wonder_moment_membership" />
 
     <LinearLayout android:id="@+id/layout_date" android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="horizontal" android:layout_below="@id/wonder_moment_visibility">
-        <EditText android:id="@+id/wonder_moment_date" android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:autoText="false" android:hint="@string/wonder_moment_date_placeholder"
+        <EditText android:id="@+id/wonder_moment_date"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:autoText="false"
+                  android:hint="@string/wonder_moment_date_placeholder"
+                  android:textColorHint="@color/app.base.grey_soft"
                   android:inputType="date" android:layout_weight="1"/>
-        <EditText android:id="@+id/wonder_moment_time" android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:autoText="false" android:hint="@string/wonder_moment_time_placeholder"
+        <EditText android:id="@+id/wonder_moment_time"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:autoText="false"
+                  android:hint="@string/wonder_moment_time_placeholder"
+                  android:textColorHint="@color/app.base.grey_soft"
                   android:inputType="time" android:layout_weight="4"/>
     </LinearLayout>
-        <EditText android:id="@+id/wonder_moment_content" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_below="@+id/layout_date"
-              android:gravity="top" android:hint="@string/wonder_moment_content_placeholder"/>
+        <EditText android:id="@+id/wonder_moment_content"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:layout_below="@+id/layout_date"
+              android:gravity="top"
+              android:textColorHint="@color/app.base.grey_soft"
+              android:hint="@string/wonder_moment_content_placeholder"/>
     <ImageView
             android:id="@+id/wonder_moment_clear"
             android:layout_width="40dp"

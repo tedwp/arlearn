@@ -49,15 +49,15 @@ public class Constants {
     public static final int  ID_DISCUSS = 6;
     public static final int  ID_COMMUNICATE = 7;
 
-    public static final List<String> INQUIRY_PHASES_LIST = Arrays.asList(
-            "Description",
-            "Question",
-            "Collect data",
-            "Hypothesis",
-            "Plan",
-            "Analyse",
-            "Discuss",
-            "Communicate"
+    public static final List<Integer> INQUIRY_PHASES_LIST = Arrays.asList(
+            R.string.inquiry_title_description,
+            R.string.inquiry_title_question,
+            R.string.inquiry_title_data,
+            R.string.inquiry_title_hypothesis,
+            R.string.inquiry_title_plan,
+            R.string.inquiry_title_analyse,
+            R.string.inquiry_title_discuss,
+            R.string.inquiry_title_communicate
     );
 
     public static final List<Integer> INQUIRY_ICON_PHASES_LIST = Arrays.asList(

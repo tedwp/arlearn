@@ -1,57 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">weSPOT inquiries</string>
-    <string name="inquiry_title_new">New inquiry</string>
-    <string name="inquiry_create_title">Create an inquiry</string>
-    <string name="inquiry_create_yes">Yes</string>
+    <string name="app_name">Inquiries</string>
+    <string name="inquiry_title_new">Nueva actividad</string>
+    <string name="inquiry_create_title">Crear una actividad</string>
+    <string name="inquiry_create_yes">Si</string>
     <string name="inquiry_create_no">No</string>
-    <string name="inquiry_create_voice_recognition">weSPOT voice recognition...</string>
+    <string name="inquiry_create_voice_recognition">weSPOT reconocimiento de voz...</string>
 
-    <string name="inquiry_title_list">Open inquiries</string>
+    <string name="inquiry_title_list">Mis actividades</string>
 
     <string name="common_title">Menu</string>
-    <string name="badges_title_list">Badges</string>
+    <string name="badges_title_list">Insignias</string>
 
-    <string name="actionbar_inquiry_list">Inquiry list</string>
-    <string name="actionbar_inquiry">Inquiry</string>
-    <string name="actionbar_list_data_collection_task">Data Collection Tasks</string>
-    <string name="actionbar_list_data_collection_task_responses">Responses</string>
+    <string name="actionbar_inquiry_list">Lista de actividades</string>
+    <string name="actionbar_inquiry">Actividad</string>
+    <string name="actionbar_list_data_collection_task">Tareas de recogida de datos</string>
+    <string name="actionbar_list_data_collection_task_responses">Respuestas</string>
 
-    <string name="login_user_hint">username</string>
-    <string name="login_password_hint">password</string>
+    <string name="login_user_hint">usuario</string>
+    <string name="login_password_hint">contraseña</string>
 
 
-    <string name="data_collection_tasks">Data collection tasks</string>
-    <string name="data_collection_task">Data collection task</string>
-    <string name="data_collection_task_no_created">No data collection yet</string>
-    <string name="data_collection_task_no_enabled_created">Data collection disabled for the inquiry</string>
-    <string name="data_collection_task_responses">Data collected</string>
+    <string name="data_collection_tasks">Tareas de recogida de datos</string>
+    <string name="data_collection_task">Tarea de recogida de datos</string>
+    <string name="data_collection_task_no_created">No existe una tarea de recogida de datos</string>
+    <string name="data_collection_task_no_enabled_created">Tarea de recogida de datos deshabilitada</string>
+    <string name="data_collection_task_responses">Datos recogidos</string>
+    <string name="data_collection_dialog_title">Titulo</string>
+    <string name="data_collection_dialog_description">Descripcion</string>
+    <string name="data_collection_dialog_ok">Guardar</string>
+    <string name="data_collection_dialog_cancel">Cancelar</string>
+    <string name="data_collection_dialog_creating">Nueva tarea de recogida de datos</string>
 
-    <string name="friends_friend_new">Add friend</string>
-    <string name="friends_title_list">Friends</string>
+    <string name="friends_friend_new">Agregar amigo</string>
+    <string name="friends_title_list">Amigos</string>
 
-    <string name="phases_invite_new_friend">Invite friends</string>
+    <string name="phases_invite_new_friend">Invita a un amigo</string>
 
-    <string name="wrapper_myinquiry">My Inquiries</string>
-    <string name="wrapper_mymedia">My media</string>
-    <string name="wrapper_profile">Profile</string>
-    <string name="wrapper_badges">Badges</string>
-    <string name="wrapper_friends">Friends</string>
+    <string name="wrapper_myinquiry">Actividades</string>
+    <string name="wrapper_mymedia">Datos coleccionados</string>
+    <string name="wrapper_profile">Perfil</string>
+    <string name="wrapper_badges">Insignias</string>
+    <string name="wrapper_friends">Amigos</string>
 
-    <string name="menu_refresh">Refresh</string>
-    <string name="menu_search">Search</string>
-    <string name="menu_add">New</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_logout">Logout</string>
-    <string name="menu_data_collection_collect_data_image">Image</string>
+    <string name="menu_new_data_collection">Nueva tarea de recogida de datos</string>
+    <string name="menu_refresh">Actualizar</string>
+    <string name="menu_search">Buscar</string>
+    <string name="menu_add">Nuevo</string>
+    <string name="menu_share">Compartir</string>
+    <string name="menu_logout">Salir</string>
+    <string name="menu_data_collection_collect_data_image">Imagen</string>
     <string name="menu_data_collection_collect_data_video">Video</string>
 
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-
-    <string name="profile_title">Profile</string>
+    <string name="profile_title">Mi perfil</string>
     <string name="profile_picture_description">profile_picture</string>
-    <string name="profile_name">Name</string>
+    <string name="profile_name">Nombre</string>
     <string name="profile_email">Email</string>
     <string name="profile_localid">Local ID</string>
     <string name="profile_id">Id</string>
@@ -60,51 +63,51 @@
     <string name="profile_website_value">www.titogelo.es</string>
     <string name="texto_de_pruebas">Pruebasss</string>
 
-    <string name="network_connection">Not network connection</string>
-    <string name="not_implement_yet">Not implemented yet</string>
+    <string name="network_connection">Sin conexion de red</string>
+    <string name="not_implement_yet">No implementado</string>
 
-    <string name="search_hint">Search</string>
+    <string name="search_hint">Buscar</string>
 
-    <string name="wonder_moment_title">Click to capture your wonder moment</string>
-    <string name="wonder_moment_membership">Membership</string>
-    <string name="wonder_moment_membership_open">Open - Any user may join</string>
-    <string name="wonder_moment_membership_closed">Closed - User must be invited</string>
-    <string name="wonder_moment_visibility">Visibility</string>
-    <string name="wonder_moment_save">Save</string>
-    <string name="wonder_moment_cancel">Cancel</string>
+    <string name="wonder_moment_membership">Tipo</string>
+    <string name="wonder_moment_membership_open">Abierto - cualquiera puede unirse</string>
+    <string name="wonder_moment_membership_closed">Cerrado - es necesario invitación</string>
+    <string name="wonder_moment_visibility">Visibilidad</string>
+    <string name="wonder_moment_save">Guardar</string>
+    <string name="wonder_moment_cancel">Cancelar</string>
     <string-array name="wonder_moment_visibility_array">
-        <item>Inquiry members only</item>
-        <item>Logged in users</item>
-        <item>Public</item>
+        <item>Solo miembros de la actividad</item>
+        <item>Usuarios conectados</item>
+        <item>Público</item>
     </string-array>
-
-    <string name="wonder_moment_record_voice">Record wonder moment</string>
-    <string name="wonder_moment_date_placeholder">Set up date</string>
-    <string name="wonder_moment_time_placeholder">Set up time</string>
-    <string name="wonder_moment_title_placeholder">Click to setup the title</string>
-    <string name="wonder_moment_location_placeholder">Click to setup the location</string>
-    <string name="wonder_moment_content_placeholder">Set your wonder moment here</string>
+    <string name="wonder_moment_record_voice">Graba tu momento de curiosidad</string>
+    <string name="wonder_moment_date_placeholder">Introduzca una fecha</string>
+    <string name="wonder_moment_time_placeholder">Introduzca una hora</string>
+    <string name="wonder_moment_title_placeholder">Introduzca el titulo</string>
+    <string name="wonder_moment_location_placeholder">Introduzca tu posición</string>
+    <string name="wonder_moment_content_placeholder">Describa aquello por lo que siente curiosidad en este instante</string>
     <string name="wonder_moment_latitude_longitude">%1$.8f, %2$.8f</string>
-    <string name="wonder_moment_no_geocoder_available">Cannot get address. No geocoder available.</string>
-    <string name="wonder_moment_play_services_available">Google Play services is available</string>
-    <string name="wonder_moment_IO_Exception_getFromLocation">IO Exception in Geocoder.getFromLocation()</string>
-    <string name="wonder_moment_illegal_argument_exception">Illegal arguments: Latitude %1$.8f Longitude %2$.8f</string>
+    <string name="wonder_moment_no_geocoder_available">Geocoder no esta accesible en esto momentos</string>
+    <string name="wonder_moment_play_services_available">Google Play services esta disponible</string>
+    <string name="wonder_moment_IO_Exception_getFromLocation">IO Excepcion en Geocoder.getFromLocation()</string>
+    <string name="wonder_moment_illegal_argument_exception">Argumentos inválidos: Latitud %1$.8f Longitud %2$.8f</string>
     <string name="wonder_moment_address_output_string">%1$s %2$s %3$s</string>
-    <string name="wonder_moment_no_address_found">No address found for location</string>
+    <string name="wonder_moment_no_address_found">No se encontrado ninguna coincidencia</string>
+    <string name="wonder_moment_placeholder_description">Este es un texto de ejemplo para la esta actividad movil auto-guiada. Por favor, describe el proposito de la actividad aqui.</string>
 
-    <string name="inquiry_title_description">Description</string>
-    <string name="inquiry_title_hypothesis">Hypothesis</string>
-    <string name="inquiry_title_question">Question</string>
-    <string name="inquiry_title_plan">Plan</string>
-    <string name="inquiry_title_data">Collect data</string>
-    <string name="inquiry_title_analyse">Analyse</string>
-    <string name="inquiry_title_discuss">Discuss</string>
-    <string name="inquiry_title_communicate">Communicate</string>
+    <string name="inquiry_title_description">Descripción</string>
+    <string name="inquiry_title_hypothesis">Hipótesis</string>
+    <string name="inquiry_title_question">Cuestión</string>
+    <string name="inquiry_title_plan">Planificación</string>
+    <string name="inquiry_title_data">Recogida de datos</string>
+    <string name="inquiry_title_analyse">Análisis</string>
+    <string name="inquiry_title_discuss">Discusión</string>
+    <string name="inquiry_title_communicate">Comunicación</string>
 
-    <string name="imageview_description">Image Thumbnail</string>
-    <string name="splash_login_button">Login</string>
+    <string name="imageview_description">Imagen en miniatura</string>
+    <string name="splash_login_button">weSPOT</string>
     <string name="splash_login_button_google">Google</string>
     <string name="splash_login_button_linkedin">Linkedin</string>
+    <string name="splash_login_button_facebook">Facebook</string>
 
     <string name="icon_list">1</string>
     <string name="placeholder">placeholder</string>

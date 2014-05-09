@@ -19,6 +19,7 @@
     <color name="data_collect.grid.image.pressed">#BB7dbcd3</color>
     <color name="data_collect.grid.image.focused">#777dbcd3</color>
     <color name="app.base.black">#ff000000</color>
+    <color name="app.base.grey_soft">#ff4d4d4d</color>
     <color name="app.base.white">#ffffffff</color>
     <color name="app.base.white.transparent">#00ffffff</color>
     <color name="app.base.blue">#ff487db9</color>

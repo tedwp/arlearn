@@ -111,6 +111,7 @@
     <string name="splash_login_button">Login</string>
     <string name="splash_login_button_google">Google</string>
     <string name="splash_login_button_linkedin">Linkedin</string>
+    <string name="splash_login_button_facebook">Facebook</string>
 
     <string name="icon_list">1</string>
     <string name="placeholder">placeholder</string>

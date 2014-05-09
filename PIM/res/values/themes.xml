@@ -7,6 +7,7 @@
         <item name="android:windowBackground">@drawable/mainmenu_960</item>
         <item name="android:actionBarStyle">@style/CustomTheme.ActionBar</item>
         <item name="android:webViewStyle">@style/CustomTheme.WebView</item>
+        <item name="android:spinnerItemStyle">@style/MooSpinnerItem</item>
         <!--<item name="android:textViewStyle">@style/CustomTheme.TextView</item>-->
     </style>
 
@@ -32,6 +33,14 @@
 
     <style name="CustomTheme.TextView.Title2" parent="CustomTheme.TextView.Title1">
 
+    </style>
+
+    <style name="MooSpinnerItem" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:textAppearance">@style/TextColorAppearanceSpinnerItem</item>
+    </style>
+
+    <style name="TextColorAppearanceSpinnerItem" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+        <item name="android:textColor">#F00</item>
     </style>
 
     <style name="CustomTheme.TextView.Title3" parent="CustomTheme.TextView">

@@ -97,14 +97,16 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity implements V
                 case Constants.ID_DESCRIPTION:
                     buttonDelegator.buttonGenerator(layout,
                             Constants.INQUIRY_ID_PHASES_LIST.get(i),
-                            Constants.INQUIRY_PHASES_LIST.get(i),String.valueOf(""),
+                            getResources().getString(Constants.INQUIRY_PHASES_LIST.get(i)),
+                            String.valueOf(""),
                             Constants.INQUIRY_ICON_PHASES_LIST.get(i)
                     ).setOnListItemClickCallback(this);
                     break;
                 case Constants.ID_QUESTION:
                     buttonDelegator.buttonGenerator(layout,
                             Constants.INQUIRY_ID_PHASES_LIST.get(i),
-                            Constants.INQUIRY_PHASES_LIST.get(i), String.valueOf(""),
+                            getResources().getString(Constants.INQUIRY_PHASES_LIST.get(i)),
+                            String.valueOf(""),
                             Constants.INQUIRY_ICON_PHASES_LIST.get(i)
                     ).setOnListItemClickCallback(this);
                     break;
@@ -133,20 +135,23 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity implements V
                 int numberDataCollectionTasks = DaoConfiguration.getInstance().getGameLocalObjectDao().load(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId()).getGeneralItems().size();
                 buttonDelegator.buttonGenerator(layout,
                         Constants.INQUIRY_ID_PHASES_LIST.get(i),
-                        Constants.INQUIRY_PHASES_LIST.get(i),String.valueOf(numberDataCollectionTasks),
+                        getResources().getString(Constants.INQUIRY_PHASES_LIST.get(i)),
+                        String.valueOf(numberDataCollectionTasks),
                         Constants.INQUIRY_ICON_PHASES_LIST.get(i)
                 ).setOnListItemClickCallback(this);
             }else{
                 buttonDelegator.buttonGenerator(layout,
                         Constants.INQUIRY_ID_PHASES_LIST.get(i),
-                        Constants.INQUIRY_PHASES_LIST.get(i),String.valueOf(""),
+                        getResources().getString(Constants.INQUIRY_PHASES_LIST.get(i)),
+                        String.valueOf(""),
                         Constants.INQUIRY_ICON_PHASES_LIST.get(i)
                 ).setOnListItemClickCallback(new NoDataCollection());
             }
         }else{
             buttonDelegator.buttonGenerator(layout,
                     Constants.INQUIRY_ID_PHASES_LIST.get(i),
-                    Constants.INQUIRY_PHASES_LIST.get(i),String.valueOf(""),
+                    getResources().getString(Constants.INQUIRY_PHASES_LIST.get(i)),
+                    String.valueOf(""),
                     Constants.INQUIRY_ICON_PHASES_LIST.get(i)
             ).setOnListItemClickCallback(new ClickNoGame());
         }
