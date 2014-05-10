@@ -22,9 +22,6 @@ package net.wespot.pim.view;
  */
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -43,12 +40,9 @@ import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.delegators.ARL;
 import org.celstec.arlearn2.android.listadapter.ListItemClickInterface;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
-import org.celstec.arlearn2.client.InquiryClient;
 import org.celstec.dao.gen.GameLocalObject;
 import org.celstec.dao.gen.GeneralItemLocalObject;
 import org.celstec.dao.gen.InquiryLocalObject;
-
-import java.util.Iterator;
 
 /**
  * Fragment to display Data Collection Task (General Item) from an Inquiry (Game)
@@ -68,16 +62,23 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("currentInquiry", INQ.inquiry.getCurrentInquiry().getId());
+        if(INQ.inquiry.getCurrentInquiry().getRunLocalObject()!=null){
+            outState.putLong("currentInquiryRunLocalObject", INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ARL.eventBus.register(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
-
-
-
-        if (savedInstanceState != null) {
-            INQ.init(getActivity());
-            INQ.accounts.syncMyAccountDetails();
-            INQ.inquiry.setCurrentInquiry(DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(savedInstanceState.getLong("currentInquiry")));
-        }
 
         View rootView = inflater.inflate(R.layout.fragment_data_collection, container, false);
         data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
@@ -108,11 +109,9 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
             data_collection_tasks_title_list.setVisibility(View.INVISIBLE);
             text_default.setVisibility(View.VISIBLE);
             text_default.setText(R.string.data_collection_task_no_enabled_created);
-
         }
         return rootView;
     }
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -181,7 +180,11 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
 //                        String p = (String) a.next();
 //                    }
 
-                    INQ.dataCollection.createDataCollectionTask(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId(),"demo title" , "demo description");
+                    INQ.dataCollection.createDataCollectionTask(
+                            INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId(),
+                            "demo title" ,
+                            "demo description"
+                    );
                     INQ.inquiry.syncDataCollectionTasks();
 
                     Toast.makeText(getActivity(), getResources().getString(R.string.data_collection_dialog_creating), Toast.LENGTH_SHORT).show();
@@ -219,13 +222,6 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
     @Override
     public boolean setOnLongClickListener(View v, int position, GeneralItemLocalObject object) {
         return false;
-    }
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ARL.eventBus.register(this);
     }
 
     @Override

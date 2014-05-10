@@ -196,9 +196,8 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 
-            if (servicesConnected()){
-                setManagerLocation();
-            }
+           setManagerLocation();
+
         }
 
         // Create inquiry

@@ -79,7 +79,11 @@ public class InquiryActivity extends _ActBar_FragmentActivity implements ActionB
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//
+
+        outState.putLong("currentInquiry", INQ.inquiry.getCurrentInquiry().getId());
+        if(INQ.inquiry.getCurrentInquiry().getRunLocalObject()!=null){
+            outState.putLong("currentInquiryRunLocalObject", INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
+        }
 //        final InquiryDelegator inquiry = INQ.inquiry;
 //
 //
@@ -95,9 +99,28 @@ public class InquiryActivity extends _ActBar_FragmentActivity implements ActionB
         if (savedInstanceState != null) {
             INQ.init(this);
             INQ.accounts.syncMyAccountDetails();
-            INQ.inquiry.setCurrentInquiry(DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(savedInstanceState.getLong("currentInquiry")));
-            Log.e(TAG, "recover INQ.inquiry is needed in InquiryActivity.");
+            INQ.inquiry.setCurrentInquiry(
+                    DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(
+                            savedInstanceState.getLong("currentInquiry")
+                    )
+            );
+            if(savedInstanceState.getLong("currentInquiryRunLocalObject")!=0){
+                INQ.inquiry.getCurrentInquiry().setRunLocalObject(
+                        DaoConfiguration.getInstance().getRunLocalObjectDao().load(
+                                savedInstanceState.getLong("currentInquiryRunLocalObject")
+                        )
+                );
+                Log.e(TAG, "go through savedInstanceState currentInquiryRunLocalObject" + savedInstanceState + " " + DaoConfiguration.getInstance().getRunLocalObjectDao());
+            }
+            Log.e(TAG, "go through savedInstanceState currentInquiry" + savedInstanceState + " " + INQ.inquiry.getCurrentInquiry());
         }
+
+//        if (savedInstanceState != null) {
+//            INQ.init(this);
+//            INQ.accounts.syncMyAccountDetails();
+//            INQ.inquiry.setCurrentInquiry(DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(savedInstanceState.getLong("currentInquiry")));
+//            Log.e(TAG, "recover INQ.inquiry is needed in InquiryActivity."+savedInstanceState.getLong("currentInquiry"));
+//        }
 
         if (INQ.inquiry.getCurrentInquiry() == null){
             Log.e(TAG, "New inquiry");
@@ -112,9 +135,9 @@ public class InquiryActivity extends _ActBar_FragmentActivity implements ActionB
             fragmentTransaction.commit();
         }else{
 
+            Log.e(TAG, "Show inquiry");
             setContentView(R.layout.activity_inquiry);
 
-            Log.e(TAG, "Show inquiry");
 
             // Create an adapter that when requested, will return a fragment representing an object in
             // the collection.

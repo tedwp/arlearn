@@ -45,6 +45,7 @@
 
     <string name="menu_new_data_collection">Nueva tarea de recogida de datos</string>
     <string name="menu_refresh">Actualizar</string>
+    <string name="menu_refreshing">Sincronizando actividades...</string>
     <string name="menu_search">Buscar</string>
     <string name="menu_add">Nuevo</string>
     <string name="menu_share">Compartir</string>
@@ -70,7 +71,7 @@
 
     <string name="wonder_moment_membership">Tipo</string>
     <string name="wonder_moment_membership_open">Abierto - cualquiera puede unirse</string>
-    <string name="wonder_moment_membership_closed">Cerrado - es necesario invitación</string>
+    <string name="wonder_moment_membership_closed">Cerrado - es necesaria invitación</string>
     <string name="wonder_moment_visibility">Visibilidad</string>
     <string name="wonder_moment_save">Guardar</string>
     <string name="wonder_moment_cancel">Cancelar</string>
@@ -86,7 +87,7 @@
     <string name="wonder_moment_location_placeholder">Introduzca tu posición</string>
     <string name="wonder_moment_content_placeholder">Describa aquello por lo que siente curiosidad en este instante</string>
     <string name="wonder_moment_latitude_longitude">%1$.8f, %2$.8f</string>
-    <string name="wonder_moment_no_geocoder_available">Geocoder no esta accesible en esto momentos</string>
+    <string name="wonder_moment_no_geocoder_available">Geocoder no esta accesible en estos momentos</string>
     <string name="wonder_moment_play_services_available">Google Play services esta disponible</string>
     <string name="wonder_moment_IO_Exception_getFromLocation">IO Excepcion en Geocoder.getFromLocation()</string>
     <string name="wonder_moment_illegal_argument_exception">Argumentos inválidos: Latitud %1$.8f Longitud %2$.8f</string>

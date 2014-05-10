@@ -125,7 +125,7 @@ public class PimInquiriesFragment extends _ActBar_FragmentActivity  implements L
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.menu_refreshing), Toast.LENGTH_SHORT).show();
                 INQ.inquiry.syncInquiries();
                 break;
         }

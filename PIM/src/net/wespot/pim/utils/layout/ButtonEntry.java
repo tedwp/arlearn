@@ -1,7 +1,6 @@
 package net.wespot.pim.utils.layout;
 
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import net.wespot.pim.R;
-import net.wespot.pim.controller.InquiryPhasesActivity;
-import org.celstec.arlearn2.android.listadapter.ListItemClickInterface;
 
 /**
  * ****************************************************************************
@@ -60,7 +57,12 @@ public class ButtonEntry extends Fragment {
 
         ((TextView) view.findViewById(R.id.name_entry_list)).setText(name);
         ((TextView) view.findViewById(R.id.notificationText)).setText(notification);
-        ((ImageView) view.findViewById(R.id.inquiry_entry_icon)).setImageDrawable(getResources().getDrawable(icon));
+
+        if (icon != 0){
+
+            ((ImageView) view.findViewById(R.id.inquiry_entry_icon)).setImageDrawable(getResources().getDrawable(icon));
+
+        }
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override

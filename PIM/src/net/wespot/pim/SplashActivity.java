@@ -1,20 +1,16 @@
 package net.wespot.pim;
 
 import android.content.Intent;
-import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 import net.wespot.pim.controller.Adapters.InitialPagerAdapter;
 import net.wespot.pim.utils.Constants;
 import net.wespot.pim.utils.layout.CirclePageIndicator;
 import net.wespot.pim.utils.layout.PageIndicator;
 import org.celstec.arlearn.delegators.INQ;
-import org.celstec.arlearn2.network.GoogleLogin;
 
 /**
  * ****************************************************************************
@@ -40,7 +36,7 @@ public class SplashActivity extends FragmentActivity {
 
     private Button login_wespot;
     private Button login_google;
-    private Button login_linkedin;
+    private Button login_facebook;
 
     InitialPagerAdapter mAdapter;
     ViewPager mPager;
@@ -81,15 +77,15 @@ public class SplashActivity extends FragmentActivity {
             }
         });
 
-        login_linkedin = (Button) findViewById(R.id.loginLinkedin);
+        login_facebook = (Button) findViewById(R.id.loginFacebook);
 
-        login_linkedin.setOnClickListener(new View.OnClickListener() {
+        login_facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent2 = new Intent(getApplicationContext(), LoginActivity.class);
-                String url = getLinkedInLoginRedirectURL(INQ.config.getProperty("linkedin_login_url"), INQ.config.getProperty("linkedin_login_client_apikey"));
+                String url = getFbRedirectURL(INQ.config.getProperty("facebook_login_url"), INQ.config.getProperty("facebook_login_client_apikey"));
                 intent2.putExtra(Constants.URL_LOGIN_NAME, url);
-                intent2.putExtra(Constants.TYPE_LOGIN, Constants.LINKEDIN);
+                intent2.putExtra(Constants.TYPE_LOGIN, Constants.FACEBOOK);
                 startActivity(intent2);
             }
         });
@@ -109,7 +105,7 @@ public class SplashActivity extends FragmentActivity {
         super.onResume();
         if (INQ.accounts.isAuthenticated()){
             login_google.setVisibility(View.INVISIBLE);
-            login_linkedin.setVisibility(View.INVISIBLE);
+            login_facebook.setVisibility(View.INVISIBLE);
         }
     }
 

@@ -60,38 +60,39 @@ public class PimProfileFragment extends _ActBar_FragmentActivity {
             localid = (TextView) findViewById(R.id.profile_localid_value);
             picture = (ImageView) findViewById(R.id.imageView);
 
-            if (account.getName() == null){
-                name.setText("-");
-            }else{
-                name.setText(account.getName());
-            }
-
-            if (account.getEmail() == null){
-                email.setText("-");
-            }else{
-                email.setText(account.getEmail());
-            }
-
-            if (account.getLocalId() == null){
-                localid.setText("-");
-            }else{
-                localid.setText(account.getLocalId());
-            }
-
-            if (account.getPicture() != null){
-                BitmapWorkerTask task = new BitmapWorkerTask(picture);
-
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
-                    task.execute(account.getPicture());
-                } else {
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, account.getPicture());
+            if (account!=null){
+                if (account.getName() == null){
+                    name.setText("-");
+                }else{
+                    name.setText(account.getName());
                 }
 
+                if (account.getEmail() == null){
+                    email.setText("-");
+                }else{
+                    email.setText(account.getEmail());
+                }
 
+                if (account.getLocalId() == null){
+                    localid.setText("-");
+                }else{
+                    localid.setText(account.getLocalId());
+                }
+
+                if (account.getPicture() != null){
+                    BitmapWorkerTask task = new BitmapWorkerTask(picture);
+
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+                        task.execute(account.getPicture());
+                    } else {
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, account.getPicture());
+                    }
+                }
+                else{
+                    picture.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_placeholder));
+                }
             }
-            else{
-                picture.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_placeholder));
-            }
+
             if (!(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
                 setTitle(R.string.common_title);
             }

@@ -1,15 +1,9 @@
 package net.wespot.pim.utils.layout;
 
-import android.app.Activity;
-
-
-import android.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.text.Layout;
-import android.view.View;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import net.wespot.pim.R;
 
 /**
  * ****************************************************************************
@@ -32,6 +26,8 @@ import net.wespot.pim.R;
  * ****************************************************************************
  */
 public class ButtonDelegator{
+
+    private static final String TAG = "ButtonDelegator";
     private static ButtonDelegator instance;
     private static FragmentActivity act;
 
@@ -42,11 +38,11 @@ public class ButtonDelegator{
         }
 
         act = activity;
-
         return instance;
     }
 
     public LinearLayout layoutGenerator(int margin_top) {
+
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(0, (int) act.getResources().getDimension(margin_top),0,0);
 
@@ -59,7 +55,7 @@ public class ButtonDelegator{
     }
 
     public ButtonEntry buttonGenerator(LinearLayout layout, int id, String title, String notificiation, int drawable) {
-
+        Log.e(TAG,  layout+" | "+id+" | "+title+" | "+notificiation+" | "+drawable);
         ButtonEntry button = new ButtonEntry(id, title,String.valueOf(notificiation),drawable);
         act.getSupportFragmentManager().beginTransaction().add(layout.getId(), button, button.getId()+"").commit();
         return button;

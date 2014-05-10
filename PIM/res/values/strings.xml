@@ -45,6 +45,7 @@
 
     <string name="menu_new_data_collection">New data collection</string>
     <string name="menu_refresh">Refresh</string>
+    <string name="menu_refreshing">Synchronizing inquiries...</string>
     <string name="menu_search">Search</string>
     <string name="menu_add">New</string>
     <string name="menu_share">Share</string>

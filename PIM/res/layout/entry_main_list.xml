@@ -15,8 +15,7 @@
     <ImageView
             android:id="@+id/inquiry_entry_icon"
             style="@style/CustomTheme.ListItem.ImageView.Left"
-            android:src="@drawable/ic_launcher"
-            android:contentDescription="icon_list"/>
+            android:src="@drawable/ic_launcher"/>
 
     <TextView android:id="@+id/notificationText"
               style="@style/CustomTheme.NotificationText" />

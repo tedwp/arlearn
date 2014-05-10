@@ -29,7 +29,7 @@ public class MainActivity extends MainActionBarFragmentActivity implements ViewI
     private static final int FRIENDS = 12349;
     private int number_inquiries;
 
-    private ButtonDelegator man;
+//    private ButtonDelegator man;
 
     /**
      * Called when the activity is first created.

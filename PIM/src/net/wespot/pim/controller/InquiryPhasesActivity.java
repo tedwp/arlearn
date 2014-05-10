@@ -21,6 +21,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import daoBase.DaoConfiguration;
@@ -35,7 +36,6 @@ import org.celstec.arlearn.delegators.INQ;
 public class InquiryPhasesActivity extends _ActBar_FragmentActivity implements ViewItemClickInterface {
 
     private static final String TAG = "InquiryActivity";
-    private ListView list_phases;
     private TextView inquiry_description_title;
     private ImageView inquiry_description_image;
 
@@ -43,6 +43,9 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity implements V
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong("currentInquiry", INQ.inquiry.getCurrentInquiry().getId());
+        if(INQ.inquiry.getCurrentInquiry().getRunLocalObject()!=null){
+            outState.putLong("currentInquiryRunLocalObject", INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
+        }
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +54,20 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity implements V
         if (savedInstanceState != null) {
             INQ.init(this);
             INQ.accounts.syncMyAccountDetails();
-            INQ.inquiry.setCurrentInquiry(DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(savedInstanceState.getLong("currentInquiry")));
+            INQ.inquiry.setCurrentInquiry(
+                    DaoConfiguration.getInstance().getInquiryLocalObjectDao().load(
+                            savedInstanceState.getLong("currentInquiry")
+                    )
+            );
+            if(savedInstanceState.getLong("currentInquiryRunLocalObject")!=0){
+                INQ.inquiry.getCurrentInquiry().setRunLocalObject(
+                        DaoConfiguration.getInstance().getRunLocalObjectDao().load(
+                                savedInstanceState.getLong("currentInquiryRunLocalObject")
+                        )
+                );
+                Log.e(TAG, "go through savedInstanceState currentInquiryRunLocalObject" + savedInstanceState + " " + DaoConfiguration.getInstance().getRunLocalObjectDao());
+            }
+            Log.e(TAG, "go through savedInstanceState currentInquiry" + savedInstanceState + " " + INQ.inquiry.getCurrentInquiry());
         }
 
         INQ.inquiry.syncDataCollectionTasks();
@@ -75,17 +91,17 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity implements V
             } else {
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, INQ.inquiry.getCurrentInquiry().getIcon());
             }
-
         }
         else{
             inquiry_description_image.setImageBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_placeholder));
         }
 
         inquiry_description_title.setText(INQ.inquiry.getCurrentInquiry().getTitle());
-//        inquiry_description_title.loadData(INQ.inquiry.getCurrentInquiry().getDescription(), Constants.MIME_TYPE, Constants.ENCONDING);
-//        inquiry_description_title.setBackgroundColor(0x00000000);
 
         LinearLayout listPhasesContainer = (LinearLayout) findViewById(R.id.list_phases);
+
+        listPhasesContainer.removeAllViews();
+
         ButtonDelegator buttonDelegator =  ButtonDelegator.getInstance(this);
         LinearLayout layout = buttonDelegator.layoutGenerator(R.dimen.mainscreen_margintop_zero);
 
@@ -119,14 +135,16 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity implements V
 
         LinearLayout linkAddFriends = (LinearLayout) findViewById(R.id.link_friends);
         ButtonDelegator buttonDelegatorAddFriends =  ButtonDelegator.getInstance(this);
-        LinearLayout layoutAddFriends = buttonDelegatorAddFriends.layoutGenerator(R.dimen.mainscreen_margintop_zero);
+        LinearLayout layoutAddFriends = buttonDelegatorAddFriends.layoutGenerator(R.dimen.mainscreen_margintop_first);
+
+
 
         buttonDelegator.buttonGenerator(layoutAddFriends, 10, getResources().getString(R.string.phases_invite_new_friend),
                 "", R.drawable.ic_invite_friend
         ).setOnListItemClickCallback(new ClickInviteFriend());
 
-        linkAddFriends.addView(layoutAddFriends);
 
+        linkAddFriends.addView(layoutAddFriends);
     }
 
     private void createDataCollectionButton(ButtonDelegator buttonDelegator, LinearLayout layout, int i) {
