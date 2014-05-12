@@ -32,12 +32,12 @@
               android:showAsAction="always"
               android:icon="@drawable/ic_action_refresh_white"
               android:orderInCategory="2" />
-        <item android:id="@+id/menu_inquiry_share"
-              android:title="@string/menu_share"
-              android:icon="@drawable/ic_menu_share"
-              android:orderInCategory="3"
-              android:showAsAction="never"
-              android:visible="@bool/spb_default_reversed"/>
+        <!--<item android:id="@+id/menu_inquiry_share"-->
+              <!--android:title="@string/menu_share"-->
+              <!--android:icon="@drawable/ic_menu_share"-->
+              <!--android:orderInCategory="3"-->
+              <!--android:showAsAction="never"-->
+              <!--android:visible="@bool/spb_default_reversed"/>-->
     </group>
 
     <group android:id="@+id/actions_data_collection">

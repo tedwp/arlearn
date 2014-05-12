@@ -57,7 +57,7 @@ public class MainActivity extends MainActionBarFragmentActivity implements ViewI
         buttonDelegator.buttonGenerator(layout, BADGES, getResources().getString(R.string.wrapper_badges),
                 String.valueOf(""), R.drawable.ic_badges).setOnListItemClickCallback(this);
         buttonDelegator.buttonGenerator(layout, FRIENDS, getResources().getString(R.string.wrapper_friends),
-                String.valueOf(""), R.drawable.ic_friends).setOnListItemClickCallback(this);
+                String.valueOf(""), R.drawable.ic_friends).setOnListItemClickCallback(new ClickInviteFriend());
 
         listMainMenu.addView(layout);
 
@@ -141,5 +141,17 @@ public class MainActivity extends MainActionBarFragmentActivity implements ViewI
     @Override
     public boolean setOnLongClickListener(View v) {
         return false;
+    }
+
+    private class ClickInviteFriend implements ViewItemClickInterface {
+        @Override
+        public void onListItemClick(View v, int id) {
+            Toast.makeText(getApplicationContext(), "Not implemented yet.", 10).show();
+        }
+
+        @Override
+        public boolean setOnLongClickListener(View v) {
+            return false;
+        }
     }
 }

@@ -5,44 +5,48 @@
         <android.support.v4.view.ViewPager
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/login"
-                android:layout_margin="10dp"/>
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/loginGoogle" android:layout_alignParentLeft="true"/>
         <net.wespot.pim.utils.layout.CirclePageIndicator
                 android:id="@+id/indicator"
                 android:padding="10dip"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
-                android:layout_alignBottom="@+id/pager" android:layout_alignParentLeft="true"
+                android:layout_above="@+id/login_wespot" android:layout_alignParentLeft="true"/>
+        <!--<ImageButton-->
+        <!--android:layout_width="60dp"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:id="@+id/logout"-->
+        <!--android:layout_alignParentBottom="true"/>-->
+
+        <Button android:layout_width="100dp" android:layout_height="60dp"
+                android:id="@+id/login_wespot"
+                android:layout_below="@id/pager"
+                android:clickable="true"
+
+                android:textSize="13dp"
+                android:contentDescription="@string/splash_login_button"
+                android:text="@string/splash_login_button"
+                android:layout_alignParentBottom="true"
                 android:layout_margin="10dp"/>
-    <!--<ImageButton-->
-            <!--android:layout_width="60dp"-->
-            <!--android:layout_height="60dp"-->
-            <!--android:id="@+id/logout"-->
-            <!--android:layout_alignParentBottom="true"/>-->
 
-    <Button android:layout_width="100dp" android:layout_height="60dp"
-            android:id="@+id/login"
-            android:clickable="true" android:src="@drawable/foto_perfil_croped"
-            android:contentDescription="@string/splash_login_button"
-            android:text="@string/splash_login_button"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="10dp"/>
+        <Button android:layout_width="100dp" android:layout_height="60dp"
+                android:id="@+id/loginGoogle"
+                android:clickable="true"
+                android:textSize="13dp"
+                android:contentDescription="@string/splash_login_button"
+                android:text="@string/splash_login_button_google"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@id/login_wespot"
+                android:layout_margin="10dp"/>
 
-    <Button android:layout_width="100dp" android:layout_height="60dp"
-            android:id="@+id/loginGoogle"
-            android:clickable="true"
-            android:contentDescription="@string/splash_login_button"
-            android:text="@string/splash_login_button_google"
-            android:layout_alignParentBottom="true"  android:layout_toRightOf="@id/login"
-            android:layout_margin="10dp"/>
-
-    <Button android:layout_width="100dp" android:layout_height="60dp"
-            android:id="@+id/loginFacebook"
-            android:clickable="true"
-            android:contentDescription="@string/splash_login_button"
-            android:text="@string/splash_login_button_facebook"
-            android:layout_alignParentBottom="true"  android:layout_toRightOf="@id/loginGoogle"
-            android:layout_margin="10dp"/>
-
+        <Button android:layout_width="100dp" android:layout_height="60dp"
+                android:id="@+id/loginFacebook"
+                android:clickable="true"
+                android:textSize="13dp"
+                android:contentDescription="@string/splash_login_button"
+                android:text="@string/splash_login_button_facebook"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@id/loginGoogle"
+                android:layout_margin="10dp"/>
 </RelativeLayout>

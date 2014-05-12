@@ -227,7 +227,7 @@ public class InquiryPhasesActivity extends _ActBar_FragmentActivity implements V
     private class ClickInviteFriend implements ViewItemClickInterface {
         @Override
         public void onListItemClick(View v, int id) {
-            Toast.makeText(getApplicationContext(), "Invite friend to this inquiry", 10).show();
+            Toast.makeText(getApplicationContext(), "Not implemented yet.", 10).show();
         }
 
         @Override

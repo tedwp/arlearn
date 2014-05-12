@@ -6,11 +6,13 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import net.wespot.pim.controller.Adapters.InitialPagerAdapter;
 import net.wespot.pim.utils.Constants;
 import net.wespot.pim.utils.layout.CirclePageIndicator;
 import net.wespot.pim.utils.layout.PageIndicator;
 import org.celstec.arlearn.delegators.INQ;
+import org.celstec.arlearn2.android.delegators.ARL;
 
 /**
  * ****************************************************************************
@@ -52,7 +54,7 @@ public class SplashActivity extends FragmentActivity {
 
         mAdapter = new InitialPagerAdapter(getSupportFragmentManager());
 
-        login_wespot = (Button) findViewById(R.id.login);
+        login_wespot = (Button) findViewById(R.id.login_wespot);
 
         login_wespot.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,8 +106,13 @@ public class SplashActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         if (INQ.accounts.isAuthenticated()){
-            login_google.setVisibility(View.INVISIBLE);
-            login_facebook.setVisibility(View.INVISIBLE);
+//            login_google.setVisibility(View.INVISIBLE);
+//            login_facebook.setVisibility(View.INVISIBLE);
+
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            ARL.accounts.syncMyAccountDetails();
+
         }
     }
 
