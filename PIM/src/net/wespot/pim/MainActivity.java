@@ -37,7 +37,9 @@ public class MainActivity extends MainActionBarFragmentActivity implements ViewI
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         ARL.eventBus.register(this);
 
         INQ.inquiry.syncInquiries();
@@ -66,6 +68,9 @@ public class MainActivity extends MainActionBarFragmentActivity implements ViewI
     @Override
     protected void onResume() {
         super.onResume();
+
+        Log.e(TAG, "on resume Main activity");
+
         number_inquiries = DaoConfiguration.getInstance().getInquiryLocalObjectDao().loadAll().size();
     }
 

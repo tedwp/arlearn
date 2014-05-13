@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import net.wespot.pim.R;
 
@@ -53,15 +54,38 @@ public class ButtonEntry extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.entry_main_list, container, false);
 
+//        LinearLayout linearLayout = new LinearLayout(getActivity());
+//
+//        TextView nam = new TextView(getActivity());
+//        TextView noti = new TextView(getActivity());
+//
+//        nam.setText(this.name);
+//        noti.setText(this.notification);
+//
+//        if (icon != 0){
+//            ImageView ico = new ImageView(getActivity());
+//            ico.setImageDrawable(getResources().getDrawable(icon));
+//        }
+//
+//        linearLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (callback != null) callback.onListItemClick(view, id);
+//            }
+//        });
+//
+//        container.addView(linearLayout);
+//
+//        return container;
+
+
+        View view = inflater.inflate(R.layout.entry_main_list, container, false);
         ((TextView) view.findViewById(R.id.name_entry_list)).setText(name);
         ((TextView) view.findViewById(R.id.notificationText)).setText(notification);
 
         if (icon != 0){
-
             ((ImageView) view.findViewById(R.id.inquiry_entry_icon)).setImageDrawable(getResources().getDrawable(icon));
-
         }
 
         view.setOnClickListener(new View.OnClickListener() {

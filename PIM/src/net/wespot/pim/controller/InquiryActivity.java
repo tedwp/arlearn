@@ -80,10 +80,14 @@ public class InquiryActivity extends _ActBar_FragmentActivity implements ActionB
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putLong("currentInquiry", INQ.inquiry.getCurrentInquiry().getId());
-        if(INQ.inquiry.getCurrentInquiry().getRunLocalObject()!=null){
-            outState.putLong("currentInquiryRunLocalObject", INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
+        if(INQ.inquiry.getCurrentInquiry() != null){
+            outState.putLong("currentInquiry", INQ.inquiry.getCurrentInquiry().getId());
+
+            if(INQ.inquiry.getCurrentInquiry().getRunLocalObject()!=null){
+                outState.putLong("currentInquiryRunLocalObject", INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
+            }
         }
+
 //        final InquiryDelegator inquiry = INQ.inquiry;
 //
 //

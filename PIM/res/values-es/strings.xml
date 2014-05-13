@@ -94,6 +94,10 @@
     <string name="wonder_moment_address_output_string">%1$s %2$s %3$s</string>
     <string name="wonder_moment_no_address_found">No se encontrado ninguna coincidencia</string>
     <string name="wonder_moment_placeholder_description">Este es un texto de ejemplo para la esta actividad movil auto-guiada. Por favor, describe el proposito de la actividad aqui.</string>
+    <string name="wonder_moment_sync">Sincronizando y salvando la actividad...</string>
+    <string name="wonder_moment_enable_internet">Habilita la conexion a internet</string>
+    <string name="wonder_moment_provide_description">Proporciona una descripción para la actividad</string>
+    <string name="wonder_moment_provide_title">Proporciona un título para la actividad</string>
 
     <string name="inquiry_title_description">Descripción</string>
     <string name="inquiry_title_hypothesis">Hipótesis</string>

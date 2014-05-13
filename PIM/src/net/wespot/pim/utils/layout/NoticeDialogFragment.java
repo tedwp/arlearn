@@ -71,7 +71,7 @@ public class NoticeDialogFragment extends DialogFragment {
                         Intent a = getActivity().getIntent();
                         a.putExtra(TITLE, dialog_title.getText());
                         a.putExtra(DESCRIPTION, dialog_description.getText());
-                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent());
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, a);
                     }
                 }
         )

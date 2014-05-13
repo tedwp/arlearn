@@ -246,20 +246,20 @@ public class InqCreateInquiryFragment extends Fragment implements LocationListen
                 if (INQ.isOnline()) {
                     CreateInquiryObject createInquiryObject = new CreateInquiryObject();
                     createInquiryObject.inquiry = new_inquiry;
-                    Toast.makeText(getActivity(), "Synchronizing & saving inquiry...", 1000).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.wonder_moment_sync), 1000).show();
 
                     ARL.eventBus.register(this);
                     // To invoke onEventBackgroundThread this line is needed
                     ARL.eventBus.post(createInquiryObject);
 
                 } else {
-                    Toast.makeText(getActivity(), "Enable internet connection", 1000).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.wonder_moment_enable_internet), 1000).show();
                 }
             } else {
-                Toast.makeText(getActivity(), "Provide a proper description for the inquiry", 1000).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.wonder_moment_provide_description), 1000).show();
             }
         } else {
-            Toast.makeText(getActivity(), "Provide a proper title for the inquiry", 1000).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.wonder_moment_provide_title), 1000).show();
         }
     }
 

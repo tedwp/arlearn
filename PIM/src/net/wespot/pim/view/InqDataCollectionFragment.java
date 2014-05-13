@@ -38,6 +38,7 @@ import net.wespot.pim.controller.Adapters.DataCollectionLazyListAdapter;
 import net.wespot.pim.utils.layout.NoticeDialogFragment;
 import org.celstec.arlearn.delegators.INQ;
 import org.celstec.arlearn2.android.delegators.ARL;
+import org.celstec.arlearn2.android.events.GeneralItemEvent;
 import org.celstec.arlearn2.android.listadapter.ListItemClickInterface;
 import org.celstec.arlearn2.beans.generalItem.GeneralItem;
 import org.celstec.dao.gen.GameLocalObject;
@@ -80,18 +81,53 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
 
+
         View rootView = inflater.inflate(R.layout.fragment_data_collection, container, false);
         data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
         text_default = (TextView) rootView.findViewById(R.id.text_default);
         data_collection_tasks_title_list = (TextView) rootView.findViewById(R.id.data_collection_tasks_title_list);
+        data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
 
+//        if(INQ.inquiry.getCurrentInquiry().getRunLocalObject()!=null){
+//            if (INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject()!=null){
+//                GameLocalObject gameLocalObject = DaoConfiguration.getInstance().getGameLocalObjectDao().load(
+//                        INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId());
+//                if (gameLocalObject.getGeneralItems().size() != 0){
+//                    INQ.responses.syncResponses(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
+//                    datAdapter =  new DataCollectionLazyListAdapter(this.getActivity(),gameLocalObject.getId());
+//                    datAdapter.setOnListItemClickCallback(this);
+//                    data_collection_tasks.setAdapter(datAdapter);
+//                }else{
+//                    Log.e(TAG, "There are no data collection tasks for this inquiry");
+//                    data_collection_tasks_title_list.setVisibility(View.INVISIBLE);
+//                    text_default.setVisibility(View.VISIBLE);
+//                    text_default.setText(R.string.data_collection_task_no_created);
+//                }
+//            }else{
+//                Log.e(TAG, "There is no game for this run.");
+//            }
+//        }else{
+//            Log.e(TAG, "Data collection task are not enabled on this inquiry");
+//            data_collection_tasks_title_list.setVisibility(View.INVISIBLE);
+//            text_default.setVisibility(View.VISIBLE);
+//            text_default.setText(R.string.data_collection_task_no_enabled_created);
+//        }
+
+        addContentValidation();
+
+        return rootView;
+    }
+
+    private void addContentValidation() {
         if(INQ.inquiry.getCurrentInquiry().getRunLocalObject()!=null){
             if (INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject()!=null){
-                GameLocalObject gameLocalObject = DaoConfiguration.getInstance().getGameLocalObjectDao().load(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId());
+                GameLocalObject gameLocalObject = DaoConfiguration.getInstance().getGameLocalObjectDao().load(
+                        INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId());
+
+
 
                 if (gameLocalObject.getGeneralItems().size() != 0){
                     INQ.responses.syncResponses(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
-                    data_collection_tasks = (ListView) rootView.findViewById(R.id.data_collection_tasks);
                     datAdapter =  new DataCollectionLazyListAdapter(this.getActivity(),gameLocalObject.getId());
                     datAdapter.setOnListItemClickCallback(this);
                     data_collection_tasks.setAdapter(datAdapter);
@@ -110,7 +146,7 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
             text_default.setVisibility(View.VISIBLE);
             text_default.setText(R.string.data_collection_task_no_enabled_created);
         }
-        return rootView;
+
     }
 
     @Override
@@ -137,6 +173,7 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
             case R.id.menu_new_data_collection:
 
                 showDialog();
+//                INQ.inquiry.syncDataCollectionTasks();
 
                 break;
         }
@@ -166,8 +203,10 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
                     // After Ok code.
                     Log.e(TAG, "ok code");
 
-//                    Bundle extras = data.getExtras();
+                    Bundle extras = data.getExtras();
 //
+
+
 //                    String title;
 //                    Iterator a = data.getExtras().keySet().iterator();
 //
@@ -180,12 +219,13 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
 //                        String p = (String) a.next();
 //                    }
 
+
+
                     INQ.dataCollection.createDataCollectionTask(
                             INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId(),
-                            "demo title" ,
-                            "demo description"
+                            extras.getString(NoticeDialogFragment.TITLE),
+                            extras.getString(NoticeDialogFragment.DESCRIPTION)
                     );
-                    INQ.inquiry.syncDataCollectionTasks();
 
                     Toast.makeText(getActivity(), getResources().getString(R.string.data_collection_dialog_creating), Toast.LENGTH_SHORT).show();
                 } else if (resultCode == Activity.RESULT_CANCELED){
@@ -196,13 +236,32 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
         }
     }
 
-    private class CreateGeneralItem {
-        public GeneralItem generalItem;
-    }
-
-    private void onEventBackgroundThread(CreateGeneralItem generalItem){
+    private void onEventBackgroundThread(GeneralItemEvent generalItem){
         Log.e(TAG, "Creation data collection task done ");
-        INQ.inquiry.syncDataCollectionTasks();
+
+
+
+        // Run code on UIThread
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                GameLocalObject gameLocalObject = DaoConfiguration.getInstance().getGameLocalObjectDao().load(
+                        INQ.inquiry.getCurrentInquiry().getRunLocalObject().getGameLocalObject().getId());
+
+                INQ.generalItems.syncGeneralItems(gameLocalObject);
+                INQ.inquiry.syncDataCollectionTasks();
+
+                gameLocalObject.getGeneralItems().size();
+//
+//                if (gameLocalObject.getGeneralItems().size() != 0){
+//                    INQ.responses.syncResponses(INQ.inquiry.getCurrentInquiry().getRunLocalObject().getId());
+//                    datAdapter =  new DataCollectionLazyListAdapter(this.getActivity(),gameLocalObject.getId());
+//                    datAdapter.setOnListItemClickCallback(this);
+//                    data_collection_tasks.setAdapter(datAdapter);
+
+            }
+        });
 
     }
 
@@ -210,6 +269,7 @@ public class InqDataCollectionFragment extends Fragment implements ListItemClick
     public void onResume() {
         super.onResume();
         INQ.inquiry.syncDataCollectionTasks();
+
     }
 
     @Override

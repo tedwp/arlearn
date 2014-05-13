@@ -98,6 +98,10 @@
     <string name="wonder_moment_address_output_string">%1$s %2$s %3$s</string>
     <string name="wonder_moment_no_address_found">No address found for location</string>
     <string name="wonder_moment_placeholder_description">This is a self-guided, mobile created, inquiry. Please provide a description of the inquiry here.</string>
+    <string name="wonder_moment_sync">Synchronizing and saving inquiry...</string>
+    <string name="wonder_moment_enable_internet">Enable internet connection</string>
+    <string name="wonder_moment_provide_description">Provide a proper description for the inquiry</string>
+    <string name="wonder_moment_provide_title">Provide a proper title for the inquiry</string>
 
     <string name="inquiry_title_description">Description</string>
     <string name="inquiry_title_hypothesis">Hypothesis</string>
