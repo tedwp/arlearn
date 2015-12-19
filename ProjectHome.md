@@ -1,0 +1,3 @@
+ARLearn is a toolkit for designing and playing mobile serious games. ARLearn is useful for mobile scenarios including fieldtrips, role-playing games and classroom response systems. On this web site you can check out the source code of this project.
+
+For more information on how to use ARLearn, check out the [getting started](http://portal.ou.nl/web/topic-mobile-learning/home/-/wiki/Main/Get%20Started) page on our project page. The ARLearn android app is available via [Google play](https://play.google.com/store/apps/details?id=org.celstec.arlearn2.android). Content for the ARLearn framework can be created with the [authoring tool](http://streetlearn.appspot.com/). An iOS (iphone/ipad) version is currently under construction.
